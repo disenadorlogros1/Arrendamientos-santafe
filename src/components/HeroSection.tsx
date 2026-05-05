@@ -17,22 +17,29 @@ export default function HeroSection() {
         <source src="/hero-video.mp4" type="video/mp4" />
       </video>
 
-      {/* Dark overlay using brand-dark color */}
+      {/* Dark overlay */}
       <div className="absolute inset-0 hero-video-overlay" />
 
-      {/* Content */}
+      {/* Content - Avenir LT Pro 35 Light */}
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, ease: 'easeOut' }}
-        className="relative z-10 text-center px-4 sm:px-6 max-w-4xl mx-auto"
+        className="relative z-10 text-center px-4 sm:px-6 max-w-4xl mx-auto mt-8"
       >
-        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-[48px] font-extrabold text-white leading-tight tracking-tight">
+        <h1
+          className="text-3xl sm:text-4xl md:text-5xl lg:text-[48px] text-white leading-tight tracking-tight"
+          style={{ fontFamily: "'Avenir LT Pro 35 Light', 'Avenir', 'Outfit', system-ui, sans-serif", fontWeight: 300 }}
+        >
           El apartamento que siempre quisiste,{' '}
-          <span className="text-brand-red">en el lugar</span> que siempre{' '}
-          <span className="text-brand-red">quisiste.</span>
+          <span className="text-brand-red" style={{ fontFamily: "'Avenir LT Pro 35 Light', 'Avenir', 'Outfit', system-ui, sans-serif", fontWeight: 300 }}>en el lugar</span>{' '}
+          que siempre{' '}
+          <span className="text-brand-red" style={{ fontFamily: "'Avenir LT Pro 35 Light', 'Avenir', 'Outfit', system-ui, sans-serif", fontWeight: 300 }}>quisiste.</span>
         </h1>
-        <p className="mt-4 text-base sm:text-lg text-white/70 font-light">
+        <p
+          className="mt-4 text-base sm:text-lg text-white/70"
+          style={{ fontFamily: "'Avenir LT Pro 35 Light', 'Avenir', 'Outfit', system-ui, sans-serif", fontWeight: 300 }}
+        >
           Sin vueltas, sin letras pequeñas, sin sorpresas.
         </p>
       </motion.div>

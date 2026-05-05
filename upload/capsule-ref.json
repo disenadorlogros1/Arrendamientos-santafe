@@ -1,0 +1,28 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "content": "### Descripción del diseño de menú de navegación  \n\n#### 1. **Forma de la cápsula**  \nLa cápsula (o contenedor del menú) tiene una **forma rectangular con bordes redondeados** (aproximadamente con un radio de curvatura moderado, no excesivamente agudo ni demasiado suave). Su diseño es **horizontal y alargado**, adaptado para albergar varios elementos de navegación en una sola fila.  \n\n\n#### 2. **Posición sobre imagen/video**  \nEl menú **se superpone sobre una imagen o video de fondo** (probablemente un paisaje urbano, con edificios y una atmósfera neblinosa/atardecer). El fondo es visible por detrás del menú, lo que crea un contraste visual entre el contenido gráfico y los elementos de navegación.  \n\n\n#### 3. **Elementos que contiene**  \nEl menú incluye **cinco opciones de navegación**, distribuidas horizontalmente:  \n- *Propiedades* (destacada con color de fondo rojo).  \n- *Consignación*  \n- *Hipotecas*  \n- *Servicios*  \n- *Institucional*  \n\n\n#### 4. **Colores, bordes, sombras y distribución**  \n\n- **Colores**:  \n  - El elemento destacado (*Propiedades*) tiene un **fondo rojo vibrante** y texto en **blanco** (alto contraste para resaltar la opción activa).  \n  - Las demás opciones (*Consignación, Hipotecas, Servicios, Institucional*) usan **texto blanco** sobre un **fondo semi-transparente gris claro** (o transparente con efecto de sombra) para mantener legibilidad sin sobrecargar visualmente.  \n  - El contenedor del menú (cápsula) tiene un **fondo semi-transparente gris oscuro** (o con un degradado sutil) que se fusiona con el fondo de la imagen, pero permite que el texto se destaque.  \n\n- **Bordes**:  \n  - La cápsula tiene **bordes redondeados** (sin borde sólido visible, ya que el diseño prioriza la fluidez visual).  \n  - El elemento *Propiedades* (rojo) también tiene bordes redondeados, integrándose con la forma general del menú.  \n\n- **Sombras**:  \n  - El menú (cápsula) incluye una **sombra sutil** (probablemente `box-shadow` con valores bajos de desenfoque y desplazamiento) para crear profundidad y separarlo del fondo, sin ser demasiado prominente.  \n\n- **Distribución**:  \n  - Los elementos están **alineados horizontalmente** y **espaciados uniformemente** dentro de la cápsula.  \n  - El elemento *Propiedades* ocupa un espacio similar en ancho a las demás opciones, pero su color rojo lo diferencia visualmente como la opción principal o activa.  \n  - La disposición es **centrada o alineada a la izquierda** (según el diseño general de la página), optimizando el uso del espacio y la legibilidad.  \n\n\n#### 5. **Estilo general**  \nEl diseño combina **modernidad y minimalismo**: el uso de formas redondeadas, colores contrastantes (rojo vs. gris/blanco) y transparencia crea un look limpio y profesional, ideal para un sitio web de bienes raíces o servicios financieros (hipotecas, consignación, etc.). La superposición sobre una imagen urbana refuerza la conexión con el sector inmobiliario.",
+        "role": "assistant"
+      }
+    }
+  ],
+  "created": 1778016223,
+  "id": "20260506052327b493a166cf7c419d",
+  "model": "glm-4.6v",
+  "object": "chat.completion",
+  "request_id": "20260506052327b493a166cf7c419d",
+  "usage": {
+    "completion_tokens": 790,
+    "completion_tokens_details": {
+      "reasoning_tokens": 0
+    },
+    "prompt_tokens": 247,
+    "prompt_tokens_details": {
+      "cached_tokens": 5
+    },
+    "total_tokens": 1037
+  }
+}
