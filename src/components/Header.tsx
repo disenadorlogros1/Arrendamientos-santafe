@@ -91,14 +91,14 @@ function WhatsAppButton() {
       href="https://wa.me/573000000000"
       target="_blank"
       rel="noopener noreferrer"
-      className={`flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold transition-all duration-700 ease-in-out whitespace-nowrap ${
+      className={`flex items-center gap-2 px-5 py-2 rounded-full text-sm font-semibold transition-all duration-700 ease-in-out whitespace-nowrap ${
         isRed
           ? 'bg-brand-red text-white shadow-[0_0_20px_rgba(207,10,44,0.6)]'
           : 'bg-white text-brand-red shadow-[0_0_12px_rgba(255,255,255,0.3)]'
       }`}
     >
       <img
-        src={isRed ? '/wpp-rojo.gif' : '/wpp-blanco.gif'}
+        src={isRed ? '/wpp-blanco.gif' : '/wpp-rojo.gif'}
         alt="WhatsApp"
         className="w-5 h-5"
       />
@@ -141,10 +141,11 @@ function NavDropdown({ item, onNavigate }: { item: NavItem; onNavigate: (page: P
             window.scrollTo({ top: 0, behavior: 'smooth' });
           }
         }}
-        className="px-5 py-2 text-sm font-medium text-brand-dark rounded-full
+        className="px-5 py-2 text-sm font-medium text-white rounded-full
           transition-all duration-300 ease-out
           hover:-translate-y-1
           hover:bg-brand-red hover:text-white hover:shadow-[0_0_18px_rgba(207,10,44,0.5)]"
+          style={{ textShadow: '0 1px 3px rgba(0,0,0,0.4)' }}
       >
         {item.label}
       </button>
