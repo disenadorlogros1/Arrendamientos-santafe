@@ -1,0 +1,28 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "content": "### 1) Códigos de color exactos (HEX, RGB)  \n- **Pantone Neutral Black C**:  \n  HEX: `#232222`  \n  RGB: R: 35, G: 34, B: 34  \n- **Pantone 188 C**:  \n  HEX: `#7A232E`  \n  RGB: R: 122, G: 35, B: 46  \n- **Pantone 187 C**:  \n  HEX: `#AC162C`  \n  RGB: R: 172, G: 22, B: 44  \n- **Pantone 186 C**:  \n  HEX: `#CF0A2C`  \n  RGB: R: 207, G: 10, B: 44  \n- **Pantone 1788 C**:  \n  HEX: `#F42534`  \n  RGB: R: 244, G: 37, B: 52  \n\n\n### 2) Nombres de tipografías  \nNo se especifican nombres de tipografías en el manual.  \n\n\n### 3) Paleta de colores completa  \nLa paleta de colores de la marca incluye los siguientes tonos (con nombre y código HEX):  \n- Pantone Neutral Black C: `#232222`  \n- Pantone 188 C: `#7A232E`  \n- Pantone 187 C: `#AC162C`  \n- Pantone 186 C: `#CF0A2C`  \n- Pantone 1788 C: `#F42534`  \n\n\n### 4) Reglas de diseño  \n- **Proporción áurea**: El logotipo está diseñado en relación con el diagrama áureo, basándose en las coincidencias con la estructura formal y proporcional de esta proporción.  \n- **Componentes del logotipo principal**: El logotipo se compone de tres elementos:  \n  1. Icono de la marca (01)  \n  2. Logotipo de la marca (02)  \n  3. Descriptor de la marca (03)  \n- **Consistencia de color**: Los colores de la paleta (Pantones) se definen para mantener la esencia de la marca en procesos internos.",
+        "role": "assistant"
+      }
+    }
+  ],
+  "created": 1778014703,
+  "id": "20260506045805c1487ce2da4f4b38",
+  "model": "glm-4.6v",
+  "object": "chat.completion",
+  "request_id": "20260506045805c1487ce2da4f4b38",
+  "usage": {
+    "completion_tokens": 498,
+    "completion_tokens_details": {
+      "reasoning_tokens": 0
+    },
+    "prompt_tokens": 14545,
+    "prompt_tokens_details": {
+      "cached_tokens": 4
+    },
+    "total_tokens": 15043
+  }
+}

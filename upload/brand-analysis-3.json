@@ -1,0 +1,28 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "content": "### Información extraída del manual de marca  \n\n#### 1. **Colores y paleta cromática**  \n- **Color principal**: Rojo (aplicación cromática principal, según la primera página).  \n- **Uso en fondos**:  \n  - Fondo claro (blanco): Logo en rojo (icono visible).  \n  - Fondo oscuro (rojo): Logo en blanco (icono visible).  \n\n\n#### 2. **Tipografías**  \n- **Logotipo**: Tipografía exclusiva para la marca (sin nombre específico, solo definida como \"tipografía exclusiva\").  \n- **Descriptor**: *Avenir Black CAJA ALTA* (letra mayúscula).  \n- **Títulos principales**: *Avenir Black Caja Baja* (letra minúscula).  \n- **Títulos secundarios**: *Avenir Heavy Caja Baja* (letra minúscula, peso \"Heavy\").  \n- **Títulos para texto corrido**: *Avenir Book* (letra minúscula).  \n- **Textos contenido creativo**: Tipografía *Avenir* (con uso sugerido: \"Caja Baja\" para títulos).  \n\n\n#### 3. **Aplicaciones del logo**  \n- **Icono (símbolo)**:  \n  - Aplicación correcta: Se muestra en fondo blanco (rojo) y fondo rojo (blanco) (primera página).  \n  - Uso en sello: Icono rodeado de texto circular (\"SANTA FE ARRENDAMIENTOS\") en rojo (tercera página).  \n- **Logotipo completo (icono + texto)**:  \n  - Proporción: Ancho 22x / Alto 12x (décima página).  \n  - Área de protección: Espacio de \"respeto\" alrededor del logotipo (delimitado por líneas X e Y) donde no deben entrar elementos ajenos (décima página).  \n  - Tamaño mínimo (escala 1:1):  \n    - Con descriptor: 2,18 cm.  \n    - Sin icono: 1,05 cm.  \n\n\n#### 4. **Usos en fondos claros y oscuros**  \n- **Fondo claro (blanco)**: Logo en rojo (icono y logotipo completo).  \n- **Fondo oscuro (rojo)**: Logo en blanco (icono).  \n\n\n#### 5. **Recursos visuales adicionales**  \n- **Sello de la marca**: Icono central rodeado de texto circular en rojo (\"SANTA FE ARRENDAMIENTOS\") (tercera página).  \n\n\n#### 6. **Uso incorrecto del logo**  \n- Se muestran ejemplos de logotipos con alteraciones (distorsión del icono, cambio de color a negro, etc.) para ilustrar lo que **no** se debe hacer (undécima página).  \n\n\n### Resumen clave  \n- **Color**: Rojo como principal, con contraste blanco para fondos oscuros.  \n- **Tipografía**: Familia *Avenir* con variaciones de peso (Black, Heavy, Book) y caja (alta/baja).  \n- **Logo**: Icono y logotipo con proporciones definidas, área de protección y tamaños mínimos.  \n- **Aplicaciones**: Uso en fondos claros/oscuros, sello circular y ejemplos de errores a evitar.",
+        "role": "assistant"
+      }
+    }
+  ],
+  "created": 1778014750,
+  "id": "2026050604584638dd1afade3140f5",
+  "model": "glm-4.6v",
+  "object": "chat.completion",
+  "request_id": "2026050604584638dd1afade3140f5",
+  "usage": {
+    "completion_tokens": 757,
+    "completion_tokens_details": {
+      "reasoning_tokens": 0
+    },
+    "prompt_tokens": 24157,
+    "prompt_tokens_details": {
+      "cached_tokens": 4
+    },
+    "total_tokens": 24914
+  }
+}

@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Outfit } from "next/font/google";
+import { Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const outfit = Outfit({
+  variable: "--font-outfit",
   subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700", "800"],
 });
 
 const geistMono = Geist_Mono({
@@ -29,7 +31,7 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: "Arrendamientos Santa Fé" }],
   icons: {
-    icon: "https://z-cdn.chatglm.cn/z-ai/static/logo.svg",
+    icon: "/logo-rojo.png",
   },
   openGraph: {
     title: "Arrendamientos Santa Fé | Arriendos y Ventas en Medellín",
@@ -48,7 +50,8 @@ export default function RootLayout({
   return (
     <html lang="es" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground`}
+        className={`${outfit.variable} ${geistMono.variable} antialiased bg-background text-foreground`}
+        style={{ fontFamily: "'Avenir LT Pro', 'Avenir', 'Outfit', var(--font-outfit), system-ui, -apple-system, sans-serif" }}
       >
         {children}
         <Toaster />

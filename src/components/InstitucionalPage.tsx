@@ -2,7 +2,6 @@
 
 import { motion } from 'framer-motion';
 import {
-  Building2,
   MapPin,
   Phone,
   Mail,
@@ -87,7 +86,7 @@ export default function InstitucionalPage() {
               transition={{ duration: 0.5 }}
             >
               <div className="flex items-center gap-2 mb-4">
-                <Building2 className="h-6 w-6 text-brand-red" />
+                <img src="/logo-rojo.png" alt="Santa Fé" className="h-6 w-auto object-contain" />
                 <h2 className="text-sm font-medium text-brand-red uppercase tracking-wider">
                   Sobre nosotros
                 </h2>

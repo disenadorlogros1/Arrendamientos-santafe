@@ -1,0 +1,28 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "content": "### 1) Colores exactos (HEX, RGB)  \n- **Color principal (rojo)**: No se especifica el código HEX/RGB en las páginas, pero se menciona como \"Pantone Color principal\" (se requiere referencia a la página 12 para valores exactos).  \n- **Color de apoyo visual (negro)**: Pantone Neutral Black C (se requiere referencia a la página 12 para valores exactos).  \n- **Color fondo principal**: Blanco (#FFFFFF / RGB 255,255,255).  \n\n\n### 2) Tipografías y pesos  \n- **Tipografía principal**:  \n  - Nombre: \"Santa Fe\" (probablemente una sans-serif moderna, como Helvetica o similar, basado en el estilo visual).  \n  - Peso: Negrita (Bold).  \n- **Tipografía secundaria**:  \n  - Nombre: \"ARRENDAMIENTOS\" (mismo tipo que \"Santa Fe\", en tamaño menor).  \n  - Peso: Regular o Light (menor que el nombre).  \n\n\n### 3) Reglas de uso del logo  \n- **Contraste básico de lectura**: Todos los colores (principal, apoyo visual, fondo) deben combinarse manteniendo un contraste suficiente para la legibilidad.  \n- **Uso con Pantone Neutral Black C y blanco**: Aplican las mismas reglas de contraste que con los colores mencionados en la página 05.  \n\n\n### 4) Tamaños mínimos  \nNo se especifica un tamaño mínimo en las páginas proporcionadas. Se requiere referencia a secciones adicionales del manual de marca.  \n\n\n### 5) Zonas de seguridad  \nNo se menciona ninguna zona de seguridad (espacio mínimo alrededor del logo) en las páginas proporcionadas. Se requiere referencia a secciones adicionales.  \n\n\n### 6) Usos correctos e incorrectos del logo  \n- **Usos correctos (ejemplos de la página 05)**:  \n  - Logo con icono (símbolo \"3\" estilizado) + texto \"Santa Fe ARRENDAMIENTOS\" en color principal (rojo) sobre fondo blanco.  \n  - Logo con icono + texto en color blanco sobre fondo principal (rojo).  \n- **Usos incorrectos (no explícitos en las páginas, pero inferidos)**:  \n  - Alterar el icono, tipografía o colores del logo.  \n  - Usar colores no especificados en el sistema cromático.  \n  - Reducir el logo por debajo del tamaño mínimo (si se define en otras secciones).  \n  - Colocar elementos demasiado cerca del logo (sin respetar la zona de seguridad, si se define).  \n\n\n**Notas**: Algunos detalles (códigos HEX/RGB, tamaños mínimos, zonas de seguridad) requieren referencia a páginas adicionales del manual de marca (ej. página 12 para colores exactos).",
+        "role": "assistant"
+      }
+    }
+  ],
+  "created": 1778014723,
+  "id": "20260506045828dd34a93a1b3f41fb",
+  "model": "glm-4.6v",
+  "object": "chat.completion",
+  "request_id": "20260506045828dd34a93a1b3f41fb",
+  "usage": {
+    "completion_tokens": 625,
+    "completion_tokens_details": {
+      "reasoning_tokens": 0
+    },
+    "prompt_tokens": 14547,
+    "prompt_tokens_details": {
+      "cached_tokens": 4
+    },
+    "total_tokens": 15172
+  }
+}

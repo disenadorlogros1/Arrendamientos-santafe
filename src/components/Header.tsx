@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Menu, X, Building2, MessageCircle } from 'lucide-react';
+import { Menu, X, MessageCircle } from 'lucide-react';
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from '@/components/ui/sheet';
 import { navItems, type PageType } from '@/data/properties';
 import { Button } from '@/components/ui/button';
@@ -23,16 +23,17 @@ export default function Header({ currentPage, onNavigate }: HeaderProps) {
   return (
     <header className="sticky top-0 z-50 bg-brand-dark">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex h-16 items-center justify-between">
-          {/* Logo */}
+        <div className="flex h-16 md:h-18 items-center justify-between">
+          {/* Logo - White version for dark background */}
           <button
             onClick={() => handleNav('home')}
             className="flex items-center gap-2 group"
           >
-            <Building2 className="h-7 w-7 text-brand-red" />
-            <span className="text-xl font-bold text-white tracking-tight">
-              Santa <span className="text-brand-red">Fé</span>
-            </span>
+            <img
+              src="/logo-blanco.png"
+              alt="Santa Fé Arrendamientos"
+              className="h-9 md:h-10 w-auto object-contain"
+            />
           </button>
 
           {/* Desktop Nav */}
@@ -79,12 +80,11 @@ export default function Header({ currentPage, onNavigate }: HeaderProps) {
               <div className="flex flex-col h-full">
                 {/* Mobile header */}
                 <div className="flex items-center justify-between p-4 border-b border-white/10">
-                  <div className="flex items-center gap-2">
-                    <Building2 className="h-6 w-6 text-brand-red" />
-                    <span className="text-lg font-bold text-white">
-                      Santa <span className="text-brand-red">Fé</span>
-                    </span>
-                  </div>
+                  <img
+                    src="/logo-blanco.png"
+                    alt="Santa Fé"
+                    className="h-8 w-auto object-contain"
+                  />
                   <button
                     onClick={() => setMobileOpen(false)}
                     className="text-white/60 hover:text-white"

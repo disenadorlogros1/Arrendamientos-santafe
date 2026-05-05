@@ -1,6 +1,6 @@
 'use client';
 
-import { Building2, MessageCircle, Phone, Mail, MapPin } from 'lucide-react';
+import { MessageCircle, Phone, Mail, MapPin } from 'lucide-react';
 
 export default function Footer() {
   return (
@@ -9,12 +9,11 @@ export default function Footer() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Brand */}
           <div className="space-y-4">
-            <div className="flex items-center gap-2">
-              <Building2 className="h-7 w-7 text-brand-red" />
-              <span className="text-xl font-bold tracking-tight">
-                Santa <span className="text-brand-red">Fé</span>
-              </span>
-            </div>
+            <img
+              src="/logo-blanco.png"
+              alt="Santa Fé Arrendamientos"
+              className="h-10 w-auto object-contain"
+            />
             <p className="text-white/60 text-sm leading-relaxed">
               Tu aliado inmobiliario en Medellín. Arriendos y ventas de
               propiedades con confianza y transparencia.

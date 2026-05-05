@@ -1,0 +1,28 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "content": "### Descripción de cada logo:  \n\n#### 1. Primer logo (versión roja):  \n- **Color de fondo**: Blanco.  \n- **Color del texto/icono**: Rojo.  \n- **Fondo de uso**: Fondo claro (ej. blanco, colores pastel o fondos claros en general).  \n- **Versión principal**: Sí (es la versión principal, ya que usa el color corporativo distintivo de la marca).    \n\n#### 2. Segundo logo (fondo en blanco sin contenido):  \n- **Color de fondo**: Blanco.  \n- **Color del texto/icono**: No aplica (es un fondo vacío, sin logo visible).  \n- **Fondo de uso**: No es una versión de logo funcional (probablemente un error o espacio en blanco).  \n- **Versión principal**: No.    \n\n#### 3. Tercer logo (versión negra):  \n- **Color de fondo**: Blanco.  \n- **Color del texto/icono**: Negro.  \n- **Fondo de uso**: Fondo claro (ej. blanco, colores pastel o fondos claros) o fondos oscuros (donde el negro resalte).  \n- **Versión principal**: No (es una versión secundaria, usada cuando el fondo es oscuro o para contrastar con fondos claros alternativos).",
+        "role": "assistant"
+      }
+    }
+  ],
+  "created": 1778014760,
+  "id": "20260506045914894dbb7846074e1d",
+  "model": "glm-4.6v",
+  "object": "chat.completion",
+  "request_id": "20260506045914894dbb7846074e1d",
+  "usage": {
+    "completion_tokens": 285,
+    "completion_tokens_details": {
+      "reasoning_tokens": 0
+    },
+    "prompt_tokens": 1402,
+    "prompt_tokens_details": {
+      "cached_tokens": 4
+    },
+    "total_tokens": 1687
+  }
+}
