@@ -1,7 +1,7 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import type { PageType } from '@/data/properties';
+import type { PageType } from '@/components/Header';
 
 interface FeaturedSectionProps {
   onNavigate: (page: PageType) => void;

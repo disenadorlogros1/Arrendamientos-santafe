@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { type PageType, properties } from '@/data/properties';
+import { type PageType } from '@/components/Header';
+import { properties } from '@/data/properties';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import HeroSection from '@/components/HeroSection';
@@ -55,7 +56,7 @@ export default function Home() {
         {currentPage === 'consignacion' && <ConsignacionPage />}
         {currentPage === 'hipotecas' && <HipotecasPage />}
         {currentPage === 'servicios' && <ServiciosPage />}
-        {currentPage === 'institucional' && <InstitucionalPage />}
+        {currentPage === 'nosotros' && <InstitucionalPage />}
       </main>
 
       <Footer />
