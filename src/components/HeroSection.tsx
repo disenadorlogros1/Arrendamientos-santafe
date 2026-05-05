@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 
 export default function HeroSection() {
   return (
-    <section className="relative w-full h-[50vh] flex items-center overflow-hidden">
+    <section className="relative w-full h-[70vh] flex items-center overflow-hidden">
       {/* Background Video */}
       <video
         autoPlay
@@ -25,7 +25,7 @@ export default function HeroSection() {
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, ease: 'easeOut' }}
-        className="relative z-10 text-left px-8 sm:px-12 md:px-16 max-w-4xl"
+        className="relative z-10 w-full text-left px-8 sm:px-12 md:px-16 lg:px-20 max-w-5xl mx-auto"
       >
         <h1
           className="text-3xl sm:text-4xl md:text-5xl lg:text-[48px] text-white tracking-tight"
