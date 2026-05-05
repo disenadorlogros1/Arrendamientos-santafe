@@ -2,8 +2,7 @@
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { MapPin, DollarSign, Home, BedDouble, Search } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Search } from 'lucide-react';
 
 export default function SearchForm() {
   const [searchType, setSearchType] = useState<'arrendar' | 'comprar'>('arrendar');
@@ -13,16 +12,17 @@ export default function SearchForm() {
       initial={{ opacity: 0, y: 40 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, delay: 0.3, ease: 'easeOut' }}
-      className="relative z-20 mx-auto -mt-10 max-w-5xl px-4 sm:px-6 lg:px-8"
+      className="relative z-20 mx-auto -mt-10 px-4 sm:px-6 lg:px-8"
+      style={{ maxWidth: '72rem' }}
     >
-      <div className="bg-white rounded-2xl shadow-2xl p-4 sm:p-6">
-        {/* Tabs */}
-        <div className="flex gap-1 mb-5 bg-gray-100 rounded-full p-1 w-fit">
+      <div className="bg-white shadow-2xl">
+        {/* Tabs - bordes rectos */}
+        <div className="flex bg-gray-100 w-full">
           <button
             onClick={() => setSearchType('arrendar')}
-            className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
+            className={`flex-1 px-5 py-2.5 text-sm font-medium transition-all duration-200 ${
               searchType === 'arrendar'
-                ? 'bg-brand-dark text-white shadow-sm'
+                ? 'bg-brand-dark text-white'
                 : 'text-gray-500 hover:text-gray-700'
             }`}
           >
@@ -30,9 +30,9 @@ export default function SearchForm() {
           </button>
           <button
             onClick={() => setSearchType('comprar')}
-            className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
+            className={`flex-1 px-5 py-2.5 text-sm font-medium transition-all duration-200 ${
               searchType === 'comprar'
-                ? 'bg-brand-dark text-white shadow-sm'
+                ? 'bg-brand-dark text-white'
                 : 'text-gray-500 hover:text-gray-700'
             }`}
           >
@@ -40,61 +40,50 @@ export default function SearchForm() {
           </button>
         </div>
 
-        {/* Search Fields */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-          <div className="relative">
-            <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-brand-gray" />
-            <input
-              type="text"
-              placeholder="Ubicación"
-              defaultValue="Envigado"
-              className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-red/30 focus:border-brand-red transition-all"
-            />
+        {/* Search Fields - layout horizontal con iconos GIF, bordes rectos */}
+        <div className="flex flex-col sm:flex-row">
+          {/* Campo: Ubicación */}
+          <div className="flex-1 flex items-center gap-2 px-4 py-3 border-b sm:border-b-0 sm:border-r border-gray-200">
+            <img src="/ubicacion.gif" alt="Ubicación" className="w-5 h-5 shrink-0" />
+            <div className="min-w-0">
+              <p className="text-[11px] text-gray-400 leading-tight">Ubicación</p>
+              <p className="text-sm text-brand-dark font-semibold truncate">Envigado</p>
+            </div>
           </div>
-          <div className="relative">
-            <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-brand-gray" />
-            <input
-              type="text"
-              placeholder="Hasta $1'500,000"
-              className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-red/30 focus:border-brand-red transition-all"
-            />
+
+          {/* Campo: Precio */}
+          <div className="flex-1 flex items-center gap-2 px-4 py-3 border-b sm:border-b-0 sm:border-r border-gray-200">
+            <img src="/precio.gif" alt="Precio" className="w-5 h-5 shrink-0" />
+            <div className="min-w-0">
+              <p className="text-[11px] text-gray-400 leading-tight">Precio</p>
+              <p className="text-sm text-brand-dark font-semibold truncate">Hasta 1&apos;500.000</p>
+            </div>
           </div>
-          <div className="relative">
-            <Home className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-brand-gray" />
-            <select
-              defaultValue="Apartamento"
-              className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-red/30 focus:border-brand-red transition-all appearance-none"
-            >
-              <option>Apartamento</option>
-              <option>Casa</option>
-              <option>Estudio</option>
-              <option>Local Comercial</option>
-            </select>
+
+          {/* Campo: Tipo de propiedad */}
+          <div className="flex-1 flex items-center gap-2 px-4 py-3 border-b sm:border-b-0 sm:border-r border-gray-200">
+            <img src="/tipo-de-propiedad.gif" alt="Tipo de propiedad" className="w-5 h-5 shrink-0" />
+            <div className="min-w-0">
+              <p className="text-[11px] text-gray-400 leading-tight">Tipo de propiedad</p>
+              <p className="text-sm text-brand-dark font-semibold truncate">Apartamento</p>
+            </div>
           </div>
-          <div className="relative">
-            <BedDouble className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-brand-gray" />
-            <select
-              defaultValue="1"
-              className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-red/30 focus:border-brand-red transition-all appearance-none"
-            >
-              <option value="1">1 o más</option>
-              <option value="2">2 o más</option>
-              <option value="3">3 o más</option>
-              <option value="4">4 o más</option>
-            </select>
+
+          {/* Campo: Habitaciones */}
+          <div className="flex-1 flex items-center gap-2 px-4 py-3 border-b sm:border-b-0 sm:border-r border-gray-200">
+            <img src="/iconos-santafe.gif" alt="Habitaciones" className="w-5 h-5 shrink-0" />
+            <div className="min-w-0">
+              <p className="text-[11px] text-gray-400 leading-tight">Habitaciones</p>
+              <p className="text-sm text-brand-dark font-semibold truncate">1 o más</p>
+            </div>
           </div>
+
+          {/* Botón Buscar - bordes rectos */}
+          <button className="bg-brand-red hover:bg-brand-red-hover text-white px-6 py-3 sm:px-8 text-sm font-semibold flex items-center justify-center gap-2 transition-colors duration-200 shrink-0">
+            <Search className="h-4 w-4" />
+            Buscar
+          </button>
         </div>
-
-        {/* Search Button */}
-        <Button className="mt-4 w-full bg-brand-red hover:bg-brand-red-hover text-white rounded-xl py-3 text-sm font-semibold flex items-center justify-center gap-2">
-          <Search className="h-4 w-4" />
-          Buscar
-        </Button>
-
-        {/* Subtitle */}
-        <p className="mt-3 text-center text-xs text-brand-gray">
-          Medellín y área metropolitana
-        </p>
       </div>
     </motion.div>
   );
