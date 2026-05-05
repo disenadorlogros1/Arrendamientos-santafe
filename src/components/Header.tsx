@@ -91,7 +91,7 @@ function WhatsAppButton() {
       href="https://wa.me/573000000000"
       target="_blank"
       rel="noopener noreferrer"
-      className={`flex items-center gap-2 px-5 py-2 rounded-full text-sm font-semibold transition-all duration-700 ease-in-out whitespace-nowrap ${
+      className={`flex items-center gap-2 h-[42px] px-5 rounded-full text-sm font-semibold transition-all duration-700 ease-in-out whitespace-nowrap ${
         isRed
           ? 'bg-brand-red text-white shadow-[0_0_20px_rgba(207,10,44,0.6)]'
           : 'bg-white text-brand-red shadow-[0_0_12px_rgba(255,255,255,0.3)]'
@@ -193,8 +193,8 @@ export default function Header({ currentPage, onNavigate }: HeaderProps) {
           />
         </button>
 
-        {/* Cápsula central - menú blanco al 70% */}
-        <nav className="hidden lg:flex items-center gap-0.5 bg-white/70 backdrop-blur-md rounded-full px-2 py-1.5 border border-white/30 shadow-lg">
+        {/* Cápsula central - menú blanco al 50% */}
+        <nav className="hidden lg:flex items-center gap-0.5 bg-white/50 backdrop-blur-md rounded-full px-2 h-[42px] border border-white/30 shadow-lg">
           {navItems.map((item) => (
             <NavDropdown key={item.label} item={item} onNavigate={handleNav} />
           ))}

@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 
 export default function HeroSection() {
   return (
-    <section className="relative w-full min-h-[350px] md:min-h-[392px] flex items-center justify-center overflow-hidden">
+    <section className="relative w-full h-[50vh] flex items-center overflow-hidden">
       {/* Background Video */}
       <video
         autoPlay
@@ -25,16 +25,17 @@ export default function HeroSection() {
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, ease: 'easeOut' }}
-        className="relative z-10 text-center px-4 sm:px-6 max-w-4xl mx-auto mt-8"
+        className="relative z-10 text-left px-8 sm:px-12 md:px-16 max-w-4xl"
       >
         <h1
-          className="text-3xl sm:text-4xl md:text-5xl lg:text-[48px] text-white leading-tight tracking-tight"
-          style={{ fontFamily: "'Avenir LT Pro 35 Light', 'Avenir', 'Outfit', system-ui, sans-serif", fontWeight: 300 }}
+          className="text-3xl sm:text-4xl md:text-5xl lg:text-[48px] text-white tracking-tight"
+          style={{
+            fontFamily: "'Avenir LT Pro 35 Light', 'Avenir', 'Outfit', system-ui, sans-serif",
+            fontWeight: 300,
+            lineHeight: '1.1',
+          }}
         >
-          El apartamento que siempre quisiste,{' '}
-          <span className="text-brand-red" style={{ fontFamily: "'Avenir LT Pro 35 Light', 'Avenir', 'Outfit', system-ui, sans-serif", fontWeight: 300 }}>en el lugar</span>{' '}
-          que siempre{' '}
-          <span className="text-brand-red" style={{ fontFamily: "'Avenir LT Pro 35 Light', 'Avenir', 'Outfit', system-ui, sans-serif", fontWeight: 300 }}>quisiste.</span>
+          El apartamento que siempre quisiste, en el lugar que siempre quisiste.
         </h1>
         <p
           className="mt-4 text-base sm:text-lg text-white/70"
