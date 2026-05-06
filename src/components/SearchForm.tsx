@@ -1,13 +1,13 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Search, Hash } from 'lucide-react';
+import { Search, Hash, ChevronDown } from 'lucide-react';
 
 const SECTORES = [
   'Envigado', 'Poblado', 'Laureles', 'Belen', 'Estadio', 'Itagui', 'Sabaneta',
   'Bello', 'Caldas', 'Copacabana', 'Guarne', 'Rionegro', 'La Ceja',
-  'Envigado', 'Medellin', 'Aranjuez', 'Buenos Aires', 'Castilla', 'Robledo',
+  'Medellin', 'Aranjuez', 'Buenos Aires', 'Castilla', 'Robledo',
   'Guayabal', 'El Poblado', 'Santo Domingo', 'Manrique', 'Popular',
   'San Javier', 'Santa Cruz', 'Altavista', 'San Antonio de Prado',
 ];
@@ -19,11 +19,74 @@ const TIPOS_INMUEBLE = [
 
 const HABITACIONES = ['1', '2', '3', '4', '5+'];
 
+/* ── CustomSelect: mismo diseño de dropdown que el Header ── */
+function CustomSelect({
+  label,
+  value,
+  onChange,
+  options,
+  placeholder,
+}: {
+  label: string;
+  value: string;
+  onChange: (val: string) => void;
+  options: string[];
+  placeholder?: string;
+}) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  return (
+    <div className="min-w-0 flex-1 relative" ref={ref}>
+      <p className="text-[11px] text-gray-400 leading-tight">{label}</p>
+      <button
+        onClick={() => setOpen(!open)}
+        className="w-full flex items-center justify-between text-sm text-brand-dark font-semibold bg-transparent border-none outline-none cursor-pointer text-left pr-1"
+      >
+        <span className={value ? '' : 'text-gray-300 font-normal'}>
+          {value || placeholder || 'Seleccionar'}
+        </span>
+        <ChevronDown
+          className={`w-3.5 h-3.5 text-gray-400 shrink-0 transition-transform duration-200 ${open ? 'rotate-180' : ''}`}
+        />
+      </button>
+
+      {/* Dropdown – mismo estilo que el Header: bg-white, rounded-2xl, shadow, hover rojo */}
+      {open && (
+        <div className="absolute top-full left-0 right-0 pt-1 z-50">
+          <div className="bg-white rounded-2xl py-1 shadow-xl border border-gray-100 max-h-[220px] overflow-y-auto">
+            {options.map((opt) => (
+              <button
+                key={opt}
+                onClick={() => { onChange(opt); setOpen(false); }}
+                className={`w-full text-left px-4 py-1.5 text-sm transition-all duration-200 first:rounded-t-2xl last:rounded-b-2xl ${
+                  value === opt
+                    ? 'bg-brand-red text-white font-semibold'
+                    : 'text-brand-dark/70 hover:text-white hover:bg-brand-red'
+                }`}
+              >
+                {opt}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function SearchForm() {
   const [searchType, setSearchType] = useState<'arrendar' | 'comprar'>('arrendar');
   const [sector, setSector] = useState('');
   const [tipo, setTipo] = useState('');
-  const [precioDesde, setPrecioDesde] = useState('');
   const [precioHasta, setPrecioHasta] = useState('');
   const [codigo, setCodigo] = useState('');
   const [habitaciones, setHabitaciones] = useState('');
@@ -87,19 +150,13 @@ export default function SearchForm() {
             <div className="w-9 h-9 rounded shrink-0 flex items-center justify-center" style={{ backgroundColor: '#f2f2f2' }}>
               <img src="/ubicacion.gif" alt="Ubicación" className="w-5 h-5" />
             </div>
-            <div className="min-w-0 flex-1">
-              <p className="text-[11px] text-gray-400 leading-tight">Sector</p>
-              <select
-                value={sector}
-                onChange={(e) => setSector(e.target.value)}
-                className="w-full text-sm text-brand-dark font-semibold bg-transparent border-none outline-none appearance-none cursor-pointer"
-              >
-                <option value="">Seleccionar</option>
-                {SECTORES.map((s) => (
-                  <option key={s} value={s}>{s}</option>
-                ))}
-              </select>
-            </div>
+            <CustomSelect
+              label="Sector"
+              value={sector}
+              onChange={setSector}
+              options={SECTORES}
+              placeholder="Seleccionar"
+            />
           </div>
 
           {/* Campo: Precio */}
@@ -124,19 +181,13 @@ export default function SearchForm() {
             <div className="w-9 h-9 rounded shrink-0 flex items-center justify-center" style={{ backgroundColor: '#f2f2f2' }}>
               <img src="/tipo-de-propiedad.gif" alt="Tipo" className="w-5 h-5" />
             </div>
-            <div className="min-w-0 flex-1">
-              <p className="text-[11px] text-gray-400 leading-tight">Tipo de Inmueble</p>
-              <select
-                value={tipo}
-                onChange={(e) => setTipo(e.target.value)}
-                className="w-full text-sm text-brand-dark font-semibold bg-transparent border-none outline-none appearance-none cursor-pointer"
-              >
-                <option value="">Seleccionar</option>
-                {TIPOS_INMUEBLE.map((t) => (
-                  <option key={t} value={t}>{t}</option>
-                ))}
-              </select>
-            </div>
+            <CustomSelect
+              label="Tipo de Inmueble"
+              value={tipo}
+              onChange={setTipo}
+              options={TIPOS_INMUEBLE}
+              placeholder="Seleccionar"
+            />
           </div>
 
           {/* Campo: Habitaciones */}
@@ -144,19 +195,13 @@ export default function SearchForm() {
             <div className="w-9 h-9 rounded shrink-0 flex items-center justify-center" style={{ backgroundColor: '#f2f2f2' }}>
               <img src="/iconos-santafe.gif" alt="Habitaciones" className="w-5 h-5" />
             </div>
-            <div className="min-w-0 flex-1">
-              <p className="text-[11px] text-gray-400 leading-tight">Habitaciones</p>
-              <select
-                value={habitaciones}
-                onChange={(e) => setHabitaciones(e.target.value)}
-                className="w-full text-sm text-brand-dark font-semibold bg-transparent border-none outline-none appearance-none cursor-pointer"
-              >
-                <option value="">Seleccionar</option>
-                {HABITACIONES.map((h) => (
-                  <option key={h} value={h}>{h} o más</option>
-                ))}
-              </select>
-            </div>
+            <CustomSelect
+              label="Habitaciones"
+              value={habitaciones}
+              onChange={setHabitaciones}
+              options={HABITACIONES.map((h) => `${h} o más`)}
+              placeholder="Seleccionar"
+            />
           </div>
 
           {/* Botón Buscar - más grande que los filtros */}
