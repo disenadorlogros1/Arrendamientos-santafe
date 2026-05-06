@@ -1,6 +1,8 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
+import InfiniteCarousel from '@/components/InfiniteCarousel';
+import { properties } from '@/data/properties';
 import type { PageType } from '@/components/Header';
 
 interface FeaturedSectionProps {
@@ -8,9 +10,11 @@ interface FeaturedSectionProps {
 }
 
 export default function FeaturedSection({ onNavigate }: FeaturedSectionProps) {
+  const featured = properties.filter((p) => p.featured);
+
   return (
-    <section className="py-4 md:py-6">
-      <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-2">
+    <section className="py-6 md:py-10">
+      <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3 mb-6">
         <div>
           <h2
             className="text-2xl sm:text-3xl md:text-4xl text-brand-red"
@@ -45,6 +49,9 @@ export default function FeaturedSection({ onNavigate }: FeaturedSectionProps) {
           Ver más
         </Button>
       </div>
+
+      {/* Infinite Carousel */}
+      <InfiniteCarousel properties={featured} />
     </section>
   );
 }

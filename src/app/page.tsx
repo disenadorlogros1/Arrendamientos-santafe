@@ -2,14 +2,12 @@
 
 import { useState, useEffect } from 'react';
 import { type PageType } from '@/components/Header';
-import { properties } from '@/data/properties';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import HeroSection from '@/components/HeroSection';
 import SearchForm from '@/components/SearchForm';
 import UserLocation from '@/components/UserLocation';
 import FeaturedSection from '@/components/FeaturedSection';
-import PropertyGrid from '@/components/PropertyGrid';
 import WhatsAppFloat from '@/components/WhatsAppFloat';
 import PropiedadesPage from '@/components/PropiedadesPage';
 import ConsignacionPage from '@/components/ConsignacionPage';
@@ -18,19 +16,14 @@ import ServiciosPage from '@/components/ServiciosPage';
 import InstitucionalPage from '@/components/InstitucionalPage';
 
 function HomePage({ onNavigate }: { onNavigate: (page: PageType) => void }) {
-  const featured = properties.filter((p) => p.featured);
-
   return (
     <>
       <HeroSection />
       <SearchForm />
       <UserLocation />
-      <div className="bg-brand-light pt-10 pb-4">
+      <div className="bg-brand-light py-6">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <FeaturedSection onNavigate={onNavigate} />
-          <div className="pb-4 md:pb-6">
-            <PropertyGrid properties={featured} />
-          </div>
         </div>
       </div>
     </>
