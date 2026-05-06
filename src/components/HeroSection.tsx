@@ -2,7 +2,7 @@
 
 export default function HeroSection() {
   return (
-    <section className="relative w-full h-[70vh] flex items-end overflow-hidden">
+    <section className="relative w-full h-[70vh] flex items-center overflow-hidden">
       {/* Background Video */}
       <video
         autoPlay
@@ -18,10 +18,10 @@ export default function HeroSection() {
       {/* Dark overlay */}
       <div className="absolute inset-0 hero-video-overlay" />
 
-      {/* Content - bottom positioned to avoid SearchForm overlap */}
+      {/* Content - centrado vertical, alineado a la izquierda */}
       <div
-        className="absolute w-full text-left px-8 sm:px-12 md:px-16 lg:px-20 pb-[160px]"
-        style={{ zIndex: 10, maxWidth: '56rem' }}
+        className="relative w-full text-left px-8 sm:px-12 md:px-16 lg:px-20 max-w-5xl mx-auto"
+        style={{ zIndex: 10 }}
       >
         <h1
           className="text-3xl sm:text-4xl md:text-5xl lg:text-[48px] text-white tracking-tight"
