@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import type { Property } from '@/data/properties';
 
 interface PropertyCardProps {
@@ -9,39 +9,35 @@ interface PropertyCardProps {
 
 export default function PropertyCard({ property }: PropertyCardProps) {
   const [isHovered, setIsHovered] = useState(false);
-  const [isClicked, setIsClicked] = useState(false);
-  const [animating, setAnimating] = useState(false);
+  const rafRef = useRef<number>(0);
 
   const handleMouseEnter = useCallback(() => {
+    cancelAnimationFrame(rafRef.current);
     setIsHovered(true);
-    setAnimating(true);
   }, []);
 
   const handleMouseLeave = useCallback(() => {
     setIsHovered(false);
-    setAnimating(false);
   }, []);
 
-  const handleClick = useCallback(() => {
-    setIsClicked(true);
-    setAnimating(true);
-    setTimeout(() => setIsClicked(false), 600);
-  }, []);
+  // Circle circumference for stroke animation
+  const radius = 17;
+  const circumference = 2 * Math.PI * radius; // ≈ 106.81
 
-  // Circle fill percentage: 0 → 100%
-  const circleFill = isHovered || isClicked ? 100 : 0;
-  // Arrow draw progress: 0 → 1
-  const arrowProgress = isHovered || isClicked ? 1 : 0;
+  // Arrow path length for draw animation
+  const arrowLength = 28;
 
   return (
     <div
       className="group bg-white rounded-lg overflow-hidden border border-gray-100"
       style={{
         boxShadow: isHovered
-          ? '0 8px 25px -5px rgba(0,0,0,0.1), 0 4px 10px -6px rgba(0,0,0,0.05)'
+          ? '0 8px 25px -5px rgba(0,0,0,0.12), 0 4px 10px -6px rgba(0,0,0,0.06)'
           : '0 1px 3px 0 rgba(0,0,0,0.04), 0 1px 2px -1px rgba(0,0,0,0.03)',
         transition: 'box-shadow 0.3s ease',
       }}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
     >
       {/* Image Container */}
       <div className="relative overflow-hidden" style={{ aspectRatio: '4/3' }}>
@@ -56,12 +52,9 @@ export default function PropertyCard({ property }: PropertyCardProps) {
           loading="lazy"
         />
 
-        {/* Animated Arrow Button */}
+        {/* Arrow Button — Always visible, animates on hover */}
         <div
           className="absolute top-3 right-3"
-          onMouseEnter={handleMouseEnter}
-          onMouseLeave={handleMouseLeave}
-          onClick={handleClick}
           style={{ cursor: 'pointer' }}
         >
           <svg
@@ -71,67 +64,52 @@ export default function PropertyCard({ property }: PropertyCardProps) {
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
             style={{
-              filter: isHovered || isClicked
-                ? 'drop-shadow(0 2px 6px rgba(207,10,44,0.4))'
-                : 'none',
+              filter: isHovered
+                ? 'drop-shadow(0 2px 8px rgba(207,10,44,0.5))'
+                : 'drop-shadow(0 1px 3px rgba(0,0,0,0.15))',
               transition: 'filter 0.3s ease',
             }}
           >
-            {/* Background circle (empty stroke) */}
+            {/* Background fill circle — fills from 0% to 100% on hover */}
             <circle
               cx="20"
               cy="20"
-              r="17"
-              stroke="#CF0A2C"
-              strokeWidth="2"
-              fill="none"
-              opacity="0.3"
-            />
-            {/* Animated fill circle - fills from 0 to 100% via dasharray */}
-            <circle
-              cx="20"
-              cy="20"
-              r="17"
+              r={radius}
               fill="#CF0A2C"
               style={{
-                clipPath: `inset(0 ${100 - circleFill}% 0 0)`,
-                transition: animating
-                  ? 'clip-path 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)'
-                  : 'clip-path 0.3s ease 0.1s',
+                clipPath: isHovered ? 'inset(0 0% 0 0)' : 'inset(0 100% 0 0)',
+                transition: 'clip-path 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
                 transformOrigin: 'center',
               }}
             />
-            {/* Circle border stroke animation */}
+
+            {/* Circle border — always visible as stroke outline */}
             <circle
               cx="20"
               cy="20"
-              r="17"
+              r={radius}
               stroke="#CF0A2C"
               strokeWidth="2"
               fill="none"
-              strokeDasharray={animating ? `${2 * Math.PI * 17}` : '0'}
-              strokeDashoffset="0"
-              strokeLinecap="round"
               style={{
-                transition: animating
-                  ? 'stroke-dasharray 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)'
-                  : 'stroke-dasharray 0.3s ease 0.15s',
-                transform: 'rotate(-90deg)',
-                transformOrigin: 'center',
+                stroke: isHovered ? '#CF0A2C' : 'rgba(207,10,44,0.7)',
+                transition: 'stroke 0.3s ease',
               }}
             />
-            {/* Arrow - builds from zero using stroke-dasharray */}
+
+            {/* Arrow — builds from zero on hover */}
             <path
               d="M15 20L20 15M20 15L25 20M20 15V26"
-              stroke="white"
+              stroke={isHovered ? '#ffffff' : '#CF0A2C'}
               strokeWidth="2"
               strokeLinecap="round"
               strokeLinejoin="round"
+              fill="none"
               style={{
-                strokeDasharray: arrowProgress ? '28' : '0 28',
-                transition: animating
-                  ? 'stroke-dasharray 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.1s'
-                  : 'stroke-dasharray 0.3s ease',
+                strokeDasharray: isHovered ? `${arrowLength}` : `0 ${arrowLength}`,
+                transition: isHovered
+                  ? 'stroke-dasharray 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.15s, stroke 0s 0.15s'
+                  : 'stroke-dasharray 0.35s ease 0.05s, stroke 0.2s ease 0.3s',
               }}
             />
           </svg>
@@ -140,7 +118,7 @@ export default function PropertyCard({ property }: PropertyCardProps) {
 
       {/* Content */}
       <div style={{ padding: '14px 16px 16px' }}>
-        {/* Price - Largest, boldest */}
+        {/* Price — Largest, boldest */}
         <p
           style={{
             fontFamily: "'Avenir LT Pro 85 Heavy', 'Avenir LT Pro', 'Avenir', 'Outfit', system-ui, sans-serif",
@@ -154,7 +132,7 @@ export default function PropertyCard({ property }: PropertyCardProps) {
           {property.price}
         </p>
 
-        {/* Location - Medium */}
+        {/* Location — Medium */}
         <p
           style={{
             fontFamily: "'Avenir LT Pro 55 Roman', 'Avenir LT Pro', 'Avenir', 'Outfit', system-ui, sans-serif",
@@ -168,7 +146,7 @@ export default function PropertyCard({ property }: PropertyCardProps) {
           {property.location}
         </p>
 
-        {/* Size + Type - Small, gray */}
+        {/* Size + Type — Small, gray */}
         <p
           style={{
             fontFamily: "'Avenir LT Pro 35 Light', 'Avenir LT Pro', 'Avenir', 'Outfit', system-ui, sans-serif",
@@ -182,7 +160,7 @@ export default function PropertyCard({ property }: PropertyCardProps) {
           {property.size} · {property.type}
         </p>
 
-        {/* Reference - Smallest, lighter */}
+        {/* Reference — Smallest, lighter */}
         <p
           style={{
             fontFamily: "'Avenir LT Pro 35 Light', 'Avenir LT Pro', 'Avenir', 'Outfit', system-ui, sans-serif",

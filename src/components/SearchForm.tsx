@@ -216,10 +216,11 @@ export default function SearchForm() {
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, delay: 0.3, ease: 'easeOut' }}
-      className="relative z-20 mx-auto px-4 sm:px-6 lg:px-8"
+      className="relative mx-auto px-4 sm:px-6 lg:px-8"
       style={{
         maxWidth: '72rem',
-        marginTop: '-180px',
+        marginTop: '-160px',
+        zIndex: 30,
       }}
     >
       <div className="bg-white shadow-2xl">

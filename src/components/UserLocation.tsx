@@ -66,8 +66,8 @@ export default function UserLocation() {
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.5 }}
-      className="relative z-[1] mx-auto px-4 sm:px-6 lg:px-8 mt-3"
-      style={{ maxWidth: '72rem' }}
+      className="relative mx-auto px-4 sm:px-6 lg:px-8 mt-3"
+      style={{ maxWidth: '72rem', zIndex: 25 }}
     >
       <div className="flex items-center gap-2 justify-center">
         <img
