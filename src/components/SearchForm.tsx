@@ -338,7 +338,7 @@ export default function SearchForm() {
               />
             ))}
 
-            {/* SVG magnifying glass: lente + mango */}
+            {/* SVG magnifying glass with animated parts */}
             <svg
               width="22"
               height="22"
@@ -346,16 +346,24 @@ export default function SearchForm() {
               fill="none"
               className="shrink-0"
             >
-              {/* Lens circle → becomes loading spinner */}
-              <circle
-                cx="10"
-                cy="10"
-                r="7"
-                stroke="white"
-                strokeWidth="2"
-                className={`search-lens ${isSearching ? 'spin' : ''}`}
-              />
-              {/* Handle → hides on search */}
+              {/* Lens: circle → morphs into partial arc (loading spinner) */}
+              {/* r=7 → circumference ≈ 43.98. dasharray "16 28" shows 16px arc out of 44 */}
+              <g className={`search-lens-group ${isSearching ? 'spinning' : ''}`}>
+                <circle
+                  cx="10"
+                  cy="10"
+                  r="7"
+                  stroke="white"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                  style={{
+                    strokeDasharray: isSearching ? '16 28' : '44 0',
+                    transition: 'stroke-dasharray 0.3s ease 0.1s, stroke-width 0.3s ease',
+                  }}
+                />
+              </g>
+
+              {/* Handle: slides out and fades */}
               <line
                 x1="14.5"
                 y1="14.5"
@@ -364,7 +372,11 @@ export default function SearchForm() {
                 stroke="white"
                 strokeWidth="2.5"
                 strokeLinecap="round"
-                className={`search-handle ${isSearching ? 'hide' : ''}`}
+                style={{
+                  opacity: isSearching ? 0 : 1,
+                  transform: isSearching ? 'translate(5px, 5px)' : 'translate(0, 0)',
+                  transition: 'opacity 0.25s ease, transform 0.25s ease',
+                }}
               />
             </svg>
 

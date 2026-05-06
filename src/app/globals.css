@@ -182,30 +182,17 @@
 }
 
 /* Search button — Pinterest-style magnifying glass animation */
-/* Handle: slides out and fades */
-.search-handle {
-  transition: opacity 0.25s ease, transform 0.25s ease;
-  transform-origin: 15px 15px;
-}
-.search-handle.hide {
-  opacity: 0;
-  transform: translate(6px, 6px) rotate(-45deg);
-}
-
-/* Lens: morphs into a loading spinner arc */
-.search-lens {
-  transition: stroke-dasharray 0.3s ease 0.1s, stroke-width 0.3s ease 0.1s;
-}
-.search-lens.spin {
-  stroke-dasharray: 18 50;
-  stroke-width: 2.5;
-  animation: lens-spin 0.8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-  transform-origin: 10px 10px;
-}
-
+/* Lens spinner rotation */
 @keyframes lens-spin {
   0%   { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+}
+.search-lens-group {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.search-lens-group.spinning {
+  animation: lens-spin 0.7s linear infinite;
 }
 
 /* Search button ripple effect */
