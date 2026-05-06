@@ -16,25 +16,27 @@ export default function SearchForm() {
       style={{ maxWidth: '72rem' }}
     >
       <div className="bg-white shadow-2xl">
-        {/* Tabs - bordes rectos */}
-        <div className="flex bg-gray-100 w-full">
+        {/* Tabs - fondo oscuro, bordes rectos */}
+        <div className="flex bg-brand-dark w-full">
           <button
             onClick={() => setSearchType('arrendar')}
-            className={`flex-1 px-5 py-2.5 text-sm font-medium transition-all duration-200 ${
+            className={`flex-1 px-5 py-2.5 text-sm transition-all duration-200 ${
               searchType === 'arrendar'
-                ? 'bg-brand-dark text-white'
-                : 'text-gray-500 hover:text-gray-700'
+                ? 'bg-white text-[#808080]'
+                : 'bg-white/40 text-white hover:bg-white/50'
             }`}
+            style={{ fontFamily: "'Avenir LT Pro 65 Medium', 'Avenir', 'Outfit', system-ui, sans-serif", fontWeight: 500 }}
           >
             Arrendar
           </button>
           <button
             onClick={() => setSearchType('comprar')}
-            className={`flex-1 px-5 py-2.5 text-sm font-medium transition-all duration-200 ${
+            className={`flex-1 px-5 py-2.5 text-sm transition-all duration-200 ${
               searchType === 'comprar'
-                ? 'bg-brand-dark text-white'
-                : 'text-gray-500 hover:text-gray-700'
+                ? 'bg-white text-[#808080]'
+                : 'bg-white/40 text-white hover:bg-white/50'
             }`}
+            style={{ fontFamily: "'Avenir LT Pro 65 Medium', 'Avenir', 'Outfit', system-ui, sans-serif", fontWeight: 500 }}
           >
             Comprar
           </button>

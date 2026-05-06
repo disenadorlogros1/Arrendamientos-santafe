@@ -31,7 +31,10 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: "Arrendamientos Santa Fé" }],
   icons: {
-    icon: "/logo-rojo.png",
+    icon: [
+      { url: "/favicon-rojo.gif", media: "(prefers-color-scheme: light)", type: "image/gif" },
+      { url: "/favicon-blanco.gif", media: "(prefers-color-scheme: dark)", type: "image/gif" },
+    ],
   },
   openGraph: {
     title: "Arrendamientos Santa Fé | Arriendos y Ventas en Medellín",
