@@ -252,8 +252,8 @@ export default function SearchForm() {
         {/* Search Fields - orden: Código, Ubicación, Precio, Tipo, Habitaciones + Buscar */}
         <div className="flex flex-col sm:flex-row items-stretch">
           {/* Campo: Código */}
-          <div className="flex-1 flex items-center gap-3 px-4 py-3 border-b sm:border-b-0 sm:border-r border-gray-200">
-            <div className="w-9 h-9 rounded shrink-0 flex items-center justify-center" style={{ backgroundColor: '#f2f2f2' }}>
+          <div className="group flex-1 flex items-center gap-3 px-4 py-3 border-b sm:border-b-0 sm:border-r border-gray-200">
+            <div className="w-9 h-9 rounded shrink-0 flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:shadow-[0_0_14px_rgba(207,10,44,0.5)]" style={{ backgroundColor: '#f2f2f2' }}>
               <img src="/numero-codigo.gif" alt="Código" className="w-5 h-5" />
             </div>
             <div className="min-w-0 flex-1">
@@ -269,8 +269,8 @@ export default function SearchForm() {
           </div>
 
           {/* Campo: Ubicación / Sector */}
-          <div className="flex-1 flex items-center gap-3 px-4 py-3 border-b sm:border-b-0 sm:border-r border-gray-200">
-            <div className="w-9 h-9 rounded shrink-0 flex items-center justify-center" style={{ backgroundColor: '#f2f2f2' }}>
+          <div className="group flex-1 flex items-center gap-3 px-4 py-3 border-b sm:border-b-0 sm:border-r border-gray-200">
+            <div className="w-9 h-9 rounded shrink-0 flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:shadow-[0_0_14px_rgba(207,10,44,0.5)]" style={{ backgroundColor: '#f2f2f2' }}>
               <img src="/ubicacion.gif" alt="Ubicación" className="w-5 h-5" />
             </div>
             <CustomSelect
@@ -283,8 +283,8 @@ export default function SearchForm() {
           </div>
 
           {/* Campo: Precio - Slider de rango dual */}
-          <div className="flex-1 flex items-center gap-3 px-4 py-3 border-b sm:border-b-0 sm:border-r border-gray-200">
-            <div className="w-9 h-9 rounded shrink-0 flex items-center justify-center" style={{ backgroundColor: '#f2f2f2' }}>
+          <div className="group flex-1 flex items-center gap-3 px-4 py-3 border-b sm:border-b-0 sm:border-r border-gray-200">
+            <div className="w-9 h-9 rounded shrink-0 flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:shadow-[0_0_14px_rgba(207,10,44,0.5)]" style={{ backgroundColor: '#f2f2f2' }}>
               <img src="/precio.gif" alt="Precio" className="w-5 h-5" />
             </div>
             <PriceRangeSlider
@@ -296,8 +296,8 @@ export default function SearchForm() {
           </div>
 
           {/* Campo: Tipo de propiedad */}
-          <div className="flex-1 flex items-center gap-3 px-4 py-3 border-b sm:border-b-0 sm:border-r border-gray-200">
-            <div className="w-9 h-9 rounded shrink-0 flex items-center justify-center" style={{ backgroundColor: '#f2f2f2' }}>
+          <div className="group flex-1 flex items-center gap-3 px-4 py-3 border-b sm:border-b-0 sm:border-r border-gray-200">
+            <div className="w-9 h-9 rounded shrink-0 flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:shadow-[0_0_14px_rgba(207,10,44,0.5)]" style={{ backgroundColor: '#f2f2f2' }}>
               <img src="/tipo-de-propiedad.gif" alt="Tipo" className="w-5 h-5" />
             </div>
             <CustomSelect
@@ -310,8 +310,8 @@ export default function SearchForm() {
           </div>
 
           {/* Campo: Habitaciones */}
-          <div className="flex-1 flex items-center gap-3 px-4 py-3 border-b sm:border-b-0 sm:border-r border-gray-200">
-            <div className="w-9 h-9 rounded shrink-0 flex items-center justify-center" style={{ backgroundColor: '#f2f2f2' }}>
+          <div className="group flex-1 flex items-center gap-3 px-4 py-3 border-b sm:border-b-0 sm:border-r border-gray-200">
+            <div className="w-9 h-9 rounded shrink-0 flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:shadow-[0_0_14px_rgba(207,10,44,0.5)]" style={{ backgroundColor: '#f2f2f2' }}>
               <img src="/habitaciones-copia.gif" alt="Habitaciones" className="w-5 h-5" />
             </div>
             <CustomSelect
