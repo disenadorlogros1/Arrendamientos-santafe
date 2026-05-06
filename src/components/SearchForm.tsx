@@ -196,9 +196,9 @@ export default function SearchForm() {
   const searchBtnRef = useRef<HTMLButtonElement>(null);
 
   const handleSearch = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
-    // Trigger spin animation
+    // Trigger handle-hide + lens-spinner animation
     setIsSearching(true);
-    setTimeout(() => setIsSearching(false), 600);
+    setTimeout(() => setIsSearching(false), 1500); // spinner runs 1.5s
 
     // Trigger ripple effect at click position
     const rect = e.currentTarget.getBoundingClientRect();
@@ -323,7 +323,7 @@ export default function SearchForm() {
             />
           </div>
 
-          {/* Botón Buscar - más grande que los filtros */}
+          {/* Botón Buscar — SVG lupa animada Pinterest-style */}
           <button
             ref={searchBtnRef}
             onClick={handleSearch}
@@ -337,11 +337,37 @@ export default function SearchForm() {
                 style={{ left: ripple.x - 10, top: ripple.y - 10 }}
               />
             ))}
-            <img
-              src="/busqueda-blanco.gif"
-              alt="Buscar"
-              className={`w-5 h-5 ${isSearching ? 'animate-search-spin' : ''}`}
-            />
+
+            {/* SVG magnifying glass: lente + mango */}
+            <svg
+              width="22"
+              height="22"
+              viewBox="0 0 24 24"
+              fill="none"
+              className="shrink-0"
+            >
+              {/* Lens circle → becomes loading spinner */}
+              <circle
+                cx="10"
+                cy="10"
+                r="7"
+                stroke="white"
+                strokeWidth="2"
+                className={`search-lens ${isSearching ? 'spin' : ''}`}
+              />
+              {/* Handle → hides on search */}
+              <line
+                x1="14.5"
+                y1="14.5"
+                x2="20"
+                y2="20"
+                stroke="white"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                className={`search-handle ${isSearching ? 'hide' : ''}`}
+              />
+            </svg>
+
             <span className="whitespace-nowrap">Buscar</span>
           </button>
         </div>
