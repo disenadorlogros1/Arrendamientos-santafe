@@ -61,7 +61,7 @@ function CustomSelect({
 
       {/* Dropdown – mismo estilo que el Header: bg-white, rounded-2xl, shadow, hover rojo */}
       {open && (
-        <div className="absolute top-full left-0 right-0 pt-1 z-50">
+        <div className="absolute top-full left-0 pt-1 z-50 w-[220px]">
           <div className="bg-white rounded-2xl py-1 shadow-xl border border-gray-100 max-h-[220px] overflow-y-auto">
             {options.map((opt) => (
               <button
