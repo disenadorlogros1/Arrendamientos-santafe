@@ -44,7 +44,7 @@ export default function Home() {
     <div className="min-h-screen flex flex-col">
       <Header currentPage={currentPage} onNavigate={handleNavigate} />
 
-      <main className="flex-1 relative" style={{ zIndex: 1 }}>
+      <main className="flex-1 relative">
         {currentPage === 'home' && <HomePage onNavigate={handleNavigate} />}
         {currentPage === 'propiedades' && <PropiedadesPage />}
         {currentPage === 'consignacion' && <ConsignacionPage />}

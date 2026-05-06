@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { createPortal } from 'react-dom';
 import { Menu, X } from 'lucide-react';
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from '@/components/ui/sheet';
 
@@ -56,16 +55,13 @@ function WhatsAppButton() {
   );
 }
 
-/* NavDropdown con dropdown via Portal — escapa de TODOS los contextos de apilamiento */
+/* NavDropdown — abre con click Y hover */
 function NavDropdown({ item, onNavigate }: { item: NavItem; onNavigate: (page: PageType) => void }) {
   const [open, setOpen] = useState(false);
-  const [mounted, setMounted] = useState(false);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [pos, setPos] = useState({ top: 0, left: 0 });
-
-  useEffect(() => { setMounted(true); }, []);
 
   const updatePos = useCallback(() => {
     if (triggerRef.current) {
@@ -74,15 +70,24 @@ function NavDropdown({ item, onNavigate }: { item: NavItem; onNavigate: (page: P
     }
   }, []);
 
-  const handleMouseEnter = useCallback(() => {
+  const doOpen = useCallback(() => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
     updatePos();
     setOpen(true);
   }, [updatePos]);
 
-  const handleMouseLeave = useCallback(() => {
+  const doClose = useCallback(() => {
     timeoutRef.current = setTimeout(() => setOpen(false), 300);
   }, []);
+
+  const handleClick = useCallback(() => {
+    if (item.children) {
+      if (open) { setOpen(false); } else { doOpen(); }
+    } else if (item.page) {
+      onNavigate(item.page);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }, [item, open, doOpen, onNavigate]);
 
   const handleSubClick = useCallback((sub: SubItem) => {
     if (sub.page) { onNavigate(sub.page); window.scrollTo({ top: 0, behavior: 'smooth' }); }
@@ -102,47 +107,45 @@ function NavDropdown({ item, onNavigate }: { item: NavItem; onNavigate: (page: P
     return () => document.removeEventListener('mousedown', outside);
   }, [open]);
 
-  const dropdownContent = item.children && open ? (
-    <div
-      ref={dropdownRef}
-      onMouseEnter={() => { if (timeoutRef.current) clearTimeout(timeoutRef.current); }}
-      onMouseLeave={handleMouseLeave}
-      className="bg-white rounded-2xl pt-2 pb-1 min-w-[210px] shadow-xl border border-gray-100"
-      style={{
-        position: 'fixed',
-        top: `${pos.top}px`,
-        left: `${pos.left}px`,
-        transform: 'translateX(-50%)',
-        zIndex: 99999,
-      }}
-    >
-      {item.children.map((sub) => (
-        <button
-          key={sub.label}
-          onClick={() => handleSubClick(sub)}
-          className="w-full text-left px-5 py-2 text-base text-brand-dark/70 hover:text-white hover:bg-brand-red transition-all duration-200 first:rounded-t-2xl last:rounded-b-2xl"
-        >
-          {sub.label}
-        </button>
-      ))}
-    </div>
-  ) : null;
-
   return (
     <>
       <button
         ref={triggerRef}
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
-        onClick={() => { if (item.page && !item.children) { onNavigate(item.page); window.scrollTo({ top: 0, behavior: 'smooth' }); } }}
+        onMouseEnter={doOpen}
+        onMouseLeave={doClose}
+        onClick={handleClick}
         className="px-5 py-2 text-sm font-medium text-white rounded-full transition-all duration-300 ease-out hover:-translate-y-1 hover:scale-110 hover:bg-brand-red hover:text-white hover:shadow-[0_0_24px_rgba(207,10,44,0.7),0_0_48px_rgba(207,10,44,0.3)]"
         style={{ textShadow: '0 1px 3px rgba(0,0,0,0.4)' }}
       >
         {item.label}
       </button>
 
-      {/* Dropdown portalizado al body — escapa del contexto z-50 del header */}
-      {mounted && dropdownContent && createPortal(dropdownContent, document.body)}
+      {/* Dropdown — position:fixed directamente, sin portal */}
+      {item.children && open && (
+        <div
+          ref={dropdownRef}
+          onMouseEnter={() => { if (timeoutRef.current) clearTimeout(timeoutRef.current); }}
+          onMouseLeave={doClose}
+          className="bg-white rounded-2xl pt-2 pb-1 min-w-[210px] shadow-xl border border-gray-100"
+          style={{
+            position: 'fixed',
+            top: `${pos.top}px`,
+            left: `${pos.left}px`,
+            transform: 'translateX(-50%)',
+            zIndex: 99999,
+          }}
+        >
+          {item.children.map((sub) => (
+            <button
+              key={sub.label}
+              onClick={() => handleSubClick(sub)}
+              className="w-full text-left px-5 py-2 text-base text-brand-dark/70 hover:text-white hover:bg-brand-red transition-all duration-200 first:rounded-t-2xl last:rounded-b-2xl"
+            >
+              {sub.label}
+            </button>
+          ))}
+        </div>
+      )}
     </>
   );
 }
