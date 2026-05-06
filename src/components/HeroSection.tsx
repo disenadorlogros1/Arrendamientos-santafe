@@ -2,7 +2,7 @@
 
 export default function HeroSection() {
   return (
-    <section className="relative w-full h-[70vh] flex items-center overflow-hidden">
+    <section className="relative w-full h-[70vh] flex items-center justify-start overflow-hidden">
       {/* Background Video */}
       <video
         autoPlay
@@ -20,8 +20,8 @@ export default function HeroSection() {
 
       {/* Content - centrado vertical, alineado a la izquierda */}
       <div
-        className="relative w-full text-left px-8 sm:px-12 md:px-16 lg:px-20 max-w-5xl mx-auto"
-        style={{ zIndex: 10 }}
+        className="relative w-full text-left pl-8 sm:pl-12 md:pl-16 lg:pl-20"
+        style={{ zIndex: 10, maxWidth: '48rem' }}
       >
         <h1
           className="text-3xl sm:text-4xl md:text-5xl lg:text-[48px] text-white tracking-tight"
