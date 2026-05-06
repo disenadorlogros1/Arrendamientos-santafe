@@ -1,7 +1,6 @@
 'use client';
 
-import { useState, useRef, useEffect, useCallback } from 'react';
-import { createPortal } from 'react-dom';
+import { useState, useEffect } from 'react';
 import { Menu, X } from 'lucide-react';
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from '@/components/ui/sheet';
 
@@ -55,133 +54,6 @@ function WhatsAppButton() {
   );
 }
 
-/* NavDropdown — dropdown portalizado al body para escapar de todos los stacking contexts */
-function NavDropdown({ item, onNavigate }: { item: NavItem; onNavigate: (page: PageType) => void }) {
-  const [open, setOpen] = useState(false);
-  const [mounted, setMounted] = useState(false);
-  const [coords, setCoords] = useState({ top: 0, left: 0 });
-  const triggerRef = useRef<HTMLButtonElement>(null);
-  const dropdownRef = useRef<HTMLDivElement>(null);
-  const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  useEffect(() => { setMounted(true); }, []);
-
-  const getCoords = useCallback(() => {
-    if (!triggerRef.current) return;
-    const rect = triggerRef.current.getBoundingClientRect();
-    setCoords({ top: rect.bottom + 2, left: rect.left + rect.width / 2 });
-  }, []);
-
-  const clearCloseTimer = useCallback(() => {
-    if (closeTimer.current) { clearTimeout(closeTimer.current); closeTimer.current = null; }
-  }, []);
-
-  const scheduleClose = useCallback(() => {
-    clearCloseTimer();
-    closeTimer.current = setTimeout(() => setOpen(false), 300);
-  }, [clearCloseTimer]);
-
-  // Click en el trigger
-  const onTriggerClick = useCallback((e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (item.children) {
-      if (open) {
-        setOpen(false);
-      } else {
-        getCoords();
-        setOpen(true);
-      }
-    } else if (item.page) {
-      onNavigate(item.page);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-  }, [item, open, getCoords, onNavigate]);
-
-  // Click en sub-item
-  const onSubClick = useCallback((sub: SubItem) => {
-    if (sub.page) {
-      onNavigate(sub.page);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-    setOpen(false);
-  }, [onNavigate]);
-
-  // Hover: abrir al entrar, cerrar al salir (con delay)
-  const onTriggerEnter = useCallback(() => {
-    clearCloseTimer();
-    if (!open) { getCoords(); setOpen(true); }
-  }, [open, getCoords, clearCloseTimer]);
-
-  const onTriggerLeave = useCallback(() => { scheduleClose(); }, [scheduleClose]);
-
-  // Click fuera para cerrar
-  useEffect(() => {
-    if (!open || !mounted) return;
-    const handler = (e: MouseEvent) => {
-      const target = e.target as Node;
-      if (
-        dropdownRef.current && !dropdownRef.current.contains(target) &&
-        triggerRef.current && !triggerRef.current.contains(target)
-      ) {
-        setOpen(false);
-      }
-    };
-    // Usar setTimeout para que el click del trigger no cierre inmediatamente
-    const id = setTimeout(() => document.addEventListener('mousedown', handler), 0);
-    return () => { clearTimeout(id); document.removeEventListener('mousedown', handler); };
-  }, [open, mounted]);
-
-  // Cleanup timer
-  useEffect(() => () => { if (closeTimer.current) clearTimeout(closeTimer.current); }, []);
-
-  // Dropdown portalizado al body
-  const dropdown = mounted && open && item.children ? (
-    <div
-      ref={dropdownRef}
-      onMouseEnter={clearCloseTimer}
-      onMouseLeave={scheduleClose}
-      style={{
-        position: 'fixed',
-        top: `${coords.top}px`,
-        left: `${coords.left}px`,
-        transform: 'translateX(-50%)',
-        zIndex: 2147483647,
-      }}
-    >
-      <div className="bg-white rounded-2xl pt-2 pb-1 min-w-[210px] shadow-2xl border border-gray-100"
-        style={{ pointerEvents: 'auto' }}>
-        {item.children.map((sub) => (
-          <button
-            key={sub.label}
-            type="button"
-            onClick={() => onSubClick(sub)}
-            className="block w-full text-left px-5 py-2.5 text-[15px] text-gray-700 hover:text-white hover:bg-brand-red transition-colors duration-150 first:rounded-t-2xl last:rounded-b-2xl"
-          >
-            {sub.label}
-          </button>
-        ))}
-      </div>
-    </div>
-  ) : null;
-
-  return (
-    <>
-      <button
-        ref={triggerRef}
-        type="button"
-        onClick={onTriggerClick}
-        onMouseEnter={onTriggerEnter}
-        onMouseLeave={onTriggerLeave}
-        className="px-4 py-2 text-sm font-medium text-white rounded-full transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-brand-red hover:text-white hover:shadow-[0_0_20px_rgba(207,10,44,0.5)]"
-        style={{ textShadow: '0 1px 3px rgba(0,0,0,0.4)' }}
-      >
-        {item.label}
-      </button>
-      {dropdown && createPortal(dropdown, document.body)}
-    </>
-  );
-}
-
 export default function Header({ currentPage, onNavigate }: HeaderProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [expandedMobile, setExpandedMobile] = useState<string | null>(null);
@@ -194,18 +66,57 @@ export default function Header({ currentPage, onNavigate }: HeaderProps) {
   };
 
   return (
-    <header className="absolute top-0 left-0 right-0 z-50 pt-4 px-4 sm:px-6 lg:px-8">
+    <header className="absolute top-0 left-0 right-0 pt-4 px-4 sm:px-6 lg:px-8"
+      style={{ zIndex: 50 }}>
       <div className="mx-auto max-w-6xl flex items-center justify-between gap-4">
         {/* Logo */}
         <button onClick={() => handleNav('home')} className="shrink-0">
           <img src="/logo-blanco.png" alt="Santa Fé Arrendamientos" className="h-10 md:h-11 w-auto object-contain drop-shadow-lg" />
         </button>
 
-        {/* Nav capsula — desktop */}
-        <nav className="hidden lg:flex items-center gap-0.5 bg-white/50 backdrop-blur-md rounded-full px-2 h-[42px] border border-white/30 shadow-lg">
-          {navItems.map((item) => (
-            <NavDropdown key={item.label} item={item} onNavigate={handleNav} />
-          ))}
+        {/* Nav capsula — desktop — SIN backdrop-blur para evitar stacking context */}
+        <nav className="hidden lg:flex items-center gap-0.5 bg-black/30 rounded-full px-2 h-[42px] border border-white/20 shadow-lg"
+          style={{ overflow: 'visible' }}>
+          {navItems.map((item) =>
+            item.children ? (
+              /* Item con dropdown — CSS puro, sin JS */
+              <div key={item.label} className="relative group">
+                <button
+                  className="px-4 py-2 text-sm font-medium text-white rounded-full transition-all duration-300 ease-out group-hover:bg-brand-red"
+                  style={{ textShadow: '0 1px 3px rgba(0,0,0,0.4)' }}
+                >
+                  {item.label}
+                </button>
+                {/* Dropdown CSS — se muestra con group-hover */}
+                <div className="absolute top-full left-1/2 pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200"
+                  style={{ transform: 'translateX(-50%)', zIndex: 60 }}>
+                  <div className="bg-white rounded-2xl pt-2 pb-1 min-w-[210px] shadow-2xl border border-gray-100">
+                    {item.children.map((sub) => (
+                      <button
+                        key={sub.label}
+                        onClick={() => {
+                          if (sub.page) handleNav(sub.page);
+                        }}
+                        className="block w-full text-left px-5 py-2.5 text-[15px] text-gray-700 hover:text-white hover:bg-brand-red transition-colors duration-150 first:rounded-t-2xl last:rounded-b-2xl"
+                      >
+                        {sub.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            ) : (
+              /* Item sin dropdown — click navega */
+              <button
+                key={item.label}
+                onClick={() => handleNav(item.page || 'home')}
+                className="px-4 py-2 text-sm font-medium text-white rounded-full transition-all duration-300 ease-out hover:bg-brand-red"
+                style={{ textShadow: '0 1px 3px rgba(0,0,0,0.4)' }}
+              >
+                {item.label}
+              </button>
+            )
+          )}
         </nav>
 
         {/* WhatsApp desktop */}
