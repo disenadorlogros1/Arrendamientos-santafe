@@ -151,13 +151,13 @@ function NavDropdown({ item, onNavigate }: { item: NavItem; onNavigate: (page: P
       </button>
 
       {item.children && open && (
-        <div className="absolute top-full left-1/2 -translate-x-1/2 pt-3 z-50">
-          <div className="bg-white rounded-2xl py-2 min-w-[210px] shadow-xl border border-gray-100">
+        <div className="absolute top-full left-1/2 -translate-x-1/2 pt-2 z-50">
+          <div className="bg-white rounded-2xl py-1 min-w-[210px] shadow-xl border border-gray-100">
             {item.children.map((sub) => (
               <button
                 key={sub.label}
                 onClick={() => handleSubClick(sub)}
-                className="w-full text-left px-5 py-2.5 text-sm text-brand-dark/70 hover:text-white hover:bg-brand-red transition-all duration-200 first:rounded-t-2xl last:rounded-b-2xl"
+                className="w-full text-left px-5 py-1.5 text-sm text-brand-dark/70 hover:text-white hover:bg-brand-red transition-all duration-200 first:rounded-t-2xl last:rounded-b-2xl"
               >
                 {sub.label}
               </button>
@@ -242,12 +242,12 @@ export default function Header({ currentPage, onNavigate }: HeaderProps) {
                         {item.label}
                       </button>
                       {item.children && expandedMobile === item.label && (
-                        <div className="pl-6 pb-2 space-y-0.5">
+                        <div className="pl-6 pb-1 space-y-0">
                           {item.children.map((sub) => (
                             <button
                               key={sub.label}
                               onClick={() => { if (sub.page) handleNav(sub.page); }}
-                              className="w-full text-left px-4 py-2.5 rounded-lg text-sm text-white/50 hover:text-white hover:bg-white/5 transition-all duration-200"
+                              className="w-full text-left px-4 py-1.5 rounded-lg text-sm text-white/50 hover:text-white hover:bg-white/5 transition-all duration-200"
                             >
                               {sub.label}
                             </button>

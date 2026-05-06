@@ -169,3 +169,10 @@
     rgba(35, 34, 34, 0.70) 100%
   );
 }
+
+/* Compact select dropdowns matching header dropdown style */
+select option {
+  padding: 4px 12px;
+  font-size: 14px;
+  line-height: 1.3;
+}
