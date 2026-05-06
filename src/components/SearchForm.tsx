@@ -69,7 +69,7 @@ function CustomSelect({
       </button>
 
       {open && (
-        <div className="absolute top-full left-0 pt-1 z-50" style={{ width: `${dropdownWidth || 220}px` }}>
+        <div className="absolute top-full left-0 pt-1" style={{ width: `${dropdownWidth || 220}px`, zIndex: 9999 }}>
           <div className="bg-white rounded-2xl py-1 shadow-xl border border-gray-100 max-h-[220px] overflow-y-auto">
             {options.map((opt) => (
               <button
@@ -133,7 +133,7 @@ function PriceRangeSlider({
       </button>
 
       {open && (
-        <div className="absolute top-full left-0 pt-1 z-50 w-[280px]">
+        <div className="absolute top-full left-0 pt-1 w-[280px]" style={{ zIndex: 9999 }}>
           <div className="bg-white rounded-2xl p-4 shadow-xl border border-gray-100">
             {/* Rango seleccionado */}
             <p className="text-xs text-gray-500 mb-3 font-medium">
@@ -212,7 +212,7 @@ export default function SearchForm() {
 
   return (
     <div
-      className="relative mx-auto px-4 sm:px-6 lg:px-8"
+      className="mx-auto px-4 sm:px-6 lg:px-8"
       style={{
         maxWidth: '72rem',
         marginTop: '-120px',
@@ -220,7 +220,7 @@ export default function SearchForm() {
         position: 'relative',
       }}
     >
-      <div className="bg-white shadow-2xl" style={{ position: 'relative', zIndex: 31 }}>
+      <div className="bg-white shadow-2xl" style={{ overflow: 'visible' }}>
         {/* Tabs - fondo oscuro, bordes rectos */}
         <div className="flex bg-brand-dark w-full">
           <button
@@ -248,7 +248,7 @@ export default function SearchForm() {
         </div>
 
         {/* Search Fields - orden: Código, Ubicación, Precio, Tipo, Habitaciones + Buscar */}
-        <div className="flex flex-col sm:flex-row items-stretch">
+        <div className="flex flex-col sm:flex-row items-stretch" style={{ overflow: 'visible' }}>
           {/* Campo: Código */}
           <div className="group flex-1 flex items-center gap-3 px-4 py-3 border-b sm:border-b-0 sm:border-r border-gray-200">
             <div className="w-9 h-9 rounded shrink-0 flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:shadow-[0_0_14px_rgba(207,10,44,0.5)]" style={{ backgroundColor: '#f2f2f2' }}>
