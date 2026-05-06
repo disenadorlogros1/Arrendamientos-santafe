@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
-import { Search, Hash, ChevronDown } from 'lucide-react';
+import { ChevronDown } from 'lucide-react';
 
 const SECTORES = [
   'Envigado', 'Poblado', 'Laureles', 'Belen', 'Estadio', 'Itagui', 'Sabaneta',
@@ -199,7 +199,7 @@ export default function SearchForm() {
       className="relative z-20 mx-auto px-4 sm:px-6 lg:px-8"
       style={{
         maxWidth: '72rem',
-        marginTop: '-120px',
+        marginTop: '-180px',
       }}
     >
       <div className="bg-white shadow-2xl">
@@ -234,7 +234,7 @@ export default function SearchForm() {
           {/* Campo: Código */}
           <div className="flex-1 flex items-center gap-3 px-4 py-3 border-b sm:border-b-0 sm:border-r border-gray-200">
             <div className="w-9 h-9 rounded shrink-0 flex items-center justify-center" style={{ backgroundColor: '#f2f2f2' }}>
-              <Hash className="w-5 h-5 text-brand-red" />
+              <img src="/numero-codigo.gif" alt="Código" className="w-5 h-5" />
             </div>
             <div className="min-w-0 flex-1">
               <p className="text-[11px] text-gray-400 leading-tight">Código</p>
@@ -292,7 +292,7 @@ export default function SearchForm() {
           {/* Campo: Habitaciones */}
           <div className="flex-1 flex items-center gap-3 px-4 py-3 border-b sm:border-b-0 sm:border-r border-gray-200">
             <div className="w-9 h-9 rounded shrink-0 flex items-center justify-center" style={{ backgroundColor: '#f2f2f2' }}>
-              <img src="/iconos-santafe.gif" alt="Habitaciones" className="w-5 h-5" />
+              <img src="/habitaciones-copia.gif" alt="Habitaciones" className="w-5 h-5" />
             </div>
             <CustomSelect
               label="Habitaciones"
@@ -304,8 +304,8 @@ export default function SearchForm() {
           </div>
 
           {/* Botón Buscar - más grande que los filtros */}
-          <button className="bg-brand-red hover:bg-brand-red-hover text-white px-8 py-3 sm:py-[18px] sm:px-10 text-sm font-semibold flex items-center justify-center gap-2 transition-colors duration-200 shrink-0">
-            <Search className="h-5 w-5" />
+          <button className="bg-brand-red hover:bg-brand-red-hover text-white px-8 py-3 sm:py-[18px] sm:px-10 text-[18px] font-semibold flex items-center justify-center gap-2 transition-colors duration-200 shrink-0">
+            <img src="/busqueda-blanco.gif" alt="Buscar" className="w-5 h-5" />
             <span className="whitespace-nowrap">Buscar</span>
           </button>
         </div>
