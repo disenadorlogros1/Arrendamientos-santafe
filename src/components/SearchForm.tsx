@@ -19,6 +19,19 @@ const TIPOS_INMUEBLE = [
 
 const HABITACIONES = ['1', '2', '3', '4', '5+'];
 
+const RANGOS_PRECIO = [
+  '$0 - $500.000',
+  '$500.000 - $1.000.000',
+  '$1.000.000 - $1.500.000',
+  '$1.500.000 - $2.000.000',
+  '$2.000.000 - $2.500.000',
+  '$2.500.000 - $3.000.000',
+  '$3.000.000 - $4.000.000',
+  '$4.000.000 - $5.000.000',
+  '$5.000.000 - $6.000.000',
+  '$6.000.000 - $7.000.000',
+];
+
 /* ── CustomSelect: mismo diseño de dropdown que el Header ── */
 function CustomSelect({
   label,
@@ -26,12 +39,14 @@ function CustomSelect({
   onChange,
   options,
   placeholder,
+  dropdownWidth,
 }: {
   label: string;
   value: string;
   onChange: (val: string) => void;
   options: string[];
   placeholder?: string;
+  dropdownWidth?: number;
 }) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -61,7 +76,7 @@ function CustomSelect({
 
       {/* Dropdown – mismo estilo que el Header: bg-white, rounded-2xl, shadow, hover rojo */}
       {open && (
-        <div className="absolute top-full left-0 pt-1 z-50 w-[220px]">
+        <div className="absolute top-full left-0 pt-1 z-50" style={{ width: `${dropdownWidth || 220}px` }}>
           <div className="bg-white rounded-2xl py-1 shadow-xl border border-gray-100 max-h-[220px] overflow-y-auto">
             {options.map((opt) => (
               <button
@@ -159,21 +174,19 @@ export default function SearchForm() {
             />
           </div>
 
-          {/* Campo: Precio */}
+          {/* Campo: Precio - Rango */}
           <div className="flex-1 flex items-center gap-3 px-4 py-3 border-b sm:border-b-0 sm:border-r border-gray-200">
             <div className="w-9 h-9 rounded shrink-0 flex items-center justify-center" style={{ backgroundColor: '#f2f2f2' }}>
               <img src="/precio.gif" alt="Precio" className="w-5 h-5" />
             </div>
-            <div className="min-w-0 flex-1">
-              <p className="text-[11px] text-gray-400 leading-tight">Precio</p>
-              <input
-                type="text"
-                value={precioHasta}
-                onChange={(e) => setPrecioHasta(e.target.value)}
-                placeholder="Hasta $5.000.000"
-                className="w-full text-sm text-brand-dark font-semibold bg-transparent border-none outline-none placeholder:text-gray-300 placeholder:font-normal"
-              />
-            </div>
+            <CustomSelect
+              label="Precio"
+              value={precioHasta}
+              onChange={setPrecioHasta}
+              options={RANGOS_PRECIO}
+              placeholder="Hasta $7.000.000"
+              dropdownWidth={260}
+            />
           </div>
 
           {/* Campo: Tipo de propiedad */}
