@@ -30,7 +30,7 @@ export default function PropertyGrid({ properties }: PropertyGridProps) {
       initial="hidden"
       whileInView="show"
       viewport={{ once: true, margin: '-50px' }}
-      className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5"
+      className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3"
     >
       {properties.map((property) => (
         <motion.div key={property.id} variants={item}>

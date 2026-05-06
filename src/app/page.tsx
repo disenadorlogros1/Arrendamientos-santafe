@@ -7,6 +7,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import HeroSection from '@/components/HeroSection';
 import SearchForm from '@/components/SearchForm';
+import UserLocation from '@/components/UserLocation';
 import FeaturedSection from '@/components/FeaturedSection';
 import PropertyGrid from '@/components/PropertyGrid';
 import WhatsAppFloat from '@/components/WhatsAppFloat';
@@ -23,10 +24,11 @@ function HomePage({ onNavigate }: { onNavigate: (page: PageType) => void }) {
     <>
       <HeroSection />
       <SearchForm />
-      <div className="bg-brand-light py-0">
+      <UserLocation />
+      <div className="bg-brand-light pt-10 pb-4">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <FeaturedSection onNavigate={onNavigate} />
-          <div className="pb-6 md:pb-8">
+          <div className="pb-4 md:pb-6">
             <PropertyGrid properties={featured} />
           </div>
         </div>

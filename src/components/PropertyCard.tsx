@@ -11,7 +11,7 @@ export default function PropertyCard({ property }: PropertyCardProps) {
   return (
     <div className="group bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 border border-gray-100">
       {/* Image */}
-      <div className="relative aspect-[3/2] overflow-hidden">
+      <div className="relative aspect-[16/10] overflow-hidden">
         <img
           src={property.image}
           alt={property.title}
@@ -28,17 +28,38 @@ export default function PropertyCard({ property }: PropertyCardProps) {
       </div>
 
       {/* Content */}
-      <div className="p-4 space-y-2">
+      <div className="p-3 space-y-1.5">
         {/* Price */}
-        <p className="text-xl font-bold text-gray-900">{property.price}</p>
+        <p
+          className="text-lg font-bold text-gray-900"
+          style={{ fontFamily: "'Avenir LT Pro 85 Heavy', 'Avenir LT Pro', 'Avenir', 'Outfit', system-ui, sans-serif", fontWeight: 800 }}
+        >
+          {property.price}
+        </p>
 
         {/* Location + Type */}
-        <p className="text-sm text-brand-gray">
+        <p
+          className="text-sm"
+          style={{
+            color: '#808080',
+            fontFamily: "'Avenir LT Pro 35 Light', 'Avenir LT Pro', 'Avenir', 'Outfit', system-ui, sans-serif",
+            fontWeight: 300,
+            lineHeight: '1.45',
+          }}
+        >
           {property.location} · {property.type}
         </p>
 
         {/* Details row */}
-        <div className="flex items-center gap-3 text-xs text-brand-gray">
+        <div
+          className="flex items-center gap-3 text-xs"
+          style={{
+            color: '#808080',
+            fontFamily: "'Avenir LT Pro 35 Light', 'Avenir LT Pro', 'Avenir', 'Outfit', system-ui, sans-serif",
+            fontWeight: 300,
+            lineHeight: '1.45',
+          }}
+        >
           <span className="flex items-center gap-1">
             <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
@@ -62,7 +83,17 @@ export default function PropertyCard({ property }: PropertyCardProps) {
         </div>
 
         {/* Reference */}
-        <p className="text-xs text-gray-400 pt-1">{property.reference}</p>
+        <p
+          className="text-xs pt-1"
+          style={{
+            color: '#b0b0b0',
+            fontFamily: "'Avenir LT Pro 35 Light', 'Avenir LT Pro', 'Avenir', 'Outfit', system-ui, sans-serif",
+            fontWeight: 300,
+            lineHeight: '1.45',
+          }}
+        >
+          {property.reference}
+        </p>
       </div>
     </div>
   );
