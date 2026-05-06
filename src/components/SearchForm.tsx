@@ -190,6 +190,26 @@ export default function SearchForm() {
   const [habitaciones, setHabitaciones] = useState('');
   const [precioMin, setPrecioMin] = useState(0);
   const [precioMax, setPrecioMax] = useState(MAX_PRECIO);
+  const [isSearching, setIsSearching] = useState(false);
+  const [ripples, setRipples] = useState<{ id: number; x: number; y: number }[]>([]);
+  const rippleCounter = useRef(0);
+  const searchBtnRef = useRef<HTMLButtonElement>(null);
+
+  const handleSearch = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
+    // Trigger spin animation
+    setIsSearching(true);
+    setTimeout(() => setIsSearching(false), 600);
+
+    // Trigger ripple effect at click position
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const id = ++rippleCounter.current;
+    setRipples((prev) => [...prev, { id, x, y }]);
+    setTimeout(() => {
+      setRipples((prev) => prev.filter((r) => r.id !== id));
+    }, 600);
+  }, []);
 
   return (
     <motion.div
@@ -304,8 +324,24 @@ export default function SearchForm() {
           </div>
 
           {/* Botón Buscar - más grande que los filtros */}
-          <button className="bg-brand-red hover:bg-brand-red-hover text-white px-8 py-3 sm:py-[18px] sm:px-10 text-[18px] font-semibold flex items-center justify-center gap-2 transition-colors duration-200 shrink-0">
-            <img src="/busqueda-blanco.gif" alt="Buscar" className="w-5 h-5" />
+          <button
+            ref={searchBtnRef}
+            onClick={handleSearch}
+            className="relative overflow-hidden bg-brand-red hover:bg-brand-red-hover text-white px-8 py-3 sm:py-[18px] sm:px-10 text-[18px] font-semibold flex items-center justify-center gap-2 transition-colors duration-200 shrink-0 active:scale-95"
+          >
+            {/* Ripple effects */}
+            {ripples.map((ripple) => (
+              <span
+                key={ripple.id}
+                className="search-ripple-effect"
+                style={{ left: ripple.x - 10, top: ripple.y - 10 }}
+              />
+            ))}
+            <img
+              src="/busqueda-blanco.gif"
+              alt="Buscar"
+              className={`w-5 h-5 ${isSearching ? 'animate-search-spin' : ''}`}
+            />
             <span className="whitespace-nowrap">Buscar</span>
           </button>
         </div>
