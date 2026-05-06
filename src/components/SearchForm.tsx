@@ -183,7 +183,7 @@ export default function SearchForm() {
   useEffect(() => () => cancelAnimationFrame(animRef.current), []);
 
   return (
-    <div style={{ maxWidth: '72rem', margin: '-120px auto 0', padding: '0 1rem' }}>
+    <div style={{ maxWidth: '72rem', margin: '-120px auto 0', padding: '0 1rem', position: 'relative' }}>
       <div className="bg-white shadow-2xl">
         {/* Tabs */}
         <div className="flex bg-brand-dark w-full">

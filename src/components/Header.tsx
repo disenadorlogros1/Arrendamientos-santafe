@@ -34,7 +34,6 @@ const navItems: NavItem[] = [
     { label: 'Quiénes somos', page: 'nosotros' },
     { label: '60 años', page: 'nosotros' },
     { label: 'Blog' },
-    { label: 'Contacto', page: 'nosotros' },
   ]},
 ];
 
