@@ -8,7 +8,6 @@ import HeroSection from '@/components/HeroSection';
 import SearchForm from '@/components/SearchForm';
 import UserLocation from '@/components/UserLocation';
 import FeaturedSection from '@/components/FeaturedSection';
-import WhatsAppFloat from '@/components/WhatsAppFloat';
 import PropiedadesPage from '@/components/PropiedadesPage';
 import ConsignacionPage from '@/components/ConsignacionPage';
 import HipotecasPage from '@/components/HipotecasPage';
@@ -45,7 +44,7 @@ export default function Home() {
     <div className="min-h-screen flex flex-col">
       <Header currentPage={currentPage} onNavigate={handleNavigate} />
 
-      <main className="flex-1">
+      <main className="flex-1 relative" style={{ zIndex: 1 }}>
         {currentPage === 'home' && <HomePage onNavigate={handleNavigate} />}
         {currentPage === 'propiedades' && <PropiedadesPage />}
         {currentPage === 'consignacion' && <ConsignacionPage />}
@@ -55,7 +54,6 @@ export default function Home() {
       </main>
 
       <Footer />
-      <WhatsAppFloat />
     </div>
   );
 }
