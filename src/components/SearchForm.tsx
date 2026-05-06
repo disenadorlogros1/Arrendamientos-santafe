@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 import { ChevronDown } from 'lucide-react';
 
 const SECTORES = [
@@ -26,7 +27,7 @@ function formatPrice(val: number) {
   return `$${val.toLocaleString('es-CO')}`;
 }
 
-/* ── CustomSelect con dropdown position:fixed ── */
+/* ── CustomSelect — dropdown portalizado al body ── */
 function CustomSelect({
   label, value, onChange, options, placeholder, dropdownWidth,
 }: {
@@ -34,9 +35,12 @@ function CustomSelect({
   options: string[]; placeholder?: string; dropdownWidth?: number;
 }) {
   const [open, setOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [pos, setPos] = useState({ top: 0, left: 0 });
+
+  useEffect(() => { setMounted(true); }, []);
 
   const updatePos = useCallback(() => {
     if (triggerRef.current) {
@@ -45,23 +49,51 @@ function CustomSelect({
     }
   }, []);
 
-  const toggle = useCallback(() => {
+  const toggle = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation();
     if (!open) updatePos();
     setOpen(prev => !prev);
   }, [open, updatePos]);
 
+  const select = useCallback((val: string) => {
+    onChange(val);
+    setOpen(false);
+  }, [onChange]);
+
+  // Cerrar al click fuera
   useEffect(() => {
-    if (!open) return;
-    const outside = (e: MouseEvent) => {
+    if (!open || !mounted) return;
+    const handler = (e: MouseEvent) => {
       const t = e.target as Node;
       if (dropdownRef.current && !dropdownRef.current.contains(t) &&
           triggerRef.current && !triggerRef.current.contains(t)) setOpen(false);
     };
-    const scroll = () => setOpen(false);
-    document.addEventListener('mousedown', outside);
-    window.addEventListener('scroll', scroll, true);
-    return () => { document.removeEventListener('mousedown', outside); window.removeEventListener('scroll', scroll, true); };
-  }, [open]);
+    const id = setTimeout(() => document.addEventListener('mousedown', handler), 0);
+    return () => { clearTimeout(id); document.removeEventListener('mousedown', handler); };
+  }, [open, mounted]);
+
+  const dropdown = mounted && open ? (
+    <div
+      ref={dropdownRef}
+      style={{
+        position: 'fixed',
+        top: `${pos.top}px`,
+        left: `${pos.left}px`,
+        width: `${dropdownWidth || 220}px`,
+        zIndex: 2147483647,
+      }}
+    >
+      <div className="bg-white rounded-2xl py-1 shadow-2xl border border-gray-100 max-h-[240px] overflow-y-auto">
+        {options.map((opt) => (
+          <button key={opt} type="button" onClick={(e) => { e.stopPropagation(); select(opt); }}
+            className={`block w-full text-left px-4 py-2.5 text-[15px] transition-colors duration-150 first:rounded-t-2xl last:rounded-b-2xl ${
+              value === opt ? 'bg-brand-red text-white font-semibold' : 'text-gray-700 hover:text-white hover:bg-brand-red'}`}>
+            {opt}
+          </button>
+        ))}
+      </div>
+    </div>
+  ) : null;
 
   return (
     <div className="min-w-0 flex-1">
@@ -75,30 +107,22 @@ function CustomSelect({
         <span className={value ? '' : 'text-gray-300 font-normal'}>{value || placeholder || 'Seleccionar'}</span>
         <ChevronDown className={`w-3.5 h-3.5 text-gray-400 shrink-0 transition-transform duration-200 ${open ? 'rotate-180' : ''}`} />
       </button>
-      {open && (
-        <div ref={dropdownRef} className="bg-white rounded-2xl py-1 shadow-xl border border-gray-100 max-h-[220px] overflow-y-auto"
-          style={{ position: 'fixed', top: `${pos.top}px`, left: `${pos.left}px`, width: `${dropdownWidth || 220}px`, zIndex: 99999 }}>
-          {options.map((opt) => (
-            <button key={opt} type="button" onClick={() => { onChange(opt); setOpen(false); }}
-              className={`w-full text-left px-4 py-2 text-base transition-all duration-200 first:rounded-t-2xl last:rounded-b-2xl ${
-                value === opt ? 'bg-brand-red text-white font-semibold' : 'text-brand-dark/70 hover:text-white hover:bg-brand-red'}`}>
-              {opt}
-            </button>
-          ))}
-        </div>
-      )}
+      {dropdown && createPortal(dropdown, document.body)}
     </div>
   );
 }
 
-/* ── PriceRangeSlider con panel position:fixed ── */
+/* ── PriceRangeSlider — panel portalizado al body ── */
 function PriceRangeSlider({ minVal, maxVal, onChangeMin, onChangeMax }: {
   minVal: number; maxVal: number; onChangeMin: (v: number) => void; onChangeMax: (v: number) => void;
 }) {
   const [open, setOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
   const [pos, setPos] = useState({ top: 0, left: 0 });
+
+  useEffect(() => { setMounted(true); }, []);
 
   const updatePos = useCallback(() => {
     if (triggerRef.current) {
@@ -107,20 +131,53 @@ function PriceRangeSlider({ minVal, maxVal, onChangeMin, onChangeMax }: {
     }
   }, []);
 
-  const toggle = useCallback(() => { if (!open) updatePos(); setOpen(prev => !prev); }, [open, updatePos]);
+  const toggle = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!open) updatePos();
+    setOpen(prev => !prev);
+  }, [open, updatePos]);
 
   useEffect(() => {
-    if (!open) return;
-    const outside = (e: MouseEvent) => {
+    if (!open || !mounted) return;
+    const handler = (e: MouseEvent) => {
       const t = e.target as Node;
       if (panelRef.current && !panelRef.current.contains(t) && triggerRef.current && !triggerRef.current.contains(t)) setOpen(false);
     };
-    document.addEventListener('mousedown', outside);
-    return () => document.removeEventListener('mousedown', outside);
-  }, [open]);
+    const id = setTimeout(() => document.addEventListener('mousedown', handler), 0);
+    return () => { clearTimeout(id); document.removeEventListener('mousedown', handler); };
+  }, [open, mounted]);
 
   const minPct = ((minVal - MIN_PRECIO) / (MAX_PRECIO - MIN_PRECIO)) * 100;
   const maxPct = ((maxVal - MIN_PRECIO) / (MAX_PRECIO - MIN_PRECIO)) * 100;
+
+  const panel = mounted && open ? (
+    <div
+      ref={panelRef}
+      style={{
+        position: 'fixed',
+        top: `${pos.top}px`,
+        left: `${pos.left}px`,
+        width: '280px',
+        zIndex: 2147483647,
+      }}
+    >
+      <div className="bg-white rounded-2xl p-4 shadow-2xl border border-gray-100">
+        <p className="text-xs text-gray-500 mb-3 font-medium">
+          Rango: <span className="text-brand-red font-semibold">{formatPrice(minVal)}</span> — <span className="text-brand-red font-semibold">{formatPrice(maxVal)}</span>
+        </p>
+        <div className="relative h-2 bg-gray-200 rounded-full mb-4">
+          <div className="absolute h-full bg-brand-red rounded-full" style={{ left: `${minPct}%`, right: `${100 - maxPct}%` }} />
+          <input type="range" min={MIN_PRECIO} max={MAX_PRECIO} step={100000} value={minVal}
+            onChange={(e) => onChangeMin(Math.min(Number(e.target.value), maxVal - 100000))}
+            className="absolute top-1/2 -translate-y-1/2 w-full appearance-none bg-transparent pointer-events-none [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-brand-red [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-white [&::-webkit-slider-thumb]:shadow-md [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:relative [&::-webkit-slider-thumb]:z-20 [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-brand-red [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-white [&::-moz-range-thumb]:shadow-md [&::-moz-range-thumb]:cursor-pointer" />
+          <input type="range" min={MIN_PRECIO} max={MAX_PRECIO} step={100000} value={maxVal}
+            onChange={(e) => onChangeMax(Math.max(Number(e.target.value), minVal + 100000))}
+            className="absolute top-1/2 -translate-y-1/2 w-full appearance-none bg-transparent pointer-events-none [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-brand-red [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-white [&::-webkit-slider-thumb]:shadow-md [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:relative [&::-webkit-slider-thumb]:z-20 [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-brand-red [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-white [&::-moz-range-thumb]:shadow-md [&::-moz-range-thumb]:cursor-pointer" />
+        </div>
+        <div className="flex justify-between text-[10px] text-gray-400"><span>$0 COP</span><span>$7.000.000 COP</span></div>
+      </div>
+    </div>
+  ) : null;
 
   return (
     <div className="min-w-0 flex-1">
@@ -130,24 +187,7 @@ function PriceRangeSlider({ minVal, maxVal, onChangeMin, onChangeMax }: {
         <span className="text-xs">{formatPrice(minVal)} – {formatPrice(maxVal)}</span>
         <ChevronDown className={`w-3.5 h-3.5 text-gray-400 shrink-0 transition-transform duration-200 ${open ? 'rotate-180' : ''}`} />
       </button>
-      {open && (
-        <div ref={panelRef} className="bg-white rounded-2xl p-4 shadow-xl border border-gray-100"
-          style={{ position: 'fixed', top: `${pos.top}px`, left: `${pos.left}px`, width: '280px', zIndex: 99999 }}>
-          <p className="text-xs text-gray-500 mb-3 font-medium">
-            Rango: <span className="text-brand-red font-semibold">{formatPrice(minVal)}</span> — <span className="text-brand-red font-semibold">{formatPrice(maxVal)}</span>
-          </p>
-          <div className="relative h-2 bg-gray-200 rounded-full mb-4">
-            <div className="absolute h-full bg-brand-red rounded-full" style={{ left: `${minPct}%`, right: `${100 - maxPct}%` }} />
-            <input type="range" min={MIN_PRECIO} max={MAX_PRECIO} step={100000} value={minVal}
-              onChange={(e) => onChangeMin(Math.min(Number(e.target.value), maxVal - 100000))}
-              className="absolute top-1/2 -translate-y-1/2 w-full appearance-none bg-transparent pointer-events-none [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-brand-red [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-white [&::-webkit-slider-thumb]:shadow-md [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:relative [&::-webkit-slider-thumb]:z-20 [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-brand-red [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-white [&::-moz-range-thumb]:shadow-md [&::-moz-range-thumb]:cursor-pointer" />
-            <input type="range" min={MIN_PRECIO} max={MAX_PRECIO} step={100000} value={maxVal}
-              onChange={(e) => onChangeMax(Math.max(Number(e.target.value), minVal + 100000))}
-              className="absolute top-1/2 -translate-y-1/2 w-full appearance-none bg-transparent pointer-events-none [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-brand-red [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-white [&::-webkit-slider-thumb]:shadow-md [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:relative [&::-webkit-slider-thumb]:z-20 [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-brand-red [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-white [&::-moz-range-thumb]:shadow-md [&::-moz-range-thumb]:cursor-pointer" />
-          </div>
-          <div className="flex justify-between text-[10px] text-gray-400"><span>$0 COP</span><span>$7.000.000 COP</span></div>
-        </div>
-      )}
+      {panel && createPortal(panel, document.body)}
     </div>
   );
 }
@@ -167,13 +207,11 @@ export default function SearchForm() {
   const handleSearch = useCallback(() => {
     setIsSearching(true);
     lastTimeRef.current = performance.now();
-
     const spin = (now: number) => {
       lastTimeRef.current = now;
       animRef.current = requestAnimationFrame(spin);
     };
     animRef.current = requestAnimationFrame(spin);
-
     setTimeout(() => {
       cancelAnimationFrame(animRef.current);
       setIsSearching(false);

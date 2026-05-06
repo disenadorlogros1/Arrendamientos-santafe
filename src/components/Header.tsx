@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 import { Menu, X } from 'lucide-react';
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from '@/components/ui/sheet';
 
@@ -54,97 +55,129 @@ function WhatsAppButton() {
   );
 }
 
-/* NavDropdown — abre con click Y hover */
+/* NavDropdown — dropdown portalizado al body para escapar de todos los stacking contexts */
 function NavDropdown({ item, onNavigate }: { item: NavItem; onNavigate: (page: PageType) => void }) {
   const [open, setOpen] = useState(false);
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const [mounted, setMounted] = useState(false);
+  const [coords, setCoords] = useState({ top: 0, left: 0 });
   const triggerRef = useRef<HTMLButtonElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const [pos, setPos] = useState({ top: 0, left: 0 });
+  const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const updatePos = useCallback(() => {
-    if (triggerRef.current) {
-      const r = triggerRef.current.getBoundingClientRect();
-      setPos({ top: r.bottom, left: r.left + r.width / 2 });
-    }
+  useEffect(() => { setMounted(true); }, []);
+
+  const getCoords = useCallback(() => {
+    if (!triggerRef.current) return;
+    const rect = triggerRef.current.getBoundingClientRect();
+    setCoords({ top: rect.bottom + 2, left: rect.left + rect.width / 2 });
   }, []);
 
-  const doOpen = useCallback(() => {
-    if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    updatePos();
-    setOpen(true);
-  }, [updatePos]);
-
-  const doClose = useCallback(() => {
-    timeoutRef.current = setTimeout(() => setOpen(false), 300);
+  const clearCloseTimer = useCallback(() => {
+    if (closeTimer.current) { clearTimeout(closeTimer.current); closeTimer.current = null; }
   }, []);
 
-  const handleClick = useCallback(() => {
+  const scheduleClose = useCallback(() => {
+    clearCloseTimer();
+    closeTimer.current = setTimeout(() => setOpen(false), 300);
+  }, [clearCloseTimer]);
+
+  // Click en el trigger
+  const onTriggerClick = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation();
     if (item.children) {
-      if (open) { setOpen(false); } else { doOpen(); }
+      if (open) {
+        setOpen(false);
+      } else {
+        getCoords();
+        setOpen(true);
+      }
     } else if (item.page) {
       onNavigate(item.page);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
-  }, [item, open, doOpen, onNavigate]);
+  }, [item, open, getCoords, onNavigate]);
 
-  const handleSubClick = useCallback((sub: SubItem) => {
-    if (sub.page) { onNavigate(sub.page); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+  // Click en sub-item
+  const onSubClick = useCallback((sub: SubItem) => {
+    if (sub.page) {
+      onNavigate(sub.page);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
     setOpen(false);
   }, [onNavigate]);
 
-  useEffect(() => () => { if (timeoutRef.current) clearTimeout(timeoutRef.current); }, []);
+  // Hover: abrir al entrar, cerrar al salir (con delay)
+  const onTriggerEnter = useCallback(() => {
+    clearCloseTimer();
+    if (!open) { getCoords(); setOpen(true); }
+  }, [open, getCoords, clearCloseTimer]);
 
-  // Cerrar al click fuera
+  const onTriggerLeave = useCallback(() => { scheduleClose(); }, [scheduleClose]);
+
+  // Click fuera para cerrar
   useEffect(() => {
-    if (!open) return;
-    const outside = (e: MouseEvent) => {
-      const t = e.target as Node;
-      if (dropdownRef.current && !dropdownRef.current.contains(t) && triggerRef.current && !triggerRef.current.contains(t)) setOpen(false);
+    if (!open || !mounted) return;
+    const handler = (e: MouseEvent) => {
+      const target = e.target as Node;
+      if (
+        dropdownRef.current && !dropdownRef.current.contains(target) &&
+        triggerRef.current && !triggerRef.current.contains(target)
+      ) {
+        setOpen(false);
+      }
     };
-    document.addEventListener('mousedown', outside);
-    return () => document.removeEventListener('mousedown', outside);
-  }, [open]);
+    // Usar setTimeout para que el click del trigger no cierre inmediatamente
+    const id = setTimeout(() => document.addEventListener('mousedown', handler), 0);
+    return () => { clearTimeout(id); document.removeEventListener('mousedown', handler); };
+  }, [open, mounted]);
+
+  // Cleanup timer
+  useEffect(() => () => { if (closeTimer.current) clearTimeout(closeTimer.current); }, []);
+
+  // Dropdown portalizado al body
+  const dropdown = mounted && open && item.children ? (
+    <div
+      ref={dropdownRef}
+      onMouseEnter={clearCloseTimer}
+      onMouseLeave={scheduleClose}
+      style={{
+        position: 'fixed',
+        top: `${coords.top}px`,
+        left: `${coords.left}px`,
+        transform: 'translateX(-50%)',
+        zIndex: 2147483647,
+      }}
+    >
+      <div className="bg-white rounded-2xl pt-2 pb-1 min-w-[210px] shadow-2xl border border-gray-100"
+        style={{ pointerEvents: 'auto' }}>
+        {item.children.map((sub) => (
+          <button
+            key={sub.label}
+            type="button"
+            onClick={() => onSubClick(sub)}
+            className="block w-full text-left px-5 py-2.5 text-[15px] text-gray-700 hover:text-white hover:bg-brand-red transition-colors duration-150 first:rounded-t-2xl last:rounded-b-2xl"
+          >
+            {sub.label}
+          </button>
+        ))}
+      </div>
+    </div>
+  ) : null;
 
   return (
     <>
       <button
         ref={triggerRef}
-        onMouseEnter={doOpen}
-        onMouseLeave={doClose}
-        onClick={handleClick}
-        className="px-5 py-2 text-sm font-medium text-white rounded-full transition-all duration-300 ease-out hover:-translate-y-1 hover:scale-110 hover:bg-brand-red hover:text-white hover:shadow-[0_0_24px_rgba(207,10,44,0.7),0_0_48px_rgba(207,10,44,0.3)]"
+        type="button"
+        onClick={onTriggerClick}
+        onMouseEnter={onTriggerEnter}
+        onMouseLeave={onTriggerLeave}
+        className="px-4 py-2 text-sm font-medium text-white rounded-full transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-brand-red hover:text-white hover:shadow-[0_0_20px_rgba(207,10,44,0.5)]"
         style={{ textShadow: '0 1px 3px rgba(0,0,0,0.4)' }}
       >
         {item.label}
       </button>
-
-      {/* Dropdown — position:fixed directamente, sin portal */}
-      {item.children && open && (
-        <div
-          ref={dropdownRef}
-          onMouseEnter={() => { if (timeoutRef.current) clearTimeout(timeoutRef.current); }}
-          onMouseLeave={doClose}
-          className="bg-white rounded-2xl pt-2 pb-1 min-w-[210px] shadow-xl border border-gray-100"
-          style={{
-            position: 'fixed',
-            top: `${pos.top}px`,
-            left: `${pos.left}px`,
-            transform: 'translateX(-50%)',
-            zIndex: 99999,
-          }}
-        >
-          {item.children.map((sub) => (
-            <button
-              key={sub.label}
-              onClick={() => handleSubClick(sub)}
-              className="w-full text-left px-5 py-2 text-base text-brand-dark/70 hover:text-white hover:bg-brand-red transition-all duration-200 first:rounded-t-2xl last:rounded-b-2xl"
-            >
-              {sub.label}
-            </button>
-          ))}
-        </div>
-      )}
+      {dropdown && createPortal(dropdown, document.body)}
     </>
   );
 }
@@ -168,7 +201,7 @@ export default function Header({ currentPage, onNavigate }: HeaderProps) {
           <img src="/logo-blanco.png" alt="Santa Fé Arrendamientos" className="h-10 md:h-11 w-auto object-contain drop-shadow-lg" />
         </button>
 
-        {/* Nav capsula */}
+        {/* Nav capsula — desktop */}
         <nav className="hidden lg:flex items-center gap-0.5 bg-white/50 backdrop-blur-md rounded-full px-2 h-[42px] border border-white/30 shadow-lg">
           {navItems.map((item) => (
             <NavDropdown key={item.label} item={item} onNavigate={handleNav} />
