@@ -143,8 +143,8 @@ function NavDropdown({ item, onNavigate }: { item: NavItem; onNavigate: (page: P
         }}
         className="px-5 py-2 text-sm font-medium text-white rounded-full
           transition-all duration-300 ease-out
-          hover:-translate-y-1
-          hover:bg-brand-red hover:text-white hover:shadow-[0_0_18px_rgba(207,10,44,0.5)]"
+          hover:-translate-y-1 hover:scale-110
+          hover:bg-brand-red hover:text-white hover:shadow-[0_0_24px_rgba(207,10,44,0.7),0_0_48px_rgba(207,10,44,0.3)]"
           style={{ textShadow: '0 1px 3px rgba(0,0,0,0.4)' }}
       >
         {item.label}
@@ -157,7 +157,7 @@ function NavDropdown({ item, onNavigate }: { item: NavItem; onNavigate: (page: P
               <button
                 key={sub.label}
                 onClick={() => handleSubClick(sub)}
-                className="w-full text-left px-5 py-1.5 text-sm text-brand-dark/70 hover:text-white hover:bg-brand-red transition-all duration-200 first:rounded-t-2xl last:rounded-b-2xl"
+                className="w-full text-left px-5 py-2 text-base text-brand-dark/70 hover:text-white hover:bg-brand-red transition-all duration-200 first:rounded-t-2xl last:rounded-b-2xl"
               >
                 {sub.label}
               </button>

@@ -76,7 +76,7 @@ function CustomSelect({
               <button
                 key={opt}
                 onClick={() => { onChange(opt); setOpen(false); }}
-                className={`w-full text-left px-4 py-1.5 text-sm transition-all duration-200 first:rounded-t-2xl last:rounded-b-2xl ${
+                className={`w-full text-left px-4 py-2 text-base transition-all duration-200 first:rounded-t-2xl last:rounded-b-2xl ${
                   value === opt
                     ? 'bg-brand-red text-white font-semibold'
                     : 'text-brand-dark/70 hover:text-white hover:bg-brand-red'
