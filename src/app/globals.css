@@ -129,6 +129,17 @@
     @apply bg-background text-foreground;
     font-family: 'Avenir LT Pro', 'Avenir', 'Outfit', var(--font-outfit), system-ui, -apple-system, sans-serif;
   }
+  /* Todos los títulos: Avenir LT Pro 85 Heavy */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Avenir LT Pro 85 Heavy', 'Avenir LT Pro', 'Avenir', 'Outfit', system-ui, sans-serif;
+    font-weight: 800;
+  }
+  /* Todos los párrafos y texto de cuerpo: Avenir LT Pro 35 Light, #808080, interlineado reducido */
+  p, span:not(.sr-only), li, label, a, td, th, input::placeholder, select {
+    font-family: 'Avenir LT Pro 35 Light', 'Avenir LT Pro', 'Avenir', 'Outfit', system-ui, sans-serif;
+    font-weight: 300;
+    line-height: 1.45;
+  }
 }
 
 /* Custom scrollbar */

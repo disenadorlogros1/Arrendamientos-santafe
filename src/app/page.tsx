@@ -26,7 +26,7 @@ function HomePage({ onNavigate }: { onNavigate: (page: PageType) => void }) {
       <div className="bg-brand-light py-0">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <FeaturedSection onNavigate={onNavigate} />
-          <div className="pb-12 md:pb-16">
+          <div className="pb-6 md:pb-8">
             <PropertyGrid properties={featured} />
           </div>
         </div>
