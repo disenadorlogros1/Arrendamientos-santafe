@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { Search, Hash, ChevronDown } from 'lucide-react';
 
@@ -19,18 +19,13 @@ const TIPOS_INMUEBLE = [
 
 const HABITACIONES = ['1', '2', '3', '4', '5+'];
 
-const RANGOS_PRECIO = [
-  '$0 - $500.000',
-  '$500.000 - $1.000.000',
-  '$1.000.000 - $1.500.000',
-  '$1.500.000 - $2.000.000',
-  '$2.000.000 - $2.500.000',
-  '$2.500.000 - $3.000.000',
-  '$3.000.000 - $4.000.000',
-  '$4.000.000 - $5.000.000',
-  '$5.000.000 - $6.000.000',
-  '$6.000.000 - $7.000.000',
-];
+const MIN_PRECIO = 0;
+const MAX_PRECIO = 7000000;
+
+function formatPrice(val: number) {
+  if (val >= 1000000) return `$${(val / 1000000).toFixed(val % 1000000 === 0 ? 0 : 1)}M`;
+  return `$${val.toLocaleString('es-CO')}`;
+}
 
 /* ── CustomSelect: mismo diseño de dropdown que el Header ── */
 function CustomSelect({
@@ -74,7 +69,6 @@ function CustomSelect({
         />
       </button>
 
-      {/* Dropdown – mismo estilo que el Header: bg-white, rounded-2xl, shadow, hover rojo */}
       {open && (
         <div className="absolute top-full left-0 pt-1 z-50" style={{ width: `${dropdownWidth || 220}px` }}>
           <div className="bg-white rounded-2xl py-1 shadow-xl border border-gray-100 max-h-[220px] overflow-y-auto">
@@ -98,21 +92,115 @@ function CustomSelect({
   );
 }
 
+/* ── Dual Range Slider para precio ── */
+function PriceRangeSlider({
+  minVal,
+  maxVal,
+  onChangeMin,
+  onChangeMax,
+}: {
+  minVal: number;
+  maxVal: number;
+  onChangeMin: (v: number) => void;
+  onChangeMax: (v: number) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const minPercent = ((minVal - MIN_PRECIO) / (MAX_PRECIO - MIN_PRECIO)) * 100;
+  const maxPercent = ((maxVal - MIN_PRECIO) / (MAX_PRECIO - MIN_PRECIO)) * 100;
+
+  return (
+    <div className="min-w-0 flex-1 relative" ref={ref}>
+      <p className="text-[11px] text-gray-400 leading-tight">Precio</p>
+      <button
+        onClick={() => setOpen(!open)}
+        className="w-full flex items-center justify-between text-sm text-brand-dark font-semibold bg-transparent border-none outline-none cursor-pointer text-left pr-1"
+      >
+        <span className="text-xs">
+          {formatPrice(minVal)} – {formatPrice(maxVal)}
+        </span>
+        <ChevronDown
+          className={`w-3.5 h-3.5 text-gray-400 shrink-0 transition-transform duration-200 ${open ? 'rotate-180' : ''}`}
+        />
+      </button>
+
+      {open && (
+        <div className="absolute top-full left-0 pt-1 z-50 w-[280px]">
+          <div className="bg-white rounded-2xl p-4 shadow-xl border border-gray-100">
+            {/* Rango seleccionado */}
+            <p className="text-xs text-gray-500 mb-3 font-medium">
+              Rango: <span className="text-brand-red font-semibold">{formatPrice(minVal)}</span> — <span className="text-brand-red font-semibold">{formatPrice(maxVal)}</span>
+            </p>
+
+            {/* Slider visual */}
+            <div className="relative h-2 bg-gray-200 rounded-full mb-4">
+              {/* Barra de rango seleccionado */}
+              <div
+                className="absolute h-full bg-brand-red rounded-full"
+                style={{ left: `${minPercent}%`, right: `${100 - maxPercent}%` }}
+              />
+              {/* Thumb min */}
+              <input
+                type="range"
+                min={MIN_PRECIO}
+                max={MAX_PRECIO}
+                step={100000}
+                value={minVal}
+                onChange={(e) => onChangeMin(Math.min(Number(e.target.value), maxVal - 100000))}
+                className="absolute top-1/2 -translate-y-1/2 w-full appearance-none bg-transparent pointer-events-none [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-brand-red [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-white [&::-webkit-slider-thumb]:shadow-md [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:relative [&::-webkit-slider-thumb]:z-20 [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-brand-red [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-white [&::-moz-range-thumb]:shadow-md [&::-moz-range-thumb]:cursor-pointer"
+              />
+              {/* Thumb max */}
+              <input
+                type="range"
+                min={MIN_PRECIO}
+                max={MAX_PRECIO}
+                step={100000}
+                value={maxVal}
+                onChange={(e) => onChangeMax(Math.max(Number(e.target.value), minVal + 100000))}
+                className="absolute top-1/2 -translate-y-1/2 w-full appearance-none bg-transparent pointer-events-none [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-brand-red [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-white [&::-webkit-slider-thumb]:shadow-md [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:relative [&::-webkit-slider-thumb]:z-20 [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-brand-red [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-white [&::-moz-range-thumb]:shadow-md [&::-moz-range-thumb]:cursor-pointer"
+              />
+            </div>
+
+            {/* Labels min/max */}
+            <div className="flex justify-between text-[10px] text-gray-400">
+              <span>$0 COP</span>
+              <span>$7.000.000 COP</span>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function SearchForm() {
   const [searchType, setSearchType] = useState<'arrendar' | 'comprar'>('arrendar');
   const [sector, setSector] = useState('');
   const [tipo, setTipo] = useState('');
-  const [precioHasta, setPrecioHasta] = useState('');
   const [codigo, setCodigo] = useState('');
   const [habitaciones, setHabitaciones] = useState('');
+  const [precioMin, setPrecioMin] = useState(0);
+  const [precioMax, setPrecioMax] = useState(MAX_PRECIO);
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 40 }}
+      initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, delay: 0.3, ease: 'easeOut' }}
       className="relative z-20 mx-auto px-4 sm:px-6 lg:px-8"
-      style={{ maxWidth: '72rem', marginTop: '-80px' }}
+      style={{
+        maxWidth: '72rem',
+        marginTop: '-120px',
+      }}
     >
       <div className="bg-white shadow-2xl">
         {/* Tabs - fondo oscuro, bordes rectos */}
@@ -174,18 +262,16 @@ export default function SearchForm() {
             />
           </div>
 
-          {/* Campo: Precio - Rango */}
+          {/* Campo: Precio - Slider de rango dual */}
           <div className="flex-1 flex items-center gap-3 px-4 py-3 border-b sm:border-b-0 sm:border-r border-gray-200">
             <div className="w-9 h-9 rounded shrink-0 flex items-center justify-center" style={{ backgroundColor: '#f2f2f2' }}>
               <img src="/precio.gif" alt="Precio" className="w-5 h-5" />
             </div>
-            <CustomSelect
-              label="Precio"
-              value={precioHasta}
-              onChange={setPrecioHasta}
-              options={RANGOS_PRECIO}
-              placeholder="Hasta $7.000.000"
-              dropdownWidth={260}
+            <PriceRangeSlider
+              minVal={precioMin}
+              maxVal={precioMax}
+              onChangeMin={setPrecioMin}
+              onChangeMax={setPrecioMax}
             />
           </div>
 
