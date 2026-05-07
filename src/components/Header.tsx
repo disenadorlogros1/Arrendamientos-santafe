@@ -57,6 +57,13 @@ function WhatsAppButton() {
 export default function Header({ currentPage, onNavigate }: HeaderProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [expandedMobile, setExpandedMobile] = useState<string | null>(null);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 40);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
   const handleNav = (page: PageType) => {
     onNavigate(page);
@@ -66,7 +73,7 @@ export default function Header({ currentPage, onNavigate }: HeaderProps) {
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 pt-4 px-4 sm:px-6 lg:px-8 transition-all duration-300"
+    <header className={`fixed top-0 left-0 right-0 pt-4 px-4 sm:px-6 lg:px-8 transition-all duration-300 ${scrolled ? 'header-scrolled' : ''}`}
       style={{ zIndex: 50 }}>
       <div className="mx-auto max-w-6xl flex items-center justify-between gap-4">
         {/* Logo */}

@@ -305,6 +305,14 @@ select option {
   }
 }
 
+/* ── Header scrolled background ── */
+.header-scrolled {
+  background-color: rgba(0, 0, 0, 0.70);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.3);
+}
+
 /* ── Hero highlight accent — red band behind text using gradient ── */
 .hero-highlight {
   display: inline;
