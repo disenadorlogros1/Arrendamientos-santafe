@@ -352,14 +352,14 @@ select option {
 @media (max-width: 1023px) {
   .hero-title-wrap {
     overflow: hidden;
-    margin-top: -28px;
-    margin-bottom: -28px;
+    margin-top: -44px;
+    margin-bottom: -44px;
   }
   .hero-title-text {
-    line-height: 0.80;
+    line-height: 0.75;
   }
   .hero-line-seg {
-    margin-bottom: -0.58em;
+    margin-bottom: -0.7em;
   }
 }
 
@@ -367,13 +367,13 @@ select option {
 @media (min-width: 1024px) {
   .hero-title-wrap {
     overflow: hidden;
-    margin-top: -20px;
-    margin-bottom: -20px;
+    margin-top: -34px;
+    margin-bottom: -34px;
   }
   .hero-title-text {
-    line-height: 0.85;
+    line-height: 0.82;
   }
   .hero-line-seg {
-    margin-bottom: -0.38em;
+    margin-bottom: -0.48em;
   }
 }
