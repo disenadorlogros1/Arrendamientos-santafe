@@ -330,13 +330,13 @@ select option {
 .hero-title-text {
   font-family: 'Avenir LT Pro 35 Light', 'Avenir', 'Outfit', system-ui, sans-serif;
   font-weight: 200;
-  line-height: 0.9;
+  line-height: 0.85;
   text-shadow: 0 2px 20px rgba(0,0,0,0.4);
 }
 
-/* Shared span styles */
+/* All spans: inline so text flows naturally across boundaries */
 .hero-line-seg {
-  display: inline-block;
+  display: inline;
   padding: 0 4px;
   margin: 0 -4px;
 }
@@ -348,31 +348,32 @@ select option {
   -webkit-box-decoration-break: clone;
 }
 
-/* ── MOBILE: inline text with negative margin compression ── */
+/* ── MOBILE: aggressive line compression via negative margins ── */
 @media (max-width: 1023px) {
+  .hero-title-wrap {
+    overflow: hidden;
+    margin-top: -14px;
+    margin-bottom: -14px;
+  }
+  .hero-title-text {
+    line-height: 0.82;
+  }
+  .hero-line-seg {
+    margin-bottom: -0.5em;
+  }
+}
+
+/* ── DESKTOP (lg+): moderate compression, text flows in ~2 lines ── */
+@media (min-width: 1024px) {
   .hero-title-wrap {
     overflow: hidden;
     margin-top: -8px;
     margin-bottom: -8px;
   }
+  .hero-title-text {
+    line-height: 0.88;
+  }
   .hero-line-seg {
-    display: inline;
-    margin-bottom: -0.35em;
-  }
-  .hero-line-seg.hero-line-highlight {
-    display: inline;
-    padding: 0 3px;
-    margin: 0 -3px;
-  }
-  .hero-line-seg.hero-line-last {
-    display: inline;
-  }
-}
-
-/* ── DESKTOP (lg+): inline-block with negative margins ── */
-@media (min-width: 1024px) {
-  .hero-line-seg.hero-line-first,
-  .hero-line-seg.hero-line-highlight {
-    margin-bottom: -0.55em;
+    margin-bottom: -0.3em;
   }
 }
