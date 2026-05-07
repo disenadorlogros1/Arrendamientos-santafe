@@ -304,3 +304,11 @@ select option {
     transform: scale(1);
   }
 }
+
+/* ── Hero underline accent ── */
+.hero-underline {
+  text-decoration: underline;
+  text-decoration-color: #CF0A2C;
+  text-underline-offset: 0.12em;
+  text-decoration-thickness: 2px;
+}

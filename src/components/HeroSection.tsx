@@ -27,12 +27,14 @@ export default function HeroSection() {
           className="text-3xl sm:text-4xl md:text-5xl lg:text-[48px] text-white tracking-tight"
           style={{
             fontFamily: "'Avenir LT Pro 35 Light', 'Avenir', 'Outfit', system-ui, sans-serif",
-            fontWeight: 300,
+            fontWeight: 200,
             lineHeight: '1.15',
             textShadow: '0 2px 20px rgba(0,0,0,0.4)',
           }}
         >
-          El apartamento que siempre quisiste, en el lugar que siempre quisiste.
+          El apartamento{' '}
+          <span className="hero-underline">que siempre quisiste, en el lugar</span>{' '}
+          que siempre quisiste.
         </h1>
         <p
           className="mt-4 text-base sm:text-lg text-white/80"
