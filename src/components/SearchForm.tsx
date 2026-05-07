@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { createPortal } from 'react-dom';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, X } from 'lucide-react';
 
 const SECTORES = [
   'Envigado', 'Poblado', 'Laureles', 'Belen', 'Estadio', 'Itagui', 'Sabaneta',
@@ -198,7 +198,8 @@ interface SearchFormProps {
 }
 
 export default function SearchForm({ mobileExpanded, onMobileExpand }: SearchFormProps) {
-  const [searchType, setSearchType] = useState<'arrendar' | 'comprar'>('arrendar');
+  const [searchType, setSearchType] = useState<'arrendar' | 'comprar' | null>(null);
+  const activeType = searchType || 'arrendar';
   const [sector, setSector] = useState('');
   const [tipo, setTipo] = useState('');
   const [codigo, setCodigo] = useState('');
@@ -212,6 +213,11 @@ export default function SearchForm({ mobileExpanded, onMobileExpand }: SearchFor
   const handleTabClick = useCallback((type: 'arrendar' | 'comprar') => {
     setSearchType(type);
     onMobileExpand(true);
+  }, [onMobileExpand]);
+
+  const handleClose = useCallback(() => {
+    setSearchType(null);
+    onMobileExpand(false);
   }, [onMobileExpand]);
 
   const handleSearch = useCallback(() => {
@@ -237,16 +243,25 @@ export default function SearchForm({ mobileExpanded, onMobileExpand }: SearchFor
         <div className="flex bg-brand-dark w-full">
           {(['arrendar', 'comprar'] as const).map((t) => (
             <button key={t} onClick={() => handleTabClick(t)}
-              className={`flex-1 px-5 py-2.5 text-sm transition-all duration-200 ${
-                searchType === t ? 'bg-white text-brand-red' : 'bg-white/40 text-white hover:bg-white/50'}`}
-              style={{ fontFamily: "'Avenir LT Pro 65 Medium', sans-serif", fontWeight: 500 }}>
+              className={`flex-1 px-5 py-3.5 transition-all duration-200 ${
+                mobileExpanded ? (activeType === t ? 'bg-white text-brand-red' : 'bg-white/40 text-white hover:bg-white/50') : 'bg-white/40 text-white hover:bg-white/50'}`}
+              style={{ fontFamily: "'Avenir LT Pro 85 Heavy', 'Avenir LT Pro', 'Avenir', system-ui, sans-serif", fontWeight: 800, fontSize: '16px' }}>
               {t === 'arrendar' ? 'Arrendar' : 'Comprar'}
             </button>
           ))}
         </div>
 
         {/* Search Fields */}
-        <div className={`search-fields flex flex-col sm:flex-row items-stretch ${mobileExpanded ? 'fields-expanded' : 'fields-collapsed'}`}>
+        <div className="relative">
+          <button
+            type="button"
+            onClick={handleClose}
+            className="absolute top-2 right-2 z-30 w-8 h-8 rounded-full bg-brand-red text-white flex items-center justify-center sm:hidden hover:bg-brand-red-hover transition-colors shadow-md"
+            aria-label="Cerrar formulario"
+          >
+            <X className="w-4 h-4" />
+          </button>
+          <div className={`search-fields flex flex-col sm:flex-row items-stretch ${mobileExpanded ? 'fields-expanded' : 'fields-collapsed'}`}>
           {/* Código */}
           <div className="group flex-1 flex items-center gap-3 px-4 py-3 border-b sm:border-b-0 sm:border-r border-gray-200">
             <div className="w-9 h-9 rounded shrink-0 flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:shadow-[0_0_14px_rgba(207,10,44,0.5)]" style={{ backgroundColor: '#f2f2f2' }}>
@@ -322,6 +337,7 @@ export default function SearchForm({ mobileExpanded, onMobileExpand }: SearchFor
             </svg>
             <span className="whitespace-nowrap">Buscar</span>
           </button>
+        </div>
         </div>
       </div>
     </div>

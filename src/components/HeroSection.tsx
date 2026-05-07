@@ -18,9 +18,9 @@ export default function HeroSection() {
       {/* Dark overlay */}
       <div className="absolute inset-0 hero-video-overlay" />
 
-      {/* Content — centrado horizontal y vertical */}
+      {/* Content — centrado horizontalmente, texto alineado a la izquierda */}
       <div
-        className="relative w-full text-center px-6 sm:px-12 md:px-16"
+        className="relative w-full px-6 sm:px-12 md:px-16 mx-auto"
         style={{ zIndex: 10, maxWidth: '56rem' }}
       >
         <h1
@@ -39,6 +39,7 @@ export default function HeroSection() {
           style={{
             fontFamily: "'Avenir LT Pro 35 Light', 'Avenir', 'Outfit', system-ui, sans-serif",
             fontWeight: 300,
+            letterSpacing: '0.15em',
             textShadow: '0 1px 10px rgba(0,0,0,0.4)',
           }}
         >

@@ -19,8 +19,8 @@ export default function FeaturedSection({ onNavigate }: FeaturedSectionProps) {
           <h2
             className="text-2xl sm:text-3xl md:text-4xl text-brand-red"
             style={{
-              fontFamily: "'Avenir LT Pro 85 Heavy', 'Avenir LT Pro', 'Avenir', 'Outfit', system-ui, sans-serif",
-              fontWeight: 800,
+              fontFamily: "'Avenir LT Pro 35 Light', 'Avenir LT Pro', 'Avenir', 'Outfit', system-ui, sans-serif",
+              fontWeight: 300,
             }}
           >
             Destacadas del mes

@@ -13,12 +13,9 @@ import ConsignacionPage from '@/components/ConsignacionPage';
 import HipotecasPage from '@/components/HipotecasPage';
 import ServiciosPage from '@/components/ServiciosPage';
 import InstitucionalPage from '@/components/InstitucionalPage';
-import PropertyGrid from '@/components/PropertyGrid';
-import { properties } from '@/data/properties';
 
 function HomePage({ onNavigate }: { onNavigate: (page: PageType) => void }) {
   const [mobileExpanded, setMobileExpanded] = useState(false);
-  const featured = properties.filter((p) => p.featured);
 
   return (
     <>
@@ -28,9 +25,6 @@ function HomePage({ onNavigate }: { onNavigate: (page: PageType) => void }) {
       <div className="bg-brand-light py-6">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <FeaturedSection onNavigate={onNavigate} />
-          <div className="pb-12 md:pb-16">
-            <PropertyGrid properties={featured} />
-          </div>
         </div>
       </div>
     </>
