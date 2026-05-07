@@ -351,19 +351,19 @@ select option {
 /* ── MOBILE: aggressive line compression via negative margins ── */
 @media (max-width: 1023px) {
   .hero-title-text {
-    line-height: 0.75;
+    line-height: 0.82;
   }
   .hero-line-seg {
-    margin-bottom: -0.7em;
+    margin-bottom: -0.18em;
   }
 }
 
 /* ── DESKTOP (lg+): moderate compression, text flows in ~2 lines ── */
 @media (min-width: 1024px) {
   .hero-title-text {
-    line-height: 0.82;
+    line-height: 0.88;
   }
   .hero-line-seg {
-    margin-bottom: -0.48em;
+    margin-bottom: -0.08em;
   }
 }
