@@ -305,20 +305,15 @@ select option {
   }
 }
 
-/* ── Hero highlight accent (behind text, like a marker) ── */
+/* ── Hero highlight accent — red band behind text using gradient ── */
 .hero-highlight {
-  position: relative;
-  z-index: 1;
   display: inline;
-}
-.hero-highlight::before {
-  content: '';
-  position: absolute;
-  left: -6px;
-  right: -6px;
-  top: 0.05em;
-  bottom: 0.15em;
-  background: #CF0A2C;
-  z-index: -1;
-  border-radius: 1px;
+  background-image: linear-gradient(#CF0A2C, #CF0A2C);
+  background-size: 100% 38%;
+  background-position: 0 68%;
+  background-repeat: no-repeat;
+  padding: 0 6px;
+  margin: 0 -6px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
 }
