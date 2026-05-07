@@ -17,25 +17,40 @@ export default function InfiniteCarousel({ properties }: InfiniteCarouselProps) 
 
   const cardWidth = 288; // card width + gap
   const singleSetWidth = properties.length * cardWidth;
+  const speedPerCard = 13.2; // seconds per card (reduced 10% from 12)
 
-  const initCarousel = useCallback(() => {
-    if (!trackRef.current || tweenRef.current) return;
+  const startInfiniteScroll = useCallback((fromX: number) => {
+    if (!trackRef.current) return;
 
-    const track = trackRef.current;
+    // Kill any existing tween
+    if (tweenRef.current) {
+      tweenRef.current.kill();
+      tweenRef.current = null;
+    }
 
-    const tween = gsap.fromTo(
-      track,
-      { x: 0 },
+    // Normalize: keep x within [-singleSetWidth, 0]
+    let startX = fromX;
+    if (startX > 0) startX -= singleSetWidth;
+    if (startX < -singleSetWidth) startX += singleSetWidth;
+    gsap.set(trackRef.current, { x: startX });
+
+    // Animate one full set width, then repeat (jump back = visually identical due to clone)
+    tweenRef.current = gsap.fromTo(
+      trackRef.current,
+      { x: startX },
       {
-        x: -singleSetWidth,
-        duration: properties.length * 12,
+        x: startX - singleSetWidth,
+        duration: properties.length * speedPerCard,
         ease: 'none',
         repeat: -1,
       }
     );
+  }, [properties.length, singleSetWidth, speedPerCard]);
 
-    tweenRef.current = tween;
-  }, [properties.length, singleSetWidth]);
+  const initCarousel = useCallback(() => {
+    if (!trackRef.current || tweenRef.current) return;
+    startInfiniteScroll(0);
+  }, [startInfiniteScroll]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -85,37 +100,43 @@ export default function InfiniteCarousel({ properties }: InfiniteCarouselProps) 
 
   const handlePrev = useCallback(() => {
     if (!tweenRef.current || !trackRef.current) return;
+
+    // Pause the infinite scroll
+    tweenRef.current.pause();
+
     const currentX = gsap.getProperty(trackRef.current, 'x') as number;
+    const targetX = currentX + cardWidth;
+
     gsap.to(trackRef.current, {
-      x: currentX + cardWidth,
+      x: targetX,
       duration: 0.5,
       ease: 'power2.out',
       onComplete: () => {
-        if (tweenRef.current) {
-          tweenRef.current.kill();
-          tweenRef.current = null;
-          initCarousel();
-        }
+        // Resume infinite scroll from the new position (no reset to 0)
+        startInfiniteScroll(targetX);
       },
     });
-  }, [cardWidth, initCarousel]);
+  }, [cardWidth, startInfiniteScroll]);
 
   const handleNext = useCallback(() => {
     if (!tweenRef.current || !trackRef.current) return;
+
+    // Pause the infinite scroll
+    tweenRef.current.pause();
+
     const currentX = gsap.getProperty(trackRef.current, 'x') as number;
+    const targetX = currentX - cardWidth;
+
     gsap.to(trackRef.current, {
-      x: currentX - cardWidth,
+      x: targetX,
       duration: 0.5,
       ease: 'power2.out',
       onComplete: () => {
-        if (tweenRef.current) {
-          tweenRef.current.kill();
-          tweenRef.current = null;
-          initCarousel();
-        }
+        // Resume infinite scroll from the new position (no reset to 0)
+        startInfiniteScroll(targetX);
       },
     });
-  }, [cardWidth, initCarousel]);
+  }, [cardWidth, startInfiniteScroll]);
 
   return (
     <div>
