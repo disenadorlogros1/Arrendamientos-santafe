@@ -305,10 +305,19 @@ select option {
   }
 }
 
-/* ── Hero underline accent ── */
-.hero-underline {
-  text-decoration: underline;
-  text-decoration-color: #CF0A2C;
-  text-underline-offset: 0.12em;
-  text-decoration-thickness: 2px;
+/* ── Hero highlight accent (behind text, like a marker) ── */
+.hero-highlight {
+  position: relative;
+  z-index: 1;
+}
+.hero-highlight::before {
+  content: '';
+  position: absolute;
+  left: -4px;
+  right: -4px;
+  top: 15%;
+  bottom: 25%;
+  background: #CF0A2C;
+  z-index: -1;
+  border-radius: 2px;
 }
