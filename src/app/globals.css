@@ -350,11 +350,6 @@ select option {
 
 /* ── MOBILE: aggressive line compression via negative margins ── */
 @media (max-width: 1023px) {
-  .hero-title-wrap {
-    overflow: hidden;
-    margin-top: -44px;
-    margin-bottom: -44px;
-  }
   .hero-title-text {
     line-height: 0.75;
   }
@@ -365,11 +360,6 @@ select option {
 
 /* ── DESKTOP (lg+): moderate compression, text flows in ~2 lines ── */
 @media (min-width: 1024px) {
-  .hero-title-wrap {
-    overflow: hidden;
-    margin-top: -34px;
-    margin-bottom: -34px;
-  }
   .hero-title-text {
     line-height: 0.82;
   }
