@@ -44,3 +44,26 @@ Built a complete single-page application (SPA) for "Arrendamientos Santa Fé" - 
 
 ### Lint Result
 - ESLint: ✅ No errors or warnings
+---
+Task ID: 1
+Agent: Main Agent
+Task: SearchForm UI improvements — X button outside menu, filter animations, divider line, desktop arrows removal, single-line filters
+
+Work Log:
+- Analyzed 3 uploaded screenshots via VLM to understand current mobile and desktop states
+- Read current SearchForm.tsx, page.tsx, and globals.css
+- Moved X button from inside the white card to outside (above tabs), with fadeInScale animation
+- Added filter-icon-pulse keyframe animation for red glow effect on tap/focus
+- Added vertical divider line between Arrendar/Comprar tabs when no option selected (mobile only)
+- Replaced ChevronDown with inline SVG and added .filter-arrow class, hidden on desktop via CSS media query
+- Added sm:flex-nowrap to ensure filters stay on a single horizontal line on desktop
+- Removed lucide-react ChevronDown import (no longer needed)
+- Build succeeded, pushed to GitHub (commit ffdc651)
+
+Stage Summary:
+- All 5 changes implemented in SearchForm.tsx and globals.css
+- X button now appears outside the white card container, top-right, mobile only
+- Filter icons animate with pulse glow on mobile tap
+- Divider line shows between tabs when no search type selected
+- Desktop filters have no dropdown arrows (hidden via .filter-arrow CSS)
+- Desktop filters always on single line
