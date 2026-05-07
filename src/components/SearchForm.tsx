@@ -278,10 +278,10 @@ export default function SearchForm({ mobileExpanded, onMobileExpand }: SearchFor
           )}
         </div>
 
-        {/* Search Fields — ALWAYS on a single horizontal line */}
-        <div className={`flex flex-row flex-nowrap items-stretch overflow-x-auto ${mobileExpanded ? 'fields-expanded' : 'fields-collapsed'}`}>
+        {/* Search Fields — mobile: vertical collapsible, desktop: single horizontal line */}
+        <div className={`search-fields flex flex-col sm:flex-row sm:flex-nowrap items-stretch ${mobileExpanded ? 'fields-expanded' : 'fields-collapsed'}`}>
           {/* Código */}
-          <div className="filter-field group flex-1 flex items-center gap-3 px-4 py-3 border-r border-gray-200 shrink-0 min-w-[130px]">
+          <div className="filter-field group flex-1 flex items-center gap-3 px-4 py-3 border-b sm:border-b-0 sm:border-r border-gray-200">
             <div className="filter-icon w-9 h-9 rounded shrink-0 flex items-center justify-center transition-all duration-300" style={{ backgroundColor: '#f2f2f2' }}>
               <img src="/numero-codigo.gif" alt="Código" className="w-5 h-5" />
             </div>
@@ -293,7 +293,7 @@ export default function SearchForm({ mobileExpanded, onMobileExpand }: SearchFor
           </div>
 
           {/* Ubicación */}
-          <div className="filter-field group flex-1 flex items-center gap-3 px-4 py-3 border-r border-gray-200 shrink-0 min-w-[130px]">
+          <div className="filter-field group flex-1 flex items-center gap-3 px-4 py-3 border-b sm:border-b-0 sm:border-r border-gray-200">
             <div className="filter-icon w-9 h-9 rounded shrink-0 flex items-center justify-center transition-all duration-300" style={{ backgroundColor: '#f2f2f2' }}>
               <img src="/ubicacion.gif" alt="Ubicación" className="w-5 h-5" />
             </div>
@@ -301,7 +301,7 @@ export default function SearchForm({ mobileExpanded, onMobileExpand }: SearchFor
           </div>
 
           {/* Precio */}
-          <div className="filter-field group flex-1 flex items-center gap-3 px-4 py-3 border-r border-gray-200 shrink-0 min-w-[130px]">
+          <div className="filter-field group flex-1 flex items-center gap-3 px-4 py-3 border-b sm:border-b-0 sm:border-r border-gray-200">
             <div className="filter-icon w-9 h-9 rounded shrink-0 flex items-center justify-center transition-all duration-300" style={{ backgroundColor: '#f2f2f2' }}>
               <img src="/precio.gif" alt="Precio" className="w-5 h-5" />
             </div>
@@ -309,7 +309,7 @@ export default function SearchForm({ mobileExpanded, onMobileExpand }: SearchFor
           </div>
 
           {/* Tipo */}
-          <div className="filter-field group flex-1 flex items-center gap-3 px-4 py-3 border-r border-gray-200 shrink-0 min-w-[150px]">
+          <div className="filter-field group flex-1 flex items-center gap-3 px-4 py-3 border-b sm:border-b-0 sm:border-r border-gray-200">
             <div className="filter-icon w-9 h-9 rounded shrink-0 flex items-center justify-center transition-all duration-300" style={{ backgroundColor: '#f2f2f2' }}>
               <img src="/tipo-de-propiedad.gif" alt="Tipo" className="w-5 h-5" />
             </div>
@@ -317,7 +317,7 @@ export default function SearchForm({ mobileExpanded, onMobileExpand }: SearchFor
           </div>
 
           {/* Habitaciones */}
-          <div className="filter-field group flex-1 flex items-center gap-3 px-4 py-3 border-r border-gray-200 shrink-0 min-w-[140px]">
+          <div className="filter-field group flex-1 flex items-center gap-3 px-4 py-3 border-b sm:border-b-0 sm:border-r border-gray-200">
             <div className="filter-icon w-9 h-9 rounded shrink-0 flex items-center justify-center transition-all duration-300" style={{ backgroundColor: '#f2f2f2' }}>
               <img src="/habitaciones-copia.gif" alt="Habitaciones" className="w-5 h-5" />
             </div>

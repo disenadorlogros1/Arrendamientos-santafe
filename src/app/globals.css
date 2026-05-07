@@ -234,11 +234,9 @@ select option {
   opacity: 0;
 }
 .search-fields.fields-expanded {
-  max-height: 200px;
+  max-height: 800px;
   opacity: 1;
-  overflow-x: auto;
-  overflow-y: hidden;
-  -webkit-overflow-scrolling: touch;
+  overflow: visible;
 }
 @media (min-width: 640px) {
   .search-fields {
@@ -246,10 +244,6 @@ select option {
     opacity: 1 !important;
     overflow: visible !important;
   }
-}
-/* Hide scrollbar on mobile filter row */
-.search-fields.fields-expanded::-webkit-scrollbar {
-  display: none;
 }
 
 /* ── UserLocation: white on dark bg (default), red on light bg (mobile) ── */
