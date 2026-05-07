@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { createPortal } from 'react-dom';
-import { ChevronDown, X } from 'lucide-react';
+import { X } from 'lucide-react';
 
 const SECTORES = [
   'Envigado', 'Poblado', 'Laureles', 'Belen', 'Estadio', 'Itagui', 'Sabaneta',
@@ -29,10 +29,10 @@ function formatPrice(val: number) {
 
 /* ── CustomSelect — dropdown portalizado al body ── */
 function CustomSelect({
-  label, value, onChange, options, placeholder, dropdownWidth,
+  label, value, onChange, options, placeholder, dropdownWidth, isFilterSelect,
 }: {
   label: string; value: string; onChange: (val: string) => void;
-  options: string[]; placeholder?: string; dropdownWidth?: number;
+  options: string[]; placeholder?: string; dropdownWidth?: number; isFilterSelect?: boolean;
 }) {
   const [open, setOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -105,7 +105,17 @@ function CustomSelect({
         className="w-full flex items-center justify-between text-sm text-brand-dark font-semibold bg-transparent border-none outline-none cursor-pointer text-left pr-1"
       >
         <span className={value ? '' : 'text-gray-300 font-normal'}>{value || placeholder || 'Seleccionar'}</span>
-        <ChevronDown className={`w-3.5 h-3.5 text-gray-400 shrink-0 transition-transform duration-200 ${open ? 'rotate-180' : ''}`} />
+        {/* Arrow hidden on desktop for filter selects, visible on mobile */}
+        {(!isFilterSelect) && (
+          <svg className={`w-3.5 h-3.5 text-gray-400 shrink-0 transition-transform duration-200 ${open ? 'rotate-180' : ''}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <polyline points="6 9 12 15 18 9" />
+          </svg>
+        )}
+        {isFilterSelect && (
+          <svg className={`w-3.5 h-3.5 text-gray-400 shrink-0 transition-transform duration-200 ${open ? 'rotate-180' : ''} filter-arrow`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <polyline points="6 9 12 15 18 9" />
+          </svg>
+        )}
       </button>
       {dropdown && createPortal(dropdown, document.body)}
     </div>
@@ -185,7 +195,10 @@ function PriceRangeSlider({ minVal, maxVal, onChangeMin, onChangeMax }: {
       <button ref={triggerRef} type="button" onClick={toggle}
         className="w-full flex items-center justify-between text-sm text-brand-dark font-semibold bg-transparent border-none outline-none cursor-pointer text-left pr-1">
         <span className="text-xs">{formatPrice(minVal)} – {formatPrice(maxVal)}</span>
-        <ChevronDown className={`w-3.5 h-3.5 text-gray-400 shrink-0 transition-transform duration-200 ${open ? 'rotate-180' : ''}`} />
+        {/* Arrow hidden on desktop for filter selects */}
+        <svg className={`w-3.5 h-3.5 text-gray-400 shrink-0 transition-transform duration-200 ${open ? 'rotate-180' : ''} filter-arrow`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <polyline points="6 9 12 15 18 9" />
+        </svg>
       </button>
       {panel && createPortal(panel, document.body)}
     </div>
@@ -238,10 +251,22 @@ export default function SearchForm({ mobileExpanded, onMobileExpand }: SearchFor
 
   return (
     <div className="relative mx-auto px-4 sm:px-6 lg:px-8 -mt-[112px] sm:-mt-[120px] lg:-mt-[180px]" style={{ maxWidth: '72rem', zIndex: 20 }}>
+      {/* X button — positioned OUTSIDE the white card, top-right, mobile only, only when expanded */}
+      {mobileExpanded && (
+        <button
+          type="button"
+          onClick={handleClose}
+          className="absolute -top-11 right-0 z-30 w-9 h-9 rounded-full bg-brand-red text-white flex items-center justify-center sm:hidden hover:bg-brand-red-hover transition-all duration-300 shadow-lg animate-[fadeInScale_0.2s_ease-out]"
+          aria-label="Cerrar formulario"
+        >
+          <X className="w-4 h-4" />
+        </button>
+      )}
+
       <div className="bg-white shadow-2xl">
         {/* Tabs */}
-        <div className="flex bg-brand-dark w-full">
-          {(['arrendar', 'comprar'] as const).map((t) => (
+        <div className="flex bg-brand-dark w-full relative">
+          {(['arrendar', 'comprar'] as const).map((t, i) => (
             <button key={t} onClick={() => handleTabClick(t)}
               className={`flex-1 px-5 py-3.5 transition-all duration-200 ${
                 mobileExpanded ? (activeType === t ? 'bg-white text-brand-red' : 'bg-white/40 text-white hover:bg-white/50') : 'bg-white/40 text-white hover:bg-white/50'}`}
@@ -249,21 +274,15 @@ export default function SearchForm({ mobileExpanded, onMobileExpand }: SearchFor
               {t === 'arrendar' ? 'Arrendar' : 'Comprar'}
             </button>
           ))}
+
+          {/* Divider line between Arrendar/Comprar — only on mobile, only when no option selected */}
+          {!mobileExpanded && (
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-px h-6 bg-white/40 sm:hidden" />
+          )}
         </div>
 
         {/* Search Fields */}
-        <div className="relative">
-          {mobileExpanded && (
-            <button
-              type="button"
-              onClick={handleClose}
-              className="absolute top-2 right-2 z-30 w-8 h-8 rounded-full bg-brand-red text-white flex items-center justify-center sm:hidden hover:bg-brand-red-hover transition-colors shadow-md"
-              aria-label="Cerrar formulario"
-            >
-              <X className="w-4 h-4" />
-            </button>
-          )}
-          <div className={`search-fields flex flex-col sm:flex-row items-stretch ${mobileExpanded ? 'fields-expanded' : 'fields-collapsed'}`}>
+        <div className={`search-fields flex flex-col sm:flex-row sm:flex-nowrap items-stretch ${mobileExpanded ? 'fields-expanded' : 'fields-collapsed'}`}>
           {/* Código */}
           <div className="filter-field group flex-1 flex items-center gap-3 px-4 py-3 border-b sm:border-b-0 sm:border-r border-gray-200">
             <div className="filter-icon w-9 h-9 rounded shrink-0 flex items-center justify-center transition-all duration-300" style={{ backgroundColor: '#f2f2f2' }}>
@@ -281,7 +300,7 @@ export default function SearchForm({ mobileExpanded, onMobileExpand }: SearchFor
             <div className="filter-icon w-9 h-9 rounded shrink-0 flex items-center justify-center transition-all duration-300" style={{ backgroundColor: '#f2f2f2' }}>
               <img src="/ubicacion.gif" alt="Ubicación" className="w-5 h-5" />
             </div>
-            <CustomSelect label="Ubicación" value={sector} onChange={setSector} options={SECTORES} placeholder="Seleccionar" />
+            <CustomSelect label="Ubicación" value={sector} onChange={setSector} options={SECTORES} placeholder="Seleccionar" isFilterSelect />
           </div>
 
           {/* Precio */}
@@ -297,7 +316,7 @@ export default function SearchForm({ mobileExpanded, onMobileExpand }: SearchFor
             <div className="filter-icon w-9 h-9 rounded shrink-0 flex items-center justify-center transition-all duration-300" style={{ backgroundColor: '#f2f2f2' }}>
               <img src="/tipo-de-propiedad.gif" alt="Tipo" className="w-5 h-5" />
             </div>
-            <CustomSelect label="Tipo de Inmueble" value={tipo} onChange={setTipo} options={TIPOS_INMUEBLE} placeholder="Seleccionar" />
+            <CustomSelect label="Tipo de Inmueble" value={tipo} onChange={setTipo} options={TIPOS_INMUEBLE} placeholder="Seleccionar" isFilterSelect />
           </div>
 
           {/* Habitaciones */}
@@ -305,7 +324,7 @@ export default function SearchForm({ mobileExpanded, onMobileExpand }: SearchFor
             <div className="filter-icon w-9 h-9 rounded shrink-0 flex items-center justify-center transition-all duration-300" style={{ backgroundColor: '#f2f2f2' }}>
               <img src="/habitaciones-copia.gif" alt="Habitaciones" className="w-5 h-5" />
             </div>
-            <CustomSelect label="Habitaciones" value={habitaciones} onChange={setHabitaciones} options={HABITACIONES.map(h => `${h} o más`)} placeholder="Seleccionar" />
+            <CustomSelect label="Habitaciones" value={habitaciones} onChange={setHabitaciones} options={HABITACIONES.map(h => `${h} o más`)} placeholder="Seleccionar" isFilterSelect />
           </div>
 
           {/* Botón Buscar — lupa animada */}
@@ -339,7 +358,6 @@ export default function SearchForm({ mobileExpanded, onMobileExpand }: SearchFor
             </svg>
             <span className="whitespace-nowrap">Buscar</span>
           </button>
-        </div>
         </div>
       </div>
     </div>
