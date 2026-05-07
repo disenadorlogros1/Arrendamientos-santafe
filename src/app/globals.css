@@ -309,15 +309,16 @@ select option {
 .hero-highlight {
   position: relative;
   z-index: 1;
+  display: inline;
 }
 .hero-highlight::before {
   content: '';
   position: absolute;
-  left: -4px;
-  right: -4px;
-  top: 15%;
-  bottom: 25%;
+  left: -6px;
+  right: -6px;
+  top: 0.05em;
+  bottom: 0.15em;
   background: #CF0A2C;
   z-index: -1;
-  border-radius: 2px;
+  border-radius: 1px;
 }

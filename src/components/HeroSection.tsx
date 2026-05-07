@@ -24,7 +24,7 @@ export default function HeroSection() {
         style={{ zIndex: 10, maxWidth: '56rem' }}
       >
         <h1
-          className="text-3xl sm:text-4xl md:text-5xl lg:text-[48px] text-white tracking-tight"
+          className="text-3xl sm:text-4xl md:text-5xl lg:text-[48px] text-white tracking-tight relative"
           style={{
             fontFamily: "'Avenir LT Pro 35 Light', 'Avenir', 'Outfit', system-ui, sans-serif",
             fontWeight: 200,
