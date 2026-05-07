@@ -325,3 +325,54 @@ select option {
   box-decoration-break: clone;
   -webkit-box-decoration-break: clone;
 }
+
+/* ── Hero title: responsive tight line-height ── */
+.hero-title-text {
+  font-family: 'Avenir LT Pro 35 Light', 'Avenir', 'Outfit', system-ui, sans-serif;
+  font-weight: 200;
+  line-height: 0.9;
+  text-shadow: 0 2px 20px rgba(0,0,0,0.4);
+}
+
+/* Shared span styles */
+.hero-line-seg {
+  display: inline-block;
+  padding: 0 4px;
+  margin: 0 -4px;
+}
+
+/* Red highlight gradient on the middle span */
+.hero-line-highlight {
+  background: linear-gradient(to bottom, transparent 60%, #CF0A2C 60%, #CF0A2C 84%, transparent 84%);
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+/* ── MOBILE: inline text with negative margin compression ── */
+@media (max-width: 1023px) {
+  .hero-title-wrap {
+    overflow: hidden;
+    margin-top: -8px;
+    margin-bottom: -8px;
+  }
+  .hero-line-seg {
+    display: inline;
+    margin-bottom: -0.35em;
+  }
+  .hero-line-seg.hero-line-highlight {
+    display: inline;
+    padding: 0 3px;
+    margin: 0 -3px;
+  }
+  .hero-line-seg.hero-line-last {
+    display: inline;
+  }
+}
+
+/* ── DESKTOP (lg+): inline-block with negative margins ── */
+@media (min-width: 1024px) {
+  .hero-line-seg.hero-line-first,
+  .hero-line-seg.hero-line-highlight {
+    margin-bottom: -0.55em;
+  }
+}
