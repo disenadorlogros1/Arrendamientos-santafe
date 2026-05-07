@@ -97,7 +97,7 @@ function CustomSelect({
 
   return (
     <div className="min-w-0 flex-1">
-      <p className="text-[11px] text-gray-400 leading-tight">{label}</p>
+      <p className="text-[14px] text-gray-400 leading-tight">{label}</p>
       <button
         ref={triggerRef}
         type="button"
@@ -181,7 +181,7 @@ function PriceRangeSlider({ minVal, maxVal, onChangeMin, onChangeMax }: {
 
   return (
     <div className="min-w-0 flex-1">
-      <p className="text-[11px] text-gray-400 leading-tight">Precio</p>
+      <p className="text-[14px] text-gray-400 leading-tight">Precio</p>
       <button ref={triggerRef} type="button" onClick={toggle}
         className="w-full flex items-center justify-between text-sm text-brand-dark font-semibold bg-transparent border-none outline-none cursor-pointer text-left pr-1">
         <span className="text-xs">{formatPrice(minVal)} – {formatPrice(maxVal)}</span>
@@ -237,7 +237,7 @@ export default function SearchForm({ mobileExpanded, onMobileExpand }: SearchFor
   useEffect(() => () => cancelAnimationFrame(animRef.current), []);
 
   return (
-    <div className="relative mx-auto px-4 sm:px-6 lg:px-8 -mt-[80px] sm:-mt-[120px] lg:-mt-[180px]" style={{ maxWidth: '72rem', zIndex: 20 }}>
+    <div className="relative mx-auto px-4 sm:px-6 lg:px-8 -mt-[112px] sm:-mt-[120px] lg:-mt-[180px]" style={{ maxWidth: '72rem', zIndex: 20 }}>
       <div className="bg-white shadow-2xl">
         {/* Tabs */}
         <div className="flex bg-brand-dark w-full">
@@ -245,7 +245,7 @@ export default function SearchForm({ mobileExpanded, onMobileExpand }: SearchFor
             <button key={t} onClick={() => handleTabClick(t)}
               className={`flex-1 px-5 py-3.5 transition-all duration-200 ${
                 mobileExpanded ? (activeType === t ? 'bg-white text-brand-red' : 'bg-white/40 text-white hover:bg-white/50') : 'bg-white/40 text-white hover:bg-white/50'}`}
-              style={{ fontFamily: "'Avenir LT Pro 85 Heavy', 'Avenir LT Pro', 'Avenir', system-ui, sans-serif", fontWeight: 800, fontSize: '16px' }}>
+              style={{ fontFamily: "'Avenir LT Pro 35 Light', 'Avenir', 'Outfit', system-ui, sans-serif", fontWeight: 300, fontSize: '16px' }}>
               {t === 'arrendar' ? 'Arrendar' : 'Comprar'}
             </button>
           ))}
@@ -253,54 +253,56 @@ export default function SearchForm({ mobileExpanded, onMobileExpand }: SearchFor
 
         {/* Search Fields */}
         <div className="relative">
-          <button
-            type="button"
-            onClick={handleClose}
-            className="absolute top-2 right-2 z-30 w-8 h-8 rounded-full bg-brand-red text-white flex items-center justify-center sm:hidden hover:bg-brand-red-hover transition-colors shadow-md"
-            aria-label="Cerrar formulario"
-          >
-            <X className="w-4 h-4" />
-          </button>
+          {mobileExpanded && (
+            <button
+              type="button"
+              onClick={handleClose}
+              className="absolute top-2 right-2 z-30 w-8 h-8 rounded-full bg-brand-red text-white flex items-center justify-center sm:hidden hover:bg-brand-red-hover transition-colors shadow-md"
+              aria-label="Cerrar formulario"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          )}
           <div className={`search-fields flex flex-col sm:flex-row items-stretch ${mobileExpanded ? 'fields-expanded' : 'fields-collapsed'}`}>
           {/* Código */}
-          <div className="group flex-1 flex items-center gap-3 px-4 py-3 border-b sm:border-b-0 sm:border-r border-gray-200">
-            <div className="w-9 h-9 rounded shrink-0 flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:shadow-[0_0_14px_rgba(207,10,44,0.5)]" style={{ backgroundColor: '#f2f2f2' }}>
+          <div className="filter-field group flex-1 flex items-center gap-3 px-4 py-3 border-b sm:border-b-0 sm:border-r border-gray-200">
+            <div className="filter-icon w-9 h-9 rounded shrink-0 flex items-center justify-center transition-all duration-300" style={{ backgroundColor: '#f2f2f2' }}>
               <img src="/numero-codigo.gif" alt="Código" className="w-5 h-5" />
             </div>
             <div className="min-w-0 flex-1">
-              <p className="text-[11px] text-gray-400 leading-tight">Código</p>
+              <p className="text-[14px] text-gray-400 leading-tight">Código</p>
               <input type="text" value={codigo} onChange={(e) => setCodigo(e.target.value)} placeholder="Ej: 1234"
                 className="w-full text-sm text-brand-dark font-semibold bg-transparent border-none outline-none placeholder:text-gray-300 placeholder:font-normal" />
             </div>
           </div>
 
-          {/* Sector */}
-          <div className="group flex-1 flex items-center gap-3 px-4 py-3 border-b sm:border-b-0 sm:border-r border-gray-200">
-            <div className="w-9 h-9 rounded shrink-0 flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:shadow-[0_0_14px_rgba(207,10,44,0.5)]" style={{ backgroundColor: '#f2f2f2' }}>
+          {/* Ubicación */}
+          <div className="filter-field group flex-1 flex items-center gap-3 px-4 py-3 border-b sm:border-b-0 sm:border-r border-gray-200">
+            <div className="filter-icon w-9 h-9 rounded shrink-0 flex items-center justify-center transition-all duration-300" style={{ backgroundColor: '#f2f2f2' }}>
               <img src="/ubicacion.gif" alt="Ubicación" className="w-5 h-5" />
             </div>
-            <CustomSelect label="Sector" value={sector} onChange={setSector} options={SECTORES} placeholder="Seleccionar" />
+            <CustomSelect label="Ubicación" value={sector} onChange={setSector} options={SECTORES} placeholder="Seleccionar" />
           </div>
 
           {/* Precio */}
-          <div className="group flex-1 flex items-center gap-3 px-4 py-3 border-b sm:border-b-0 sm:border-r border-gray-200">
-            <div className="w-9 h-9 rounded shrink-0 flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:shadow-[0_0_14px_rgba(207,10,44,0.5)]" style={{ backgroundColor: '#f2f2f2' }}>
+          <div className="filter-field group flex-1 flex items-center gap-3 px-4 py-3 border-b sm:border-b-0 sm:border-r border-gray-200">
+            <div className="filter-icon w-9 h-9 rounded shrink-0 flex items-center justify-center transition-all duration-300" style={{ backgroundColor: '#f2f2f2' }}>
               <img src="/precio.gif" alt="Precio" className="w-5 h-5" />
             </div>
             <PriceRangeSlider minVal={precioMin} maxVal={precioMax} onChangeMin={setPrecioMin} onChangeMax={setPrecioMax} />
           </div>
 
           {/* Tipo */}
-          <div className="group flex-1 flex items-center gap-3 px-4 py-3 border-b sm:border-b-0 sm:border-r border-gray-200">
-            <div className="w-9 h-9 rounded shrink-0 flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:shadow-[0_0_14px_rgba(207,10,44,0.5)]" style={{ backgroundColor: '#f2f2f2' }}>
+          <div className="filter-field group flex-1 flex items-center gap-3 px-4 py-3 border-b sm:border-b-0 sm:border-r border-gray-200">
+            <div className="filter-icon w-9 h-9 rounded shrink-0 flex items-center justify-center transition-all duration-300" style={{ backgroundColor: '#f2f2f2' }}>
               <img src="/tipo-de-propiedad.gif" alt="Tipo" className="w-5 h-5" />
             </div>
             <CustomSelect label="Tipo de Inmueble" value={tipo} onChange={setTipo} options={TIPOS_INMUEBLE} placeholder="Seleccionar" />
           </div>
 
           {/* Habitaciones */}
-          <div className="group flex-1 flex items-center gap-3 px-4 py-3 border-b sm:border-b-0 sm:border-r border-gray-200">
-            <div className="w-9 h-9 rounded shrink-0 flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:shadow-[0_0_14px_rgba(207,10,44,0.5)]" style={{ backgroundColor: '#f2f2f2' }}>
+          <div className="filter-field group flex-1 flex items-center gap-3 px-4 py-3 border-b sm:border-b-0 sm:border-r border-gray-200">
+            <div className="filter-icon w-9 h-9 rounded shrink-0 flex items-center justify-center transition-all duration-300" style={{ backgroundColor: '#f2f2f2' }}>
               <img src="/habitaciones-copia.gif" alt="Habitaciones" className="w-5 h-5" />
             </div>
             <CustomSelect label="Habitaciones" value={habitaciones} onChange={setHabitaciones} options={HABITACIONES.map(h => `${h} o más`)} placeholder="Seleccionar" />

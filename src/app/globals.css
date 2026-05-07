@@ -257,3 +257,20 @@ select option {
     text-shadow: none !important;
   }
 }
+
+/* ── Filter icon glow on mobile focus/active ── */
+.filter-field:focus-within .filter-icon {
+  box-shadow: 0 0 16px 2px rgba(207, 10, 44, 0.45);
+  transform: scale(1.1);
+}
+.filter-field:active .filter-icon {
+  box-shadow: 0 0 16px 2px rgba(207, 10, 44, 0.45);
+  transform: scale(1.1);
+}
+/* Desktop: keep hover glow */
+@media (min-width: 640px) {
+  .filter-field:hover .filter-icon {
+    transform: scale(1.1);
+    box-shadow: 0 0 14px rgba(207, 10, 44, 0.5);
+  }
+}
