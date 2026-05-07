@@ -33,7 +33,16 @@ export default function HeroSection() {
           }}
         >
           El apartamento{' '}
-          <span className="hero-highlight">que siempre quisiste, en el lugar</span>{' '}
+          <span
+            style={{
+              display: 'inline',
+              background: 'linear-gradient(to bottom, transparent 55%, #CF0A2C 55%, #CF0A2C 88%, transparent 88%)',
+              padding: '0 4px',
+              margin: '0 -4px',
+              boxDecorationBreak: 'clone',
+              WebkitBoxDecorationBreak: 'clone',
+            }}
+          >que siempre quisiste, en el lugar</span>{' '}
           que siempre quisiste.
         </h1>
         <p
