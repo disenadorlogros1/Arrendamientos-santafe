@@ -28,7 +28,7 @@ export default function HeroSection() {
           style={{
             fontFamily: "'Avenir LT Pro 35 Light', 'Avenir', 'Outfit', system-ui, sans-serif",
             fontWeight: 200,
-            lineHeight: '1.15',
+            lineHeight: '0.95',
             textShadow: '0 2px 20px rgba(0,0,0,0.4)',
           }}
         >
@@ -36,7 +36,7 @@ export default function HeroSection() {
           <span
             style={{
               display: 'inline',
-              background: 'linear-gradient(to bottom, transparent 55%, #CF0A2C 55%, #CF0A2C 88%, transparent 88%)',
+              background: 'linear-gradient(to bottom, transparent 58%, #CF0A2C 58%, #CF0A2C 88%, transparent 88%)',
               padding: '0 4px',
               margin: '0 -4px',
               boxDecorationBreak: 'clone',
