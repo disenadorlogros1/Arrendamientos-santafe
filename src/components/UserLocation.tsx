@@ -3,7 +3,11 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 
-export default function UserLocation() {
+interface UserLocationProps {
+  mobileExpanded: boolean;
+}
+
+export default function UserLocation({ mobileExpanded }: UserLocationProps) {
   const [location, setLocation] = useState('Detectando ubicación...');
   const [loading, setLoading] = useState(true);
 
@@ -71,17 +75,15 @@ export default function UserLocation() {
     >
       <div className="flex items-center gap-2 justify-center">
         <img
-          src="/ubicacion.gif"
+          src={mobileExpanded ? '/ubicacion.gif' : '/ubicacion-blanco.gif'}
           alt="Ubicación"
-          className="w-4 h-4 opacity-70"
+          className="w-4 h-4"
         />
         <span
-          className="text-sm"
+          className={`user-location-text text-sm ${mobileExpanded ? 'on-light' : ''}`}
           style={{
             fontFamily: "'Avenir LT Pro 35 Light', 'Avenir', 'Outfit', system-ui, sans-serif",
             fontWeight: 300,
-            color: '#ffffff',
-            textShadow: '0 1px 4px rgba(0,0,0,0.5)',
           }}
         >
           {loading ? (

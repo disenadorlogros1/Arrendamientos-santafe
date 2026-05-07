@@ -223,3 +223,37 @@ select option {
   font-size: 14px;
   line-height: 1.3;
 }
+
+/* ── Mobile search field collapse/expand ── */
+.search-fields {
+  transition: max-height 0.4s ease-out, opacity 0.3s ease-out;
+  overflow: hidden;
+}
+.search-fields.fields-collapsed {
+  max-height: 0;
+  opacity: 0;
+}
+.search-fields.fields-expanded {
+  max-height: 800px;
+  opacity: 1;
+  overflow: visible;
+}
+@media (min-width: 640px) {
+  .search-fields {
+    max-height: none !important;
+    opacity: 1 !important;
+    overflow: visible !important;
+  }
+}
+
+/* ── UserLocation: white on dark bg (default), red on light bg (mobile) ── */
+.user-location-text {
+  color: #ffffff;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+}
+@media (max-width: 639px) {
+  .user-location-text.on-light {
+    color: #CF0A2C !important;
+    text-shadow: none !important;
+  }
+}

@@ -192,7 +192,12 @@ function PriceRangeSlider({ minVal, maxVal, onChangeMin, onChangeMax }: {
   );
 }
 
-export default function SearchForm() {
+interface SearchFormProps {
+  mobileExpanded: boolean;
+  onMobileExpand: (expanded: boolean) => void;
+}
+
+export default function SearchForm({ mobileExpanded, onMobileExpand }: SearchFormProps) {
   const [searchType, setSearchType] = useState<'arrendar' | 'comprar'>('arrendar');
   const [sector, setSector] = useState('');
   const [tipo, setTipo] = useState('');
@@ -203,6 +208,11 @@ export default function SearchForm() {
   const [isSearching, setIsSearching] = useState(false);
   const animRef = useRef<number>(0);
   const lastTimeRef = useRef<number>(0);
+
+  const handleTabClick = useCallback((type: 'arrendar' | 'comprar') => {
+    setSearchType(type);
+    onMobileExpand(true);
+  }, [onMobileExpand]);
 
   const handleSearch = useCallback(() => {
     setIsSearching(true);
@@ -221,12 +231,12 @@ export default function SearchForm() {
   useEffect(() => () => cancelAnimationFrame(animRef.current), []);
 
   return (
-    <div style={{ maxWidth: '72rem', margin: '-120px auto 0', padding: '0 1rem', position: 'relative' }}>
+    <div className="relative mx-auto px-4 sm:px-6 lg:px-8 -mt-[80px] sm:-mt-[120px] lg:-mt-[180px]" style={{ maxWidth: '72rem', zIndex: 20 }}>
       <div className="bg-white shadow-2xl">
         {/* Tabs */}
         <div className="flex bg-brand-dark w-full">
           {(['arrendar', 'comprar'] as const).map((t) => (
-            <button key={t} onClick={() => setSearchType(t)}
+            <button key={t} onClick={() => handleTabClick(t)}
               className={`flex-1 px-5 py-2.5 text-sm transition-all duration-200 ${
                 searchType === t ? 'bg-white text-brand-red' : 'bg-white/40 text-white hover:bg-white/50'}`}
               style={{ fontFamily: "'Avenir LT Pro 65 Medium', sans-serif", fontWeight: 500 }}>
@@ -236,7 +246,7 @@ export default function SearchForm() {
         </div>
 
         {/* Search Fields */}
-        <div className="flex flex-col sm:flex-row items-stretch">
+        <div className={`search-fields flex flex-col sm:flex-row items-stretch ${mobileExpanded ? 'fields-expanded' : 'fields-collapsed'}`}>
           {/* Código */}
           <div className="group flex-1 flex items-center gap-3 px-4 py-3 border-b sm:border-b-0 sm:border-r border-gray-200">
             <div className="w-9 h-9 rounded shrink-0 flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:shadow-[0_0_14px_rgba(207,10,44,0.5)]" style={{ backgroundColor: '#f2f2f2' }}>
