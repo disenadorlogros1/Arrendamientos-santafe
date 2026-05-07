@@ -28,22 +28,30 @@ export default function HeroSection() {
           style={{
             fontFamily: "'Avenir LT Pro 35 Light', 'Avenir', 'Outfit', system-ui, sans-serif",
             fontWeight: 200,
-            lineHeight: '0.10',
+            lineHeight: '0.9',
             textShadow: '0 2px 20px rgba(0,0,0,0.4)',
           }}
         >
-          El apartamento{' '}
+          <span
+            style={{ display: 'inline-block', marginBottom: '-0.55em' }}
+          >
+            El apartamento{' '}
+          </span>
           <span
             style={{
-              display: 'inline',
+              display: 'inline-block',
+              marginBottom: '-0.55em',
               background: 'linear-gradient(to bottom, transparent 60%, #CF0A2C 60%, #CF0A2C 84%, transparent 84%)',
               padding: '0 4px',
-              margin: '0 -4px',
               boxDecorationBreak: 'clone',
               WebkitBoxDecorationBreak: 'clone',
             }}
           >que siempre quisiste, en el lugar</span>{' '}
-          que siempre quisiste.
+          <span
+            style={{ display: 'inline-block' }}
+          >
+            que siempre quisiste.
+          </span>
         </h1>
         <p
           className="mt-4 text-base sm:text-lg text-white"
