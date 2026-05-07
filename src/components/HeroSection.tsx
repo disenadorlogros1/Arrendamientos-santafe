@@ -28,7 +28,7 @@ export default function HeroSection() {
           style={{
             fontFamily: "'Avenir LT Pro 35 Light', 'Avenir', 'Outfit', system-ui, sans-serif",
             fontWeight: 200,
-            lineHeight: '0.55',
+            lineHeight: '0.35',
             textShadow: '0 2px 20px rgba(0,0,0,0.4)',
           }}
         >

@@ -103,7 +103,7 @@ function CustomSelect({
 
   return (
     <div className="min-w-0 flex-1">
-      <p className="text-[14px] text-gray-400 leading-tight">{label}</p>
+      <p className="text-[14px] text-gray-400 leading-tight whitespace-normal sm:whitespace-nowrap">{label}</p>
       <button
         ref={triggerRef}
         type="button"
@@ -309,7 +309,7 @@ export default function SearchForm({ mobileExpanded, onMobileExpand }: SearchFor
           </div>
 
           {/* Tipo */}
-          <div className="filter-field group flex-1 flex items-center gap-3 px-4 py-3 border-b sm:border-b-0 sm:border-r border-gray-200">
+          <div className="filter-field group flex-1 flex items-center gap-3 px-4 py-3 border-b sm:border-b-0 sm:border-r border-gray-200 sm:min-w-[160px]">
             <div className="filter-icon w-9 h-9 rounded shrink-0 flex items-center justify-center transition-all duration-300" style={{ backgroundColor: '#f2f2f2' }}>
               <img src="/tipo-de-propiedad.gif" alt="Tipo" className="w-5 h-5" />
             </div>
