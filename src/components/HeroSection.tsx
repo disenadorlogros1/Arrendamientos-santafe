@@ -48,8 +48,8 @@ export default function HeroSection() {
         <p
           className="mt-4 text-base sm:text-lg text-white"
           style={{
-            fontFamily: "'Avenir LT Pro 35 Light', 'Avenir', 'Outfit', system-ui, sans-serif",
-            fontWeight: 300,
+            fontFamily: "'Avenir LT Pro 35 Light', 'Avenir Next Ultra Light', 'Avenir', 'Outfit', system-ui, sans-serif",
+            fontWeight: 100,
             letterSpacing: '0.25em',
             textShadow: '0 1px 10px rgba(0,0,0,0.4)',
           }}
