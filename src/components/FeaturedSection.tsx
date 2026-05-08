@@ -1,15 +1,11 @@
 'use client';
 
+import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import InfiniteCarousel from '@/components/InfiniteCarousel';
 import { properties } from '@/data/properties';
-import type { PageType } from '@/components/Header';
 
-interface FeaturedSectionProps {
-  onNavigate: (page: PageType) => void;
-}
-
-export default function FeaturedSection({ onNavigate }: FeaturedSectionProps) {
+export default function FeaturedSection() {
   const featured = properties.filter((p) => p.featured);
 
   return (
@@ -39,14 +35,8 @@ export default function FeaturedSection({ onNavigate }: FeaturedSectionProps) {
             agendamos tu visita de inmediato.
           </p>
         </div>
-        <Button
-          onClick={() => {
-            onNavigate('propiedades');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-          }}
-          className="shrink-0 bg-gray-800 hover:bg-gray-700 text-white rounded-full px-6 py-2.5 text-sm font-medium"
-        >
-          Ver más
+        <Button asChild className="shrink-0 bg-gray-800 hover:bg-gray-700 text-white rounded-full px-6 py-2.5 text-sm font-medium">
+          <Link href="/propiedades/">Ver más</Link>
         </Button>
       </div>
 
