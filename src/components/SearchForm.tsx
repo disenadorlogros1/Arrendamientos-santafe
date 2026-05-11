@@ -2,27 +2,30 @@
 
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { createPortal } from 'react-dom';
-import { X } from 'lucide-react';
+import { X, SlidersHorizontal, Hash, MapPin } from 'lucide-react';
 
 const SECTORES = [
-  'Envigado', 'Poblado', 'Laureles', 'Belen', 'Estadio', 'Itagui', 'Sabaneta',
-  'Bello', 'Caldas', 'Copacabana', 'Guarne', 'Rionegro', 'La Ceja',
-  'Medellin', 'Aranjuez', 'Buenos Aires', 'Castilla', 'Robledo',
-  'Guayabal', 'El Poblado', 'Santo Domingo', 'Manrique', 'Popular',
-  'San Javier', 'Santa Cruz', 'Altavista', 'San Antonio de Prado',
+  'Medellín', 'Envigado', 'Rionegro', 'Bello', 'Itagüí', 'Sabaneta',
+  'Caldas', 'Copacabana', 'Guarne', 'La Ceja',
+  'El Poblado', 'Laureles', 'Belén', 'Estadio', 'Aranjuez',
+  'Buenos Aires', 'Castilla', 'Robledo', 'Guayabal',
+  'Santo Domingo', 'San Antonio de Prado',
 ];
 
 const TIPOS_INMUEBLE = [
-  'ApartaEstudio', 'Apartamento', 'Bodega', 'Casa', 'CasaLocal',
-  'Finca', 'Local', 'Oficina',
+  'Apartamento', 'Apartaestudio', 'Casa', 'Oficina',
+  'Local comercial', 'Bodega', 'Lote', 'Finca',
 ];
 
 const HABITACIONES = ['1', '2', '3', '4', '5+'];
+const BANOS = ['1', '2', '3', '4', '5+'];
+const PARQUEADEROS = ['0', '1', '2', '3+'];
+const ESTRATOS = ['1', '2', '3', '4', '5', '6'];
 
 /* Price ranges per search type */
 const PRICE_RANGES = {
   arrendar: { min: 100000, max: 15000000, step: 100000 },
-  comprar:  { min: 30000000, max: 500000000, step: 1000000 },
+  comprar:  { min: 30000000, max: 1500000000, step: 1000000 },
 } as const;
 
 function formatPrice(val: number) {
@@ -210,10 +213,17 @@ interface SearchFormProps {
 export default function SearchForm({ mobileExpanded, onMobileExpand }: SearchFormProps) {
   const [searchType, setSearchType] = useState<'arrendar' | 'comprar' | null>(null);
   const activeType = searchType || 'arrendar';
+  const [searchMode, setSearchMode] = useState<'codigo' | 'ubicacion'>('ubicacion');
   const [sector, setSector] = useState('');
   const [tipo, setTipo] = useState('');
   const [codigo, setCodigo] = useState('');
   const [habitaciones, setHabitaciones] = useState('');
+  const [banos, setBanos] = useState('');
+  const [parqueaderos, setParqueaderos] = useState('');
+  const [estrato, setEstrato] = useState('');
+  const [areaMin, setAreaMin] = useState('');
+  const [areaMax, setAreaMax] = useState('');
+  const [showAdvanced, setShowAdvanced] = useState(false);
   const [precioMin, setPrecioMin] = useState(PRICE_RANGES.arrendar.min);
   const [precioMax, setPrecioMax] = useState(PRICE_RANGES.arrendar.max);
   const [isSearching, setIsSearching] = useState(false);
@@ -221,7 +231,6 @@ export default function SearchForm({ mobileExpanded, onMobileExpand }: SearchFor
 
   const handleTabClick = useCallback((type: 'arrendar' | 'comprar') => {
     setSearchType(type);
-    /* Reset price to new range when switching tabs */
     setPrecioMin(PRICE_RANGES[type].min);
     setPrecioMax(PRICE_RANGES[type].max);
     onMobileExpand(true);
@@ -230,6 +239,7 @@ export default function SearchForm({ mobileExpanded, onMobileExpand }: SearchFor
   const handleClose = useCallback(() => {
     setSearchType(null);
     onMobileExpand(false);
+    setShowAdvanced(false);
   }, [onMobileExpand]);
 
   const handleSearch = useCallback(() => {
@@ -248,7 +258,7 @@ export default function SearchForm({ mobileExpanded, onMobileExpand }: SearchFor
 
   return (
     <div className="relative mx-auto px-4 sm:px-6 lg:px-8 -mt-[112px] sm:-mt-[120px] lg:-mt-[180px]" style={{ maxWidth: '72rem', zIndex: 20 }}>
-      {/* X button — positioned OUTSIDE the white card, top-right, mobile only, only when expanded */}
+      {/* X button — mobile only when expanded */}
       {mobileExpanded && (
         <button
           type="button"
@@ -261,7 +271,7 @@ export default function SearchForm({ mobileExpanded, onMobileExpand }: SearchFor
       )}
 
       <div className="bg-white shadow-2xl">
-        {/* Tabs */}
+        {/* Tabs Arrendar / Comprar */}
         <div className="flex bg-brand-dark w-full relative">
           {(['arrendar', 'comprar'] as const).map((t) => (
             <button key={t} onClick={() => handleTabClick(t)}
@@ -271,91 +281,170 @@ export default function SearchForm({ mobileExpanded, onMobileExpand }: SearchFor
               {t === 'arrendar' ? 'Arrendar' : 'Comprar'}
             </button>
           ))}
-
-          {/* Divider line between Arrendar/Comprar — only on mobile, only when no option selected */}
           {!mobileExpanded && (
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-px h-6 bg-white/40 sm:hidden" />
           )}
         </div>
 
-        {/* Search Fields — mobile: vertical collapsible, desktop: single horizontal line */}
-        <div className={`search-fields flex flex-col sm:flex-row sm:flex-nowrap items-stretch ${mobileExpanded ? 'fields-expanded' : 'fields-collapsed'}`}>
-          {/* Código */}
-          <div className="filter-field group flex-1 flex items-center gap-3 px-4 py-3 border-b sm:border-b-0 sm:border-r border-gray-200">
-            <div className="filter-icon w-9 h-9 rounded shrink-0 flex items-center justify-center transition-all duration-300" style={{ backgroundColor: '#f2f2f2' }}>
-              <img src="/numero-codigo.gif" alt="Código" className="w-5 h-5" />
-            </div>
-            <div className="min-w-0 flex-1">
-              <p className="text-[14px] text-gray-400 leading-tight">Código</p>
-              <input type="text" value={codigo} onChange={(e) => setCodigo(e.target.value)} placeholder="Ej: 1234"
-                className="w-full text-sm text-brand-dark font-semibold bg-transparent border-none outline-none placeholder:text-gray-300 placeholder:font-normal" />
-            </div>
-          </div>
-
-          {/* Ubicación */}
-          <div className="filter-field group flex-1 flex items-center gap-3 px-4 py-3 border-b sm:border-b-0 sm:border-r border-gray-200">
-            <div className="filter-icon w-9 h-9 rounded shrink-0 flex items-center justify-center transition-all duration-300" style={{ backgroundColor: '#f2f2f2' }}>
-              <img src="/ubicacion.gif" alt="Ubicación" className="w-5 h-5" />
-            </div>
-            <CustomSelect label="Ubicación" value={sector} onChange={setSector} options={SECTORES} placeholder="Seleccionar" />
-          </div>
-
-          {/* Precio */}
-          <div className="filter-field group flex-1 flex items-center gap-3 px-4 py-3 border-b sm:border-b-0 sm:border-r border-gray-200">
-            <div className="filter-icon w-9 h-9 rounded shrink-0 flex items-center justify-center transition-all duration-300" style={{ backgroundColor: '#f2f2f2' }}>
-              <img src="/precio.gif" alt="Precio" className="w-5 h-5" />
-            </div>
-            <PriceRangeSlider searchType={activeType} minVal={precioMin} maxVal={precioMax} onChangeMin={setPrecioMin} onChangeMax={setPrecioMax} />
-          </div>
-
-          {/* Tipo */}
-          <div className="filter-field group flex-1 flex items-center gap-3 px-4 py-3 border-b sm:border-b-0 sm:border-r border-gray-200 sm:min-w-[160px]">
-            <div className="filter-icon w-9 h-9 rounded shrink-0 flex items-center justify-center transition-all duration-300" style={{ backgroundColor: '#f2f2f2' }}>
-              <img src="/tipo-de-propiedad.gif" alt="Tipo" className="w-5 h-5" />
-            </div>
-            <CustomSelect label="Tipo de Inmueble" value={tipo} onChange={setTipo} options={TIPOS_INMUEBLE} placeholder="Seleccionar" />
-          </div>
-
-          {/* Habitaciones */}
-          <div className="filter-field group flex-1 flex items-center gap-3 px-4 py-3 border-b sm:border-b-0 sm:border-r border-gray-200">
-            <div className="filter-icon w-9 h-9 rounded shrink-0 flex items-center justify-center transition-all duration-300" style={{ backgroundColor: '#f2f2f2' }}>
-              <img src="/habitaciones-copia.gif" alt="Habitaciones" className="w-5 h-5" />
-            </div>
-            <CustomSelect label="Habitaciones" value={habitaciones} onChange={setHabitaciones} options={HABITACIONES.map(h => `${h} o más`)} placeholder="Seleccionar" />
-          </div>
-
-          {/* Botón Buscar — lupa animada */}
+        {/* Toggle: Por código / Por ubicación */}
+        <div className={`flex border-b border-gray-200 ${mobileExpanded ? '' : 'hidden sm:flex'}`}>
           <button
-            onClick={handleSearch}
-            className="relative overflow-hidden bg-brand-red hover:bg-brand-red-hover text-white px-8 py-3 sm:py-[18px] sm:px-10 text-[18px] font-semibold flex items-center justify-center gap-2 transition-colors duration-200 shrink-0 active:scale-95"
+            type="button"
+            onClick={() => setSearchMode('codigo')}
+            className={`flex items-center gap-2 flex-1 sm:flex-none px-5 py-2.5 text-sm font-semibold transition-colors ${
+              searchMode === 'codigo'
+                ? 'text-brand-red border-b-2 border-brand-red -mb-px'
+                : 'text-gray-500 hover:text-brand-red'
+            }`}
           >
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" className="shrink-0">
-              <circle
-                cx="10" cy="10" r="7"
-                stroke="white" strokeWidth="2.5" strokeLinecap="round"
-                strokeDasharray={isSearching ? '14 30' : '44 0'}
-                style={{ transition: 'stroke-dasharray 0.3s ease' }}
-              />
-              <line
-                x1="14.5" y1="14.5" x2="20" y2="20"
-                stroke="white" strokeWidth="2.5" strokeLinecap="round"
-                style={{
-                  opacity: isSearching ? 0 : 1,
-                  transition: 'opacity 0.25s ease',
-                }}
-              />
-              {isSearching && (
-                <circle
-                  cx="10" cy="10" r="5"
-                  stroke="rgba(255,255,255,0.8)" strokeWidth="1.5" strokeLinecap="round"
-                  strokeDasharray="8 24"
-                  className="search-lens-group spinning"
-                />
-              )}
-            </svg>
-            <span className="whitespace-nowrap">Buscar</span>
+            <Hash className="w-4 h-4" />
+            Por código
+          </button>
+          <button
+            type="button"
+            onClick={() => setSearchMode('ubicacion')}
+            className={`flex items-center gap-2 flex-1 sm:flex-none px-5 py-2.5 text-sm font-semibold transition-colors ${
+              searchMode === 'ubicacion'
+                ? 'text-brand-red border-b-2 border-brand-red -mb-px'
+                : 'text-gray-500 hover:text-brand-red'
+            }`}
+          >
+            <MapPin className="w-4 h-4" />
+            Por ubicación
           </button>
         </div>
+
+        {/* MODO CÓDIGO — solo input de código + botón */}
+        {searchMode === 'codigo' && (
+          <div className={`search-fields flex flex-col sm:flex-row sm:flex-nowrap items-stretch ${mobileExpanded ? 'fields-expanded' : 'fields-collapsed'}`}>
+            <div className="filter-field group flex-1 flex items-center gap-3 px-4 py-3 border-b sm:border-b-0 sm:border-r border-gray-200">
+              <div className="filter-icon w-9 h-9 rounded shrink-0 flex items-center justify-center" style={{ backgroundColor: '#f2f2f2' }}>
+                <img src="/numero-codigo.gif" alt="Código" className="w-5 h-5" />
+              </div>
+              <div className="min-w-0 flex-1">
+                <p className="text-[14px] text-gray-400 leading-tight">Código del inmueble</p>
+                <input
+                  type="text"
+                  value={codigo}
+                  onChange={(e) => setCodigo(e.target.value)}
+                  placeholder="Ej: 1234"
+                  className="w-full text-sm text-brand-dark font-semibold bg-transparent border-none outline-none placeholder:text-gray-300 placeholder:font-normal"
+                />
+              </div>
+            </div>
+
+            <button
+              onClick={handleSearch}
+              className="relative overflow-hidden bg-brand-red hover:bg-brand-red-hover text-white px-8 py-3 sm:py-[18px] sm:px-10 text-[18px] font-semibold flex items-center justify-center gap-2 transition-colors duration-200 shrink-0 active:scale-95"
+            >
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" className="shrink-0">
+                <circle cx="10" cy="10" r="7" stroke="white" strokeWidth="2.5" strokeLinecap="round"
+                  strokeDasharray={isSearching ? '14 30' : '44 0'}
+                  style={{ transition: 'stroke-dasharray 0.3s ease' }} />
+                <line x1="14.5" y1="14.5" x2="20" y2="20" stroke="white" strokeWidth="2.5" strokeLinecap="round"
+                  style={{ opacity: isSearching ? 0 : 1, transition: 'opacity 0.25s ease' }} />
+              </svg>
+              <span className="whitespace-nowrap">Buscar inmueble</span>
+            </button>
+          </div>
+        )}
+
+        {/* MODO UBICACIÓN — todos los filtros */}
+        {searchMode === 'ubicacion' && (
+          <>
+            <div className={`search-fields flex flex-col sm:flex-row sm:flex-nowrap items-stretch ${mobileExpanded ? 'fields-expanded' : 'fields-collapsed'}`}>
+              {/* Ciudad o sector */}
+              <div className="filter-field group flex-1 flex items-center gap-3 px-4 py-3 border-b sm:border-b-0 sm:border-r border-gray-200">
+                <div className="filter-icon w-9 h-9 rounded shrink-0 flex items-center justify-center" style={{ backgroundColor: '#f2f2f2' }}>
+                  <img src="/ubicacion.gif" alt="Ciudad o sector" className="w-5 h-5" />
+                </div>
+                <CustomSelect label="Ciudad o sector" value={sector} onChange={setSector} options={SECTORES} placeholder="Seleccionar" />
+              </div>
+
+              {/* Tipo de inmueble */}
+              <div className="filter-field group flex-1 flex items-center gap-3 px-4 py-3 border-b sm:border-b-0 sm:border-r border-gray-200">
+                <div className="filter-icon w-9 h-9 rounded shrink-0 flex items-center justify-center" style={{ backgroundColor: '#f2f2f2' }}>
+                  <img src="/tipo-de-propiedad.gif" alt="Tipo" className="w-5 h-5" />
+                </div>
+                <CustomSelect label="Tipo de inmueble" value={tipo} onChange={setTipo} options={TIPOS_INMUEBLE} placeholder="Seleccionar" />
+              </div>
+
+              {/* Rango de precio */}
+              <div className="filter-field group flex-1 flex items-center gap-3 px-4 py-3 border-b sm:border-b-0 sm:border-r border-gray-200">
+                <div className="filter-icon w-9 h-9 rounded shrink-0 flex items-center justify-center" style={{ backgroundColor: '#f2f2f2' }}>
+                  <img src="/precio.gif" alt="Precio" className="w-5 h-5" />
+                </div>
+                <PriceRangeSlider searchType={activeType} minVal={precioMin} maxVal={precioMax} onChangeMin={setPrecioMin} onChangeMax={setPrecioMax} />
+              </div>
+
+              {/* Habitaciones */}
+              <div className="filter-field group flex-1 flex items-center gap-3 px-4 py-3 border-b sm:border-b-0 sm:border-r border-gray-200">
+                <div className="filter-icon w-9 h-9 rounded shrink-0 flex items-center justify-center" style={{ backgroundColor: '#f2f2f2' }}>
+                  <img src="/habitaciones-copia.gif" alt="Habitaciones" className="w-5 h-5" />
+                </div>
+                <CustomSelect label="Habitaciones" value={habitaciones} onChange={setHabitaciones} options={HABITACIONES.map(h => `${h} o más`)} placeholder="Seleccionar" />
+              </div>
+
+              {/* Botón Buscar inmueble — CTA principal */}
+              <button
+                onClick={handleSearch}
+                className="relative overflow-hidden bg-brand-red hover:bg-brand-red-hover text-white px-8 py-3 sm:py-[18px] sm:px-10 text-[18px] font-semibold flex items-center justify-center gap-2 transition-colors duration-200 shrink-0 active:scale-95"
+              >
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" className="shrink-0">
+                  <circle cx="10" cy="10" r="7" stroke="white" strokeWidth="2.5" strokeLinecap="round"
+                    strokeDasharray={isSearching ? '14 30' : '44 0'}
+                    style={{ transition: 'stroke-dasharray 0.3s ease' }} />
+                  <line x1="14.5" y1="14.5" x2="20" y2="20" stroke="white" strokeWidth="2.5" strokeLinecap="round"
+                    style={{ opacity: isSearching ? 0 : 1, transition: 'opacity 0.25s ease' }} />
+                  {isSearching && (
+                    <circle cx="10" cy="10" r="5" stroke="rgba(255,255,255,0.8)" strokeWidth="1.5" strokeLinecap="round"
+                      strokeDasharray="8 24" className="search-lens-group spinning" />
+                  )}
+                </svg>
+                <span className="whitespace-nowrap">Buscar inmueble</span>
+              </button>
+            </div>
+
+            {/* Botón Búsqueda avanzada */}
+            <div className="flex justify-center sm:justify-start px-4 py-2 border-t border-gray-100">
+              <button
+                type="button"
+                onClick={() => setShowAdvanced(prev => !prev)}
+                className="inline-flex items-center gap-2 text-xs sm:text-sm text-gray-600 hover:text-brand-red font-medium transition-colors"
+              >
+                <SlidersHorizontal className="w-4 h-4" />
+                {showAdvanced ? 'Ocultar filtros avanzados' : 'Búsqueda avanzada'}
+              </button>
+            </div>
+
+            {/* Filtros avanzados (colapsable) */}
+            {showAdvanced && (
+              <div className="border-t border-gray-200 bg-gray-50 grid grid-cols-2 sm:grid-cols-5 gap-0">
+                <div className="filter-field flex items-center gap-3 px-4 py-3 border-r border-b sm:border-b-0 border-gray-200">
+                  <CustomSelect label="Baños" value={banos} onChange={setBanos} options={BANOS.map(b => `${b} o más`)} placeholder="Seleccionar" />
+                </div>
+                <div className="filter-field flex items-center gap-3 px-4 py-3 border-r border-b sm:border-b-0 border-gray-200">
+                  <CustomSelect label="Parqueaderos" value={parqueaderos} onChange={setParqueaderos} options={PARQUEADEROS.map(p => `${p} o más`)} placeholder="Seleccionar" />
+                </div>
+                <div className="filter-field flex items-center gap-3 px-4 py-3 border-r border-b sm:border-b-0 border-gray-200 col-span-2 sm:col-span-1">
+                  <div className="min-w-0 flex-1">
+                    <p className="text-[14px] text-gray-400 leading-tight">Área (m²)</p>
+                    <div className="flex items-center gap-2">
+                      <input type="number" value={areaMin} onChange={(e) => setAreaMin(e.target.value)} placeholder="Min"
+                        className="w-full text-sm text-brand-dark font-semibold bg-transparent border-none outline-none placeholder:text-gray-300 placeholder:font-normal" />
+                      <span className="text-gray-300">—</span>
+                      <input type="number" value={areaMax} onChange={(e) => setAreaMax(e.target.value)} placeholder="Max"
+                        className="w-full text-sm text-brand-dark font-semibold bg-transparent border-none outline-none placeholder:text-gray-300 placeholder:font-normal" />
+                    </div>
+                  </div>
+                </div>
+                <div className="filter-field flex items-center gap-3 px-4 py-3 border-r border-gray-200">
+                  <CustomSelect label="Estrato" value={estrato} onChange={setEstrato} options={ESTRATOS} placeholder="Seleccionar" />
+                </div>
+              </div>
+            )}
+          </>
+        )}
       </div>
     </div>
   );

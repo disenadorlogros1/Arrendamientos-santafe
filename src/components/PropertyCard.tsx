@@ -1,10 +1,15 @@
 'use client';
 
 import { useState, useCallback, useRef } from 'react';
+import { Eye, MessageCircle, CalendarDays } from 'lucide-react';
 import type { Property } from '@/data/properties';
 
 interface PropertyCardProps {
   property: Property;
+}
+
+function whatsappLink(message: string) {
+  return `https://wa.me/573006557529?text=${encodeURIComponent(message)}`;
 }
 
 export default function PropertyCard({ property }: PropertyCardProps) {
@@ -173,6 +178,53 @@ export default function PropertyCard({ property }: PropertyCardProps) {
         >
           {property.reference}
         </p>
+
+        {/* CTAs operativos en iconos */}
+        <div className="mt-3 pt-3 border-t border-gray-100 flex items-center justify-around gap-2">
+          {/* Ver inmueble */}
+          <button
+            type="button"
+            onClick={(e) => e.stopPropagation()}
+            className="flex flex-col items-center gap-1 px-2 py-1 text-gray-500 hover:text-brand-red transition-colors group/cta"
+            aria-label="Ver inmueble"
+            title="Ver inmueble"
+          >
+            <Eye className="w-5 h-5" />
+            <span className="text-[10px] leading-none group-hover/cta:text-brand-red">Ver</span>
+          </button>
+
+          {/* Consultar disponibilidad (WhatsApp) */}
+          <a
+            href={whatsappLink(
+              `Hola, quisiera consultar disponibilidad del inmueble ${property.reference} (${property.location}).`
+            )}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={(e) => e.stopPropagation()}
+            className="flex flex-col items-center gap-1 px-2 py-1 text-gray-500 hover:text-brand-red transition-colors group/cta"
+            aria-label="Consultar disponibilidad"
+            title="Consultar disponibilidad"
+          >
+            <MessageCircle className="w-5 h-5" />
+            <span className="text-[10px] leading-none group-hover/cta:text-brand-red">Consultar</span>
+          </a>
+
+          {/* Agendar visita */}
+          <a
+            href={whatsappLink(
+              `Hola, me gustaría agendar una visita al inmueble ${property.reference} (${property.location}).`
+            )}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={(e) => e.stopPropagation()}
+            className="flex flex-col items-center gap-1 px-2 py-1 text-gray-500 hover:text-brand-red transition-colors group/cta"
+            aria-label="Agendar visita"
+            title="Agendar visita"
+          >
+            <CalendarDays className="w-5 h-5" />
+            <span className="text-[10px] leading-none group-hover/cta:text-brand-red">Agendar</span>
+          </a>
+        </div>
       </div>
     </div>
   );
