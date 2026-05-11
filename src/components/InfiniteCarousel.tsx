@@ -103,10 +103,13 @@ export default function InfiniteCarousel({ properties }: InfiniteCarouselProps) 
     };
   }, []);
 
+  // Flecha izquierda: invierte la dirección del giro hacia la izquierda (cards entran por la izquierda).
   const handlePrev = useCallback(() => {
     if (!tweenRef.current || !trackRef.current) return;
 
-    // Pause the infinite scroll
+    // Cambia la dirección a "backward" (track se mueve hacia la derecha → cards entran por la izquierda)
+    directionRef.current = 'backward';
+
     tweenRef.current.pause();
 
     const currentX = gsap.getProperty(trackRef.current, 'x') as number;
@@ -117,16 +120,19 @@ export default function InfiniteCarousel({ properties }: InfiniteCarouselProps) 
       duration: 0.5,
       ease: 'power2.out',
       onComplete: () => {
-        // Resume infinite scroll from the new position (no reset to 0)
+        // Reanuda el scroll infinito en la nueva dirección (backward)
         startInfiniteScroll(targetX);
       },
     });
   }, [cardWidth, startInfiniteScroll]);
 
+  // Flecha derecha: dirección por defecto (cards entran por la derecha, giran hacia la izquierda).
   const handleNext = useCallback(() => {
     if (!tweenRef.current || !trackRef.current) return;
 
-    // Pause the infinite scroll
+    // Cambia la dirección a "forward" (track se mueve hacia la izquierda → cards entran por la derecha)
+    directionRef.current = 'forward';
+
     tweenRef.current.pause();
 
     const currentX = gsap.getProperty(trackRef.current, 'x') as number;
@@ -137,7 +143,7 @@ export default function InfiniteCarousel({ properties }: InfiniteCarouselProps) 
       duration: 0.5,
       ease: 'power2.out',
       onComplete: () => {
-        // Resume infinite scroll from the new position (no reset to 0)
+        // Reanuda el scroll infinito en la nueva dirección (forward)
         startInfiniteScroll(targetX);
       },
     });
