@@ -236,7 +236,7 @@ export default function HipotecasPage() {
               className="mt-6 bg-white text-brand-dark hover:bg-white/90 rounded-full px-8 py-3 font-semibold"
             >
               <a
-                href="https://wa.me/573000000000"
+                href="https://wa.me/573006557529?text=Hola%2C%20quisiera%20asesor%C3%ADa%20sobre%20hipotecas%20con%20Arrendamientos%20Santa%20Fe."
                 target="_blank"
                 rel="noopener noreferrer"
               >

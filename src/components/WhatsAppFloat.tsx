@@ -23,7 +23,7 @@ export default function WhatsAppFloat() {
 
   return (
     <a
-      href="https://wa.me/573000000000"
+      href="https://wa.me/573006557529?text=Hola%2C%20quisiera%20hablar%20con%20un%20asesor%20de%20Arrendamientos%20Santa%20Fe."
       target="_blank"
       rel="noopener noreferrer"
       className={`fixed bottom-6 right-6 z-50 w-14 h-14 ${color.bg} ${color.hover} rounded-full flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-700 animate-bounce-subtle`}

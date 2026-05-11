@@ -16,20 +16,23 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Arrendamientos Santa Fé | Arriendos y Ventas en Medellín",
+  title: "Arrendamientos Santa Fe | 60 años guiando decisiones inmobiliarias en Antioquia",
   description:
-    "El apartamento que siempre quisiste, en el lugar que siempre quisiste. Arriendos y ventas de propiedades en Medellín y área metropolitana.",
+    "Respaldo y experiencia inmobiliaria en Antioquia desde 1966. Arrendamientos, ventas, consignación, administración y asesoría con procesos claros y acompañamiento en cada etapa.",
   keywords: [
-    "arriendos",
+    "arrendamientos",
     "ventas",
     "propiedades",
+    "inmobiliaria Antioquia",
     "Medellín",
+    "Envigado",
+    "Rionegro",
     "apartamentos",
     "casas",
-    "arrendamientos",
-    "Santa Fé",
+    "consignación",
+    "Arrendamientos Santa Fe",
   ],
-  authors: [{ name: "Arrendamientos Santa Fé" }],
+  authors: [{ name: "Arrendamientos Santa Fe" }],
   icons: {
     icon: [
       { url: "/favicon-rojo.gif", media: "(prefers-color-scheme: light)", type: "image/gif" },
@@ -37,11 +40,18 @@ export const metadata: Metadata = {
     ],
   },
   openGraph: {
-    title: "Arrendamientos Santa Fé | Arriendos y Ventas en Medellín",
+    title: "Arrendamientos Santa Fe | 60 años de experiencia inmobiliaria",
     description:
-      "El apartamento que siempre quisiste, en el lugar que siempre quisiste. Arriendos y ventas de propiedades en Medellín y área metropolitana.",
-    siteName: "Arrendamientos Santa Fé",
+      "Respaldo y experiencia en Antioquia para encontrar o gestionar tu propiedad ideal. Sedes en Medellín, Envigado y Rionegro.",
+    siteName: "Arrendamientos Santa Fe",
+    locale: "es_CO",
     type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Arrendamientos Santa Fe | 60 años de experiencia inmobiliaria",
+    description:
+      "Respaldo y experiencia en Antioquia para encontrar o gestionar tu propiedad ideal.",
   },
 };
 

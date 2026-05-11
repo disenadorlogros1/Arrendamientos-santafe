@@ -1,6 +1,22 @@
 'use client';
 
-export default function HeroSection() {
+interface HeroSectionProps {
+  onNavigate?: (page: 'propiedades' | 'consignacion') => void;
+}
+
+const WHATSAPP_URL =
+  'https://wa.me/573006557529?text=Hola%2C%20quisiera%20hablar%20con%20un%20asesor%20de%20Arrendamientos%20Santa%20Fe.';
+
+export default function HeroSection({ onNavigate }: HeroSectionProps) {
+  const scrollToSearch = () => {
+    const el = document.getElementById('buscador');
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } else {
+      window.scrollTo({ top: window.innerHeight * 0.7, behavior: 'smooth' });
+    }
+  };
+
   return (
     <section className="relative w-full h-[70vh] flex items-center justify-center overflow-hidden">
       {/* Background Video */}
@@ -25,28 +41,59 @@ export default function HeroSection() {
       >
         <div className="hero-title-wrap">
           <h1 className="hero-title-text text-3xl sm:text-4xl md:text-5xl lg:text-[48px] text-white tracking-tight">
-            <span className="hero-line-seg hero-line-first">
-              El apartamento{' '}
-            </span>
             <span className="hero-line-seg hero-line-highlight">
-              que siempre quisiste, en el lugar
+              60 años
             </span>{' '}
             <span className="hero-line-seg hero-line-last">
-              que siempre quisiste.
+              guiando tus decisiones inmobiliarias.
             </span>
           </h1>
         </div>
         <p
-          className="mt-4 text-base sm:text-lg text-white"
+          className="mt-4 text-base sm:text-lg text-white max-w-2xl"
           style={{
-            fontFamily: "'Avenir LT Pro 35 Light', 'Avenir Next Ultra Light', 'Avenir', 'Outfit', system-ui, sans-serif",
-            fontWeight: 100,
-            letterSpacing: '0.25em',
+            fontFamily:
+              "'Avenir LT Pro 35 Light', 'Avenir Next Ultra Light', 'Avenir', 'Outfit', system-ui, sans-serif",
+            fontWeight: 200,
+            letterSpacing: '0.05em',
             textShadow: '0 1px 10px rgba(0,0,0,0.4)',
           }}
         >
-          Sin vueltas, sin letras pequeñas, sin sorpresas.
+          Respaldo y experiencia en Antioquia para encontrar o gestionar tu
+          propiedad ideal.
         </p>
+
+        {/* CTAs jerárquicos */}
+        <div className="mt-7 flex flex-wrap items-center gap-3">
+          {/* CTA Principal: Buscar inmueble */}
+          <button
+            type="button"
+            onClick={scrollToSearch}
+            className="inline-flex items-center justify-center h-12 px-6 bg-brand-red hover:bg-brand-red-hover text-white text-sm sm:text-base font-semibold rounded-md shadow-lg transition-colors"
+          >
+            Buscar inmueble
+          </button>
+
+          {/* CTA Secundario: Consignar mi propiedad */}
+          <button
+            type="button"
+            onClick={() => onNavigate?.('consignacion')}
+            className="inline-flex items-center justify-center h-12 px-6 bg-transparent hover:bg-white/10 text-white text-sm sm:text-base font-semibold border-2 border-white/80 rounded-md transition-colors"
+          >
+            Consignar mi propiedad
+          </button>
+
+          {/* CTA Operativo: Hablar con un asesor (WhatsApp) */}
+          <a
+            href={WHATSAPP_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 h-10 px-4 bg-white/10 hover:bg-white/20 text-white text-sm rounded-md backdrop-blur-sm transition-colors"
+          >
+            <img src="/wpp-blanco.gif" alt="" className="w-4 h-4" />
+            <span>Hablar con un asesor</span>
+          </a>
+        </div>
       </div>
     </section>
   );

@@ -86,7 +86,7 @@ export default function InstitucionalPage() {
               transition={{ duration: 0.5 }}
             >
               <div className="flex items-center gap-2 mb-4">
-                <img src="/logo-rojo.png" alt="Santa Fé" className="h-6 w-auto object-contain" />
+                <img src="/logo-rojo.png" alt="Arrendamientos Santa Fe" className="h-6 w-auto object-contain" />
                 <h2 className="text-sm font-medium text-brand-red uppercase tracking-wider">
                   Sobre nosotros
                 </h2>
@@ -95,7 +95,7 @@ export default function InstitucionalPage() {
                 Más de 15 años conectando personas con su hogar ideal
               </h3>
               <p className="text-brand-gray leading-relaxed mb-4">
-                Arrendamientos Santa Fé nació con la misión de hacer más fácil y transparente el
+                Arrendamientos Santa Fe nació con la misión de hacer más fácil y transparente el
                 proceso de encontrar arriendo o compra de propiedades en Medellín y su área
                 metropolitana.
               </p>
@@ -258,7 +258,7 @@ export default function InstitucionalPage() {
               className="bg-white text-brand-dark hover:bg-white/90 rounded-full px-8 py-3 font-semibold"
             >
               <a
-                href="https://wa.me/573000000000"
+                href="https://wa.me/573006557529?text=Hola%2C%20quisiera%20m%C3%A1s%20informaci%C3%B3n%20sobre%20Arrendamientos%20Santa%20Fe."
                 target="_blank"
                 rel="noopener noreferrer"
               >

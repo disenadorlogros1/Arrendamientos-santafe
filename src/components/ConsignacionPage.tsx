@@ -67,7 +67,7 @@ export default function ConsignacionPage() {
             className="text-center mb-12"
           >
             <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">
-              ¿Por qué consignar con <span className="text-brand-red">Santa Fé</span>?
+              ¿Por qué consignar con <span className="text-brand-red">Arrendamientos Santa Fe</span>?
             </h2>
             <p className="mt-3 text-brand-gray max-w-2xl mx-auto">
               Más de 15 años de experiencia nos respaldan. Tu propiedad en las mejores manos.
@@ -158,7 +158,7 @@ export default function ConsignacionPage() {
               className="mt-6 bg-white text-brand-dark hover:bg-white/90 rounded-full px-8 py-3 font-semibold"
             >
               <a
-                href="https://wa.me/573000000000"
+                href="https://wa.me/573006557529?text=Hola%2C%20quisiera%20consignar%20una%20propiedad%20con%20Arrendamientos%20Santa%20Fe."
                 target="_blank"
                 rel="noopener noreferrer"
               >

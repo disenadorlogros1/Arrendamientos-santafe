@@ -19,8 +19,10 @@ function HomePage({ onNavigate }: { onNavigate: (page: PageType) => void }) {
 
   return (
     <>
-      <HeroSection />
-      <SearchForm mobileExpanded={mobileExpanded} onMobileExpand={setMobileExpanded} />
+      <HeroSection onNavigate={onNavigate} />
+      <div id="buscador">
+        <SearchForm mobileExpanded={mobileExpanded} onMobileExpand={setMobileExpanded} />
+      </div>
       <UserLocation mobileExpanded={mobileExpanded} />
       <div className="bg-brand-light py-6">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">

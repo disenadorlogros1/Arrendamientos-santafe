@@ -23,7 +23,7 @@ export default function FeaturedSection({ onNavigate }: FeaturedSectionProps) {
               fontWeight: 300,
             }}
           >
-            Destacadas del mes
+            Propiedades destacadas
           </h2>
           <p
             className="mt-1 text-sm sm:text-base max-w-xl"
@@ -34,9 +34,9 @@ export default function FeaturedSection({ onNavigate }: FeaturedSectionProps) {
               lineHeight: '1.45',
             }}
           >
-            Las mejores oportunidades vuelan. En estas propiedades ya está
-            escrito tu futuro, ¡no las dejes pasar! Escríbenos por WhatsApp y
-            agendamos tu visita de inmediato.
+            Inmuebles seleccionados por ubicación, características y
+            oportunidad. Consulta disponibilidad, agenda una visita o recibe
+            asesoría de nuestro equipo.
           </p>
         </div>
         <Button
@@ -44,7 +44,7 @@ export default function FeaturedSection({ onNavigate }: FeaturedSectionProps) {
             onNavigate('propiedades');
             window.scrollTo({ top: 0, behavior: 'smooth' });
           }}
-          className="shrink-0 bg-gray-800 hover:bg-gray-700 text-white rounded-full px-6 py-2.5 text-sm font-medium"
+          className="shrink-0 bg-brand-red hover:bg-brand-red-hover text-white rounded-md px-6 h-11 text-sm font-semibold"
         >
           Ver más
         </Button>

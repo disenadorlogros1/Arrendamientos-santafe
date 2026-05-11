@@ -7,8 +7,12 @@ import { Sheet, SheetContent, SheetTrigger, SheetTitle } from '@/components/ui/s
 export type PageType = 'home' | 'propiedades' | 'consignacion' | 'hipotecas' | 'servicios' | 'nosotros';
 
 interface HeaderProps { currentPage: PageType; onNavigate: (page: PageType) => void; }
-interface SubItem { label: string; page?: PageType; }
+interface SubItem { label: string; page?: PageType; href?: string; }
 interface NavItem { label: string; page?: PageType; children?: SubItem[]; }
+
+const PSE_URL = 'https://www.psepagos.co/PSEHostingUI/ShowTicketOffice.aspx?ID=9011';
+const SOLICITUD_ARRENDAMIENTO_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSfAg9SMibueBBUy-Pe1rQuO1Rz7U4z7z9uq91pv-gp-0-dCgQ/viewform';
+const REPARACIONES_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSdwCAaLU5ApyfAvf-yEEgj-fMQmnBRIh4614LhDIWtKhBDzyQ/viewform';
 
 const navItems: NavItem[] = [
   { label: 'Inicio', page: 'home' },
@@ -26,14 +30,14 @@ const navItems: NavItem[] = [
     { label: 'Requisitos', page: 'hipotecas' },
   ]},
   { label: 'Servicios', page: 'servicios', children: [
-    { label: 'Pagar en línea' },
-    { label: 'Solicitud de arrendamiento' },
-    { label: 'Reparaciones' },
+    { label: 'Todos los servicios', page: 'servicios' },
+    { label: 'Pagar en línea', href: PSE_URL },
+    { label: 'Solicitud de arrendamiento', href: SOLICITUD_ARRENDAMIENTO_URL },
+    { label: 'Reportar reparación', href: REPARACIONES_URL },
   ]},
   { label: 'Nosotros', page: 'nosotros', children: [
     { label: 'Quiénes somos', page: 'nosotros' },
     { label: '60 años', page: 'nosotros' },
-    { label: 'Blog' },
   ]},
 ];
 
@@ -44,7 +48,7 @@ function WhatsAppButton() {
     return () => clearInterval(i);
   }, []);
   return (
-    <a href="https://wa.me/573000000000" target="_blank" rel="noopener noreferrer"
+    <a href="https://wa.me/573006557529?text=Hola%2C%20quisiera%20hablar%20con%20un%20asesor%20de%20Arrendamientos%20Santa%20Fe." target="_blank" rel="noopener noreferrer"
       className={`flex items-center gap-2 h-[42px] px-5 rounded-full text-sm font-semibold transition-all duration-700 ease-in-out whitespace-nowrap ${
         isRed ? 'bg-brand-red text-white shadow-[0_0_20px_rgba(207,10,44,0.6)]' : 'bg-white text-brand-red shadow-[0_0_12px_rgba(255,255,255,0.3)]'
       }`}>
@@ -78,7 +82,7 @@ export default function Header({ currentPage, onNavigate }: HeaderProps) {
       <div className="mx-auto max-w-6xl flex items-center justify-between gap-4">
         {/* Logo */}
         <button onClick={() => handleNav('home')} className="shrink-0">
-          <img src="/logo-blanco.png" alt="Santa Fé Arrendamientos" className="h-10 md:h-11 w-auto object-contain drop-shadow-lg" />
+          <img src="/logo-blanco.png" alt="Arrendamientos Santa Fe" className="h-10 md:h-11 w-auto object-contain drop-shadow-lg" />
         </button>
 
         {/* Nav capsula — desktop — SIN backdrop-blur para evitar stacking context */}
@@ -97,18 +101,30 @@ export default function Header({ currentPage, onNavigate }: HeaderProps) {
                 {/* Dropdown CSS — se muestra con group-hover */}
                 <div className="absolute top-full left-1/2 pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200"
                   style={{ transform: 'translateX(-50%)', zIndex: 60 }}>
-                  <div className="bg-white rounded-2xl pt-2 pb-1 min-w-[210px] shadow-2xl border border-gray-100">
-                    {item.children.map((sub) => (
-                      <button
-                        key={sub.label}
-                        onClick={() => {
-                          if (sub.page) handleNav(sub.page);
-                        }}
-                        className="block w-full text-left px-5 py-2.5 text-[15px] text-gray-700 hover:text-white hover:bg-brand-red transition-colors duration-150 first:rounded-t-2xl last:rounded-b-2xl"
-                      >
-                        {sub.label}
-                      </button>
-                    ))}
+                  <div className="bg-white rounded-2xl pt-2 pb-1 min-w-[230px] shadow-2xl border border-gray-100">
+                    {item.children.map((sub) =>
+                      sub.href ? (
+                        <a
+                          key={sub.label}
+                          href={sub.href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="block w-full text-left px-5 py-2.5 text-[15px] text-gray-700 hover:text-white hover:bg-brand-red transition-colors duration-150 first:rounded-t-2xl last:rounded-b-2xl"
+                        >
+                          {sub.label}
+                        </a>
+                      ) : (
+                        <button
+                          key={sub.label}
+                          onClick={() => {
+                            if (sub.page) handleNav(sub.page);
+                          }}
+                          className="block w-full text-left px-5 py-2.5 text-[15px] text-gray-700 hover:text-white hover:bg-brand-red transition-colors duration-150 first:rounded-t-2xl last:rounded-b-2xl"
+                        >
+                          {sub.label}
+                        </button>
+                      )
+                    )}
                   </div>
                 </div>
               </div>
@@ -142,7 +158,7 @@ export default function Header({ currentPage, onNavigate }: HeaderProps) {
               <SheetTitle className="sr-only">Menú de navegación</SheetTitle>
               <div className="flex flex-col h-full">
                 <div className="flex items-center justify-between p-4 border-b border-white/10">
-                  <img src="/logo-blanco.png" alt="Santa Fé" className="h-8 w-auto object-contain" />
+                  <img src="/logo-blanco.png" alt="Arrendamientos Santa Fe" className="h-8 w-auto object-contain" />
                   <button onClick={() => setMobileOpen(false)} className="text-white/60 hover:text-white" aria-label="Cerrar menú">
                     <X className="h-5 w-5" />
                   </button>
@@ -157,12 +173,24 @@ export default function Header({ currentPage, onNavigate }: HeaderProps) {
                       </button>
                       {item.children && expandedMobile === item.label && (
                         <div className="pl-6 pb-1 space-y-0">
-                          {item.children.map((sub) => (
-                            <button key={sub.label} onClick={() => { if (sub.page) handleNav(sub.page); }}
-                              className="w-full text-left px-4 py-1.5 rounded-lg text-sm text-white/50 hover:text-white hover:bg-white/5 transition-all duration-200">
-                              {sub.label}
-                            </button>
-                          ))}
+                          {item.children.map((sub) =>
+                            sub.href ? (
+                              <a
+                                key={sub.label}
+                                href={sub.href}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="block w-full text-left px-4 py-1.5 rounded-lg text-sm text-white/50 hover:text-white hover:bg-white/5 transition-all duration-200"
+                              >
+                                {sub.label}
+                              </a>
+                            ) : (
+                              <button key={sub.label} onClick={() => { if (sub.page) handleNav(sub.page); }}
+                                className="w-full text-left px-4 py-1.5 rounded-lg text-sm text-white/50 hover:text-white hover:bg-white/5 transition-all duration-200">
+                                {sub.label}
+                              </button>
+                            )
+                          )}
                         </div>
                       )}
                     </div>

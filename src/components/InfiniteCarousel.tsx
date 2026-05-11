@@ -13,6 +13,7 @@ export default function InfiniteCarousel({ properties }: InfiniteCarouselProps) 
   const wrapperRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const tweenRef = useRef<gsap.core.Tween | null>(null);
+  const directionRef = useRef<'forward' | 'backward'>('forward');
   const [isPaused, setIsPaused] = useState(false);
 
   const cardWidth = 288; // card width + gap
@@ -34,12 +35,16 @@ export default function InfiniteCarousel({ properties }: InfiniteCarouselProps) 
     if (startX < -singleSetWidth) startX += singleSetWidth;
     gsap.set(trackRef.current, { x: startX });
 
+    // Direction: forward = track moves left (cards scroll left). backward = track moves right (cards scroll right).
+    const isForward = directionRef.current === 'forward';
+    const endX = isForward ? startX - singleSetWidth : startX + singleSetWidth;
+
     // Animate one full set width, then repeat (jump back = visually identical due to clone)
     tweenRef.current = gsap.fromTo(
       trackRef.current,
       { x: startX },
       {
-        x: startX - singleSetWidth,
+        x: endX,
         duration: properties.length * speedPerCard,
         ease: 'none',
         repeat: -1,

@@ -177,7 +177,7 @@ export default function ServiciosPage() {
               className="mt-6 bg-white text-brand-dark hover:bg-white/90 rounded-full px-8 py-3 font-semibold"
             >
               <a
-                href="https://wa.me/573000000000"
+                href="https://wa.me/573006557529?text=Hola%2C%20quisiera%20conocer%20m%C3%A1s%20sobre%20los%20servicios%20de%20Arrendamientos%20Santa%20Fe."
                 target="_blank"
                 rel="noopener noreferrer"
               >
