@@ -7,32 +7,32 @@ import { Button } from '@/components/ui/button';
 const benefits = [
   {
     icon: Shield,
-    title: 'Seguridad total',
-    description: 'Verificamos cada propiedad y documento antes de consignarla. Tu tranquilidad es nuestra prioridad.',
+    title: 'Respaldo y experiencia',
+    description: '60 años de trayectoria en el mercado inmobiliario de Antioquia.',
   },
   {
     icon: Clock,
-    title: 'Proceso ágil',
-    description: 'Gestionamos todo el proceso de consignación de manera eficiente para que no pierdas tiempo.',
+    title: 'Procesos claros',
+    description: 'Acompañamiento oportuno en cada etapa, con información transparente.',
   },
   {
     icon: TrendingUp,
-    title: 'Valorización',
-    description: 'Te asesoramos para que tu propiedad mantenga y aumente su valor en el mercado.',
+    title: 'Conocimiento del mercado',
+    description: 'Te orientamos sobre el comportamiento del sector y la valorización de tu inmueble.',
   },
   {
     icon: FileCheck,
-    title: 'Documentación completa',
-    description: 'Nos encargamos de toda la documentación legal y contractual de tu propiedad.',
+    title: 'Gestión documental',
+    description: 'Apoyo en la revisión y trámite de la documentación legal y contractual.',
   },
 ];
 
 const steps = [
-  { number: '01', title: 'Contacto inicial', description: 'Cuéntanos sobre tu propiedad y tus expectativas de consignación.' },
-  { number: '02', title: 'Visita y evaluación', description: 'Realizamos una visita profesional para evaluar tu inmueble.' },
-  { number: '03', title: 'Documentación', description: 'Recopilamos y verificamos toda la documentación necesaria.' },
-  { number: '04', title: 'Publicación', description: 'Tu propiedad es publicada en nuestras plataformas con fotografías profesionales.' },
-  { number: '05', title: 'Gestión y cierre', description: 'Gestionamos las visitas, negociaciones y el cierre del arriendo o venta.' },
+  { number: '01', title: 'Contacto inicial', description: 'Cuéntanos sobre tu inmueble y los objetivos del propietario.' },
+  { number: '02', title: 'Visita y evaluación', description: 'Visitamos el inmueble y revisamos su estado, ubicación y características.' },
+  { number: '03', title: 'Documentación', description: 'Recopilamos y revisamos la documentación requerida para la gestión.' },
+  { number: '04', title: 'Publicación', description: 'Publicamos el inmueble en nuestros canales con material fotográfico profesional.' },
+  { number: '05', title: 'Gestión y cierre', description: 'Coordinamos visitas, negociación y cierre del arrendamiento o venta.' },
 ];
 
 export default function ConsignacionPage() {
@@ -47,10 +47,11 @@ export default function ConsignacionPage() {
             transition={{ duration: 0.5 }}
           >
             <h1 className="text-3xl sm:text-4xl font-bold text-white">
-              Consignación
+              Consignación de inmuebles
             </h1>
-            <p className="mt-2 text-white/60 max-w-2xl">
-              Confía tu propiedad a profesionales. Nos encargamos de todo para que tú solo recibas los beneficios.
+            <p className="mt-2 text-white/70 max-w-2xl">
+              Consigna tu propiedad con respaldo, experiencia y conocimiento del
+              mercado inmobiliario en Antioquia.
             </p>
           </motion.div>
         </div>
@@ -70,7 +71,8 @@ export default function ConsignacionPage() {
               ¿Por qué consignar con <span className="text-brand-red">Arrendamientos Santa Fe</span>?
             </h2>
             <p className="mt-3 text-brand-gray max-w-2xl mx-auto">
-              Más de 15 años de experiencia nos respaldan. Tu propiedad en las mejores manos.
+              60 años de experiencia en arrendamiento, venta y administración
+              inmobiliaria en Antioquia.
             </p>
           </motion.div>
 
@@ -109,7 +111,7 @@ export default function ConsignacionPage() {
               Proceso de <span className="text-brand-red">consignación</span>
             </h2>
             <p className="mt-3 text-brand-gray max-w-2xl mx-auto">
-              Un proceso simple y transparente de principio a fin.
+              Un proceso ordenado, con información clara en cada etapa.
             </p>
           </motion.div>
 
@@ -148,10 +150,11 @@ export default function ConsignacionPage() {
           >
             <Users className="h-12 w-12 text-brand-red mx-auto mb-4" />
             <h2 className="text-2xl sm:text-3xl font-bold text-white">
-              ¿Listo para consignar tu propiedad?
+              ¿Tienes un inmueble para consignar?
             </h2>
-            <p className="mt-3 text-white/60 max-w-xl mx-auto">
-              Contáctanos hoy y agenda una visita sin compromiso. Te asesoramos en todo el proceso.
+            <p className="mt-3 text-white/70 max-w-xl mx-auto">
+              Conversemos sobre tu propiedad. Te orientamos con información
+              clara para que tomes una mejor decisión.
             </p>
             <Button
               asChild

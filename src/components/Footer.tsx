@@ -1,6 +1,11 @@
 'use client';
 
 import { MessageCircle, Phone, Mail, MapPin, Clock, CreditCard, FileText, Wrench } from 'lucide-react';
+import type { PageType } from '@/components/Header';
+
+interface FooterProps {
+  onNavigate?: (page: PageType) => void;
+}
 
 const PSE_URL = 'https://www.psepagos.co/PSEHostingUI/ShowTicketOffice.aspx?ID=9011';
 const SOLICITUD_ARRENDAMIENTO_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSfAg9SMibueBBUy-Pe1rQuO1Rz7U4z7z9uq91pv-gp-0-dCgQ/viewform';
@@ -10,7 +15,7 @@ const FACEBOOK_URL = 'https://www.facebook.com/arrendamientossantafe';
 const INSTAGRAM_URL = 'https://www.instagram.com/arrendamientossantafe';
 const TIKTOK_URL = 'https://www.tiktok.com/@arrendamientossantafe';
 
-export default function Footer() {
+export default function Footer({ onNavigate }: FooterProps = {}) {
   return (
     <footer className="bg-brand-dark text-white">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
@@ -188,14 +193,37 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Copyright */}
+        {/* Copyright + legales */}
         <div className="mt-10 pt-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <p className="text-white/40 text-xs">
+          <p className="text-white/40 text-xs text-center sm:text-left">
             © {new Date().getFullYear()} Arrendamientos Santa Fe. Todos los derechos reservados.
+            <br className="sm:hidden" />
+            <span className="hidden sm:inline"> · </span>
+            Antioquia, Colombia
           </p>
-          <p className="text-white/40 text-xs">
-            Antioquia, Colombia · 60 años de experiencia inmobiliaria
-          </p>
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs">
+            {onNavigate ? (
+              <>
+                <button
+                  type="button"
+                  onClick={() => onNavigate('politicas')}
+                  className="text-white/50 hover:text-white transition-colors"
+                >
+                  Política de datos
+                </button>
+                <span className="text-white/20">·</span>
+                <button
+                  type="button"
+                  onClick={() => onNavigate('terminos')}
+                  className="text-white/50 hover:text-white transition-colors"
+                >
+                  Términos y condiciones
+                </button>
+              </>
+            ) : (
+              <span className="text-white/40">60 años de experiencia inmobiliaria</span>
+            )}
+          </div>
         </div>
       </div>
     </footer>

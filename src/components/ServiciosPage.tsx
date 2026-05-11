@@ -3,11 +3,11 @@
 import { motion } from 'framer-motion';
 import {
   Home,
+  TrendingUp,
   Key,
-  FileCheck,
-  Scale,
-  PaintBucket,
-  Camera,
+  ClipboardList,
+  BadgeCheck,
+  Calculator,
   MessageCircle,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -15,39 +15,36 @@ import { Button } from '@/components/ui/button';
 const services = [
   {
     icon: Home,
-    title: 'Arriendos',
+    title: 'Arrendamientos',
     description:
-      'Gestión completa de arriendo: búsqueda de inquilinos, contratos, cobros y mantenimiento. Tú solo recibes tu renta.',
+      'Encuentra inmuebles disponibles con acompañamiento durante el proceso.',
+  },
+  {
+    icon: TrendingUp,
+    title: 'Ventas',
+    description: 'Compra o vende tu propiedad con asesoría inmobiliaria.',
   },
   {
     icon: Key,
-    title: 'Ventas',
-    description:
-      'Venta profesional de tu propiedad con tasación de mercado, fotografía profesional y negociación experta.',
-  },
-  {
-    icon: FileCheck,
     title: 'Consignación',
     description:
-      'Deja tu propiedad en nuestras manos. La administramos, protegemos y mantenemos como si fuera nuestra.',
+      'Entrega tu inmueble a una empresa con experiencia en promoción y gestión.',
   },
   {
-    icon: Scale,
-    title: 'Asesoría legal',
+    icon: ClipboardList,
+    title: 'Administración',
     description:
-      'Revisión de contratos, estudio de títulos y acompañamiento legal en todas las transacciones inmobiliarias.',
+      'Gestionamos procesos de arrendamiento con respaldo y claridad.',
   },
   {
-    icon: PaintBucket,
-    title: 'Adecuación',
-    description:
-      'Servicio de adecuación y mejora de propiedades para maximizar su valor en el mercado de arriendo o venta.',
+    icon: BadgeCheck,
+    title: 'Avalúos',
+    description: 'Recibe orientación sobre el valor comercial de tu inmueble.',
   },
   {
-    icon: Camera,
-    title: 'Fotografía profesional',
-    description:
-      'Sesiones fotográficas y videos de alta calidad para que tu propiedad destaque en todas las plataformas.',
+    icon: Calculator,
+    title: 'Hipotecas',
+    description: 'Conoce alternativas de préstamo sobre propiedad raíz.',
   },
 ];
 
@@ -63,10 +60,11 @@ export default function ServiciosPage() {
             transition={{ duration: 0.5 }}
           >
             <h1 className="text-3xl sm:text-4xl font-bold text-white">
-              Nuestros Servicios
+              Nuestros servicios
             </h1>
-            <p className="mt-2 text-white/60 max-w-2xl">
-              Soluciones inmobiliarias integrales para cada etapa de tu vida.
+            <p className="mt-2 text-white/70 max-w-2xl">
+              Una oferta integral para acompañar tus decisiones inmobiliarias en
+              Antioquia con respaldo, experiencia y procesos claros.
             </p>
           </motion.div>
         </div>
@@ -111,29 +109,29 @@ export default function ServiciosPage() {
               transition={{ duration: 0.5 }}
             >
               <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">
-                Atención <span className="text-brand-red">personalizada</span>
+                Acompañamiento <span className="text-brand-red">en cada etapa</span>
               </h2>
               <p className="text-brand-gray leading-relaxed mb-4">
-                Cada cliente es único, y cada propiedad lo es también. Por eso ofrecemos un servicio
-                personalizado que se adapta a tus necesidades específicas, ya sea que busques arrendar,
-                comprar, vender o consignar tu propiedad.
+                Cada decisión inmobiliaria es distinta. Por eso ofrecemos un
+                servicio con información clara, procesos ordenados y
+                acompañamiento desde la primera consulta hasta el cierre.
               </p>
               <p className="text-brand-gray leading-relaxed">
-                Nuestro equipo de profesionales está disponible para acompañarte en cada paso del proceso,
-                desde la primera consulta hasta la firma del contrato.
+                Nuestro equipo está disponible para orientarte en arrendamiento,
+                venta, consignación, administración y asesoría hipotecaria.
               </p>
               <div className="mt-6 flex flex-wrap gap-6">
                 <div>
-                  <p className="text-3xl font-bold text-brand-red">500+</p>
-                  <p className="text-sm text-brand-gray">Propiedades gestionadas</p>
-                </div>
-                <div>
-                  <p className="text-3xl font-bold text-brand-red">15+</p>
+                  <p className="text-3xl font-bold text-brand-red">60</p>
                   <p className="text-sm text-brand-gray">Años de experiencia</p>
                 </div>
                 <div>
-                  <p className="text-3xl font-bold text-brand-red">98%</p>
-                  <p className="text-sm text-brand-gray">Clientes satisfechos</p>
+                  <p className="text-3xl font-bold text-brand-red">3</p>
+                  <p className="text-sm text-brand-gray">Sedes en Antioquia</p>
+                </div>
+                <div>
+                  <p className="text-3xl font-bold text-brand-red">+1K</p>
+                  <p className="text-sm text-brand-gray">Inmuebles gestionados</p>
                 </div>
               </div>
             </motion.div>
@@ -169,8 +167,9 @@ export default function ServiciosPage() {
             <h2 className="text-2xl sm:text-3xl font-bold text-white">
               ¿Necesitas alguno de nuestros servicios?
             </h2>
-            <p className="mt-3 text-white/60 max-w-xl mx-auto">
-              Escríbenos y cuéntanos qué necesitas. Te respondemos en minutos.
+            <p className="mt-3 text-white/70 max-w-xl mx-auto">
+              Escríbenos por WhatsApp y un asesor te orientará con información
+              clara sobre lo que necesitas.
             </p>
             <Button
               asChild

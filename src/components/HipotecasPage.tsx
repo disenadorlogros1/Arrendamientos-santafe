@@ -31,18 +31,18 @@ export default function HipotecasPage() {
   const features = [
     {
       icon: Percent,
-      title: 'Mejores tasas',
-      description: 'Negociamos las mejores tasas de interés con los principales bancos del país.',
+      title: 'Orientación sobre tasas',
+      description: 'Información clara sobre tasas de interés y alternativas disponibles en el mercado.',
     },
     {
       icon: FileText,
-      title: 'Asesoría completa',
-      description: 'Te guiamos en todo el proceso: documentos, requisitos y negociaciones.',
+      title: 'Acompañamiento en el proceso',
+      description: 'Te orientamos sobre los documentos, requisitos y etapas del crédito hipotecario.',
     },
     {
       icon: Handshake,
-      title: 'Alianzas bancarias',
-      description: 'Trabajamos con los bancos más reconocidos para conseguir el crédito ideal.',
+      title: 'Conexión con entidades',
+      description: 'Te conectamos con entidades financieras reconocidas para evaluar opciones.',
     },
   ];
 
@@ -57,10 +57,11 @@ export default function HipotecasPage() {
             transition={{ duration: 0.5 }}
           >
             <h1 className="text-3xl sm:text-4xl font-bold text-white">
-              Hipotecas
+              Asesoría hipotecaria
             </h1>
-            <p className="mt-2 text-white/60 max-w-2xl">
-              Te ayudamos a conseguir el crédito hipotecario que necesitas para la casa de tus sueños.
+            <p className="mt-2 text-white/70 max-w-2xl">
+              Te orientamos en alternativas de préstamo sobre propiedad raíz con
+              información clara y acompañamiento durante el proceso.
             </p>
           </motion.div>
         </div>
@@ -228,8 +229,9 @@ export default function HipotecasPage() {
             <h2 className="text-2xl sm:text-3xl font-bold text-white">
               ¿Necesitas asesoría hipotecaria?
             </h2>
-            <p className="mt-3 text-white/60 max-w-xl mx-auto">
-              Nuestro equipo te guía para encontrar la mejor opción de crédito hipotecario según tu perfil.
+            <p className="mt-3 text-white/70 max-w-xl mx-auto">
+              Conversemos sobre tu caso. Te orientamos con información clara
+              sobre alternativas de préstamo sobre propiedad raíz.
             </p>
             <Button
               asChild

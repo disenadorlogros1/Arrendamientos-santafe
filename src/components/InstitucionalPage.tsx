@@ -39,18 +39,18 @@ const team = [
 const values = [
   {
     icon: Heart,
-    title: 'Transparencia',
-    description: 'Operamos con total honestidad y claridad en cada transacción.',
+    title: 'Respaldo y experiencia',
+    description: '60 años de trayectoria respaldan nuestra forma de acompañar decisiones inmobiliarias.',
   },
   {
     icon: Target,
-    title: 'Compromiso',
-    description: 'Nos comprometemos con cada cliente para encontrar la mejor solución.',
+    title: 'Procesos claros',
+    description: 'Información transparente y acompañamiento en cada etapa del proceso.',
   },
   {
     icon: Users,
-    title: 'Cercanía',
-    description: 'Tratamos a cada cliente como parte de nuestra familia.',
+    title: 'Conocimiento del mercado',
+    description: 'Entendemos las dinámicas inmobiliarias de Antioquia desde sus territorios.',
   },
 ];
 
@@ -66,10 +66,11 @@ export default function InstitucionalPage() {
             transition={{ duration: 0.5 }}
           >
             <h1 className="text-3xl sm:text-4xl font-bold text-white">
-              Institucional
+              Sobre nosotros · 60 años
             </h1>
-            <p className="mt-2 text-white/60 max-w-2xl">
-              Conoce quiénes somos y por qué somos tu mejor opción inmobiliaria en Medellín.
+            <p className="mt-2 text-white/70 max-w-2xl">
+              Desde 1966 acompañamos a personas, familias y propietarios en
+              decisiones inmobiliarias clave en Antioquia.
             </p>
           </motion.div>
         </div>
@@ -92,22 +93,22 @@ export default function InstitucionalPage() {
                 </h2>
               </div>
               <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">
-                Más de 15 años conectando personas con su hogar ideal
+                60 años de experiencia inmobiliaria en Antioquia
               </h3>
               <p className="text-brand-gray leading-relaxed mb-4">
-                Arrendamientos Santa Fe nació con la misión de hacer más fácil y transparente el
-                proceso de encontrar arriendo o compra de propiedades en Medellín y su área
-                metropolitana.
+                Desde 1966, Arrendamientos Santa Fe ha acompañado a personas,
+                familias y propietarios en decisiones inmobiliarias clave.
               </p>
               <p className="text-brand-gray leading-relaxed mb-4">
-                Desde nuestros inicios, nos hemos destacado por un servicio personalizado, una
-                comunicación clara y un compromiso genuino con cada uno de nuestros clientes. No
-                somos una inmobiliaria más, somos tu aliado inmobiliario de confianza.
+                Nuestra experiencia nos ha permitido crecer junto a Antioquia,
+                entendiendo sus territorios, sus dinámicas y las necesidades de
+                quienes buscan arrendar, vender, comprar o invertir con
+                confianza.
               </p>
               <p className="text-brand-gray leading-relaxed">
-                Hoy contamos con un equipo multidisciplinario de profesionales apasionados por el
-                sector inmobiliario, listos para acompañarte en cada paso de tu camino hacia el
-                hogar de tus sueños.
+                Hoy contamos con tres sedes en Medellín, Envigado y Rionegro,
+                desde donde acompañamos a nuestros clientes con respaldo,
+                procesos claros y criterio inmobiliario.
               </p>
             </motion.div>
 
@@ -127,8 +128,8 @@ export default function InstitucionalPage() {
               />
               <div className="absolute inset-0 rounded-2xl bg-gradient-to-t from-black/20 to-transparent" />
               <div className="absolute bottom-6 left-6 bg-white rounded-xl p-4 shadow-lg">
-                <p className="text-2xl font-bold text-brand-red">15+</p>
-                <p className="text-xs text-brand-gray">Años de experiencia</p>
+                <p className="text-2xl font-bold text-brand-red">60</p>
+                <p className="text-xs text-brand-gray">Años desde 1966</p>
               </div>
             </motion.div>
           </div>
@@ -185,7 +186,8 @@ export default function InstitucionalPage() {
               Nuestro <span className="text-brand-red">equipo</span>
             </h2>
             <p className="mt-3 text-brand-gray max-w-2xl mx-auto">
-              Profesionales comprometidos con hacer de tu experiencia inmobiliaria la mejor posible.
+              Un equipo con conocimiento del mercado inmobiliario en Antioquia,
+              listo para acompañarte con criterio y claridad.
             </p>
           </motion.div>
 
@@ -232,18 +234,18 @@ export default function InstitucionalPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <div className="bg-white/5 rounded-xl p-5 text-center border border-white/10">
               <MapPin className="h-6 w-6 text-brand-red mx-auto mb-2" />
-              <p className="text-sm text-white font-medium">Ubicación</p>
-              <p className="text-xs text-white/50 mt-1">Medellín, Antioquia</p>
+              <p className="text-sm text-white font-medium">Sedes</p>
+              <p className="text-xs text-white/60 mt-1">Medellín · Envigado · Rionegro</p>
             </div>
             <div className="bg-white/5 rounded-xl p-5 text-center border border-white/10">
               <Phone className="h-6 w-6 text-brand-red mx-auto mb-2" />
               <p className="text-sm text-white font-medium">Teléfono</p>
-              <p className="text-xs text-white/50 mt-1">+57 300 000 0000</p>
+              <p className="text-xs text-white/60 mt-1">(604) 448 4015</p>
             </div>
             <div className="bg-white/5 rounded-xl p-5 text-center border border-white/10">
               <Mail className="h-6 w-6 text-brand-red mx-auto mb-2" />
               <p className="text-sm text-white font-medium">Email</p>
-              <p className="text-xs text-white/50 mt-1">info@santafe.com</p>
+              <p className="text-xs text-white/60 mt-1 break-all">santafe@arrendamientossantafe.com</p>
             </div>
             <div className="bg-white/5 rounded-xl p-5 text-center border border-white/10">
               <Clock className="h-6 w-6 text-brand-red mx-auto mb-2" />

@@ -18,6 +18,8 @@ import ConsignacionPage from '@/components/ConsignacionPage';
 import HipotecasPage from '@/components/HipotecasPage';
 import ServiciosPage from '@/components/ServiciosPage';
 import InstitucionalPage from '@/components/InstitucionalPage';
+import PoliticasPage from '@/components/PoliticasPage';
+import TerminosPage from '@/components/TerminosPage';
 
 function HomePage({ onNavigate }: { onNavigate: (page: PageType) => void }) {
   const [mobileExpanded, setMobileExpanded] = useState(false);
@@ -80,9 +82,11 @@ export default function Home() {
         {currentPage === 'hipotecas' && <HipotecasPage />}
         {currentPage === 'servicios' && <ServiciosPage />}
         {currentPage === 'nosotros' && <InstitucionalPage />}
+        {currentPage === 'politicas' && <PoliticasPage />}
+        {currentPage === 'terminos' && <TerminosPage />}
       </main>
 
-      <Footer />
+      <Footer onNavigate={handleNavigate} />
     </div>
   );
 }

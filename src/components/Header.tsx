@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { Menu, X } from 'lucide-react';
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from '@/components/ui/sheet';
 
-export type PageType = 'home' | 'propiedades' | 'consignacion' | 'hipotecas' | 'servicios' | 'nosotros';
+export type PageType = 'home' | 'propiedades' | 'consignacion' | 'hipotecas' | 'servicios' | 'nosotros' | 'politicas' | 'terminos';
 
 interface HeaderProps { currentPage: PageType; onNavigate: (page: PageType) => void; }
 interface SubItem { label: string; page?: PageType; href?: string; }
