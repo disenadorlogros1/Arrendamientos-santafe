@@ -8,6 +8,11 @@ import HeroSection from '@/components/HeroSection';
 import SearchForm from '@/components/SearchForm';
 import UserLocation from '@/components/UserLocation';
 import FeaturedSection from '@/components/FeaturedSection';
+import PropietariosBlock from '@/components/PropietariosBlock';
+import QuickAccessGrid from '@/components/QuickAccessGrid';
+import ServiciosBlock from '@/components/ServiciosBlock';
+import ZonasCoberturaMap from '@/components/ZonasCoberturaMap';
+import TrayectoriaBlock from '@/components/TrayectoriaBlock';
 import PropiedadesPage from '@/components/PropiedadesPage';
 import ConsignacionPage from '@/components/ConsignacionPage';
 import HipotecasPage from '@/components/HipotecasPage';
@@ -19,16 +24,36 @@ function HomePage({ onNavigate }: { onNavigate: (page: PageType) => void }) {
 
   return (
     <>
+      {/* Sección 1: Hero Principal */}
       <HeroSection onNavigate={onNavigate} />
+
+      {/* Buscador (anclado al hero) */}
       <div id="buscador">
         <SearchForm mobileExpanded={mobileExpanded} onMobileExpand={setMobileExpanded} />
       </div>
       <UserLocation mobileExpanded={mobileExpanded} />
+
+      {/* Sección 2: Propiedades Destacadas */}
       <div className="bg-brand-light py-6">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <FeaturedSection onNavigate={onNavigate} />
         </div>
       </div>
+
+      {/* Sección 3: Bloque para Propietarios (Consignación) */}
+      <PropietariosBlock onNavigate={onNavigate} />
+
+      {/* Bloque de Accesos rápidos: ¿Qué necesitas hacer hoy? */}
+      <QuickAccessGrid onNavigate={onNavigate} />
+
+      {/* Sección 4: Servicios Principales */}
+      <ServiciosBlock onNavigate={onNavigate} />
+
+      {/* Sección 5: Zonas de Cobertura (Mapa) */}
+      <ZonasCoberturaMap />
+
+      {/* Sección 6: Bloque Institucional 60 años */}
+      <TrayectoriaBlock onNavigate={onNavigate} />
     </>
   );
 }

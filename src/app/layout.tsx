@@ -3,6 +3,7 @@ import { Outfit } from "next/font/google";
 import { Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
+import WhatsAppFloat from "@/components/WhatsAppFloat";
 
 const outfit = Outfit({
   variable: "--font-outfit",
@@ -67,6 +68,7 @@ export default function RootLayout({
         style={{ fontFamily: "'Avenir LT Pro', 'Avenir', 'Outfit', var(--font-outfit), system-ui, -apple-system, sans-serif" }}
       >
         {children}
+        <WhatsAppFloat />
         <Toaster />
       </body>
     </html>
