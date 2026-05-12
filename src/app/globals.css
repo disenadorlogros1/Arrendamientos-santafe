@@ -330,7 +330,7 @@ select option {
 .hero-title-text {
   font-family: 'Avenir LT Pro 35 Light', 'Avenir', 'Outfit', system-ui, sans-serif;
   font-weight: 200;
-  line-height: 0.95;
+  line-height: 0.82;
   text-shadow: 0 2px 20px rgba(0,0,0,0.4);
 }
 
@@ -348,22 +348,22 @@ select option {
   -webkit-box-decoration-break: clone;
 }
 
-/* ── MOBILE: line-height optimizado para nueva frase ── */
+/* ── MOBILE: line-height ajustado más compacto ── */
 @media (max-width: 1023px) {
   .hero-title-text {
-    line-height: 0.92;
+    line-height: 0.8;
   }
   .hero-line-seg {
-    margin-bottom: 0;
+    margin-bottom: -0.06em;
   }
 }
 
-/* ── DESKTOP (lg+): line-height optimizado para nueva frase ── */
+/* ── DESKTOP (lg+): line-height ajustado más compacto ── */
 @media (min-width: 1024px) {
   .hero-title-text {
-    line-height: 0.95;
+    line-height: 0.85;
   }
   .hero-line-seg {
-    margin-bottom: 0;
+    margin-bottom: -0.04em;
   }
 }

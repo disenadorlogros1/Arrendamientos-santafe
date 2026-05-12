@@ -41,11 +41,14 @@ export default function HeroSection({ onNavigate }: HeroSectionProps) {
       >
         <div className="hero-title-wrap">
           <h1 className="hero-title-text text-3xl sm:text-4xl md:text-5xl lg:text-[48px] text-white tracking-tight">
-            <span className="hero-line-seg hero-line-highlight">
+            <span className="hero-line-seg hero-line-first">
               60 años
             </span>{' '}
+            <span className="hero-line-seg hero-line-highlight">
+              guiando tus decisiones
+            </span>{' '}
             <span className="hero-line-seg hero-line-last">
-              guiando tus decisiones inmobiliarias.
+              inmobiliarias.
             </span>
           </h1>
         </div>
@@ -59,8 +62,8 @@ export default function HeroSection({ onNavigate }: HeroSectionProps) {
             textShadow: '0 1px 10px rgba(0,0,0,0.4)',
           }}
         >
-          Respaldo y experiencia en Antioquia para encontrar o gestionar tu
-          propiedad ideal.
+          Respaldo y experiencia para encontrar o gestionar tu propiedad ideal
+          en Antioquia.
         </p>
 
         {/* CTAs jerárquicos */}
