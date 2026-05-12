@@ -271,46 +271,51 @@ export default function SearchForm({ mobileExpanded, onMobileExpand }: SearchFor
       )}
 
       <div className="bg-white shadow-2xl">
-        {/* Tabs Arrendar / Comprar */}
+        {/* Tabs Arrendar / Comprar — altura reducida, sistema de colores rojo */}
         <div className="flex bg-brand-dark w-full relative">
           {(['arrendar', 'comprar'] as const).map((t) => (
             <button key={t} onClick={() => handleTabClick(t)}
-              className={`flex-1 px-5 py-3.5 transition-all duration-200 ${
-                mobileExpanded ? (activeType === t ? 'bg-white text-brand-red' : 'bg-white/40 text-white hover:bg-white/50') : 'bg-white/40 text-white hover:bg-white/50'}`}
-              style={{ fontFamily: "'Avenir LT Pro 35 Light', 'Avenir', 'Outfit', system-ui, sans-serif", fontWeight: 300, fontSize: '16px' }}>
+              className={`flex-1 px-5 py-2 transition-all duration-200 ${
+                mobileExpanded
+                  ? activeType === t
+                    ? 'bg-brand-red-hover text-white'
+                    : 'bg-gray-500 text-white hover:bg-gray-600'
+                  : 'bg-brand-red text-white hover:bg-brand-red-hover'
+              }`}
+              style={{ fontFamily: "'Avenir LT Pro 35 Light', 'Avenir', 'Outfit', system-ui, sans-serif", fontWeight: 400, fontSize: '15px' }}>
               {t === 'arrendar' ? 'Arrendar' : 'Comprar'}
             </button>
           ))}
           {!mobileExpanded && (
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-px h-6 bg-white/40 sm:hidden" />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-px h-5 bg-white/40 sm:hidden" />
           )}
         </div>
 
-        {/* Toggle: Por código / Por ubicación */}
-        <div className={`flex border-b border-gray-200 ${mobileExpanded ? '' : 'hidden sm:flex'}`}>
+        {/* Toggle: Por código / Por ubicación — centrado horizontalmente */}
+        <div className={`flex justify-center border-b border-gray-200 ${mobileExpanded ? '' : 'hidden sm:flex'}`}>
           <button
             type="button"
             onClick={() => setSearchMode('codigo')}
-            className={`flex items-center gap-2 flex-1 sm:flex-none px-5 py-2.5 text-sm font-semibold transition-colors ${
+            className={`flex items-center gap-2 px-6 py-2.5 text-sm font-semibold transition-colors ${
               searchMode === 'codigo'
                 ? 'text-brand-red border-b-2 border-brand-red -mb-px'
                 : 'text-gray-500 hover:text-brand-red'
             }`}
           >
             <Hash className="w-4 h-4" />
-            Por código
+            Búsqueda por código
           </button>
           <button
             type="button"
             onClick={() => setSearchMode('ubicacion')}
-            className={`flex items-center gap-2 flex-1 sm:flex-none px-5 py-2.5 text-sm font-semibold transition-colors ${
+            className={`flex items-center gap-2 px-6 py-2.5 text-sm font-semibold transition-colors ${
               searchMode === 'ubicacion'
                 ? 'text-brand-red border-b-2 border-brand-red -mb-px'
                 : 'text-gray-500 hover:text-brand-red'
             }`}
           >
             <MapPin className="w-4 h-4" />
-            Por ubicación
+            Búsqueda por ubicación
           </button>
         </div>
 
@@ -405,19 +410,7 @@ export default function SearchForm({ mobileExpanded, onMobileExpand }: SearchFor
               </button>
             </div>
 
-            {/* Botón Búsqueda avanzada */}
-            <div className="flex justify-center sm:justify-start px-4 py-2 border-t border-gray-100">
-              <button
-                type="button"
-                onClick={() => setShowAdvanced(prev => !prev)}
-                className="inline-flex items-center gap-2 text-xs sm:text-sm text-gray-600 hover:text-brand-red font-medium transition-colors"
-              >
-                <SlidersHorizontal className="w-4 h-4" />
-                {showAdvanced ? 'Ocultar filtros avanzados' : 'Búsqueda avanzada'}
-              </button>
-            </div>
-
-            {/* Filtros avanzados (colapsable) */}
+            {/* Filtros avanzados (colapsable) — aparecen ARRIBA del botón */}
             {showAdvanced && (
               <div className="border-t border-gray-200 bg-gray-50 grid grid-cols-2 sm:grid-cols-5 gap-0">
                 <div className="filter-field flex items-center gap-3 px-4 py-3 border-r border-b sm:border-b-0 border-gray-200">
@@ -443,6 +436,18 @@ export default function SearchForm({ mobileExpanded, onMobileExpand }: SearchFor
                 </div>
               </div>
             )}
+
+            {/* Botón Búsqueda avanzada — siempre al pie del menú, centrado */}
+            <div className="flex justify-center px-4 py-2.5 border-t border-gray-100">
+              <button
+                type="button"
+                onClick={() => setShowAdvanced(prev => !prev)}
+                className="inline-flex items-center gap-2 text-xs sm:text-sm text-gray-600 hover:text-brand-red font-semibold transition-colors"
+              >
+                <SlidersHorizontal className="w-4 h-4" />
+                {showAdvanced ? 'Ocultar filtros avanzados' : 'Búsqueda avanzada'}
+              </button>
+            </div>
           </>
         )}
       </div>

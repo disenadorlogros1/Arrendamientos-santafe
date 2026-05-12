@@ -255,16 +255,28 @@ select option {
   }
 }
 
-/* ── UserLocation: white on dark bg (default), red on light bg (mobile) ── */
+/* ── UserLocation: blanco sobre oscuro (default), rojo sobre claro ── */
 .user-location-text {
   color: #ffffff;
   text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
 }
-@media (max-width: 639px) {
-  .user-location-text.on-light {
-    color: #f32735 !important;
-    text-shadow: none !important;
+.user-location-text.on-light {
+  color: #f32735 !important;
+  text-shadow: none !important;
+}
+/* En desktop, el tag siempre cae bajo el buscador blanco → rojo */
+@media (min-width: 640px) {
+  .user-location-text {
+    color: #f32735;
+    text-shadow: none;
   }
+}
+/* Icono adaptado al fondo: muestra el rojo en desktop, blanco en mobile */
+.user-location-icon-dark { display: inline-block; }
+.user-location-icon-light { display: none; }
+@media (min-width: 640px) {
+  .user-location-icon-dark { display: none; }
+  .user-location-icon-light { display: inline-block; }
 }
 
 /* ── Filter icon glow animation on mobile tap ── */
@@ -357,22 +369,22 @@ select option {
   -webkit-box-decoration-break: clone;
 }
 
-/* ── MOBILE: line-height ajustado más compacto ── */
+/* ── MOBILE: line-height natural sin solapamiento ── */
 @media (max-width: 1023px) {
   .hero-title-text {
-    line-height: 0.8;
+    line-height: 0.95;
   }
   .hero-line-seg {
-    margin-bottom: -0.06em;
+    margin-bottom: 0;
   }
 }
 
-/* ── DESKTOP (lg+): line-height ajustado más compacto ── */
+/* ── DESKTOP (lg+): line-height ajustado a la imagen de referencia ── */
 @media (min-width: 1024px) {
   .hero-title-text {
-    line-height: 0.85;
+    line-height: 0.95;
   }
   .hero-line-seg {
-    margin-bottom: -0.04em;
+    margin-bottom: 0;
   }
 }

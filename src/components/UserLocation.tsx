@@ -19,10 +19,18 @@ export default function UserLocation({ mobileExpanded }: UserLocationProps) {
       style={{ maxWidth: '72rem', zIndex: 25 }}
     >
       <div className="flex items-center gap-2 justify-center">
+        {/* Icono rojo (sobre fondo claro): desktop por defecto y mobile expandido */}
         <img
-          src={mobileExpanded ? '/ubicacion.gif' : '/ubicacion-blanco.gif'}
+          src="/ubicacion.gif"
           alt="Ubicación"
-          className="w-4 h-4"
+          className={`w-4 h-4 user-location-icon-light ${mobileExpanded ? 'sm:!inline-block !inline-block' : ''}`}
+        />
+        {/* Icono blanco (sobre fondo oscuro): solo mobile cuando NO está expandido */}
+        <img
+          src="/ubicacion-blanco.gif"
+          alt=""
+          aria-hidden="true"
+          className={`w-4 h-4 user-location-icon-dark ${mobileExpanded ? '!hidden' : ''}`}
         />
         <span
           className={`user-location-text text-sm ${mobileExpanded ? 'on-light' : ''}`}
