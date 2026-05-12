@@ -80,7 +80,7 @@ export default function PropertyCard({ property }: PropertyCardProps) {
               cx="20"
               cy="20"
               r={radius}
-              fill="#CF0A2C"
+              fill="#f32735"
               style={{
                 clipPath: isHovered ? 'inset(0 0% 0 0)' : 'inset(0 100% 0 0)',
                 transition: 'clip-path 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
@@ -93,11 +93,11 @@ export default function PropertyCard({ property }: PropertyCardProps) {
               cx="20"
               cy="20"
               r={radius}
-              stroke="#CF0A2C"
+              stroke="#f32735"
               strokeWidth="2"
               fill="none"
               style={{
-                stroke: isHovered ? '#CF0A2C' : 'rgba(207,10,44,0.7)',
+                stroke: isHovered ? '#f32735' : 'rgba(243,39,53,0.7)',
                 transition: 'stroke 0.3s ease',
               }}
             />
@@ -105,7 +105,7 @@ export default function PropertyCard({ property }: PropertyCardProps) {
             {/* Arrow — builds from zero on hover */}
             <path
               d="M15 20L20 15M20 15L25 20M20 15V26"
-              stroke={isHovered ? '#ffffff' : '#CF0A2C'}
+              stroke={isHovered ? '#ffffff' : '#f32735'}
               strokeWidth="2"
               strokeLinecap="round"
               strokeLinejoin="round"

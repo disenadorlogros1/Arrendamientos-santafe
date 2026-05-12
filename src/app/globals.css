@@ -41,11 +41,11 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
-  /* Brand colors from Manual de Marca */
-  --color-brand-red: #CF0A2C;
-  --color-brand-red-hover: #AC162C;
-  --color-brand-red-light: #F42534;
-  --color-brand-red-dark: #7A232E;
+  /* Brand colors — rojo inicial #f32735 (cautivar), rojo seleccionado #aa182c (indicar acción) */
+  --color-brand-red: #f32735;
+  --color-brand-red-hover: #aa182c;
+  --color-brand-red-light: #f32735;
+  --color-brand-red-dark: #aa182c;
   --color-brand-dark: #232222;
   --color-brand-dark-secondary: #333333;
   --color-brand-light: #F5F5F5;
@@ -171,6 +171,15 @@
   animation: bounce-subtle 2s ease-in-out infinite;
 }
 
+/* Hero buttons — resplandor rojo al hover */
+.hero-btn {
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+.hero-btn:hover {
+  box-shadow: 0 0 24px 4px rgba(243, 39, 53, 0.55), 0 4px 18px rgba(243, 39, 53, 0.4);
+  text-shadow: none;
+}
+
 /* Video hero overlay */
 .hero-video-overlay {
   background: linear-gradient(
@@ -253,7 +262,7 @@ select option {
 }
 @media (max-width: 639px) {
   .user-location-text.on-light {
-    color: #CF0A2C !important;
+    color: #f32735 !important;
     text-shadow: none !important;
   }
 }
@@ -316,7 +325,7 @@ select option {
 /* ── Hero highlight accent — red band behind text using gradient ── */
 .hero-highlight {
   display: inline;
-  background-image: linear-gradient(#CF0A2C, #CF0A2C);
+  background-image: linear-gradient(#f32735, #f32735);
   background-size: 100% 38%;
   background-position: 0 68%;
   background-repeat: no-repeat;
@@ -330,7 +339,7 @@ select option {
 .hero-title-text {
   font-family: 'Avenir LT Pro 35 Light', 'Avenir', 'Outfit', system-ui, sans-serif;
   font-weight: 200;
-  line-height: 0.82;
+  line-height: 0.95;
   text-shadow: 0 2px 20px rgba(0,0,0,0.4);
 }
 
@@ -343,7 +352,7 @@ select option {
 
 /* Red highlight gradient on the middle span */
 .hero-line-highlight {
-  background: linear-gradient(to bottom, transparent 60%, #CF0A2C 60%, #CF0A2C 84%, transparent 84%);
+  background: linear-gradient(to bottom, transparent 60%, #f32735 60%, #f32735 84%, transparent 84%);
   box-decoration-break: clone;
   -webkit-box-decoration-break: clone;
 }

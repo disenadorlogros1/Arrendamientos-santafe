@@ -18,7 +18,7 @@ export default function HeroSection({ onNavigate }: HeroSectionProps) {
   };
 
   return (
-    <section className="relative w-full h-[70vh] flex items-center justify-center overflow-hidden">
+    <section className="relative w-full h-[85vh] sm:h-[88vh] flex items-start justify-center overflow-hidden pt-24 sm:pt-28">
       {/* Background Video */}
       <video
         autoPlay
@@ -34,13 +34,13 @@ export default function HeroSection({ onNavigate }: HeroSectionProps) {
       {/* Dark overlay */}
       <div className="absolute inset-0 hero-video-overlay" />
 
-      {/* Content — centrado horizontalmente, texto alineado a la izquierda */}
+      {/* Content — centrado horizontalmente, texto alineado a la izquierda, subido para dejar más espacio al buscador */}
       <div
         className="relative w-full px-6 sm:px-12 md:px-16 mx-auto"
         style={{ zIndex: 10, maxWidth: '56rem' }}
       >
         <div className="hero-title-wrap">
-          <h1 className="hero-title-text text-3xl sm:text-4xl md:text-5xl lg:text-[48px] text-white tracking-tight">
+          <h1 className="hero-title-text text-3xl sm:text-4xl md:text-5xl lg:text-[52px] text-white tracking-tight">
             <span className="hero-line-seg hero-line-first">
               60 años
             </span>{' '}
@@ -53,12 +53,12 @@ export default function HeroSection({ onNavigate }: HeroSectionProps) {
           </h1>
         </div>
         <p
-          className="mt-4 text-base sm:text-lg text-white max-w-2xl"
+          className="mt-5 text-base sm:text-lg text-white max-w-2xl"
           style={{
             fontFamily:
               "'Avenir LT Pro 35 Light', 'Avenir Next Ultra Light', 'Avenir', 'Outfit', system-ui, sans-serif",
             fontWeight: 200,
-            letterSpacing: '0.05em',
+            letterSpacing: '0.2em',
             textShadow: '0 1px 10px rgba(0,0,0,0.4)',
           }}
         >
@@ -66,13 +66,14 @@ export default function HeroSection({ onNavigate }: HeroSectionProps) {
           en Antioquia.
         </p>
 
-        {/* CTAs jerárquicos */}
+        {/* CTAs jerárquicos — botones cápsula con hover blanco + resplandor rojo */}
         <div className="mt-7 flex flex-wrap items-center gap-3">
           {/* CTA Principal: Buscar inmueble */}
           <button
             type="button"
             onClick={scrollToSearch}
-            className="inline-flex items-center justify-center h-12 px-6 bg-brand-red hover:bg-brand-red-hover text-white text-sm sm:text-base font-semibold rounded-md shadow-lg transition-colors"
+            className="hero-btn group inline-flex items-center justify-center h-[42px] px-6 bg-black/30 hover:bg-white text-white hover:text-brand-red text-sm sm:text-base font-semibold rounded-full border border-white/30 transition-all duration-300 hover:scale-105"
+            style={{ textShadow: '0 1px 3px rgba(0,0,0,0.4)' }}
           >
             Buscar inmueble
           </button>
@@ -81,7 +82,8 @@ export default function HeroSection({ onNavigate }: HeroSectionProps) {
           <button
             type="button"
             onClick={() => onNavigate?.('consignacion')}
-            className="inline-flex items-center justify-center h-12 px-6 bg-transparent hover:bg-white/10 text-white text-sm sm:text-base font-semibold border-2 border-white/80 rounded-md transition-colors"
+            className="hero-btn group inline-flex items-center justify-center h-[42px] px-6 bg-black/30 hover:bg-white text-white hover:text-brand-red text-sm sm:text-base font-semibold rounded-full border border-white/30 transition-all duration-300 hover:scale-105"
+            style={{ textShadow: '0 1px 3px rgba(0,0,0,0.4)' }}
           >
             Consignar mi propiedad
           </button>
@@ -91,9 +93,9 @@ export default function HeroSection({ onNavigate }: HeroSectionProps) {
             href={WHATSAPP_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 h-10 px-4 bg-white/10 hover:bg-white/20 text-white text-sm rounded-md backdrop-blur-sm transition-colors"
+            className="hero-btn group inline-flex items-center gap-2 h-[42px] px-5 bg-black/30 hover:bg-white text-white hover:text-brand-red text-sm sm:text-base font-semibold rounded-full border border-white/30 transition-all duration-300 hover:scale-105"
+            style={{ textShadow: '0 1px 3px rgba(0,0,0,0.4)' }}
           >
-            <img src="/wpp-blanco.gif" alt="" className="w-4 h-4" />
             <span>Hablar con un asesor</span>
           </a>
         </div>

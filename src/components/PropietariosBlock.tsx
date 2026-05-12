@@ -19,7 +19,7 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
         className="absolute inset-0 opacity-[0.07] pointer-events-none"
         style={{
           backgroundImage:
-            'radial-gradient(circle at 80% 20%, #CF0A2C 0%, transparent 50%), radial-gradient(circle at 20% 80%, #CF0A2C 0%, transparent 40%)',
+            'radial-gradient(circle at 80% 20%, #f32735 0%, transparent 50%), radial-gradient(circle at 20% 80%, #f32735 0%, transparent 40%)',
         }}
       />
 

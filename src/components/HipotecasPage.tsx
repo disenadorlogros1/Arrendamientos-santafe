@@ -97,7 +97,7 @@ export default function HipotecasPage() {
                       step={10000000}
                       value={loanAmount}
                       onChange={(e) => setLoanAmount(Number(e.target.value))}
-                      className="w-full accent-[#CF0A2C]"
+                      className="w-full accent-[#f32735]"
                     />
                     <div className="flex justify-between text-xs text-brand-gray mt-1">
                       <span>$50M</span>
@@ -117,7 +117,7 @@ export default function HipotecasPage() {
                       step={5}
                       value={term}
                       onChange={(e) => setTerm(Number(e.target.value))}
-                      className="w-full accent-[#CF0A2C]"
+                      className="w-full accent-[#f32735]"
                     />
                     <div className="flex justify-between text-xs text-brand-gray mt-1">
                       <span>5 años</span>
@@ -137,7 +137,7 @@ export default function HipotecasPage() {
                       step={0.5}
                       value={rate}
                       onChange={(e) => setRate(Number(e.target.value))}
-                      className="w-full accent-[#CF0A2C]"
+                      className="w-full accent-[#f32735]"
                     />
                     <div className="flex justify-between text-xs text-brand-gray mt-1">
                       <span>8%</span>
