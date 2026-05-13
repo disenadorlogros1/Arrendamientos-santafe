@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, CreditCard } from 'lucide-react';
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from '@/components/ui/sheet';
 
 export type PageType = 'home' | 'propiedades' | 'consignacion' | 'hipotecas' | 'servicios' | 'nosotros' | 'politicas' | 'terminos';
@@ -50,10 +50,25 @@ function WhatsAppButton() {
   return (
     <a href="https://wa.me/573006557529?text=Hola%2C%20quisiera%20hablar%20con%20un%20asesor%20de%20Arrendamientos%20Santa%20Fe." target="_blank" rel="noopener noreferrer"
       className={`flex items-center gap-2 h-[42px] px-5 rounded-full text-sm font-semibold transition-all duration-700 ease-in-out whitespace-nowrap ${
-        isRed ? 'bg-brand-red text-white shadow-[0_0_20px_rgba(207,10,44,0.6)]' : 'bg-white text-brand-red shadow-[0_0_12px_rgba(255,255,255,0.3)]'
+        isRed ? 'bg-brand-red text-white shadow-[0_0_20px_rgba(243,39,53,0.6)]' : 'bg-white text-brand-red shadow-[0_0_12px_rgba(255,255,255,0.3)]'
       }`}>
       <img src={isRed ? '/wpp-blanco.gif' : '/wpp-rojo.gif'} alt="WhatsApp" className="w-5 h-5" />
       <span>WhatsApp</span>
+    </a>
+  );
+}
+
+function PSEButton() {
+  return (
+    <a
+      href="https://www.psepagos.co/PSEHostingUI/ShowTicketOffice.aspx?ID=9011"
+      target="_blank"
+      rel="noopener noreferrer"
+      className="flex items-center gap-2 h-[42px] px-5 rounded-full text-sm font-semibold whitespace-nowrap bg-white text-brand-red shadow-[0_0_12px_rgba(255,255,255,0.3)] hover:bg-brand-red hover:text-white transition-colors"
+      aria-label="Pagar en línea por PSE"
+    >
+      <CreditCard className="w-4 h-4" />
+      <span>Pagar en línea</span>
     </a>
   );
 }
@@ -85,15 +100,15 @@ export default function Header({ currentPage, onNavigate }: HeaderProps) {
           <img src="/logo-blanco.png" alt="Arrendamientos Santa Fe" className="h-10 md:h-11 w-auto object-contain drop-shadow-lg" />
         </button>
 
-        {/* Nav capsula — desktop — 60% del ancho, centrado en pantalla */}
-        <nav className="hidden lg:flex items-center justify-center gap-0.5 bg-black/30 rounded-full px-2 h-[42px] border border-white/20 shadow-lg mx-auto"
+        {/* Nav capsula — desktop — botones equidistribuidos a lo ancho del menú */}
+        <nav className="hidden lg:flex items-center justify-between gap-1 bg-black/30 rounded-full px-2 h-[42px] border border-white/20 shadow-lg mx-auto"
           style={{ overflow: 'visible', width: '60%', maxWidth: '72rem' }}>
           {navItems.map((item) =>
             item.children ? (
               /* Item con dropdown — CSS puro, sin JS */
-              <div key={item.label} className="relative group">
+              <div key={item.label} className="relative group flex-1">
                 <button
-                  className="px-4 py-2 text-sm font-medium text-white rounded-full transition-all duration-300 ease-out group-hover:bg-brand-red"
+                  className="w-full px-2 py-2 text-sm font-medium text-white rounded-full transition-all duration-300 ease-out group-hover:bg-brand-red"
                   style={{ textShadow: '0 1px 3px rgba(0,0,0,0.4)' }}
                 >
                   {item.label}
@@ -133,7 +148,7 @@ export default function Header({ currentPage, onNavigate }: HeaderProps) {
               <button
                 key={item.label}
                 onClick={() => handleNav(item.page || 'home')}
-                className="px-4 py-2 text-sm font-medium text-white rounded-full transition-all duration-300 ease-out hover:bg-brand-red"
+                className="flex-1 px-2 py-2 text-sm font-medium text-white rounded-full transition-all duration-300 ease-out hover:bg-brand-red"
                 style={{ textShadow: '0 1px 3px rgba(0,0,0,0.4)' }}
               >
                 {item.label}
@@ -142,12 +157,16 @@ export default function Header({ currentPage, onNavigate }: HeaderProps) {
           )}
         </nav>
 
-        {/* WhatsApp desktop */}
-        <div className="hidden lg:block shrink-0"><WhatsAppButton /></div>
+        {/* WhatsApp + PSE desktop */}
+        <div className="hidden lg:flex shrink-0 items-center gap-2">
+          <WhatsAppButton />
+          <PSEButton />
+        </div>
 
         {/* Mobile */}
-        <div className="flex items-center gap-3 lg:hidden">
+        <div className="flex items-center gap-2 lg:hidden">
           <WhatsAppButton />
+          <PSEButton />
           <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
             <SheetTrigger asChild>
               <button className="text-white p-1.5 hover:bg-white/10 rounded-full transition-colors" aria-label="Abrir menú">

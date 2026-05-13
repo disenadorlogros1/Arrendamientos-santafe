@@ -257,7 +257,7 @@ export default function SearchForm({ mobileExpanded, onMobileExpand }: SearchFor
   useEffect(() => () => cancelAnimationFrame(animRef.current), []);
 
   return (
-    <div className="relative mx-auto px-4 sm:px-6 lg:px-8 -mt-[112px] sm:-mt-[120px] lg:-mt-[180px]" style={{ maxWidth: '72rem', zIndex: 20 }}>
+    <div className="relative mx-auto px-4 sm:px-6 lg:px-8 -mt-[152px] sm:-mt-[160px] lg:-mt-[220px]" style={{ maxWidth: '72rem', zIndex: 20 }}>
       {/* X button — mobile only when expanded */}
       {mobileExpanded && (
         <button
@@ -271,16 +271,14 @@ export default function SearchForm({ mobileExpanded, onMobileExpand }: SearchFor
       )}
 
       <div className="bg-white shadow-2xl">
-        {/* Tabs Arrendar / Comprar — altura reducida, sistema de colores rojo */}
+        {/* Tabs Arrendar / Comprar — blanco 50% opacidad */}
         <div className="flex bg-brand-dark w-full relative">
           {(['arrendar', 'comprar'] as const).map((t) => (
             <button key={t} onClick={() => handleTabClick(t)}
               className={`flex-1 px-5 py-2 transition-all duration-200 ${
-                mobileExpanded
-                  ? activeType === t
-                    ? 'bg-brand-red-hover text-white'
-                    : 'bg-gray-500 text-white hover:bg-gray-600'
-                  : 'bg-brand-red text-white hover:bg-brand-red-hover'
+                mobileExpanded && activeType === t
+                  ? 'bg-white text-brand-red'
+                  : 'bg-white/50 text-white hover:bg-white/70'
               }`}
               style={{ fontFamily: "'Avenir LT Pro 35 Light', 'Avenir', 'Outfit', system-ui, sans-serif", fontWeight: 400, fontSize: '15px' }}>
               {t === 'arrendar' ? 'Arrendar' : 'Comprar'}
@@ -410,16 +408,30 @@ export default function SearchForm({ mobileExpanded, onMobileExpand }: SearchFor
               </button>
             </div>
 
-            {/* Filtros avanzados (colapsable) — aparecen ARRIBA del botón */}
+            {/* Filtros avanzados (colapsable) — misma diagramación que el menú visible */}
             {showAdvanced && (
-              <div className="border-t border-gray-200 bg-gray-50 grid grid-cols-2 sm:grid-cols-5 gap-0">
-                <div className="filter-field flex items-center gap-3 px-4 py-3 border-r border-b sm:border-b-0 border-gray-200">
+              <div className="search-fields flex flex-col sm:flex-row sm:flex-nowrap items-stretch border-t border-gray-200 bg-gray-50">
+                {/* Baños */}
+                <div className="filter-field group flex-1 flex items-center gap-3 px-4 py-3 border-b sm:border-b-0 sm:border-r border-gray-200">
+                  <div className="filter-icon w-9 h-9 rounded shrink-0 flex items-center justify-center" style={{ backgroundColor: '#f2f2f2' }}>
+                    <SlidersHorizontal className="w-5 h-5 text-brand-red" />
+                  </div>
                   <CustomSelect label="Baños" value={banos} onChange={setBanos} options={BANOS.map(b => `${b} o más`)} placeholder="Seleccionar" />
                 </div>
-                <div className="filter-field flex items-center gap-3 px-4 py-3 border-r border-b sm:border-b-0 border-gray-200">
+
+                {/* Parqueaderos */}
+                <div className="filter-field group flex-1 flex items-center gap-3 px-4 py-3 border-b sm:border-b-0 sm:border-r border-gray-200">
+                  <div className="filter-icon w-9 h-9 rounded shrink-0 flex items-center justify-center" style={{ backgroundColor: '#f2f2f2' }}>
+                    <SlidersHorizontal className="w-5 h-5 text-brand-red" />
+                  </div>
                   <CustomSelect label="Parqueaderos" value={parqueaderos} onChange={setParqueaderos} options={PARQUEADEROS.map(p => `${p} o más`)} placeholder="Seleccionar" />
                 </div>
-                <div className="filter-field flex items-center gap-3 px-4 py-3 border-r border-b sm:border-b-0 border-gray-200 col-span-2 sm:col-span-1">
+
+                {/* Área */}
+                <div className="filter-field group flex-1 flex items-center gap-3 px-4 py-3 border-b sm:border-b-0 sm:border-r border-gray-200">
+                  <div className="filter-icon w-9 h-9 rounded shrink-0 flex items-center justify-center" style={{ backgroundColor: '#f2f2f2' }}>
+                    <SlidersHorizontal className="w-5 h-5 text-brand-red" />
+                  </div>
                   <div className="min-w-0 flex-1">
                     <p className="text-[14px] text-gray-400 leading-tight">Área (m²)</p>
                     <div className="flex items-center gap-2">
@@ -431,7 +443,12 @@ export default function SearchForm({ mobileExpanded, onMobileExpand }: SearchFor
                     </div>
                   </div>
                 </div>
-                <div className="filter-field flex items-center gap-3 px-4 py-3 border-r border-gray-200">
+
+                {/* Estrato */}
+                <div className="filter-field group flex-1 flex items-center gap-3 px-4 py-3 border-b sm:border-b-0 sm:border-r border-gray-200">
+                  <div className="filter-icon w-9 h-9 rounded shrink-0 flex items-center justify-center" style={{ backgroundColor: '#f2f2f2' }}>
+                    <SlidersHorizontal className="w-5 h-5 text-brand-red" />
+                  </div>
                   <CustomSelect label="Estrato" value={estrato} onChange={setEstrato} options={ESTRATOS} placeholder="Seleccionar" />
                 </div>
               </div>
