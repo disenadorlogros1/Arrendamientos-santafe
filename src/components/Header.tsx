@@ -42,10 +42,17 @@ const navItems: NavItem[] = [
 ];
 
 function WhatsAppButton() {
+  const [isRed, setIsRed] = useState(false);
+  useEffect(() => {
+    const i = setInterval(() => setIsRed(p => !p), 6000);
+    return () => clearInterval(i);
+  }, []);
   return (
     <a href="https://wa.me/573006557529?text=Hola%2C%20quisiera%20hablar%20con%20un%20asesor%20de%20Arrendamientos%20Santa%20Fe." target="_blank" rel="noopener noreferrer"
-      className="flex items-center gap-2 h-[42px] px-5 rounded-full text-sm font-semibold whitespace-nowrap bg-white/20 text-white hover:bg-brand-red transition-all duration-300 shadow-[0_0_12px_rgba(255,255,255,0.2)]">
-      <img src="/wpp-blanco.gif" alt="WhatsApp" className="w-5 h-5" />
+      className={`flex items-center gap-2 h-[42px] px-5 rounded-full text-sm font-semibold whitespace-nowrap text-white transition-all duration-500 shadow-[0_0_12px_rgba(255,255,255,0.2)] ${
+        isRed ? 'bg-brand-red shadow-[0_0_20px_rgba(243,39,53,0.6)]' : 'bg-white/20'
+      }`}>
+      <img src={isRed ? '/wpp-blanco.gif' : '/wpp-blanco.gif'} alt="WhatsApp" className="w-5 h-5" />
       <span>WhatsApp</span>
     </a>
   );
@@ -101,7 +108,7 @@ export default function Header({ currentPage, onNavigate }: HeaderProps) {
               /* Item con dropdown — CSS puro, sin JS */
               <div key={item.label} className="relative group flex-1">
                 <button
-                  className="w-full px-2 py-2 text-sm font-medium text-brand-dark hover:text-white rounded-full transition-all duration-300 ease-out group-hover:bg-brand-red group-hover:text-white"
+                  className="w-full px-2 py-2 text-sm font-medium text-white rounded-full transition-all duration-300 ease-out hover:bg-brand-red"
                 >
                   {item.label}
                 </button>
@@ -140,8 +147,8 @@ export default function Header({ currentPage, onNavigate }: HeaderProps) {
               <button
                 key={item.label}
                 onClick={() => handleNav(item.page || 'home')}
-                className={`flex-1 px-2 py-2 text-sm font-medium rounded-full transition-all duration-300 ease-out hover:bg-brand-red hover:text-white ${
-                  currentPage === item.page ? 'bg-brand-red text-white' : 'text-brand-dark'
+                className={`flex-1 px-2 py-2 text-sm font-medium text-white rounded-full transition-all duration-300 ease-out hover:bg-brand-red ${
+                  currentPage === item.page ? 'text-white' : 'text-white'
                 }`}
               >
                 {item.label}
@@ -158,8 +165,15 @@ export default function Header({ currentPage, onNavigate }: HeaderProps) {
 
         {/* Mobile */}
         <div className="flex items-center gap-2 lg:hidden">
-          <WhatsAppButton />
-          <PSEButton />
+          {/* Mobile: Solo iconos */}
+          <a href="https://wa.me/573006557529?text=Hola%2C%20quisiera%20hablar%20con%20un%20asesor%20de%20Arrendamientos%20Santa%20Fe." target="_blank" rel="noopener noreferrer"
+            className="flex items-center justify-center w-[42px] h-[42px] rounded-full bg-white/20 text-white hover:bg-brand-red transition-all duration-300">
+            <img src="/wpp-blanco.gif" alt="WhatsApp" className="w-5 h-5" />
+          </a>
+          <a href="https://www.psepagos.co/PSEHostingUI/ShowTicketOffice.aspx?ID=9011" target="_blank" rel="noopener noreferrer"
+            className="flex items-center justify-center w-[42px] h-[42px] rounded-full bg-white/20 text-white hover:bg-brand-red transition-all duration-300">
+            <CreditCard className="w-5 h-5" />
+          </a>
           <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
             <SheetTrigger asChild>
               <button className="text-white p-1.5 hover:bg-white/10 rounded-full transition-colors" aria-label="Abrir menú">

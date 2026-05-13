@@ -18,7 +18,7 @@ export default function HeroSection({ onNavigate }: HeroSectionProps) {
   };
 
   return (
-    <section className="relative w-full h-[85vh] sm:h-[88vh] flex items-start justify-center overflow-hidden pt-[126px] sm:pt-[142px]">
+    <section className="relative w-full h-screen flex flex-col items-center justify-center overflow-hidden">
       {/* Background Video */}
       <video
         autoPlay
@@ -34,7 +34,7 @@ export default function HeroSection({ onNavigate }: HeroSectionProps) {
       {/* Dark overlay */}
       <div className="absolute inset-0 hero-video-overlay" />
 
-      {/* Content — centrado horizontalmente, texto alineado a la izquierda, subido para dejar más espacio al buscador */}
+      {/* Content — Centrado en la mitad del viewport */}
       <div
         className="relative w-full px-6 sm:px-12 md:px-16 mx-auto"
         style={{ zIndex: 10, maxWidth: '56rem' }}
@@ -58,7 +58,8 @@ export default function HeroSection({ onNavigate }: HeroSectionProps) {
             fontFamily:
               "'Avenir LT Pro 35 Light', 'Avenir Next Ultra Light', 'Avenir', 'Outfit', system-ui, sans-serif",
             fontWeight: 200,
-            letterSpacing: '0.2em',
+            letterSpacing: '0em',
+            lineHeight: '1.32',
             textShadow: '0 1px 10px rgba(0,0,0,0.4)',
           }}
         >

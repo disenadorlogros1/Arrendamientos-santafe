@@ -387,25 +387,6 @@ export default function SearchForm({ mobileExpanded, onMobileExpand }: SearchFor
                 </div>
                 <CustomSelect label="Habitaciones" value={habitaciones} onChange={setHabitaciones} options={HABITACIONES.map(h => `${h} o más`)} placeholder="Seleccionar" />
               </div>
-
-              {/* Botón Buscar inmueble — CTA principal */}
-              <button
-                onClick={handleSearch}
-                className="relative overflow-hidden bg-brand-red hover:bg-brand-red-hover text-white px-8 py-3 sm:py-[18px] sm:px-10 text-[18px] font-semibold flex items-center justify-center gap-2 transition-colors duration-200 shrink-0 active:scale-95"
-              >
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" className="shrink-0">
-                  <circle cx="10" cy="10" r="7" stroke="white" strokeWidth="2.5" strokeLinecap="round"
-                    strokeDasharray={isSearching ? '14 30' : '44 0'}
-                    style={{ transition: 'stroke-dasharray 0.3s ease' }} />
-                  <line x1="14.5" y1="14.5" x2="20" y2="20" stroke="white" strokeWidth="2.5" strokeLinecap="round"
-                    style={{ opacity: isSearching ? 0 : 1, transition: 'opacity 0.25s ease' }} />
-                  {isSearching && (
-                    <circle cx="10" cy="10" r="5" stroke="rgba(255,255,255,0.8)" strokeWidth="1.5" strokeLinecap="round"
-                      strokeDasharray="8 24" className="search-lens-group spinning" />
-                  )}
-                </svg>
-                <span className="whitespace-nowrap">Buscar inmueble</span>
-              </button>
             </div>
 
             {/* Filtros avanzados (colapsable) — misma diagramación que el menú visible */}
@@ -454,8 +435,37 @@ export default function SearchForm({ mobileExpanded, onMobileExpand }: SearchFor
               </div>
             )}
 
-            {/* Botón Búsqueda avanzada — siempre al pie del menú, centrado */}
-            <div className="flex justify-center px-4 py-2.5 border-t border-gray-100">
+            {/* Botón Búsqueda avanzada */}
+            <div className="flex justify-center px-4 py-2.5 border-t border-gray-100 sm:hidden">
+              <button
+                type="button"
+                onClick={() => setShowAdvanced(prev => !prev)}
+                className="inline-flex items-center gap-2 text-xs sm:text-sm text-gray-600 hover:text-brand-red font-semibold transition-colors"
+              >
+                <SlidersHorizontal className="w-4 h-4" />
+                {showAdvanced ? 'Ocultar filtros avanzados' : 'Búsqueda avanzada'}
+              </button>
+            </div>
+
+            {/* Botón Buscar inmueble — SIEMPRE ÚLTIMO */}
+            <div className="flex sm:hidden px-4 py-3 border-t border-gray-100">
+              <button
+                onClick={handleSearch}
+                className="w-full relative overflow-hidden bg-brand-red hover:bg-brand-red-hover text-white px-8 py-3 text-base font-semibold flex items-center justify-center gap-2 transition-colors duration-200 active:scale-95 rounded-lg"
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" className="shrink-0">
+                  <circle cx="10" cy="10" r="7" stroke="white" strokeWidth="2.5" strokeLinecap="round"
+                    strokeDasharray={isSearching ? '14 30' : '44 0'}
+                    style={{ transition: 'stroke-dasharray 0.3s ease' }} />
+                  <line x1="14.5" y1="14.5" x2="20" y2="20" stroke="white" strokeWidth="2.5" strokeLinecap="round"
+                    style={{ opacity: isSearching ? 0 : 1, transition: 'opacity 0.25s ease' }} />
+                </svg>
+                <span>Buscar inmueble</span>
+              </button>
+            </div>
+
+            {/* Desktop: Botón Búsqueda avanzada al pie */}
+            <div className="hidden sm:flex justify-center px-4 py-2.5 border-t border-gray-100">
               <button
                 type="button"
                 onClick={() => setShowAdvanced(prev => !prev)}
