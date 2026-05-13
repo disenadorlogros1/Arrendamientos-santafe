@@ -465,7 +465,7 @@ export default function SearchForm({ mobileExpanded, onMobileExpand }: SearchFor
             </div>
 
             {/* Desktop: Botón Buscar inmueble y Búsqueda avanzada en una fila */}
-            <div className="hidden sm:flex sm:justify-between sm:items-center px-4 py-2.5 border-t border-gray-100 gap-4">
+            <div className="hidden sm:flex sm:justify-between sm:items-center px-4 py-3 border-t border-gray-100 gap-4">
               <button
                 type="button"
                 onClick={() => setShowAdvanced(prev => !prev)}
@@ -476,9 +476,9 @@ export default function SearchForm({ mobileExpanded, onMobileExpand }: SearchFor
               </button>
               <button
                 onClick={handleSearch}
-                className="relative overflow-hidden bg-brand-red hover:bg-brand-red-hover text-white px-8 py-2 text-sm font-semibold flex items-center justify-center gap-2 transition-colors duration-200 active:scale-95 rounded-lg"
+                className="relative overflow-hidden bg-brand-red hover:bg-brand-red-hover text-white px-12 py-3 text-base font-bold flex items-center justify-center gap-2 transition-colors duration-200 active:scale-95 flex-1"
               >
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" className="shrink-0">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" className="shrink-0">
                   <circle cx="10" cy="10" r="7" stroke="white" strokeWidth="2.5" strokeLinecap="round"
                     strokeDasharray={isSearching ? '14 30' : '44 0'}
                     style={{ transition: 'stroke-dasharray 0.3s ease' }} />

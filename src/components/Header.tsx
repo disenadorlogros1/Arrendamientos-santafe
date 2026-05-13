@@ -83,9 +83,10 @@ function WhatsAppButton() {
   }, []);
   return (
     <a href="https://wa.me/573006557529?text=Hola%2C%20quisiera%20hablar%20con%20un%20asesor%20de%20Arrendamientos%20Santa%20Fe." target="_blank" rel="noopener noreferrer"
-      className={`flex items-center gap-2 h-[42px] px-5 rounded-full text-sm font-semibold whitespace-nowrap text-white transition-all duration-500 shadow-[0_0_12px_rgba(255,255,255,0.2)] ${
-        isRed ? 'bg-brand-red shadow-[0_0_20px_rgba(243,39,53,0.6)]' : 'bg-white/20'
-      }`}>
+      className={`flex items-center gap-2 h-[42px] px-5 rounded-full text-sm font-semibold whitespace-nowrap text-white transition-all duration-500 ${
+        isRed ? 'bg-brand-red shadow-[0_0_20px_rgba(243,39,53,0.6)]' : 'bg-white shadow-[0_0_12px_rgba(255,255,255,0.3)]'
+      }`}
+      style={{ color: isRed ? 'white' : '#232222' }}>
       <img src={isRed ? '/wpp-blanco.gif' : '/wpp-blanco.gif'} alt="WhatsApp" className="w-5 h-5" />
       <span>WhatsApp</span>
     </a>
@@ -136,7 +137,7 @@ export default function Header({ currentPage, onNavigate }: HeaderProps) {
   return (
     <header className={`fixed top-0 left-0 right-0 pt-4 pb-3 px-4 sm:px-6 lg:px-8 transition-all duration-300 ${scrolled ? 'header-scrolled' : ''}`}
       style={{ zIndex: 50 }}>
-      <div className="w-full flex items-center justify-between gap-4">
+      <div className="mx-auto w-full max-w-[calc(64rem+2rem)] flex items-center justify-between gap-4">
         {/* Logo — anclado a la izquierda */}
         <button onClick={() => handleNav('home')} className="shrink-0">
           <img src="/logo-blanco.png" alt="Arrendamientos Santa Fe" className="h-10 md:h-11 w-auto object-contain drop-shadow-lg" />
