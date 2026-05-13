@@ -336,11 +336,11 @@ select option {
   -webkit-box-decoration-break: clone;
 }
 
-/* ── Hero title: interlineado muy ajustado (-50px acumulado) ── */
+/* ── Hero title: interlineado ajustado ── */
 .hero-title-text {
   font-family: 'Avenir LT Pro 35 Light', 'Avenir', 'Outfit', system-ui, sans-serif;
   font-weight: 300;
-  line-height: 0.5;
+  line-height: 1.15;
   text-shadow: 0 2px 20px rgba(0,0,0,0.4);
 }
 
@@ -358,22 +358,22 @@ select option {
   -webkit-box-decoration-break: clone;
 }
 
-/* ── MOBILE: interlineado muy ajustado ── */
+/* ── MOBILE: interlineado ajustado ── */
 @media (max-width: 1023px) {
   .hero-title-text {
-    line-height: 0.55;
+    line-height: 1.2;
   }
   .hero-line-seg {
-    margin-bottom: -0.13em;
+    margin-bottom: 0;
   }
 }
 
-/* ── DESKTOP (lg+): interlineado muy ajustado ── */
+/* ── DESKTOP (lg+): interlineado ajustado ── */
 @media (min-width: 1024px) {
   .hero-title-text {
-    line-height: 0.5;
+    line-height: 1.15;
   }
   .hero-line-seg {
-    margin-bottom: -0.17em;
+    margin-bottom: 0;
   }
 }

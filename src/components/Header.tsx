@@ -42,17 +42,10 @@ const navItems: NavItem[] = [
 ];
 
 function WhatsAppButton() {
-  const [isRed, setIsRed] = useState(false);
-  useEffect(() => {
-    const i = setInterval(() => setIsRed(p => !p), 10000);
-    return () => clearInterval(i);
-  }, []);
   return (
     <a href="https://wa.me/573006557529?text=Hola%2C%20quisiera%20hablar%20con%20un%20asesor%20de%20Arrendamientos%20Santa%20Fe." target="_blank" rel="noopener noreferrer"
-      className={`flex items-center gap-2 h-[42px] px-5 rounded-full text-sm font-semibold transition-all duration-700 ease-in-out whitespace-nowrap ${
-        isRed ? 'bg-brand-red text-white shadow-[0_0_20px_rgba(243,39,53,0.6)]' : 'bg-white text-brand-red shadow-[0_0_12px_rgba(255,255,255,0.3)]'
-      }`}>
-      <img src={isRed ? '/wpp-blanco.gif' : '/wpp-rojo.gif'} alt="WhatsApp" className="w-5 h-5" />
+      className="flex items-center gap-2 h-[42px] px-5 rounded-full text-sm font-semibold whitespace-nowrap bg-white/20 text-white hover:bg-brand-red transition-all duration-300 shadow-[0_0_12px_rgba(255,255,255,0.2)]">
+      <img src="/wpp-blanco.gif" alt="WhatsApp" className="w-5 h-5" />
       <span>WhatsApp</span>
     </a>
   );
@@ -64,7 +57,7 @@ function PSEButton() {
       href="https://www.psepagos.co/PSEHostingUI/ShowTicketOffice.aspx?ID=9011"
       target="_blank"
       rel="noopener noreferrer"
-      className="flex items-center gap-2 h-[42px] px-5 rounded-full text-sm font-semibold whitespace-nowrap bg-white text-brand-red shadow-[0_0_12px_rgba(255,255,255,0.3)] hover:bg-brand-red hover:text-white transition-colors"
+      className="flex items-center gap-2 h-[42px] px-5 rounded-full text-sm font-semibold whitespace-nowrap bg-white/20 text-white hover:bg-brand-red transition-colors duration-300 shadow-[0_0_12px_rgba(255,255,255,0.2)]"
       aria-label="Pagar en línea por PSE"
     >
       <CreditCard className="w-4 h-4" />
