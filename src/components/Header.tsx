@@ -100,16 +100,15 @@ export default function Header({ currentPage, onNavigate }: HeaderProps) {
           <img src="/logo-blanco.png" alt="Arrendamientos Santa Fe" className="h-10 md:h-11 w-auto object-contain drop-shadow-lg" />
         </button>
 
-        {/* Nav capsula — desktop — botones equidistribuidos a lo ancho del menú */}
-        <nav className="hidden lg:flex items-center justify-between gap-1 bg-black/30 rounded-full px-2 h-[42px] border border-white/20 shadow-lg mx-auto"
-          style={{ overflow: 'visible', width: '60%', maxWidth: '72rem' }}>
+        {/* Nav capsula — desktop — botones equidistribuidos, fondo blanco 60% opacidad */}
+        <nav className="hidden lg:flex items-center justify-between gap-1 bg-white/60 backdrop-blur-sm rounded-full px-2 h-[42px] border border-white/40 shadow-lg mx-auto"
+          style={{ overflow: 'visible', width: '60%', maxWidth: '64rem' }}>
           {navItems.map((item) =>
             item.children ? (
               /* Item con dropdown — CSS puro, sin JS */
               <div key={item.label} className="relative group flex-1">
                 <button
-                  className="w-full px-2 py-2 text-sm font-medium text-white rounded-full transition-all duration-300 ease-out group-hover:bg-brand-red"
-                  style={{ textShadow: '0 1px 3px rgba(0,0,0,0.4)' }}
+                  className="w-full px-2 py-2 text-sm font-medium text-brand-dark hover:text-white rounded-full transition-all duration-300 ease-out group-hover:bg-brand-red group-hover:text-white"
                 >
                   {item.label}
                 </button>
@@ -148,8 +147,9 @@ export default function Header({ currentPage, onNavigate }: HeaderProps) {
               <button
                 key={item.label}
                 onClick={() => handleNav(item.page || 'home')}
-                className="flex-1 px-2 py-2 text-sm font-medium text-white rounded-full transition-all duration-300 ease-out hover:bg-brand-red"
-                style={{ textShadow: '0 1px 3px rgba(0,0,0,0.4)' }}
+                className={`flex-1 px-2 py-2 text-sm font-medium rounded-full transition-all duration-300 ease-out hover:bg-brand-red hover:text-white ${
+                  currentPage === item.page ? 'bg-brand-red text-white' : 'text-brand-dark'
+                }`}
               >
                 {item.label}
               </button>

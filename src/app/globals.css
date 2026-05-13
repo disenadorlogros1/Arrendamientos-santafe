@@ -255,7 +255,7 @@ select option {
   }
 }
 
-/* ── UserLocation: blanco sobre oscuro (default), rojo sobre claro ── */
+/* ── UserLocation: blanco sobre video/oscuro (default), rojo sólo cuando .on-light ── */
 .user-location-text {
   color: #ffffff;
   text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
@@ -264,20 +264,9 @@ select option {
   color: #f32735 !important;
   text-shadow: none !important;
 }
-/* En desktop, el tag siempre cae bajo el buscador blanco → rojo */
-@media (min-width: 640px) {
-  .user-location-text {
-    color: #f32735;
-    text-shadow: none;
-  }
-}
-/* Icono adaptado al fondo: muestra el rojo en desktop, blanco en mobile */
+/* Icono blanco por defecto (sobre video), rojo sólo cuando el contexto sea claro */
 .user-location-icon-dark { display: inline-block; }
 .user-location-icon-light { display: none; }
-@media (min-width: 640px) {
-  .user-location-icon-dark { display: none; }
-  .user-location-icon-light { display: inline-block; }
-}
 
 /* ── Filter icon glow animation on mobile tap ── */
 @keyframes filter-icon-pulse {
@@ -347,11 +336,11 @@ select option {
   -webkit-box-decoration-break: clone;
 }
 
-/* ── Hero title: interlineado mínimo (-30px aprox) ── */
+/* ── Hero title: interlineado muy ajustado (-50px acumulado) ── */
 .hero-title-text {
   font-family: 'Avenir LT Pro 35 Light', 'Avenir', 'Outfit', system-ui, sans-serif;
   font-weight: 300;
-  line-height: 0.6;
+  line-height: 0.5;
   text-shadow: 0 2px 20px rgba(0,0,0,0.4);
 }
 
@@ -369,22 +358,22 @@ select option {
   -webkit-box-decoration-break: clone;
 }
 
-/* ── MOBILE: interlineado mínimo (-30px aprox) ── */
+/* ── MOBILE: interlineado muy ajustado ── */
 @media (max-width: 1023px) {
   .hero-title-text {
-    line-height: 0.65;
+    line-height: 0.55;
   }
   .hero-line-seg {
-    margin-bottom: -0.08em;
+    margin-bottom: -0.13em;
   }
 }
 
-/* ── DESKTOP (lg+): interlineado mínimo (-30px aprox) ── */
+/* ── DESKTOP (lg+): interlineado muy ajustado ── */
 @media (min-width: 1024px) {
   .hero-title-text {
-    line-height: 0.6;
+    line-height: 0.5;
   }
   .hero-line-seg {
-    margin-bottom: -0.12em;
+    margin-bottom: -0.17em;
   }
 }

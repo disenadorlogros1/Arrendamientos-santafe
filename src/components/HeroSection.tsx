@@ -18,7 +18,7 @@ export default function HeroSection({ onNavigate }: HeroSectionProps) {
   };
 
   return (
-    <section className="relative w-full h-[85vh] sm:h-[88vh] flex items-start justify-center overflow-hidden pt-24 sm:pt-28">
+    <section className="relative w-full h-[85vh] sm:h-[88vh] flex items-start justify-center overflow-hidden pt-[126px] sm:pt-[142px]">
       {/* Background Video */}
       <video
         autoPlay
