@@ -464,8 +464,8 @@ export default function SearchForm({ mobileExpanded, onMobileExpand }: SearchFor
               </button>
             </div>
 
-            {/* Desktop: Botón Búsqueda avanzada al pie */}
-            <div className="hidden sm:flex justify-center px-4 py-2.5 border-t border-gray-100">
+            {/* Desktop: Botón Buscar inmueble y Búsqueda avanzada en una fila */}
+            <div className="hidden sm:flex sm:justify-between sm:items-center px-4 py-2.5 border-t border-gray-100 gap-4">
               <button
                 type="button"
                 onClick={() => setShowAdvanced(prev => !prev)}
@@ -473,6 +473,19 @@ export default function SearchForm({ mobileExpanded, onMobileExpand }: SearchFor
               >
                 <SlidersHorizontal className="w-4 h-4" />
                 {showAdvanced ? 'Ocultar filtros avanzados' : 'Búsqueda avanzada'}
+              </button>
+              <button
+                onClick={handleSearch}
+                className="relative overflow-hidden bg-brand-red hover:bg-brand-red-hover text-white px-8 py-2 text-sm font-semibold flex items-center justify-center gap-2 transition-colors duration-200 active:scale-95 rounded-lg"
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" className="shrink-0">
+                  <circle cx="10" cy="10" r="7" stroke="white" strokeWidth="2.5" strokeLinecap="round"
+                    strokeDasharray={isSearching ? '14 30' : '44 0'}
+                    style={{ transition: 'stroke-dasharray 0.3s ease' }} />
+                  <line x1="14.5" y1="14.5" x2="20" y2="20" stroke="white" strokeWidth="2.5" strokeLinecap="round"
+                    style={{ opacity: isSearching ? 0 : 1, transition: 'opacity 0.25s ease' }} />
+                </svg>
+                <span>Buscar inmueble</span>
               </button>
             </div>
           </>

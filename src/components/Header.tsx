@@ -14,6 +14,40 @@ const PSE_URL = 'https://www.psepagos.co/PSEHostingUI/ShowTicketOffice.aspx?ID=9
 const SOLICITUD_ARRENDAMIENTO_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSfAg9SMibueBBUy-Pe1rQuO1Rz7U4z7z9uq91pv-gp-0-dCgQ/viewform';
 const REPARACIONES_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSdwCAaLU5ApyfAvf-yEEgj-fMQmnBRIh4614LhDIWtKhBDzyQ/viewform';
 
+function MobileWhatsAppButton() {
+  const [isRed, setIsRed] = useState(false);
+  useEffect(() => {
+    const i = setInterval(() => setIsRed(p => !p), 5000);
+    return () => clearInterval(i);
+  }, []);
+  return (
+    <a href="https://wa.me/573006557529?text=Hola%2C%20quisiera%20hablar%20con%20un%20asesor%20de%20Arrendamientos%20Santa%20Fe." target="_blank" rel="noopener noreferrer"
+      className={`flex items-center justify-center w-[42px] h-[42px] rounded-full text-white transition-all duration-500 ${
+        isRed ? 'bg-brand-red shadow-[0_0_20px_rgba(243,39,53,0.6)]' : 'bg-white shadow-[0_0_12px_rgba(255,255,255,0.3)]'
+      }`}
+      style={{ color: isRed ? 'white' : '#232222' }}>
+      <img src={isRed ? '/wpp-blanco.gif' : '/wpp-blanco.gif'} alt="WhatsApp" className="w-5 h-5" />
+    </a>
+  );
+}
+
+function MobilePSEButton() {
+  const [isRed, setIsRed] = useState(false);
+  useEffect(() => {
+    const i = setInterval(() => setIsRed(p => !p), 5000);
+    return () => clearInterval(i);
+  }, []);
+  return (
+    <a href="https://www.psepagos.co/PSEHostingUI/ShowTicketOffice.aspx?ID=9011" target="_blank" rel="noopener noreferrer"
+      className={`flex items-center justify-center w-[42px] h-[42px] rounded-full text-white transition-all duration-500 ${
+        isRed ? 'bg-brand-red shadow-[0_0_20px_rgba(243,39,53,0.6)]' : 'bg-white shadow-[0_0_12px_rgba(255,255,255,0.3)]'
+      }`}
+      style={{ color: isRed ? 'white' : '#232222' }}>
+      <CreditCard className="w-5 h-5" />
+    </a>
+  );
+}
+
 const navItems: NavItem[] = [
   { label: 'Inicio', page: 'home' },
   { label: 'Propiedades', page: 'propiedades', children: [
@@ -59,12 +93,20 @@ function WhatsAppButton() {
 }
 
 function PSEButton() {
+  const [isRed, setIsRed] = useState(false);
+  useEffect(() => {
+    const i = setInterval(() => setIsRed(p => !p), 6000);
+    return () => clearInterval(i);
+  }, []);
   return (
     <a
       href="https://www.psepagos.co/PSEHostingUI/ShowTicketOffice.aspx?ID=9011"
       target="_blank"
       rel="noopener noreferrer"
-      className="flex items-center gap-2 h-[42px] px-5 rounded-full text-sm font-semibold whitespace-nowrap bg-white/20 text-white hover:bg-brand-red transition-colors duration-300 shadow-[0_0_12px_rgba(255,255,255,0.2)]"
+      className={`flex items-center gap-2 h-[42px] px-5 rounded-full text-sm font-semibold whitespace-nowrap text-white transition-all duration-500 ${
+        isRed ? 'bg-brand-red shadow-[0_0_20px_rgba(243,39,53,0.6)]' : 'bg-white shadow-[0_0_12px_rgba(255,255,255,0.3)]'
+      }`}
+      style={{ color: isRed ? 'white' : '#232222' }}
       aria-label="Pagar en línea por PSE"
     >
       <CreditCard className="w-4 h-4" />
@@ -100,9 +142,9 @@ export default function Header({ currentPage, onNavigate }: HeaderProps) {
           <img src="/logo-blanco.png" alt="Arrendamientos Santa Fe" className="h-10 md:h-11 w-auto object-contain drop-shadow-lg" />
         </button>
 
-        {/* Nav capsula — desktop — botones equidistribuidos, fondo blanco 60% opacidad */}
-        <nav className="hidden lg:flex items-center justify-between gap-1 bg-white/60 backdrop-blur-sm rounded-full px-2 h-[42px] border border-white/40 shadow-lg mx-auto"
-          style={{ overflow: 'visible', width: '60%', maxWidth: '64rem' }}>
+        {/* Nav capsula — desktop — botones equidistribuidos, fondo blanco 40% opacidad */}
+        <nav className="hidden lg:flex items-center justify-between gap-1 bg-white/40 backdrop-blur-sm rounded-full px-2 h-[42px] border border-white/30 shadow-lg mx-auto"
+          style={{ overflow: 'visible', width: '100%', maxWidth: '64rem' }}>
           {navItems.map((item) =>
             item.children ? (
               /* Item con dropdown — CSS puro, sin JS */
@@ -165,15 +207,10 @@ export default function Header({ currentPage, onNavigate }: HeaderProps) {
 
         {/* Mobile */}
         <div className="flex items-center gap-2 lg:hidden">
-          {/* Mobile: Solo iconos */}
-          <a href="https://wa.me/573006557529?text=Hola%2C%20quisiera%20hablar%20con%20un%20asesor%20de%20Arrendamientos%20Santa%20Fe." target="_blank" rel="noopener noreferrer"
-            className="flex items-center justify-center w-[42px] h-[42px] rounded-full bg-white/20 text-white hover:bg-brand-red transition-all duration-300">
-            <img src="/wpp-blanco.gif" alt="WhatsApp" className="w-5 h-5" />
-          </a>
-          <a href="https://www.psepagos.co/PSEHostingUI/ShowTicketOffice.aspx?ID=9011" target="_blank" rel="noopener noreferrer"
-            className="flex items-center justify-center w-[42px] h-[42px] rounded-full bg-white/20 text-white hover:bg-brand-red transition-all duration-300">
-            <CreditCard className="w-5 h-5" />
-          </a>
+          {/* Mobile WhatsApp: Icono, alterna cada 5 segundos */}
+          <MobileWhatsAppButton />
+          {/* Mobile PSE: Icono, alterna cada 5 segundos */}
+          <MobilePSEButton />
           <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
             <SheetTrigger asChild>
               <button className="text-white p-1.5 hover:bg-white/10 rounded-full transition-colors" aria-label="Abrir menú">

@@ -58,7 +58,7 @@ export default function HeroSection({ onNavigate }: HeroSectionProps) {
             fontFamily:
               "'Avenir LT Pro 35 Light', 'Avenir Next Ultra Light', 'Avenir', 'Outfit', system-ui, sans-serif",
             fontWeight: 200,
-            letterSpacing: '0em',
+            letterSpacing: '0.2em',
             lineHeight: '1.32',
             textShadow: '0 1px 10px rgba(0,0,0,0.4)',
           }}
@@ -68,7 +68,7 @@ export default function HeroSection({ onNavigate }: HeroSectionProps) {
         </p>
 
         {/* CTAs jerárquicos — botones cápsula con hover blanco + resplandor rojo */}
-        <div className="mt-7 flex flex-wrap items-center gap-3">
+        <div className="mt-7 flex flex-wrap items-center gap-1.5 sm:gap-3">
           {/* CTA Principal: Buscar inmueble */}
           <button
             type="button"
