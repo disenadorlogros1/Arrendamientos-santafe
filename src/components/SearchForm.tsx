@@ -257,7 +257,7 @@ export default function SearchForm({ mobileExpanded, onMobileExpand }: SearchFor
   useEffect(() => () => cancelAnimationFrame(animRef.current), []);
 
   return (
-    <div className="relative mx-auto px-4 sm:px-6 lg:px-8 -mt-[152px] sm:-mt-[160px] lg:-mt-[220px]" style={{ width: '100%', maxWidth: '64rem', zIndex: 20 }}>
+    <div className="relative mx-auto px-4 sm:px-6 lg:px-8 -mt-[100px] sm:-mt-[110px] lg:-mt-[140px]" style={{ width: '100%', maxWidth: '64rem', zIndex: 20 }}>
       {/* X button — mobile only when expanded */}
       {mobileExpanded && (
         <button
