@@ -56,7 +56,7 @@ export default function HeroSection({ onNavigate }: HeroSectionProps) {
         style={{ zIndex: 10, maxWidth: '56rem' }}
       >
         <div className="hero-title-wrap">
-          <h1 className="hero-title-text text-xl sm:text-4xl md:text-5xl lg:text-[52px] text-white tracking-tight">
+          <h1 className="hero-title-text text-2xl sm:text-3xl md:text-5xl lg:text-[52px] text-white tracking-tight">
             <div>
               <span className="hero-line-seg hero-line-first">
                 <AnimatedText text="60 años" startIndex={0} />
@@ -66,7 +66,7 @@ export default function HeroSection({ onNavigate }: HeroSectionProps) {
                 <AnimatedText text="guiando tus decisiones" startIndex={7} />
               </span>
             </div>
-            <div style={{ whiteSpace: 'nowrap' }}>
+            <div>
               <span className="hero-line-seg hero-line-last">
                 <AnimatedText text="inmobiliarias." startIndex={29} />
               </span>
