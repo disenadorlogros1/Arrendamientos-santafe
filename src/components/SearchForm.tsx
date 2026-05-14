@@ -168,7 +168,7 @@ export default function SearchForm({ onNavigate }: SearchFormProps) {
   const filterCell = "flex-1 flex items-center gap-2.5 px-5 py-2.5 min-w-0";
 
   return (
-    <div className="relative mx-auto px-4 sm:px-6 lg:px-8 -mt-[90px] sm:-mt-[110px] lg:-mt-[140px]"
+    <div className="relative mx-auto px-4 sm:px-6 lg:px-8 -mt-[150px] sm:-mt-[110px] lg:-mt-[140px]"
       style={{ width: '100%', maxWidth: '64rem', zIndex: 20 }}>
       <div className="shadow-2xl flex flex-col overflow-hidden">
 
