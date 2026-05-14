@@ -211,7 +211,7 @@ export default function Header({ currentPage, onNavigate }: HeaderProps) {
         </div>
 
         {/* Mobile */}
-        <div className="flex items-center gap-2 lg:hidden">
+        <div className="flex items-center gap-2 lg:hidden absolute right-4 sm:right-6">
           {/* Mobile WhatsApp: Icono, alterna cada 5 segundos */}
           <MobileWhatsAppButton />
           {/* Mobile PSE: Icono, alterna cada 5 segundos */}
