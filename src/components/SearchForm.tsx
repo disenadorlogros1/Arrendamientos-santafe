@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { createPortal } from 'react-dom';
-import { X, SlidersHorizontal, Hash, MapPin } from 'lucide-react';
+import { X, SlidersHorizontal, Hash, MapPin, Home, Users } from 'lucide-react';
 
 const SECTORES = [
   'Medellín', 'Envigado', 'Rionegro', 'Bello', 'Itagüí', 'Sabaneta',
@@ -255,21 +255,41 @@ export default function SearchForm({ mobileExpanded, onMobileExpand, onNavigate 
 
   return (
     <div className="relative mx-auto px-4 sm:px-6 lg:px-8 -mt-[100px] sm:-mt-[110px] lg:-mt-[140px]" style={{ width: '100%', maxWidth: '64rem', zIndex: 20 }}>
-      <div className="bg-white shadow-2xl flex flex-col">
-        {/* Tabs Arrendar / Comprar con subtítulos */}
-        <div className="flex">
-          {(['arrendar', 'comprar'] as const).map((t, idx) => (
-            <div key={t} className="flex-1 flex items-stretch">
-              <button
-                onClick={() => handleTabClick(t)}
-                className={`flex-1 px-5 py-4 text-center transition-all duration-200 flex flex-col items-center justify-center ${
-                  searchType === t ? 'bg-brand-red text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                }`}
-              >
-                <div className="font-medium text-sm">{t === 'arrendar' ? 'Arrendar' : 'Comprar'}</div>
-                <div className="text-xs opacity-75 mt-1">{t === 'arrendar' ? '# Búsqueda por código' : '📍 Búsqueda por ubicación'}</div>
-              </button>
-              {idx === 0 && <div className="w-px bg-gray-300" />}
+      <div className="shadow-2xl flex flex-col">
+        {/* Tabs Arrendar / Comprar - Según SVG */}
+        <div className="flex h-[50px]">
+          {(['arrendar', 'comprar'] as const).map((t) => (
+            <button
+              key={t}
+              onClick={() => handleTabClick(t)}
+              className={`flex-1 flex flex-col items-center justify-center text-white font-medium transition-all ${
+                searchType === t ? 'bg-brand-red' : 'bg-white/60'
+              }`}
+              style={{
+                fontSize: '25px',
+                fontFamily: "'Avenir LT Pro', 'Outfit', system-ui, sans-serif",
+                fontWeight: 500,
+              }}
+            >
+              {t === 'arrendar' ? 'Arrendar' : 'Comprar'}
+            </button>
+          ))}
+        </div>
+
+        {/* Subtítulos bajo los tabs */}
+        <div className="flex h-[30px] bg-white border-b border-gray-300">
+          {(['arrendar', 'comprar'] as const).map((t) => (
+            <div
+              key={`subtitle-${t}`}
+              className="flex-1 flex items-center justify-center text-sm"
+              style={{
+                color: '#aa182c',
+                fontFamily: "'Avenir LT Pro', 'Outfit', system-ui, sans-serif",
+                fontSize: '15px',
+                fontWeight: 500,
+              }}
+            >
+              {t === 'arrendar' ? '# Búsqueda por código' : '📍 Búsqueda por ubicación'}
             </div>
           ))}
         </div>
@@ -278,43 +298,60 @@ export default function SearchForm({ mobileExpanded, onMobileExpand, onNavigate 
         {searchType && (
           <>
             {/* Fila única: Ubicación, Precio, Tipo, Habitaciones + Botón Buscar */}
-            <div className="flex flex-col sm:flex-row sm:flex-nowrap items-stretch bg-white border-t border-gray-200">
+            <div className="flex flex-col sm:flex-row sm:flex-nowrap items-stretch bg-white border-b border-gray-300">
               {/* Ubicación */}
-              <div className="filter-field group flex-1 flex items-center gap-3 px-4 py-3 border-b sm:border-b-0 sm:border-r border-gray-200 min-w-0">
-                <div className="filter-icon w-9 h-9 rounded shrink-0 flex items-center justify-center" style={{ backgroundColor: '#f2f2f2' }}>
-                  <img src="/ubicacion.gif" alt="Ubicación" className="w-5 h-5" />
+              <div className="filter-field flex-1 flex items-center gap-3 px-4 py-3 border-r border-gray-300 min-w-0">
+                <div className="w-[54px] h-[54px] rounded flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#f2f2f2' }}>
+                  <MapPin className="w-6 h-6" style={{ color: '#aa182c' }} />
                 </div>
-                <CustomSelect label="Ubicación" value={sector} onChange={setSector} options={SECTORES} placeholder="Seleccionar" />
+                <div className="flex-1">
+                  <p className="text-xs text-gray-600 font-medium">Ubicación</p>
+                  <CustomSelect value={sector} onChange={setSector} options={SECTORES} placeholder="Seleccionar" label="" />
+                </div>
               </div>
 
               {/* Precio */}
-              <div className="filter-field group flex-1 flex items-center gap-3 px-4 py-3 border-b sm:border-b-0 sm:border-r border-gray-200 min-w-0">
-                <div className="filter-icon w-9 h-9 rounded shrink-0 flex items-center justify-center" style={{ backgroundColor: '#f2f2f2' }}>
-                  <img src="/precio.gif" alt="Precio" className="w-5 h-5" />
+              <div className="filter-field flex-1 flex items-center gap-3 px-4 py-3 border-r border-gray-300 min-w-0">
+                <div className="w-[54px] h-[54px] rounded flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#f2f2f2' }}>
+                  <img src="/precio.gif" alt="Precio" className="w-6 h-6" />
                 </div>
-                <PriceRangeSlider searchType={activeType} minVal={precioMin} maxVal={precioMax} onChangeMin={setPrecioMin} onChangeMax={setPrecioMax} />
+                <div className="flex-1">
+                  <p className="text-xs text-gray-600 font-medium">Precio</p>
+                  <PriceRangeSlider searchType={activeType} minVal={precioMin} maxVal={precioMax} onChangeMin={setPrecioMin} onChangeMax={setPrecioMax} />
+                </div>
               </div>
 
-              {/* Tipo de inmueble */}
-              <div className="filter-field group flex-1 flex items-center gap-3 px-4 py-3 border-b sm:border-b-0 sm:border-r border-gray-200 min-w-0">
-                <div className="filter-icon w-9 h-9 rounded shrink-0 flex items-center justify-center" style={{ backgroundColor: '#f2f2f2' }}>
-                  <img src="/tipo-de-propiedad.gif" alt="Tipo" className="w-5 h-5" />
+              {/* Tipo de propiedad */}
+              <div className="filter-field flex-1 flex items-center gap-3 px-4 py-3 border-r border-gray-300 min-w-0">
+                <div className="w-[54px] h-[54px] rounded flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#f2f2f2' }}>
+                  <Home className="w-6 h-6" style={{ color: '#aa182c' }} />
                 </div>
-                <CustomSelect label="Tipo de propiedad" value={tipo} onChange={setTipo} options={TIPOS_INMUEBLE} placeholder="Seleccionar" />
+                <div className="flex-1">
+                  <p className="text-xs text-gray-600 font-medium">Tipo de propiedad</p>
+                  <CustomSelect value={tipo} onChange={setTipo} options={TIPOS_INMUEBLE} placeholder="Seleccionar" label="" />
+                </div>
               </div>
 
               {/* Habitaciones */}
-              <div className="filter-field group flex-1 flex items-center gap-3 px-4 py-3 border-b sm:border-b-0 sm:border-r border-gray-200 min-w-0">
-                <div className="filter-icon w-9 h-9 rounded shrink-0 flex items-center justify-center" style={{ backgroundColor: '#f2f2f2' }}>
-                  <img src="/habitaciones-copia.gif" alt="Habitaciones" className="w-5 h-5" />
+              <div className="filter-field flex-1 flex items-center gap-3 px-4 py-3 border-r border-gray-300 min-w-0">
+                <div className="w-[54px] h-[54px] rounded flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#f2f2f2' }}>
+                  <Users className="w-6 h-6" style={{ color: '#aa182c' }} />
                 </div>
-                <CustomSelect label="Habitaciones" value={habitaciones} onChange={setHabitaciones} options={HABITACIONES.map(h => `${h} o más`)} placeholder="Seleccionar" />
+                <div className="flex-1">
+                  <p className="text-xs text-gray-600 font-medium">Habitaciones</p>
+                  <CustomSelect value={habitaciones} onChange={setHabitaciones} options={HABITACIONES.map(h => `${h} o más`)} placeholder="Seleccionar" label="" />
+                </div>
               </div>
 
               {/* Botón Buscar inmueble */}
               <button
                 onClick={handleSearch}
-                className="shrink-0 bg-brand-red hover:bg-brand-red-hover text-white px-6 py-3 font-semibold flex items-center justify-center gap-2 transition-colors duration-200 active:scale-95 whitespace-nowrap"
+                className="shrink-0 bg-brand-red hover:bg-brand-red-hover text-white px-8 py-3 font-semibold flex items-center justify-center gap-2 transition-colors duration-200 active:scale-95 whitespace-nowrap"
+                style={{
+                  fontSize: '25px',
+                  fontFamily: "'Avenir LT Pro', 'Outfit', system-ui, sans-serif",
+                  fontWeight: 500,
+                }}
               >
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
                   <circle cx="10" cy="10" r="7" stroke="white" strokeWidth="2.5" strokeLinecap="round"
@@ -327,78 +364,20 @@ export default function SearchForm({ mobileExpanded, onMobileExpand, onNavigate 
               </button>
             </div>
 
-            {/* Filtros avanzados (colapsable) */}
-            {showAdvanced && (
-              <div className="search-fields flex flex-col sm:flex-row sm:flex-nowrap items-stretch border-t border-gray-200 bg-white">
-                {/* Baños */}
-                <div className="filter-field group flex-1 flex items-center gap-3 px-4 py-3 border-b sm:border-b-0 sm:border-r border-gray-200">
-                  <div className="filter-icon w-9 h-9 rounded shrink-0 flex items-center justify-center" style={{ backgroundColor: '#f2f2f2' }}>
-                    <SlidersHorizontal className="w-5 h-5 text-brand-red" />
-                  </div>
-                  <CustomSelect label="Baños" value={banos} onChange={setBanos} options={BANOS.map(b => `${b} o más`)} placeholder="Seleccionar" />
-                </div>
-
-                {/* Parqueaderos */}
-                <div className="filter-field group flex-1 flex items-center gap-3 px-4 py-3 border-b sm:border-b-0 sm:border-r border-gray-200">
-                  <div className="filter-icon w-9 h-9 rounded shrink-0 flex items-center justify-center" style={{ backgroundColor: '#f2f2f2' }}>
-                    <SlidersHorizontal className="w-5 h-5 text-brand-red" />
-                  </div>
-                  <CustomSelect label="Parqueaderos" value={parqueaderos} onChange={setParqueaderos} options={PARQUEADEROS.map(p => `${p} o más`)} placeholder="Seleccionar" />
-                </div>
-
-                {/* Área */}
-                <div className="filter-field group flex-1 flex items-center gap-3 px-4 py-3 border-b sm:border-b-0 sm:border-r border-gray-200">
-                  <div className="filter-icon w-9 h-9 rounded shrink-0 flex items-center justify-center" style={{ backgroundColor: '#f2f2f2' }}>
-                    <SlidersHorizontal className="w-5 h-5 text-brand-red" />
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <p className="text-[14px] text-gray-400 leading-tight">Área (m²)</p>
-                    <div className="flex items-center gap-2">
-                      <input type="number" value={areaMin} onChange={(e) => setAreaMin(e.target.value)} placeholder="Min"
-                        className="w-full text-sm text-brand-dark font-semibold bg-transparent border-none outline-none placeholder:text-gray-300 placeholder:font-normal" />
-                      <span className="text-gray-300">—</span>
-                      <input type="number" value={areaMax} onChange={(e) => setAreaMax(e.target.value)} placeholder="Max"
-                        className="w-full text-sm text-brand-dark font-semibold bg-transparent border-none outline-none placeholder:text-gray-300 placeholder:font-normal" />
-                    </div>
-                  </div>
-                </div>
-
-                {/* Estrato */}
-                <div className="filter-field group flex-1 flex items-center gap-3 px-4 py-3 border-b sm:border-b-0 sm:border-r border-gray-200">
-                  <div className="filter-icon w-9 h-9 rounded shrink-0 flex items-center justify-center" style={{ backgroundColor: '#f2f2f2' }}>
-                    <SlidersHorizontal className="w-5 h-5 text-brand-red" />
-                  </div>
-                  <CustomSelect label="Estrato" value={estrato} onChange={setEstrato} options={ESTRATOS} placeholder="Seleccionar" />
-                </div>
-              </div>
-            )}
-
-            {/* Botón Búsqueda avanzada */}
-            <div className="flex justify-center px-4 py-2.5 border-t border-gray-100 bg-white">
+            {/* Sección roja inferior - Búsqueda avanzada */}
+            <div className="bg-brand-red py-4 px-4 flex items-center justify-center">
               <button
                 type="button"
                 onClick={() => setShowAdvanced(prev => !prev)}
-                className="inline-flex items-center gap-2 text-xs sm:text-sm text-gray-600 hover:text-brand-red font-semibold transition-colors"
+                className="inline-flex items-center gap-2 text-white font-semibold transition-colors hover:opacity-80"
+                style={{
+                  fontSize: '15px',
+                  fontFamily: "'Avenir LT Pro', 'Outfit', system-ui, sans-serif",
+                  fontWeight: 500,
+                }}
               >
-                <SlidersHorizontal className="w-4 h-4" />
+                <SlidersHorizontal className="w-5 h-5" />
                 {showAdvanced ? 'Ocultar filtros avanzados' : 'Búsqueda avanzada'}
-              </button>
-            </div>
-
-            {/* Botón Buscar inmueble */}
-            <div className="px-4 py-3 border-t border-gray-100 bg-white">
-              <button
-                onClick={handleSearch}
-                className="w-full relative overflow-hidden bg-brand-red hover:bg-brand-red-hover text-white px-8 py-4 text-lg font-semibold flex items-center justify-center gap-2 transition-colors duration-200 active:scale-95"
-              >
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" className="shrink-0">
-                  <circle cx="10" cy="10" r="7" stroke="white" strokeWidth="2.5" strokeLinecap="round"
-                    strokeDasharray={isSearching ? '14 30' : '44 0'}
-                    style={{ transition: 'stroke-dasharray 0.3s ease' }} />
-                  <line x1="14.5" y1="14.5" x2="20" y2="20" stroke="white" strokeWidth="2.5" strokeLinecap="round"
-                    style={{ opacity: isSearching ? 0 : 1, transition: 'opacity 0.25s ease' }} />
-                </svg>
-                <span>Buscar inmueble</span>
               </button>
             </div>
           </>
