@@ -385,7 +385,7 @@ select option {
   box-decoration-break: clone;
   -webkit-box-decoration-break: clone;
   clip-path: inset(0 100% 0 0);
-  animation: slideHighlightFromLeft 2.79s cubic-bezier(0.34, 1.56, 0.64, 1) 0.42s forwards;
+  animation: slideHighlightFromLeft 4.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.42s forwards;
 }
 
 /* ── MOBILE: interlineado ajustado (10% reducción) ── */
