@@ -137,15 +137,15 @@ export default function Header({ currentPage, onNavigate }: HeaderProps) {
   return (
     <header className={`fixed top-0 left-0 right-0 pt-4 pb-3 px-4 sm:px-6 lg:px-8 transition-all duration-300 ${scrolled ? 'header-scrolled' : ''}`}
       style={{ zIndex: 50 }}>
-      <div className="flex items-center justify-between gap-4 h-[58px]">
+      <div className="mx-auto flex items-center justify-between gap-4 h-[58px]" style={{ maxWidth: '64rem' }}>
         {/* Logo — extremo izquierdo */}
         <button onClick={() => handleNav('home')} className="shrink-0">
           <img src="/logo-blanco.png" alt="Arrendamientos Santa Fe" className="h-10 md:h-11 w-auto object-contain drop-shadow-lg" />
         </button>
 
-        {/* Nav capsula — centrada con max-width de SearchForm */}
-        <nav className="hidden lg:flex items-center justify-between gap-1 bg-white/40 backdrop-blur-sm rounded-full px-2 h-[42px] border border-white/30 shadow-lg"
-          style={{ overflow: 'visible', width: '100%', maxWidth: '64rem' }}>
+        {/* Nav capsula — centrada */}
+        <nav className="hidden lg:flex items-center justify-between gap-1 bg-white/40 backdrop-blur-sm rounded-full px-2 h-[42px] border border-white/30 shadow-lg flex-1"
+          style={{ overflow: 'visible', justifyContent: 'center' }}>
           {navItems.map((item) =>
             item.children ? (
               /* Item con dropdown — CSS puro, sin JS */
