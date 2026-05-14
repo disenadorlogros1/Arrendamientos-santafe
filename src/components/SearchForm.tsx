@@ -32,7 +32,7 @@ function formatPrice(val: number) {
   return `$${val.toLocaleString('es-CO')}`;
 }
 
-const FONT = "'Avenir LT Pro 35 Thin', 'Avenir LT Pro', 'Outfit', system-ui, sans-serif";
+const FONT = "'Avenir LT Pro', 'Outfit', system-ui, sans-serif";
 const COLOR_LABEL = '#808080';
 const COLOR_VALUE = '#232222';
 const COLOR_ICON = '#aa182c';
@@ -95,7 +95,7 @@ function CustomSelect({ label, value, onChange, options, placeholder }: {
   return (
     <div className="min-w-0 flex-1">
       {label && (
-        <p className="leading-tight mb-[2px]" style={{ fontFamily: FONT, fontSize: '11px', color: COLOR_LABEL, fontWeight: 500 }}>
+        <p className="leading-tight mb-[2px]" style={{ fontFamily: FONT, fontSize: '11px', color: COLOR_LABEL, fontWeight: 300 }}>
           {label}
         </p>
       )}
@@ -104,7 +104,7 @@ function CustomSelect({ label, value, onChange, options, placeholder }: {
         <span style={{
           fontFamily: FONT,
           fontSize: '15px',
-          fontWeight: 600,
+          fontWeight: 400,
           color: value ? COLOR_VALUE : '#b0b0b0',
         }}>
           {value || placeholder || 'Seleccionar'}
@@ -178,7 +178,7 @@ export default function SearchForm({ onNavigate }: SearchFormProps) {
             <button key={t} onClick={() => handleTabClick(t)}
               className={`flex-1 flex items-center justify-center text-white transition-all ${
                 searchType === t ? 'bg-brand-red' : 'bg-white/60 hover:bg-white/70'}`}
-              style={{ fontSize: '20px', fontFamily: FONT, fontWeight: 600 }}>
+              style={{ fontSize: '20px', fontFamily: FONT, fontWeight: 400 }}>
               {t === 'arrendar' ? 'Arrendar' : 'Comprar'}
             </button>
           ))}
@@ -219,7 +219,7 @@ export default function SearchForm({ onNavigate }: SearchFormProps) {
             <div className={`${filterCell} border-b sm:border-b-0 sm:border-r border-gray-100`}>
               <CircleDollarSign className="w-[22px] h-[22px] flex-shrink-0" strokeWidth={1.6} style={{ color: COLOR_ICON }} />
               <div className="min-w-0 flex-1">
-                <p className="leading-tight mb-[2px]" style={{ fontFamily: FONT, fontSize: '11px', color: COLOR_LABEL, fontWeight: 500 }}>Precio</p>
+                <p className="leading-tight mb-[2px]" style={{ fontFamily: FONT, fontSize: '11px', color: COLOR_LABEL, fontWeight: 300 }}>Precio</p>
                 <p style={{ fontFamily: FONT, fontSize: '15px', fontWeight: 600, color: COLOR_VALUE }}>
                   {formatPrice(precioMin)} – {formatPrice(precioMax)}
                 </p>
@@ -269,7 +269,7 @@ export default function SearchForm({ onNavigate }: SearchFormProps) {
         {/* ── FILA FINAL: Buscar inmueble — roja, siempre al final ── */}
         <button onClick={handleSearch}
           className="bg-brand-red hover:bg-brand-red-hover text-white py-3.5 flex items-center justify-center gap-2 transition-colors duration-200 active:scale-[0.99]"
-          style={{ fontSize: '20px', fontFamily: FONT, fontWeight: 600 }}>
+          style={{ fontSize: '20px', fontFamily: FONT, fontWeight: 400 }}>
           <SearchIcon />
           <span>Buscar inmueble</span>
         </button>
