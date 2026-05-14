@@ -146,6 +146,7 @@ export default function RootLayout({
     <html lang="es" suppressHydrationWarning>
       <head>
         <link rel="canonical" href={SITE_URL} />
+        <link rel="stylesheet" href="https://use.typekit.net/jpo1mmh.css" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
