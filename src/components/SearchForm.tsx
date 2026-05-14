@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { createPortal } from 'react-dom';
-import { SlidersHorizontal, MapPin, Home, Users } from 'lucide-react';
+import { SlidersHorizontal, MapPin, Home, BedDouble, CircleDollarSign } from 'lucide-react';
 
 const SECTORES = [
   'Medellín', 'Envigado', 'Rionegro', 'Bello', 'Itagüí', 'Sabaneta',
@@ -31,6 +31,11 @@ function formatPrice(val: number) {
   if (val >= 1000000) return `$${(val / 1000000).toFixed(val % 1000000 === 0 ? 0 : 1)}M`;
   return `$${val.toLocaleString('es-CO')}`;
 }
+
+const FONT = "'Avenir LT Pro', 'Outfit', system-ui, sans-serif";
+const COLOR_LABEL = '#808080';
+const COLOR_VALUE = '#232222';
+const COLOR_ICON = '#aa182c';
 
 function CustomSelect({ label, value, onChange, options, placeholder }: {
   label: string; value: string; onChange: (val: string) => void;
@@ -75,10 +80,10 @@ function CustomSelect({ label, value, onChange, options, placeholder }: {
 
   const dropdown = mounted && open ? (
     <div ref={dropdownRef} style={{ position: 'fixed', top: `${pos.top}px`, left: `${pos.left}px`, width: '220px', zIndex: 2147483647 }}>
-      <div className="bg-white rounded-2xl py-1 shadow-2xl border border-gray-100 max-h-[240px] overflow-y-auto">
+      <div className="bg-white rounded-xl py-1 shadow-2xl border border-gray-100 max-h-[240px] overflow-y-auto">
         {options.map((opt) => (
           <button key={opt} type="button" onClick={(e) => { e.stopPropagation(); select(opt); }}
-            className={`block w-full text-left px-4 py-2.5 text-[15px] transition-colors duration-150 ${
+            className={`block w-full text-left px-4 py-2.5 text-[14px] transition-colors duration-150 ${
               value === opt ? 'bg-brand-red text-white font-semibold' : 'text-gray-700 hover:text-white hover:bg-brand-red'}`}>
             {opt}
           </button>
@@ -89,10 +94,21 @@ function CustomSelect({ label, value, onChange, options, placeholder }: {
 
   return (
     <div className="min-w-0 flex-1">
-      {label && <p className="text-[13px] text-gray-400 leading-tight mb-0.5">{label}</p>}
+      {label && (
+        <p className="leading-tight mb-[2px]" style={{ fontFamily: FONT, fontSize: '11px', color: COLOR_LABEL, fontWeight: 500 }}>
+          {label}
+        </p>
+      )}
       <button ref={triggerRef} type="button" onClick={toggle}
-        className="w-full flex items-center text-sm text-brand-dark font-semibold bg-transparent border-none outline-none cursor-pointer text-left">
-        <span className={value ? 'text-brand-dark' : 'text-gray-300 font-normal'}>{value || placeholder || 'Seleccionar'}</span>
+        className="w-full flex items-center bg-transparent border-none outline-none cursor-pointer text-left">
+        <span style={{
+          fontFamily: FONT,
+          fontSize: '15px',
+          fontWeight: 600,
+          color: value ? COLOR_VALUE : '#b0b0b0',
+        }}>
+          {value || placeholder || 'Seleccionar'}
+        </span>
       </button>
       {dropdown && createPortal(dropdown, document.body)}
     </div>
@@ -105,8 +121,6 @@ const SearchIcon = () => (
     <line x1="14.5" y1="14.5" x2="20" y2="20" stroke="white" strokeWidth="2.5" strokeLinecap="round" />
   </svg>
 );
-
-const FONT = "'Avenir LT Pro', 'Outfit', system-ui, sans-serif";
 
 interface SearchFormProps {
   mobileExpanded: boolean;
@@ -150,18 +164,21 @@ export default function SearchForm({ onNavigate }: SearchFormProps) {
     onNavigate?.('propiedades');
   };
 
+  // Estilo compartido para cada celda de filtro
+  const filterCell = "flex-1 flex items-center gap-2.5 px-5 py-2.5 min-w-0";
+
   return (
     <div className="relative mx-auto px-4 sm:px-6 lg:px-8 -mt-[100px] sm:-mt-[110px] lg:-mt-[140px]"
       style={{ width: '100%', maxWidth: '64rem', zIndex: 20 }}>
-      <div className="shadow-2xl flex flex-col">
+      <div className="shadow-2xl flex flex-col rounded-xl overflow-hidden">
 
         {/* ── FILA 1: Tabs Arrendar / Comprar — siempre visible ── */}
-        <div className="flex h-[50px]">
+        <div className="flex h-[48px]">
           {(['arrendar', 'comprar'] as const).map((t) => (
             <button key={t} onClick={() => handleTabClick(t)}
-              className={`flex-1 flex items-center justify-center text-white font-medium transition-all ${
-                searchType === t ? 'bg-brand-red' : 'bg-white/60'}`}
-              style={{ fontSize: '22px', fontFamily: FONT, fontWeight: 500 }}>
+              className={`flex-1 flex items-center justify-center text-white transition-all ${
+                searchType === t ? 'bg-brand-red' : 'bg-white/60 hover:bg-white/70'}`}
+              style={{ fontSize: '20px', fontFamily: FONT, fontWeight: 600 }}>
               {t === 'arrendar' ? 'Arrendar' : 'Comprar'}
             </button>
           ))}
@@ -169,23 +186,23 @@ export default function SearchForm({ onNavigate }: SearchFormProps) {
 
         {/* ── FILA 2: Métodos — visible desde Orden 2 ── */}
         {step >= 1 && (
-          <div className="flex h-[44px] bg-white border-b border-gray-200">
+          <div className="flex h-[40px] bg-white border-b border-gray-100">
             <button onClick={() => handleMethodClick('codigo')}
               className="flex-1 flex items-center justify-center hover:bg-gray-50 transition-colors"
               style={{
-                color: searchMethod === 'codigo' ? '#aa182c' : '#808080',
-                fontFamily: FONT, fontSize: '14px', fontWeight: 500,
-                borderBottom: searchMethod === 'codigo' ? '3px solid #f32735' : '3px solid transparent',
+                color: searchMethod === 'codigo' ? COLOR_ICON : COLOR_LABEL,
+                fontFamily: FONT, fontSize: '13px', fontWeight: 500,
+                borderBottom: searchMethod === 'codigo' ? '2px solid #f32735' : '2px solid transparent',
               }}>
               # Búsqueda por código
             </button>
-            <div className="w-px bg-gray-200 my-2" />
+            <div className="w-px bg-gray-100 my-2" />
             <button onClick={() => handleMethodClick('ubicacion')}
               className="flex-1 flex items-center justify-center hover:bg-gray-50 transition-colors"
               style={{
-                color: searchMethod === 'ubicacion' ? '#aa182c' : '#808080',
-                fontFamily: FONT, fontSize: '14px', fontWeight: 500,
-                borderBottom: searchMethod === 'ubicacion' ? '3px solid #f32735' : '3px solid transparent',
+                color: searchMethod === 'ubicacion' ? COLOR_ICON : COLOR_LABEL,
+                fontFamily: FONT, fontSize: '13px', fontWeight: 500,
+                borderBottom: searchMethod === 'ubicacion' ? '2px solid #f32735' : '2px solid transparent',
               }}>
               📍 Búsqueda por ubicación
             </button>
@@ -194,32 +211,26 @@ export default function SearchForm({ onNavigate }: SearchFormProps) {
 
         {/* ── FILA 3: Filtros básicos — visible desde Orden 3 ── */}
         {step >= 2 && (
-          <div className="flex flex-col sm:flex-row sm:flex-nowrap items-stretch bg-white border-b border-gray-200">
-            <div className="flex-1 flex items-center gap-3 px-4 py-3 border-r border-gray-200 min-w-0">
-              <div className="w-[48px] h-[48px] rounded flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#f2f2f2' }}>
-                <MapPin className="w-5 h-5" style={{ color: '#aa182c' }} />
-              </div>
+          <div className="flex flex-col sm:flex-row sm:flex-nowrap items-stretch bg-white border-b border-gray-100">
+            <div className={`${filterCell} border-b sm:border-b-0 sm:border-r border-gray-100`}>
+              <MapPin className="w-[22px] h-[22px] flex-shrink-0" strokeWidth={1.6} style={{ color: COLOR_ICON }} />
               <CustomSelect label="Ubicación" value={sector} onChange={setSector} options={SECTORES} placeholder="Seleccionar" />
             </div>
-            <div className="flex-1 flex items-center gap-3 px-4 py-3 border-r border-gray-200 min-w-0">
-              <div className="w-[48px] h-[48px] rounded flex items-center justify-center flex-shrink-0 font-bold text-lg" style={{ backgroundColor: '#f2f2f2', color: '#aa182c' }}>
-                $
-              </div>
+            <div className={`${filterCell} border-b sm:border-b-0 sm:border-r border-gray-100`}>
+              <CircleDollarSign className="w-[22px] h-[22px] flex-shrink-0" strokeWidth={1.6} style={{ color: COLOR_ICON }} />
               <div className="min-w-0 flex-1">
-                <p className="text-[13px] text-gray-400 leading-tight mb-0.5">Precio</p>
-                <p className="text-sm font-semibold text-brand-dark">{formatPrice(precioMin)} – {formatPrice(precioMax)}</p>
+                <p className="leading-tight mb-[2px]" style={{ fontFamily: FONT, fontSize: '11px', color: COLOR_LABEL, fontWeight: 500 }}>Precio</p>
+                <p style={{ fontFamily: FONT, fontSize: '15px', fontWeight: 600, color: COLOR_VALUE }}>
+                  {formatPrice(precioMin)} – {formatPrice(precioMax)}
+                </p>
               </div>
             </div>
-            <div className="flex-1 flex items-center gap-3 px-4 py-3 border-r border-gray-200 min-w-0">
-              <div className="w-[48px] h-[48px] rounded flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#f2f2f2' }}>
-                <Home className="w-5 h-5" style={{ color: '#aa182c' }} />
-              </div>
+            <div className={`${filterCell} border-b sm:border-b-0 sm:border-r border-gray-100`}>
+              <Home className="w-[22px] h-[22px] flex-shrink-0" strokeWidth={1.6} style={{ color: COLOR_ICON }} />
               <CustomSelect label="Tipo de propiedad" value={tipo} onChange={setTipo} options={TIPOS_INMUEBLE} placeholder="Seleccionar" />
             </div>
-            <div className="flex-1 flex items-center gap-3 px-4 py-3 min-w-0">
-              <div className="w-[48px] h-[48px] rounded flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#f2f2f2' }}>
-                <Users className="w-5 h-5" style={{ color: '#aa182c' }} />
-              </div>
+            <div className={filterCell}>
+              <BedDouble className="w-[22px] h-[22px] flex-shrink-0" strokeWidth={1.6} style={{ color: COLOR_ICON }} />
               <CustomSelect label="Habitaciones" value={habitaciones} onChange={setHabitaciones} options={HABITACIONES} placeholder="Seleccionar" />
             </div>
           </div>
@@ -227,17 +238,17 @@ export default function SearchForm({ onNavigate }: SearchFormProps) {
 
         {/* ── FILA 4: Filtros avanzados — visible solo en Orden 4 ── */}
         {step === 3 && (
-          <div className="flex flex-col sm:flex-row sm:flex-nowrap items-stretch bg-gray-50 border-b border-gray-200">
-            <div className="flex-1 flex items-center gap-3 px-4 py-3 border-r border-gray-200 min-w-0">
+          <div className="flex flex-col sm:flex-row sm:flex-nowrap items-stretch bg-[#fafafa] border-b border-gray-100">
+            <div className={`${filterCell} border-b sm:border-b-0 sm:border-r border-gray-100`}>
               <CustomSelect label="Baños" value={banos} onChange={setBanos} options={BANOS} placeholder="Seleccionar" />
             </div>
-            <div className="flex-1 flex items-center gap-3 px-4 py-3 border-r border-gray-200 min-w-0">
+            <div className={`${filterCell} border-b sm:border-b-0 sm:border-r border-gray-100`}>
               <CustomSelect label="Área mínima" value={areaMin} onChange={setAreaMin} options={AREAS} placeholder="Seleccionar" />
             </div>
-            <div className="flex-1 flex items-center gap-3 px-4 py-3 border-r border-gray-200 min-w-0">
+            <div className={`${filterCell} border-b sm:border-b-0 sm:border-r border-gray-100`}>
               <CustomSelect label="Área máxima" value={areaMax} onChange={setAreaMax} options={AREAS} placeholder="Seleccionar" />
             </div>
-            <div className="flex-1 flex items-center gap-3 px-4 py-3 min-w-0">
+            <div className={filterCell}>
               <CustomSelect label="Parqueaderos" value={parqueaderos} onChange={setParqueaderos} options={PARQUEADEROS} placeholder="Seleccionar" />
             </div>
           </div>
@@ -245,11 +256,11 @@ export default function SearchForm({ onNavigate }: SearchFormProps) {
 
         {/* ── FILA Búsqueda avanzada — blanca, visible desde Orden 3 ── */}
         {step >= 2 && (
-          <div className="bg-white border-b border-gray-200 py-3 px-4 flex items-center justify-center">
+          <div className="bg-white border-b border-gray-100 py-2.5 px-4 flex items-center justify-center">
             <button type="button" onClick={handleAdvancedToggle}
-              className="inline-flex items-center gap-2 font-semibold hover:opacity-70 transition-opacity"
-              style={{ fontSize: '15px', fontFamily: FONT, fontWeight: 500, color: '#808080' }}>
-              <SlidersHorizontal className="w-5 h-5" />
+              className="inline-flex items-center gap-2 hover:opacity-70 transition-opacity"
+              style={{ fontSize: '13px', fontFamily: FONT, fontWeight: 500, color: COLOR_LABEL }}>
+              <SlidersHorizontal className="w-4 h-4" strokeWidth={1.6} />
               {step === 3 ? 'Ocultar filtros avanzados' : 'Búsqueda avanzada'}
             </button>
           </div>
@@ -257,8 +268,8 @@ export default function SearchForm({ onNavigate }: SearchFormProps) {
 
         {/* ── FILA FINAL: Buscar inmueble — roja, siempre al final ── */}
         <button onClick={handleSearch}
-          className="bg-brand-red hover:bg-brand-red-hover text-white px-8 py-4 font-semibold flex items-center justify-center gap-2 transition-colors duration-200 active:scale-95"
-          style={{ fontSize: '20px', fontFamily: FONT, fontWeight: 500 }}>
+          className="bg-brand-red hover:bg-brand-red-hover text-white py-3.5 flex items-center justify-center gap-2 transition-colors duration-200 active:scale-[0.99]"
+          style={{ fontSize: '18px', fontFamily: FONT, fontWeight: 600 }}>
           <SearchIcon />
           <span>Buscar inmueble</span>
         </button>
