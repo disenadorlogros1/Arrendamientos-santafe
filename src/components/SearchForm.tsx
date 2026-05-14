@@ -263,7 +263,7 @@ export default function SearchForm({ mobileExpanded, onMobileExpand, onNavigate 
               <button
                 onClick={() => handleTabClick(t)}
                 className={`flex-1 px-5 py-3 text-center transition-all duration-200 font-medium ${
-                  searchType === t ? 'bg-white text-brand-red' : 'bg-white/60 text-white hover:bg-white/70'
+                  searchType === t ? 'bg-white text-brand-red' : 'bg-white/50 text-white hover:bg-white/60'
                 }`}
               >
                 {t === 'arrendar' ? 'Arrendar' : 'Comprar'}

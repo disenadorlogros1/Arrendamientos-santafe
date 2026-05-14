@@ -7,14 +7,14 @@ interface HeroSectionProps {
 const WHATSAPP_URL =
   'https://wa.me/573006557529?text=Hola%2C%20quisiera%20hablar%20con%20un%20asesor%20de%20Arrendamientos%20Santa%20Fe.';
 
-const AnimatedText = ({ text }: { text: string }) => {
+const AnimatedText = ({ text, startIndex = 0 }: { text: string; startIndex?: number }) => {
   return (
     <>
       {text.split('').map((char, i) => (
         <span
           key={i}
           className="letter-animate"
-          style={{ animationDelay: `${i * 0.05}s` }}
+          style={{ animationDelay: `${(startIndex + i) * 0.05}s` }}
         >
           {char}
         </span>
@@ -58,13 +58,13 @@ export default function HeroSection({ onNavigate }: HeroSectionProps) {
         <div className="hero-title-wrap">
           <h1 className="hero-title-text text-3xl sm:text-4xl md:text-5xl lg:text-[52px] text-white tracking-tight">
             <span className="hero-line-seg hero-line-first">
-              <AnimatedText text="60 años" />
-            </span>{' '}
+              <AnimatedText text="60 años " startIndex={0} />
+            </span>
             <span className="hero-line-seg hero-line-highlight">
-              <AnimatedText text="guiando tus decisiones" />
-            </span>{' '}
+              <AnimatedText text="guiando tus decisiones " startIndex={8} />
+            </span>
             <span className="hero-line-seg hero-line-last">
-              <AnimatedText text="inmobiliarias." />
+              <AnimatedText text="inmobiliarias." startIndex={31} />
             </span>
           </h1>
         </div>
