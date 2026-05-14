@@ -137,15 +137,15 @@ export default function Header({ currentPage, onNavigate }: HeaderProps) {
   return (
     <header className={`fixed top-0 left-0 right-0 pt-4 pb-3 px-4 sm:px-6 lg:px-8 transition-all duration-300 ${scrolled ? 'header-scrolled' : ''}`}
       style={{ zIndex: 50 }}>
-      <div className="mx-auto flex items-center justify-between gap-4 h-[58px]" style={{ maxWidth: '64rem' }}>
-        {/* Logo — extremo izquierdo */}
-        <button onClick={() => handleNav('home')} className="shrink-0">
+      <div className="flex items-center justify-center gap-4 h-[58px]">
+        {/* Logo — extremo izquierdo FIJO */}
+        <button onClick={() => handleNav('home')} className="shrink-0 absolute left-4 sm:left-6 lg:left-8">
           <img src="/logo-blanco.png" alt="Arrendamientos Santa Fe" className="h-10 md:h-11 w-auto object-contain drop-shadow-lg" />
         </button>
 
         {/* Nav capsula — centrada */}
-        <nav className="hidden lg:flex items-center justify-between gap-1 bg-white/40 backdrop-blur-sm rounded-full px-2 h-[42px] border border-white/30 shadow-lg flex-1"
-          style={{ overflow: 'visible', justifyContent: 'center' }}>
+        <nav className="hidden lg:flex items-center justify-between gap-1 bg-white/40 backdrop-blur-sm rounded-full px-2 h-[42px] border border-white/30 shadow-lg"
+          style={{ overflow: 'visible', width: '100%', maxWidth: '64rem' }}>
           {navItems.map((item) =>
             item.children ? (
               /* Item con dropdown — CSS puro, sin JS */
@@ -200,8 +200,8 @@ export default function Header({ currentPage, onNavigate }: HeaderProps) {
           )}
         </nav>
 
-        {/* WhatsApp + PSE desktop */}
-        <div className="hidden lg:flex shrink-0 items-center gap-2">
+        {/* WhatsApp + PSE desktop — extremo derecho FIJO */}
+        <div className="hidden lg:flex shrink-0 items-center gap-2 absolute right-4 sm:right-6 lg:right-8">
           <WhatsAppButton />
           <PSEButton />
         </div>

@@ -255,41 +255,38 @@ export default function SearchForm({ mobileExpanded, onMobileExpand, onNavigate 
 
   return (
     <div className="relative mx-auto px-4 sm:px-6 lg:px-8 -mt-[100px] sm:-mt-[110px] lg:-mt-[140px]" style={{ width: '100%', maxWidth: '64rem', zIndex: 20 }}>
-      <div className="bg-white shadow-2xl">
-        {/* Tabs Arrendar / Comprar + Botón Buscar — siempre visibles */}
-        <div className="flex flex-col sm:flex-row bg-brand-dark w-full">
-          <div className="flex flex-1 bg-brand-dark">
-            {(['arrendar', 'comprar'] as const).map((t) => (
+      {/* Tabs + Botón Buscar — estructura simple */}
+      <div className="flex bg-gray-200 shadow-2xl">
+        {/* Tabs Arrendar / Comprar */}
+        <div className="flex flex-1">
+          {(['arrendar', 'comprar'] as const).map((t, idx) => (
+            <div key={t} className="flex-1 flex items-center">
               <button
-                key={t}
                 onClick={() => handleTabClick(t)}
-                className={`flex-1 px-5 py-3 transition-all duration-200 ${
-                  searchType === t
-                    ? 'bg-white text-brand-red'
-                    : 'bg-white/50 text-white hover:bg-white/70'
-                }`}
-                style={{ fontFamily: "'Avenir LT Pro 65 Medium', 'Avenir', 'Outfit', system-ui, sans-serif", fontWeight: 500, fontSize: '15px' }}
+                className="flex-1 px-5 py-3 text-center transition-all duration-200 bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium"
               >
                 {t === 'arrendar' ? 'Arrendar' : 'Comprar'}
               </button>
-            ))}
-          </div>
-
-          {/* Botón Buscar — siempre visible */}
-          <button
-            onClick={handleSearch}
-            className="relative overflow-hidden bg-brand-red hover:bg-brand-red-hover text-white px-6 sm:px-10 py-3 text-base sm:text-lg font-semibold flex items-center justify-center gap-2 transition-colors duration-200 active:scale-95 shrink-0 sm:w-auto"
-          >
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" className="shrink-0">
-              <circle cx="10" cy="10" r="7" stroke="white" strokeWidth="2.5" strokeLinecap="round"
-                strokeDasharray={isSearching ? '14 30' : '44 0'}
-                style={{ transition: 'stroke-dasharray 0.3s ease' }} />
-              <line x1="14.5" y1="14.5" x2="20" y2="20" stroke="white" strokeWidth="2.5" strokeLinecap="round"
-                style={{ opacity: isSearching ? 0 : 1, transition: 'opacity 0.25s ease' }} />
-            </svg>
-            <span className="whitespace-nowrap">Buscar inmueble</span>
-          </button>
+              {idx === 0 && <div className="w-px h-8 bg-gray-400" />}
+            </div>
+          ))}
         </div>
+
+        {/* Botón Buscar inmueble */}
+        <button
+          onClick={handleSearch}
+          className="bg-brand-red hover:bg-brand-red-hover text-white px-8 py-3 font-semibold flex items-center justify-center gap-2 transition-colors duration-200 active:scale-95 whitespace-nowrap"
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <circle cx="10" cy="10" r="7" stroke="white" strokeWidth="2.5" strokeLinecap="round"
+              strokeDasharray={isSearching ? '14 30' : '44 0'}
+              style={{ transition: 'stroke-dasharray 0.3s ease' }} />
+            <line x1="14.5" y1="14.5" x2="20" y2="20" stroke="white" strokeWidth="2.5" strokeLinecap="round"
+              style={{ opacity: isSearching ? 0 : 1, transition: 'opacity 0.25s ease' }} />
+          </svg>
+          <span>Buscar inmueble</span>
+        </button>
+      </div>
 
         {/* Filtros — solo visible cuando se selecciona Arrendar o Comprar */}
         {searchType && (
