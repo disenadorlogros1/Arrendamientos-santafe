@@ -25,7 +25,7 @@ function MobileWhatsAppButton() {
         isRed ? 'bg-brand-red shadow-[0_0_20px_rgba(243,39,53,0.6)]' : 'bg-white shadow-[0_0_12px_rgba(255,255,255,0.3)]'
       }`}
       style={{ color: isRed ? 'white' : '#232222' }}>
-      <img src={isRed ? '/wpp-blanco.gif' : '/wpp-blanco.gif'} alt="WhatsApp" className="w-5 h-5" />
+      <img src="/icons/icon-whatsapp-white.gif" alt="WhatsApp" className="w-5 h-5" />
     </a>
   );
 }
@@ -86,7 +86,7 @@ function WhatsAppButton() {
         isRed ? 'bg-brand-red shadow-[0_0_20px_rgba(243,39,53,0.6)]' : 'bg-white shadow-[0_0_12px_rgba(255,255,255,0.3)]'
       }`}
       style={{ color: isRed ? 'white' : '#232222' }}>
-      <img src={isRed ? '/wpp-blanco.gif' : '/wpp-blanco.gif'} alt="WhatsApp" className="w-5 h-5" />
+      <img src="/icons/icon-whatsapp-white.gif" alt="WhatsApp" className="w-5 h-5" />
       <span>WhatsApp</span>
     </a>
   );
