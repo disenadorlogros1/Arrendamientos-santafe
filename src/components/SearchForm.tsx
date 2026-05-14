@@ -265,10 +265,6 @@ export default function SearchForm({ mobileExpanded, onMobileExpand, onNavigate 
                 className={`flex-1 px-5 py-3 text-center transition-all duration-200 font-medium ${
                   searchType === t ? 'bg-white text-brand-red' : 'bg-white/60 text-white hover:bg-white/70'
                 }`}
-                style={{
-                  fontFamily: "'Avenir LT Pro 65 Medium', 'Avenir LT Pro', 'Avenir', 'Outfit', system-ui, sans-serif",
-                  fontWeight: 500,
-                }}
               >
                 {t === 'arrendar' ? 'Arrendar' : 'Comprar'}
               </button>
