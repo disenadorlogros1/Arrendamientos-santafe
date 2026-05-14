@@ -213,6 +213,7 @@ interface SearchFormProps {
 
 export default function SearchForm({ mobileExpanded, onMobileExpand, onNavigate }: SearchFormProps) {
   const [searchType, setSearchType] = useState<'arrendar' | 'comprar' | null>(null);
+  const [searchMethod, setSearchMethod] = useState<'ubicacion' | 'codigo'>('ubicacion');
   const activeType = searchType || 'arrendar';
   const [sector, setSector] = useState('');
   const [tipo, setTipo] = useState('');
@@ -276,22 +277,49 @@ export default function SearchForm({ mobileExpanded, onMobileExpand, onNavigate 
           ))}
         </div>
 
-        {/* Subtítulos bajo los tabs */}
-        <div className="flex h-[30px] bg-white border-b border-gray-300">
-          {(['arrendar', 'comprar'] as const).map((t) => (
-            <div
-              key={`subtitle-${t}`}
-              className="flex-1 flex items-center justify-center text-sm"
+        {/* Subtítulos bajo los tabs - Búsqueda por código (izq) vs. Búsqueda por ubicación (der) */}
+        <div className="flex h-[40px] bg-white border-b border-gray-300 items-center">
+          {/* Búsqueda por código - izquierda, gris */}
+          <button
+            type="button"
+            onClick={() => setSearchMethod('codigo')}
+            className="flex-1 flex items-center justify-center gap-2 hover:opacity-80 transition-opacity"
+          >
+            <span
               style={{
-                color: '#aa182c',
+                color: '#808080',
                 fontFamily: "'Avenir LT Pro', 'Outfit', system-ui, sans-serif",
-                fontSize: '15px',
+                fontSize: '14px',
                 fontWeight: 500,
               }}
             >
-              {t === 'arrendar' ? '# Búsqueda por código' : '📍 Búsqueda por ubicación'}
-            </div>
-          ))}
+              # Búsqueda por código
+            </span>
+          </button>
+
+          {/* Línea divisoria */}
+          <div className="h-6 w-px bg-gray-300" />
+
+          {/* Búsqueda por ubicación - derecha, rojo */}
+          <button
+            type="button"
+            onClick={() => setSearchMethod('ubicacion')}
+            className="flex-1 flex items-center justify-center gap-2 hover:opacity-80 transition-opacity border-b-2"
+            style={{
+              borderColor: searchMethod === 'ubicacion' ? '#f32735' : 'transparent',
+            }}
+          >
+            <span
+              style={{
+                color: '#aa182c',
+                fontFamily: "'Avenir LT Pro', 'Outfit', system-ui, sans-serif",
+                fontSize: '14px',
+                fontWeight: 500,
+              }}
+            >
+              📍 Búsqueda por ubicación
+            </span>
+          </button>
         </div>
 
         {/* Filtros — en una sola fila horizontal */}
