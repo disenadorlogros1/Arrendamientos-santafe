@@ -356,8 +356,8 @@ select option {
 
 /* ── Hero title: interlineado ajustado ── */
 .hero-title-text {
-  font-family: 'Avenir LT Pro 35 Light', 'Avenir', 'Outfit', system-ui, sans-serif;
-  font-weight: 300;
+  font-family: 'Avenir LT Pro 65 Medium', 'Avenir', 'Outfit', system-ui, sans-serif;
+  font-weight: 500;
   line-height: 1.035;
   text-shadow: 0 2px 20px rgba(0,0,0,0.4);
 }
