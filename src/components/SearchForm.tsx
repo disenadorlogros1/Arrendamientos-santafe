@@ -173,10 +173,11 @@ export default function SearchForm({ onNavigate }: SearchFormProps) {
       <div className="shadow-2xl flex flex-col overflow-hidden">
 
         {/* ── FILA 1: Tabs Arrendar / Comprar — siempre visible ── */}
-        <div className="flex h-[48px]">
-          {(['arrendar', 'comprar'] as const).map((t) => (
+        <div className="flex h-[38px] sm:h-[48px]">
+          {(['arrendar', 'comprar'] as const).map((t, i) => (
             <button key={t} onClick={() => handleTabClick(t)}
               className={`flex-1 flex items-center justify-center text-white transition-all ${
+                i === 0 ? 'border-r border-gray-300' : ''} ${
                 searchType === t ? 'bg-brand-red' : 'bg-white/60 hover:bg-white/70'}`}
               style={{ fontSize: '20px', fontFamily: FONT, fontWeight: 400 }}>
               {t === 'arrendar' ? 'Arrendar' : 'Comprar'}
