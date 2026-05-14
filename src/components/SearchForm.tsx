@@ -2,7 +2,6 @@
 
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { createPortal } from 'react-dom';
-import { SlidersHorizontal, MapPin, Home, BedDouble, CircleDollarSign } from 'lucide-react';
 
 const SECTORES = [
   'Medellín', 'Envigado', 'Rionegro', 'Bello', 'Itagüí', 'Sabaneta',
@@ -116,10 +115,7 @@ function CustomSelect({ label, value, onChange, options, placeholder }: {
 }
 
 const SearchIcon = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-    <circle cx="10" cy="10" r="7" stroke="white" strokeWidth="2.5" strokeLinecap="round" />
-    <line x1="14.5" y1="14.5" x2="20" y2="20" stroke="white" strokeWidth="2.5" strokeLinecap="round" />
-  </svg>
+  <img src="/icons/icon-search-white.gif" alt="Buscar" width="20" height="20" />
 );
 
 interface SearchFormProps {
@@ -189,23 +185,25 @@ export default function SearchForm({ onNavigate }: SearchFormProps) {
         {step >= 1 && (
           <div className="flex h-[40px] bg-white border-b border-gray-100">
             <button onClick={() => handleMethodClick('codigo')}
-              className="flex-1 flex items-center justify-center hover:bg-gray-50 transition-colors"
+              className="flex-1 flex items-center justify-center gap-1.5 hover:bg-gray-50 transition-colors"
               style={{
                 color: searchMethod === 'codigo' ? COLOR_ICON : COLOR_LABEL,
                 fontFamily: FONT, fontSize: '13px', fontWeight: 500,
                 borderBottom: searchMethod === 'codigo' ? '2px solid #f32735' : '2px solid transparent',
               }}>
-              # Búsqueda por código
+              <img src="/icons/icon-code-red.gif" alt="Código" className="w-4 h-4" />
+              Búsqueda por código
             </button>
             <div className="w-px bg-gray-100 my-2" />
             <button onClick={() => handleMethodClick('ubicacion')}
-              className="flex-1 flex items-center justify-center hover:bg-gray-50 transition-colors"
+              className="flex-1 flex items-center justify-center gap-1.5 hover:bg-gray-50 transition-colors"
               style={{
                 color: searchMethod === 'ubicacion' ? COLOR_ICON : COLOR_LABEL,
                 fontFamily: FONT, fontSize: '13px', fontWeight: 500,
                 borderBottom: searchMethod === 'ubicacion' ? '2px solid #f32735' : '2px solid transparent',
               }}>
-              📍 Búsqueda por ubicación
+              <img src="/icons/icon-location-red.gif" alt="Ubicación" className="w-4 h-4" />
+              Búsqueda por ubicación
             </button>
           </div>
         )}
@@ -214,11 +212,11 @@ export default function SearchForm({ onNavigate }: SearchFormProps) {
         {step >= 2 && (
           <div className="flex flex-col sm:flex-row sm:flex-nowrap items-stretch bg-white border-b border-gray-100">
             <div className={`${filterCell} border-b sm:border-b-0 sm:border-r border-gray-100`}>
-              <MapPin className="w-[22px] h-[22px] flex-shrink-0" strokeWidth={1.6} style={{ color: COLOR_ICON }} />
+              <img src="/icons/icon-location-red.gif" alt="Ubicación" className="w-[22px] h-[22px] flex-shrink-0" />
               <CustomSelect label="Ubicación" value={sector} onChange={setSector} options={SECTORES} placeholder="Seleccionar" />
             </div>
             <div className={`${filterCell} border-b sm:border-b-0 sm:border-r border-gray-100`}>
-              <CircleDollarSign className="w-[22px] h-[22px] flex-shrink-0" strokeWidth={1.6} style={{ color: COLOR_ICON }} />
+              <img src="/icons/icon-dollar-red.gif" alt="Precio" className="w-[22px] h-[22px] flex-shrink-0" />
               <div className="min-w-0 flex-1">
                 <p className="leading-tight mb-[2px]" style={{ fontFamily: FONT, fontSize: '11px', color: COLOR_LABEL, fontWeight: 300 }}>Precio</p>
                 <p style={{ fontFamily: FONT, fontSize: '15px', fontWeight: 600, color: COLOR_VALUE }}>
@@ -227,11 +225,11 @@ export default function SearchForm({ onNavigate }: SearchFormProps) {
               </div>
             </div>
             <div className={`${filterCell} border-b sm:border-b-0 sm:border-r border-gray-100`}>
-              <Home className="w-[22px] h-[22px] flex-shrink-0" strokeWidth={1.6} style={{ color: COLOR_ICON }} />
+              <img src="/icons/icon-home-red.gif" alt="Tipo de propiedad" className="w-[22px] h-[22px] flex-shrink-0" />
               <CustomSelect label="Tipo de propiedad" value={tipo} onChange={setTipo} options={TIPOS_INMUEBLE} placeholder="Seleccionar" />
             </div>
             <div className={filterCell}>
-              <BedDouble className="w-[22px] h-[22px] flex-shrink-0" strokeWidth={1.6} style={{ color: COLOR_ICON }} />
+              <img src="/icons/icon-bed-red.gif" alt="Habitaciones" className="w-[22px] h-[22px] flex-shrink-0" />
               <CustomSelect label="Habitaciones" value={habitaciones} onChange={setHabitaciones} options={HABITACIONES} placeholder="Seleccionar" />
             </div>
           </div>
@@ -261,7 +259,7 @@ export default function SearchForm({ onNavigate }: SearchFormProps) {
             <button type="button" onClick={handleAdvancedToggle}
               className="inline-flex items-center gap-2 hover:opacity-70 transition-opacity"
               style={{ fontSize: '13px', fontFamily: FONT, fontWeight: 500, color: COLOR_LABEL }}>
-              <SlidersHorizontal className="w-4 h-4" strokeWidth={1.6} />
+              <img src="/icons/icon-filters-red.gif" alt="Filtros" className="w-4 h-4" />
               {step === 3 ? 'Ocultar filtros avanzados' : 'Búsqueda avanzada'}
             </button>
           </div>

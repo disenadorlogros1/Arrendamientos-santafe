@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Menu, X, CreditCard } from 'lucide-react';
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from '@/components/ui/sheet';
 
 export type PageType = 'home' | 'propiedades' | 'consignacion' | 'hipotecas' | 'servicios' | 'nosotros' | 'politicas' | 'terminos';
@@ -43,7 +42,7 @@ function MobilePSEButton() {
         isRed ? 'bg-brand-red shadow-[0_0_20px_rgba(243,39,53,0.6)]' : 'bg-white shadow-[0_0_12px_rgba(255,255,255,0.3)]'
       }`}
       style={{ color: isRed ? 'white' : '#232222' }}>
-      <CreditCard className="w-5 h-5" />
+      <img src="/icons/icon-credit-card-white.gif" alt="Pagar" className="w-5 h-5" />
     </a>
   );
 }
@@ -110,7 +109,7 @@ function PSEButton() {
       style={{ color: isRed ? 'white' : '#232222' }}
       aria-label="Pagar en línea por PSE"
     >
-      <CreditCard className="w-4 h-4" />
+      <img src="/icons/icon-credit-card-white.gif" alt="Pagar" className="w-4 h-4" />
       <span>Pagar en línea</span>
     </a>
   );
@@ -219,7 +218,7 @@ export default function Header({ currentPage, onNavigate }: HeaderProps) {
           <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
             <SheetTrigger asChild>
               <button className="text-white p-1.5 hover:bg-white/10 rounded-full transition-colors" aria-label="Abrir menú">
-                <Menu className="h-5 w-5" />
+                <img src="/icons/icon-menu-white.gif" alt="Menú" className="h-5 w-5" />
               </button>
             </SheetTrigger>
             <SheetContent side="right" className="w-80 bg-brand-dark border-brand-dark-secondary p-0">
@@ -228,7 +227,7 @@ export default function Header({ currentPage, onNavigate }: HeaderProps) {
                 <div className="flex items-center justify-between p-4 border-b border-white/10">
                   <img src="/logo-blanco.png" alt="Arrendamientos Santa Fe" className="h-8 w-auto object-contain" />
                   <button onClick={() => setMobileOpen(false)} className="text-white/60 hover:text-white" aria-label="Cerrar menú">
-                    <X className="h-5 w-5" />
+                    <img src="/icons/icon-close-white.gif" alt="Cerrar" className="h-5 w-5" />
                   </button>
                 </div>
                 <nav className="flex flex-col p-3 gap-0.5 flex-1 overflow-y-auto">
