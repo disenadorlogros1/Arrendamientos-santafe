@@ -65,7 +65,7 @@ export default function HeroSection({ onNavigate }: HeroSectionProps) {
             <div>
               <AnimatedText text="60 años guiando tus decisiones" startIndex={0} />
             </div>
-            <div>
+            <div style={{ whiteSpace: 'nowrap' }}>
               <AnimatedText text="inmobiliarias." startIndex={30} />
             </div>
           </h1>

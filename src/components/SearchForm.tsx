@@ -256,18 +256,24 @@ export default function SearchForm({ mobileExpanded, onMobileExpand, onNavigate 
   return (
     <div className="relative mx-auto px-4 sm:px-6 lg:px-8 -mt-[100px] sm:-mt-[110px] lg:-mt-[140px]" style={{ width: '100%', maxWidth: '64rem', zIndex: 20 }}>
       <div className="bg-white shadow-2xl flex flex-col">
-        {/* Tabs Arrendar / Comprar — estilo Nav cápsula */}
-        <div className="flex items-center justify-between gap-1 bg-white/40 backdrop-blur-sm rounded-full px-2 py-2 m-3 border border-white/30 shadow-lg">
-          {(['arrendar', 'comprar'] as const).map((t) => (
-            <button
-              key={t}
-              onClick={() => handleTabClick(t)}
-              className={`flex-1 px-5 py-2 text-center text-sm font-medium rounded-full transition-all duration-300 ${
-                searchType === t ? 'bg-white text-brand-red' : 'text-white hover:bg-brand-red'
-              }`}
-            >
-              {t === 'arrendar' ? 'Arrendar' : 'Comprar'}
-            </button>
+        {/* Tabs Arrendar / Comprar — blanco 60% opacidad */}
+        <div className="flex">
+          {(['arrendar', 'comprar'] as const).map((t, idx) => (
+            <div key={t} className="flex-1 flex items-center">
+              <button
+                onClick={() => handleTabClick(t)}
+                className={`flex-1 px-5 py-3 text-center transition-all duration-200 font-medium ${
+                  searchType === t ? 'bg-white text-brand-red' : 'bg-white/60 text-white hover:bg-white/70'
+                }`}
+                style={{
+                  fontFamily: "'Avenir LT Pro 65 Medium', 'Avenir LT Pro', 'Avenir', 'Outfit', system-ui, sans-serif",
+                  fontWeight: 500,
+                }}
+              >
+                {t === 'arrendar' ? 'Arrendar' : 'Comprar'}
+              </button>
+              {idx === 0 && <div className="w-px h-8 bg-gray-300" />}
+            </div>
           ))}
         </div>
 
