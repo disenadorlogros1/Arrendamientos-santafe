@@ -257,18 +257,18 @@ export default function SearchForm({ mobileExpanded, onMobileExpand, onNavigate 
     <div className="relative mx-auto px-4 sm:px-6 lg:px-8 -mt-[100px] sm:-mt-[110px] lg:-mt-[140px]" style={{ width: '100%', maxWidth: '64rem', zIndex: 20 }}>
       <div className="bg-white shadow-2xl flex flex-col">
         {/* Tabs Arrendar / Comprar — blanco 60% opacidad */}
-        <div className="flex bg-white/60 backdrop-blur-sm">
+        <div className="flex">
           {(['arrendar', 'comprar'] as const).map((t, idx) => (
             <div key={t} className="flex-1 flex items-center">
               <button
                 onClick={() => handleTabClick(t)}
-                className={`flex-1 px-5 py-3 text-center transition-all duration-200 text-white font-medium ${
+                className={`flex-1 px-5 py-3 text-center transition-all duration-200 font-medium ${
                   searchType === t ? 'bg-white text-brand-red' : 'bg-white/60 text-white hover:bg-white/70'
                 }`}
               >
                 {t === 'arrendar' ? 'Arrendar' : 'Comprar'}
               </button>
-              {idx === 0 && <div className="w-px h-8 bg-white/40" />}
+              {idx === 0 && <div className="w-px h-8 bg-gray-300" />}
             </div>
           ))}
         </div>
@@ -293,7 +293,7 @@ export default function SearchForm({ mobileExpanded, onMobileExpand, onNavigate 
         {searchType && (
           <>
             {/* Row 1: Ciudad, Tipo, Precio, Habitaciones */}
-            <div className="search-fields flex flex-col sm:flex-row sm:flex-nowrap items-stretch">
+            <div className="search-fields flex flex-col sm:flex-row sm:flex-nowrap items-stretch bg-white">
               {/* Ciudad o sector */}
               <div className="filter-field group flex-1 flex items-center gap-3 px-4 py-3 border-b sm:border-b-0 sm:border-r border-gray-200">
                 <div className="filter-icon w-9 h-9 rounded shrink-0 flex items-center justify-center" style={{ backgroundColor: '#f2f2f2' }}>
@@ -329,7 +329,7 @@ export default function SearchForm({ mobileExpanded, onMobileExpand, onNavigate 
 
             {/* Filtros avanzados (colapsable) */}
             {showAdvanced && (
-              <div className="search-fields flex flex-col sm:flex-row sm:flex-nowrap items-stretch border-t border-gray-200 bg-gray-50">
+              <div className="search-fields flex flex-col sm:flex-row sm:flex-nowrap items-stretch border-t border-gray-200 bg-white">
                 {/* Baños */}
                 <div className="filter-field group flex-1 flex items-center gap-3 px-4 py-3 border-b sm:border-b-0 sm:border-r border-gray-200">
                   <div className="filter-icon w-9 h-9 rounded shrink-0 flex items-center justify-center" style={{ backgroundColor: '#f2f2f2' }}>
@@ -374,7 +374,7 @@ export default function SearchForm({ mobileExpanded, onMobileExpand, onNavigate 
             )}
 
             {/* Botón Búsqueda avanzada */}
-            <div className="flex justify-center px-4 py-2.5 border-t border-gray-100">
+            <div className="flex justify-center px-4 py-2.5 border-t border-gray-100 bg-white">
               <button
                 type="button"
                 onClick={() => setShowAdvanced(prev => !prev)}
@@ -386,7 +386,7 @@ export default function SearchForm({ mobileExpanded, onMobileExpand, onNavigate 
             </div>
 
             {/* Botón Buscar inmueble */}
-            <div className="px-4 py-3 border-t border-gray-100">
+            <div className="px-4 py-3 border-t border-gray-100 bg-white">
               <button
                 onClick={handleSearch}
                 className="w-full relative overflow-hidden bg-brand-red hover:bg-brand-red-hover text-white px-8 py-4 text-lg font-semibold flex items-center justify-center gap-2 transition-colors duration-200 active:scale-95"
