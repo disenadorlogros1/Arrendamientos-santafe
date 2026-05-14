@@ -255,27 +255,28 @@ export default function SearchForm({ mobileExpanded, onMobileExpand, onNavigate 
 
   return (
     <div className="relative mx-auto px-4 sm:px-6 lg:px-8 -mt-[100px] sm:-mt-[110px] lg:-mt-[140px]" style={{ width: '100%', maxWidth: '64rem', zIndex: 20 }}>
-      {/* Tabs + Botón Buscar — estructura simple */}
-      <div className="flex bg-gray-200 shadow-2xl">
-        {/* Tabs Arrendar / Comprar */}
-        <div className="flex flex-1">
+      <div className="bg-white shadow-2xl flex flex-col">
+        {/* Tabs Arrendar / Comprar — blanco 60% opacidad */}
+        <div className="flex bg-white/60 backdrop-blur-sm">
           {(['arrendar', 'comprar'] as const).map((t, idx) => (
             <div key={t} className="flex-1 flex items-center">
               <button
                 onClick={() => handleTabClick(t)}
-                className="flex-1 px-5 py-3 text-center transition-all duration-200 bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium"
+                className={`flex-1 px-5 py-3 text-center transition-all duration-200 text-white font-medium ${
+                  searchType === t ? 'bg-white text-brand-red' : 'bg-white/60 text-white hover:bg-white/70'
+                }`}
               >
                 {t === 'arrendar' ? 'Arrendar' : 'Comprar'}
               </button>
-              {idx === 0 && <div className="w-px h-8 bg-gray-400" />}
+              {idx === 0 && <div className="w-px h-8 bg-white/40" />}
             </div>
           ))}
         </div>
 
-        {/* Botón Buscar inmueble */}
+        {/* Botón Buscar inmueble — ancho completo */}
         <button
           onClick={handleSearch}
-          className="bg-brand-red hover:bg-brand-red-hover text-white px-8 py-3 font-semibold flex items-center justify-center gap-2 transition-colors duration-200 active:scale-95 whitespace-nowrap"
+          className="w-full bg-brand-red hover:bg-brand-red-hover text-white px-8 py-3 font-semibold flex items-center justify-center gap-2 transition-colors duration-200 active:scale-95"
         >
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
             <circle cx="10" cy="10" r="7" stroke="white" strokeWidth="2.5" strokeLinecap="round"
