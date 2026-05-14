@@ -30,7 +30,7 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
               className="inline-block text-xs sm:text-sm font-semibold tracking-widest text-brand-red uppercase mb-3"
               style={{
                 fontFamily:
-                  "'Avenir LT Pro 35 Light', 'Avenir', 'Outfit', system-ui, sans-serif",
+                  "'Avenir LT Pro 65 Medium', 'Avenir', 'Outfit', system-ui, sans-serif",
               }}
             >
               Propietarios
@@ -39,7 +39,7 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
               className="text-3xl sm:text-4xl lg:text-5xl leading-tight"
               style={{
                 fontFamily:
-                  "'Avenir LT Pro 35 Light', 'Avenir', 'Outfit', system-ui, sans-serif",
+                  "'Avenir LT Pro 65 Medium', 'Avenir', 'Outfit', system-ui, sans-serif",
                 fontWeight: 300,
               }}
             >

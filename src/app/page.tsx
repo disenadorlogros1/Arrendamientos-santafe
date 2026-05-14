@@ -31,7 +31,7 @@ function HomePage({ onNavigate }: { onNavigate: (page: PageType) => void }) {
 
       {/* Buscador (anclado al hero) */}
       <div id="buscador">
-        <SearchForm mobileExpanded={mobileExpanded} onMobileExpand={setMobileExpanded} />
+        <SearchForm mobileExpanded={mobileExpanded} onMobileExpand={setMobileExpanded} onNavigate={onNavigate} />
       </div>
       <UserLocation mobileExpanded={mobileExpanded} />
 

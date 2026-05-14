@@ -154,7 +154,7 @@ export default function PropertyCard({ property }: PropertyCardProps) {
         {/* Size + Type — Small, gray */}
         <p
           style={{
-            fontFamily: "'Avenir LT Pro 35 Light', 'Avenir LT Pro', 'Avenir', 'Outfit', system-ui, sans-serif",
+            fontFamily: "'Avenir LT Pro 65 Medium', 'Avenir LT Pro', 'Avenir', 'Outfit', system-ui, sans-serif",
             fontWeight: 300,
             fontSize: '13px',
             lineHeight: '1.4',
@@ -168,7 +168,7 @@ export default function PropertyCard({ property }: PropertyCardProps) {
         {/* Reference — Smallest, lighter */}
         <p
           style={{
-            fontFamily: "'Avenir LT Pro 35 Light', 'Avenir LT Pro', 'Avenir', 'Outfit', system-ui, sans-serif",
+            fontFamily: "'Avenir LT Pro 65 Medium', 'Avenir LT Pro', 'Avenir', 'Outfit', system-ui, sans-serif",
             fontWeight: 300,
             fontSize: '12px',
             lineHeight: '1.4',

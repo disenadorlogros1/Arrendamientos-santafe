@@ -56,7 +56,7 @@ export default function HeroSection({ onNavigate }: HeroSectionProps) {
           className="mt-5 text-base sm:text-lg text-white max-w-2xl"
           style={{
             fontFamily:
-              "'Avenir LT Pro 35 Light', 'Avenir Next Ultra Light', 'Avenir', 'Outfit', system-ui, sans-serif",
+              "'Avenir LT Pro 65 Medium', 'Avenir Next Ultra Light', 'Avenir', 'Outfit', system-ui, sans-serif",
             fontWeight: 200,
             letterSpacing: '0.2em',
             lineHeight: '1.32',
@@ -76,7 +76,7 @@ export default function HeroSection({ onNavigate }: HeroSectionProps) {
             className="hero-btn group inline-flex items-center justify-center h-[42px] px-6 bg-black/30 hover:bg-white text-white hover:text-brand-red text-sm sm:text-base rounded-full border border-white/30 transition-all duration-300 hover:scale-105"
             style={{
               textShadow: '0 1px 3px rgba(0,0,0,0.4)',
-              fontFamily: "'Avenir LT Pro 35 Light', 'Avenir', 'Outfit', system-ui, sans-serif",
+              fontFamily: "'Avenir LT Pro 65 Medium', 'Avenir', 'Outfit', system-ui, sans-serif",
               fontWeight: 300,
             }}
           >
@@ -90,7 +90,7 @@ export default function HeroSection({ onNavigate }: HeroSectionProps) {
             className="hero-btn group inline-flex items-center justify-center h-[42px] px-6 bg-black/30 hover:bg-white text-white hover:text-brand-red text-sm sm:text-base rounded-full border border-white/30 transition-all duration-300 hover:scale-105"
             style={{
               textShadow: '0 1px 3px rgba(0,0,0,0.4)',
-              fontFamily: "'Avenir LT Pro 35 Light', 'Avenir', 'Outfit', system-ui, sans-serif",
+              fontFamily: "'Avenir LT Pro 65 Medium', 'Avenir', 'Outfit', system-ui, sans-serif",
               fontWeight: 300,
             }}
           >
@@ -105,7 +105,7 @@ export default function HeroSection({ onNavigate }: HeroSectionProps) {
             className="hero-btn group inline-flex items-center gap-2 h-[42px] px-5 bg-black/30 hover:bg-white text-white hover:text-brand-red text-sm sm:text-base rounded-full border border-white/30 transition-all duration-300 hover:scale-105"
             style={{
               textShadow: '0 1px 3px rgba(0,0,0,0.4)',
-              fontFamily: "'Avenir LT Pro 35 Light', 'Avenir', 'Outfit', system-ui, sans-serif",
+              fontFamily: "'Avenir LT Pro 65 Medium', 'Avenir', 'Outfit', system-ui, sans-serif",
               fontWeight: 300,
             }}
           >

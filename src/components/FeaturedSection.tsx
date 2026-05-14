@@ -19,7 +19,7 @@ export default function FeaturedSection({ onNavigate }: FeaturedSectionProps) {
           <h2
             className="text-2xl sm:text-3xl md:text-4xl text-brand-red"
             style={{
-              fontFamily: "'Avenir LT Pro 35 Light', 'Avenir LT Pro', 'Avenir', 'Outfit', system-ui, sans-serif",
+              fontFamily: "'Avenir LT Pro 65 Medium', 'Avenir LT Pro', 'Avenir', 'Outfit', system-ui, sans-serif",
               fontWeight: 300,
             }}
           >
@@ -29,7 +29,7 @@ export default function FeaturedSection({ onNavigate }: FeaturedSectionProps) {
             className="mt-1 text-sm sm:text-base max-w-xl"
             style={{
               color: '#808080',
-              fontFamily: "'Avenir LT Pro 35 Light', 'Avenir LT Pro', 'Avenir', 'Outfit', system-ui, sans-serif",
+              fontFamily: "'Avenir LT Pro 65 Medium', 'Avenir LT Pro', 'Avenir', 'Outfit', system-ui, sans-serif",
               fontWeight: 300,
               lineHeight: '1.45',
             }}
