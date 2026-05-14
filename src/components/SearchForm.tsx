@@ -213,10 +213,8 @@ interface SearchFormProps {
 export default function SearchForm({ mobileExpanded, onMobileExpand }: SearchFormProps) {
   const [searchType, setSearchType] = useState<'arrendar' | 'comprar' | null>(null);
   const activeType = searchType || 'arrendar';
-  const [searchMode, setSearchMode] = useState<'codigo' | 'ubicacion'>('ubicacion');
   const [sector, setSector] = useState('');
   const [tipo, setTipo] = useState('');
-  const [codigo, setCodigo] = useState('');
   const [habitaciones, setHabitaciones] = useState('');
   const [banos, setBanos] = useState('');
   const [parqueaderos, setParqueaderos] = useState('');
@@ -258,104 +256,30 @@ export default function SearchForm({ mobileExpanded, onMobileExpand }: SearchFor
 
   return (
     <div className="relative mx-auto px-4 sm:px-6 lg:px-8 -mt-[100px] sm:-mt-[110px] lg:-mt-[140px]" style={{ width: '100%', maxWidth: '64rem', zIndex: 20 }}>
-      {/* X button — mobile only when expanded */}
-      {mobileExpanded && (
-        <button
-          type="button"
-          onClick={handleClose}
-          className="absolute -top-11 right-0 z-30 w-9 h-9 rounded-full bg-brand-red text-white flex items-center justify-center sm:hidden hover:bg-brand-red-hover transition-all duration-300 shadow-lg animate-[fadeInScale_0.2s_ease-out]"
-          aria-label="Cerrar formulario"
-        >
-          <X className="w-4 h-4" />
-        </button>
-      )}
-
       <div className="bg-white shadow-2xl">
-        {/* Tabs Arrendar / Comprar — blanco 50% opacidad */}
+        {/* Tabs Arrendar / Comprar — siempre visibles */}
         <div className="flex bg-brand-dark w-full relative">
           {(['arrendar', 'comprar'] as const).map((t) => (
-            <button key={t} onClick={() => handleTabClick(t)}
-              className={`flex-1 px-5 py-2 transition-all duration-200 ${
-                mobileExpanded && activeType === t
+            <button
+              key={t}
+              onClick={() => handleTabClick(t)}
+              className={`flex-1 px-5 py-3 transition-all duration-200 ${
+                searchType === t
                   ? 'bg-white text-brand-red'
                   : 'bg-white/50 text-white hover:bg-white/70'
               }`}
-              style={{ fontFamily: "'Avenir LT Pro 35 Light', 'Avenir', 'Outfit', system-ui, sans-serif", fontWeight: 400, fontSize: '15px' }}>
+              style={{ fontFamily: "'Avenir LT Pro 35 Light', 'Avenir', 'Outfit', system-ui, sans-serif", fontWeight: 400, fontSize: '15px' }}
+            >
               {t === 'arrendar' ? 'Arrendar' : 'Comprar'}
             </button>
           ))}
-          {!mobileExpanded && (
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-px h-5 bg-white/40 sm:hidden" />
-          )}
         </div>
 
-        {/* Toggle: Por código / Por ubicación — solo en desktop cuando se selecciona arrendar/comprar */}
-        <div className={`flex justify-center border-b border-gray-200 ${mobileExpanded ? '' : 'hidden'} ${searchType ? 'sm:flex' : 'sm:hidden'}`}>
-          <button
-            type="button"
-            onClick={() => setSearchMode('codigo')}
-            className={`flex items-center gap-2 px-6 py-2.5 text-sm font-semibold transition-colors ${
-              searchMode === 'codigo'
-                ? 'text-brand-red border-b-2 border-brand-red -mb-px'
-                : 'text-gray-500 hover:text-brand-red'
-            }`}
-          >
-            <Hash className="w-4 h-4" />
-            Búsqueda por código
-          </button>
-          <button
-            type="button"
-            onClick={() => setSearchMode('ubicacion')}
-            className={`flex items-center gap-2 px-6 py-2.5 text-sm font-semibold transition-colors ${
-              searchMode === 'ubicacion'
-                ? 'text-brand-red border-b-2 border-brand-red -mb-px'
-                : 'text-gray-500 hover:text-brand-red'
-            }`}
-          >
-            <MapPin className="w-4 h-4" />
-            Búsqueda por ubicación
-          </button>
-        </div>
-
-        {/* MODO CÓDIGO — solo input de código + botón */}
-        {searchMode === 'codigo' && (
-          <div className={`search-fields flex flex-col sm:flex-row sm:flex-nowrap items-stretch ${mobileExpanded ? 'fields-expanded' : 'fields-collapsed'} ${searchType ? 'sm:flex' : 'sm:hidden'}`}>
-            <div className="filter-field group flex-1 flex items-center gap-3 px-4 py-3 border-b sm:border-b-0 sm:border-r border-gray-200">
-              <div className="filter-icon w-9 h-9 rounded shrink-0 flex items-center justify-center" style={{ backgroundColor: '#f2f2f2' }}>
-                <img src="/numero-codigo.gif" alt="Código" className="w-5 h-5" />
-              </div>
-              <div className="min-w-0 flex-1">
-                <p className="text-[14px] text-gray-400 leading-tight">Código del inmueble</p>
-                <input
-                  type="text"
-                  value={codigo}
-                  onChange={(e) => setCodigo(e.target.value)}
-                  placeholder="Ej: 1234"
-                  className="w-full text-sm text-brand-dark font-semibold bg-transparent border-none outline-none placeholder:text-gray-300 placeholder:font-normal"
-                />
-              </div>
-            </div>
-
-            <button
-              onClick={handleSearch}
-              className="relative overflow-hidden bg-brand-red hover:bg-brand-red-hover text-white px-8 py-3 sm:py-[18px] sm:px-10 text-[18px] font-semibold flex items-center justify-center gap-2 transition-colors duration-200 shrink-0 active:scale-95"
-            >
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" className="shrink-0">
-                <circle cx="10" cy="10" r="7" stroke="white" strokeWidth="2.5" strokeLinecap="round"
-                  strokeDasharray={isSearching ? '14 30' : '44 0'}
-                  style={{ transition: 'stroke-dasharray 0.3s ease' }} />
-                <line x1="14.5" y1="14.5" x2="20" y2="20" stroke="white" strokeWidth="2.5" strokeLinecap="round"
-                  style={{ opacity: isSearching ? 0 : 1, transition: 'opacity 0.25s ease' }} />
-              </svg>
-              <span className="whitespace-nowrap">Buscar inmueble</span>
-            </button>
-          </div>
-        )}
-
-        {/* MODO UBICACIÓN — todos los filtros */}
-        {searchMode === 'ubicacion' && (
+        {/* Filtros — solo visible cuando se selecciona Arrendar o Comprar */}
+        {searchType && (
           <>
-            <div className={`search-fields flex flex-col sm:flex-row sm:flex-nowrap items-stretch ${mobileExpanded ? 'fields-expanded' : 'fields-collapsed'} ${searchType ? 'sm:flex' : 'sm:hidden'}`}>
+            {/* Row 1: Ciudad, Tipo, Precio, Habitaciones */}
+            <div className="search-fields flex flex-col sm:flex-row sm:flex-nowrap items-stretch">
               {/* Ciudad o sector */}
               <div className="filter-field group flex-1 flex items-center gap-3 px-4 py-3 border-b sm:border-b-0 sm:border-r border-gray-200">
                 <div className="filter-icon w-9 h-9 rounded shrink-0 flex items-center justify-center" style={{ backgroundColor: '#f2f2f2' }}>
@@ -389,9 +313,9 @@ export default function SearchForm({ mobileExpanded, onMobileExpand }: SearchFor
               </div>
             </div>
 
-            {/* Filtros avanzados (colapsable) — misma diagramación que el menú visible */}
+            {/* Filtros avanzados (colapsable) */}
             {showAdvanced && (
-              <div className={`search-fields flex flex-col sm:flex-row sm:flex-nowrap items-stretch border-t border-gray-200 bg-gray-50 ${searchType ? 'sm:flex' : 'sm:hidden'}`}>
+              <div className="search-fields flex flex-col sm:flex-row sm:flex-nowrap items-stretch border-t border-gray-200 bg-gray-50">
                 {/* Baños */}
                 <div className="filter-field group flex-1 flex items-center gap-3 px-4 py-3 border-b sm:border-b-0 sm:border-r border-gray-200">
                   <div className="filter-icon w-9 h-9 rounded shrink-0 flex items-center justify-center" style={{ backgroundColor: '#f2f2f2' }}>
@@ -436,7 +360,7 @@ export default function SearchForm({ mobileExpanded, onMobileExpand }: SearchFor
             )}
 
             {/* Botón Búsqueda avanzada */}
-            <div className="flex justify-center px-4 py-2.5 border-t border-gray-100 sm:hidden">
+            <div className="flex justify-center px-4 py-2.5 border-t border-gray-100">
               <button
                 type="button"
                 onClick={() => setShowAdvanced(prev => !prev)}
@@ -447,38 +371,11 @@ export default function SearchForm({ mobileExpanded, onMobileExpand }: SearchFor
               </button>
             </div>
 
-            {/* Botón Buscar inmueble — SIEMPRE ÚLTIMO */}
-            <div className="flex sm:hidden px-4 py-3 border-t border-gray-100">
+            {/* Botón Buscar inmueble */}
+            <div className="px-4 py-3 border-t border-gray-100">
               <button
                 onClick={handleSearch}
-                className="w-full relative overflow-hidden bg-brand-red hover:bg-brand-red-hover text-white px-8 py-3 text-base font-semibold flex items-center justify-center gap-2 transition-colors duration-200 active:scale-95 rounded-lg"
-              >
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" className="shrink-0">
-                  <circle cx="10" cy="10" r="7" stroke="white" strokeWidth="2.5" strokeLinecap="round"
-                    strokeDasharray={isSearching ? '14 30' : '44 0'}
-                    style={{ transition: 'stroke-dasharray 0.3s ease' }} />
-                  <line x1="14.5" y1="14.5" x2="20" y2="20" stroke="white" strokeWidth="2.5" strokeLinecap="round"
-                    style={{ opacity: isSearching ? 0 : 1, transition: 'opacity 0.25s ease' }} />
-                </svg>
-                <span>Buscar inmueble</span>
-              </button>
-            </div>
-
-            {/* Desktop: Botón Búsqueda avanzada y Buscar inmueble en dos filas */}
-            <div className="hidden sm:flex sm:flex-col px-4 py-3 border-t border-gray-100 gap-2">
-              <div className="flex justify-center">
-                <button
-                  type="button"
-                  onClick={() => setShowAdvanced(prev => !prev)}
-                  className="inline-flex items-center gap-2 text-xs sm:text-sm text-gray-600 hover:text-brand-red font-semibold transition-colors"
-                >
-                  <SlidersHorizontal className="w-4 h-4" />
-                  {showAdvanced ? 'Ocultar filtros avanzados' : 'Búsqueda avanzada'}
-                </button>
-              </div>
-              <button
-                onClick={handleSearch}
-                className="w-full relative overflow-hidden bg-brand-red hover:bg-brand-red-hover text-white px-12 py-4 text-lg font-bold flex items-center justify-center gap-2 transition-colors duration-200 active:scale-95"
+                className="w-full relative overflow-hidden bg-brand-red hover:bg-brand-red-hover text-white px-8 py-4 text-lg font-semibold flex items-center justify-center gap-2 transition-colors duration-200 active:scale-95"
               >
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" className="shrink-0">
                   <circle cx="10" cy="10" r="7" stroke="white" strokeWidth="2.5" strokeLinecap="round"
