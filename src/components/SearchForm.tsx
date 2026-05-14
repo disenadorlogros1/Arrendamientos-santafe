@@ -388,6 +388,7 @@ export default function SearchForm({ mobileExpanded, onMobileExpand, onNavigate 
             </div>
           </>
         )}
+      </div>
     </div>
   );
 }
