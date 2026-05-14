@@ -34,7 +34,7 @@ export default function HeroSection({ onNavigate }: HeroSectionProps) {
   };
 
   return (
-    <section className="relative w-full h-screen lg:h-[70vh] flex flex-col items-center justify-center overflow-hidden">
+    <section className="relative w-full h-[calc(100vh-100px)] lg:h-[70vh] flex flex-col items-center justify-center overflow-hidden">
       {/* Background Video */}
       <video
         autoPlay
