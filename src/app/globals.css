@@ -196,6 +196,24 @@
   0%   { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
+/* Letra animada aparecer de abajo hacia arriba con fade */
+@keyframes slideUpFade {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.letter-animate {
+  display: inline-block;
+  animation: slideUpFade 0.6s ease-out forwards;
+  opacity: 0;
+}
+
 .search-lens-group {
   transform-box: fill-box;
   transform-origin: center;

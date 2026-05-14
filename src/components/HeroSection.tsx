@@ -7,6 +7,22 @@ interface HeroSectionProps {
 const WHATSAPP_URL =
   'https://wa.me/573006557529?text=Hola%2C%20quisiera%20hablar%20con%20un%20asesor%20de%20Arrendamientos%20Santa%20Fe.';
 
+const AnimatedText = ({ text }: { text: string }) => {
+  return (
+    <>
+      {text.split('').map((char, i) => (
+        <span
+          key={i}
+          className="letter-animate"
+          style={{ animationDelay: `${i * 0.05}s` }}
+        >
+          {char}
+        </span>
+      ))}
+    </>
+  );
+};
+
 export default function HeroSection({ onNavigate }: HeroSectionProps) {
   const scrollToSearch = () => {
     const el = document.getElementById('buscador');
@@ -42,13 +58,13 @@ export default function HeroSection({ onNavigate }: HeroSectionProps) {
         <div className="hero-title-wrap">
           <h1 className="hero-title-text text-3xl sm:text-4xl md:text-5xl lg:text-[52px] text-white tracking-tight">
             <span className="hero-line-seg hero-line-first">
-              60 años
+              <AnimatedText text="60 años" />
             </span>{' '}
             <span className="hero-line-seg hero-line-highlight">
-              guiando tus decisiones
+              <AnimatedText text="guiando tus decisiones" />
             </span>{' '}
             <span className="hero-line-seg hero-line-last">
-              inmobiliarias.
+              <AnimatedText text="inmobiliarias." />
             </span>
           </h1>
         </div>
