@@ -274,42 +274,57 @@ export default function SearchForm({ mobileExpanded, onMobileExpand, onNavigate 
           ))}
         </div>
 
-        {/* Filtros — siempre visibles */}
+        {/* Filtros — en una sola fila horizontal */}
         {searchType && (
           <>
-            {/* Row 1: Ciudad, Tipo, Precio, Habitaciones */}
-            <div className="search-fields flex flex-col sm:flex-row sm:flex-nowrap items-stretch bg-white border-t border-gray-200">
-              {/* Ciudad o sector */}
-              <div className="filter-field group flex-1 flex items-center gap-3 px-4 py-3 border-b sm:border-b-0 sm:border-r border-gray-200">
+            {/* Fila única: Ubicación, Precio, Tipo, Habitaciones + Botón Buscar */}
+            <div className="flex flex-col sm:flex-row sm:flex-nowrap items-stretch bg-white border-t border-gray-200">
+              {/* Ubicación */}
+              <div className="filter-field group flex-1 flex items-center gap-3 px-4 py-3 border-b sm:border-b-0 sm:border-r border-gray-200 min-w-0">
                 <div className="filter-icon w-9 h-9 rounded shrink-0 flex items-center justify-center" style={{ backgroundColor: '#f2f2f2' }}>
-                  <img src="/ubicacion.gif" alt="Ciudad o sector" className="w-5 h-5" />
+                  <img src="/ubicacion.gif" alt="Ubicación" className="w-5 h-5" />
                 </div>
-                <CustomSelect label="Ciudad o sector" value={sector} onChange={setSector} options={SECTORES} placeholder="Seleccionar" />
+                <CustomSelect label="Ubicación" value={sector} onChange={setSector} options={SECTORES} placeholder="Seleccionar" />
               </div>
 
-              {/* Tipo de inmueble */}
-              <div className="filter-field group flex-1 flex items-center gap-3 px-4 py-3 border-b sm:border-b-0 sm:border-r border-gray-200">
-                <div className="filter-icon w-9 h-9 rounded shrink-0 flex items-center justify-center" style={{ backgroundColor: '#f2f2f2' }}>
-                  <img src="/tipo-de-propiedad.gif" alt="Tipo" className="w-5 h-5" />
-                </div>
-                <CustomSelect label="Tipo de inmueble" value={tipo} onChange={setTipo} options={TIPOS_INMUEBLE} placeholder="Seleccionar" />
-              </div>
-
-              {/* Rango de precio */}
-              <div className="filter-field group flex-1 flex items-center gap-3 px-4 py-3 border-b sm:border-b-0 sm:border-r border-gray-200">
+              {/* Precio */}
+              <div className="filter-field group flex-1 flex items-center gap-3 px-4 py-3 border-b sm:border-b-0 sm:border-r border-gray-200 min-w-0">
                 <div className="filter-icon w-9 h-9 rounded shrink-0 flex items-center justify-center" style={{ backgroundColor: '#f2f2f2' }}>
                   <img src="/precio.gif" alt="Precio" className="w-5 h-5" />
                 </div>
                 <PriceRangeSlider searchType={activeType} minVal={precioMin} maxVal={precioMax} onChangeMin={setPrecioMin} onChangeMax={setPrecioMax} />
               </div>
 
+              {/* Tipo de inmueble */}
+              <div className="filter-field group flex-1 flex items-center gap-3 px-4 py-3 border-b sm:border-b-0 sm:border-r border-gray-200 min-w-0">
+                <div className="filter-icon w-9 h-9 rounded shrink-0 flex items-center justify-center" style={{ backgroundColor: '#f2f2f2' }}>
+                  <img src="/tipo-de-propiedad.gif" alt="Tipo" className="w-5 h-5" />
+                </div>
+                <CustomSelect label="Tipo de propiedad" value={tipo} onChange={setTipo} options={TIPOS_INMUEBLE} placeholder="Seleccionar" />
+              </div>
+
               {/* Habitaciones */}
-              <div className="filter-field group flex-1 flex items-center gap-3 px-4 py-3 border-b sm:border-b-0 sm:border-r border-gray-200">
+              <div className="filter-field group flex-1 flex items-center gap-3 px-4 py-3 border-b sm:border-b-0 sm:border-r border-gray-200 min-w-0">
                 <div className="filter-icon w-9 h-9 rounded shrink-0 flex items-center justify-center" style={{ backgroundColor: '#f2f2f2' }}>
                   <img src="/habitaciones-copia.gif" alt="Habitaciones" className="w-5 h-5" />
                 </div>
                 <CustomSelect label="Habitaciones" value={habitaciones} onChange={setHabitaciones} options={HABITACIONES.map(h => `${h} o más`)} placeholder="Seleccionar" />
               </div>
+
+              {/* Botón Buscar inmueble */}
+              <button
+                onClick={handleSearch}
+                className="shrink-0 bg-brand-red hover:bg-brand-red-hover text-white px-6 py-3 font-semibold flex items-center justify-center gap-2 transition-colors duration-200 active:scale-95 whitespace-nowrap"
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                  <circle cx="10" cy="10" r="7" stroke="white" strokeWidth="2.5" strokeLinecap="round"
+                    strokeDasharray={isSearching ? '14 30' : '44 0'}
+                    style={{ transition: 'stroke-dasharray 0.3s ease' }} />
+                  <line x1="14.5" y1="14.5" x2="20" y2="20" stroke="white" strokeWidth="2.5" strokeLinecap="round"
+                    style={{ opacity: isSearching ? 0 : 1, transition: 'opacity 0.25s ease' }} />
+                </svg>
+                <span>Buscar inmueble</span>
+              </button>
             </div>
 
             {/* Filtros avanzados (colapsable) */}
