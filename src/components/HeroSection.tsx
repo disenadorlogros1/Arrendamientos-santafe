@@ -94,7 +94,7 @@ export default function HeroSection({ onNavigate }: HeroSectionProps) {
           <button
             type="button"
             onClick={scrollToSearch}
-            className="hero-btn group inline-flex items-center justify-center h-[42px] px-6 bg-black/30 hover:bg-white text-white hover:text-brand-red text-sm sm:text-base rounded-full border border-white/30 transition-all duration-300 hover:scale-105"
+            className="hero-btn group inline-flex items-center justify-center h-[42px] px-6 bg-black/30 hover:bg-white/80 text-white hover:text-brand-red text-sm sm:text-base rounded-full border border-white/30 transition-all duration-300 hover:scale-105"
             style={{
               textShadow: '0 1px 3px rgba(0,0,0,0.4)',
               fontFamily: "'Avenir LT Pro 65 Medium', 'Avenir', 'Outfit', system-ui, sans-serif",
@@ -108,7 +108,7 @@ export default function HeroSection({ onNavigate }: HeroSectionProps) {
           <button
             type="button"
             onClick={() => onNavigate?.('consignacion')}
-            className="hero-btn group inline-flex items-center justify-center h-[42px] px-6 bg-black/30 hover:bg-white text-white hover:text-brand-red text-sm sm:text-base rounded-full border border-white/30 transition-all duration-300 hover:scale-105"
+            className="hero-btn group inline-flex items-center justify-center h-[42px] px-6 bg-black/30 hover:bg-white/80 text-white hover:text-brand-red text-sm sm:text-base rounded-full border border-white/30 transition-all duration-300 hover:scale-105"
             style={{
               textShadow: '0 1px 3px rgba(0,0,0,0.4)',
               fontFamily: "'Avenir LT Pro 65 Medium', 'Avenir', 'Outfit', system-ui, sans-serif",
@@ -123,7 +123,7 @@ export default function HeroSection({ onNavigate }: HeroSectionProps) {
             href={WHATSAPP_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="hero-btn group inline-flex items-center gap-2 h-[42px] px-5 bg-black/30 hover:bg-white text-white hover:text-brand-red text-sm sm:text-base rounded-full border border-white/30 transition-all duration-300 hover:scale-105"
+            className="hero-btn group inline-flex items-center gap-2 h-[42px] px-5 bg-black/30 hover:bg-white/80 text-white hover:text-brand-red text-sm sm:text-base rounded-full border border-white/30 transition-all duration-300 hover:scale-105"
             style={{
               textShadow: '0 1px 3px rgba(0,0,0,0.4)',
               fontFamily: "'Avenir LT Pro 65 Medium', 'Avenir', 'Outfit', system-ui, sans-serif",

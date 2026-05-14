@@ -152,6 +152,7 @@ export default function Header({ currentPage, onNavigate }: HeaderProps) {
               <div key={item.label} className="relative group flex-1">
                 <button
                   className="w-full px-2 py-2 text-sm font-medium text-white rounded-full transition-all duration-300 ease-out hover:bg-brand-red"
+                  style={{ fontFamily: "'Avenir LT Pro 35 Thin', 'Avenir LT Pro', 'Outfit', system-ui, sans-serif" }}
                 >
                   {item.label}
                 </button>
@@ -167,6 +168,7 @@ export default function Header({ currentPage, onNavigate }: HeaderProps) {
                           target="_blank"
                           rel="noopener noreferrer"
                           className="block w-full text-left px-5 py-2.5 text-[15px] text-gray-700 hover:text-white hover:bg-brand-red transition-colors duration-150 first:rounded-t-2xl last:rounded-b-2xl"
+                          style={{ fontFamily: "'Avenir LT Pro 35 Thin', 'Avenir LT Pro', 'Outfit', system-ui, sans-serif" }}
                         >
                           {sub.label}
                         </a>
@@ -177,6 +179,7 @@ export default function Header({ currentPage, onNavigate }: HeaderProps) {
                             if (sub.page) handleNav(sub.page);
                           }}
                           className="block w-full text-left px-5 py-2.5 text-[15px] text-gray-700 hover:text-white hover:bg-brand-red transition-colors duration-150 first:rounded-t-2xl last:rounded-b-2xl"
+                          style={{ fontFamily: "'Avenir LT Pro 35 Thin', 'Avenir LT Pro', 'Outfit', system-ui, sans-serif" }}
                         >
                           {sub.label}
                         </button>
@@ -193,6 +196,7 @@ export default function Header({ currentPage, onNavigate }: HeaderProps) {
                 className={`flex-1 px-2 py-2 text-sm font-medium text-white rounded-full transition-all duration-300 ease-out hover:bg-brand-red ${
                   currentPage === item.page ? 'text-white' : 'text-white'
                 }`}
+                style={{ fontFamily: "'Avenir LT Pro 35 Thin', 'Avenir LT Pro', 'Outfit', system-ui, sans-serif" }}
               >
                 {item.label}
               </button>
@@ -232,7 +236,8 @@ export default function Header({ currentPage, onNavigate }: HeaderProps) {
                     <div key={item.label}>
                       <button
                         onClick={() => { if (item.children) setExpandedMobile(expandedMobile === item.label ? null : item.label); else if (item.page) handleNav(item.page); }}
-                        className={`w-full text-left px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 ${currentPage === item.page ? 'bg-brand-red text-white' : 'text-white/70 hover:bg-white/10 hover:text-white'}`}>
+                        className={`w-full text-left px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 ${currentPage === item.page ? 'bg-brand-red text-white' : 'text-white/70 hover:bg-white/10 hover:text-white'}`}
+                        style={{ fontFamily: "'Avenir LT Pro 35 Thin', 'Avenir LT Pro', 'Outfit', system-ui, sans-serif" }}>
                         {item.label}
                       </button>
                       {item.children && expandedMobile === item.label && (
@@ -245,12 +250,14 @@ export default function Header({ currentPage, onNavigate }: HeaderProps) {
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="block w-full text-left px-4 py-1.5 rounded-lg text-sm text-white/50 hover:text-white hover:bg-white/5 transition-all duration-200"
+                                style={{ fontFamily: "'Avenir LT Pro 35 Thin', 'Avenir LT Pro', 'Outfit', system-ui, sans-serif" }}
                               >
                                 {sub.label}
                               </a>
                             ) : (
                               <button key={sub.label} onClick={() => { if (sub.page) handleNav(sub.page); }}
-                                className="w-full text-left px-4 py-1.5 rounded-lg text-sm text-white/50 hover:text-white hover:bg-white/5 transition-all duration-200">
+                                className="w-full text-left px-4 py-1.5 rounded-lg text-sm text-white/50 hover:text-white hover:bg-white/5 transition-all duration-200"
+                                style={{ fontFamily: "'Avenir LT Pro 35 Thin', 'Avenir LT Pro', 'Outfit', system-ui, sans-serif" }}>
                                 {sub.label}
                               </button>
                             )

@@ -32,7 +32,7 @@ function formatPrice(val: number) {
   return `$${val.toLocaleString('es-CO')}`;
 }
 
-const FONT = "'Avenir LT Pro', 'Outfit', system-ui, sans-serif";
+const FONT = "'Avenir LT Pro 35 Thin', 'Avenir LT Pro', 'Outfit', system-ui, sans-serif";
 const COLOR_LABEL = '#808080';
 const COLOR_VALUE = '#232222';
 const COLOR_ICON = '#aa182c';
@@ -80,7 +80,7 @@ function CustomSelect({ label, value, onChange, options, placeholder }: {
 
   const dropdown = mounted && open ? (
     <div ref={dropdownRef} style={{ position: 'fixed', top: `${pos.top}px`, left: `${pos.left}px`, width: '220px', zIndex: 2147483647 }}>
-      <div className="bg-white rounded-xl py-1 shadow-2xl border border-gray-100 max-h-[240px] overflow-y-auto">
+      <div className="bg-white py-1 shadow-2xl border border-gray-100 max-h-[240px] overflow-y-auto">
         {options.map((opt) => (
           <button key={opt} type="button" onClick={(e) => { e.stopPropagation(); select(opt); }}
             className={`block w-full text-left px-4 py-2.5 text-[14px] transition-colors duration-150 ${
@@ -170,7 +170,7 @@ export default function SearchForm({ onNavigate }: SearchFormProps) {
   return (
     <div className="relative mx-auto px-4 sm:px-6 lg:px-8 -mt-[100px] sm:-mt-[110px] lg:-mt-[140px]"
       style={{ width: '100%', maxWidth: '64rem', zIndex: 20 }}>
-      <div className="shadow-2xl flex flex-col rounded-xl overflow-hidden">
+      <div className="shadow-2xl flex flex-col overflow-hidden">
 
         {/* ── FILA 1: Tabs Arrendar / Comprar — siempre visible ── */}
         <div className="flex h-[48px]">
@@ -269,7 +269,7 @@ export default function SearchForm({ onNavigate }: SearchFormProps) {
         {/* ── FILA FINAL: Buscar inmueble — roja, siempre al final ── */}
         <button onClick={handleSearch}
           className="bg-brand-red hover:bg-brand-red-hover text-white py-3.5 flex items-center justify-center gap-2 transition-colors duration-200 active:scale-[0.99]"
-          style={{ fontSize: '18px', fontFamily: FONT, fontWeight: 600 }}>
+          style={{ fontSize: '20px', fontFamily: FONT, fontWeight: 600 }}>
           <SearchIcon />
           <span>Buscar inmueble</span>
         </button>

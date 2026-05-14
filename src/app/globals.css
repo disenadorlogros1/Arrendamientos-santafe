@@ -171,12 +171,11 @@
   animation: bounce-subtle 2s ease-in-out infinite;
 }
 
-/* Hero buttons — resplandor rojo al hover */
+/* Hero buttons */
 .hero-btn {
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
 }
 .hero-btn:hover {
-  box-shadow: 0 0 24px 4px rgba(243, 39, 53, 0.55), 0 4px 18px rgba(243, 39, 53, 0.4);
   text-shadow: none;
 }
 
