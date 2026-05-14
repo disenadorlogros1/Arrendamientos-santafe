@@ -32,9 +32,7 @@ function formatPrice(val: number) {
   return `$${val.toLocaleString('es-CO')}`;
 }
 
-function CustomSelect({
-  label, value, onChange, options, placeholder,
-}: {
+function CustomSelect({ label, value, onChange, options, placeholder }: {
   label: string; value: string; onChange: (val: string) => void;
   options: string[]; placeholder?: string;
 }) {
@@ -117,19 +115,16 @@ interface SearchFormProps {
 }
 
 export default function SearchForm({ onNavigate }: SearchFormProps) {
-  // step: 0=inicial, 1=con métodos, 2=con filtros básicos, 3=con filtros avanzados
+  // step 0 = Orden 1, step 1 = Orden 2, step 2 = Orden 3, step 3 = Orden 4
   const [step, setStep] = useState<0 | 1 | 2 | 3>(0);
   const [searchType, setSearchType] = useState<'arrendar' | 'comprar' | null>(null);
   const [searchMethod, setSearchMethod] = useState<'ubicacion' | 'codigo' | null>(null);
 
-  // Filtros básicos
   const [sector, setSector] = useState('');
   const [tipo, setTipo] = useState('');
   const [habitaciones, setHabitaciones] = useState('');
   const [precioMin, setPrecioMin] = useState(PRICE_RANGES.arrendar.min);
   const [precioMax, setPrecioMax] = useState(PRICE_RANGES.arrendar.max);
-
-  // Filtros avanzados
   const [banos, setBanos] = useState('');
   const [areaMin, setAreaMin] = useState('');
   const [areaMax, setAreaMax] = useState('');
@@ -172,70 +167,65 @@ export default function SearchForm({ onNavigate }: SearchFormProps) {
           ))}
         </div>
 
-        {/* ── FILA 2: Métodos de búsqueda — visible desde step 1 ── */}
+        {/* ── FILA 2: Métodos — visible desde Orden 2 ── */}
         {step >= 1 && (
           <div className="flex h-[44px] bg-white border-b border-gray-200">
             <button onClick={() => handleMethodClick('codigo')}
-              className="flex-1 flex items-center justify-center gap-1.5 hover:bg-gray-50 transition-colors"
-              style={{ color: searchMethod === 'codigo' ? '#aa182c' : '#808080', fontFamily: FONT, fontSize: '14px', fontWeight: 500,
-                borderBottom: searchMethod === 'codigo' ? '3px solid #f32735' : '3px solid transparent' }}>
+              className="flex-1 flex items-center justify-center hover:bg-gray-50 transition-colors"
+              style={{
+                color: searchMethod === 'codigo' ? '#aa182c' : '#808080',
+                fontFamily: FONT, fontSize: '14px', fontWeight: 500,
+                borderBottom: searchMethod === 'codigo' ? '3px solid #f32735' : '3px solid transparent',
+              }}>
               # Búsqueda por código
             </button>
             <div className="w-px bg-gray-200 my-2" />
             <button onClick={() => handleMethodClick('ubicacion')}
-              className="flex-1 flex items-center justify-center gap-1.5 hover:bg-gray-50 transition-colors"
-              style={{ color: searchMethod === 'ubicacion' ? '#aa182c' : '#808080', fontFamily: FONT, fontSize: '14px', fontWeight: 500,
-                borderBottom: searchMethod === 'ubicacion' ? '3px solid #f32735' : '3px solid transparent' }}>
+              className="flex-1 flex items-center justify-center hover:bg-gray-50 transition-colors"
+              style={{
+                color: searchMethod === 'ubicacion' ? '#aa182c' : '#808080',
+                fontFamily: FONT, fontSize: '14px', fontWeight: 500,
+                borderBottom: searchMethod === 'ubicacion' ? '3px solid #f32735' : '3px solid transparent',
+              }}>
               📍 Búsqueda por ubicación
             </button>
           </div>
         )}
 
-        {/* ── FILA 3: Filtros básicos — visible desde step 2 ── */}
+        {/* ── FILA 3: Filtros básicos — visible desde Orden 3 ── */}
         {step >= 2 && (
           <div className="flex flex-col sm:flex-row sm:flex-nowrap items-stretch bg-white border-b border-gray-200">
-            {/* Ubicación */}
             <div className="flex-1 flex items-center gap-3 px-4 py-3 border-r border-gray-200 min-w-0">
               <div className="w-[48px] h-[48px] rounded flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#f2f2f2' }}>
                 <MapPin className="w-5 h-5" style={{ color: '#aa182c' }} />
               </div>
               <CustomSelect label="Ubicación" value={sector} onChange={setSector} options={SECTORES} placeholder="Seleccionar" />
             </div>
-            {/* Precio */}
             <div className="flex-1 flex items-center gap-3 px-4 py-3 border-r border-gray-200 min-w-0">
-              <div className="w-[48px] h-[48px] rounded flex items-center justify-center flex-shrink-0 text-lg" style={{ backgroundColor: '#f2f2f2', color: '#aa182c' }}>
+              <div className="w-[48px] h-[48px] rounded flex items-center justify-center flex-shrink-0 font-bold text-lg" style={{ backgroundColor: '#f2f2f2', color: '#aa182c' }}>
                 $
               </div>
               <div className="min-w-0 flex-1">
                 <p className="text-[13px] text-gray-400 leading-tight mb-0.5">Precio</p>
-                <p className="text-sm font-semibold text-brand-dark truncate">{formatPrice(precioMin)} – {formatPrice(precioMax)}</p>
+                <p className="text-sm font-semibold text-brand-dark">{formatPrice(precioMin)} – {formatPrice(precioMax)}</p>
               </div>
             </div>
-            {/* Tipo de propiedad */}
             <div className="flex-1 flex items-center gap-3 px-4 py-3 border-r border-gray-200 min-w-0">
               <div className="w-[48px] h-[48px] rounded flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#f2f2f2' }}>
                 <Home className="w-5 h-5" style={{ color: '#aa182c' }} />
               </div>
               <CustomSelect label="Tipo de propiedad" value={tipo} onChange={setTipo} options={TIPOS_INMUEBLE} placeholder="Seleccionar" />
             </div>
-            {/* Habitaciones */}
-            <div className="flex-1 flex items-center gap-3 px-4 py-3 border-r border-gray-200 min-w-0">
+            <div className="flex-1 flex items-center gap-3 px-4 py-3 min-w-0">
               <div className="w-[48px] h-[48px] rounded flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#f2f2f2' }}>
                 <Users className="w-5 h-5" style={{ color: '#aa182c' }} />
               </div>
               <CustomSelect label="Habitaciones" value={habitaciones} onChange={setHabitaciones} options={HABITACIONES} placeholder="Seleccionar" />
             </div>
-            {/* Botón buscar */}
-            <button onClick={handleSearch}
-              className="shrink-0 bg-brand-red hover:bg-brand-red-hover text-white px-8 py-3 font-semibold flex items-center justify-center gap-2 transition-colors duration-200 active:scale-95 whitespace-nowrap"
-              style={{ fontSize: '18px', fontFamily: FONT, fontWeight: 500 }}>
-              <SearchIcon />
-              <span>Buscar inmueble</span>
-            </button>
           </div>
         )}
 
-        {/* ── FILA 4: Filtros avanzados — visible solo en step 3 ── */}
+        {/* ── FILA 4: Filtros avanzados — visible solo en Orden 4 ── */}
         {step === 3 && (
           <div className="flex flex-col sm:flex-row sm:flex-nowrap items-stretch bg-gray-50 border-b border-gray-200">
             <div className="flex-1 flex items-center gap-3 px-4 py-3 border-r border-gray-200 min-w-0">
@@ -253,26 +243,25 @@ export default function SearchForm({ onNavigate }: SearchFormProps) {
           </div>
         )}
 
-        {/* ── FILA FINAL: Botón buscar (steps 0-1) o Búsqueda avanzada (steps 2-3) ── */}
-        {step < 2 && (
-          <button onClick={handleSearch}
-            className="bg-brand-red hover:bg-brand-red-hover text-white px-8 py-4 font-semibold flex items-center justify-center gap-2 transition-colors duration-200 active:scale-95"
-            style={{ fontSize: '20px', fontFamily: FONT, fontWeight: 500 }}>
-            <SearchIcon />
-            <span>Buscar inmueble</span>
-          </button>
-        )}
-
+        {/* ── FILA Búsqueda avanzada — blanca, visible desde Orden 3 ── */}
         {step >= 2 && (
-          <div className="bg-brand-red py-3 px-4 flex items-center justify-center">
+          <div className="bg-white border-b border-gray-200 py-3 px-4 flex items-center justify-center">
             <button type="button" onClick={handleAdvancedToggle}
-              className="inline-flex items-center gap-2 text-white font-semibold hover:opacity-80 transition-opacity"
-              style={{ fontSize: '15px', fontFamily: FONT, fontWeight: 500 }}>
+              className="inline-flex items-center gap-2 font-semibold hover:opacity-70 transition-opacity"
+              style={{ fontSize: '15px', fontFamily: FONT, fontWeight: 500, color: '#808080' }}>
               <SlidersHorizontal className="w-5 h-5" />
               {step === 3 ? 'Ocultar filtros avanzados' : 'Búsqueda avanzada'}
             </button>
           </div>
         )}
+
+        {/* ── FILA FINAL: Buscar inmueble — roja, siempre al final ── */}
+        <button onClick={handleSearch}
+          className="bg-brand-red hover:bg-brand-red-hover text-white px-8 py-4 font-semibold flex items-center justify-center gap-2 transition-colors duration-200 active:scale-95"
+          style={{ fontSize: '20px', fontFamily: FONT, fontWeight: 500 }}>
+          <SearchIcon />
+          <span>Buscar inmueble</span>
+        </button>
 
       </div>
     </div>
