@@ -57,17 +57,7 @@ export default function HeroSection({ onNavigate }: HeroSectionProps) {
       >
         <div className="hero-title-wrap">
           <h1 className="hero-title-text text-3xl sm:text-4xl md:text-5xl lg:text-[52px] text-white tracking-tight">
-            <span className="hero-line-seg hero-line-first">
-              <AnimatedText text="60 años" startIndex={0} />
-            </span>
-            {' '}
-            <span className="hero-line-seg hero-line-highlight">
-              <AnimatedText text="guiando tus decisiones" startIndex={7} />
-            </span>
-            {' '}
-            <span className="hero-line-seg hero-line-last">
-              <AnimatedText text="inmobiliarias." startIndex={29} />
-            </span>
+            <AnimatedText text="60 años guiando tus decisiones inmobiliarias." startIndex={0} />
           </h1>
         </div>
         <p
