@@ -56,8 +56,18 @@ export default function HeroSection({ onNavigate }: HeroSectionProps) {
         style={{ zIndex: 10, maxWidth: '56rem' }}
       >
         <div className="hero-title-wrap">
-          <h1 className="hero-title-text text-3xl sm:text-4xl md:text-5xl lg:text-[52px] text-white tracking-tight">
-            <AnimatedText text="60 años guiando tus decisiones inmobiliarias." startIndex={0} />
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-[52px] text-white tracking-tight" style={{
+            fontFamily: "'Avenir LT Pro 65 Medium', 'Avenir LT Pro', 'Avenir', 'Outfit', system-ui, sans-serif",
+            fontWeight: 500,
+            lineHeight: 1.035,
+            textShadow: '0 2px 20px rgba(0,0,0,0.4)',
+          }}>
+            <div>
+              <AnimatedText text="60 años guiando tus decisiones" startIndex={0} />
+            </div>
+            <div>
+              <AnimatedText text="inmobiliarias." startIndex={30} />
+            </div>
           </h1>
         </div>
         <p
