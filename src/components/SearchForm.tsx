@@ -256,44 +256,29 @@ export default function SearchForm({ mobileExpanded, onMobileExpand, onNavigate 
   return (
     <div className="relative mx-auto px-4 sm:px-6 lg:px-8 -mt-[100px] sm:-mt-[110px] lg:-mt-[140px]" style={{ width: '100%', maxWidth: '64rem', zIndex: 20 }}>
       <div className="bg-white shadow-2xl flex flex-col">
-        {/* Tabs Arrendar / Comprar — blanco 60% opacidad */}
+        {/* Tabs Arrendar / Comprar con subtítulos */}
         <div className="flex">
           {(['arrendar', 'comprar'] as const).map((t, idx) => (
-            <div key={t} className="flex-1 flex items-center">
+            <div key={t} className="flex-1 flex items-stretch">
               <button
                 onClick={() => handleTabClick(t)}
-                className={`flex-1 px-5 py-3 text-center transition-all duration-200 font-medium ${
-                  searchType === t ? 'bg-white text-brand-red' : 'bg-white/60 text-white hover:bg-white/70'
+                className={`flex-1 px-5 py-4 text-center transition-all duration-200 flex flex-col items-center justify-center ${
+                  searchType === t ? 'bg-brand-red text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                 }`}
               >
-                {t === 'arrendar' ? 'Arrendar' : 'Comprar'}
+                <div className="font-medium text-sm">{t === 'arrendar' ? 'Arrendar' : 'Comprar'}</div>
+                <div className="text-xs opacity-75 mt-1">{t === 'arrendar' ? '# Búsqueda por código' : '📍 Búsqueda por ubicación'}</div>
               </button>
-              {idx === 0 && <div className="w-px h-8 bg-gray-300" />}
+              {idx === 0 && <div className="w-px bg-gray-300" />}
             </div>
           ))}
         </div>
 
-        {/* Botón Buscar inmueble — ancho completo */}
-        <button
-          onClick={handleSearch}
-          className="w-full bg-brand-red hover:bg-brand-red-hover text-white px-8 py-3 font-semibold flex items-center justify-center gap-2 transition-colors duration-200 active:scale-95"
-        >
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-            <circle cx="10" cy="10" r="7" stroke="white" strokeWidth="2.5" strokeLinecap="round"
-              strokeDasharray={isSearching ? '14 30' : '44 0'}
-              style={{ transition: 'stroke-dasharray 0.3s ease' }} />
-            <line x1="14.5" y1="14.5" x2="20" y2="20" stroke="white" strokeWidth="2.5" strokeLinecap="round"
-              style={{ opacity: isSearching ? 0 : 1, transition: 'opacity 0.25s ease' }} />
-          </svg>
-          <span>Buscar inmueble</span>
-        </button>
-      </div>
-
-        {/* Filtros — solo visible cuando se selecciona Arrendar o Comprar */}
+        {/* Filtros — siempre visibles */}
         {searchType && (
           <>
             {/* Row 1: Ciudad, Tipo, Precio, Habitaciones */}
-            <div className="search-fields flex flex-col sm:flex-row sm:flex-nowrap items-stretch bg-white">
+            <div className="search-fields flex flex-col sm:flex-row sm:flex-nowrap items-stretch bg-white border-t border-gray-200">
               {/* Ciudad o sector */}
               <div className="filter-field group flex-1 flex items-center gap-3 px-4 py-3 border-b sm:border-b-0 sm:border-r border-gray-200">
                 <div className="filter-icon w-9 h-9 rounded shrink-0 flex items-center justify-center" style={{ backgroundColor: '#f2f2f2' }}>
