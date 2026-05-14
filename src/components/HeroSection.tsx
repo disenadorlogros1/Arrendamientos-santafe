@@ -16,7 +16,7 @@ const AnimatedText = ({ text, startIndex = 0 }: { text: string; startIndex?: num
           className="letter-animate"
           style={{ animationDelay: `${(startIndex + i) * 0.06}s` }}
         >
-          {char}
+          {char === ' ' ? ' ' : char}
         </span>
       ))}
     </>
