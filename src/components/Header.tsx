@@ -21,11 +21,11 @@ function MobileWhatsAppButton() {
   }, []);
   return (
     <a href="https://wa.me/573006557529?text=Hola%2C%20quisiera%20hablar%20con%20un%20asesor%20de%20Arrendamientos%20Santa%20Fe." target="_blank" rel="noopener noreferrer"
-      className={`flex items-center justify-center w-[42px] h-[42px] rounded-full text-white transition-all duration-500 ${
+      className={`flex items-center justify-center w-[42px] h-[42px] rounded-full transition-all duration-500 ${
         isRed ? 'bg-brand-red shadow-[0_0_20px_rgba(243,39,53,0.6)]' : 'bg-white shadow-[0_0_12px_rgba(255,255,255,0.3)]'
       }`}
-      style={{ color: isRed ? 'white' : '#232222' }}>
-      <img src="/icons/icon-whatsapp-white.gif" alt="WhatsApp" className="w-5 h-5" />
+      style={{ color: isRed ? 'white' : '#f32735' }}>
+      <img src={isRed ? "/icons/icon-whatsapp-white.gif" : "/icons/icon-whatsapp-red.gif"} alt="WhatsApp" className="w-5 h-5" />
     </a>
   );
 }
@@ -38,11 +38,11 @@ function MobilePSEButton() {
   }, []);
   return (
     <a href="https://www.psepagos.co/PSEHostingUI/ShowTicketOffice.aspx?ID=9011" target="_blank" rel="noopener noreferrer"
-      className={`flex items-center justify-center w-[42px] h-[42px] rounded-full text-white transition-all duration-500 ${
+      className={`flex items-center justify-center w-[42px] h-[42px] rounded-full transition-all duration-500 ${
         isRed ? 'bg-brand-red shadow-[0_0_20px_rgba(243,39,53,0.6)]' : 'bg-white shadow-[0_0_12px_rgba(255,255,255,0.3)]'
       }`}
-      style={{ color: isRed ? 'white' : '#232222' }}>
-      <img src="/icons/icon-credit-card-white.gif" alt="Pagar" className="w-5 h-5" />
+      style={{ color: isRed ? 'white' : '#f32735' }}>
+      <img src={isRed ? "/icons/icon-credit-card-white.gif" : "/icons/icon-credit-card-red.gif"} alt="Pagar" className="w-5.5 h-5.5" />
     </a>
   );
 }
@@ -82,11 +82,10 @@ function WhatsAppButton() {
   }, []);
   return (
     <a href="https://wa.me/573006557529?text=Hola%2C%20quisiera%20hablar%20con%20un%20asesor%20de%20Arrendamientos%20Santa%20Fe." target="_blank" rel="noopener noreferrer"
-      className={`flex items-center gap-2 h-[42px] px-5 rounded-full text-sm font-semibold whitespace-nowrap text-white transition-all duration-500 ${
-        isRed ? 'bg-brand-red shadow-[0_0_20px_rgba(243,39,53,0.6)]' : 'bg-white shadow-[0_0_12px_rgba(255,255,255,0.3)]'
-      }`}
-      style={{ color: isRed ? 'white' : '#232222' }}>
-      <img src="/icons/icon-whatsapp-white.gif" alt="WhatsApp" className="w-5 h-5" />
+      className={`flex items-center gap-2 h-[42px] px-5 rounded-full text-sm font-semibold whitespace-nowrap transition-all duration-500 ${
+        isRed ? 'bg-brand-red shadow-[0_0_20px_rgba(243,39,53,0.6)] text-white' : 'bg-white shadow-[0_0_12px_rgba(255,255,255,0.3)] text-brand-red'
+      }`}>
+      <img src={isRed ? "/icons/icon-whatsapp-white.gif" : "/icons/icon-whatsapp-red.gif"} alt="WhatsApp" className="w-5 h-5" />
       <span>WhatsApp</span>
     </a>
   );
@@ -103,13 +102,12 @@ function PSEButton() {
       href="https://www.psepagos.co/PSEHostingUI/ShowTicketOffice.aspx?ID=9011"
       target="_blank"
       rel="noopener noreferrer"
-      className={`flex items-center gap-2 h-[42px] px-5 rounded-full text-sm font-semibold whitespace-nowrap text-white transition-all duration-500 ${
-        isRed ? 'bg-brand-red shadow-[0_0_20px_rgba(243,39,53,0.6)]' : 'bg-white shadow-[0_0_12px_rgba(255,255,255,0.3)]'
+      className={`flex items-center gap-2 h-[42px] px-5 rounded-full text-sm font-semibold whitespace-nowrap transition-all duration-500 ${
+        isRed ? 'bg-brand-red shadow-[0_0_20px_rgba(243,39,53,0.6)] text-white' : 'bg-white shadow-[0_0_12px_rgba(255,255,255,0.3)] text-brand-red'
       }`}
-      style={{ color: isRed ? 'white' : '#232222' }}
       aria-label="Pagar en línea por PSE"
     >
-      <img src="/icons/icon-credit-card-white.gif" alt="Pagar" className="w-4 h-4" />
+      <img src={isRed ? "/icons/icon-credit-card-white.gif" : "/icons/icon-credit-card-red.gif"} alt="Pagar" className="w-4.5 h-4.5" />
       <span>Pagar en línea</span>
     </a>
   );

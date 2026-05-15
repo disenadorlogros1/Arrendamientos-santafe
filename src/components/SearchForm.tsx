@@ -259,7 +259,7 @@ export default function SearchForm({ onNavigate }: SearchFormProps) {
             <button type="button" onClick={handleAdvancedToggle}
               className="inline-flex items-center gap-2 hover:opacity-70 transition-opacity"
               style={{ fontSize: '13px', fontFamily: FONT, fontWeight: 500, color: COLOR_LABEL }}>
-              <img src="/icons/icon-santa-fe-logo.png" alt="Filtros" className="w-4 h-4" />
+              <img src="/icons/icon-filters-red.gif" alt="Filtros" className="w-4 h-4" />
               {step === 3 ? 'Ocultar filtros avanzados' : 'Búsqueda avanzada'}
             </button>
           </div>
