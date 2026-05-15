@@ -109,7 +109,7 @@ function PSEButton() {
       style={{ color: isRed ? 'white' : '#aa182c' }}
       aria-label="Pagar en línea por PSE"
     >
-      <img src={isRed ? "/icons/icon-credit-card-white.gif" : "/icons/icon-credit-card-red.gif"} alt="Pagar" className="w-4.5 h-4.5" />
+      <img src={isRed ? "/icons/icon-credit-card-white.gif" : "/icons/icon-credit-card-red.gif"} alt="Pagar" className="w-[21px] h-[21px]" />
       <span>Pagar en línea</span>
     </a>
   );
@@ -139,7 +139,7 @@ export default function Header({ currentPage, onNavigate }: HeaderProps) {
       <div className="flex items-center justify-center gap-4 h-[58px]">
         {/* Logo — extremo izquierdo FIJO */}
         <button onClick={() => handleNav('home')} className="shrink-0 absolute left-4 sm:left-6 lg:left-8">
-          <img src="/icon-santa-fe-logo.png" alt="Arrendamientos Santa Fe" className="h-10 md:h-11 w-auto object-contain drop-shadow-lg" />
+          <img src="/icons/icon-santa-fe-logo.png" alt="Arrendamientos Santa Fe" className="h-10 md:h-11 w-auto object-contain drop-shadow-lg" />
         </button>
 
         {/* Nav capsula — centrada */}
@@ -225,7 +225,7 @@ export default function Header({ currentPage, onNavigate }: HeaderProps) {
               <SheetTitle className="sr-only">Menú de navegación</SheetTitle>
               <div className="flex flex-col h-full">
                 <div className="flex items-center justify-between p-4 border-b border-white/10">
-                  <img src="/icon-santa-fe-logo.png" alt="Arrendamientos Santa Fe" className="h-8 w-auto object-contain" />
+                  <img src="/icons/icon-santa-fe-logo.png" alt="Arrendamientos Santa Fe" className="h-8 w-auto object-contain" />
                   <button onClick={() => setMobileOpen(false)} className="text-white/60 hover:text-white" aria-label="Cerrar menú">
                     <img src="/icons/icon-close-white.gif" alt="Cerrar" className="h-5 w-5" />
                   </button>
