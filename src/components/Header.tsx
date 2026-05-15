@@ -24,7 +24,7 @@ function MobileWhatsAppButton() {
       className={`flex items-center justify-center w-[42px] h-[42px] rounded-full transition-all duration-500 ${
         isRed ? 'bg-brand-red shadow-[0_0_20px_rgba(243,39,53,0.6)]' : 'bg-white shadow-[0_0_12px_rgba(255,255,255,0.3)]'
       }`}
-      style={{ color: isRed ? 'white' : '#f32735' }}>
+      style={{ color: isRed ? 'white' : '#aa182c' }}>
       <img src={isRed ? "/icons/icon-whatsapp-white.gif" : "/icons/icon-whatsapp-red.gif"} alt="WhatsApp" className="w-5 h-5" />
     </a>
   );
@@ -41,7 +41,7 @@ function MobilePSEButton() {
       className={`flex items-center justify-center w-[42px] h-[42px] rounded-full transition-all duration-500 ${
         isRed ? 'bg-brand-red shadow-[0_0_20px_rgba(243,39,53,0.6)]' : 'bg-white shadow-[0_0_12px_rgba(255,255,255,0.3)]'
       }`}
-      style={{ color: isRed ? 'white' : '#f32735' }}>
+      style={{ color: isRed ? 'white' : '#aa182c' }}>
       <img src={isRed ? "/icons/icon-credit-card-white.gif" : "/icons/icon-credit-card-red.gif"} alt="Pagar" className="w-5.5 h-5.5" />
     </a>
   );
@@ -83,8 +83,9 @@ function WhatsAppButton() {
   return (
     <a href="https://wa.me/573006557529?text=Hola%2C%20quisiera%20hablar%20con%20un%20asesor%20de%20Arrendamientos%20Santa%20Fe." target="_blank" rel="noopener noreferrer"
       className={`flex items-center gap-2 h-[42px] px-5 rounded-full text-sm font-semibold whitespace-nowrap transition-all duration-500 ${
-        isRed ? 'bg-brand-red shadow-[0_0_20px_rgba(243,39,53,0.6)] text-white' : 'bg-white shadow-[0_0_12px_rgba(255,255,255,0.3)] text-brand-red'
-      }`}>
+        isRed ? 'bg-brand-red shadow-[0_0_20px_rgba(243,39,53,0.6)]' : 'bg-white shadow-[0_0_12px_rgba(255,255,255,0.3)]'
+      }`}
+      style={{ color: isRed ? 'white' : '#aa182c' }}>
       <img src={isRed ? "/icons/icon-whatsapp-white.gif" : "/icons/icon-whatsapp-red.gif"} alt="WhatsApp" className="w-5 h-5" />
       <span>WhatsApp</span>
     </a>
@@ -103,8 +104,9 @@ function PSEButton() {
       target="_blank"
       rel="noopener noreferrer"
       className={`flex items-center gap-2 h-[42px] px-5 rounded-full text-sm font-semibold whitespace-nowrap transition-all duration-500 ${
-        isRed ? 'bg-brand-red shadow-[0_0_20px_rgba(243,39,53,0.6)] text-white' : 'bg-white shadow-[0_0_12px_rgba(255,255,255,0.3)] text-brand-red'
+        isRed ? 'bg-brand-red shadow-[0_0_20px_rgba(243,39,53,0.6)]' : 'bg-white shadow-[0_0_12px_rgba(255,255,255,0.3)]'
       }`}
+      style={{ color: isRed ? 'white' : '#aa182c' }}
       aria-label="Pagar en línea por PSE"
     >
       <img src={isRed ? "/icons/icon-credit-card-white.gif" : "/icons/icon-credit-card-red.gif"} alt="Pagar" className="w-4.5 h-4.5" />
@@ -137,7 +139,7 @@ export default function Header({ currentPage, onNavigate }: HeaderProps) {
       <div className="flex items-center justify-center gap-4 h-[58px]">
         {/* Logo — extremo izquierdo FIJO */}
         <button onClick={() => handleNav('home')} className="shrink-0 absolute left-4 sm:left-6 lg:left-8">
-          <img src="/logo-blanco.png" alt="Arrendamientos Santa Fe" className="h-10 md:h-11 w-auto object-contain drop-shadow-lg" />
+          <img src="/icon-santa-fe-logo.png" alt="Arrendamientos Santa Fe" className="h-10 md:h-11 w-auto object-contain drop-shadow-lg" />
         </button>
 
         {/* Nav capsula — centrada */}
@@ -223,7 +225,7 @@ export default function Header({ currentPage, onNavigate }: HeaderProps) {
               <SheetTitle className="sr-only">Menú de navegación</SheetTitle>
               <div className="flex flex-col h-full">
                 <div className="flex items-center justify-between p-4 border-b border-white/10">
-                  <img src="/logo-blanco.png" alt="Arrendamientos Santa Fe" className="h-8 w-auto object-contain" />
+                  <img src="/icon-santa-fe-logo.png" alt="Arrendamientos Santa Fe" className="h-8 w-auto object-contain" />
                   <button onClick={() => setMobileOpen(false)} className="text-white/60 hover:text-white" aria-label="Cerrar menú">
                     <img src="/icons/icon-close-white.gif" alt="Cerrar" className="h-5 w-5" />
                   </button>
