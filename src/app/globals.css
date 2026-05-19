@@ -355,8 +355,8 @@ select option {
 
 /* ── Hero title: interlineado ajustado ── */
 .hero-title-text {
-  font-family: "avenir-lt-pro", sans-serif;
-  font-weight: 500;
+  font-family: "Avenir Next Ultra Light", "avenir-lt-pro", sans-serif;
+  font-weight: 200;
   font-style: normal;
   line-height: 1.035;
   text-shadow: 0 2px 20px rgba(0,0,0,0.4);
