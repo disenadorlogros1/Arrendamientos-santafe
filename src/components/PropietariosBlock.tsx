@@ -26,15 +26,6 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid md:grid-cols-12 gap-8 items-center">
           <div className="md:col-span-7">
-            <span
-              className="inline-block text-xs sm:text-sm font-semibold tracking-widest text-brand-red uppercase mb-3"
-              style={{
-                fontFamily:
-                  "'Avenir LT Pro 65 Medium', 'Avenir', 'Outfit', system-ui, sans-serif",
-              }}
-            >
-              Propietarios
-            </span>
             <h2
               className="text-3xl sm:text-4xl lg:text-5xl leading-tight"
               style={{
@@ -45,30 +36,32 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
             >
               ¿Tienes un inmueble para{' '}
               <span
-                className="text-brand-red inline"
+                className="text-brand-red inline hero-line-highlight"
                 style={{
                   fontWeight: 700,
-                  background: 'linear-gradient(to bottom, transparent 60%, #f32735 60%, #f32735 84%, transparent 84%)',
+                  background: 'linear-gradient(to bottom, transparent 60%, white 60%, white 84%, transparent 84%)',
                   WebkitBoxDecorationBreak: 'clone',
                   boxDecorationBreak: 'clone',
                   padding: '0 4px',
                   margin: '0 -4px',
+                  clipPath: 'inset(0 100% 0 0)',
+                  animation: 'slideHighlightFromLeft 4.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.42s forwards',
                 }}
               >
-                arrendar o vender
-              </span>?
+                arrendar o vender?
+              </span>
             </h2>
             <p className="mt-5 text-base sm:text-lg text-white/80 max-w-2xl leading-relaxed">
               Más de 60 años gestionando propiedades en Antioquia. Tu inmueble en manos de quienes conocen el mercado inmobiliario regional.
             </p>
 
             {/* CTAs jerárquicos */}
-            <div className="mt-8 flex flex-wrap items-center gap-3">
+            <div className="mt-8 flex items-center gap-3">
               {/* CTA Principal */}
               <button
                 type="button"
                 onClick={() => onNavigate('consignacion')}
-                className="inline-flex items-center justify-center gap-2 h-12 px-6 bg-brand-red hover:bg-brand-red-hover text-white text-sm sm:text-base font-semibold rounded-md shadow-lg transition-colors"
+                className="inline-flex items-center justify-center gap-2 h-12 px-6 bg-white text-brand-red text-sm sm:text-base font-semibold transition-all duration-300 hover:scale-125 hover:bg-brand-red hover:text-white"
               >
                 Consignar mi propiedad
                 <ArrowRight className="w-4 h-4" />
@@ -78,7 +71,7 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
               <button
                 type="button"
                 onClick={() => onNavigate('consignacion')}
-                className="inline-flex items-center gap-2 h-12 px-6 bg-transparent hover:bg-white/10 text-white text-sm sm:text-base font-semibold border-2 border-white/70 rounded-md transition-colors"
+                className="inline-flex items-center gap-2 h-12 px-6 bg-white text-brand-red text-sm sm:text-base font-semibold transition-all duration-300 hover:scale-125 hover:bg-brand-red hover:text-white"
               >
                 <Info className="w-4 h-4" />
                 Conocer cómo funciona
@@ -89,7 +82,7 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
                 href={WHATSAPP_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 h-10 px-4 bg-white/10 hover:bg-white/20 text-white text-sm rounded-md transition-colors"
+                className="inline-flex items-center gap-2 h-12 px-6 bg-white text-brand-red text-sm font-semibold transition-all duration-300 hover:scale-125 hover:bg-brand-red hover:text-white"
               >
                 <MessageCircle className="w-4 h-4" />
                 Hablar con un asesor
@@ -110,7 +103,7 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
               </div>
               <div className="bg-white/5 border border-white/10 rounded-lg p-5 backdrop-blur-sm col-span-2">
                 <p className="text-sm text-white/80 leading-relaxed">
-                  Te avisamos cuando haya un arrendatario interesado. Sin cuelgues, sin demoras.
+                  Te avisamos cuando haya un arrendatario interesado. Sin demoras, sin contratiempos.
                 </p>
               </div>
             </div>
