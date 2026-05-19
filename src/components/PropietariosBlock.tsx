@@ -1,6 +1,7 @@
 'use client';
 
-import { MessageCircle, ArrowRight, Info } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
+import { MessageCircle } from 'lucide-react';
 import type { PageType } from '@/components/Header';
 
 interface PropietariosBlockProps {
@@ -11,6 +12,26 @@ const WHATSAPP_URL =
   'https://wa.me/573006557529?text=Hola%2C%20quisiera%20consignar%20una%20propiedad%20con%20Arrendamientos%20Santa%20Fe.';
 
 export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps) {
+  const [isVisible, setIsVisible] = useState(false);
+  const titleRef = useRef<HTMLHeadingElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !isVisible) {
+          setIsVisible(true);
+          observer.unobserve(entry.target);
+        }
+      },
+      { threshold: 0.5 }
+    );
+
+    if (titleRef.current) {
+      observer.observe(titleRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, [isVisible]);
   return (
     <section className="relative py-16 sm:py-20 bg-brand-dark text-white overflow-hidden">
       {/* Acento visual sutil */}
@@ -27,6 +48,7 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
         <div className="grid md:grid-cols-12 gap-8 items-center">
           <div className="md:col-span-7">
             <h2
+              ref={titleRef}
               className="text-3xl sm:text-4xl lg:text-5xl leading-tight text-white"
               style={{
                 fontFamily:
@@ -36,7 +58,7 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
             >
               ¿Tienes un inmueble para{' '}
               <span
-                className="text-white inline hero-line-highlight"
+                className="text-white inline"
                 style={{
                   fontWeight: 700,
                   background: 'linear-gradient(to bottom, transparent 60%, #f32735 60%, #f32735 84%, transparent 84%)',
@@ -45,7 +67,7 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
                   padding: '0 4px',
                   margin: '0 -4px',
                   clipPath: 'inset(0 100% 0 0)',
-                  animation: 'slideHighlightFromLeft 4.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.42s forwards',
+                  animation: isVisible ? 'slideHighlightFromLeft 4.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.42s forwards' : 'none',
                 }}
               >
                 arrendar o vender?
