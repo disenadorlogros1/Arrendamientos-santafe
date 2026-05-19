@@ -63,12 +63,12 @@ export default function HeroSection({ onNavigate }: HeroSectionProps) {
               </span>
               {' '}
               <span className="hero-line-seg hero-line-highlight">
-                <AnimatedText text="guiando tus decisiones" startIndex={7} />
+                <AnimatedText text="acompañando" startIndex={7} />
               </span>
             </div>
             <div>
               <span className="hero-line-seg hero-line-last">
-                <AnimatedText text="inmobiliarias." startIndex={29} />
+                <AnimatedText text="decisiones que importan." startIndex={18} />
               </span>
             </div>
           </h1>
@@ -84,13 +84,12 @@ export default function HeroSection({ onNavigate }: HeroSectionProps) {
             textShadow: '0 1px 10px rgba(0,0,0,0.4)',
           }}
         >
-          Respaldo y experiencia para encontrar o gestionar tu propiedad ideal
-          en Antioquia.
+          Inmuebles disponibles ahora. Consulta, agenda o pide asesoría.
         </p>
 
         {/* CTAs jerárquicos — botones cápsula con hover blanco + resplandor rojo */}
         <div className="mt-7 flex flex-wrap items-center gap-1.5 sm:gap-3">
-          {/* CTA Principal: Buscar inmueble */}
+          {/* CTA Principal: Ver propiedades disponibles */}
           <button
             type="button"
             onClick={scrollToSearch}
@@ -101,21 +100,7 @@ export default function HeroSection({ onNavigate }: HeroSectionProps) {
               fontWeight: 300,
             }}
           >
-            Buscar inmueble
-          </button>
-
-          {/* CTA Secundario: Consignar mi propiedad */}
-          <button
-            type="button"
-            onClick={() => onNavigate?.('consignacion')}
-            className="hero-btn group inline-flex items-center justify-center h-[42px] px-6 bg-black/30 hover:bg-white/60 text-white text-sm sm:text-base rounded-full border border-white/30 transition-all duration-300 hover:scale-105"
-            style={{
-              textShadow: '0 1px 3px rgba(0,0,0,0.4)',
-              fontFamily: "'Avenir LT Pro 65 Medium', 'Avenir', 'Outfit', system-ui, sans-serif",
-              fontWeight: 300,
-            }}
-          >
-            Consignar mi propiedad
+            Ver propiedades disponibles
           </button>
 
           {/* CTA Operativo: Hablar con un asesor (WhatsApp) */}

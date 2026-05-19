@@ -26,25 +26,25 @@ const servicios: Servicio[] = [
   {
     icon: Home,
     title: 'Arrendamientos',
-    description: 'Encuentra inmuebles disponibles con acompañamiento durante el proceso.',
+    description: 'Encuentra tu próximo hogar o local. Te acompañamos desde la búsqueda hasta la firma.',
     page: 'propiedades',
   },
   {
     icon: TrendingUp,
     title: 'Ventas',
-    description: 'Compra o vende tu propiedad con asesoría inmobiliaria.',
+    description: 'Vende al precio justo. Valoramos tu inmueble con criterio de mercado.',
     page: 'propiedades',
   },
   {
     icon: Key,
     title: 'Consignación',
-    description: 'Entrega tu inmueble a una empresa con experiencia en promoción y gestión.',
+    description: 'Nosotros conseguimos el arrendatario. Tú recibes el pago.',
     page: 'consignacion',
   },
   {
     icon: ClipboardList,
     title: 'Administración',
-    description: 'Gestionamos procesos de arrendamiento con respaldo y claridad.',
+    description: 'Manejamos el cobro, los contratos y las reparaciones por ti.',
     page: 'servicios',
   },
   {

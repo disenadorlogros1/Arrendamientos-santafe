@@ -17,24 +17,24 @@ const services = [
     icon: Home,
     title: 'Arrendamientos',
     description:
-      'Encuentra inmuebles disponibles con acompañamiento durante el proceso.',
+      'Encuentra tu próximo hogar o local. Te acompañamos desde la búsqueda hasta la firma.',
   },
   {
     icon: TrendingUp,
     title: 'Ventas',
-    description: 'Compra o vende tu propiedad con asesoría inmobiliaria.',
+    description: 'Vende al precio justo. Valoramos tu inmueble con criterio de mercado.',
   },
   {
     icon: Key,
     title: 'Consignación',
     description:
-      'Entrega tu inmueble a una empresa con experiencia en promoción y gestión.',
+      'Nosotros conseguimos el arrendatario. Tú recibes el pago.',
   },
   {
     icon: ClipboardList,
     title: 'Administración',
     description:
-      'Gestionamos procesos de arrendamiento con respaldo y claridad.',
+      'Manejamos el cobro, los contratos y las reparaciones por ti.',
   },
   {
     icon: BadgeCheck,
@@ -131,7 +131,7 @@ export default function ServiciosPage() {
                 </div>
                 <div>
                   <p className="text-3xl font-bold text-brand-red">+1K</p>
-                  <p className="text-sm text-brand-gray">Inmuebles gestionados</p>
+                  <p className="text-sm text-brand-gray">Inmuebles en gestión activa</p>
                 </div>
               </div>
             </motion.div>

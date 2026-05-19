@@ -81,7 +81,7 @@ export default function Home() {
         {currentPage === 'consignacion' && <ConsignacionPage />}
         {currentPage === 'hipotecas' && <HipotecasPage />}
         {currentPage === 'servicios' && <ServiciosPage />}
-        {currentPage === 'nosotros' && <InstitucionalPage />}
+        {currentPage === 'nosotros' && <InstitucionalPage onNavigate={handleNavigate} />}
         {currentPage === 'politicas' && <PoliticasPage />}
         {currentPage === 'terminos' && <TerminosPage />}
       </main>

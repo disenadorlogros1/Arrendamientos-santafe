@@ -44,11 +44,22 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
               }}
             >
               ¿Tienes un inmueble para{' '}
-              <span className="text-brand-red font-medium">arrendar o vender</span>?
+              <span
+                className="text-brand-red inline"
+                style={{
+                  fontWeight: 700,
+                  background: 'linear-gradient(to bottom, transparent 60%, #f32735 60%, #f32735 84%, transparent 84%)',
+                  WebkitBoxDecorationBreak: 'clone',
+                  boxDecorationBreak: 'clone',
+                  padding: '0 4px',
+                  margin: '0 -4px',
+                }}
+              >
+                arrendar o vender
+              </span>?
             </h2>
             <p className="mt-5 text-base sm:text-lg text-white/80 max-w-2xl leading-relaxed">
-              Consígnalo con una empresa que cuenta con experiencia, procesos
-              claros y conocimiento del mercado inmobiliario en Antioquia.
+              Más de 60 años gestionando propiedades en Antioquia. Tu inmueble en manos de quienes conocen el mercado inmobiliario regional.
             </p>
 
             {/* CTAs jerárquicos */}
@@ -99,8 +110,7 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
               </div>
               <div className="bg-white/5 border border-white/10 rounded-lg p-5 backdrop-blur-sm col-span-2">
                 <p className="text-sm text-white/80 leading-relaxed">
-                  Procesos claros, acompañamiento oportuno y asesoría en cada
-                  etapa.
+                  Te avisamos cuando haya un arrendatario interesado. Sin cuelgues, sin demoras.
                 </p>
               </div>
             </div>

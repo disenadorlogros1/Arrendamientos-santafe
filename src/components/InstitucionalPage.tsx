@@ -12,6 +12,8 @@ import {
   Users,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import TrayectoriaBlock from '@/components/TrayectoriaBlock';
+import type { PageType } from '@/components/Header';
 
 const team = [
   {
@@ -54,7 +56,11 @@ const values = [
   },
 ];
 
-export default function InstitucionalPage() {
+interface InstitucionalPageProps {
+  onNavigate?: (page: PageType) => void;
+}
+
+export default function InstitucionalPage({ onNavigate }: InstitucionalPageProps = {}) {
   return (
     <div className="min-h-screen bg-white">
       {/* Page Header */}
@@ -212,6 +218,9 @@ export default function InstitucionalPage() {
           </div>
         </div>
       </section>
+
+      {/* Timeline Section */}
+      {onNavigate && <TrayectoriaBlock onNavigate={onNavigate} />}
 
       {/* Contact */}
       <section className="py-12 md:py-16 bg-brand-dark">

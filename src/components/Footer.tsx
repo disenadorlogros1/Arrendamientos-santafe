@@ -23,13 +23,12 @@ export default function Footer({ onNavigate }: FooterProps = {}) {
           {/* Marca */}
           <div className="space-y-4">
             <img
-              src="/logo-blanco.png"
+              src="/icons/icon-santa-fe-logo.png"
               alt="Arrendamientos Santa Fe"
               className="h-10 w-auto object-contain"
             />
             <p className="text-white/60 text-sm leading-relaxed">
-              60 años acompañando decisiones inmobiliarias en Antioquia con
-              respaldo, experiencia y procesos claros.
+              Una empresa antioqueña con historia. Para quienes buscan, para quienes confían.
             </p>
             <div className="flex gap-3">
               <a

@@ -54,14 +54,6 @@ const navItems: NavItem[] = [
     { label: 'Arrendar', page: 'propiedades' },
     { label: 'Comprar', page: 'propiedades' },
   ]},
-  { label: 'Consignación', page: 'consignacion', children: [
-    { label: 'Beneficios', page: 'consignacion' },
-    { label: 'Proceso', page: 'consignacion' },
-  ]},
-  { label: 'Hipotecas', page: 'hipotecas', children: [
-    { label: 'Calculadora', page: 'hipotecas' },
-    { label: 'Requisitos', page: 'hipotecas' },
-  ]},
   { label: 'Servicios', page: 'servicios', children: [
     { label: 'Todos los servicios', page: 'servicios' },
     { label: 'Pagar en línea', href: PSE_URL },

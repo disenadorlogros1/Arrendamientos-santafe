@@ -8,10 +8,12 @@ interface TrayectoriaBlockProps {
 }
 
 const HITOS = [
-  { year: '1966', label: 'Fundación de la empresa en Medellín' },
-  { year: '1985', label: 'Apertura de operación en Envigado' },
-  { year: '2005', label: 'Expansión al Oriente Antioqueño' },
-  { year: '2026', label: '60 años de experiencia inmobiliaria' },
+  { year: '1966', label: 'Nacemos en Medellín con una promesa: acompañar cada decisión con confianza y cercanía.' },
+  { year: '1974', label: 'Consolidamos nuestra operación y ganamos la confianza de propietarios y clientes en Antioquia.' },
+  { year: '2006', label: 'Cuatro décadas de trayectoria avalan nuestro respaldo y seriedad en el sector inmobiliario.' },
+  { year: '2017', label: 'Abrimos sede en Envigado y ampliamos nuestra presencia en el sur del Valle de Aburrá.' },
+  { year: '2018', label: 'Renovamos nuestra imagen para proyectar lo que siempre hemos sido: cercanos, serios y vigentes.' },
+  { year: '2026', label: '60 años creciendo con Antioquia. Celebramos con la apertura de nuestra sede en Rionegro.' },
 ];
 
 export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) {
@@ -71,7 +73,7 @@ export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) 
                 <Users className="w-5 h-5 text-brand-red mx-auto mb-1" />
                 <p className="text-2xl font-bold text-brand-dark">+1K</p>
                 <p className="text-[11px] text-gray-500 mt-0.5">
-                  inmuebles gestionados
+                  inmuebles en gestión activa
                 </p>
               </div>
             </div>
@@ -98,11 +100,8 @@ export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) 
                 Línea de tiempo
               </h3>
               <ol className="relative border-l-2 border-brand-red/20 ml-2 space-y-6">
-                {HITOS.map((hito, idx) => (
+                {HITOS.map((hito) => (
                   <li key={hito.year} className="ml-6 relative">
-                    <span className="absolute -left-[34px] top-0 w-6 h-6 rounded-full bg-brand-red text-white text-[10px] font-bold flex items-center justify-center shadow-sm">
-                      {idx + 1}
-                    </span>
                     <p className="text-2xl font-bold text-brand-red leading-none">
                       {hito.year}
                     </p>
