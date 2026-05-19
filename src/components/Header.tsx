@@ -56,7 +56,6 @@ const navItems: NavItem[] = [
   ]},
   { label: 'Servicios', page: 'servicios', children: [
     { label: 'Todos los servicios', page: 'servicios' },
-    { label: 'Pagar en línea', href: PSE_URL },
     { label: 'Solicitud de arrendamiento', href: SOLICITUD_ARRENDAMIENTO_URL },
     { label: 'Reportar reparación', href: REPARACIONES_URL },
   ]},
