@@ -9,7 +9,6 @@ import SearchForm from '@/components/SearchForm';
 import UserLocation from '@/components/UserLocation';
 import FeaturedSection from '@/components/FeaturedSection';
 import PropietariosBlock from '@/components/PropietariosBlock';
-import QuickAccessGrid from '@/components/QuickAccessGrid';
 import ServiciosBlock from '@/components/ServiciosBlock';
 import ZonasCoberturaMap from '@/components/ZonasCoberturaMap';
 import TrayectoriaBlock from '@/components/TrayectoriaBlock';
@@ -44,9 +43,6 @@ function HomePage({ onNavigate }: { onNavigate: (page: PageType) => void }) {
 
       {/* Sección 3: Bloque para Propietarios (Consignación) */}
       <PropietariosBlock onNavigate={onNavigate} />
-
-      {/* Bloque de Accesos rápidos: ¿Qué necesitas hacer hoy? */}
-      <QuickAccessGrid onNavigate={onNavigate} />
 
       {/* Sección 4: Servicios Principales */}
       <ServiciosBlock onNavigate={onNavigate} />

@@ -65,33 +65,6 @@ export default function ServiciosBlock({ onNavigate }: ServiciosBlockProps) {
   return (
     <section className="py-14 sm:py-20 bg-gray-50">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-10 sm:mb-12">
-          <span className="inline-block text-xs sm:text-sm font-semibold tracking-widest text-brand-red uppercase mb-3">
-            Nuestros servicios
-          </span>
-          <h2
-            className="text-3xl sm:text-4xl text-brand-dark"
-            style={{
-              fontFamily:
-                "'Avenir Next Ultra Light', 'Avenir LT Pro 65 Medium', 'Avenir', 'Outfit', system-ui, sans-serif",
-              fontWeight: 300,
-            }}
-          >
-            Servicios principales
-          </h2>
-          <p
-            className="mt-3 text-base text-gray-500 max-w-2xl mx-auto"
-            style={{
-              fontFamily:
-                "'Avenir Next Ultra Light', 'Avenir LT Pro 65 Medium', 'Avenir', 'Outfit', system-ui, sans-serif",
-              fontWeight: 300,
-            }}
-          >
-            Una oferta integral para acompañar tus decisiones inmobiliarias en
-            cada etapa.
-          </p>
-        </div>
-
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {servicios.map((s) => {
             const Icon = s.icon;
