@@ -22,8 +22,8 @@ const PARQUEADEROS = ['0', '1', '2', '3+'];
 const AREAS = ['50m²', '100m²', '150m²', '200m²', '250m²', '300m²', '400m²', '500m²+'];
 
 const PRICE_RANGES = {
-  arrendar: { min: 100000, max: 15000000, step: 100000 },
-  comprar:  { min: 30000000, max: 1500000000, step: 1000000 },
+  arrendar: { min: 100000, max: 10000000, step: 100000 },
+  comprar:  { min: 10000000, max: 300000000, step: 1000000 },
 } as const;
 
 function formatPrice(val: number) {
@@ -239,7 +239,43 @@ export default function SearchForm({ onNavigate }: SearchFormProps) {
                   <img src="/icons/icon-dollar-red.gif" alt="Precio" className="w-[22px] h-[22px] flex-shrink-0" />
                   <div className="min-w-0 flex-1">
                     <p className="leading-tight mb-[2px]" style={{ fontFamily: FONT, fontSize: '11px', color: COLOR_LABEL, fontWeight: 300 }}>Precio</p>
-                    <p style={{ fontFamily: FONT, fontSize: '15px', fontWeight: 600, color: COLOR_VALUE }}>
+                    <div className="relative h-6">
+                      <input
+                        type="range"
+                        min={PRICE_RANGES[searchType!].min}
+                        max={PRICE_RANGES[searchType!].max}
+                        value={precioMin}
+                        onChange={(e) => {
+                          const newMin = parseInt(e.target.value);
+                          if (newMin <= precioMax) setPrecioMin(newMin);
+                        }}
+                        className="absolute w-full h-1 bg-transparent rounded-lg appearance-none cursor-pointer pointer-events-none z-5 accent-brand-red"
+                        style={{ top: '50%', transform: 'translateY(-50%)' } as any}
+                      />
+                      <input
+                        type="range"
+                        min={PRICE_RANGES[searchType!].min}
+                        max={PRICE_RANGES[searchType!].max}
+                        value={precioMax}
+                        onChange={(e) => {
+                          const newMax = parseInt(e.target.value);
+                          if (newMax >= precioMin) setPrecioMax(newMax);
+                        }}
+                        className="absolute w-full h-1 bg-transparent rounded-lg appearance-none cursor-pointer z-5 accent-brand-red"
+                        style={{ top: '50%', transform: 'translateY(-50%)' } as any}
+                      />
+                      <div className="absolute w-full h-1 bg-gray-200 rounded-lg z-0" style={{ top: '50%', transform: 'translateY(-50%)' }} />
+                      <div
+                        className="absolute h-1 bg-brand-red rounded-lg z-3"
+                        style={{
+                          left: `${((precioMin - PRICE_RANGES[searchType!].min) / (PRICE_RANGES[searchType!].max - PRICE_RANGES[searchType!].min)) * 100}%`,
+                          right: `${100 - ((precioMax - PRICE_RANGES[searchType!].min) / (PRICE_RANGES[searchType!].max - PRICE_RANGES[searchType!].min)) * 100}%`,
+                          top: '50%',
+                          transform: 'translateY(-50%)',
+                        }}
+                      />
+                    </div>
+                    <p style={{ fontFamily: FONT, fontSize: '12px', color: COLOR_VALUE, marginTop: '4px' }}>
                       {formatPrice(precioMin)} – {formatPrice(precioMax)}
                     </p>
                   </div>
@@ -281,7 +317,7 @@ export default function SearchForm({ onNavigate }: SearchFormProps) {
             <button type="button" onClick={handleAdvancedToggle}
               className="inline-flex items-center gap-2 hover:opacity-70 transition-opacity"
               style={{ fontSize: '13px', fontFamily: FONT, fontWeight: 500, color: COLOR_LABEL }}>
-              <img src="/icons/icon-filters-red.gif" alt="Filtros" className="w-4 h-4" />
+              <img src="/icons/icon-sliders-red.gif" alt="Filtros" className="w-4 h-4" />
               {step === 3 ? 'Ocultar filtros avanzados' : 'Búsqueda avanzada'}
             </button>
           </div>
