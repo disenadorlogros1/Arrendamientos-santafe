@@ -34,9 +34,7 @@ export default function FeaturedSection({ onNavigate }: FeaturedSectionProps) {
               lineHeight: '1.45',
             }}
           >
-            Inmuebles seleccionados por ubicación, características y
-            oportunidad. Consulta disponibilidad, agenda una visita o recibe
-            asesoría de nuestro equipo.
+            Inmuebles disponibles ahora. Consulta, agenda o pide asesoría.
           </p>
         </div>
         <Button
@@ -44,7 +42,7 @@ export default function FeaturedSection({ onNavigate }: FeaturedSectionProps) {
             onNavigate('propiedades');
             window.scrollTo({ top: 0, behavior: 'smooth' });
           }}
-          className="shrink-0 bg-brand-red hover:bg-brand-red-hover text-white rounded-md px-6 h-11 text-sm font-semibold"
+          className="shrink-0 bg-brand-red hover:bg-brand-red-hover text-white rounded-full px-6 h-11 text-sm font-semibold"
         >
           Ver más
         </Button>
