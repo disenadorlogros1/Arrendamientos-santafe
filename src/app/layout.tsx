@@ -41,8 +41,8 @@ export const metadata: Metadata = {
   authors: [{ name: "Arrendamientos Santa Fe" }],
   icons: {
     icon: [
-      { url: "/icon-favicon-white.gif", media: "(prefers-color-scheme: light)", type: "image/gif" },
-      { url: "/icon-favicon-red.gif", media: "(prefers-color-scheme: dark)", type: "image/gif" },
+      { url: "/icons/icon-favicon-white.gif", media: "(prefers-color-scheme: light)", type: "image/gif" },
+      { url: "/icons/icon-favicon-red.gif", media: "(prefers-color-scheme: dark)", type: "image/gif" },
     ],
   },
   openGraph: {

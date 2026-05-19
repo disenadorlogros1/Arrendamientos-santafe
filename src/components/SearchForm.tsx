@@ -139,6 +139,7 @@ export default function SearchForm({ onNavigate }: SearchFormProps) {
   const [areaMin, setAreaMin] = useState('');
   const [areaMax, setAreaMax] = useState('');
   const [parqueaderos, setParqueaderos] = useState('');
+  const [codigoInmueble, setCodigoInmueble] = useState('');
 
   const handleTabClick = (type: 'arrendar' | 'comprar') => {
     setSearchType(type);
@@ -208,35 +209,56 @@ export default function SearchForm({ onNavigate }: SearchFormProps) {
           </div>
         )}
 
-        {/* ── FILA 3: Filtros básicos — visible desde Orden 3 ── */}
+        {/* ── FILA 3: Búsqueda por código O Filtros básicos — visible desde Orden 3 ── */}
         {step >= 2 && (
-          <div className="flex flex-col sm:flex-row sm:flex-nowrap items-stretch bg-white border-b border-gray-100">
-            <div className={`${filterCell} border-b sm:border-b-0 sm:border-r border-gray-100`}>
-              <img src="/icons/icon-location-red.gif" alt="Ubicación" className="w-[22px] h-[22px] flex-shrink-0" />
-              <CustomSelect label="Ubicación" value={sector} onChange={setSector} options={SECTORES} placeholder="Seleccionar" />
-            </div>
-            <div className={`${filterCell} border-b sm:border-b-0 sm:border-r border-gray-100`}>
-              <img src="/icons/icon-dollar-red.gif" alt="Precio" className="w-[22px] h-[22px] flex-shrink-0" />
-              <div className="min-w-0 flex-1">
-                <p className="leading-tight mb-[2px]" style={{ fontFamily: FONT, fontSize: '11px', color: COLOR_LABEL, fontWeight: 300 }}>Precio</p>
-                <p style={{ fontFamily: FONT, fontSize: '15px', fontWeight: 600, color: COLOR_VALUE }}>
-                  {formatPrice(precioMin)} – {formatPrice(precioMax)}
-                </p>
+          <>
+            {searchMethod === 'codigo' ? (
+              // Búsqueda por código
+              <div className="bg-white border-b border-gray-100 px-5 py-4 flex items-center gap-2.5">
+                <img src="/icons/icon-code-red.gif" alt="Código" className="w-[22px] h-[22px] flex-shrink-0" />
+                <div className="min-w-0 flex-1">
+                  <p className="leading-tight mb-[2px]" style={{ fontFamily: FONT, fontSize: '11px', color: COLOR_LABEL, fontWeight: 300 }}>Código del inmueble</p>
+                  <input
+                    type="text"
+                    value={codigoInmueble}
+                    onChange={(e) => setCodigoInmueble(e.target.value)}
+                    placeholder="Ej: 12345"
+                    className="w-full bg-transparent border-none outline-none text-[15px] font-400"
+                    style={{ fontFamily: FONT, fontSize: '15px', color: COLOR_VALUE }}
+                  />
+                </div>
               </div>
-            </div>
-            <div className={`${filterCell} border-b sm:border-b-0 sm:border-r border-gray-100`}>
-              <img src="/icons/icon-home-red.gif" alt="Tipo de propiedad" className="w-[22px] h-[22px] flex-shrink-0" />
-              <CustomSelect label="Tipo de propiedad" value={tipo} onChange={setTipo} options={TIPOS_INMUEBLE} placeholder="Seleccionar" />
-            </div>
-            <div className={filterCell}>
-              <img src="/icons/icon-bed-red.gif" alt="Habitaciones" className="w-[22px] h-[22px] flex-shrink-0" />
-              <CustomSelect label="Habitaciones" value={habitaciones} onChange={setHabitaciones} options={HABITACIONES} placeholder="Seleccionar" />
-            </div>
-          </div>
+            ) : (
+              // Búsqueda por ubicación - Filtros básicos
+              <div className="flex flex-col sm:flex-row sm:flex-nowrap items-stretch bg-white border-b border-gray-100">
+                <div className={`${filterCell} border-b sm:border-b-0 sm:border-r border-gray-100`}>
+                  <img src="/icons/icon-location-red.gif" alt="Ubicación" className="w-[22px] h-[22px] flex-shrink-0" />
+                  <CustomSelect label="Ubicación" value={sector} onChange={setSector} options={SECTORES} placeholder="Seleccionar" />
+                </div>
+                <div className={`${filterCell} border-b sm:border-b-0 sm:border-r border-gray-100`}>
+                  <img src="/icons/icon-dollar-red.gif" alt="Precio" className="w-[22px] h-[22px] flex-shrink-0" />
+                  <div className="min-w-0 flex-1">
+                    <p className="leading-tight mb-[2px]" style={{ fontFamily: FONT, fontSize: '11px', color: COLOR_LABEL, fontWeight: 300 }}>Precio</p>
+                    <p style={{ fontFamily: FONT, fontSize: '15px', fontWeight: 600, color: COLOR_VALUE }}>
+                      {formatPrice(precioMin)} – {formatPrice(precioMax)}
+                    </p>
+                  </div>
+                </div>
+                <div className={`${filterCell} border-b sm:border-b-0 sm:border-r border-gray-100`}>
+                  <img src="/icons/icon-home-red.gif" alt="Tipo de propiedad" className="w-[22px] h-[22px] flex-shrink-0" />
+                  <CustomSelect label="Tipo de propiedad" value={tipo} onChange={setTipo} options={TIPOS_INMUEBLE} placeholder="Seleccionar" />
+                </div>
+                <div className={filterCell}>
+                  <img src="/icons/icon-bed-red.gif" alt="Habitaciones" className="w-[22px] h-[22px] flex-shrink-0" />
+                  <CustomSelect label="Habitaciones" value={habitaciones} onChange={setHabitaciones} options={HABITACIONES} placeholder="Seleccionar" />
+                </div>
+              </div>
+            )}
+          </>
         )}
 
-        {/* ── FILA 4: Filtros avanzados — visible solo en Orden 4 ── */}
-        {step === 3 && (
+        {/* ── FILA 4: Filtros avanzados — visible solo en Orden 4 (búsqueda por ubicación) ── */}
+        {step === 3 && searchMethod === 'ubicacion' && (
           <div className="flex flex-col sm:flex-row sm:flex-nowrap items-stretch bg-[#fafafa] border-b border-gray-100">
             <div className={`${filterCell} border-b sm:border-b-0 sm:border-r border-gray-100`}>
               <CustomSelect label="Baños" value={banos} onChange={setBanos} options={BANOS} placeholder="Seleccionar" />
@@ -253,8 +275,8 @@ export default function SearchForm({ onNavigate }: SearchFormProps) {
           </div>
         )}
 
-        {/* ── FILA Búsqueda avanzada — blanca, visible desde Orden 3 ── */}
-        {step >= 2 && (
+        {/* ── FILA Búsqueda avanzada — blanca, visible desde Orden 3 (solo búsqueda por ubicación) ── */}
+        {step >= 2 && searchMethod === 'ubicacion' && (
           <div className="bg-white border-b border-gray-100 py-2.5 px-4 flex items-center justify-center">
             <button type="button" onClick={handleAdvancedToggle}
               className="inline-flex items-center gap-2 hover:opacity-70 transition-opacity"
