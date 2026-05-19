@@ -18,12 +18,12 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting && !isVisible) {
+        if (entry.isIntersecting) {
           setIsVisible(true);
           observer.unobserve(entry.target);
         }
       },
-      { threshold: 0.5 }
+      { threshold: 0.3 }
     );
 
     if (titleRef.current) {
@@ -31,7 +31,7 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
     }
 
     return () => observer.disconnect();
-  }, [isVisible]);
+  }, []);
   return (
     <section className="relative py-16 sm:py-20 bg-brand-dark text-white overflow-hidden">
       {/* Acento visual sutil */}
@@ -78,12 +78,12 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
             </p>
 
             {/* CTAs jerárquicos */}
-            <div className="mt-8 flex items-center gap-3">
+            <div className="mt-8 flex flex-col md:flex-row items-center gap-3">
               {/* CTA Principal */}
               <button
                 type="button"
                 onClick={() => onNavigate('consignacion')}
-                className="inline-flex items-center justify-center h-12 px-6 bg-white text-brand-red text-sm sm:text-base font-semibold transition-all duration-300 hover:scale-105 hover:bg-brand-red hover:text-white"
+                className="w-full md:w-auto inline-flex items-center justify-center h-12 px-6 bg-white text-brand-red text-sm sm:text-base font-semibold transition-all duration-300 hover:scale-105 hover:bg-brand-red hover:text-white"
                 style={{ lineHeight: '1.2' }}
               >
                 Consignar mi propiedad
@@ -93,7 +93,7 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
               <button
                 type="button"
                 onClick={() => onNavigate('consignacion')}
-                className="inline-flex items-center justify-center h-12 px-6 bg-white text-brand-red text-sm sm:text-base font-semibold transition-all duration-300 hover:scale-105 hover:bg-brand-red hover:text-white"
+                className="w-full md:w-auto inline-flex items-center justify-center h-12 px-6 bg-white text-brand-red text-sm sm:text-base font-semibold transition-all duration-300 hover:scale-105 hover:bg-brand-red hover:text-white"
                 style={{ lineHeight: '1.2' }}
               >
                 Conocer cómo funciona
@@ -104,7 +104,7 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
                 href={WHATSAPP_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center justify-center h-12 px-6 bg-white text-brand-red text-sm font-semibold transition-all duration-300 hover:scale-105 hover:bg-brand-red hover:text-white"
+                className="w-full md:w-auto inline-flex items-center justify-center h-12 px-6 bg-white text-brand-red text-sm font-semibold transition-all duration-300 hover:scale-105 hover:bg-brand-red hover:text-white"
                 style={{ lineHeight: '1.2' }}
               >
                 Hablar con un asesor

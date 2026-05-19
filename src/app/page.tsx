@@ -10,7 +10,6 @@ import UserLocation from '@/components/UserLocation';
 import FeaturedSection from '@/components/FeaturedSection';
 import PropietariosBlock from '@/components/PropietariosBlock';
 import ServiciosBlock from '@/components/ServiciosBlock';
-import ZonasCoberturaMap from '@/components/ZonasCoberturaMap';
 import TrayectoriaBlock from '@/components/TrayectoriaBlock';
 import PropiedadesPage from '@/components/PropiedadesPage';
 import ConsignacionPage from '@/components/ConsignacionPage';
@@ -47,10 +46,7 @@ function HomePage({ onNavigate }: { onNavigate: (page: PageType) => void }) {
       {/* Sección 4: Servicios Principales */}
       <ServiciosBlock onNavigate={onNavigate} />
 
-      {/* Sección 5: Zonas de Cobertura (Mapa) */}
-      <ZonasCoberturaMap />
-
-      {/* Sección 6: Bloque Institucional 60 años */}
+      {/* Sección 5: Bloque Institucional 60 años */}
       <TrayectoriaBlock onNavigate={onNavigate} />
     </>
   );
