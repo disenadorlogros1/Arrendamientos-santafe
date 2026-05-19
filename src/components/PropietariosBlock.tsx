@@ -27,7 +27,7 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
         <div className="grid md:grid-cols-12 gap-8 items-center">
           <div className="md:col-span-7">
             <h2
-              className="text-3xl sm:text-4xl lg:text-5xl leading-tight"
+              className="text-3xl sm:text-4xl lg:text-5xl leading-tight text-white"
               style={{
                 fontFamily:
                   "'Avenir Next Ultra Light', 'Avenir LT Pro 65 Medium', 'Avenir', 'Outfit', system-ui, sans-serif",
@@ -36,10 +36,10 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
             >
               ¿Tienes un inmueble para{' '}
               <span
-                className="text-brand-red inline hero-line-highlight"
+                className="text-white inline hero-line-highlight"
                 style={{
                   fontWeight: 700,
-                  background: 'linear-gradient(to bottom, transparent 60%, white 60%, white 84%, transparent 84%)',
+                  background: 'linear-gradient(to bottom, transparent 60%, #f32735 60%, #f32735 84%, transparent 84%)',
                   WebkitBoxDecorationBreak: 'clone',
                   boxDecorationBreak: 'clone',
                   padding: '0 4px',
@@ -61,19 +61,19 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
               <button
                 type="button"
                 onClick={() => onNavigate('consignacion')}
-                className="inline-flex items-center justify-center gap-2 h-12 px-6 bg-white text-brand-red text-sm sm:text-base font-semibold transition-all duration-300 hover:scale-125 hover:bg-brand-red hover:text-white"
+                className="inline-flex items-center justify-center h-12 px-6 bg-white text-brand-red text-sm sm:text-base font-semibold transition-all duration-300 hover:scale-105 hover:bg-brand-red hover:text-white"
+                style={{ lineHeight: '1.2' }}
               >
                 Consignar mi propiedad
-                <ArrowRight className="w-4 h-4" />
               </button>
 
               {/* CTA Secundario */}
               <button
                 type="button"
                 onClick={() => onNavigate('consignacion')}
-                className="inline-flex items-center gap-2 h-12 px-6 bg-white text-brand-red text-sm sm:text-base font-semibold transition-all duration-300 hover:scale-125 hover:bg-brand-red hover:text-white"
+                className="inline-flex items-center justify-center h-12 px-6 bg-white text-brand-red text-sm sm:text-base font-semibold transition-all duration-300 hover:scale-105 hover:bg-brand-red hover:text-white"
+                style={{ lineHeight: '1.2' }}
               >
-                <Info className="w-4 h-4" />
                 Conocer cómo funciona
               </button>
 
@@ -82,9 +82,9 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
                 href={WHATSAPP_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 h-12 px-6 bg-white text-brand-red text-sm font-semibold transition-all duration-300 hover:scale-125 hover:bg-brand-red hover:text-white"
+                className="inline-flex items-center justify-center h-12 px-6 bg-white text-brand-red text-sm font-semibold transition-all duration-300 hover:scale-105 hover:bg-brand-red hover:text-white"
+                style={{ lineHeight: '1.2' }}
               >
-                <MessageCircle className="w-4 h-4" />
                 Hablar con un asesor
               </a>
             </div>
