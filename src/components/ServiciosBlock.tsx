@@ -73,7 +73,7 @@ export default function ServiciosBlock({ onNavigate }: ServiciosBlockProps) {
             className="text-3xl sm:text-4xl text-brand-dark"
             style={{
               fontFamily:
-                "'Avenir LT Pro 65 Medium', 'Avenir', 'Outfit', system-ui, sans-serif",
+                "'Avenir Next Ultra Light', 'Avenir LT Pro 65 Medium', 'Avenir', 'Outfit', system-ui, sans-serif",
               fontWeight: 300,
             }}
           >
@@ -83,7 +83,7 @@ export default function ServiciosBlock({ onNavigate }: ServiciosBlockProps) {
             className="mt-3 text-base text-gray-500 max-w-2xl mx-auto"
             style={{
               fontFamily:
-                "'Avenir LT Pro 65 Medium', 'Avenir', 'Outfit', system-ui, sans-serif",
+                "'Avenir Next Ultra Light', 'Avenir LT Pro 65 Medium', 'Avenir', 'Outfit', system-ui, sans-serif",
               fontWeight: 300,
             }}
           >

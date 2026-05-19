@@ -40,7 +40,7 @@ export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) 
               className="text-3xl sm:text-4xl lg:text-5xl text-brand-dark leading-tight"
               style={{
                 fontFamily:
-                  "'Avenir LT Pro 65 Medium', 'Avenir', 'Outfit', system-ui, sans-serif",
+                  "'Avenir Next Ultra Light', 'Avenir LT Pro 65 Medium', 'Avenir', 'Outfit', system-ui, sans-serif",
                 fontWeight: 300,
               }}
             >
