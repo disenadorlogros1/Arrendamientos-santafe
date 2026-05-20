@@ -230,12 +230,13 @@ es una de mis favoritas en arrendamiento Santa Fe`;
             {/* Precio */}
             <p
               style={{
-                fontFamily: "'Avenir LT Pro 85 Heavy', 'Avenir LT Pro', 'Avenir', 'Outfit', system-ui, sans-serif",
-                fontWeight: 800,
-                fontSize: '18px',
-                lineHeight: '1.3',
+                fontFamily: "'Avenir LT Pro', 'Avenir', 'Outfit', system-ui, sans-serif",
+                fontWeight: 900,
+                fontSize: '30px',
+                lineHeight: '1.2',
                 color: '#232222',
                 margin: '0 0 4px 0',
+                letterSpacing: '-0.5px',
               }}
             >
               {property.price}
@@ -244,11 +245,11 @@ es una de mis favoritas en arrendamiento Santa Fe`;
             {/* Ubicación */}
             <p
               style={{
-                fontFamily: "'Avenir LT Pro 55 Roman', 'Avenir LT Pro', 'Avenir', 'Outfit', system-ui, sans-serif",
+                fontFamily: "'Avenir LT Pro', 'Avenir', 'Outfit', system-ui, sans-serif",
                 fontWeight: 400,
                 fontSize: '13px',
                 lineHeight: '1.4',
-                color: '#232222',
+                color: '#808080',
                 margin: '0 0 2px 0',
               }}
             >
@@ -258,9 +259,9 @@ es una de mis favoritas en arrendamiento Santa Fe`;
             {/* Tipo */}
             <p
               style={{
-                fontFamily: "'Avenir LT Pro 65 Medium', 'Avenir LT Pro', 'Avenir', 'Outfit', system-ui, sans-serif",
-                fontWeight: 300,
-                fontSize: '12px',
+                fontFamily: "'Avenir LT Pro', 'Avenir', 'Outfit', system-ui, sans-serif",
+                fontWeight: 900,
+                fontSize: '15px',
                 lineHeight: '1.4',
                 color: '#808080',
                 margin: '0 0 8px 0',
@@ -271,9 +272,9 @@ es una de mis favoritas en arrendamiento Santa Fe`;
           </div>
 
           {/* Comodidades con Iconos */}
-          <div className="grid grid-cols-4 gap-2 pt-3 border-t border-gray-200">
+          <div className="flex pt-3 border-t-2 border-brand-red">
             {/* Área */}
-            <div className="flex flex-col items-center gap-1">
+            <div className="flex-1 flex flex-col items-center gap-1 border-r border-brand-red pr-2">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#f32735" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M21 21H3V3h18v18zM9 3v18M3 9h18" />
               </svg>
@@ -283,7 +284,7 @@ es una de mis favoritas en arrendamiento Santa Fe`;
             </div>
 
             {/* Habitaciones */}
-            <div className="flex flex-col items-center gap-1">
+            <div className="flex-1 flex flex-col items-center gap-1 border-r border-brand-red px-2">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#f32735" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
                 <polyline points="9 22 9 12 15 12 15 22" />
@@ -294,7 +295,7 @@ es una de mis favoritas en arrendamiento Santa Fe`;
             </div>
 
             {/* Baños */}
-            <div className="flex flex-col items-center gap-1">
+            <div className="flex-1 flex flex-col items-center gap-1 border-r border-brand-red px-2">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#f32735" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M3 9h18V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v3zm0 0v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V9" />
                 <circle cx="8" cy="15" r="1" />
@@ -306,7 +307,7 @@ es una de mis favoritas en arrendamiento Santa Fe`;
             </div>
 
             {/* Parqueadero o Piscina */}
-            <div className="flex flex-col items-center gap-1">
+            <div className="flex-1 flex flex-col items-center gap-1 pl-2">
               {property.parking ? (
                 <>
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#f32735" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
