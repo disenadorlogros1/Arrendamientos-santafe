@@ -9,6 +9,7 @@ interface PropertyCardProps {
 
 export default function PropertyCard({ property }: PropertyCardProps) {
   const [isHovered, setIsHovered] = useState(false);
+  const [hoveredButton, setHoveredButton] = useState<string | null>(null);
   const [showLoginModal, setShowLoginModal] = useState(false);
 
   const handleMouseEnter = useCallback(() => {
@@ -81,12 +82,14 @@ es una de mis favoritas en arrendamiento Santa Fe`;
             <button
               type="button"
               onClick={(e) => e.stopPropagation()}
+              onMouseEnter={() => setHoveredButton('more')}
+              onMouseLeave={() => setHoveredButton(null)}
               className="flex items-center justify-center"
               aria-label="Ver más"
               title="Ver más"
               style={{
-                width: isHovered ? '44px' : '24px',
-                height: isHovered ? '44px' : '24px',
+                width: hoveredButton === 'more' ? '44px' : '24px',
+                height: hoveredButton === 'more' ? '44px' : '24px',
                 backgroundColor: '#f32735',
                 borderRadius: '50%',
                 cursor: 'pointer',
@@ -99,8 +102,8 @@ es una de mis favoritas en arrendamiento Santa Fe`;
               <img
                 src="/icons/icon-more-white.gif"
                 alt="Ver más"
-                width={isHovered ? '20' : '12'}
-                height={isHovered ? '20' : '12'}
+                width={hoveredButton === 'more' ? '20' : '12'}
+                height={hoveredButton === 'more' ? '20' : '12'}
                 style={{
                   transition: 'all 0.3s ease',
                   objectFit: 'contain',
@@ -114,12 +117,14 @@ es una de mis favoritas en arrendamiento Santa Fe`;
               target="_blank"
               rel="noopener noreferrer"
               onClick={(e) => e.stopPropagation()}
+              onMouseEnter={() => setHoveredButton('consult')}
+              onMouseLeave={() => setHoveredButton(null)}
               className="flex items-center justify-center"
               aria-label="Consultar"
               title="Consultar"
               style={{
-                width: isHovered ? '44px' : '24px',
-                height: isHovered ? '44px' : '24px',
+                width: hoveredButton === 'consult' ? '44px' : '24px',
+                height: hoveredButton === 'consult' ? '44px' : '24px',
                 backgroundColor: '#f32735',
                 borderRadius: '50%',
                 cursor: 'pointer',
@@ -132,8 +137,8 @@ es una de mis favoritas en arrendamiento Santa Fe`;
               <img
                 src="/icons/icon-consult-white.gif"
                 alt="Consultar"
-                width={isHovered ? '20' : '12'}
-                height={isHovered ? '20' : '12'}
+                width={hoveredButton === 'consult' ? '20' : '12'}
+                height={hoveredButton === 'consult' ? '20' : '12'}
                 style={{
                   transition: 'all 0.3s ease',
                   objectFit: 'contain',
@@ -145,12 +150,14 @@ es una de mis favoritas en arrendamiento Santa Fe`;
             <button
               type="button"
               onClick={(e) => e.stopPropagation()}
+              onMouseEnter={() => setHoveredButton('schedule')}
+              onMouseLeave={() => setHoveredButton(null)}
               className="flex items-center justify-center"
               aria-label="Agendar"
               title="Agendar"
               style={{
-                width: isHovered ? '44px' : '24px',
-                height: isHovered ? '44px' : '24px',
+                width: hoveredButton === 'schedule' ? '44px' : '24px',
+                height: hoveredButton === 'schedule' ? '44px' : '24px',
                 backgroundColor: '#f32735',
                 borderRadius: '50%',
                 cursor: 'pointer',
@@ -163,8 +170,8 @@ es una de mis favoritas en arrendamiento Santa Fe`;
               <img
                 src="/icons/icon-schedule-white.gif"
                 alt="Agendar"
-                width={isHovered ? '20' : '12'}
-                height={isHovered ? '20' : '12'}
+                width={hoveredButton === 'schedule' ? '20' : '12'}
+                height={hoveredButton === 'schedule' ? '20' : '12'}
                 style={{
                   transition: 'all 0.3s ease',
                   objectFit: 'contain',
@@ -179,12 +186,14 @@ es una de mis favoritas en arrendamiento Santa Fe`;
                 e.stopPropagation();
                 setShowLoginModal(true);
               }}
+              onMouseEnter={() => setHoveredButton('favorite')}
+              onMouseLeave={() => setHoveredButton(null)}
               className="flex items-center justify-center"
               aria-label="Favorito"
               title="Favorito"
               style={{
-                width: isHovered ? '44px' : '24px',
-                height: isHovered ? '44px' : '24px',
+                width: hoveredButton === 'favorite' ? '44px' : '24px',
+                height: hoveredButton === 'favorite' ? '44px' : '24px',
                 backgroundColor: '#f32735',
                 borderRadius: '50%',
                 cursor: 'pointer',
@@ -197,8 +206,8 @@ es una de mis favoritas en arrendamiento Santa Fe`;
               <img
                 src="/icons/icon-favorite-white.gif"
                 alt="Favorito"
-                width={isHovered ? '20' : '12'}
-                height={isHovered ? '20' : '12'}
+                width={hoveredButton === 'favorite' ? '20' : '12'}
+                height={hoveredButton === 'favorite' ? '20' : '12'}
                 style={{
                   transition: 'all 0.3s ease',
                   objectFit: 'contain',
