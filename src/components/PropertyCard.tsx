@@ -265,25 +265,31 @@ es una de mis favoritas en arrendamiento Santa Fe`;
           </div>
 
           {/* Comodidades con Iconos */}
-          <div className="flex pt-3 border-t-2 border-brand-red gap-0">
+          <div className="flex pt-2 pb-2 border-t-2 border-brand-red" style={{ gap: 0 }}>
             {/* Área */}
-            <div className="flex-1 flex flex-row items-center justify-center gap-1 border-r border-brand-red px-2">
+            <div
+              className="flex-1 flex flex-row items-center justify-center border-r border-brand-red"
+              style={{ gap: '6px', padding: '8px 4px', minHeight: '40px', whiteSpace: 'nowrap' }}
+            >
               <img
-                src="/icons/icon-area-red.gif"
+                src="/icons/icon-area-gray.gif"
                 alt="Área"
                 width={16}
                 height={16}
                 style={{ objectFit: 'contain', flexShrink: 0 }}
               />
-              <span style={{ fontSize: '12px', color: '#232222', fontWeight: 700, textAlign: 'center' }}>
+              <span style={{ fontSize: '12px', color: '#232222', fontWeight: 700 }}>
                 {property.size}
               </span>
             </div>
 
             {/* Habitaciones */}
-            <div className="flex-1 flex flex-row items-center justify-center gap-1 border-r border-brand-red px-2">
+            <div
+              className="flex-1 flex flex-row items-center justify-center border-r border-brand-red"
+              style={{ gap: '6px', padding: '8px 4px', minHeight: '40px', whiteSpace: 'nowrap' }}
+            >
               <img
-                src="/icons/icon-bed-red.gif"
+                src="/icons/icon-bed-gray.gif"
                 alt="Habitaciones"
                 width={16}
                 height={16}
@@ -295,9 +301,12 @@ es una de mis favoritas en arrendamiento Santa Fe`;
             </div>
 
             {/* Baños */}
-            <div className="flex-1 flex flex-row items-center justify-center gap-1 border-r border-brand-red px-2">
+            <div
+              className="flex-1 flex flex-row items-center justify-center border-r border-brand-red"
+              style={{ gap: '6px', padding: '8px 4px', minHeight: '40px', whiteSpace: 'nowrap' }}
+            >
               <img
-                src="/icons/icon-bathroom-red.gif"
+                src="/icons/icon-bathroom-gray.gif"
                 alt="Baños"
                 width={16}
                 height={16}
@@ -309,9 +318,12 @@ es una de mis favoritas en arrendamiento Santa Fe`;
             </div>
 
             {/* Referencia */}
-            <div className="flex-1 flex flex-row items-center justify-center gap-1 px-2">
+            <div
+              className="flex-1 flex flex-row items-center justify-center"
+              style={{ gap: '6px', padding: '8px 4px', minHeight: '40px', whiteSpace: 'nowrap' }}
+            >
               <img
-                src="/icons/icon-code-red.gif"
+                src="/icons/icon-code-gray.gif"
                 alt="Referencia"
                 width={16}
                 height={16}
