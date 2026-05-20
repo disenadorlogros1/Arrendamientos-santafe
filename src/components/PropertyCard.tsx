@@ -235,40 +235,48 @@ es una de mis favoritas en arrendamiento Santa Fe`;
                 fontSize: '30px',
                 lineHeight: '1.2',
                 color: '#232222',
-                margin: '0 0 4px 0',
+                margin: '0 0 8px 0',
                 letterSpacing: '-0.5px',
               }}
             >
               {property.price}
             </p>
 
-            {/* Ubicación */}
-            <p
+            {/* Ubicación y Tipo (misma línea) */}
+            <div
               style={{
-                fontFamily: "'Avenir LT Pro', 'Avenir', 'Outfit', system-ui, sans-serif",
-                fontWeight: 400,
-                fontSize: '13px',
-                lineHeight: '1.4',
-                color: '#808080',
-                margin: '0 0 2px 0',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'baseline',
+                marginBottom: '8px',
               }}
             >
-              {property.location}
-            </p>
+              <p
+                style={{
+                  fontFamily: "'Avenir LT Pro', 'Avenir', 'Outfit', system-ui, sans-serif",
+                  fontWeight: 400,
+                  fontSize: '13px',
+                  lineHeight: '1.4',
+                  color: '#808080',
+                  margin: '0',
+                }}
+              >
+                {property.location}
+              </p>
 
-            {/* Tipo */}
-            <p
-              style={{
-                fontFamily: "'Avenir LT Pro', 'Avenir', 'Outfit', system-ui, sans-serif",
-                fontWeight: 900,
-                fontSize: '15px',
-                lineHeight: '1.4',
-                color: '#808080',
-                margin: '0 0 8px 0',
-              }}
-            >
-              {property.type}
-            </p>
+              <p
+                style={{
+                  fontFamily: "'Avenir LT Pro', 'Avenir', 'Outfit', system-ui, sans-serif",
+                  fontWeight: 900,
+                  fontSize: '15px',
+                  lineHeight: '1.4',
+                  color: '#808080',
+                  margin: '0',
+                }}
+              >
+                {property.type}
+              </p>
+            </div>
           </div>
 
           {/* Comodidades con Iconos */}
