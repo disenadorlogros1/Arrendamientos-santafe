@@ -88,8 +88,8 @@ es una de mis favoritas en arrendamiento Santa Fe`;
               aria-label="Ver más"
               title="Ver más"
               style={{
-                width: hoveredButton === 'more' ? '44px' : '24px',
-                height: hoveredButton === 'more' ? '44px' : '24px',
+                width: '44px',
+                height: '44px',
                 backgroundColor: '#f32735',
                 borderRadius: '50%',
                 cursor: 'pointer',
@@ -97,13 +97,15 @@ es una de mis favoritas en arrendamiento Santa Fe`;
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
+                transform: hoveredButton === 'more' ? 'scale(1)' : 'scale(0.55)',
+                transformOrigin: 'center',
               }}
             >
               <img
                 src="/icons/icon-more-white.gif"
                 alt="Ver más"
-                width={hoveredButton === 'more' ? '20' : '12'}
-                height={hoveredButton === 'more' ? '20' : '12'}
+                width={16}
+                height={16}
                 style={{
                   transition: 'all 0.3s ease',
                   objectFit: 'contain',
@@ -242,7 +244,7 @@ es una de mis favoritas en arrendamiento Santa Fe`;
                 display: 'flex',
                 justifyContent: 'space-between',
                 alignItems: 'baseline',
-                marginBottom: '8px',
+                marginBottom: '2px',
               }}
             >
               <p
