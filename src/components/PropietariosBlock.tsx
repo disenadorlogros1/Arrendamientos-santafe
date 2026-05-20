@@ -125,7 +125,7 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
               </div>
               <div className="bg-white/5 border border-white/10 rounded-lg p-5 backdrop-blur-sm col-span-2">
                 <p className="text-sm text-white/80 leading-relaxed">
-                  Te avisamos cuando haya un arrendatario interesado. Sin cuelgues, sin demoras.
+                  Te avisamos cuando haya un arrendatario interesado. Sin demoras, sin contratiempos.
                 </p>
               </div>
             </div>
