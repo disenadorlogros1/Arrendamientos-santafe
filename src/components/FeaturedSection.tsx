@@ -42,7 +42,7 @@ export default function FeaturedSection({ onNavigate }: FeaturedSectionProps) {
             onNavigate('propiedades');
             window.scrollTo({ top: 0, behavior: 'smooth' });
           }}
-          className="shrink-0 bg-brand-red hover:bg-brand-red-hover text-white rounded-full px-6 h-11 text-sm font-semibold"
+          className="shrink-0 bg-brand-red hover:bg-brand-red-hover text-white rounded-full px-6 h-12 text-sm font-semibold"
         >
           Ver más
         </Button>
