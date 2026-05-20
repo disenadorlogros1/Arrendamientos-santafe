@@ -34,7 +34,7 @@ export default function FeaturedSection({ onNavigate }: FeaturedSectionProps) {
               lineHeight: '1.45',
             }}
           >
-            Inmuebles disponibles ahora. Consulta, agenda o pide asesoría.
+            Inmuebles disponibles ahora. Consulta, agencia o pide asesoría.
           </p>
         </div>
         <Button
