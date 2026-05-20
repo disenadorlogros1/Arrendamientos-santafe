@@ -16,9 +16,9 @@ export default function InfiniteCarousel({ properties }: InfiniteCarouselProps) 
   const directionRef = useRef<'forward' | 'backward'>('forward');
   const [isPaused, setIsPaused] = useState(false);
 
-  const cardWidth = 288; // card width + gap
+  const cardWidth = 280; // card width + gap (ajustado para layout vertical)
   const singleSetWidth = properties.length * cardWidth;
-  const speedPerCard = 13.2; // seconds per card (reduced 10% from 12)
+  const speedPerCard = 13; // seconds per card
 
   const startInfiniteScroll = useCallback((fromX: number) => {
     if (!trackRef.current) return;

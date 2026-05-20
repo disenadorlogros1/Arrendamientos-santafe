@@ -9,6 +9,8 @@ export interface Property {
   image: string;
   bedrooms: number;
   bathrooms: number;
+  parking?: number;
+  pool?: boolean;
   featured?: boolean;
 }
 
@@ -24,6 +26,8 @@ export const properties: Property[] = [
     image: "/propiedad-1.PNG",
     bedrooms: 2,
     bathrooms: 1,
+    parking: 1,
+    pool: true,
     featured: true,
   },
   {
@@ -37,6 +41,8 @@ export const properties: Property[] = [
     image: "/propiedad-2.PNG",
     bedrooms: 3,
     bathrooms: 2,
+    parking: 2,
+    pool: true,
     featured: true,
   },
   {
@@ -50,6 +56,8 @@ export const properties: Property[] = [
     image: "/propiedad-3.PNG",
     bedrooms: 1,
     bathrooms: 1,
+    parking: 1,
+    pool: false,
     featured: true,
   },
   {
@@ -63,6 +71,8 @@ export const properties: Property[] = [
     image: "/propiedad-4.PNG",
     bedrooms: 2,
     bathrooms: 1,
+    parking: 1,
+    pool: false,
     featured: true,
   },
   {
@@ -76,6 +86,8 @@ export const properties: Property[] = [
     image: "https://picsum.photos/seed/prop5/600/400",
     bedrooms: 1,
     bathrooms: 1,
+    parking: 1,
+    pool: true,
   },
   {
     id: 6,
@@ -88,6 +100,8 @@ export const properties: Property[] = [
     image: "https://picsum.photos/seed/prop6/600/400",
     bedrooms: 4,
     bathrooms: 3,
+    parking: 2,
+    pool: true,
   },
   {
     id: 7,
@@ -100,6 +114,8 @@ export const properties: Property[] = [
     image: "https://picsum.photos/seed/prop7/600/400",
     bedrooms: 2,
     bathrooms: 1,
+    parking: 1,
+    pool: false,
   },
   {
     id: 8,
@@ -112,6 +128,8 @@ export const properties: Property[] = [
     image: "https://picsum.photos/seed/prop8/600/400",
     bedrooms: 1,
     bathrooms: 1,
+    parking: 1,
+    pool: false,
   },
   {
     id: 9,
@@ -124,6 +142,8 @@ export const properties: Property[] = [
     image: "https://picsum.photos/seed/prop9/600/400",
     bedrooms: 4,
     bathrooms: 3,
+    parking: 3,
+    pool: true,
   },
   {
     id: 10,
@@ -136,6 +156,8 @@ export const properties: Property[] = [
     image: "https://picsum.photos/seed/prop10/600/400",
     bedrooms: 2,
     bathrooms: 1,
+    parking: 1,
+    pool: false,
   },
   {
     id: 11,
@@ -148,6 +170,8 @@ export const properties: Property[] = [
     image: "https://picsum.photos/seed/prop11/600/400",
     bedrooms: 3,
     bathrooms: 2,
+    parking: 2,
+    pool: true,
   },
   {
     id: 12,
@@ -160,6 +184,8 @@ export const properties: Property[] = [
     image: "https://picsum.photos/seed/prop12/600/400",
     bedrooms: 3,
     bathrooms: 2,
+    parking: 2,
+    pool: true,
   },
 ];
 
