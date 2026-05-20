@@ -239,7 +239,7 @@ es una de mis favoritas en arrendamiento Santa Fe`;
               <p
                 style={{
                   fontFamily: "'Avenir LT Pro', 'Avenir', 'Outfit', system-ui, sans-serif",
-                  fontWeight: 400,
+                  fontWeight: 700,
                   fontSize: '12px',
                   lineHeight: '1.4',
                   color: '#808080',
@@ -252,7 +252,7 @@ es una de mis favoritas en arrendamiento Santa Fe`;
               <p
                 style={{
                   fontFamily: "'Avenir LT Pro', 'Avenir', 'Outfit', system-ui, sans-serif",
-                  fontWeight: 400,
+                  fontWeight: 700,
                   fontSize: '12px',
                   lineHeight: '1.4',
                   color: '#808080',
