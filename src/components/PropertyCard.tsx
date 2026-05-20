@@ -97,7 +97,7 @@ es una de mis favoritas en arrendamiento Santa Fe`;
               }}
             >
               <img
-                src="/icons/icon-more-red.gif"
+                src="/icons/icon-more-white.gif"
                 alt="Ver más"
                 width={isHovered ? '20' : '12'}
                 height={isHovered ? '20' : '12'}
@@ -130,7 +130,7 @@ es una de mis favoritas en arrendamiento Santa Fe`;
               }}
             >
               <img
-                src="/icons/icon-consult-red.gif"
+                src="/icons/icon-consult-white.gif"
                 alt="Consultar"
                 width={isHovered ? '20' : '12'}
                 height={isHovered ? '20' : '12'}
@@ -161,7 +161,7 @@ es una de mis favoritas en arrendamiento Santa Fe`;
               }}
             >
               <img
-                src="/icons/icon-code-red.gif"
+                src="/icons/icon-schedule-white.gif"
                 alt="Agendar"
                 width={isHovered ? '20' : '12'}
                 height={isHovered ? '20' : '12'}
@@ -195,7 +195,7 @@ es una de mis favoritas en arrendamiento Santa Fe`;
               }}
             >
               <img
-                src="/icons/icon-favorite-red.gif"
+                src="/icons/icon-favorite-white.gif"
                 alt="Favorito"
                 width={isHovered ? '20' : '12'}
                 height={isHovered ? '20' : '12'}
@@ -268,7 +268,7 @@ es una de mis favoritas en arrendamiento Santa Fe`;
           <div className="flex border-t-2 border-brand-red" style={{ gap: 0 }}>
             {/* Área */}
             <div
-              className="flex-1 flex flex-col items-center justify-center border-r-2 border-brand-red"
+              className="flex-1 flex flex-row items-center justify-center border-r-2 border-brand-red"
               style={{ gap: '4px', padding: '6px 4px', whiteSpace: 'nowrap' }}
             >
               <img
@@ -285,7 +285,7 @@ es una de mis favoritas en arrendamiento Santa Fe`;
 
             {/* Habitaciones */}
             <div
-              className="flex-1 flex flex-col items-center justify-center border-r-2 border-brand-red"
+              className="flex-1 flex flex-row items-center justify-center border-r-2 border-brand-red"
               style={{ gap: '4px', padding: '6px 4px', whiteSpace: 'nowrap' }}
             >
               <img
@@ -302,7 +302,7 @@ es una de mis favoritas en arrendamiento Santa Fe`;
 
             {/* Baños */}
             <div
-              className="flex-1 flex flex-col items-center justify-center border-r-2 border-brand-red"
+              className="flex-1 flex flex-row items-center justify-center border-r-2 border-brand-red"
               style={{ gap: '4px', padding: '6px 4px', whiteSpace: 'nowrap' }}
             >
               <img
