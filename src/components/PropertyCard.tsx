@@ -220,7 +220,7 @@ es una de mis favoritas en arrendamiento Santa Fe`;
                 fontSize: '30px',
                 lineHeight: '1.2',
                 color: '#232222',
-                margin: '0 0 8px 0',
+                margin: '0 0 4px 0',
                 letterSpacing: '-0.5px',
               }}
             >
@@ -240,7 +240,7 @@ es una de mis favoritas en arrendamiento Santa Fe`;
                 style={{
                   fontFamily: "'Avenir LT Pro', 'Avenir', 'Outfit', system-ui, sans-serif",
                   fontWeight: 400,
-                  fontSize: '13px',
+                  fontSize: '12px',
                   lineHeight: '1.4',
                   color: '#808080',
                   margin: '0',
@@ -252,8 +252,8 @@ es una de mis favoritas en arrendamiento Santa Fe`;
               <p
                 style={{
                   fontFamily: "'Avenir LT Pro', 'Avenir', 'Outfit', system-ui, sans-serif",
-                  fontWeight: 900,
-                  fontSize: '15px',
+                  fontWeight: 400,
+                  fontSize: '12px',
                   lineHeight: '1.4',
                   color: '#808080',
                   margin: '0',
@@ -323,7 +323,7 @@ es una de mis favoritas en arrendamiento Santa Fe`;
               style={{ gap: '6px', padding: '8px 4px', minHeight: '40px', whiteSpace: 'nowrap' }}
             >
               <img
-                src="/icons/icon-code-gray.gif"
+                src="/icons/icon-code-Gray.gif"
                 alt="Referencia"
                 width={16}
                 height={16}
