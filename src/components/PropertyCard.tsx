@@ -278,16 +278,16 @@ es una de mis favoritas en arrendamiento Santa Fe`;
             {/* Área */}
             <div
               className="flex-1 flex flex-row items-center justify-center border-r-2 border-brand-red"
-              style={{ gap: '4px', padding: '6px 4px', whiteSpace: 'nowrap' }}
+              style={{ gap: '3px', padding: '3px 2px', whiteSpace: 'nowrap' }}
             >
               <img
                 src="/icons/icon-area-gray.gif"
                 alt="Área"
-                width={18}
-                height={18}
+                width={14}
+                height={14}
                 style={{ objectFit: 'contain', flexShrink: 0 }}
               />
-              <span style={{ fontSize: '14px', color: '#232222', fontWeight: 700 }}>
+              <span style={{ fontSize: '11px', color: '#232222', fontWeight: 700 }}>
                 {property.size}
               </span>
             </div>
@@ -295,16 +295,16 @@ es una de mis favoritas en arrendamiento Santa Fe`;
             {/* Habitaciones */}
             <div
               className="flex-1 flex flex-row items-center justify-center border-r-2 border-brand-red"
-              style={{ gap: '4px', padding: '6px 4px', whiteSpace: 'nowrap' }}
+              style={{ gap: '3px', padding: '3px 2px', whiteSpace: 'nowrap' }}
             >
               <img
                 src="/icons/icon-bed-gray.gif"
                 alt="Habitaciones"
-                width={18}
-                height={18}
+                width={14}
+                height={14}
                 style={{ objectFit: 'contain', flexShrink: 0 }}
               />
-              <span style={{ fontSize: '14px', color: '#232222', fontWeight: 700 }}>
+              <span style={{ fontSize: '11px', color: '#232222', fontWeight: 700 }}>
                 {property.bedrooms}
               </span>
             </div>
@@ -312,33 +312,33 @@ es una de mis favoritas en arrendamiento Santa Fe`;
             {/* Baños */}
             <div
               className="flex-1 flex flex-row items-center justify-center border-r-2 border-brand-red"
-              style={{ gap: '4px', padding: '6px 4px', whiteSpace: 'nowrap' }}
+              style={{ gap: '3px', padding: '3px 2px', whiteSpace: 'nowrap' }}
             >
               <img
                 src="/icons/icon-bathroom-gray.gif"
                 alt="Baños"
-                width={18}
-                height={18}
+                width={14}
+                height={14}
                 style={{ objectFit: 'contain', flexShrink: 0 }}
               />
-              <span style={{ fontSize: '14px', color: '#232222', fontWeight: 700 }}>
+              <span style={{ fontSize: '11px', color: '#232222', fontWeight: 700 }}>
                 {property.bathrooms}
               </span>
             </div>
 
             {/* Referencia */}
             <div
-              className="flex-1 flex flex-col items-center justify-center"
-              style={{ gap: '4px', padding: '6px 4px', whiteSpace: 'nowrap' }}
+              className="flex-1 flex flex-row items-center justify-center"
+              style={{ gap: '3px', padding: '3px 2px', whiteSpace: 'nowrap' }}
             >
               <img
                 src="/icons/icon-code-Gray.gif"
                 alt="Referencia"
-                width={18}
-                height={18}
+                width={14}
+                height={14}
                 style={{ objectFit: 'contain', flexShrink: 0 }}
               />
-              <span style={{ fontSize: '14px', color: '#232222', fontWeight: 700 }}>
+              <span style={{ fontSize: '11px', color: '#232222', fontWeight: 700 }}>
                 {property.reference.replace('Ref. ', '')}
               </span>
             </div>
