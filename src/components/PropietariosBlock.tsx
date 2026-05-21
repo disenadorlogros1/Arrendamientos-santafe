@@ -58,7 +58,7 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
             >
               ¿Tienes un inmueble para{' '}
               <span
-                className="text-white inline"
+                className="text-white inline-block"
                 style={{
                   fontWeight: 700,
                   background: 'linear-gradient(to bottom, transparent 60%, #f32735 60%, #f32735 84%, transparent 84%)',
