@@ -98,7 +98,7 @@ es una de mis favoritas en arrendamiento Santa Fe`;
                 alignItems: 'center',
                 justifyContent: 'center',
                 transform: hoveredButton === 'more' ? 'scale(1)' : 'scale(0.55)',
-                transformOrigin: 'center',
+                transformOrigin: 'top right',
               }}
             >
               <img
