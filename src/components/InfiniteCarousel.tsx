@@ -33,6 +33,15 @@ export default function InfiniteCarousel({ properties }: InfiniteCarouselProps) 
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  // Autoplay - las cards giran automáticamente cada 4 segundos
+  useEffect(() => {
+    const autoplayInterval = setInterval(() => {
+      navigate(true);
+    }, 4000);
+
+    return () => clearInterval(autoplayInterval);
+  }, [navigate]);
+
   // Valores responsivos
   const VISIBLE = windowWidth < 640 ? 1 : windowWidth < 1024 ? 2 : 4; // mobile: 1, tablet: 2, desktop: 4
   const CARD_W = windowWidth < 640 ? 280 : windowWidth < 1024 ? 240 : 312; // mobile: 280, tablet: 240, desktop: 312
