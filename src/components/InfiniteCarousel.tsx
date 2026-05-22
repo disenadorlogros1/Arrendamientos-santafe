@@ -19,12 +19,14 @@ const buildCards = (properties: Property[]) =>
 export default function InfiniteCarousel({ properties }: InfiniteCarouselProps) {
   const [cards] = useState(() => buildCards(properties));
   const [startIndex, setStartIndex] = useState(0);
-  const [windowWidth, setWindowWidth] = useState(1280);
+  const [windowWidth, setWindowWidth] = useState(375); // Mobile-first: 375px por defecto
+  const [isMounted, setIsMounted] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const isAnimating = useRef(false);
 
-  // Actualizar ancho de ventana
+  // Actualizar ancho de ventana solo en el cliente
   useEffect(() => {
+    setIsMounted(true);
     const handleResize = () => setWindowWidth(window.innerWidth);
     handleResize();
     window.addEventListener('resize', handleResize);
