@@ -88,6 +88,7 @@ export const properties: Property[] = [
     bathrooms: 1,
     parking: 1,
     pool: true,
+    featured: true,
   },
   {
     id: 6,
@@ -102,6 +103,7 @@ export const properties: Property[] = [
     bathrooms: 3,
     parking: 2,
     pool: true,
+    featured: true,
   },
   {
     id: 7,
@@ -116,6 +118,7 @@ export const properties: Property[] = [
     bathrooms: 1,
     parking: 1,
     pool: false,
+    featured: true,
   },
   {
     id: 8,
@@ -130,6 +133,7 @@ export const properties: Property[] = [
     bathrooms: 1,
     parking: 1,
     pool: false,
+    featured: true,
   },
   {
     id: 9,
@@ -144,6 +148,7 @@ export const properties: Property[] = [
     bathrooms: 3,
     parking: 3,
     pool: true,
+    featured: true,
   },
   {
     id: 10,
@@ -158,6 +163,7 @@ export const properties: Property[] = [
     bathrooms: 1,
     parking: 1,
     pool: false,
+    featured: true,
   },
   {
     id: 11,
@@ -172,6 +178,7 @@ export const properties: Property[] = [
     bathrooms: 2,
     parking: 2,
     pool: true,
+    featured: true,
   },
   {
     id: 12,
@@ -186,6 +193,7 @@ export const properties: Property[] = [
     bathrooms: 2,
     parking: 2,
     pool: true,
+    featured: true,
   },
 ];
 
