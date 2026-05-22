@@ -46,26 +46,27 @@ export default function PropiedadesPage() {
       </div>
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
-        {/* Business Type Filter */}
-        <div className="mb-6">
-          <label className="block text-xs font-medium text-brand-gray uppercase tracking-wider mb-3">
-            ¿Qué buscas?
-          </label>
-          <div className="flex flex-wrap gap-2">
-            {['Todos', 'Arrendar', 'Comprar'].map((type) => (
-              <button
-                key={type}
-                onClick={() => setSelectedBusinessType(type as 'Todos' | 'Arrendar' | 'Comprar')}
-                className={`px-6 py-2 rounded-full text-sm font-medium transition-all ${
-                  selectedBusinessType === type
-                    ? 'bg-brand-red text-white'
-                    : 'bg-gray-100 text-brand-gray border border-gray-300 hover:border-brand-red hover:bg-white'
-                }`}
-              >
-                {type}
-              </button>
-            ))}
-          </div>
+        {/* Business Type Filter — Igual al del Hero */}
+        <div className="flex h-[44px] bg-white border border-gray-200 rounded-lg overflow-hidden mb-6 shadow-sm">
+          {(['Todos', 'Arrendar', 'Comprar'] as const).map((type, i) => (
+            <button
+              key={type}
+              onClick={() => setSelectedBusinessType(type)}
+              className={`flex-1 flex items-center justify-center text-sm font-medium transition-all ${
+                i < 2 ? 'border-r border-gray-200' : ''
+              } ${
+                selectedBusinessType === type
+                  ? 'bg-brand-red text-white'
+                  : 'bg-gray-50 text-brand-gray hover:bg-gray-100'
+              }`}
+              style={{
+                fontFamily: "'Avenir LT Pro', 'Outfit', system-ui, sans-serif",
+                fontSize: '14px',
+              }}
+            >
+              {type}
+            </button>
+          ))}
         </div>
 
         {/* Search + Filter Toggle */}
@@ -164,7 +165,7 @@ export default function PropiedadesPage() {
         </p>
 
         {/* Property Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 sm:gap-5">
           {filtered.map((property) => (
             <motion.div
               key={property.id}
