@@ -42,6 +42,13 @@ export const useSplitTextAnimation = (selector: string, initialDelay: number = 0
         // Establecer estado inicial en los .split-line divs
         gsap.set(split.lines, { y: 80, opacity: 0 });
 
+        // Animar el padre (h1/h2) a opacity 1 y las líneas con sus propias animaciones
+        gsap.to(target as HTMLElement, {
+          opacity: 1,
+          duration: 2.8,
+          ease: 'none',
+        });
+
         // Animar líneas desde abajo hacia arriba (lenta y dramática)
         gsap.to(split.lines, {
           duration: 2.8,
