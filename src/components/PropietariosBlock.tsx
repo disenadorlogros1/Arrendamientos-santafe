@@ -14,7 +14,7 @@ const WHATSAPP_URL =
 
 export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps) {
   const [isVisible, setIsVisible] = useState(false);
-  const titleRef = useSplitTextAnimation('.propietarios-title-split');
+  const titleRef = useSplitTextAnimation('.propietarios-title-split', 0, true);
 
   // Mostrar animación del subrayado cuando el elemento es visible
   useEffect(() => {

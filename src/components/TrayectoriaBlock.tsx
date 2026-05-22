@@ -19,7 +19,7 @@ const HITOS = [
 ];
 
 export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) {
-  const titleRef = useSplitTextAnimation('.trayectoria-title-split');
+  const titleRef = useSplitTextAnimation('.trayectoria-title-split', 0, true);
 
   return (
     <section className="relative py-16 sm:py-24 bg-gradient-to-br from-gray-50 to-white overflow-hidden">
