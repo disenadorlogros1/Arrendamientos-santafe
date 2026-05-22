@@ -5,7 +5,7 @@ import { Sheet, SheetContent, SheetTrigger, SheetTitle } from '@/components/ui/s
 
 export type PageType = 'home' | 'propiedades' | 'consignacion' | 'hipotecas' | 'servicios' | 'nosotros' | 'blog' | 'inversionistas' | 'politicas' | 'terminos';
 
-interface HeaderProps { currentPage: PageType; onNavigate: (page: PageType) => void; }
+interface HeaderProps { currentPage: PageType; onNavigate: (page: PageType) => void; isHeroPage?: boolean; }
 interface SubItem { label: string; page?: PageType; href?: string; }
 interface NavItem { label: string; page?: PageType; children?: SubItem[]; }
 
@@ -103,7 +103,7 @@ function PSEButton() {
   );
 }
 
-export default function Header({ currentPage, onNavigate }: HeaderProps) {
+export default function Header({ currentPage, onNavigate, isHeroPage = true }: HeaderProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [expandedMobile, setExpandedMobile] = useState<string | null>(null);
   const [scrolled, setScrolled] = useState(false);
@@ -121,8 +121,13 @@ export default function Header({ currentPage, onNavigate }: HeaderProps) {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  // En páginas no-hero, siempre mostrar background opaco
+  const headerBackground = !isHeroPage
+    ? 'bg-white shadow-md'
+    : scrolled ? 'header-scrolled' : '';
+
   return (
-    <header className={`fixed top-0 left-0 right-0 pt-4 pb-3 px-4 sm:px-6 lg:px-8 transition-all duration-300 ${scrolled ? 'header-scrolled' : ''}`}
+    <header className={`fixed top-0 left-0 right-0 pt-4 pb-3 px-4 sm:px-6 lg:px-8 transition-all duration-300 ${headerBackground}`}
       style={{ zIndex: 50 }}>
       <div className="flex items-center justify-center gap-4 h-[58px]">
         {/* Logo — extremo izquierdo FIJO */}
@@ -131,8 +136,15 @@ export default function Header({ currentPage, onNavigate }: HeaderProps) {
         </button>
 
         {/* Nav capsula — centrada */}
-        <nav className="hidden lg:flex items-center justify-between gap-1 bg-white/40 backdrop-blur-sm rounded-full px-2 h-[42px] border border-white/30 shadow-lg"
-          style={{ overflow: 'visible', width: '100%', maxWidth: '64rem' }}>
+        <nav className={`hidden lg:flex items-center justify-between gap-1 rounded-full px-2 h-[42px] border shadow-lg`}
+          style={{
+            overflow: 'visible',
+            width: '100%',
+            maxWidth: '64rem',
+            backgroundColor: !isHeroPage ? 'rgba(255, 255, 255, 0.95)' : 'rgba(255, 255, 255, 0.4)',
+            borderColor: !isHeroPage ? 'rgba(200, 200, 200, 0.5)' : 'rgba(255, 255, 255, 0.3)',
+            backdropFilter: 'blur(10px)',
+          }}>
           {navItems.map((item) =>
             item.children ? (
               /* Item con dropdown — CSS puro, sin JS */

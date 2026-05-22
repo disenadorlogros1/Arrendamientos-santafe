@@ -117,7 +117,7 @@ export default function InfiniteCarousel({ properties }: InfiniteCarouselProps) 
           });
         }
       }
-    }, 4000);
+    }, windowWidth < 640 ? 8000 : 4000);
 
     return () => clearInterval(autoplayInterval);
   }, [isMounted, cards.length, windowWidth]);

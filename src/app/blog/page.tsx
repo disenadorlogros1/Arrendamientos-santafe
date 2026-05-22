@@ -25,7 +25,7 @@ export default function Page() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <Header currentPage={currentPage} onNavigate={handleNavigate} />
+      <Header currentPage={currentPage} onNavigate={handleNavigate} isHeroPage={false} />
       <main className="flex-1 relative pt-[80px]">
         <BlogPage />
       </main>

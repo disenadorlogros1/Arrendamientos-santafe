@@ -31,7 +31,7 @@ export default function PropertyDetailPage() {
   if (!property) {
     return (
       <div className="min-h-screen flex flex-col">
-        <Header currentPage={currentPage} onNavigate={handleNavigate} />
+        <Header currentPage={currentPage} onNavigate={handleNavigate} isHeroPage={false} />
         <main className="flex-1 flex items-center justify-center">
           <div className="text-center">
             <h1 className="text-2xl font-bold mb-4">Propiedad no encontrada</h1>
@@ -47,7 +47,7 @@ export default function PropertyDetailPage() {
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
-      <Header currentPage={currentPage} onNavigate={handleNavigate} />
+      <Header currentPage={currentPage} onNavigate={handleNavigate} isHeroPage={false} />
       <main className="flex-1 pt-[80px] relative">
       <div>
       {/* Breadcrumb */}
