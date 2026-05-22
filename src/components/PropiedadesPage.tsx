@@ -12,12 +12,14 @@ const types = ['Todos', 'Apartamento', 'Casa'];
 const priceRanges = ['Todos', 'Hasta $800,000', '$800,000 - $1.500,000', '$1.500,000 - $2.500,000', 'Más de $2.500,000'];
 
 export default function PropiedadesPage() {
+  const [selectedBusinessType, setSelectedBusinessType] = useState<'Todos' | 'Arrendar' | 'Comprar'>('Todos');
   const [selectedLocation, setSelectedLocation] = useState('Todas');
   const [selectedType, setSelectedType] = useState('Todos');
   const [selectedPrice, setSelectedPrice] = useState('Todos');
   const [showFilters, setShowFilters] = useState(false);
 
   const filtered = properties.filter((p) => {
+    if (selectedBusinessType !== 'Todos' && p.businessType !== selectedBusinessType) return false;
     if (selectedLocation !== 'Todas' && p.location !== selectedLocation) return false;
     if (selectedType !== 'Todos' && p.type !== selectedType) return false;
     return true;
@@ -44,6 +46,28 @@ export default function PropiedadesPage() {
       </div>
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
+        {/* Business Type Filter */}
+        <div className="mb-6">
+          <label className="block text-xs font-medium text-brand-gray uppercase tracking-wider mb-3">
+            ¿Qué buscas?
+          </label>
+          <div className="flex flex-wrap gap-2">
+            {['Todos', 'Arrendar', 'Comprar'].map((type) => (
+              <button
+                key={type}
+                onClick={() => setSelectedBusinessType(type as 'Todos' | 'Arrendar' | 'Comprar')}
+                className={`px-6 py-2 rounded-full text-sm font-medium transition-all ${
+                  selectedBusinessType === type
+                    ? 'bg-brand-red text-white'
+                    : 'bg-gray-100 text-brand-gray border border-gray-300 hover:border-brand-red hover:bg-white'
+                }`}
+              >
+                {type}
+              </button>
+            ))}
+          </div>
+        </div>
+
         {/* Search + Filter Toggle */}
         <div className="flex flex-col sm:flex-row gap-3 mb-6">
           <div className="relative flex-1">
@@ -160,6 +184,7 @@ export default function PropiedadesPage() {
             </p>
             <Button
               onClick={() => {
+                setSelectedBusinessType('Todos');
                 setSelectedLocation('Todas');
                 setSelectedType('Todos');
                 setSelectedPrice('Todos');
