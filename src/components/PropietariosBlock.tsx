@@ -27,8 +27,9 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
 
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid md:grid-cols-12 gap-8 items-center">
-          <div className="md:col-span-7" ref={titleRef}>
+          <div className="md:col-span-7">
             <h2
+              ref={titleRef}
               className="propietarios-title-split text-3xl sm:text-4xl lg:text-5xl leading-tight text-white"
               style={{
                 fontFamily:

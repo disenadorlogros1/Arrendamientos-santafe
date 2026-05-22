@@ -16,9 +16,10 @@ export default function FeaturedSection({ onNavigate }: FeaturedSectionProps) {
 
   return (
     <section className="py-6 md:py-10">
-      <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3 mb-6" ref={titleRef}>
+      <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3 mb-6">
         <div>
           <h2
+            ref={titleRef}
             className="featured-title-split text-3xl sm:text-4xl lg:text-5xl text-brand-red"
             style={{
               fontFamily: "'Avenir Next Ultra Light', 'Avenir LT Pro 65 Medium', 'Avenir', 'Outfit', system-ui, sans-serif",

@@ -14,7 +14,8 @@ export const useSplitTextAnimation = (
     if (!ref.current) return;
 
     const setup = async () => {
-      const target = ref.current?.querySelector(selector) as HTMLElement | null;
+      // Buscar el elemento: primero dentro del ref, si no, usar el ref directamente
+      const target = (ref.current?.querySelector(selector) ?? ref.current) as HTMLElement | null;
       if (!target) return null;
 
       const gsapModule = await import('gsap');
