@@ -95,20 +95,40 @@ export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) 
 
           {/* Línea de tiempo */}
           <div className="lg:col-span-6">
-            <div className="relative bg-white border border-gray-200 rounded-lg p-6 sm:p-8 shadow-sm">
-              <h3 className="text-sm font-semibold tracking-widest text-gray-500 uppercase mb-6">
+            <div className="relative">
+              <h3 className="text-sm font-semibold tracking-widest text-gray-500 uppercase mb-8">
                 Línea de tiempo
               </h3>
-              <ol className="relative border-l-2 border-brand-red/20 ml-2 space-y-6">
-                {HITOS.map((hito) => (
-                  <li key={hito.year} className="ml-6 relative">
-                    <p className="text-2xl font-bold text-brand-red leading-none">
-                      {hito.year}
-                    </p>
-                    <p className="mt-1 text-sm text-gray-600">{hito.label}</p>
-                  </li>
-                ))}
-              </ol>
+
+              {/* Contenedor de la línea de tiempo */}
+              <div className="relative">
+                {/* Línea roja central */}
+                <div className="absolute left-1/2 transform -translate-x-1/2 w-1 bg-brand-red h-full top-0" />
+
+                {/* Hitos */}
+                <div className="space-y-8 md:space-y-12">
+                  {HITOS.map((hito, index) => (
+                    <div key={hito.year} className={`flex ${index % 2 === 0 ? 'flex-row' : 'flex-row-reverse'} gap-6 md:gap-8 items-start`}>
+                      {/* Contenido */}
+                      <div className={`w-1/2 ${index % 2 === 0 ? 'text-right pr-4' : 'text-left pl-4'}`}>
+                        <p className="text-sm text-gray-600 leading-relaxed">
+                          {hito.label}
+                        </p>
+                      </div>
+
+                      {/* Año */}
+                      <div className="flex items-center justify-center">
+                        <p className="text-4xl md:text-5xl font-black text-brand-red leading-none">
+                          {hito.year}
+                        </p>
+                      </div>
+
+                      {/* Espacio derecho */}
+                      <div className="w-1/2" />
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
         </div>
