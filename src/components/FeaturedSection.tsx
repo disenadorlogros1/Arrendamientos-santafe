@@ -23,7 +23,7 @@ export default function FeaturedSection({ onNavigate }: FeaturedSectionProps) {
             style={{
               fontFamily: "'Avenir Next Ultra Light', 'Avenir LT Pro 65 Medium', 'Avenir', 'Outfit', system-ui, sans-serif",
               fontWeight: 300,
-              lineHeight: '0.65',
+              lineHeight: '0.35',
             }}
           >
             Propiedades destacadas

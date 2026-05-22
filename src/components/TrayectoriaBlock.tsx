@@ -46,7 +46,7 @@ export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) 
                 fontFamily:
                   "'Avenir Next Ultra Light', 'Avenir LT Pro 65 Medium', 'Avenir', 'Outfit', system-ui, sans-serif",
                 fontWeight: 300,
-                lineHeight: '0.65',
+                lineHeight: '0.35',
               }}
             >
               <span className="text-brand-red font-medium">60 años</span> de

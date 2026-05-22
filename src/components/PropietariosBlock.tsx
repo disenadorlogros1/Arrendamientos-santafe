@@ -55,7 +55,7 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
                 fontFamily:
                   "'Avenir Next Ultra Light', 'Avenir LT Pro 65 Medium', 'Avenir', 'Outfit', system-ui, sans-serif",
                 fontWeight: 300,
-                lineHeight: '0.65',
+                lineHeight: '0.35',
               }}
             >
               ¿Tienes un inmueble para{' '}
