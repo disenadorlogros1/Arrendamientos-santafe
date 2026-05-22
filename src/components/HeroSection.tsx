@@ -83,11 +83,6 @@ export default function HeroSection({ onNavigate }: HeroSectionProps) {
             className="text-brand-red inline-block"
             style={{
               fontWeight: 700,
-              background: 'linear-gradient(to bottom, transparent 60%, #f32735 60%, #f32735 84%, transparent 84%)',
-              WebkitBoxDecorationBreak: 'clone',
-              boxDecorationBreak: 'clone',
-              padding: '0 4px',
-              margin: '0 -4px',
             }}
           >
             decisiones que importan.
@@ -104,7 +99,7 @@ export default function HeroSection({ onNavigate }: HeroSectionProps) {
             textShadow: '0 1px 10px rgba(0,0,0,0.4)',
           }}
         >
-          Inmuebles disponibles ahora. Consulta, agenda o pide asesoría.
+          Respaldo y experiencia para encontrar o gestionar tu propiedad ideal en Antioquia.
         </p>
 
         {/* CTAs jerárquicos — botones cápsula con hover blanco + resplandor rojo */}

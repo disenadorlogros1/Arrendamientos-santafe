@@ -63,13 +63,6 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
                 className="text-brand-red inline-block"
                 style={{
                   fontWeight: 700,
-                  background: 'linear-gradient(to bottom, transparent 60%, white 60%, white 84%, transparent 84%)',
-                  WebkitBoxDecorationBreak: 'clone',
-                  boxDecorationBreak: 'clone',
-                  padding: '0 4px',
-                  margin: '0 -4px',
-                  clipPath: 'inset(0 100% 0 0)',
-                  animation: isVisible ? 'slideHighlightFromLeft 4.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.42s forwards' : 'none',
                 }}
               >
                 arrendar o vender?
