@@ -12,6 +12,13 @@ export interface Property {
   parking?: number;
   pool?: boolean;
   featured?: boolean;
+  description?: string;
+  address?: string;
+  stratum?: number;
+  characteristics?: string[];
+  garage?: number;
+  petFriendly?: boolean;
+  furnished?: boolean;
 }
 
 export const properties: Property[] = [
@@ -29,6 +36,12 @@ export const properties: Property[] = [
     parking: 1,
     pool: false,
     featured: true,
+    description: "Local comercial bien ubicado en Belén con excelente visibilidad y acceso. Ideal para negocios variados, cerca a zonas de alto tráfico comercial.",
+    address: "Cra. 45 #52-30, Belén",
+    stratum: 3,
+    characteristics: ["Acceso principal", "Zona comercial", "Parqueo"],
+    garage: 1,
+    furnished: false,
   },
   {
     id: 2,
@@ -44,6 +57,12 @@ export const properties: Property[] = [
     parking: 2,
     pool: false,
     featured: true,
+    description: "Casa familiar en Florida Nueva con buena distribución de espacios. Cuenta con sala, comedor, cocina integrada y zona de servicio. Perfecta para familias.",
+    address: "Cra. 52 #47-15, Florida Nueva",
+    stratum: 4,
+    characteristics: ["Cocina integral", "Zona de servicios", "Patio", "Unidad cerrada"],
+    garage: 2,
+    furnished: false,
   },
   {
     id: 3,
@@ -59,6 +78,12 @@ export const properties: Property[] = [
     parking: 2,
     pool: false,
     featured: true,
+    description: "Moderno apartamento en Florida Nueva con amplios espacios y excelente iluminación natural. Cuenta con balcón, cocina equipada y acabados de calidad.",
+    address: "Diag. 48 #53-20, Florida Nueva",
+    stratum: 4,
+    characteristics: ["Balcón", "Cocina equipada", "Aire acondicionado", "Ascensor"],
+    garage: 2,
+    furnished: false,
   },
   {
     id: 4,
@@ -74,6 +99,12 @@ export const properties: Property[] = [
     parking: 2,
     pool: false,
     featured: true,
+    description: "Casa espaciosa en Velodromo, ideal para familias. Posee 3 habitaciones bien distribuidas, zona social amplia y patio trasero.",
+    address: "Cra. 45 #38-50, Velodromo",
+    stratum: 3,
+    characteristics: ["Patio trasero", "Cocina integrada", "Zona de lavandería", "Terraza"],
+    garage: 2,
+    furnished: false,
   },
   {
     id: 5,
@@ -89,6 +120,12 @@ export const properties: Property[] = [
     parking: 1,
     pool: false,
     featured: true,
+    description: "Pequeño local comercial en Santa Fe de Antioquia, bien ubicado en zona de tráfico. Perfecto para oficina, consultorio o comercio.",
+    address: "Cra. 13 #11-80, Santa Fe de Antioquia",
+    stratum: 2,
+    characteristics: ["Zona comercial", "Fácil acceso", "Parqueo disponible"],
+    garage: 1,
+    furnished: false,
   },
   {
     id: 6,
@@ -104,6 +141,12 @@ export const properties: Property[] = [
     parking: 2,
     pool: false,
     featured: true,
+    description: "Casa-local con potencial comercial en Belén. Ideal para quien busca vivienda y negocio en el mismo lugar. Amplia y bien distribuida.",
+    address: "Cra. 46 #54-10, Belén",
+    stratum: 3,
+    characteristics: ["Zona mixta", "Frente comercial", "Vivienda", "Dos entradas"],
+    garage: 2,
+    furnished: false,
   },
   {
     id: 7,
@@ -119,6 +162,12 @@ export const properties: Property[] = [
     parking: 1,
     pool: false,
     featured: true,
+    description: "Espacioso local comercial en Floresta con excelente visibilidad. Cuenta con 2 baños, parqueo y ubicación estratégica para cualquier negocio.",
+    address: "Cra. 49 #59-30, Floresta",
+    stratum: 4,
+    characteristics: ["Amplio", "Dos baños", "Zona comercial premium", "Estacionamiento"],
+    garage: 1,
+    furnished: false,
   },
   {
     id: 8,
@@ -134,6 +183,12 @@ export const properties: Property[] = [
     parking: 1,
     pool: false,
     featured: true,
+    description: "Cómodo apartamento en Laureles en zona residencial consolidada. Cuenta con amplias ventanas, buenos acabados y cerca a centros comerciales.",
+    address: "Cra. 51 #65-45, Laureles",
+    stratum: 4,
+    characteristics: ["Zona residencial", "Cerca a comercio", "Ascensor", "Seguridad"],
+    garage: 1,
+    furnished: false,
   },
   {
     id: 9,

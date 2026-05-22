@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useCallback } from 'react';
+import { useRouter } from 'next/navigation';
 import type { Property } from '@/data/properties';
 
 interface PropertyCardProps {
@@ -8,6 +9,7 @@ interface PropertyCardProps {
 }
 
 export default function PropertyCard({ property }: PropertyCardProps) {
+  const router = useRouter();
   const [isHovered, setIsHovered] = useState(false);
   const [hoveredButton, setHoveredButton] = useState<string | null>(null);
   const [showLoginModal, setShowLoginModal] = useState(false);
@@ -19,6 +21,10 @@ export default function PropertyCard({ property }: PropertyCardProps) {
   const handleMouseLeave = useCallback(() => {
     setIsHovered(false);
   }, []);
+
+  const handleViewMore = useCallback(() => {
+    router.push(`/propiedad/${property.id}`);
+  }, [router, property.id]);
 
   // Construir mensaje de comodidades para Favorito/WhatsApp
   const buildAmenitiesMessage = () => {
@@ -81,7 +87,10 @@ es una de mis favoritas en arrendamiento Santa Fe`;
             {/* Ver Más */}
             <button
               type="button"
-              onClick={(e) => e.stopPropagation()}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleViewMore();
+              }}
               onMouseEnter={() => setHoveredButton('more')}
               onMouseLeave={() => setHoveredButton(null)}
               className="flex items-center justify-center"
