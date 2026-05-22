@@ -93,23 +93,12 @@ export const useSplitTextAnimation = (selector: string, initialDelay: number = 0
           entries.forEach((entry) => {
             console.log('[SplitText] Elemento visible:', entry.isIntersecting);
 
-            // Si está saliendo (hacia arriba), ejecutar inmediatamente sin delay
-            if (!entry.isIntersecting) {
-              animateText(false);
-            } else {
-              // Si está entrando, respetar el delay
-              if (document.fonts && document.fonts.ready) {
-                document.fonts.ready.then(() => {
-                  setTimeout(() => animateText(true), 100 + initialDelay);
-                });
-              } else {
-                setTimeout(() => animateText(true), 300 + initialDelay);
-              }
-            }
+            // Ejecutar inmediatamente sin delay, tanto entrada como salida
+            animateText(entry.isIntersecting);
           });
         },
         {
-          threshold: 0.1, // Detecta más rápido cuando sale de pantalla
+          threshold: 0.1,
         }
       );
 

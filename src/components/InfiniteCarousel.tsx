@@ -15,10 +15,14 @@ export default function InfiniteCarousel({ properties }: InfiniteCarouselProps) 
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const cardWidth = 280; // card width + gap
+  const repeticiones = 3; // Repetir las cards 3 veces (total: 12 cards si tienes 4)
+  const cardsExtendidas = Array.from({ length: repeticiones }, (_, i) =>
+    properties.map((prop, idx) => ({ ...prop, id: `${prop.id}-${i}` }))
+  ).flat();
 
   // Navegar a la siguiente card
   const handleNext = useCallback(() => {
-    const nextIndex = (currentIndex + 1) % properties.length;
+    const nextIndex = (currentIndex + 1) % cardsExtendidas.length;
     setCurrentIndex(nextIndex);
 
     if (trackRef.current) {
@@ -28,11 +32,11 @@ export default function InfiniteCarousel({ properties }: InfiniteCarouselProps) 
         ease: 'power2.out',
       });
     }
-  }, [currentIndex, properties.length, cardWidth]);
+  }, [currentIndex, cardsExtendidas.length, cardWidth]);
 
   // Navegar a la anterior card
   const handlePrev = useCallback(() => {
-    const prevIndex = currentIndex === 0 ? properties.length - 1 : currentIndex - 1;
+    const prevIndex = currentIndex === 0 ? cardsExtendidas.length - 1 : currentIndex - 1;
     setCurrentIndex(prevIndex);
 
     if (trackRef.current) {
@@ -42,7 +46,7 @@ export default function InfiniteCarousel({ properties }: InfiniteCarouselProps) 
         ease: 'power2.out',
       });
     }
-  }, [currentIndex, properties.length, cardWidth]);
+  }, [currentIndex, cardsExtendidas.length, cardWidth]);
 
   // Inicializar posición
   useEffect(() => {
@@ -62,7 +66,7 @@ export default function InfiniteCarousel({ properties }: InfiniteCarouselProps) 
           className="flex"
           style={{ gap: '16px', willChange: 'transform' }}
         >
-          {properties.map((property) => (
+          {cardsExtendidas.map((property) => (
             <div
               key={property.id}
               className="flex-shrink-0"
