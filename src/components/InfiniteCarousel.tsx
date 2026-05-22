@@ -44,49 +44,78 @@ export default function InfiniteCarousel({ properties }: InfiniteCarouselProps) 
         const slots = containerRef.current.querySelectorAll<HTMLElement>('[data-slot]');
         const leavingSlot = slots[0];
 
-        // Usar duración más corta en mobile para animación más fluida
-        const duration = windowWidth < 640 ? 0.5 : 0.7;
+        const isMobileView = windowWidth < 640;
+        const duration = isMobileView ? 0.4 : 0.7;
 
-        // Animar la card que sale
-        gsap.to(leavingSlot, {
-          opacity: 0,
-          scale: 0.8,
-          rotationY: windowWidth < 640 ? 45 : 90,
-          transformOrigin: 'bottom left',
-          duration: duration,
-          ease: 'power2.in',
-          onComplete: () => {
-            // DESPUÉS de que la card salga, actualizar startIndex
-            flushSync(() => {
-              setStartIndex((prev) => (prev + 1) % cards.length);
-            });
+        if (isMobileView) {
+          // MOBILE: Animación simple de fade
+          gsap.to(leavingSlot, {
+            opacity: 0,
+            duration: duration,
+            ease: 'power2.in',
+            onComplete: () => {
+              flushSync(() => {
+                setStartIndex((prev) => (prev + 1) % cards.length);
+              });
 
-            // AHORA animar la card que ENTRA
-            requestAnimationFrame(() => {
-              const newSlots = containerRef.current?.querySelectorAll<HTMLElement>('[data-slot]');
-              if (!newSlots) return;
-              const enteringSlot = newSlots[newSlots.length - 1];
+              requestAnimationFrame(() => {
+                const newSlots = containerRef.current?.querySelectorAll<HTMLElement>('[data-slot]');
+                if (!newSlots) return;
+                const enteringSlot = newSlots[newSlots.length - 1];
 
-              gsap.set(enteringSlot, { opacity: 0, scale: 0.8, rotationY: windowWidth < 640 ? -45 : -90 });
+                gsap.set(enteringSlot, { opacity: 0 });
 
-              gsap.fromTo(
-                enteringSlot,
-                { opacity: 0, scale: 0.8, rotationY: windowWidth < 640 ? -45 : -90 },
-                {
+                gsap.to(enteringSlot, {
                   opacity: 1,
-                  scale: 1,
-                  rotationY: 0,
-                  transformOrigin: 'bottom right',
                   duration: duration,
                   ease: 'power2.out',
                   onComplete: () => {
                     isAnimating.current = false;
                   },
-                }
-              );
-            });
-          },
-        });
+                });
+              });
+            },
+          });
+        } else {
+          // DESKTOP: Animación 3D (mantener la original)
+          gsap.to(leavingSlot, {
+            opacity: 0,
+            scale: 0.8,
+            rotationY: 90,
+            transformOrigin: 'bottom left',
+            duration: duration,
+            ease: 'power2.in',
+            onComplete: () => {
+              flushSync(() => {
+                setStartIndex((prev) => (prev + 1) % cards.length);
+              });
+
+              requestAnimationFrame(() => {
+                const newSlots = containerRef.current?.querySelectorAll<HTMLElement>('[data-slot]');
+                if (!newSlots) return;
+                const enteringSlot = newSlots[newSlots.length - 1];
+
+                gsap.set(enteringSlot, { opacity: 0, scale: 0.8, rotationY: -90 });
+
+                gsap.fromTo(
+                  enteringSlot,
+                  { opacity: 0, scale: 0.8, rotationY: -90 },
+                  {
+                    opacity: 1,
+                    scale: 1,
+                    rotationY: 0,
+                    transformOrigin: 'bottom right',
+                    duration: duration,
+                    ease: 'power2.out',
+                    onComplete: () => {
+                      isAnimating.current = false;
+                    },
+                  }
+                );
+              });
+            },
+          });
+        }
       }
     }, 4000);
 
@@ -109,55 +138,89 @@ export default function InfiniteCarousel({ properties }: InfiniteCarouselProps) 
     if (isAnimating.current || !containerRef.current) return;
     isAnimating.current = true;
 
+    const isMobileView = windowWidth < 640;
+    const duration = isMobileView ? 0.4 : 0.7;
     const slots = containerRef.current.querySelectorAll<HTMLElement>('[data-slot]');
     const leavingSlot = forward ? slots[0] : slots[slots.length - 1];
 
-    // Animar la card que sale
-    gsap.to(leavingSlot, {
-      opacity: 0,
-      scale: 0,
-      rotationY: forward ? 90 : -90,
-      transformOrigin: forward ? 'bottom left' : 'bottom right',
-      duration: 0.7,
-      ease: 'power2.in',
-      onComplete: () => {
-        // DESPUÉS de que la card salga, actualizar startIndex
-        flushSync(() => {
-          setStartIndex((prev) =>
-            forward
-              ? (prev + 1) % cards.length
-              : (prev - 1 + cards.length) % cards.length
-          );
-        });
+    if (isMobileView) {
+      // MOBILE: Animación simple de fade
+      gsap.to(leavingSlot, {
+        opacity: 0,
+        duration: duration,
+        ease: 'power2.in',
+        onComplete: () => {
+          flushSync(() => {
+            setStartIndex((prev) =>
+              forward
+                ? (prev + 1) % cards.length
+                : (prev - 1 + cards.length) % cards.length
+            );
+          });
 
-        // AHORA animar la card que ENTRA (que ya es diferente porque React actualizó)
-        requestAnimationFrame(() => {
-          const newSlots = containerRef.current?.querySelectorAll<HTMLElement>('[data-slot]');
-          if (!newSlots) return;
-          const enteringSlot = forward ? newSlots[newSlots.length - 1] : newSlots[0];
+          requestAnimationFrame(() => {
+            const newSlots = containerRef.current?.querySelectorAll<HTMLElement>('[data-slot]');
+            if (!newSlots) return;
+            const enteringSlot = forward ? newSlots[newSlots.length - 1] : newSlots[0];
 
-          // Asegurar que esté invisible antes de animar
-          gsap.set(enteringSlot, { opacity: 0, scale: 0, rotationY: forward ? -90 : 90 });
+            gsap.set(enteringSlot, { opacity: 0 });
 
-          gsap.fromTo(
-            enteringSlot,
-            { opacity: 0, scale: 0, rotationY: forward ? -90 : 90 },
-            {
+            gsap.to(enteringSlot, {
               opacity: 1,
-              scale: 1,
-              rotationY: 0,
-              transformOrigin: forward ? 'bottom right' : 'bottom left',
-              duration: 0.7,
+              duration: duration,
               ease: 'power2.out',
               onComplete: () => {
                 isAnimating.current = false;
               },
-            }
-          );
-        });
-      },
-    });
-  }, [cards.length]);
+            });
+          });
+        },
+      });
+    } else {
+      // DESKTOP: Animación 3D
+      gsap.to(leavingSlot, {
+        opacity: 0,
+        scale: 0,
+        rotationY: forward ? 90 : -90,
+        transformOrigin: forward ? 'bottom left' : 'bottom right',
+        duration: duration,
+        ease: 'power2.in',
+        onComplete: () => {
+          flushSync(() => {
+            setStartIndex((prev) =>
+              forward
+                ? (prev + 1) % cards.length
+                : (prev - 1 + cards.length) % cards.length
+            );
+          });
+
+          requestAnimationFrame(() => {
+            const newSlots = containerRef.current?.querySelectorAll<HTMLElement>('[data-slot]');
+            if (!newSlots) return;
+            const enteringSlot = forward ? newSlots[newSlots.length - 1] : newSlots[0];
+
+            gsap.set(enteringSlot, { opacity: 0, scale: 0, rotationY: forward ? -90 : 90 });
+
+            gsap.fromTo(
+              enteringSlot,
+              { opacity: 0, scale: 0, rotationY: forward ? -90 : 90 },
+              {
+                opacity: 1,
+                scale: 1,
+                rotationY: 0,
+                transformOrigin: forward ? 'bottom right' : 'bottom left',
+                duration: duration,
+                ease: 'power2.out',
+                onComplete: () => {
+                  isAnimating.current = false;
+                },
+              }
+            );
+          });
+        },
+      });
+    }
+  }, [cards.length, windowWidth]);
 
   return (
     <div className="wrapper">

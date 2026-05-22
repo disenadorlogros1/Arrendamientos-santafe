@@ -315,6 +315,7 @@ export default function PropertyDetailPage() {
           </div>
         </div>
       </div>
+      </div>
       </main>
       <Footer onNavigate={handleNavigate} />
     </div>
