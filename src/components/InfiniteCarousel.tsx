@@ -39,17 +39,21 @@ export default function InfiniteCarousel({ properties }: InfiniteCarouselProps) 
 
     const autoplayInterval = setInterval(() => {
       if (!isAnimating.current && containerRef.current) {
-        // Simulamos el click en el botón siguiente
+        isAnimating.current = true;
+
         const slots = containerRef.current.querySelectorAll<HTMLElement>('[data-slot]');
         const leavingSlot = slots[0];
+
+        // Usar duración más corta en mobile para animación más fluida
+        const duration = windowWidth < 640 ? 0.5 : 0.7;
 
         // Animar la card que sale
         gsap.to(leavingSlot, {
           opacity: 0,
-          scale: 0,
-          rotationY: 90,
+          scale: 0.8,
+          rotationY: windowWidth < 640 ? 45 : 90,
           transformOrigin: 'bottom left',
-          duration: 0.7,
+          duration: duration,
           ease: 'power2.in',
           onComplete: () => {
             // DESPUÉS de que la card salga, actualizar startIndex
@@ -63,18 +67,21 @@ export default function InfiniteCarousel({ properties }: InfiniteCarouselProps) 
               if (!newSlots) return;
               const enteringSlot = newSlots[newSlots.length - 1];
 
-              gsap.set(enteringSlot, { opacity: 0, scale: 0, rotationY: -90 });
+              gsap.set(enteringSlot, { opacity: 0, scale: 0.8, rotationY: windowWidth < 640 ? -45 : -90 });
 
               gsap.fromTo(
                 enteringSlot,
-                { opacity: 0, scale: 0, rotationY: -90 },
+                { opacity: 0, scale: 0.8, rotationY: windowWidth < 640 ? -45 : -90 },
                 {
                   opacity: 1,
                   scale: 1,
                   rotationY: 0,
                   transformOrigin: 'bottom right',
-                  duration: 0.7,
+                  duration: duration,
                   ease: 'power2.out',
+                  onComplete: () => {
+                    isAnimating.current = false;
+                  },
                 }
               );
             });
@@ -84,7 +91,7 @@ export default function InfiniteCarousel({ properties }: InfiniteCarouselProps) 
     }, 4000);
 
     return () => clearInterval(autoplayInterval);
-  }, [isMounted, cards.length]);
+  }, [isMounted, cards.length, windowWidth]);
 
   // Valores responsivos
   const VISIBLE = windowWidth < 640 ? 1 : windowWidth < 1024 ? 2 : 4; // mobile: 1, tablet: 2, desktop: 4

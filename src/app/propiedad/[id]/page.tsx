@@ -169,7 +169,7 @@ export default function PropertyDetailPage() {
                 </div>
               </div>
 
-              {/* Mapa de Google - Solo para propiedades de arrendar */}
+              {/* Mapa de OpenStreetMap - Solo para propiedades de arrendar */}
               {property.businessType === 'Arrendar' && (
                 <div className="mt-6">
                   <h2 className="text-lg font-bold text-gray-900 mb-4">Ubicación</h2>
@@ -180,9 +180,10 @@ export default function PropertyDetailPage() {
                       style={{ border: 0 }}
                       loading="lazy"
                       allowFullScreen
-                      src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyA-aOI-9xDm7Dq5W5K5v5v5v5v5v5v5v5&q=${encodeURIComponent(property.address || property.location)}`}
+                      src={`https://www.openstreetmap.org/export/embed.html?bbox=-75.6,6.1,-75.5,6.3&layer=mapnik&marker=${property.location}`}
                     />
                   </div>
+                  <p className="text-xs text-gray-500 mt-2">© OpenStreetMap contributors</p>
                 </div>
               )}
 
