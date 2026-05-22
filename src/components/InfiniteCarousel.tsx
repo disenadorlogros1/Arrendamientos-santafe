@@ -35,7 +35,8 @@ export default function InfiniteCarousel({ properties }: InfiniteCarouselProps) 
 
   // Valores responsivos
   const VISIBLE = windowWidth < 640 ? 1 : windowWidth < 1024 ? 2 : 4; // mobile: 1, tablet: 2, desktop: 4
-  const CARD_W = windowWidth < 640 ? 180 : windowWidth < 1024 ? 240 : 312; // mobile: 180, tablet: 240, desktop: 312
+  const CARD_W = windowWidth < 640 ? 280 : windowWidth < 1024 ? 240 : 312; // mobile: 280, tablet: 240, desktop: 312
+  const CARD_H = windowWidth < 640 ? 497 : 'auto'; // Aspecto ratio 9:16 (1080x1920) para mobile
   const GAP = windowWidth < 640 ? 8 : 12;
 
   // Cards actualmente visibles
@@ -55,6 +56,7 @@ export default function InfiniteCarousel({ properties }: InfiniteCarouselProps) 
     gsap.to(leavingSlot, {
       opacity: 0,
       scale: 0,
+      rotationY: forward ? 90 : -90,
       transformOrigin: forward ? 'bottom left' : 'bottom right',
       duration: 0.7,
       ease: 'power2.in',
@@ -75,14 +77,15 @@ export default function InfiniteCarousel({ properties }: InfiniteCarouselProps) 
           const enteringSlot = forward ? newSlots[newSlots.length - 1] : newSlots[0];
 
           // Asegurar que esté invisible antes de animar
-          gsap.set(enteringSlot, { opacity: 0, scale: 0 });
+          gsap.set(enteringSlot, { opacity: 0, scale: 0, rotationY: forward ? -90 : 90 });
 
           gsap.fromTo(
             enteringSlot,
-            { opacity: 0, scale: 0 },
+            { opacity: 0, scale: 0, rotationY: forward ? -90 : 90 },
             {
               opacity: 1,
               scale: 1,
+              rotationY: 0,
               transformOrigin: forward ? 'bottom right' : 'bottom left',
               duration: 0.7,
               ease: 'power2.out',
@@ -115,7 +118,12 @@ export default function InfiniteCarousel({ properties }: InfiniteCarouselProps) 
             key={property.uid}
             data-slot={property.slotIndex}
             className="flex-shrink-0"
-            style={{ width: `${CARD_W}px`, minWidth: `${CARD_W}px` }}
+            style={{
+              width: `${CARD_W}px`,
+              minWidth: `${CARD_W}px`,
+              height: CARD_H,
+              perspective: '1000px',
+            }}
           >
             <PropertyCard property={property} />
           </div>
