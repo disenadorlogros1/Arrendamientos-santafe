@@ -31,9 +31,6 @@ export const useSplitTextAnimation = (selector: string, initialDelay: number = 0
 
         console.log('[SplitText] Inicializando animación para:', selector);
 
-        // Establecer opacidad inicial a 0 antes de crear SplitText
-        (target as HTMLElement).style.opacity = '0';
-
         // Crear instancia de SplitText
         const split = new SplitText(target, {
           type: 'lines',
@@ -42,23 +39,20 @@ export const useSplitTextAnimation = (selector: string, initialDelay: number = 0
 
         console.log('[SplitText] Líneas encontradas:', split.lines.length);
 
+        // Establecer estado inicial en los .split-line divs
+        gsap.set(split.lines, { y: 80, opacity: 0 });
+
         // Animar líneas desde abajo hacia arriba (lenta y dramática)
-        gsap.fromTo(split.lines,
-          {
-            y: 80,
-            opacity: 0,
+        gsap.to(split.lines, {
+          duration: 2.8,
+          y: 0,
+          opacity: 1,
+          stagger: 0.49,
+          ease: 'expo.out',
+          onComplete: () => {
+            console.log('[SplitText] Animación completada');
           },
-          {
-            duration: 2.8,
-            y: 0,
-            opacity: 1,
-            stagger: 0.49,
-            ease: 'expo.out',
-            onComplete: () => {
-              console.log('[SplitText] Animación completada');
-            },
-          }
-        );
+        });
 
         hasAnimated.current = true;
       } catch (error) {
