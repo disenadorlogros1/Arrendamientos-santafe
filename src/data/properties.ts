@@ -19,13 +19,14 @@ export interface Property {
   garage?: number;
   petFriendly?: boolean;
   furnished?: boolean;
+  businessType?: "Arrendar" | "Comprar";
 }
 
 export const properties: Property[] = [
   {
     id: 1,
     title: "Local en Belén",
-    price: "$2'200,000",
+    price: "$22'000,000",
     location: "Belén",
     type: "Local",
     size: "60 M²",
@@ -42,11 +43,12 @@ export const properties: Property[] = [
     characteristics: ["Acceso principal", "Zona comercial", "Parqueo"],
     garage: 1,
     furnished: false,
+    businessType: "Comprar",
   },
   {
     id: 2,
     title: "Casa en Florida Nueva",
-    price: "$4'000,000",
+    price: "$400'000,000",
     location: "Florida Nueva",
     type: "Casa",
     size: "150 M²",
@@ -63,11 +65,12 @@ export const properties: Property[] = [
     characteristics: ["Cocina integral", "Zona de servicios", "Patio", "Unidad cerrada"],
     garage: 2,
     furnished: false,
+    businessType: "Comprar",
   },
   {
     id: 3,
     title: "Apartamento en Florida Nueva",
-    price: "$5'000,000",
+    price: "$500'000,000",
     location: "Florida Nueva",
     type: "Apartamento",
     size: "120 M²",
@@ -84,11 +87,12 @@ export const properties: Property[] = [
     characteristics: ["Balcón", "Cocina equipada", "Aire acondicionado", "Ascensor"],
     garage: 2,
     furnished: false,
+    businessType: "Comprar",
   },
   {
     id: 4,
     title: "Casa en Velodromo",
-    price: "$3'500,000",
+    price: "$300'500,000",
     location: "Velodromo",
     type: "Casa",
     size: "140 M²",
@@ -105,6 +109,7 @@ export const properties: Property[] = [
     characteristics: ["Patio trasero", "Cocina integrada", "Zona de lavandería", "Terraza"],
     garage: 2,
     furnished: false,
+    businessType: "Comprar",
   },
   {
     id: 5,
@@ -126,6 +131,7 @@ export const properties: Property[] = [
     characteristics: ["Zona comercial", "Fácil acceso", "Parqueo disponible"],
     garage: 1,
     furnished: false,
+    businessType: "Arrendar",
   },
   {
     id: 6,
@@ -147,6 +153,7 @@ export const properties: Property[] = [
     characteristics: ["Zona mixta", "Frente comercial", "Vivienda", "Dos entradas"],
     garage: 2,
     furnished: false,
+    businessType: "Arrendar",
   },
   {
     id: 7,
@@ -168,6 +175,7 @@ export const properties: Property[] = [
     characteristics: ["Amplio", "Dos baños", "Zona comercial premium", "Estacionamiento"],
     garage: 1,
     furnished: false,
+    businessType: "Arrendar",
   },
   {
     id: 8,
@@ -189,6 +197,7 @@ export const properties: Property[] = [
     characteristics: ["Zona residencial", "Cerca a comercio", "Ascensor", "Seguridad"],
     garage: 1,
     furnished: false,
+    businessType: "Arrendar",
   },
   {
     id: 9,
@@ -210,6 +219,7 @@ export const properties: Property[] = [
     characteristics: ["Ascensor", "Zona residencial", "Cerca a comercio"],
     garage: 1,
     furnished: false,
+    businessType: "Arrendar",
   },
   {
     id: 10,
@@ -231,6 +241,7 @@ export const properties: Property[] = [
     characteristics: ["Amplio", "Buena distribución", "Acceso vial"],
     garage: 1,
     furnished: false,
+    businessType: "Arrendar",
   },
   {
     id: 11,
@@ -273,6 +284,7 @@ export const properties: Property[] = [
     characteristics: ["Versatil", "Moderno", "Buena ubicación"],
     garage: 1,
     furnished: false,
+    businessType: "Arrendar",
   },
 ];
 
