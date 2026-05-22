@@ -44,7 +44,7 @@ export default function InfiniteCarousel({ properties }: InfiniteCarouselProps) 
       opacity: 0,
       scale: 0,
       transformOrigin: forward ? 'bottom left' : 'bottom right',
-      duration: 0.45,
+      duration: 0.7,
       ease: 'power2.in',
       onComplete: () => {
         // DESPUÉS de que la card salga, actualizar startIndex
@@ -72,7 +72,7 @@ export default function InfiniteCarousel({ properties }: InfiniteCarouselProps) 
               opacity: 1,
               scale: 1,
               transformOrigin: forward ? 'bottom right' : 'bottom left',
-              duration: 0.45,
+              duration: 0.7,
               ease: 'power2.out',
               onComplete: () => {
                 isAnimating.current = false;

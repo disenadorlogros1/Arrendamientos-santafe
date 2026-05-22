@@ -33,8 +33,8 @@ export const useSplitTextAnimation = (
           linesClass: 'split-line',
         });
         // Estado inicial oculto
-        gsap.set(target, { opacity: 0, y: 40 });
-        gsap.set(splitRef.current.lines, { opacity: 0, y: 60 });
+        gsap.set(target, { opacity: 0, y: 25 });
+        gsap.set(splitRef.current.lines, { opacity: 0, y: 30 });
       }
 
       return { gsap, target, split: splitRef.current };
@@ -62,10 +62,10 @@ export const useSplitTextAnimation = (
       const { gsap, target, split } = result;
 
       gsap.killTweensOf([target, split.lines]);
-      gsap.to(target, { opacity: 0, y: 40, duration: 0.5, ease: 'power2.in' });
+      gsap.to(target, { opacity: 0, y: -30, duration: 0.5, ease: 'power2.in' });
       gsap.to(split.lines, {
         opacity: 0,
-        y: 60,
+        y: -40,
         duration: 0.5,
         stagger: 0.08,
         ease: 'power2.in',

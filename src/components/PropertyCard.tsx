@@ -64,7 +64,7 @@ es una de mis favoritas en arrendamiento Santa Fe`;
         onMouseLeave={handleMouseLeave}
       >
         {/* Image Container — Vertical Layout */}
-        <div className="relative overflow-hidden w-full" style={{ aspectRatio: '1/1' }}>
+        <div className="relative overflow-hidden w-full" style={{ aspectRatio: '9/16' }}>
           <img
             src={property.image}
             alt={property.title}
