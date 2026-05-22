@@ -45,7 +45,7 @@ export default function PropiedadesPage() {
         </div>
       </div>
 
-      <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8 py-8">
+      <div className="mx-auto max-w-7xl px-1 sm:px-6 lg:px-8 py-8">
         {/* Business Type Filter — Igual al del Hero */}
         <div className="flex h-[44px] bg-white border border-gray-200 rounded-lg overflow-hidden mb-6 shadow-sm">
           {(['Todos', 'Arrendar', 'Comprar'] as const).map((type, i) => (
@@ -165,7 +165,7 @@ export default function PropiedadesPage() {
         </p>
 
         {/* Property Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 sm:gap-5">
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-1 sm:gap-5">
           {filtered.map((property) => (
             <motion.div
               key={property.id}
