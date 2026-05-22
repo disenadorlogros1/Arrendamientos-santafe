@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { MessageCircle } from 'lucide-react';
+import { useSplitTextAnimation } from '@/hooks/useSplitTextAnimation';
 import type { PageType } from '@/components/Header';
 
 interface PropietariosBlockProps {
@@ -13,8 +14,9 @@ const WHATSAPP_URL =
 
 export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps) {
   const [isVisible, setIsVisible] = useState(false);
-  const titleRef = useRef<HTMLHeadingElement>(null);
+  const titleRef = useSplitTextAnimation('.propietarios-title-split');
 
+  // Mostrar animación del subrayado cuando el elemento es visible
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -46,14 +48,14 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
 
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid md:grid-cols-12 gap-8 items-center">
-          <div className="md:col-span-7">
+          <div className="md:col-span-7" ref={titleRef}>
             <h2
-              ref={titleRef}
-              className="text-3xl sm:text-4xl lg:text-5xl leading-tight text-white"
+              className="propietarios-title-split text-3xl sm:text-4xl lg:text-5xl leading-tight text-white"
               style={{
                 fontFamily:
                   "'Avenir Next Ultra Light', 'Avenir LT Pro 65 Medium', 'Avenir', 'Outfit', system-ui, sans-serif",
                 fontWeight: 300,
+                lineHeight: '0.65',
               }}
             >
               ¿Tienes un inmueble para{' '}
