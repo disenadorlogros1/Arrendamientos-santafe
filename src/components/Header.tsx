@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from '@/components/ui/sheet';
 
-export type PageType = 'home' | 'propiedades' | 'consignacion' | 'hipotecas' | 'servicios' | 'nosotros' | 'politicas' | 'terminos';
+export type PageType = 'home' | 'propiedades' | 'consignacion' | 'hipotecas' | 'servicios' | 'nosotros' | 'blog' | 'inversionistas' | 'politicas' | 'terminos';
 
 interface HeaderProps { currentPage: PageType; onNavigate: (page: PageType) => void; }
 interface SubItem { label: string; page?: PageType; href?: string; }
@@ -49,17 +49,17 @@ function MobilePSEButton() {
 
 const navItems: NavItem[] = [
   { label: 'Inicio', page: 'home' },
-  { label: 'Propiedades', page: 'propiedades', children: [
-    { label: 'Buscar propiedades', page: 'propiedades' },
-    { label: 'Arrendar', page: 'propiedades' },
-    { label: 'Comprar', page: 'propiedades' },
-  ]},
+  { label: 'Propiedades', page: 'propiedades' },
   { label: 'Servicios', page: 'servicios', children: [
     { label: 'Todos los servicios', page: 'servicios' },
     { label: 'Solicitud de arrendamiento', href: SOLICITUD_ARRENDAMIENTO_URL },
     { label: 'Reportar reparación', href: REPARACIONES_URL },
   ]},
-  { label: 'Nosotros', page: 'nosotros' },
+  { label: 'Nosotros', page: 'nosotros', children: [
+    { label: 'Quiénes somos', page: 'nosotros' },
+    { label: 'Blog', page: 'blog' },
+    { label: 'Para inversionistas', page: 'inversionistas' },
+  ]},
 ];
 
 function WhatsAppButton() {

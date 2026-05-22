@@ -16,6 +16,8 @@ import ConsignacionPage from '@/components/ConsignacionPage';
 import HipotecasPage from '@/components/HipotecasPage';
 import ServiciosPage from '@/components/ServiciosPage';
 import InstitucionalPage from '@/components/InstitucionalPage';
+import BlogPage from '@/components/BlogPage';
+import InversionistasPage from '@/components/InversionistasPage';
 import PoliticasPage from '@/components/PoliticasPage';
 import TerminosPage from '@/components/TerminosPage';
 
@@ -74,6 +76,8 @@ export default function Home() {
         {currentPage === 'hipotecas' && <HipotecasPage />}
         {currentPage === 'servicios' && <ServiciosPage />}
         {currentPage === 'nosotros' && <InstitucionalPage onNavigate={handleNavigate} />}
+        {currentPage === 'blog' && <BlogPage />}
+        {currentPage === 'inversionistas' && <InversionistasPage />}
         {currentPage === 'politicas' && <PoliticasPage />}
         {currentPage === 'terminos' && <TerminosPage />}
       </main>
