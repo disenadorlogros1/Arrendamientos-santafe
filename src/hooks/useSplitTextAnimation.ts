@@ -98,8 +98,7 @@ export const useSplitTextAnimation = (selector: string, initialDelay: number = 0
           });
         },
         {
-          threshold: 0.2,
-          rootMargin: '0px 0px -15% 0px',
+          threshold: 0.4,
         }
       );
 
@@ -132,7 +131,7 @@ export const useSplitTextAnimation = (selector: string, initialDelay: number = 0
           });
         },
         {
-          threshold: 0.3,
+          threshold: 0.4,
         }
       );
 
