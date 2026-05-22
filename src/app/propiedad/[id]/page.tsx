@@ -1,31 +1,55 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { properties } from '@/data/properties';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
+import type { PageType } from '@/components/Header';
 
 export default function PropertyDetailPage() {
   const params = useParams();
   const router = useRouter();
+  const [currentPage, setCurrentPage] = useState<PageType>('propiedades');
   const propertyId = parseInt(params.id as string);
   const property = properties.find((p) => p.id === propertyId);
 
+  const handleNavigate = (page: PageType) => {
+    if (page === 'home') {
+      window.location.href = '/';
+    } else {
+      setCurrentPage(page);
+    }
+  };
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
+
   if (!property) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold mb-4">Propiedad no encontrada</h1>
-          <Link href="/" className="text-brand-red hover:underline">
-            Volver al inicio
-          </Link>
-        </div>
+      <div className="min-h-screen flex flex-col">
+        <Header currentPage={currentPage} onNavigate={handleNavigate} />
+        <main className="flex-1 flex items-center justify-center">
+          <div className="text-center">
+            <h1 className="text-2xl font-bold mb-4">Propiedad no encontrada</h1>
+            <Link href="/propiedades" className="text-brand-red hover:underline">
+              Volver al listado
+            </Link>
+          </div>
+        </main>
+        <Footer onNavigate={handleNavigate} />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen flex flex-col bg-gray-50">
+      <Header currentPage={currentPage} onNavigate={handleNavigate} />
+      <main className="flex-1 pt-[80px] relative">
+      <div>
       {/* Breadcrumb */}
       <div className="bg-white border-b border-gray-200 py-4 px-6">
         <div className="max-w-7xl mx-auto">
@@ -291,6 +315,8 @@ export default function PropertyDetailPage() {
           </div>
         </div>
       </div>
+      </main>
+      <Footer onNavigate={handleNavigate} />
     </div>
   );
 }
