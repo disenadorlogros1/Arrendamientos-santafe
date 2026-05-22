@@ -64,7 +64,7 @@ es una de mis favoritas en arrendamiento Santa Fe`;
         onMouseLeave={handleMouseLeave}
       >
         {/* Image Container — Vertical Layout */}
-        <div className="relative overflow-hidden w-full" style={{ aspectRatio: '9/16' }}>
+        <div className="relative overflow-hidden w-full" style={{ aspectRatio: '4/5' }}>
           <img
             src={property.image}
             alt={property.title}
@@ -220,7 +220,7 @@ es una de mis favoritas en arrendamiento Santa Fe`;
         </div>
 
         {/* Content — Flex-grow para llenar espacio */}
-        <div className="flex-grow flex flex-col justify-between p-4">
+        <div className="flex-grow flex flex-col justify-between p-2">
           {/* Información Principal */}
           <div>
             {/* Precio */}
