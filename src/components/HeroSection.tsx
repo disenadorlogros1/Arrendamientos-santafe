@@ -60,7 +60,7 @@ export default function HeroSection({ onNavigate }: HeroSectionProps) {
         style={{ zIndex: 10, maxWidth: '56rem' }}
         ref={titleRef}
       >
-        <h1 className="hero-title-split text-2xl sm:text-3xl md:text-5xl lg:text-[52px] text-white tracking-tight" style={{ fontFamily: "'Avenir Next Ultra Light', 'Avenir LT Pro 65 Medium', 'Avenir', 'Outfit', system-ui, sans-serif", fontWeight: 200, lineHeight: '0.65', opacity: 1 }}>
+        <h1 className="hero-title-split text-2xl sm:text-3xl md:text-5xl lg:text-[52px] text-white tracking-tight" style={{ fontFamily: "'Avenir Next Ultra Light', 'Avenir LT Pro 65 Medium', 'Avenir', 'Outfit', system-ui, sans-serif", fontWeight: 200, lineHeight: '0.65' }}>
           60 años <span className="text-brand-red font-bold">acompañando</span>
           <br />
           <span
