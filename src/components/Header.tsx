@@ -121,9 +121,9 @@ export default function Header({ currentPage, onNavigate, isHeroPage = true }: H
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  // En páginas no-hero, siempre mostrar background opaco
+  // En páginas no-hero, mostrar background negro; en hero, cambiar con scroll
   const headerBackground = !isHeroPage
-    ? 'bg-white shadow-md'
+    ? 'bg-brand-dark shadow-md'
     : scrolled ? 'header-scrolled' : '';
 
   return (
@@ -141,8 +141,8 @@ export default function Header({ currentPage, onNavigate, isHeroPage = true }: H
             overflow: 'visible',
             width: '100%',
             maxWidth: '64rem',
-            backgroundColor: !isHeroPage ? 'rgba(255, 255, 255, 0.95)' : 'rgba(255, 255, 255, 0.4)',
-            borderColor: !isHeroPage ? 'rgba(200, 200, 200, 0.5)' : 'rgba(255, 255, 255, 0.3)',
+            backgroundColor: !isHeroPage ? 'rgba(0, 0, 0, 0.3)' : 'rgba(255, 255, 255, 0.4)',
+            borderColor: !isHeroPage ? 'rgba(255, 255, 255, 0.1)' : 'rgba(255, 255, 255, 0.3)',
             backdropFilter: 'blur(10px)',
           }}>
           {navItems.map((item) =>
