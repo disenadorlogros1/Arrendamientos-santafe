@@ -187,14 +187,14 @@ export default function InfiniteCarousel({ properties }: InfiniteCarouselProps) 
       >
         <div
           ref={trackRef}
-          className="flex"
+          className="flex carousel-container"
           style={{ gap: '16px', willChange: 'transform' }}
         >
           {/* Original set */}
           {properties.map((property, index) => (
             <div
               key={`orig-${property.id}`}
-              className={`flex-shrink-0 ${!visibleIndices.has(index) ? 'hide' : ''}`}
+              className={`carousel-item ${!visibleIndices.has(index) ? 'hide' : ''}`}
               style={{ width: `${cardWidth - 16}px`, minWidth: `${cardWidth - 16}px` }}
             >
               <PropertyCard property={property} />
@@ -204,7 +204,7 @@ export default function InfiniteCarousel({ properties }: InfiniteCarouselProps) 
           {properties.map((property, index) => (
             <div
               key={`clone-${property.id}`}
-              className={`flex-shrink-0 ${!visibleIndices.has(index) ? 'hide' : ''}`}
+              className={`carousel-item ${!visibleIndices.has(index) ? 'hide' : ''}`}
               style={{ width: `${cardWidth - 16}px`, minWidth: `${cardWidth - 16}px` }}
             >
               <PropertyCard property={property} />
