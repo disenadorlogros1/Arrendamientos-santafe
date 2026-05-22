@@ -59,6 +59,9 @@ es una de mis favoritas en arrendamiento Santa Fe`;
   const whatsappConsultLink = `https://wa.me/573006557529?text=${encodeURIComponent(
     `Hola, quisiera consultar disponibilidad del inmueble ${property.reference} (${property.location}).`
   )}`;
+  const whatsappScheduleLink = `https://wa.me/573006557529?text=${encodeURIComponent(
+    `Hola, quisiera agendar una visita al inmueble ${property.reference} ubicado en ${property.location}.`
+  )}`;
 
   return (
     <>
@@ -166,8 +169,10 @@ es una de mis favoritas en arrendamiento Santa Fe`;
             </a>
 
             {/* Agendar */}
-            <button
-              type="button"
+            <a
+              href={whatsappScheduleLink}
+              target="_blank"
+              rel="noopener noreferrer"
               onClick={(e) => e.stopPropagation()}
               onMouseEnter={() => setHoveredButton('schedule')}
               onMouseLeave={() => setHoveredButton(null)}
@@ -190,14 +195,14 @@ es una de mis favoritas en arrendamiento Santa Fe`;
               <img
                 src="/icons/icon-schedule-white.gif"
                 alt="Agendar"
-                width={hoveredButton === 'schedule' ? '20' : '12'}
-                height={hoveredButton === 'schedule' ? '20' : '12'}
+                width={16}
+                height={16}
                 style={{
                   transition: 'all 0.3s ease',
                   objectFit: 'contain',
                 }}
               />
-            </button>
+            </a>
 
             {/* Favorito */}
             <button
