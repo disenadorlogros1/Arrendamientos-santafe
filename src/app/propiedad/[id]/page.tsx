@@ -31,7 +31,7 @@ export default function PropertyDetailPage() {
         <div className="max-w-7xl mx-auto">
           <div className="flex items-center gap-2 text-sm text-gray-600">
             <button
-              onClick={() => router.back()}
+              onClick={() => router.push('/propiedades')}
               className="text-brand-red hover:underline font-semibold"
               title="Volver"
             >

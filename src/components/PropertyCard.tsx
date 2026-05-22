@@ -309,11 +309,11 @@ es una de mis favoritas en arrendamiento Santa Fe`;
               <img
                 src="/icons/icon-area-gray.gif"
                 alt="Área"
-                width={14}
-                height={14}
+                width={17}
+                height={17}
                 style={{ objectFit: 'contain', flexShrink: 0 }}
               />
-              <span style={{ fontSize: '11px', color: '#232222', fontWeight: 700 }}>
+              <span style={{ fontSize: '16px', color: '#232222', fontWeight: 700 }}>
                 {property.size}
               </span>
             </div>
@@ -326,11 +326,11 @@ es una de mis favoritas en arrendamiento Santa Fe`;
               <img
                 src="/icons/icon-bed-gray.gif"
                 alt="Habitaciones"
-                width={14}
-                height={14}
+                width={17}
+                height={17}
                 style={{ objectFit: 'contain', flexShrink: 0 }}
               />
-              <span style={{ fontSize: '11px', color: '#232222', fontWeight: 700 }}>
+              <span style={{ fontSize: '16px', color: '#232222', fontWeight: 700 }}>
                 {property.bedrooms}
               </span>
             </div>
@@ -343,11 +343,11 @@ es una de mis favoritas en arrendamiento Santa Fe`;
               <img
                 src="/icons/icon-bathroom-gray.gif"
                 alt="Baños"
-                width={14}
-                height={14}
+                width={17}
+                height={17}
                 style={{ objectFit: 'contain', flexShrink: 0 }}
               />
-              <span style={{ fontSize: '11px', color: '#232222', fontWeight: 700 }}>
+              <span style={{ fontSize: '16px', color: '#232222', fontWeight: 700 }}>
                 {property.bathrooms}
               </span>
             </div>
@@ -360,11 +360,11 @@ es una de mis favoritas en arrendamiento Santa Fe`;
               <img
                 src="/icons/icon-code-Gray.gif"
                 alt="Referencia"
-                width={14}
-                height={14}
+                width={17}
+                height={17}
                 style={{ objectFit: 'contain', flexShrink: 0 }}
               />
-              <span style={{ fontSize: '11px', color: '#232222', fontWeight: 700 }}>
+              <span style={{ fontSize: '16px', color: '#232222', fontWeight: 700 }}>
                 {property.reference.replace('Ref. ', '')}
               </span>
             </div>
