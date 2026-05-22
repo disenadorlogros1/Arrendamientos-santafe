@@ -2,11 +2,14 @@ import { useEffect, useRef } from 'react';
 
 export const useSplitTextAnimation = (selector: string) => {
   const ref = useRef<HTMLElement>(null);
+  const hasAnimated = useRef(false);
 
   useEffect(() => {
     if (!ref.current) return;
 
     const animateText = async () => {
+      if (hasAnimated.current) return; // Evitar animar dos veces
+
       const target = ref.current?.querySelector(selector);
       if (!target) {
         console.warn(`[SplitText] No se encontró elemento con selector: ${selector}`);
@@ -14,7 +17,7 @@ export const useSplitTextAnimation = (selector: string) => {
       }
 
       try {
-        // Importar GSAP dinámicamente para asegurar que está disponible
+        // Importar GSAP dinámicamente
         const gsapModule = await import('gsap');
         const gsap = gsapModule.default;
 
@@ -36,33 +39,59 @@ export const useSplitTextAnimation = (selector: string) => {
 
         console.log('[SplitText] Líneas encontradas:', split.lines.length);
 
-        // Animar líneas desde abajo hacia arriba
+        // Animar líneas desde abajo hacia arriba (lenta y dramática)
         gsap.from(split.lines, {
-          duration: 1.2,
-          y: 60,
+          duration: 2.0,
+          y: 80,
           opacity: 0,
-          stagger: 0.25,
+          stagger: 0.35,
           ease: 'expo.out',
           onComplete: () => {
             console.log('[SplitText] Animación completada');
           },
         });
+
+        hasAnimated.current = true;
       } catch (error) {
         console.error('[SplitText] Error en animación:', error);
       }
     };
 
-    // Esperar a que las fuentes estén cargadas y luego animar
-    if (document.fonts && document.fonts.ready) {
-      document.fonts.ready.then(() => {
-        requestAnimationFrame(() => {
-          setTimeout(animateText, 100);
+    // Usar IntersectionObserver para activar la animación al hacer scroll
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          // Cuando el elemento entra en el viewport
+          if (entry.isIntersecting && !hasAnimated.current) {
+            console.log('[SplitText] Elemento visible, iniciando animación');
+
+            // Esperar a que las fuentes estén cargadas
+            if (document.fonts && document.fonts.ready) {
+              document.fonts.ready.then(() => {
+                setTimeout(animateText, 100);
+              });
+            } else {
+              setTimeout(animateText, 300);
+            }
+
+            // Dejar de observar después de animar
+            observer.unobserve(entry.target);
+          }
         });
-      });
-    } else {
-      // Fallback
-      setTimeout(animateText, 300);
+      },
+      {
+        threshold: 0.3, // Se activa cuando 30% del elemento es visible
+      }
+    );
+
+    // Observar el elemento ref
+    if (ref.current) {
+      observer.observe(ref.current);
     }
+
+    return () => {
+      observer.disconnect();
+    };
   }, [selector]);
 
   return ref;
