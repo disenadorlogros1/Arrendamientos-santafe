@@ -17,7 +17,7 @@ const buildCards = (properties: Property[]) =>
   ).flat();
 
 const VISIBLE = 4; // Cuántas cards se ven al mismo tiempo
-const CARD_W = 240;
+const CARD_W = 312; // 240 * 1.3 para 30% más grande
 const GAP = 12;
 
 export default function InfiniteCarousel({ properties }: InfiniteCarouselProps) {
@@ -89,8 +89,14 @@ export default function InfiniteCarousel({ properties }: InfiniteCarouselProps) 
       {/* Contenedor horizontal de cards */}
       <div
         ref={containerRef}
-        className="w-full overflow-hidden"
-        style={{ display: 'flex', flexDirection: 'row', gap: `${GAP}px` }}
+        className="overflow-hidden"
+        style={{
+          display: 'flex',
+          flexDirection: 'row',
+          gap: `${GAP}px`,
+          width: `${VISIBLE * CARD_W + (VISIBLE - 1) * GAP}px`,
+          margin: '0 auto',
+        }}
       >
         {visibleCards.map((property) => (
           <div
