@@ -1,5 +1,6 @@
 'use client';
 
+import { useSplitTextAnimation } from '@/hooks/useSplitTextAnimation';
 import { Button } from '@/components/ui/button';
 import InfiniteCarousel from '@/components/InfiniteCarousel';
 import { properties } from '@/data/properties';
@@ -11,16 +12,18 @@ interface FeaturedSectionProps {
 
 export default function FeaturedSection({ onNavigate }: FeaturedSectionProps) {
   const featured = properties.filter((p) => p.featured);
+  const titleRef = useSplitTextAnimation('.featured-title-split');
 
   return (
     <section className="py-6 md:py-10">
-      <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3 mb-6">
+      <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3 mb-6" ref={titleRef}>
         <div>
           <h2
-            className="text-2xl sm:text-3xl md:text-4xl text-brand-red"
+            className="featured-title-split text-2xl sm:text-3xl md:text-4xl text-brand-red"
             style={{
               fontFamily: "'Avenir Next Ultra Light', 'Avenir LT Pro 65 Medium', 'Avenir', 'Outfit', system-ui, sans-serif",
               fontWeight: 300,
+              lineHeight: '0.65',
             }}
           >
             Propiedades destacadas
@@ -34,7 +37,7 @@ export default function FeaturedSection({ onNavigate }: FeaturedSectionProps) {
               lineHeight: '1.45',
             }}
           >
-            Inmuebles disponibles ahora. Consulta, agencia o pide asesoría.
+            Inmuebles disponibles ahora. Consulta, agenda o pide asesoría.
           </p>
         </div>
         <Button

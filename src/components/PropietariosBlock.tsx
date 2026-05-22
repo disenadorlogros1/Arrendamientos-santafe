@@ -58,10 +58,10 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
             >
               ¿Tienes un inmueble para{' '}
               <span
-                className="text-white inline-block"
+                className="text-brand-red inline-block"
                 style={{
                   fontWeight: 700,
-                  background: 'linear-gradient(to bottom, transparent 60%, #f32735 60%, #f32735 84%, transparent 84%)',
+                  background: 'linear-gradient(to bottom, transparent 60%, white 60%, white 84%, transparent 84%)',
                   WebkitBoxDecorationBreak: 'clone',
                   boxDecorationBreak: 'clone',
                   padding: '0 4px',
@@ -125,7 +125,7 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
               </div>
               <div className="bg-white/5 border border-white/10 rounded-lg p-5 backdrop-blur-sm col-span-2">
                 <p className="text-sm text-white/80 leading-relaxed">
-                  Te avisamos cuando haya un arrendatario interesado. Sin demoras, sin contratiempos.
+                  Te avisamos cuando haya un arrendatario interesado. Sin cuelgues, sin demoras.
                 </p>
               </div>
             </div>

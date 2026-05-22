@@ -1,5 +1,7 @@
 'use client';
 
+import { useSplitTextAnimation } from '@/hooks/useSplitTextAnimation';
+
 interface HeroSectionProps {
   onNavigate?: (page: 'propiedades' | 'consignacion') => void;
 }
@@ -24,6 +26,8 @@ const AnimatedText = ({ text, startIndex = 0 }: { text: string; startIndex?: num
 };
 
 export default function HeroSection({ onNavigate }: HeroSectionProps) {
+  const titleRef = useSplitTextAnimation('.hero-title-split');
+
   const scrollToSearch = () => {
     const el = document.getElementById('buscador');
     if (el) {
@@ -54,25 +58,25 @@ export default function HeroSection({ onNavigate }: HeroSectionProps) {
       <div
         className="relative w-full px-6 sm:px-12 md:px-16 mx-auto"
         style={{ zIndex: 10, maxWidth: '56rem' }}
+        ref={titleRef}
       >
-        <div className="hero-title-wrap">
-          <h1 className="hero-title-text text-2xl sm:text-3xl md:text-5xl lg:text-[52px] text-white tracking-tight" style={{ fontFamily: "'Avenir Next Ultra Light', 'Avenir LT Pro 65 Medium', 'Avenir', 'Outfit', system-ui, sans-serif", fontWeight: 200 }}>
-            <div>
-              <span className="hero-line-seg hero-line-first">
-                <AnimatedText text="60 años" startIndex={0} />
-              </span>
-              {' '}
-              <span className="hero-line-seg hero-line-highlight">
-                <AnimatedText text="acompañando" startIndex={7} />
-              </span>
-            </div>
-            <div>
-              <span className="hero-line-seg hero-line-last">
-                <AnimatedText text="decisiones que importan." startIndex={18} />
-              </span>
-            </div>
-          </h1>
-        </div>
+        <h1 className="hero-title-split text-2xl sm:text-3xl md:text-5xl lg:text-[52px] text-white tracking-tight" style={{ fontFamily: "'Avenir Next Ultra Light', 'Avenir LT Pro 65 Medium', 'Avenir', 'Outfit', system-ui, sans-serif", fontWeight: 200, lineHeight: '0.65', opacity: 1 }}>
+          60 años <span className="text-brand-red font-bold">acompañando</span>
+          <br />
+          <span
+            className="text-brand-red inline-block"
+            style={{
+              fontWeight: 700,
+              background: 'linear-gradient(to bottom, transparent 60%, #f32735 60%, #f32735 84%, transparent 84%)',
+              WebkitBoxDecorationBreak: 'clone',
+              boxDecorationBreak: 'clone',
+              padding: '0 4px',
+              margin: '0 -4px',
+            }}
+          >
+            decisiones que importan.
+          </span>
+        </h1>
         <p
           className="mt-5 text-base sm:text-lg text-white max-w-2xl"
           style={{
@@ -84,7 +88,7 @@ export default function HeroSection({ onNavigate }: HeroSectionProps) {
             textShadow: '0 1px 10px rgba(0,0,0,0.4)',
           }}
         >
-          Respaldo y experiencia para encontrar o gestionar tu propiedad ideal en Antioquia.
+          Inmuebles disponibles ahora. Consulta, agenda o pide asesoría.
         </p>
 
         {/* CTAs jerárquicos — botones cápsula con hover blanco + resplandor rojo */}
