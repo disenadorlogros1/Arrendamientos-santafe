@@ -41,7 +41,7 @@ export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) 
               Nuestra trayectoria
             </span>
             <h2
-              className="trayectoria-title-split text-3xl sm:text-4xl lg:text-5xl text-brand-dark leading-tight"
+              className="trayectoria-title-split text-3xl sm:text-4xl lg:text-5xl text-brand-red leading-tight"
               style={{
                 fontFamily:
                   "'Avenir Next Ultra Light', 'Avenir LT Pro 65 Medium', 'Avenir', 'Outfit', system-ui, sans-serif",
@@ -49,8 +49,15 @@ export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) 
                 lineHeight: '0.35',
               }}
             >
-              <span className="text-brand-red font-medium">60 años</span> de
-              experiencia inmobiliaria en Antioquia
+              Inmobiliaria con{' '}
+              <span
+                style={{
+                  fontWeight: 700,
+                }}
+              >
+                60 años de experiencia
+              </span>
+              {' '}en Antioquia
             </h2>
             <p className="mt-5 text-base sm:text-lg text-gray-600 leading-relaxed max-w-xl">
               Desde 1966 acompañamos a personas, familias y propietarios en

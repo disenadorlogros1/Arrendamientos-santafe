@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 
-export const useSplitTextAnimation = (selector: string) => {
+export const useSplitTextAnimation = (selector: string, initialDelay: number = 0) => {
   const ref = useRef<HTMLElement>(null);
   const hasAnimated = useRef(false);
 
@@ -68,10 +68,10 @@ export const useSplitTextAnimation = (selector: string) => {
             // Esperar a que las fuentes estén cargadas
             if (document.fonts && document.fonts.ready) {
               document.fonts.ready.then(() => {
-                setTimeout(animateText, 100);
+                setTimeout(animateText, 100 + initialDelay);
               });
             } else {
-              setTimeout(animateText, 300);
+              setTimeout(animateText, 300 + initialDelay);
             }
 
             // Dejar de observar después de animar

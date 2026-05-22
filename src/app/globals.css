@@ -471,6 +471,9 @@ input[type="range"]::-moz-range-track {
 }
 
 .hero-title-split,
-.featured-title-split {
+.featured-title-split,
+.trayectoria-title-split,
+.propietarios-title-split {
   line-height: inherit;
+  opacity: 0;
 }

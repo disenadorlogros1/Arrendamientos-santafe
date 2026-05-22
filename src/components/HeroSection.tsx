@@ -69,24 +69,16 @@ export default function HeroSection({ onNavigate }: HeroSectionProps) {
             lineHeight: '0.18',
           }}
         >
-          60 años{' '}
+          60 años acompañando decisiones{' '}
           <span
-            className="text-brand-red inline-block"
+            className="inline-block"
             style={{
               fontWeight: 700,
             }}
           >
-            acompañando
+            que importan
           </span>
-          {' '}
-          <span
-            className="text-brand-red inline-block"
-            style={{
-              fontWeight: 700,
-            }}
-          >
-            decisiones que importan.
-          </span>
+          .
         </h1>
         <p
           className="mt-5 text-base sm:text-lg text-white max-w-2xl"

@@ -12,7 +12,7 @@ interface FeaturedSectionProps {
 
 export default function FeaturedSection({ onNavigate }: FeaturedSectionProps) {
   const featured = properties.filter((p) => p.featured);
-  const titleRef = useSplitTextAnimation('.featured-title-split');
+  const titleRef = useSplitTextAnimation('.featured-title-split', 3500);
 
   return (
     <section className="py-6 md:py-10">
@@ -26,7 +26,14 @@ export default function FeaturedSection({ onNavigate }: FeaturedSectionProps) {
               lineHeight: '0.35',
             }}
           >
-            Propiedades destacadas
+            Propiedades{' '}
+            <span
+              style={{
+                fontWeight: 700,
+              }}
+            >
+              destacadas
+            </span>
           </h2>
           <p
             className="mt-1 text-sm sm:text-base max-w-xl"
