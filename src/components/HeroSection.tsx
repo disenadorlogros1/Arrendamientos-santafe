@@ -80,10 +80,11 @@ export default function HeroSection({ onNavigate }: HeroSectionProps) {
             fontFamily:
               "'Avenir Next Ultra Light', 'Avenir LT Pro 65 Medium', 'Avenir', 'Outfit', system-ui, sans-serif",
             fontWeight: 300,
-            lineHeight: '0.18',
+            lineHeight: '1.2',
           }}
         >
-          60 años acompañando decisiones{' '}
+          60 años acompañando{' '}
+          <span style={{ display: 'block' }}>decisiones</span>
           <span
             style={{
               fontWeight: 700,

@@ -47,18 +47,20 @@ export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) 
                 fontFamily:
                   "'Avenir Next Ultra Light', 'Avenir LT Pro 65 Medium', 'Avenir', 'Outfit', system-ui, sans-serif",
                 fontWeight: 300,
-                lineHeight: '0.35',
+                lineHeight: '1.2',
               }}
             >
               Inmobiliaria con{' '}
-              <span
-                style={{
-                  fontWeight: 700,
-                }}
-              >
-                60 años de experiencia
+              <span style={{ display: 'block' }}>
+                <span
+                  style={{
+                    fontWeight: 700,
+                  }}
+                >
+                  60 años de experiencia
+                </span>
               </span>
-              {' '}en Antioquia
+              en Antioquia
             </h2>
             <p className="mt-5 text-base sm:text-lg text-gray-600 leading-relaxed max-w-xl">
               Desde 1966 acompañamos a personas, familias y propietarios en
