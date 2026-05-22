@@ -31,7 +31,9 @@ const TIPOS_INMUEBLE = [
 const HABITACIONES = ['1', '2', '3', '4', '5+'];
 const BANOS = ['1', '2', '3', '4', '5+'];
 const PARQUEADEROS = ['0', '1', '2', '3+'];
+const ESTRATOS = ['1', '2', '3', '4', '5', '6'];
 const AREAS = ['50m²', '100m²', '150m²', '200m²', '250m²', '300m²', '400m²', '500m²+'];
+const AREA_VALUES = { min: 50, max: 500, step: 50 } as const;
 
 const PRICE_RANGES = {
   arrendar: { min: 100000, max: 10000000, step: 100000 },
@@ -148,9 +150,10 @@ export default function SearchForm({ onNavigate }: SearchFormProps) {
   const [precioMin, setPrecioMin] = useState(PRICE_RANGES.arrendar.min);
   const [precioMax, setPrecioMax] = useState(PRICE_RANGES.arrendar.max);
   const [banos, setBanos] = useState('');
-  const [areaMin, setAreaMin] = useState('');
-  const [areaMax, setAreaMax] = useState('');
+  const [areaMin, setAreaMin] = useState(AREA_VALUES.min);
+  const [areaMax, setAreaMax] = useState(AREA_VALUES.max);
   const [parqueaderos, setParqueaderos] = useState('');
+  const [estrato, setEstrato] = useState('');
   const [codigoInmueble, setCodigoInmueble] = useState('');
 
   const handleTabClick = (type: 'arrendar' | 'comprar') => {
@@ -244,11 +247,11 @@ export default function SearchForm({ onNavigate }: SearchFormProps) {
               // Búsqueda por ubicación - Filtros básicos
               <div className="flex flex-col sm:flex-row sm:flex-nowrap items-stretch bg-white border-b border-gray-100">
                 <div className={`${filterCell} border-b sm:border-b-0 sm:border-r border-gray-100`}>
-                  <img src="/icons/icon-location-red.gif" alt="Ubicación" className="w-[22px] h-[22px] flex-shrink-0" />
+                  <img src="/icons/icon-location-red.gif" alt="Ubicación" className="w-[26px] h-[26px] flex-shrink-0" />
                   <CustomSelect label="Ubicación" value={sector} onChange={setSector} options={SECTORES} placeholder="Seleccionar" />
                 </div>
                 <div className={`${filterCell} border-b sm:border-b-0 sm:border-r border-gray-100`}>
-                  <img src="/icons/icon-dollar-red.gif" alt="Precio" className="w-[22px] h-[22px] flex-shrink-0" />
+                  <img src="/icons/icon-dollar-red.gif" alt="Precio" className="w-[26px] h-[26px] flex-shrink-0" />
                   <div className="min-w-0 flex-1">
                     <p className="leading-tight mb-[2px]" style={{ fontFamily: FONT, fontSize: '11px', color: COLOR_LABEL, fontWeight: 300 }}>Precio</p>
                     <div className="relative h-6">
@@ -293,11 +296,11 @@ export default function SearchForm({ onNavigate }: SearchFormProps) {
                   </div>
                 </div>
                 <div className={`${filterCell} border-b sm:border-b-0 sm:border-r border-gray-100`}>
-                  <img src="/icons/icon-home-red.gif" alt="Tipo de propiedad" className="w-[22px] h-[22px] flex-shrink-0" />
+                  <img src="/icons/icon-home-red.gif" alt="Tipo de propiedad" className="w-[26px] h-[26px] flex-shrink-0" />
                   <CustomSelect label="Tipo de propiedad" value={tipo} onChange={setTipo} options={TIPOS_INMUEBLE} placeholder="Seleccionar" />
                 </div>
                 <div className={filterCell}>
-                  <img src="/icons/icon-bed-red.gif" alt="Habitaciones" className="w-[22px] h-[22px] flex-shrink-0" />
+                  <img src="/icons/icon-bed-red.gif" alt="Habitaciones" className="w-[26px] h-[26px] flex-shrink-0" />
                   <CustomSelect label="Habitaciones" value={habitaciones} onChange={setHabitaciones} options={HABITACIONES} placeholder="Seleccionar" />
                 </div>
               </div>
@@ -309,16 +312,60 @@ export default function SearchForm({ onNavigate }: SearchFormProps) {
         {step === 3 && searchMethod === 'ubicacion' && (
           <div className="flex flex-col sm:flex-row sm:flex-nowrap items-stretch bg-[#fafafa] border-b border-gray-100">
             <div className={`${filterCell} border-b sm:border-b-0 sm:border-r border-gray-100`}>
+              <img src="/icons/icon-bathroom-red.gif" alt="Baños" className="w-[26px] h-[26px] flex-shrink-0" />
               <CustomSelect label="Baños" value={banos} onChange={setBanos} options={BANOS} placeholder="Seleccionar" />
             </div>
             <div className={`${filterCell} border-b sm:border-b-0 sm:border-r border-gray-100`}>
-              <CustomSelect label="Área mínima" value={areaMin} onChange={setAreaMin} options={AREAS} placeholder="Seleccionar" />
+              <img src="/icons/icon-area-red.gif" alt="Área" className="w-[26px] h-[26px] flex-shrink-0" />
+              <div className="min-w-0 flex-1">
+                <p className="leading-tight mb-[2px]" style={{ fontFamily: FONT, fontSize: '11px', color: COLOR_LABEL, fontWeight: 300 }}>Área</p>
+                <div className="relative h-6">
+                  <input
+                    type="range"
+                    min={AREA_VALUES.min}
+                    max={AREA_VALUES.max}
+                    value={areaMin}
+                    onChange={(e) => {
+                      const newMin = parseInt(e.target.value);
+                      if (newMin <= areaMax) setAreaMin(newMin);
+                    }}
+                    className="absolute w-full h-1 bg-transparent rounded-lg appearance-none cursor-pointer pointer-events-none z-5 accent-brand-red"
+                    style={{ top: '50%', transform: 'translateY(-50%)' } as any}
+                  />
+                  <input
+                    type="range"
+                    min={AREA_VALUES.min}
+                    max={AREA_VALUES.max}
+                    value={areaMax}
+                    onChange={(e) => {
+                      const newMax = parseInt(e.target.value);
+                      if (newMax >= areaMin) setAreaMax(newMax);
+                    }}
+                    className="absolute w-full h-1 bg-transparent rounded-lg appearance-none cursor-pointer z-5 accent-brand-red"
+                    style={{ top: '50%', transform: 'translateY(-50%)' } as any}
+                  />
+                  <div className="absolute w-full h-1 bg-gray-200 rounded-lg z-0" style={{ top: '50%', transform: 'translateY(-50%)' }} />
+                  <div
+                    className="absolute h-1 bg-brand-red rounded-lg z-3"
+                    style={{
+                      left: `${((areaMin - AREA_VALUES.min) / (AREA_VALUES.max - AREA_VALUES.min)) * 100}%`,
+                      right: `${100 - ((areaMax - AREA_VALUES.min) / (AREA_VALUES.max - AREA_VALUES.min)) * 100}%`,
+                      top: '50%',
+                      transform: 'translateY(-50%)',
+                    }}
+                  />
+                </div>
+                <p style={{ fontFamily: FONT, fontSize: '12px', color: COLOR_VALUE, marginTop: '4px' }}>
+                  {areaMin}m² – {areaMax}m²
+                </p>
+              </div>
             </div>
             <div className={`${filterCell} border-b sm:border-b-0 sm:border-r border-gray-100`}>
-              <CustomSelect label="Área máxima" value={areaMax} onChange={setAreaMax} options={AREAS} placeholder="Seleccionar" />
+              <img src="/icons/icon-parking-red.gif" alt="Parqueaderos" className="w-[26px] h-[26px] flex-shrink-0" />
+              <CustomSelect label="Parqueaderos" value={parqueaderos} onChange={setParqueaderos} options={PARQUEADEROS} placeholder="Seleccionar" />
             </div>
             <div className={filterCell}>
-              <CustomSelect label="Parqueaderos" value={parqueaderos} onChange={setParqueaderos} options={PARQUEADEROS} placeholder="Seleccionar" />
+              <CustomSelect label="Estrato" value={estrato} onChange={setEstrato} options={ESTRATOS} placeholder="Seleccionar" />
             </div>
           </div>
         )}
