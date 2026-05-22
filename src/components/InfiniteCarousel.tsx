@@ -37,7 +37,6 @@ export default function InfiniteCarousel({ properties }: InfiniteCarouselProps) 
     isAnimating.current = true;
 
     const slots = containerRef.current.querySelectorAll<HTMLElement>('[data-slot]');
-    const enteringSlot = forward ? slots[slots.length - 1] : slots[0];
     const leavingSlot = forward ? slots[0] : slots[slots.length - 1];
 
     // Animar la card que sale
@@ -47,42 +46,42 @@ export default function InfiniteCarousel({ properties }: InfiniteCarouselProps) 
       transformOrigin: forward ? 'bottom left' : 'bottom right',
       duration: 0.45,
       ease: 'power2.in',
+      onComplete: () => {
+        // DESPUÉS de que la card salga, actualizar startIndex
+        flushSync(() => {
+          setStartIndex((prev) =>
+            forward
+              ? (prev + 1) % cards.length
+              : (prev - 1 + cards.length) % cards.length
+          );
+        });
+
+        // AHORA animar la card que ENTRA (que ya es diferente porque React actualizó)
+        requestAnimationFrame(() => {
+          const newSlots = containerRef.current?.querySelectorAll<HTMLElement>('[data-slot]');
+          if (!newSlots) return;
+          const enteringSlot = forward ? newSlots[newSlots.length - 1] : newSlots[0];
+
+          // Asegurar que esté invisible antes de animar
+          gsap.set(enteringSlot, { opacity: 0, scale: 0 });
+
+          gsap.fromTo(
+            enteringSlot,
+            { opacity: 0, scale: 0 },
+            {
+              opacity: 1,
+              scale: 1,
+              transformOrigin: forward ? 'bottom right' : 'bottom left',
+              duration: 0.45,
+              ease: 'power2.out',
+              onComplete: () => {
+                isAnimating.current = false;
+              },
+            }
+          );
+        });
+      },
     });
-
-    // Preparar la card que entra (invisible)
-    gsap.set(enteringSlot, { opacity: 0, scale: 0 });
-
-    // Actualizar el índice y animar la entrada
-    setTimeout(() => {
-      flushSync(() => {
-        setStartIndex((prev) =>
-          forward
-            ? (prev + 1) % cards.length
-            : (prev - 1 + cards.length) % cards.length
-        );
-      });
-
-      requestAnimationFrame(() => {
-        const newSlots = containerRef.current?.querySelectorAll<HTMLElement>('[data-slot]');
-        if (!newSlots) return;
-        const newEntering = forward ? newSlots[newSlots.length - 1] : newSlots[0];
-
-        gsap.fromTo(
-          newEntering,
-          { opacity: 0, scale: 0 },
-          {
-            opacity: 1,
-            scale: 1,
-            transformOrigin: forward ? 'bottom right' : 'bottom left',
-            duration: 0.45,
-            ease: 'power2.out',
-            onComplete: () => {
-              isAnimating.current = false;
-            },
-          }
-        );
-      });
-    }, 450);
   }, [cards.length]);
 
   return (
