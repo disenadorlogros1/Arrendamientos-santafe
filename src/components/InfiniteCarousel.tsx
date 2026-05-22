@@ -33,14 +33,25 @@ export default function InfiniteCarousel({ properties }: InfiniteCarouselProps) 
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Autoplay - las cards giran automáticamente cada 4 segundos
+  // Guardar navigate en un ref para usarlo en autoplay sin dependencias circulares
+  const navigateRef = useRef<(forward: boolean) => void>();
+
   useEffect(() => {
+    navigateRef.current = navigate;
+  }, [navigate]);
+
+  // Autoplay - las cards giran automáticamente cada 4 segundos con animación completa
+  useEffect(() => {
+    if (!isMounted) return;
+
     const autoplayInterval = setInterval(() => {
-      setStartIndex((prev) => (prev + 1) % cards.length);
+      if (navigateRef.current && !isAnimating.current) {
+        navigateRef.current(true);
+      }
     }, 4000);
 
     return () => clearInterval(autoplayInterval);
-  }, [cards.length]);
+  }, [isMounted]);
 
   // Valores responsivos
   const VISIBLE = windowWidth < 640 ? 1 : windowWidth < 1024 ? 2 : 4; // mobile: 1, tablet: 2, desktop: 4
