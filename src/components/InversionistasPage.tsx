@@ -176,6 +176,167 @@ export default function InversionistasPage() {
         </div>
       </section>
 
+      {/* Guía de Barrios */}
+      <section className="py-12 md:py-16 bg-gray-50">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5 }}
+          >
+            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-3 text-center">
+              Guía de Barrios Estratégicos
+            </h2>
+            <p className="text-gray-600 text-center mb-12 max-w-2xl mx-auto">
+              Explora los barrios de Medellín con mayor potencial de revalorización e ingresos por arrendamiento
+            </p>
+
+            {/* Barrios Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {/* Barrio 1: Poblado */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3 }}
+                className="bg-white rounded-lg overflow-hidden border border-gray-200 hover:shadow-xl transition-shadow"
+              >
+                <div className="h-48 bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white text-2xl font-bold">
+                  El Poblado
+                </div>
+                <div className="p-6">
+                  <div className="grid grid-cols-3 gap-4 mb-6 pb-6 border-b border-gray-200">
+                    <div className="text-center">
+                      <p className="text-2xl font-bold text-brand-red">$2.8M</p>
+                      <p className="text-xs text-gray-500">precio/m²</p>
+                    </div>
+                    <div className="text-center">
+                      <p className="text-2xl font-bold text-brand-red">5-7%</p>
+                      <p className="text-xs text-gray-500">rentabilidad anual</p>
+                    </div>
+                    <div className="text-center">
+                      <p className="text-2xl font-bold text-brand-red">Est. 4-6</p>
+                      <p className="text-xs text-gray-500">estrato</p>
+                    </div>
+                  </div>
+                  <h3 className="font-bold text-gray-900 mb-3">Por qué invertir</h3>
+                  <ul className="space-y-2 text-sm text-gray-700 mb-6">
+                    <li>✓ Zona de mayor demanda de arriendos turísticos</li>
+                    <li>✓ Oferta gastronómica y comercial de clase mundial</li>
+                    <li>✓ Zona segura y bien conectada</li>
+                    <li>✓ Infraestructura moderna y servicios premium</li>
+                  </ul>
+                </div>
+              </motion.div>
+
+              {/* Barrio 2: Laureles */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, delay: 0.1 }}
+                className="bg-white rounded-lg overflow-hidden border border-gray-200 hover:shadow-xl transition-shadow"
+              >
+                <div className="h-48 bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center text-white text-2xl font-bold">
+                  Laureles
+                </div>
+                <div className="p-6">
+                  <div className="grid grid-cols-3 gap-4 mb-6 pb-6 border-b border-gray-200">
+                    <div className="text-center">
+                      <p className="text-2xl font-bold text-brand-red">$1.5M</p>
+                      <p className="text-xs text-gray-500">precio/m²</p>
+                    </div>
+                    <div className="text-center">
+                      <p className="text-2xl font-bold text-brand-red">6-8%</p>
+                      <p className="text-xs text-gray-500">rentabilidad anual</p>
+                    </div>
+                    <div className="text-center">
+                      <p className="text-2xl font-bold text-brand-red">Est. 3-4</p>
+                      <p className="text-xs text-gray-500">estrato</p>
+                    </div>
+                  </div>
+                  <h3 className="font-bold text-gray-900 mb-3">Por qué invertir</h3>
+                  <ul className="space-y-2 text-sm text-gray-700 mb-6">
+                    <li>✓ Mejor relación precio-rentabilidad</li>
+                    <li>✓ Zona residencial consolidada y segura</li>
+                    <li>✓ Comunidad de clase media estable</li>
+                    <li>✓ Acceso fácil a transporte público</li>
+                  </ul>
+                </div>
+              </motion.div>
+
+              {/* Barrio 3: Envigado */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, delay: 0.2 }}
+                className="bg-white rounded-lg overflow-hidden border border-gray-200 hover:shadow-xl transition-shadow"
+              >
+                <div className="h-48 bg-gradient-to-br from-purple-400 to-purple-600 flex items-center justify-center text-white text-2xl font-bold">
+                  Envigado
+                </div>
+                <div className="p-6">
+                  <div className="grid grid-cols-3 gap-4 mb-6 pb-6 border-b border-gray-200">
+                    <div className="text-center">
+                      <p className="text-2xl font-bold text-brand-red">$1.8M</p>
+                      <p className="text-xs text-gray-500">precio/m²</p>
+                    </div>
+                    <div className="text-center">
+                      <p className="text-2xl font-bold text-brand-red">6-7%</p>
+                      <p className="text-xs text-gray-500">rentabilidad anual</p>
+                    </div>
+                    <div className="text-center">
+                      <p className="text-2xl font-bold text-brand-red">Est. 3-5</p>
+                      <p className="text-xs text-gray-500">estrato</p>
+                    </div>
+                  </div>
+                  <h3 className="font-bold text-gray-900 mb-3">Por qué invertir</h3>
+                  <ul className="space-y-2 text-sm text-gray-700 mb-6">
+                    <li>✓ Municipio independiente con crecimiento sostenido</li>
+                    <li>✓ Centro comercial y de negocios en expansión</li>
+                    <li>✓ Comunidad próspera y en crecimiento</li>
+                    <li>✓ Proyectos de desarrollo inmobiliario importantes</li>
+                  </ul>
+                </div>
+              </motion.div>
+
+              {/* Barrio 4: Sabaneta */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, delay: 0.3 }}
+                className="bg-white rounded-lg overflow-hidden border border-gray-200 hover:shadow-xl transition-shadow"
+              >
+                <div className="h-48 bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center text-white text-2xl font-bold">
+                  Sabaneta
+                </div>
+                <div className="p-6">
+                  <div className="grid grid-cols-3 gap-4 mb-6 pb-6 border-b border-gray-200">
+                    <div className="text-center">
+                      <p className="text-2xl font-bold text-brand-red">$1.2M</p>
+                      <p className="text-xs text-gray-500">precio/m²</p>
+                    </div>
+                    <div className="text-center">
+                      <p className="text-2xl font-bold text-brand-red">7-9%</p>
+                      <p className="text-xs text-gray-500">rentabilidad anual</p>
+                    </div>
+                    <div className="text-center">
+                      <p className="text-2xl font-bold text-brand-red">Est. 2-4</p>
+                      <p className="text-xs text-gray-500">estrato</p>
+                    </div>
+                  </div>
+                  <h3 className="font-bold text-gray-900 mb-3">Por qué invertir</h3>
+                  <ul className="space-y-2 text-sm text-gray-700 mb-6">
+                    <li>✓ Mejor valor por metro cuadrado</li>
+                    <li>✓ Demanda creciente de vivienda</li>
+                    <li>✓ Proyectos de infraestructura en desarrollo</li>
+                    <li>✓ Rentabilidad superior al promedio</li>
+                  </ul>
+                </div>
+              </motion.div>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
       {/* Por qué elegirnos */}
       <section className="py-12 md:py-16 bg-white">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
