@@ -1,7 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useCallback, useState } from 'react';
-import gsap from 'gsap';
+import { useState, useCallback } from 'react';
 import PropertyCard from './PropertyCard';
 import type { Property } from '@/data/properties';
 
@@ -10,75 +9,38 @@ interface InfiniteCarouselProps {
 }
 
 export default function InfiniteCarousel({ properties }: InfiniteCarouselProps) {
-  const wrapperRef = useRef<HTMLDivElement>(null);
-  const trackRef = useRef<HTMLDivElement>(null);
-  const [currentIndex, setCurrentIndex] = useState(0);
-
-  const cardWidth = 280; // card width + gap
-  const repeticiones = 3; // Repetir las cards 3 veces (total: 12 cards si tienes 4)
+  const repeticiones = 3;
   const cardsExtendidas = Array.from({ length: repeticiones }, (_, i) =>
-    properties.map((prop, idx) => ({ ...prop, id: `${prop.id}-${i}` }))
+    properties.map((prop) => ({ ...prop, id: `${prop.id}-${i}` }))
   ).flat();
 
-  // Navegar a la siguiente card
+  const [currentIndex, setCurrentIndex] = useState(0);
+
   const handleNext = useCallback(() => {
-    const nextIndex = (currentIndex + 1) % cardsExtendidas.length;
-    setCurrentIndex(nextIndex);
+    setCurrentIndex((prev) => (prev + 1) % cardsExtendidas.length);
+  }, [cardsExtendidas.length]);
 
-    if (trackRef.current) {
-      gsap.to(trackRef.current, {
-        x: -nextIndex * cardWidth,
-        duration: 0.5,
-        ease: 'power2.out',
-      });
-    }
-  }, [currentIndex, cardsExtendidas.length, cardWidth]);
-
-  // Navegar a la anterior card
   const handlePrev = useCallback(() => {
-    const prevIndex = currentIndex === 0 ? cardsExtendidas.length - 1 : currentIndex - 1;
-    setCurrentIndex(prevIndex);
-
-    if (trackRef.current) {
-      gsap.to(trackRef.current, {
-        x: -prevIndex * cardWidth,
-        duration: 0.5,
-        ease: 'power2.out',
-      });
-    }
-  }, [currentIndex, cardsExtendidas.length, cardWidth]);
-
-  // Inicializar posición
-  useEffect(() => {
-    if (trackRef.current) {
-      gsap.set(trackRef.current, { x: 0 });
-    }
-  }, []);
+    setCurrentIndex((prev) =>
+      prev === 0 ? cardsExtendidas.length - 1 : prev - 1
+    );
+  }, [cardsExtendidas.length]);
 
   return (
     <div className="wrapper">
-      <div
-        ref={wrapperRef}
-        className="w-full overflow-hidden"
-      >
-        <div
-          ref={trackRef}
-          className="flex"
-          style={{ gap: '16px', willChange: 'transform' }}
-        >
-          {cardsExtendidas.map((property) => (
-            <div
-              key={property.id}
-              className="flex-shrink-0"
-              style={{ width: `${cardWidth - 16}px`, minWidth: `${cardWidth - 16}px` }}
-            >
-              <PropertyCard property={property} />
-            </div>
-          ))}
-        </div>
+      {/* Contenedor de cards — solo la activa es visible */}
+      <div className="w-full" style={{ minHeight: 420 }}>
+        {cardsExtendidas.map((property, index) => (
+          <div
+            key={property.id}
+            className={index !== currentIndex ? 'hide' : ''}
+          >
+            <PropertyCard property={property} />
+          </div>
+        ))}
       </div>
 
-      {/* Navigation arrows */}
+      {/* Botones de navegación */}
       <div className="buttons">
         <button
           type="button"
@@ -90,6 +52,11 @@ export default function InfiniteCarousel({ properties }: InfiniteCarouselProps) 
             <polyline points="15 18 9 12 15 6" />
           </svg>
         </button>
+
+        {/* Indicador */}
+        <span className="text-sm text-gray-400 self-center">
+          {currentIndex + 1} / {cardsExtendidas.length}
+        </span>
 
         <button
           type="button"
