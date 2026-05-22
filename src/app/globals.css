@@ -470,6 +470,11 @@ input[type="range"]::-moz-range-track {
   line-height: 1;
 }
 
+/* ── Carousel card visibility ── */
+.hide {
+  display: none;
+}
+
 .hero-title-split,
 .featured-title-split,
 .trayectoria-title-split,
