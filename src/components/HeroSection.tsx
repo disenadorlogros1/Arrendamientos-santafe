@@ -48,12 +48,7 @@ export default function HeroSection({ onNavigate }: HeroSectionProps) {
   }, []);
 
   const scrollToSearch = () => {
-    const el = document.getElementById('buscador');
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    } else {
-      window.scrollTo({ top: window.innerHeight * 0.7, behavior: 'smooth' });
-    }
+    onNavigate?.('propiedades');
   };
 
   return (

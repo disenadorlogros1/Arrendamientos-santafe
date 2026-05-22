@@ -26,6 +26,10 @@ export default function PropertyCard({ property }: PropertyCardProps) {
     router.push(`/propiedad/${property.id}`);
   }, [router, property.id]);
 
+  const handleImageClick = useCallback(() => {
+    router.push(`/propiedad/${property.id}`);
+  }, [router, property.id]);
+
   // Construir mensaje de comodidades para Favorito/WhatsApp
   const buildAmenitiesMessage = () => {
     const amenities: string[] = [];
@@ -70,7 +74,11 @@ es una de mis favoritas en arrendamiento Santa Fe`;
         onMouseLeave={handleMouseLeave}
       >
         {/* Image Container — Vertical Layout */}
-        <div className="relative overflow-hidden w-full" style={{ aspectRatio: '4/5' }}>
+        <div
+          className="relative overflow-hidden w-full cursor-pointer"
+          style={{ aspectRatio: '4/5' }}
+          onClick={handleImageClick}
+        >
           <img
             src={property.image}
             alt={property.title}
@@ -82,8 +90,8 @@ es una de mis favoritas en arrendamiento Santa Fe`;
             loading="lazy"
           />
 
-          {/* 4 Botones en esquina superior derecha */}
-          <div className="absolute top-3 right-3 flex flex-col gap-2">
+          {/* 4 Botones en columna vertical centrada */}
+          <div className="absolute top-1/2 right-3 transform -translate-y-1/2 flex flex-col gap-2">
             {/* Ver Más */}
             <button
               type="button"
@@ -106,8 +114,6 @@ es una de mis favoritas en arrendamiento Santa Fe`;
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                transform: hoveredButton === 'more' ? 'scale(1)' : 'scale(0.55)',
-                transformOrigin: 'top right',
               }}
             >
               <img

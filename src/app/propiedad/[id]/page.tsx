@@ -1,12 +1,13 @@
 'use client';
 
 import { properties } from '@/data/properties';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 
 export default function PropertyDetailPage() {
   const params = useParams();
+  const router = useRouter();
   const propertyId = parseInt(params.id as string);
   const property = properties.find((p) => p.id === propertyId);
 
@@ -29,13 +30,13 @@ export default function PropertyDetailPage() {
       <div className="bg-white border-b border-gray-200 py-4 px-6">
         <div className="max-w-7xl mx-auto">
           <div className="flex items-center gap-2 text-sm text-gray-600">
-            <Link href="/" className="text-brand-red hover:underline">
-              Inicio
-            </Link>
-            <span>/</span>
-            <Link href="/" className="text-brand-red hover:underline">
-              Propiedades
-            </Link>
+            <button
+              onClick={() => router.back()}
+              className="text-brand-red hover:underline font-semibold"
+              title="Volver"
+            >
+              ← Atrás
+            </button>
             <span>/</span>
             <span className="text-gray-900">{property.title}</span>
           </div>
