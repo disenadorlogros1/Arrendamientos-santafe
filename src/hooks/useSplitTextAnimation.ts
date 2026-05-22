@@ -42,11 +42,18 @@ export const useSplitTextAnimation = (selector: string, initialDelay: number = 0
         console.log('[SplitText] Líneas encontradas:', split.lines.length);
 
         if (animateToVisible) {
-          // Animar el padre (h1/h2) a opacity 1
+          // Establecer estado inicial si es la primera vez
+          if (!split.lines[0]._gsap) {
+            gsap.set(target as HTMLElement, { opacity: 0, y: 80 });
+            gsap.set(split.lines, { opacity: 0, y: 80 });
+          }
+
+          // Animar el padre (h1/h2) hacia arriba y fade in
           gsap.to(target as HTMLElement, {
             opacity: 1,
+            y: 0,
             duration: 1.4,
-            ease: 'none',
+            ease: 'power2.out',
           });
 
           // Animar líneas desde abajo hacia arriba
@@ -58,18 +65,19 @@ export const useSplitTextAnimation = (selector: string, initialDelay: number = 0
             ease: 'expo.out',
           });
         } else {
-          // Animar de vuelta a invisible (para scroll hacia arriba)
+          // Animar de vuelta a invisible (para scroll hacia arriba) - INMEDIATO, sin delay
           gsap.to(target as HTMLElement, {
             opacity: 0,
-            duration: 0.8,
+            y: 80,
+            duration: 0.6,
             ease: 'power2.in',
           });
 
           gsap.to(split.lines, {
-            duration: 0.8,
+            duration: 0.6,
             y: 80,
             opacity: 0,
-            stagger: 0.15,
+            stagger: 0.1,
             ease: 'power2.in',
           });
         }
@@ -85,18 +93,23 @@ export const useSplitTextAnimation = (selector: string, initialDelay: number = 0
           entries.forEach((entry) => {
             console.log('[SplitText] Elemento visible:', entry.isIntersecting);
 
-            // Esperar a que las fuentes estén cargadas
-            if (document.fonts && document.fonts.ready) {
-              document.fonts.ready.then(() => {
-                setTimeout(() => animateText(entry.isIntersecting), 100 + initialDelay);
-              });
+            // Si está saliendo (hacia arriba), ejecutar inmediatamente sin delay
+            if (!entry.isIntersecting) {
+              animateText(false);
             } else {
-              setTimeout(() => animateText(entry.isIntersecting), 300 + initialDelay);
+              // Si está entrando, respetar el delay
+              if (document.fonts && document.fonts.ready) {
+                document.fonts.ready.then(() => {
+                  setTimeout(() => animateText(true), 100 + initialDelay);
+                });
+              } else {
+                setTimeout(() => animateText(true), 300 + initialDelay);
+              }
             }
           });
         },
         {
-          threshold: 0.3,
+          threshold: 0.1, // Detecta más rápido cuando sale de pantalla
         }
       );
 
