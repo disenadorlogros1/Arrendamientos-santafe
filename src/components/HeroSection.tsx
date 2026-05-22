@@ -1,5 +1,7 @@
 'use client';
 
+import { useRef, useEffect } from 'react';
+import gsap from 'gsap';
 import { useSplitTextAnimation } from '@/hooks/useSplitTextAnimation';
 
 interface HeroSectionProps {
@@ -27,6 +29,23 @@ const AnimatedText = ({ text, startIndex = 0 }: { text: string; startIndex?: num
 
 export default function HeroSection({ onNavigate }: HeroSectionProps) {
   const titleRef = useSplitTextAnimation('.hero-title-split');
+  const underlineRef = useRef<HTMLSpanElement>(null);
+
+  // Animar el subrayado después de que termine el título (1.4s duración del título)
+  useEffect(() => {
+    if (!underlineRef.current) return;
+
+    // Iniciar invisible
+    gsap.set(underlineRef.current, { scaleX: 0, transformOrigin: 'left center' });
+
+    // Aparecer deslizándose de izquierda a derecha después del título
+    gsap.to(underlineRef.current, {
+      scaleX: 1,
+      duration: 0.9,
+      delay: 1.6,
+      ease: 'power3.out',
+    });
+  }, []);
 
   const scrollToSearch = () => {
     const el = document.getElementById('buscador');
@@ -71,14 +90,29 @@ export default function HeroSection({ onNavigate }: HeroSectionProps) {
         >
           60 años acompañando decisiones{' '}
           <span
-            className="inline-block"
             style={{
               fontWeight: 700,
+              position: 'relative',
+              display: 'inline-block',
             }}
           >
-            que importan
+            que importan.
+            {/* Subrayado independiente — no afecta el texto ni el interlineado */}
+            <span
+              ref={underlineRef}
+              aria-hidden="true"
+              style={{
+                position: 'absolute',
+                bottom: -6,
+                left: 0,
+                width: '100%',
+                height: 10,
+                backgroundColor: '#f32735',
+                borderRadius: 2,
+                display: 'block',
+              }}
+            />
           </span>
-          .
         </h1>
         <p
           className="mt-5 text-base sm:text-lg text-white max-w-2xl"

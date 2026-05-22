@@ -98,7 +98,8 @@ export const useSplitTextAnimation = (selector: string, initialDelay: number = 0
           });
         },
         {
-          threshold: 0.1,
+          threshold: 0.2,
+          rootMargin: '0px 0px -15% 0px',
         }
       );
 
