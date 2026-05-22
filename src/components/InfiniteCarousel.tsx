@@ -1,6 +1,7 @@
 'use client';
 
-import { useRef, useCallback, useState, useEffect } from 'react';
+import { useRef, useCallback, useState } from 'react';
+import { flushSync } from 'react-dom';
 import gsap from 'gsap';
 import PropertyCard from './PropertyCard';
 import type { Property } from '@/data/properties';
@@ -15,8 +16,8 @@ const buildCards = (properties: Property[]) =>
     properties.map((p) => ({ ...p, uid: `${p.id}-${rep}` }))
   ).flat();
 
-const VISIBLE = 3; // Cuántas cards se ven al mismo tiempo
-const CARD_W = 300;
+const VISIBLE = 4; // Cuántas cards se ven al mismo tiempo
+const CARD_W = 270;
 const GAP = 16;
 
 export default function InfiniteCarousel({ properties }: InfiniteCarouselProps) {
@@ -53,11 +54,13 @@ export default function InfiniteCarousel({ properties }: InfiniteCarouselProps) 
 
     // Actualizar el índice y animar la entrada
     setTimeout(() => {
-      setStartIndex((prev) =>
-        forward
-          ? (prev + 1) % cards.length
-          : (prev - 1 + cards.length) % cards.length
-      );
+      flushSync(() => {
+        setStartIndex((prev) =>
+          forward
+            ? (prev + 1) % cards.length
+            : (prev - 1 + cards.length) % cards.length
+        );
+      });
 
       requestAnimationFrame(() => {
         const newSlots = containerRef.current?.querySelectorAll<HTMLElement>('[data-slot]');
