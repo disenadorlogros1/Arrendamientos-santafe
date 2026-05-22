@@ -20,6 +20,8 @@ export interface Property {
   petFriendly?: boolean;
   furnished?: boolean;
   businessType?: "Arrendar" | "Comprar";
+  latitude?: number;
+  longitude?: number;
 }
 
 export const properties: Property[] = [
@@ -44,6 +46,8 @@ export const properties: Property[] = [
     garage: 1,
     furnished: false,
     businessType: "Comprar",
+    latitude: 6.2480,
+    longitude: -75.5700,
   },
   {
     id: 2,
@@ -66,6 +70,8 @@ export const properties: Property[] = [
     garage: 2,
     furnished: false,
     businessType: "Comprar",
+    latitude: 6.2240,
+    longitude: -75.5710,
   },
   {
     id: 3,
@@ -88,6 +94,8 @@ export const properties: Property[] = [
     garage: 2,
     furnished: false,
     businessType: "Comprar",
+    latitude: 6.2240,
+    longitude: -75.5710,
   },
   {
     id: 4,
@@ -110,6 +118,8 @@ export const properties: Property[] = [
     garage: 2,
     furnished: false,
     businessType: "Comprar",
+    latitude: 6.2480,
+    longitude: -75.5890,
   },
   {
     id: 5,
@@ -132,6 +142,8 @@ export const properties: Property[] = [
     garage: 1,
     furnished: false,
     businessType: "Arrendar",
+    latitude: 6.5538,
+    longitude: -75.8133,
   },
   {
     id: 6,
@@ -154,6 +166,8 @@ export const properties: Property[] = [
     garage: 2,
     furnished: false,
     businessType: "Arrendar",
+    latitude: 6.2476,
+    longitude: -75.5695,
   },
   {
     id: 7,
@@ -176,6 +190,8 @@ export const properties: Property[] = [
     garage: 1,
     furnished: false,
     businessType: "Arrendar",
+    latitude: 6.2690,
+    longitude: -75.5520,
   },
   {
     id: 8,
@@ -198,6 +214,8 @@ export const properties: Property[] = [
     garage: 1,
     furnished: false,
     businessType: "Arrendar",
+    latitude: 6.2530,
+    longitude: -75.5440,
   },
   {
     id: 9,
@@ -220,6 +238,8 @@ export const properties: Property[] = [
     garage: 1,
     furnished: false,
     businessType: "Arrendar",
+    latitude: 6.2290,
+    longitude: -75.5670,
   },
   {
     id: 10,
@@ -242,6 +262,8 @@ export const properties: Property[] = [
     garage: 1,
     furnished: false,
     businessType: "Arrendar",
+    latitude: 6.2292,
+    longitude: -75.5672,
   },
   {
     id: 11,
@@ -263,6 +285,9 @@ export const properties: Property[] = [
     characteristics: ["Patio", "Zona de servicios", "Familiar"],
     garage: 1,
     furnished: false,
+    businessType: "Arrendar",
+    latitude: 6.2688,
+    longitude: -75.5525,
   },
   {
     id: 12,
@@ -285,6 +310,8 @@ export const properties: Property[] = [
     garage: 1,
     furnished: false,
     businessType: "Arrendar",
+    latitude: 6.2690,
+    longitude: -75.5530,
   },
 ];
 

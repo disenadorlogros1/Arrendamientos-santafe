@@ -7,6 +7,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import MapComponent from '@/components/MapComponent';
 import type { PageType } from '@/components/Header';
 
 export default function PropertyDetailPage() {
@@ -193,21 +194,17 @@ export default function PropertyDetailPage() {
                 </div>
               </div>
 
-              {/* Mapa de OpenStreetMap - Solo para propiedades de arrendar */}
-              {property.businessType === 'Arrendar' && (
+              {/* Mapa Leaflet con Carto */}
+              {property.latitude && property.longitude && (
                 <div className="mt-6">
                   <h2 className="text-lg font-bold text-gray-900 mb-4">Ubicación</h2>
-                  <div className="w-full h-96 rounded-lg overflow-hidden border border-gray-200">
-                    <iframe
-                      width="100%"
-                      height="100%"
-                      style={{ border: 0 }}
-                      loading="lazy"
-                      allowFullScreen
-                      src={`https://www.openstreetmap.org/export/embed.html?bbox=-75.6,6.1,-75.5,6.3&layer=mapnik&marker=${property.location}`}
-                    />
-                  </div>
-                  <p className="text-xs text-gray-500 mt-2">© OpenStreetMap contributors</p>
+                  <MapComponent
+                    latitude={property.latitude}
+                    longitude={property.longitude}
+                    title={property.title}
+                    businessType={property.businessType || 'Arrendar'}
+                  />
+                  <p className="text-xs text-gray-500 mt-2">© OpenStreetMap contributors © CARTO</p>
                 </div>
               )}
 
