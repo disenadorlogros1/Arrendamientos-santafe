@@ -80,11 +80,11 @@ export default function InfiniteCarousel({ properties }: InfiniteCarouselProps) 
 
   return (
     <div className="wrapper">
-      {/* Contenedor de cards */}
+      {/* Contenedor de cards — horizontal */}
       <div
         ref={containerRef}
-        className="container w-full overflow-hidden"
-        style={{ gap: '16px' }}
+        className="w-full overflow-hidden"
+        style={{ display: 'flex', flexDirection: 'row', gap: '16px' }}
       >
         {cards.map((property) => (
           <div
