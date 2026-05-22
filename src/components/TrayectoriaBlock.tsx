@@ -19,6 +19,8 @@ const HITOS = [
 ];
 
 export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) {
+  const titleRef = useSplitTextAnimation('.trayectoria-title-split');
+
   return (
     <section className="relative py-16 sm:py-24 bg-gradient-to-br from-gray-50 to-white overflow-hidden">
       {/* Acento decorativo */}
@@ -34,16 +36,17 @@ export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) 
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid lg:grid-cols-12 gap-10 items-center">
           {/* Texto */}
-          <div className="lg:col-span-6">
+          <div className="lg:col-span-6" ref={titleRef}>
             <span className="inline-block text-xs sm:text-sm font-semibold tracking-widest text-brand-red uppercase mb-3">
               Nuestra trayectoria
             </span>
             <h2
-              className="text-3xl sm:text-4xl lg:text-5xl text-brand-dark leading-tight"
+              className="trayectoria-title-split text-3xl sm:text-4xl lg:text-5xl text-brand-dark leading-tight"
               style={{
                 fontFamily:
                   "'Avenir Next Ultra Light', 'Avenir LT Pro 65 Medium', 'Avenir', 'Outfit', system-ui, sans-serif",
                 fontWeight: 300,
+                lineHeight: '0.65',
               }}
             >
               <span className="text-brand-red font-medium">60 años</span> de

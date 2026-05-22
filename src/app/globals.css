@@ -461,3 +461,14 @@ input[type="range"]::-moz-range-track {
   background: transparent;
   border: none;
 }
+
+/* ── GSAP SplitText animations ── */
+.split-line {
+  display: block;
+  overflow: visible;
+}
+
+.hero-title-split,
+.featured-title-split {
+  line-height: inherit;
+}
