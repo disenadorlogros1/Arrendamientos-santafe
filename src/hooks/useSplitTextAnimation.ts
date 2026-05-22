@@ -31,6 +31,9 @@ export const useSplitTextAnimation = (selector: string, initialDelay: number = 0
 
         console.log('[SplitText] Inicializando animación para:', selector);
 
+        // Establecer opacidad inicial a 0 antes de crear SplitText
+        (target as HTMLElement).style.opacity = '0';
+
         // Crear instancia de SplitText
         const split = new SplitText(target, {
           type: 'lines',

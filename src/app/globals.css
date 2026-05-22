@@ -475,5 +475,4 @@ input[type="range"]::-moz-range-track {
 .trayectoria-title-split,
 .propietarios-title-split {
   line-height: inherit;
-  opacity: 0;
 }
