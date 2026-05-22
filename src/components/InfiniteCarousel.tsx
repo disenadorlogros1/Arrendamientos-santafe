@@ -15,7 +15,6 @@ export default function InfiniteCarousel({ properties }: InfiniteCarouselProps) 
   const tweenRef = useRef<gsap.core.Tween | null>(null);
   const directionRef = useRef<'forward' | 'backward'>('forward');
   const [isPaused, setIsPaused] = useState(false);
-  const [isVisible, setIsVisible] = useState(true);
   const cardWidth = 280; // card width + gap (ajustado para layout vertical)
   const singleSetWidth = properties.length * cardWidth;
   const speedPerCard = 13; // seconds per card
@@ -103,28 +102,6 @@ export default function InfiniteCarousel({ properties }: InfiniteCarouselProps) 
     };
   }, []);
 
-  // Observer para hacer desaparecer/aparecer cards basado en scroll
-  useEffect(() => {
-    if (!wrapperRef.current) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          setIsVisible(entry.isIntersecting);
-        });
-      },
-      {
-        threshold: 0.1,
-      }
-    );
-
-    observer.observe(wrapperRef.current);
-
-    return () => {
-      observer.disconnect();
-    };
-  }, []);
-
   // Flecha izquierda: invierte la dirección del giro hacia la izquierda (cards entran por la izquierda).
   const handlePrev = useCallback(() => {
     if (!tweenRef.current || !trackRef.current) return;
@@ -183,7 +160,7 @@ export default function InfiniteCarousel({ properties }: InfiniteCarouselProps) 
       >
         <div
           ref={trackRef}
-          className={`flex ${!isVisible ? 'hide' : ''}`}
+          className="flex"
           style={{ gap: '16px', willChange: 'transform' }}
         >
           {/* Original set */}
