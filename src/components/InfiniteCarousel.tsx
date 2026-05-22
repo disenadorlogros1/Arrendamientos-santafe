@@ -34,13 +34,19 @@ export default function InfiniteCarousel({ properties }: InfiniteCarouselProps) 
   }, []);
 
   // Autoplay - las cards giran automáticamente cada 4 segundos
+  const navigateRef = useRef(navigate);
+
+  useEffect(() => {
+    navigateRef.current = navigate;
+  }, [navigate]);
+
   useEffect(() => {
     const autoplayInterval = setInterval(() => {
-      navigate(true);
+      navigateRef.current(true);
     }, 4000);
 
     return () => clearInterval(autoplayInterval);
-  }, [navigate]);
+  }, []);
 
   // Valores responsivos
   const VISIBLE = windowWidth < 640 ? 1 : windowWidth < 1024 ? 2 : 4; // mobile: 1, tablet: 2, desktop: 4
