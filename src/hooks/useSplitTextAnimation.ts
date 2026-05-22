@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 
-export const useSplitTextAnimation = (selector: string, initialDelay: number = 0) => {
+export const useSplitTextAnimation = (selector: string, initialDelay: number = 0, scrollBased: boolean = false) => {
   const ref = useRef<HTMLElement>(null);
   const hasAnimated = useRef(false);
 
