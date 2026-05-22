@@ -391,6 +391,56 @@ export default function SearchForm({ onNavigate }: SearchFormProps) {
         </button>
 
       </div>
+
+      {/* ── Estilos para los sliders de rango ── */}
+      <style>{`
+        /* Webkit (Chrome, Safari, Edge) */
+        input[type="range"]::-webkit-slider-thumb {
+          appearance: none;
+          width: 16px;
+          height: 16px;
+          border-radius: 50%;
+          background: #f32735;
+          cursor: pointer;
+          border: none;
+          outline: none;
+          box-shadow: none;
+          transform: translateY(-50%);
+          position: relative;
+          top: 50%;
+        }
+
+        input[type="range"]::-webkit-slider-thumb:hover {
+          box-shadow: 0 0 8px rgba(243, 39, 53, 0.3);
+        }
+
+        /* Firefox */
+        input[type="range"]::-moz-range-thumb {
+          width: 16px;
+          height: 16px;
+          border-radius: 50%;
+          background: #f32735;
+          cursor: pointer;
+          border: none;
+          outline: none;
+          box-shadow: none;
+        }
+
+        input[type="range"]::-moz-range-thumb:hover {
+          box-shadow: 0 0 8px rgba(243, 39, 53, 0.3);
+        }
+
+        /* Firefox - Track */
+        input[type="range"]::-moz-range-track {
+          background: transparent;
+          border: none;
+        }
+
+        input[type="range"]::-moz-range-progress {
+          background: transparent;
+          border: none;
+        }
+      `}</style>
     </div>
   );
 }
