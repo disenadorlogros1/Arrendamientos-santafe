@@ -38,10 +38,10 @@ export const useSplitTextAnimation = (selector: string) => {
 
         // Animar líneas desde abajo hacia arriba
         gsap.from(split.lines, {
-          duration: 0.8,
-          yPercent: 100,
+          duration: 1.2,
+          y: 60,
           opacity: 0,
-          stagger: 0.15,
+          stagger: 0.25,
           ease: 'expo.out',
           onComplete: () => {
             console.log('[SplitText] Animación completada');
