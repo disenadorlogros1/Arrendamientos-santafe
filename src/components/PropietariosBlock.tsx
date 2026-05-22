@@ -1,6 +1,5 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
 import { MessageCircle } from 'lucide-react';
 import { useSplitTextAnimation } from '@/hooks/useSplitTextAnimation';
 import type { PageType } from '@/components/Header';
@@ -13,27 +12,7 @@ const WHATSAPP_URL =
   'https://wa.me/573006557529?text=Hola%2C%20quisiera%20consignar%20una%20propiedad%20con%20Arrendamientos%20Santa%20Fe.';
 
 export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps) {
-  const [isVisible, setIsVisible] = useState(false);
   const titleRef = useSplitTextAnimation('.propietarios-title-split', 0, true);
-
-  // Mostrar animación del subrayado cuando el elemento es visible
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-          observer.unobserve(entry.target);
-        }
-      },
-      { threshold: 0.3 }
-    );
-
-    if (titleRef.current) {
-      observer.observe(titleRef.current);
-    }
-
-    return () => observer.disconnect();
-  }, []);
   return (
     <section className="relative py-16 sm:py-20 bg-brand-dark text-white overflow-hidden">
       {/* Acento visual sutil */}

@@ -13,9 +13,11 @@ interface InfiniteCarouselProps {
   properties: Property[];
 }
 
-// Generar lista inicial con IDs únicos
+// Generar lista inicial repitiendo las cards para hacerlas infinitas
 const buildCards = (properties: Property[]) =>
-  properties.map((p, i) => ({ ...p, uid: `${p.id}-${i}` }));
+  Array.from({ length: 4 }, (_, rep) =>
+    properties.map((p, i) => ({ ...p, uid: `${p.id}-${rep}-${i}` }))
+  ).flat();
 
 export default function InfiniteCarousel({ properties }: InfiniteCarouselProps) {
   const containerRef = useRef<HTMLDivElement>(null);
