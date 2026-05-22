@@ -90,8 +90,8 @@ es una de mis favoritas en arrendamiento Santa Fe`;
             loading="lazy"
           />
 
-          {/* 4 Botones en columna vertical centrada */}
-          <div className="absolute top-1/2 right-3 transform -translate-y-1/2 flex flex-col gap-2">
+          {/* 4 Botones en esquina superior derecha */}
+          <div className="absolute top-3 right-3 flex flex-col gap-2">
             {/* Ver Más */}
             <button
               type="button"
@@ -105,8 +105,8 @@ es una de mis favoritas en arrendamiento Santa Fe`;
               aria-label="Ver más"
               title="Ver más"
               style={{
-                width: '44px',
-                height: '44px',
+                width: '28px',
+                height: '28px',
                 backgroundColor: '#f32735',
                 borderRadius: '50%',
                 cursor: 'pointer',
@@ -114,6 +114,7 @@ es una de mis favoritas en arrendamiento Santa Fe`;
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
+                transform: hoveredButton === 'more' ? 'scale(1.2)' : 'scale(1)',
               }}
             >
               <img
@@ -140,8 +141,8 @@ es una de mis favoritas en arrendamiento Santa Fe`;
               aria-label="Consultar"
               title="Consultar"
               style={{
-                width: hoveredButton === 'consult' ? '44px' : '24px',
-                height: hoveredButton === 'consult' ? '44px' : '24px',
+                width: '28px',
+                height: '28px',
                 backgroundColor: '#f32735',
                 borderRadius: '50%',
                 cursor: 'pointer',
@@ -149,6 +150,7 @@ es una de mis favoritas en arrendamiento Santa Fe`;
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
+                transform: hoveredButton === 'consult' ? 'scale(1.2)' : 'scale(1)',
               }}
             >
               <img
@@ -173,8 +175,8 @@ es una de mis favoritas en arrendamiento Santa Fe`;
               aria-label="Agendar"
               title="Agendar"
               style={{
-                width: hoveredButton === 'schedule' ? '44px' : '24px',
-                height: hoveredButton === 'schedule' ? '44px' : '24px',
+                width: '28px',
+                height: '28px',
                 backgroundColor: '#f32735',
                 borderRadius: '50%',
                 cursor: 'pointer',
@@ -182,6 +184,7 @@ es una de mis favoritas en arrendamiento Santa Fe`;
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
+                transform: hoveredButton === 'schedule' ? 'scale(1.2)' : 'scale(1)',
               }}
             >
               <img
@@ -209,8 +212,8 @@ es una de mis favoritas en arrendamiento Santa Fe`;
               aria-label="Favorito"
               title="Favorito"
               style={{
-                width: hoveredButton === 'favorite' ? '44px' : '24px',
-                height: hoveredButton === 'favorite' ? '44px' : '24px',
+                width: '28px',
+                height: '28px',
                 backgroundColor: '#f32735',
                 borderRadius: '50%',
                 cursor: 'pointer',
@@ -218,13 +221,14 @@ es una de mis favoritas en arrendamiento Santa Fe`;
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
+                transform: hoveredButton === 'favorite' ? 'scale(1.2)' : 'scale(1)',
               }}
             >
               <img
                 src="/icons/icon-favorite-white.gif"
                 alt="Favorito"
-                width={hoveredButton === 'favorite' ? '20' : '12'}
-                height={hoveredButton === 'favorite' ? '20' : '12'}
+                width={16}
+                height={16}
                 style={{
                   transition: 'all 0.3s ease',
                   objectFit: 'contain',
