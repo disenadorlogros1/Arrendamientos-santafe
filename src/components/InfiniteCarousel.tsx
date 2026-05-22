@@ -17,8 +17,8 @@ const buildCards = (properties: Property[]) =>
   ).flat();
 
 const VISIBLE = 4; // Cuántas cards se ven al mismo tiempo
-const CARD_W = 270;
-const GAP = 16;
+const CARD_W = 240;
+const GAP = 12;
 
 export default function InfiniteCarousel({ properties }: InfiniteCarouselProps) {
   const [cards] = useState(() => buildCards(properties));
