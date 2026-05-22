@@ -15,32 +15,32 @@ export default function InfiniteCarousel({ properties }: InfiniteCarouselProps) 
   const tweenRef = useRef<gsap.core.Tween | null>(null);
   const directionRef = useRef<'forward' | 'backward'>('forward');
   const [isPaused, setIsPaused] = useState(false);
-  const [visibleCards, setVisibleCards] = useState<Set<string>>(new Set());
+  const [visibleIndices, setVisibleIndices] = useState<Set<number>>(new Set());
 
   const cardWidth = 280; // card width + gap (ajustado para layout vertical)
   const singleSetWidth = properties.length * cardWidth;
   const speedPerCard = 13; // seconds per card
   const visibleCardsCount = 4; // Number of visible cards at once
-  const wrapperWidth = visibleCardsCount * (cardWidth - 16); // approximate visible width
 
   // Calcula qué cards deben ser visibles basado en la posición X del track
   const updateVisibleCards = useCallback(() => {
     if (!trackRef.current) return;
 
     const currentX = gsap.getProperty(trackRef.current, 'x') as number;
-    const newVisibleCards = new Set<string>();
+    const newVisibleIndices = new Set<number>();
 
-    // Calcular cuál es la primera card visible y las siguientes
-    const startIndex = Math.abs(Math.round(currentX / cardWidth)) % properties.length;
+    // Calcular cuál es la primera card visible basado en la posición X
+    // Cada card ocupa cardWidth, entonces dividimos currentX por cardWidth
+    const firstVisibleIndex = Math.abs(Math.round(currentX / cardWidth)) % properties.length;
 
+    // Agregar los índices de las 4 cards visibles
     for (let i = 0; i < visibleCardsCount; i++) {
-      const index = (startIndex + i) % properties.length;
-      newVisibleCards.add(`orig-${properties[index].id}`);
-      newVisibleCards.add(`clone-${properties[index].id}`);
+      const index = (firstVisibleIndex + i) % properties.length;
+      newVisibleIndices.add(index);
     }
 
-    setVisibleCards(newVisibleCards);
-  }, [properties, cardWidth, visibleCardsCount]);
+    setVisibleIndices(newVisibleIndices);
+  }, [properties.length, cardWidth, visibleCardsCount]);
 
   const startInfiniteScroll = useCallback((fromX: number) => {
     if (!trackRef.current) return;
@@ -191,20 +191,20 @@ export default function InfiniteCarousel({ properties }: InfiniteCarouselProps) 
           style={{ gap: '16px', willChange: 'transform' }}
         >
           {/* Original set */}
-          {properties.map((property) => (
+          {properties.map((property, index) => (
             <div
               key={`orig-${property.id}`}
-              className={`flex-shrink-0 ${!visibleCards.has(`orig-${property.id}`) ? 'hide' : ''}`}
+              className={`flex-shrink-0 ${!visibleIndices.has(index) ? 'hide' : ''}`}
               style={{ width: `${cardWidth - 16}px`, minWidth: `${cardWidth - 16}px` }}
             >
               <PropertyCard property={property} />
             </div>
           ))}
           {/* Clone set for seamless loop */}
-          {properties.map((property) => (
+          {properties.map((property, index) => (
             <div
               key={`clone-${property.id}`}
-              className={`flex-shrink-0 ${!visibleCards.has(`clone-${property.id}`) ? 'hide' : ''}`}
+              className={`flex-shrink-0 ${!visibleIndices.has(index) ? 'hide' : ''}`}
               style={{ width: `${cardWidth - 16}px`, minWidth: `${cardWidth - 16}px` }}
             >
               <PropertyCard property={property} />

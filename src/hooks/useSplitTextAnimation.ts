@@ -45,16 +45,16 @@ export const useSplitTextAnimation = (selector: string, initialDelay: number = 0
         // Animar el padre (h1/h2) a opacity 1 y las líneas con sus propias animaciones
         gsap.to(target as HTMLElement, {
           opacity: 1,
-          duration: 2.8,
+          duration: 1.4,
           ease: 'none',
         });
 
         // Animar líneas desde abajo hacia arriba (lenta y dramática)
         gsap.to(split.lines, {
-          duration: 2.8,
+          duration: 1.4,
           y: 0,
           opacity: 1,
-          stagger: 0.49,
+          stagger: 0.25,
           ease: 'expo.out',
           onComplete: () => {
             console.log('[SplitText] Animación completada');

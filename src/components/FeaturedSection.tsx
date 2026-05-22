@@ -12,7 +12,7 @@ interface FeaturedSectionProps {
 
 export default function FeaturedSection({ onNavigate }: FeaturedSectionProps) {
   const featured = properties.filter((p) => p.featured);
-  const titleRef = useSplitTextAnimation('.featured-title-split', 3500);
+  const titleRef = useSplitTextAnimation('.featured-title-split', 1750);
 
   return (
     <section className="py-6 md:py-10">
