@@ -114,7 +114,7 @@ es una de mis favoritas en arrendamiento Santa Fe`;
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                transform: hoveredButton === 'more' ? 'scale(1.2)' : 'scale(1)',
+                transform: hoveredButton === 'more' ? 'scale(1.5)' : 'scale(1)',
               }}
             >
               <img
@@ -150,7 +150,7 @@ es una de mis favoritas en arrendamiento Santa Fe`;
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                transform: hoveredButton === 'consult' ? 'scale(1.2)' : 'scale(1)',
+                transform: hoveredButton === 'consult' ? 'scale(1.5)' : 'scale(1)',
               }}
             >
               <img
@@ -184,7 +184,7 @@ es una de mis favoritas en arrendamiento Santa Fe`;
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                transform: hoveredButton === 'schedule' ? 'scale(1.2)' : 'scale(1)',
+                transform: hoveredButton === 'schedule' ? 'scale(1.5)' : 'scale(1)',
               }}
             >
               <img
@@ -221,7 +221,7 @@ es una de mis favoritas en arrendamiento Santa Fe`;
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                transform: hoveredButton === 'favorite' ? 'scale(1.2)' : 'scale(1)',
+                transform: hoveredButton === 'favorite' ? 'scale(1.5)' : 'scale(1)',
               }}
             >
               <img
