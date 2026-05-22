@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Search, SlidersHorizontal } from 'lucide-react';
 import PropertyCard from './PropertyCard';
+import InfiniteCarousel from './InfiniteCarousel';
 import { properties } from '@/data/properties';
 import { Button } from '@/components/ui/button';
 
@@ -164,8 +165,13 @@ export default function PropiedadesPage() {
           {filtered.length} propiedades encontradas
         </p>
 
-        {/* Property Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-1 sm:gap-5">
+        {/* Mobile Carousel */}
+        <div className="lg:hidden mb-8">
+          <InfiniteCarousel properties={filtered} />
+        </div>
+
+        {/* Desktop Grid */}
+        <div className="hidden lg:grid grid-cols-3 xl:grid-cols-4 gap-5">
           {filtered.map((property) => (
             <motion.div
               key={property.id}
@@ -179,7 +185,26 @@ export default function PropiedadesPage() {
         </div>
 
         {filtered.length === 0 && (
-          <div className="text-center py-16">
+          <div className="text-center py-16 lg:hidden">
+            <p className="text-brand-gray text-lg">
+              No se encontraron propiedades con los filtros seleccionados.
+            </p>
+            <Button
+              onClick={() => {
+                setSelectedBusinessType('Todos');
+                setSelectedLocation('Todas');
+                setSelectedType('Todos');
+                setSelectedPrice('Todos');
+              }}
+              className="mt-4 bg-brand-red hover:bg-brand-red-hover text-white rounded-full"
+            >
+              Limpiar filtros
+            </Button>
+          </div>
+        )}
+
+        {filtered.length === 0 && (
+          <div className="hidden lg:block text-center py-16">
             <p className="text-brand-gray text-lg">
               No se encontraron propiedades con los filtros seleccionados.
             </p>
