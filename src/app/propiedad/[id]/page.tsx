@@ -58,7 +58,7 @@ export default function PropertyDetailPage() {
             {/* Tipo, Referencia, Título */}
             <div className="bg-white rounded-lg p-6 mb-6 border border-gray-200">
               <div className="flex items-center gap-2 mb-3">
-                <span className="text-red-600 text-sm font-bold">ARRIENDO</span>
+                <span className="text-red-600 text-sm font-bold">{property.businessType === 'Comprar' ? 'VENTA' : 'ARRIENDO'}</span>
                 <span className="text-gray-600 text-sm font-bold">{property.type.toUpperCase()}</span>
                 <span className="text-gray-600 text-sm font-bold">Ref. {property.reference.replace('Ref. ', '')}</span>
               </div>
