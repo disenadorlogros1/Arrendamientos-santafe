@@ -40,12 +40,28 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
             >
               ¿Tienes un inmueble para{' '}
               <span
-                className="text-brand-red inline-block"
+                className="text-brand-red"
                 style={{
                   fontWeight: 700,
+                  position: 'relative',
+                  display: 'inline-block',
                 }}
               >
                 arrendar o vender?
+                {/* Barra blanca bajo "arrendar o vender?" */}
+                <span
+                  aria-hidden="true"
+                  style={{
+                    position: 'absolute',
+                    bottom: -5,
+                    left: 0,
+                    width: '100%',
+                    height: 8,
+                    backgroundColor: '#ffffff',
+                    borderRadius: 2,
+                    display: 'block',
+                  }}
+                />
               </span>
             </h2>
             <p className="mt-5 text-base sm:text-lg text-white/80 max-w-2xl leading-relaxed">

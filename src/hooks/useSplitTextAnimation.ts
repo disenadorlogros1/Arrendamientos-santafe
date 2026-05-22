@@ -84,7 +84,7 @@ export const useSplitTextAnimation = (
           });
         },
         {
-          threshold: 0,
+          threshold: 0.5,
           rootMargin: '-25% 0px -25% 0px',
         }
       );

@@ -88,7 +88,8 @@ export default function HeroSection({ onNavigate }: HeroSectionProps) {
             lineHeight: '0.18',
           }}
         >
-          60 años acompañando decisiones{' '}
+          60 años acompañando
+          <br />
           <span
             style={{
               fontWeight: 700,
@@ -96,7 +97,7 @@ export default function HeroSection({ onNavigate }: HeroSectionProps) {
               display: 'inline-block',
             }}
           >
-            que importan.
+            decisiones que importan
             {/* Subrayado independiente — no afecta el texto ni el interlineado */}
             <span
               ref={underlineRef}
@@ -125,7 +126,7 @@ export default function HeroSection({ onNavigate }: HeroSectionProps) {
             textShadow: '0 1px 10px rgba(0,0,0,0.4)',
           }}
         >
-          Respaldo y experiencia para encontrar o gestionar tu propiedad ideal en Antioquia.
+          Inmuebles disponibles ahora. Consulta, agenda o pide asesoría.
         </p>
 
         {/* CTAs jerárquicos — botones cápsula con hover blanco + resplandor rojo */}

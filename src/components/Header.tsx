@@ -59,10 +59,7 @@ const navItems: NavItem[] = [
     { label: 'Solicitud de arrendamiento', href: SOLICITUD_ARRENDAMIENTO_URL },
     { label: 'Reportar reparación', href: REPARACIONES_URL },
   ]},
-  { label: 'Nosotros', page: 'nosotros', children: [
-    { label: 'Quiénes somos', page: 'nosotros' },
-    { label: '60 años', page: 'nosotros' },
-  ]},
+  { label: 'Nosotros', page: 'nosotros' },
 ];
 
 function WhatsAppButton() {
