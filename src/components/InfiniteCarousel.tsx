@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useCallback, useState } from 'react';
+import { useRef, useCallback, useState, useEffect } from 'react';
 import { flushSync } from 'react-dom';
 import gsap from 'gsap';
 import PropertyCard from './PropertyCard';
@@ -16,15 +16,25 @@ const buildCards = (properties: Property[]) =>
     properties.map((p) => ({ ...p, uid: `${p.id}-${rep}` }))
   ).flat();
 
-const VISIBLE = 4; // Cuántas cards se ven al mismo tiempo
-const CARD_W = 312; // 240 * 1.3 para 30% más grande
-const GAP = 12;
-
 export default function InfiniteCarousel({ properties }: InfiniteCarouselProps) {
   const [cards] = useState(() => buildCards(properties));
   const [startIndex, setStartIndex] = useState(0);
+  const [windowWidth, setWindowWidth] = useState(1280);
   const containerRef = useRef<HTMLDivElement>(null);
   const isAnimating = useRef(false);
+
+  // Actualizar ancho de ventana
+  useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // Valores responsivos
+  const VISIBLE = windowWidth < 640 ? 1 : windowWidth < 1024 ? 2 : 4; // mobile: 1, tablet: 2, desktop: 4
+  const CARD_W = windowWidth < 640 ? 180 : windowWidth < 1024 ? 240 : 312; // mobile: 180, tablet: 240, desktop: 312
+  const GAP = windowWidth < 640 ? 8 : 12;
 
   // Cards actualmente visibles
   const visibleCards = Array.from({ length: VISIBLE }, (_, i) => {
