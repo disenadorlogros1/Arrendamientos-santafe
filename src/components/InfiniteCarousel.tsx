@@ -1,99 +1,101 @@
 'use client';
 
-import { useRef, useCallback, useState } from 'react';
-import { flushSync } from 'react-dom';
+import { useRef, useCallback, useState, useEffect } from 'react';
 import gsap from 'gsap';
-import { Flip } from 'gsap/Flip';
 import PropertyCard from './PropertyCard';
 import type { Property } from '@/data/properties';
-
-gsap.registerPlugin(Flip);
 
 interface InfiniteCarouselProps {
   properties: Property[];
 }
 
-// Generar lista inicial repitiendo las cards para hacerlas infinitas
+// Repetir cards para tener suficientes
 const buildCards = (properties: Property[]) =>
-  Array.from({ length: 4 }, (_, rep) =>
-    properties.map((p, i) => ({ ...p, uid: `${p.id}-${rep}-${i}` }))
+  Array.from({ length: 5 }, (_, rep) =>
+    properties.map((p) => ({ ...p, uid: `${p.id}-${rep}` }))
   ).flat();
 
+const VISIBLE = 4; // Cuántas cards se ven al mismo tiempo
+const CARD_W = 264;
+const GAP = 16;
+
 export default function InfiniteCarousel({ properties }: InfiniteCarouselProps) {
+  const [cards] = useState(() => buildCards(properties));
+  const [startIndex, setStartIndex] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
   const isAnimating = useRef(false);
-  const [cards, setCards] = useState(() => buildCards(properties));
 
-  const updateCaterpillar = useCallback((forward: boolean) => {
+  // Cards actualmente visibles
+  const visibleCards = Array.from({ length: VISIBLE }, (_, i) => {
+    const idx = (startIndex + i) % cards.length;
+    return { ...cards[idx], slotIndex: i };
+  });
+
+  const navigate = useCallback((forward: boolean) => {
     if (isAnimating.current || !containerRef.current) return;
     isAnimating.current = true;
 
-    // 1. Capturar estado ANTES de que React cambie el DOM
-    const cardEls = gsap.utils.toArray<HTMLElement>('[data-card]', containerRef.current);
-    const state = Flip.getState(cardEls);
+    const slots = containerRef.current.querySelectorAll<HTMLElement>('[data-slot]');
+    const enteringSlot = forward ? slots[slots.length - 1] : slots[0];
+    const leavingSlot = forward ? slots[0] : slots[slots.length - 1];
 
-    // 2. Actualizar state de forma síncrona para que el DOM cambie inmediatamente
-    flushSync(() => {
-      setCards((prev) => {
-        const next = [...prev];
-        if (forward) {
-          const first = next.shift()!;
-          next.push({ ...first, uid: `${first.uid}-f${Date.now()}` });
-        } else {
-          const last = next.pop()!;
-          next.unshift({ ...last, uid: `${last.uid}-b${Date.now()}` });
-        }
-        return next;
-      });
+    // Animar la card que sale
+    gsap.to(leavingSlot, {
+      opacity: 0,
+      scale: 0,
+      transformOrigin: forward ? 'bottom left' : 'bottom right',
+      duration: 0.45,
+      ease: 'power2.in',
     });
 
-    // 3. Ejecutar Flip DESPUÉS de que el DOM esté actualizado
-    Flip.from(state, {
-      targets: '[data-card]',
-      fade: true,
-      absoluteOnLeave: true,
-      onEnter: (els) => {
+    // Preparar la card que entra (invisible)
+    gsap.set(enteringSlot, { opacity: 0, scale: 0 });
+
+    // Actualizar el índice y animar la entrada
+    setTimeout(() => {
+      setStartIndex((prev) =>
+        forward
+          ? (prev + 1) % cards.length
+          : (prev - 1 + cards.length) % cards.length
+      );
+
+      requestAnimationFrame(() => {
+        const newSlots = containerRef.current?.querySelectorAll<HTMLElement>('[data-slot]');
+        if (!newSlots) return;
+        const newEntering = forward ? newSlots[newSlots.length - 1] : newSlots[0];
+
         gsap.fromTo(
-          els,
+          newEntering,
           { opacity: 0, scale: 0 },
           {
             opacity: 1,
             scale: 1,
             transformOrigin: forward ? 'bottom right' : 'bottom left',
-            duration: 0.5,
+            duration: 0.45,
             ease: 'power2.out',
+            onComplete: () => {
+              isAnimating.current = false;
+            },
           }
         );
-      },
-      onLeave: (els) => {
-        gsap.to(els, {
-          opacity: 0,
-          scale: 0,
-          transformOrigin: forward ? 'bottom left' : 'bottom right',
-          duration: 0.5,
-          ease: 'power2.in',
-          onComplete: () => {
-            isAnimating.current = false;
-          },
-        });
-      },
-    });
-  }, []);
+      });
+    }, 450);
+  }, [cards.length]);
 
   return (
     <div className="wrapper">
-      {/* Contenedor de cards — horizontal */}
+      {/* Contenedor horizontal de cards */}
       <div
         ref={containerRef}
         className="w-full overflow-hidden"
-        style={{ display: 'flex', flexDirection: 'row', gap: '16px' }}
+        style={{ display: 'flex', flexDirection: 'row', gap: `${GAP}px` }}
       >
-        {cards.map((property) => (
+        {visibleCards.map((property) => (
           <div
             key={property.uid}
-            data-card
+            data-slot={property.slotIndex}
             className="flex-shrink-0"
-            style={{ width: '264px', minWidth: '264px' }}
+            style={{ width: `${CARD_W}px`, minWidth: `${CARD_W}px` }}
           >
             <PropertyCard property={property} />
           </div>
@@ -104,8 +106,7 @@ export default function InfiniteCarousel({ properties }: InfiniteCarouselProps) 
       <div className="buttons">
         <button
           type="button"
-          id="prev"
-          onClick={() => updateCaterpillar(false)}
+          onClick={() => navigate(false)}
           className="w-10 h-10 rounded-full border border-gray-300 flex items-center justify-center text-gray-500 hover:border-brand-red hover:text-brand-red hover:bg-brand-red/5 transition-all duration-200"
           aria-label="Anterior"
         >
@@ -116,8 +117,7 @@ export default function InfiniteCarousel({ properties }: InfiniteCarouselProps) 
 
         <button
           type="button"
-          id="next"
-          onClick={() => updateCaterpillar(true)}
+          onClick={() => navigate(true)}
           className="w-10 h-10 rounded-full border border-gray-300 flex items-center justify-center text-gray-500 hover:border-brand-red hover:text-brand-red hover:bg-brand-red/5 transition-all duration-200"
           aria-label="Siguiente"
         >
