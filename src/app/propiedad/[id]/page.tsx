@@ -126,14 +126,14 @@ export default function PropertyDetailPage() {
                 <h2 className="text-lg font-bold text-gray-900 mb-4">Detalles del inmueble</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="flex items-center gap-3 p-3 bg-gray-50 rounded">
-                    <span className="text-red-600 text-xl">🏠</span>
+                    <img src="/icons/icon-home-red.gif" alt="Tipo" width="24" height="24" />
                     <div>
                       <div className="text-xs text-gray-600">Tipo de inmueble</div>
                       <div className="font-semibold text-gray-900">{property.type}</div>
                     </div>
                   </div>
                   <div className="flex items-center gap-3 p-3 bg-gray-50 rounded">
-                    <span className="text-red-600 text-xl">📐</span>
+                    <img src="/icons/icon-area-gray.gif" alt="Área" width="24" height="24" />
                     <div>
                       <div className="text-xs text-gray-600">Área construida</div>
                       <div className="font-semibold text-gray-900">{property.size}</div>
@@ -141,16 +141,16 @@ export default function PropertyDetailPage() {
                   </div>
                   {property.stratum && (
                     <div className="flex items-center gap-3 p-3 bg-gray-50 rounded">
-                      <span className="text-red-600 text-xl">📊</span>
+                      <img src="/icons/icon-home-red.gif" alt="Estrato" width="24" height="24" />
                       <div>
                         <div className="text-xs text-gray-600">Estrato</div>
-                        <div className="font-semibold text-gray-900">{property.stratum}</div>
+                        <div className="font-semibold text-gray-900">Est. {property.stratum}</div>
                       </div>
                     </div>
                   )}
                   {property.bedrooms > 0 && (
                     <div className="flex items-center gap-3 p-3 bg-gray-50 rounded">
-                      <span className="text-red-600 text-xl">🛏️</span>
+                      <img src="/icons/icon-bed-gray.gif" alt="Habitaciones" width="24" height="24" />
                       <div>
                         <div className="text-xs text-gray-600">Habitaciones</div>
                         <div className="font-semibold text-gray-900">{property.bedrooms}</div>
@@ -159,7 +159,7 @@ export default function PropertyDetailPage() {
                   )}
                   {property.bathrooms > 0 && (
                     <div className="flex items-center gap-3 p-3 bg-gray-50 rounded">
-                      <span className="text-red-600 text-xl">🚿</span>
+                      <img src="/icons/icon-bathroom-gray.gif" alt="Baños" width="24" height="24" />
                       <div>
                         <div className="text-xs text-gray-600">Baños</div>
                         <div className="font-semibold text-gray-900">{property.bathrooms}</div>
@@ -168,6 +168,23 @@ export default function PropertyDetailPage() {
                   )}
                 </div>
               </div>
+
+              {/* Mapa de Google - Solo para propiedades de arrendar */}
+              {property.businessType === 'Arrendar' && (
+                <div className="mt-6">
+                  <h2 className="text-lg font-bold text-gray-900 mb-4">Ubicación</h2>
+                  <div className="w-full h-96 rounded-lg overflow-hidden border border-gray-200">
+                    <iframe
+                      width="100%"
+                      height="100%"
+                      style={{ border: 0 }}
+                      loading="lazy"
+                      allowFullScreen
+                      src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyA-aOI-9xDm7Dq5W5K5v5v5v5v5v5v5v5&q=${encodeURIComponent(property.address || property.location)}`}
+                    />
+                  </div>
+                </div>
+              )}
 
               {/* Características */}
               {property.characteristics && property.characteristics.length > 0 && (
@@ -190,7 +207,7 @@ export default function PropertyDetailPage() {
           <div className="lg:col-span-1">
             <div className="bg-white rounded-lg p-6 border border-gray-200 sticky top-6">
               <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-                <span>📍</span>
+                <img src="/icons/icon-location-red.gif" alt="Ubicación" width="20" height="20" />
                 ¿Te interesa esta propiedad?
               </h3>
               <p className="text-gray-600 text-sm mb-6">Te responderemos de inmediato.</p>
@@ -204,7 +221,7 @@ export default function PropertyDetailPage() {
                 rel="noopener noreferrer"
                 className="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-4 rounded-lg flex items-center justify-center gap-2 mb-4 transition"
               >
-                <span>💬</span>
+                <img src="/icons/icon-consult-white.gif" alt="WhatsApp" width="20" height="20" />
                 Escribir por WhatsApp
               </a>
 
@@ -213,8 +230,9 @@ export default function PropertyDetailPage() {
               {/* Formulario */}
               <form className="space-y-3">
                 <div>
-                  <label className="block text-gray-700 font-semibold text-sm mb-2">
-                    👤 Tu nombre
+                  <label className="block text-gray-700 font-semibold text-sm mb-2 flex items-center gap-2">
+                    <img src="/icons/icon-location-red.gif" alt="Nombre" width="16" height="16" />
+                    Tu nombre
                   </label>
                   <input
                     type="text"
@@ -224,8 +242,9 @@ export default function PropertyDetailPage() {
                 </div>
 
                 <div>
-                  <label className="block text-gray-700 font-semibold text-sm mb-2">
-                    📱 Teléfono
+                  <label className="block text-gray-700 font-semibold text-sm mb-2 flex items-center gap-2">
+                    <img src="/icons/icon-location-red.gif" alt="Teléfono" width="16" height="16" />
+                    Teléfono
                   </label>
                   <input
                     type="tel"
@@ -235,8 +254,9 @@ export default function PropertyDetailPage() {
                 </div>
 
                 <div>
-                  <label className="block text-gray-700 font-semibold text-sm mb-2">
-                    💬 Mensaje (opcional)
+                  <label className="block text-gray-700 font-semibold text-sm mb-2 flex items-center gap-2">
+                    <img src="/icons/icon-consult-white.gif" alt="Mensaje" width="16" height="16" />
+                    Mensaje (opcional)
                   </label>
                   <textarea
                     placeholder="¿Está disponible para visitar esta semana?"
@@ -248,7 +268,7 @@ export default function PropertyDetailPage() {
                   type="submit"
                   className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-4 rounded-lg transition"
                 >
-                  ➤ Enviar consulta
+                  Enviar consulta
                 </button>
               </form>
 
@@ -256,11 +276,13 @@ export default function PropertyDetailPage() {
               <div className="mt-6 pt-6 border-t border-gray-200">
                 <h4 className="text-sm font-bold text-gray-900 mb-3">COMPARTIR PROPIEDAD</h4>
                 <div className="flex gap-3">
-                  <button className="flex-1 bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-3 rounded-lg transition text-sm">
-                    💬
+                  <button className="flex-1 bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-3 rounded-lg transition text-sm flex items-center justify-center gap-2">
+                    <img src="/icons/icon-consult-white.gif" alt="Compartir" width="16" height="16" />
+                    WhatsApp
                   </button>
-                  <button className="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-900 font-bold py-2 px-3 rounded-lg transition text-sm">
-                    🔗
+                  <button className="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-900 font-bold py-2 px-3 rounded-lg transition text-sm flex items-center justify-center gap-2">
+                    <img src="/icons/icon-location-red.gif" alt="Link" width="16" height="16" />
+                    Copiar
                   </button>
                 </div>
               </div>

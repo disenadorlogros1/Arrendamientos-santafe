@@ -47,7 +47,7 @@ export default function PropiedadesPage() {
 
       <div className="mx-auto max-w-7xl px-1 sm:px-6 lg:px-8 py-8">
         {/* Business Type Filter — Igual al del Hero */}
-        <div className="flex h-[44px] bg-white border border-gray-200 rounded-lg overflow-hidden mb-6 shadow-sm">
+        <div className="flex h-[44px] bg-white border border-gray-200 overflow-hidden mb-6 shadow-lg">
           {(['Todos', 'Arrendar', 'Comprar'] as const).map((type, i) => (
             <button
               key={type}

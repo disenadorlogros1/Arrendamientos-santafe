@@ -33,25 +33,58 @@ export default function InfiniteCarousel({ properties }: InfiniteCarouselProps) 
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Guardar navigate en un ref para usarlo en autoplay sin dependencias circulares
-  const navigateRef = useRef<(forward: boolean) => void>();
-
-  useEffect(() => {
-    navigateRef.current = navigate;
-  }, [navigate]);
-
-  // Autoplay - las cards giran automáticamente cada 4 segundos con animación completa
+  // Autoplay - las cards giran automáticamente cada 4 segundos
   useEffect(() => {
     if (!isMounted) return;
 
     const autoplayInterval = setInterval(() => {
-      if (navigateRef.current && !isAnimating.current) {
-        navigateRef.current(true);
+      if (!isAnimating.current && containerRef.current) {
+        // Simulamos el click en el botón siguiente
+        const slots = containerRef.current.querySelectorAll<HTMLElement>('[data-slot]');
+        const leavingSlot = slots[0];
+
+        // Animar la card que sale
+        gsap.to(leavingSlot, {
+          opacity: 0,
+          scale: 0,
+          rotationY: 90,
+          transformOrigin: 'bottom left',
+          duration: 0.7,
+          ease: 'power2.in',
+          onComplete: () => {
+            // DESPUÉS de que la card salga, actualizar startIndex
+            flushSync(() => {
+              setStartIndex((prev) => (prev + 1) % cards.length);
+            });
+
+            // AHORA animar la card que ENTRA
+            requestAnimationFrame(() => {
+              const newSlots = containerRef.current?.querySelectorAll<HTMLElement>('[data-slot]');
+              if (!newSlots) return;
+              const enteringSlot = newSlots[newSlots.length - 1];
+
+              gsap.set(enteringSlot, { opacity: 0, scale: 0, rotationY: -90 });
+
+              gsap.fromTo(
+                enteringSlot,
+                { opacity: 0, scale: 0, rotationY: -90 },
+                {
+                  opacity: 1,
+                  scale: 1,
+                  rotationY: 0,
+                  transformOrigin: 'bottom right',
+                  duration: 0.7,
+                  ease: 'power2.out',
+                }
+              );
+            });
+          },
+        });
       }
     }, 4000);
 
     return () => clearInterval(autoplayInterval);
-  }, [isMounted]);
+  }, [isMounted, cards.length]);
 
   // Valores responsivos
   const VISIBLE = windowWidth < 640 ? 1 : windowWidth < 1024 ? 2 : 4; // mobile: 1, tablet: 2, desktop: 4
