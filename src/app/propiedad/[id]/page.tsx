@@ -49,7 +49,7 @@ export default function PropertyDetailPage() {
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
       <Header currentPage={currentPage} onNavigate={handleNavigate} isHeroPage={false} />
-      <main className="flex-1 pt-[80px] relative">
+      <main className="flex-1 pt-[120px] relative">
       <div>
       {/* Breadcrumb */}
       <div className="bg-white border-b border-gray-200 py-4 px-6">
