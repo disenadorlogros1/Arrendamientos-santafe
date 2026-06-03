@@ -29,7 +29,7 @@ export default function PropiedadesPage() {
   return (
     <div className="min-h-screen bg-white">
       {/* Page Header */}
-      <div className="bg-brand-dark py-12 md:py-16 mt-[100px]">
+      <div className="bg-brand-dark py-12 md:py-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
