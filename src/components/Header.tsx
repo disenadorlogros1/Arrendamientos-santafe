@@ -121,14 +121,16 @@ export default function Header({ currentPage, onNavigate, isHeroPage = true }: H
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  // En páginas no-hero, mostrar background negro; en hero, cambiar con scroll
+  // En páginas no-hero, mostrar background gris oscuro; en hero, cambiar con scroll
   const headerBackground = !isHeroPage
-    ? 'bg-brand-dark shadow-md'
+    ? 'shadow-md'
     : scrolled ? 'header-scrolled' : '';
+
+  const headerBgColor = !isHeroPage ? '#2d2d2d' : 'transparent';
 
   return (
     <header className={`fixed top-0 left-0 right-0 pt-4 pb-3 px-4 sm:px-6 lg:px-8 transition-all duration-300 ${headerBackground}`}
-      style={{ zIndex: 50 }}>
+      style={{ zIndex: 50, backgroundColor: headerBgColor }}>
       <div className="flex items-center justify-center gap-4 h-[58px]">
         {/* Logo — extremo izquierdo FIJO */}
         <button onClick={() => handleNav('home')} className="shrink-0 absolute left-4 sm:left-6 lg:left-8">
@@ -141,8 +143,8 @@ export default function Header({ currentPage, onNavigate, isHeroPage = true }: H
             overflow: 'visible',
             width: '100%',
             maxWidth: '64rem',
-            backgroundColor: !isHeroPage ? 'rgba(0, 0, 0, 0.3)' : 'rgba(255, 255, 255, 0.4)',
-            borderColor: !isHeroPage ? 'rgba(255, 255, 255, 0.1)' : 'rgba(255, 255, 255, 0.3)',
+            backgroundColor: !isHeroPage ? 'rgba(255, 255, 255, 0.08)' : 'rgba(255, 255, 255, 0.4)',
+            borderColor: !isHeroPage ? 'rgba(255, 255, 255, 0.2)' : 'rgba(255, 255, 255, 0.3)',
             backdropFilter: 'blur(10px)',
           }}>
           {navItems.map((item) =>
