@@ -83,16 +83,15 @@ export default function HeroSection({ onNavigate }: HeroSectionProps) {
             lineHeight: '1.2',
           }}
         >
-          60 años acompañando{' '}
-          <span style={{ display: 'block' }}>decisiones</span>
+          60 años acompañando
           <span
             style={{
               fontWeight: 700,
               position: 'relative',
-              display: 'inline-block',
+              display: 'block',
             }}
           >
-            que importan.
+            decisiones que importan.
             {/* Subrayado independiente — no afecta el texto ni el interlineado */}
             <span
               ref={underlineRef}
