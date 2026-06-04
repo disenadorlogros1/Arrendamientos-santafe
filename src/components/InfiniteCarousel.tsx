@@ -133,42 +133,34 @@ export default function InfiniteCarousel({ properties }: InfiniteCarouselProps) 
     isAnimating.current = true;
 
     const isMobileView = windowWidth < 640;
-    const duration = isMobileView ? 0.4 : 0.7;
+    const duration = isMobileView ? 0.5 : 0.7;
     const slots = containerRef.current.querySelectorAll<HTMLElement>('[data-slot]');
     const leavingSlot = forward ? slots[0] : slots[slots.length - 1];
 
     if (isMobileView) {
-      // MOBILE: Animación simple de fade
-      gsap.to(leavingSlot, {
-        opacity: 0,
-        duration: duration,
-        ease: 'power2.in',
-        onComplete: () => {
-          flushSync(() => {
-            setStartIndex((prev) =>
-              forward
-                ? (prev + 1) % cards.length
-                : (prev - 1 + cards.length) % cards.length
-            );
-          });
+      // MOBILE: Animación suave de fade (igual al autoplay)
+      flushSync(() => {
+        setStartIndex((prev) =>
+          forward
+            ? (prev + 1) % cards.length
+            : (prev - 1 + cards.length) % cards.length
+        );
+      });
 
-          requestAnimationFrame(() => {
-            const newSlots = containerRef.current?.querySelectorAll<HTMLElement>('[data-slot]');
-            if (!newSlots) return;
-            const enteringSlot = forward ? newSlots[newSlots.length - 1] : newSlots[0];
+      requestAnimationFrame(() => {
+        const newSlots = containerRef.current?.querySelectorAll<HTMLElement>('[data-slot]');
+        if (!newSlots) return;
 
-            gsap.set(enteringSlot, { opacity: 0 });
-
-            gsap.to(enteringSlot, {
-              opacity: 1,
-              duration: duration,
-              ease: 'power2.out',
-              onComplete: () => {
-                isAnimating.current = false;
-              },
-            });
-          });
-        },
+        const currentSlot = newSlots[0];
+        gsap.set(currentSlot, { opacity: 0 });
+        gsap.to(currentSlot, {
+          opacity: 1,
+          duration: duration,
+          ease: 'power2.inOut',
+          onComplete: () => {
+            isAnimating.current = false;
+          },
+        });
       });
     } else {
       // DESKTOP: Animación 3D
