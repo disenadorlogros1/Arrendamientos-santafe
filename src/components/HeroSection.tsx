@@ -31,16 +31,19 @@ export default function HeroSection({ onNavigate }: HeroSectionProps) {
   const titleRef = useSplitTextAnimation('.hero-title-split');
   const boldTextRef = useRef<HTMLSpanElement>(null);
 
-  // Animar el subrayado después de que termine el título (1.4s duración del título)
+  // Animar la línea roja detrás del texto después de que termine el título
   useEffect(() => {
     if (!boldTextRef.current) return;
 
+    const underlineEl = boldTextRef.current.nextElementSibling;
+    if (!underlineEl) return;
+
     // Iniciar invisible
-    gsap.set(boldTextRef.current, { borderBottomWidth: '0px' });
+    gsap.set(underlineEl, { scaleX: 0, transformOrigin: 'left center' });
 
     // Aparecer deslizándose de izquierda a derecha después del título
-    gsap.to(boldTextRef.current, {
-      borderBottomWidth: '10px',
+    gsap.to(underlineEl, {
+      scaleX: 1,
       duration: 0.9,
       delay: 1.6,
       ease: 'power3.out',
@@ -85,16 +88,33 @@ export default function HeroSection({ onNavigate }: HeroSectionProps) {
         >
           60 años acompañando
           <span
-            ref={boldTextRef}
             style={{
               fontWeight: 700,
               display: 'block',
-              borderBottom: '10px solid #f32735',
-              borderBottomWidth: '0px',
-              paddingBottom: '5px',
+              position: 'relative',
             }}
           >
-            decisiones que importan.
+            <span
+              ref={boldTextRef}
+              style={{
+                position: 'relative',
+                zIndex: 2,
+              }}
+            >
+              decisiones que importan.
+            </span>
+            <span
+              aria-hidden="true"
+              style={{
+                position: 'absolute',
+                bottom: 8,
+                left: 0,
+                width: '100%',
+                height: 10,
+                backgroundColor: '#f32735',
+                zIndex: 1,
+              }}
+            />
           </span>
         </h1>
         <p
