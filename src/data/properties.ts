@@ -22,6 +22,20 @@ export interface Property {
   businessType?: "Arrendar" | "Comprar";
   latitude?: number;
   longitude?: number;
+  investmentZone?: "el-poblado" | "laureles" | "envigado" | "sabaneta";
+}
+
+// Location to investment zone mapping
+export const locationToZoneMap: Record<string, string | undefined> = {
+  "El Poblado": "el-poblado",
+  "Castropol": "el-poblado",
+  "Laureles": "laureles",
+  "Envigado": "envigado",
+  "Sabaneta": "sabaneta",
+};
+
+export function getInvestmentZoneForLocation(location: string): string | undefined {
+  return locationToZoneMap[location];
 }
 
 export const properties: Property[] = [

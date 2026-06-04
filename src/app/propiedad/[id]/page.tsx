@@ -8,6 +8,8 @@ import Image from 'next/image';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import MapComponent from '@/components/MapComponent';
+import { getInvestmentZoneForLocation } from '@/data/properties';
+import { getZoneBySlug } from '@/data/investment-zones';
 import type { PageType } from '@/components/Header';
 
 export default function PropertyDetailPage() {
@@ -222,6 +224,41 @@ export default function PropertyDetailPage() {
                   </div>
                 </div>
               )}
+
+              {/* Investment Zone Section */}
+              {(() => {
+                const investmentZoneSlug = getInvestmentZoneForLocation(property.location);
+                const investmentZone = investmentZoneSlug ? getZoneBySlug(investmentZoneSlug) : null;
+
+                return investmentZone && property.businessType === 'Comprar' ? (
+                  <div className="mt-6 bg-gradient-to-br from-brand-red/5 to-transparent rounded-xl p-6 border-l-4 border-brand-red">
+                    <h2 className="text-lg font-bold text-gray-900 mb-3">Zona de inversión</h2>
+                    <p className="text-gray-600 mb-4">
+                      Esta propiedad se encuentra en <span className="font-semibold text-brand-red">{investmentZone.name}</span>, una zona con alta demanda y potencial de rentabilidad.
+                    </p>
+                    <div className="grid grid-cols-3 gap-4 mb-6">
+                      <div className="text-center">
+                        <p className="text-xs text-gray-600 mb-1">Rentabilidad</p>
+                        <p className="font-bold text-brand-red text-lg">{investmentZone.rentability}</p>
+                      </div>
+                      <div className="text-center">
+                        <p className="text-xs text-gray-600 mb-1">Precio m²</p>
+                        <p className="font-bold text-gray-900 text-sm">{investmentZone.pricePerM2}</p>
+                      </div>
+                      <div className="text-center">
+                        <p className="text-xs text-gray-600 mb-1">Estratos</p>
+                        <p className="font-bold text-gray-900">{investmentZone.strata}</p>
+                      </div>
+                    </div>
+                    <Link
+                      href={`/inversionistas/${investmentZone.slug}`}
+                      className="inline-flex items-center gap-2 h-10 px-6 bg-brand-red hover:bg-brand-red-hover text-white font-semibold rounded-lg transition-all duration-300"
+                    >
+                      ¿Por qué invertir en esta zona?
+                    </Link>
+                  </div>
+                ) : null;
+              })()}
             </div>
           </div>
 
