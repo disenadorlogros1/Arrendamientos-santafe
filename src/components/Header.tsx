@@ -123,13 +123,13 @@ export default function Header({ currentPage, onNavigate, isHeroPage = true }: H
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  // Header dinámico: blanco solo cuando hay fondo blanco debajo
-  const shouldBeWhite = !isHeroPage; // Solo en páginas internas
+  // Header dinámico: opacidad según fondo
+  // isHeroPage=true (home) → 30% opacidad, isHeroPage=false (páginas internas) → 100% opacidad
   const headerBackground = 'shadow-md';
-  const headerBgColor = shouldBeWhite ? 'rgba(255, 255, 255, 1)' : 'rgba(45, 45, 45, 0.3)';
-  const headerTextColor = shouldBeWhite ? '#1a1a1a' : '#ffffff';
-  const navBgColor = shouldBeWhite ? 'rgba(0, 0, 0, 0.3)' : 'rgba(255, 255, 255, 0.3)';
-  const navBorderColor = shouldBeWhite ? 'rgba(0, 0, 0, 0.2)' : 'rgba(255, 255, 255, 0.3)';
+  const headerBgColor = isHeroPage ? 'rgba(45, 45, 45, 0.3)' : 'rgba(255, 255, 255, 1)';
+  const headerTextColor = isHeroPage ? '#ffffff' : '#1a1a1a';
+  const navBgColor = isHeroPage ? 'rgba(255, 255, 255, 0.3)' : 'rgba(0, 0, 0, 0.3)';
+  const navBorderColor = isHeroPage ? 'rgba(255, 255, 255, 0.3)' : 'rgba(0, 0, 0, 0.2)';
 
   return (
     <header className={`fixed top-0 left-0 right-0 pt-4 pb-3 px-4 sm:px-6 lg:px-8 transition-all duration-300 ${headerBackground}`}
