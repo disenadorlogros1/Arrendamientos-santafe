@@ -128,7 +128,7 @@ export default function Header({ currentPage, onNavigate, isHeroPage = true }: H
   const headerBackground = 'shadow-md';
   const headerBgColor = shouldBeWhite ? '#ffffff' : '#2d2d2d';
   const headerTextColor = shouldBeWhite ? '#1a1a1a' : '#ffffff';
-  const navBgColor = shouldBeWhite ? 'rgba(0, 0, 0, 0.5)' : 'rgba(255, 255, 255, 0.5)';
+  const navBgColor = shouldBeWhite ? 'rgba(0, 0, 0, 0.3)' : 'rgba(255, 255, 255, 0.3)';
   const navBorderColor = shouldBeWhite ? 'rgba(0, 0, 0, 0.2)' : 'rgba(255, 255, 255, 0.3)';
 
   return (
