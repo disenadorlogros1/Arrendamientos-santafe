@@ -1,8 +1,10 @@
 'use client';
 
-import { motion } from 'framer-motion';
-import { TrendingUp, BarChart3, DollarSign, MapPin, ArrowRight, CheckCircle } from 'lucide-react';
+import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { TrendingUp, BarChart3, DollarSign, MapPin, ChevronDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { investmentZones } from '@/data/investment-zones';
 
 const beneficios = [
   { icon: TrendingUp, title: 'Rentabilidad comprobada', description: '60 años de experiencia generando retornos consistentes para nuestros inversionistas' },
@@ -11,430 +13,211 @@ const beneficios = [
   { icon: MapPin, title: 'Ubicaciones estratégicas', description: 'Propiedades en las mejores zonas de Medellín y área metropolitana' },
 ];
 
-const oportunidades = [
-  {
-    title: 'Propiedades en Arrendamiento',
-    description: 'Invierte en propiedades generadoras de ingresos mensuales con alta demanda en Medellín.',
-    retorno: '5-8% anual',
-  },
-  {
-    title: 'Proyectos Inmobiliarios',
-    description: 'Participación en proyectos de desarrollo con potencial de revalorización significativa.',
-    retorno: '15-25% ciclo proyecto',
-  },
-  {
-    title: 'Cartera Diversificada',
-    description: 'Portafolio balanceado entre diferentes tipos de propiedades y ubicaciones.',
-    retorno: 'Personalizado',
-  },
-];
-
-const pasos = [
-  { numero: '1', titulo: 'Consulta inicial', descripcion: 'Conocemos tu perfil de inversión y objetivos financieros' },
-  { numero: '2', titulo: 'Análisis de opciones', descripcion: 'Presentamos oportunidades alineadas con tu perfil' },
-  { numero: '3', titulo: 'Evaluación técnica', descripcion: 'Análisis legal, técnico y financiero de la propiedad' },
-  { numero: '4', titulo: 'Cierre e inversión', descripcion: 'Acompañamiento completo en el proceso de inversión' },
-];
+const WHATSAPP_URL = 'https://wa.me/573006557529?text=Hola%2C%20quisiera%20consultar%20oportunidades%20de%20inversión%20inmobiliaria.';
 
 export default function InversionistasPage() {
+  const [expandedZone, setExpandedZone] = useState<string | null>(null);
+
   return (
     <div className="min-h-screen bg-white">
-      {/* Page Header */}
-      <div className="bg-brand-dark py-12 md:py-16">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            <h1 className="text-4xl sm:text-5xl font-bold text-white mb-4">
-              Para Inversionistas
-            </h1>
-            <p className="text-white/70 text-lg max-w-2xl">
-              Oportunidades inmobiliarias con rentabilidad comprobada en Antioquia
-            </p>
-          </motion.div>
-        </div>
-      </div>
-
       {/* Hero Section */}
-      <section className="py-12 md:py-16 bg-gradient-to-br from-gray-50 to-white">
+      <section className="bg-gradient-to-br from-brand-dark to-gray-900 py-16 md:py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            className="text-center mb-12"
+            transition={{ duration: 0.6 }}
+            className="text-center"
           >
-            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
-              Invierte en el crecimiento de Medellín
-            </h2>
-            <p className="text-gray-600 text-lg max-w-3xl mx-auto">
-              Con 60 años acompañando inversores, te ofrecemos oportunidades inmobiliarias de alto potencial en las mejores ubicaciones de Antioquia.
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
+              Inversión inmobiliaria en Medellín y el Valle de Aburrá
+            </h1>
+            <p className="text-lg sm:text-xl text-gray-300 max-w-3xl mx-auto mb-8">
+              Conoce las zonas con mayor potencial de valorización y rentabilidad inmobiliaria en Antioquia.
             </p>
-          </motion.div>
-
-          {/* Beneficios */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {beneficios.map((beneficio, idx) => {
-              const Icon = beneficio.icon;
-              return (
-                <motion.div
-                  key={idx}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3, delay: idx * 0.05 }}
-                  className="bg-white p-6 rounded-lg border border-gray-200 hover:shadow-lg transition-shadow"
-                >
-                  <Icon className="w-8 h-8 text-brand-red mb-3" />
-                  <h3 className="font-bold text-gray-900 mb-2">{beneficio.title}</h3>
-                  <p className="text-gray-600 text-sm">{beneficio.description}</p>
-                </motion.div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* Oportunidades */}
-      <section className="py-12 md:py-16 bg-white">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5 }}
-          >
-            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-3 text-center">
-              Tipos de Inversión
-            </h2>
-            <p className="text-gray-600 text-center mb-12 max-w-2xl mx-auto">
-              Elige la opción que mejor se adapte a tu estrategia de inversión
-            </p>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {oportunidades.map((oportunidad, idx) => (
-                <motion.div
-                  key={idx}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3, delay: idx * 0.1 }}
-                  className="bg-gradient-to-br from-gray-50 to-white p-8 rounded-lg border border-gray-200 hover:shadow-xl transition-all"
-                >
-                  <h3 className="text-xl font-bold text-gray-900 mb-3">{oportunidad.title}</h3>
-                  <p className="text-gray-600 text-sm mb-6">{oportunidad.descripcion}</p>
-                  <div className="pt-6 border-t border-gray-200">
-                    <p className="text-sm text-gray-600 mb-2">Retorno potencial:</p>
-                    <p className="text-2xl font-bold text-brand-red">{oportunidad.retorno}</p>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
+            <a
+              href="#zonas"
+              className="inline-flex items-center gap-2 h-12 px-8 bg-brand-red hover:bg-brand-red-hover text-white font-semibold rounded-full transition-all duration-300"
+            >
+              Ver zonas estratégicas
+            </a>
           </motion.div>
         </div>
       </section>
 
-      {/* Proceso de inversión */}
-      <section className="py-12 md:py-16 bg-gray-50">
+      {/* Investment Zones Section */}
+      <section id="zonas" className="py-16 md:py-24 bg-gray-50">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5 }}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-16"
           >
-            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-3 text-center">
-              Nuestro Proceso
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              Zonas estratégicas para invertir
             </h2>
-            <p className="text-gray-600 text-center mb-12 max-w-2xl mx-auto">
-              Te acompañamos en cada paso de tu inversión inmobiliaria
+            <p className="text-gray-600 text-lg max-w-2xl mx-auto">
+              Selecciona una zona para conocer rentabilidad, precios y ventajas de inversión
             </p>
+          </motion.div>
 
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-              {pasos.map((paso, idx) => (
-                <motion.div
-                  key={idx}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3, delay: idx * 0.1 }}
-                  className="relative"
+          {/* Zone Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {investmentZones.map((zone, index) => (
+              <motion.div
+                key={zone.id}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm hover:shadow-md transition-all"
+              >
+                {/* Basic Info - Always Visible */}
+                <button
+                  onClick={() => setExpandedZone(expandedZone === zone.id ? null : zone.id)}
+                  className="w-full p-6 text-left hover:bg-gray-50 transition-colors"
                 >
-                  <div className="bg-white p-6 rounded-lg border border-gray-200 text-center">
-                    <div className="w-12 h-12 bg-brand-red text-white rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-4">
-                      {paso.numero}
-                    </div>
-                    <h3 className="font-bold text-gray-900 mb-2">{paso.titulo}</h3>
-                    <p className="text-gray-600 text-sm">{paso.descripcion}</p>
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-2xl font-bold text-gray-900">{zone.name}</h3>
+                    <ChevronDown
+                      className={`w-6 h-6 text-brand-red transition-transform duration-300 ${
+                        expandedZone === zone.id ? 'rotate-180' : ''
+                      }`}
+                    />
                   </div>
-                  {idx < pasos.length - 1 && (
-                    <div className="hidden md:block absolute top-1/2 -right-2 transform -translate-y-1/2">
-                      <ArrowRight className="w-6 h-6 text-brand-red" />
+
+                  <div className="grid grid-cols-3 gap-4 mb-4">
+                    <div className="bg-gradient-to-br from-brand-red/5 to-transparent p-3 rounded-lg">
+                      <p className="text-xs text-gray-600 mb-1">Rentabilidad</p>
+                      <p className="text-lg font-bold text-brand-red">{zone.rentability}</p>
                     </div>
+                    <div className="bg-gradient-to-br from-blue-50 to-transparent p-3 rounded-lg">
+                      <p className="text-xs text-gray-600 mb-1">Precio m²</p>
+                      <p className="text-sm font-bold text-gray-900">{zone.pricePerM2}</p>
+                    </div>
+                    <div className="bg-gradient-to-br from-green-50 to-transparent p-3 rounded-lg">
+                      <p className="text-xs text-gray-600 mb-1">Estratos</p>
+                      <p className="text-lg font-bold text-gray-900">{zone.strata}</p>
+                    </div>
+                  </div>
+                </button>
+
+                {/* Expanded Content */}
+                <AnimatePresence>
+                  {expandedZone === zone.id && (
+                    <motion.div
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: 'auto' }}
+                      exit={{ opacity: 0, height: 0 }}
+                      transition={{ duration: 0.3 }}
+                      className="border-t border-gray-200"
+                    >
+                      <div className="p-6 space-y-4">
+                        {/* Description */}
+                        <p className="text-gray-600 leading-relaxed">{zone.description}</p>
+
+                        {/* Advantages */}
+                        <div>
+                          <h4 className="font-bold text-gray-900 mb-3">Ventajas de inversión:</h4>
+                          <ul className="space-y-2">
+                            {zone.advantages.map((advantage, i) => (
+                              <li key={i} className="flex items-start gap-2 text-gray-700">
+                                <span className="w-2 h-2 bg-brand-red rounded-full mt-2 flex-shrink-0" />
+                                <span className="text-sm">{advantage}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+
+                        {/* CTAs */}
+                        <div className="grid grid-cols-2 gap-3 pt-4">
+                          <a
+                            href={`/propiedades?location=${zone.name}`}
+                            className="inline-flex items-center justify-center gap-1 h-10 px-4 bg-brand-red hover:bg-brand-red-hover text-white font-semibold rounded-lg transition-colors text-sm"
+                          >
+                            Ver propiedades
+                          </a>
+                          <a
+                            href={`/inversionistas/${zone.slug}`}
+                            className="inline-flex items-center justify-center gap-1 h-10 px-4 border-2 border-brand-red text-brand-red hover:bg-brand-red hover:text-white font-semibold rounded-lg transition-colors text-sm"
+                          >
+                            Más información
+                          </a>
+                        </div>
+                      </div>
+                    </motion.div>
                   )}
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
+                </AnimatePresence>
+              </motion.div>
+            ))}
+          </div>
         </div>
       </section>
 
-      {/* Guía de Barrios */}
-      <section className="py-12 md:py-16 bg-gray-50">
+      {/* Benefits Section */}
+      <section className="py-16 md:py-24 bg-white">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5 }}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-16"
           >
-            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-3 text-center">
-              Guía de Barrios Estratégicos
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              ¿Por qué invertir con nosotros?
             </h2>
-            <p className="text-gray-600 text-center mb-12 max-w-2xl mx-auto">
-              Explora los barrios de Medellín con mayor potencial de revalorización e ingresos por arrendamiento
-            </p>
-
-            {/* Barrios Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {/* Barrio 1: Poblado */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3 }}
-                className="bg-white rounded-lg overflow-hidden border border-gray-200 hover:shadow-xl transition-shadow"
-              >
-                <div className="h-48 bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white text-2xl font-bold">
-                  El Poblado
-                </div>
-                <div className="p-6">
-                  <div className="grid grid-cols-3 gap-4 mb-6 pb-6 border-b border-gray-200">
-                    <div className="text-center">
-                      <p className="text-2xl font-bold text-brand-red">$2.8M</p>
-                      <p className="text-xs text-gray-500">precio/m²</p>
-                    </div>
-                    <div className="text-center">
-                      <p className="text-2xl font-bold text-brand-red">5-7%</p>
-                      <p className="text-xs text-gray-500">rentabilidad anual</p>
-                    </div>
-                    <div className="text-center">
-                      <p className="text-2xl font-bold text-brand-red">Est. 4-6</p>
-                      <p className="text-xs text-gray-500">estrato</p>
-                    </div>
-                  </div>
-                  <h3 className="font-bold text-gray-900 mb-3">Por qué invertir</h3>
-                  <ul className="space-y-2 text-sm text-gray-700 mb-6">
-                    <li>✓ Zona de mayor demanda de arriendos turísticos</li>
-                    <li>✓ Oferta gastronómica y comercial de clase mundial</li>
-                    <li>✓ Zona segura y bien conectada</li>
-                    <li>✓ Infraestructura moderna y servicios premium</li>
-                  </ul>
-                </div>
-              </motion.div>
-
-              {/* Barrio 2: Laureles */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3, delay: 0.1 }}
-                className="bg-white rounded-lg overflow-hidden border border-gray-200 hover:shadow-xl transition-shadow"
-              >
-                <div className="h-48 bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center text-white text-2xl font-bold">
-                  Laureles
-                </div>
-                <div className="p-6">
-                  <div className="grid grid-cols-3 gap-4 mb-6 pb-6 border-b border-gray-200">
-                    <div className="text-center">
-                      <p className="text-2xl font-bold text-brand-red">$1.5M</p>
-                      <p className="text-xs text-gray-500">precio/m²</p>
-                    </div>
-                    <div className="text-center">
-                      <p className="text-2xl font-bold text-brand-red">6-8%</p>
-                      <p className="text-xs text-gray-500">rentabilidad anual</p>
-                    </div>
-                    <div className="text-center">
-                      <p className="text-2xl font-bold text-brand-red">Est. 3-4</p>
-                      <p className="text-xs text-gray-500">estrato</p>
-                    </div>
-                  </div>
-                  <h3 className="font-bold text-gray-900 mb-3">Por qué invertir</h3>
-                  <ul className="space-y-2 text-sm text-gray-700 mb-6">
-                    <li>✓ Mejor relación precio-rentabilidad</li>
-                    <li>✓ Zona residencial consolidada y segura</li>
-                    <li>✓ Comunidad de clase media estable</li>
-                    <li>✓ Acceso fácil a transporte público</li>
-                  </ul>
-                </div>
-              </motion.div>
-
-              {/* Barrio 3: Envigado */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3, delay: 0.2 }}
-                className="bg-white rounded-lg overflow-hidden border border-gray-200 hover:shadow-xl transition-shadow"
-              >
-                <div className="h-48 bg-gradient-to-br from-purple-400 to-purple-600 flex items-center justify-center text-white text-2xl font-bold">
-                  Envigado
-                </div>
-                <div className="p-6">
-                  <div className="grid grid-cols-3 gap-4 mb-6 pb-6 border-b border-gray-200">
-                    <div className="text-center">
-                      <p className="text-2xl font-bold text-brand-red">$1.8M</p>
-                      <p className="text-xs text-gray-500">precio/m²</p>
-                    </div>
-                    <div className="text-center">
-                      <p className="text-2xl font-bold text-brand-red">6-7%</p>
-                      <p className="text-xs text-gray-500">rentabilidad anual</p>
-                    </div>
-                    <div className="text-center">
-                      <p className="text-2xl font-bold text-brand-red">Est. 3-5</p>
-                      <p className="text-xs text-gray-500">estrato</p>
-                    </div>
-                  </div>
-                  <h3 className="font-bold text-gray-900 mb-3">Por qué invertir</h3>
-                  <ul className="space-y-2 text-sm text-gray-700 mb-6">
-                    <li>✓ Municipio independiente con crecimiento sostenido</li>
-                    <li>✓ Centro comercial y de negocios en expansión</li>
-                    <li>✓ Comunidad próspera y en crecimiento</li>
-                    <li>✓ Proyectos de desarrollo inmobiliario importantes</li>
-                  </ul>
-                </div>
-              </motion.div>
-
-              {/* Barrio 4: Sabaneta */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3, delay: 0.3 }}
-                className="bg-white rounded-lg overflow-hidden border border-gray-200 hover:shadow-xl transition-shadow"
-              >
-                <div className="h-48 bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center text-white text-2xl font-bold">
-                  Sabaneta
-                </div>
-                <div className="p-6">
-                  <div className="grid grid-cols-3 gap-4 mb-6 pb-6 border-b border-gray-200">
-                    <div className="text-center">
-                      <p className="text-2xl font-bold text-brand-red">$1.2M</p>
-                      <p className="text-xs text-gray-500">precio/m²</p>
-                    </div>
-                    <div className="text-center">
-                      <p className="text-2xl font-bold text-brand-red">7-9%</p>
-                      <p className="text-xs text-gray-500">rentabilidad anual</p>
-                    </div>
-                    <div className="text-center">
-                      <p className="text-2xl font-bold text-brand-red">Est. 2-4</p>
-                      <p className="text-xs text-gray-500">estrato</p>
-                    </div>
-                  </div>
-                  <h3 className="font-bold text-gray-900 mb-3">Por qué invertir</h3>
-                  <ul className="space-y-2 text-sm text-gray-700 mb-6">
-                    <li>✓ Mejor valor por metro cuadrado</li>
-                    <li>✓ Demanda creciente de vivienda</li>
-                    <li>✓ Proyectos de infraestructura en desarrollo</li>
-                    <li>✓ Rentabilidad superior al promedio</li>
-                  </ul>
-                </div>
-              </motion.div>
-            </div>
           </motion.div>
-        </div>
-      </section>
 
-      {/* Por qué elegirnos */}
-      <section className="py-12 md:py-16 bg-white">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5 }}
-            >
-              <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-6">
-                ¿Por qué invertir con nosotros?
-              </h2>
-              <ul className="space-y-4">
-                {[
-                  '60 años de experiencia y trayectoria comprobada',
-                  'Equipo de expertos en análisis inmobiliario',
-                  'Transparencia total en cada transacción',
-                  'Acceso exclusivo a oportunidades premium',
-                  'Acompañamiento profesional de principio a fin',
-                  'Rentabilidades consistentes y verificables',
-                ].map((item, idx) => (
-                  <motion.div
-                    key={idx}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.3, delay: idx * 0.05 }}
-                    className="flex items-start gap-3"
-                  >
-                    <CheckCircle className="w-5 h-5 text-brand-red shrink-0 mt-0.5" />
-                    <span className="text-gray-700">{item}</span>
-                  </motion.div>
-                ))}
-              </ul>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-              className="bg-gradient-to-br from-brand-red/10 to-brand-red/5 rounded-lg p-8 border border-brand-red/20"
-            >
-              <h3 className="text-2xl font-bold text-gray-900 mb-4">
-                ¿Listo para invertir?
-              </h3>
-              <p className="text-gray-700 mb-6">
-                Contáctanos hoy y conoce las oportunidades exclusivas que tenemos disponibles para ti.
-              </p>
-              <Button className="w-full bg-brand-red hover:bg-brand-red-hover text-white font-semibold h-12">
-                Solicitar asesoría
-              </Button>
-              <p className="text-gray-600 text-sm text-center mt-4">
-                O llama a <span className="font-semibold">+57 300 655 7529</span>
-              </p>
-            </motion.div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {beneficios.map((beneficio, i) => (
+              <motion.div
+                key={beneficio.title}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: i * 0.1 }}
+                className="bg-gray-50 rounded-xl p-6"
+              >
+                <div className="w-12 h-12 bg-brand-red/10 rounded-lg flex items-center justify-center mb-4">
+                  <beneficio.icon className="w-6 h-6 text-brand-red" />
+                </div>
+                <h3 className="text-lg font-bold text-gray-900 mb-2">{beneficio.title}</h3>
+                <p className="text-gray-600 text-sm leading-relaxed">{beneficio.description}</p>
+              </motion.div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Cross-linking CTAs */}
-      <section className="py-12 md:py-16 bg-white">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-2 gap-6">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              className="bg-gradient-to-br from-brand-red/5 to-transparent border border-brand-red/20 rounded-xl p-8"
-            >
-              <h3 className="text-2xl font-bold text-brand-dark mb-3">Explora nuestro catálogo de propiedades</h3>
-              <p className="text-gray-600 mb-6">
-                Consulta todas nuestras propiedades disponibles para inversión en Medellín y Antioquia.
-              </p>
-              <Button
-                onClick={() => window.location.href = '/propiedades'}
-                className="bg-brand-red hover:bg-brand-red-hover text-white rounded-full"
-              >
-                Ver propiedades de inversión
-              </Button>
-            </motion.div>
+      {/* CTA Section */}
+      <section className="py-16 md:py-20 bg-brand-red">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+            className="text-3xl md:text-4xl font-bold text-white mb-8"
+          >
+            ¿Listo para comenzar tu inversión?
+          </motion.h2>
 
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.1 }}
-              className="bg-gradient-to-br from-orange-50 to-transparent border border-orange-200 rounded-xl p-8"
-            >
-              <h3 className="text-2xl font-bold text-brand-dark mb-3">¿Tienes una propiedad para publicar?</h3>
-              <p className="text-gray-600 mb-6">
-                Consigna tu propiedad con nosotros y llega a miles de inversionistas potenciales.
-              </p>
-              <Button
-                onClick={() => window.location.href = '/consignacion'}
-                className="bg-orange-600 hover:bg-orange-700 text-white rounded-full"
-              >
-                Consigna tu propiedad
-              </Button>
-            </motion.div>
-          </div>
+          <motion.a
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            href={WHATSAPP_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 h-12 px-8 bg-white text-brand-red font-semibold rounded-full hover:bg-gray-100 transition-all duration-300 transform hover:scale-105"
+          >
+            <span>Solicitar asesoría</span>
+            <img src="/icons/icon-whatsapp-red.gif" alt="WhatsApp" className="w-5 h-5" />
+          </motion.a>
         </div>
       </section>
     </div>
