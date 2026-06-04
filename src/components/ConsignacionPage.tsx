@@ -172,6 +172,49 @@ export default function ConsignacionPage() {
           </motion.div>
         </div>
       </section>
+
+      {/* Cross-linking CTAs */}
+      <section className="py-12 md:py-16 bg-white">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="grid md:grid-cols-2 gap-6">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              className="bg-gradient-to-br from-blue-50 to-transparent border border-blue-200 rounded-xl p-8"
+            >
+              <h3 className="text-2xl font-bold text-brand-dark mb-3">¿Buscas una propiedad para arrendar o comprar?</h3>
+              <p className="text-gray-600 mb-6">
+                Explora nuestro catálogo de miles de propiedades disponibles en Medellín y Antioquia.
+              </p>
+              <Button
+                onClick={() => window.location.href = '/propiedades'}
+                className="bg-blue-600 hover:bg-blue-700 text-white rounded-full"
+              >
+                Ver propiedades disponibles
+              </Button>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              className="bg-gradient-to-br from-green-50 to-transparent border border-green-200 rounded-xl p-8"
+            >
+              <h3 className="text-2xl font-bold text-brand-dark mb-3">¿Te interesa invertir en inmuebles?</h3>
+              <p className="text-gray-600 mb-6">
+                Descubre nuestras oportunidades de inversión con mayor potencial de retorno en Antioquia.
+              </p>
+              <Button
+                onClick={() => window.location.href = '/inversionistas'}
+                className="bg-green-600 hover:bg-green-700 text-white rounded-full"
+              >
+                Explorar inversiones inmobiliarias
+              </Button>
+            </motion.div>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }
