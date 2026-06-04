@@ -244,7 +244,7 @@ es una de mis favoritas en arrendamiento Santa Fe`;
         </div>
 
         {/* Content — Flex-grow para llenar espacio */}
-        <div className="flex-grow flex flex-col justify-start sm:justify-between p-2">
+        <div className="flex-grow flex flex-col justify-end sm:justify-between p-2">
           {/* Información Principal */}
           <div>
             {/* Precio */}
