@@ -133,7 +133,7 @@ export default function Header({ currentPage, onNavigate, isHeroPage = true }: H
 
   return (
     <header className={`fixed top-0 left-0 right-0 pt-4 pb-3 px-4 sm:px-6 lg:px-8 transition-all duration-300 ${headerBackground}`}
-      style={{ zIndex: 50, backgroundColor: headerBgColor }}>
+      style={{ zIndex: 50, backgroundColor: headerBgColor, backfaceVisibility: 'hidden' }}>
       <div className="flex items-center justify-center gap-4 h-[58px]">
         {/* Logo — extremo izquierdo FIJO */}
         <button onClick={() => handleNav('home')} className="shrink-0 absolute left-4 sm:left-6 lg:left-8">
