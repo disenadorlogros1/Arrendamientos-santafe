@@ -108,7 +108,7 @@ export default function HeroSection({ onNavigate }: HeroSectionProps) {
             textShadow: '0 1px 10px rgba(0,0,0,0.4)',
           }}
         >
-          Inmuebles disponibles ahora. Consulta, agenda o pide asesoría.
+          Respaldo y experiencia para encontrar o gestionar tu propiedad ideal en Antioquia.
         </p>
 
         {/* CTAs jerárquicos — botones cápsula con hover blanco + resplandor rojo */}
