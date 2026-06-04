@@ -217,12 +217,12 @@ export default function InfiniteCarousel({ properties }: InfiniteCarouselProps) 
   }, [cards.length, windowWidth]);
 
   return (
-    <div className="wrapper" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '12px' }}>
-      {/* Botón Anterior */}
+    <div className="wrapper" style={{ display: 'grid', gridTemplateColumns: '44px 1fr 44px', alignItems: 'center', gap: '12px', width: '100%' }}>
+      {/* Botón Anterior - Izquierda */}
       <button
         type="button"
         onClick={() => navigate(false)}
-        className="flex-shrink-0 w-10 h-10 rounded-full border border-gray-300 flex items-center justify-center text-gray-500 hover:border-brand-red hover:text-brand-red hover:bg-brand-red/5 transition-all duration-200"
+        className="w-10 h-10 rounded-full border border-gray-300 flex items-center justify-center text-gray-500 hover:border-brand-red hover:text-brand-red hover:bg-brand-red/5 transition-all duration-200"
         aria-label="Anterior"
       >
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -230,7 +230,7 @@ export default function InfiniteCarousel({ properties }: InfiniteCarouselProps) 
         </svg>
       </button>
 
-      {/* Contenedor horizontal de cards */}
+      {/* Contenedor horizontal de cards - Centro */}
       <div
         ref={containerRef}
         className="overflow-hidden"
@@ -259,11 +259,11 @@ export default function InfiniteCarousel({ properties }: InfiniteCarouselProps) 
         ))}
       </div>
 
-      {/* Botón Siguiente */}
+      {/* Botón Siguiente - Derecha */}
       <button
         type="button"
         onClick={() => navigate(true)}
-        className="flex-shrink-0 w-10 h-10 rounded-full border border-gray-300 flex items-center justify-center text-gray-500 hover:border-brand-red hover:text-brand-red hover:bg-brand-red/5 transition-all duration-200"
+        className="w-10 h-10 rounded-full border border-gray-300 flex items-center justify-center text-gray-500 hover:border-brand-red hover:text-brand-red hover:bg-brand-red/5 transition-all duration-200"
         aria-label="Siguiente"
       >
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
