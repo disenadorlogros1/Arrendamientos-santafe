@@ -22,7 +22,7 @@ export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) 
   const titleRef = useSplitTextAnimation('.trayectoria-title-split', 0, true);
 
   return (
-    <section className="relative py-16 sm:py-24 bg-gradient-to-br from-gray-50 to-white overflow-hidden">
+    <section className="relative py-8 sm:py-16 lg:py-24 bg-gradient-to-br from-gray-50 to-white overflow-hidden">
       {/* Acento decorativo */}
       <div
         aria-hidden="true"
@@ -34,7 +34,7 @@ export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) 
       />
 
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="grid lg:grid-cols-12 gap-10 items-center">
+        <div className="grid lg:grid-cols-12 gap-4 sm:gap-10 items-start sm:items-center">
           {/* Texto */}
           <div className="lg:col-span-6">
             <h2
@@ -66,25 +66,25 @@ export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) 
             </p>
 
             {/* Cifras clave */}
-            <div className="mt-8 grid grid-cols-3 gap-3 max-w-md">
-              <div className="bg-white border border-gray-200 rounded-lg p-4 text-center">
-                <Award className="w-5 h-5 text-brand-red mx-auto mb-1" />
-                <p className="text-2xl font-bold text-brand-dark">60+</p>
-                <p className="text-[11px] text-gray-500 mt-0.5">
+            <div className="mt-6 sm:mt-8 grid grid-cols-3 gap-2 sm:gap-3 max-w-md">
+              <div className="bg-white border border-gray-200 rounded-lg p-3 sm:p-4 text-center">
+                <Award className="w-4 sm:w-5 h-4 sm:h-5 text-brand-red mx-auto mb-1" />
+                <p className="text-xl sm:text-2xl font-bold text-brand-dark">60+</p>
+                <p className="text-[9px] sm:text-[11px] text-gray-500 mt-0.5">
                   años de experiencia
                 </p>
               </div>
-              <div className="bg-white border border-gray-200 rounded-lg p-4 text-center">
-                <Building2 className="w-5 h-5 text-brand-red mx-auto mb-1" />
-                <p className="text-2xl font-bold text-brand-dark">3</p>
-                <p className="text-[11px] text-gray-500 mt-0.5">
+              <div className="bg-white border border-gray-200 rounded-lg p-3 sm:p-4 text-center">
+                <Building2 className="w-4 sm:w-5 h-4 sm:h-5 text-brand-red mx-auto mb-1" />
+                <p className="text-xl sm:text-2xl font-bold text-brand-dark">3</p>
+                <p className="text-[9px] sm:text-[11px] text-gray-500 mt-0.5">
                   sedes en Antioquia
                 </p>
               </div>
-              <div className="bg-white border border-gray-200 rounded-lg p-4 text-center">
-                <Users className="w-5 h-5 text-brand-red mx-auto mb-1" />
-                <p className="text-2xl font-bold text-brand-dark">+1K</p>
-                <p className="text-[11px] text-gray-500 mt-0.5">
+              <div className="bg-white border border-gray-200 rounded-lg p-3 sm:p-4 text-center">
+                <Users className="w-4 sm:w-5 h-4 sm:h-5 text-brand-red mx-auto mb-1" />
+                <p className="text-xl sm:text-2xl font-bold text-brand-dark">+1K</p>
+                <p className="text-[9px] sm:text-[11px] text-gray-500 mt-0.5">
                   inmuebles en gestión activa
                 </p>
               </div>
@@ -108,35 +108,35 @@ export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) 
           {/* Línea de tiempo */}
           <div className="lg:col-span-6">
             <div className="relative">
-              <h3 className="text-sm font-semibold tracking-widest text-gray-500 uppercase mb-8">
+              <h3 className="text-xs sm:text-sm font-semibold tracking-widest text-gray-500 uppercase mb-4 sm:mb-8">
                 Línea de tiempo
               </h3>
 
               {/* Contenedor horizontal de la línea de tiempo */}
               <div className="relative overflow-x-auto">
                 {/* Línea roja horizontal central */}
-                <div className="absolute top-1/2 transform -translate-y-1/2 w-full h-16 bg-brand-red/10 pointer-events-none" />
+                <div className="absolute top-1/2 transform -translate-y-1/2 w-full h-10 sm:h-16 bg-brand-red/10 pointer-events-none" />
 
                 {/* Hitos */}
-                <div className="flex gap-4 md:gap-6 pb-4 min-w-max md:min-w-full">
+                <div className="flex gap-2 sm:gap-4 md:gap-6 pb-4 min-w-max md:min-w-full">
                   {HITOS.map((hito, index) => (
-                    <div key={hito.year} className="flex flex-col items-center gap-3 flex-1 min-w-[180px]">
+                    <div key={hito.year} className="flex flex-col items-center gap-2 sm:gap-3 flex-1 min-w-[130px] sm:min-w-[180px]">
                       {/* Contenido arriba */}
-                      <div className="h-20 flex items-end">
-                        <p className="text-xs md:text-sm text-gray-600 leading-tight text-center">
+                      <div className="h-12 sm:h-20 flex items-end">
+                        <p className="text-[10px] sm:text-xs md:text-sm text-gray-600 leading-tight text-center">
                           {hito.label}
                         </p>
                       </div>
 
                       {/* Franja roja con el año */}
-                      <div className="relative z-10 bg-brand-red px-4 py-3 rounded-sm flex items-center justify-center min-w-[140px]">
-                        <p className="text-2xl md:text-3xl font-black text-white leading-none">
+                      <div className="relative z-10 bg-brand-red px-3 sm:px-4 py-2 sm:py-3 rounded-sm flex items-center justify-center min-w-[100px] sm:min-w-[140px]">
+                        <p className="text-lg sm:text-2xl md:text-3xl font-black text-white leading-none">
                           {hito.year}
                         </p>
                       </div>
 
                       {/* Contenido abajo (vacío, podría agregarse si es necesario) */}
-                      <div className="h-20" />
+                      <div className="h-12 sm:h-20" />
                     </div>
                   ))}
                 </div>
