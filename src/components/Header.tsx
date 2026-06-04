@@ -107,31 +107,12 @@ export default function Header({ currentPage, onNavigate, isHeroPage = true }: H
   const [mobileOpen, setMobileOpen] = useState(false);
   const [expandedMobile, setExpandedMobile] = useState<string | null>(null);
   const [scrolled, setScrolled] = useState(false);
-  const [isDarkBackground, setIsDarkBackground] = useState(!isHeroPage);
 
   useEffect(() => {
-    const detectBackgroundColor = () => {
-      // Obtener el elemento que está debajo del header
-      const headerHeight = 80; // altura aproximada del header
-      const element = document.elementFromPoint(window.innerWidth / 2, headerHeight + 20);
-
-      if (element) {
-        const bgColor = window.getComputedStyle(element).backgroundColor;
-        // Si el color de fondo contiene rgb, analizarlo
-        if (bgColor && bgColor !== 'rgba(0, 0, 0, 0)') {
-          // Detectar si es oscuro o claro
-          const isLight = bgColor.includes('rgb(255') || bgColor.includes('rgb(254') || bgColor.includes('rgb(253');
-          setIsDarkBackground(!isLight);
-        }
-      }
-
-      setScrolled(window.scrollY > 40);
-    };
-
-    window.addEventListener('scroll', detectBackgroundColor, { passive: true });
-    detectBackgroundColor(); // Ejecutar al montar
-    return () => window.removeEventListener('scroll', detectBackgroundColor);
-  }, [isHeroPage]);
+    const onScroll = () => setScrolled(window.scrollY > 40);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
   const handleNav = (page: PageType) => {
     onNavigate(page);
@@ -140,13 +121,14 @@ export default function Header({ currentPage, onNavigate, isHeroPage = true }: H
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  // Header dinámico detecta el fondo en tiempo real
-  // Si fondo es oscuro (como hero) → 30% opacidad, Si es claro (blanco) → 100% opacidad
+  // Header con opacidad según el tipo de página
+  // Home (isHeroPage=true): 30% opacidad sobre fondo oscuro
+  // Páginas internas (isHeroPage=false): 100% opacidad sobre fondo claro
   const headerBackground = 'shadow-md';
-  const headerBgColor = isDarkBackground ? 'rgba(45, 45, 45, 0.3)' : 'rgba(255, 255, 255, 1)';
-  const headerTextColor = isDarkBackground ? '#ffffff' : '#1a1a1a';
-  const navBgColor = isDarkBackground ? 'rgba(255, 255, 255, 0.3)' : 'rgba(0, 0, 0, 0.3)';
-  const navBorderColor = isDarkBackground ? 'rgba(255, 255, 255, 0.3)' : 'rgba(0, 0, 0, 0.2)';
+  const headerBgColor = isHeroPage ? 'rgba(45, 45, 45, 0.3)' : 'rgba(255, 255, 255, 1)';
+  const headerTextColor = isHeroPage ? '#ffffff' : '#1a1a1a';
+  const navBgColor = isHeroPage ? 'rgba(255, 255, 255, 0.3)' : 'rgba(0, 0, 0, 0.3)';
+  const navBorderColor = isHeroPage ? 'rgba(255, 255, 255, 0.3)' : 'rgba(0, 0, 0, 0.2)';
 
   return (
     <header className={`fixed top-0 left-0 right-0 pt-4 pb-3 px-4 sm:px-6 lg:px-8 transition-all duration-300 ${headerBackground}`}
@@ -154,7 +136,7 @@ export default function Header({ currentPage, onNavigate, isHeroPage = true }: H
       <div className="flex items-center justify-center gap-4 h-[58px]">
         {/* Logo — extremo izquierdo FIJO */}
         <button onClick={() => handleNav('home')} className="shrink-0 absolute left-4 sm:left-6 lg:left-8">
-          <img src="/icons/icon-santa-fe-logo.png" alt="Arrendamientos Santa Fe" className="h-10 md:h-11 w-auto object-contain drop-shadow-lg" style={{ filter: isDarkBackground ? 'brightness(1)' : 'brightness(0.2)' }} />
+          <img src="/icons/icon-santa-fe-logo.png" alt="Arrendamientos Santa Fe" className="h-10 md:h-11 w-auto object-contain drop-shadow-lg" style={{ filter: isHeroPage ? 'brightness(1)' : 'brightness(0.2)' }} />
         </button>
 
         {/* Nav capsula — centrada */}
@@ -238,7 +220,7 @@ export default function Header({ currentPage, onNavigate, isHeroPage = true }: H
           <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
             <SheetTrigger asChild>
               <button className="p-1.5 hover:bg-white/10 rounded-full transition-colors" style={{ color: headerTextColor }} aria-label="Abrir menú">
-                <img src={isDarkBackground ? "/icons/icon-menu-white.gif" : "/icons/icon-menu-black.gif"} alt="Menú" className="h-5 w-5" />
+                <img src={isHeroPage ? "/icons/icon-menu-white.gif" : "/icons/icon-menu-black.gif"} alt="Menú" className="h-5 w-5" />
               </button>
             </SheetTrigger>
             <SheetContent side="right" className="w-80 bg-brand-dark border-brand-dark-secondary p-0">
