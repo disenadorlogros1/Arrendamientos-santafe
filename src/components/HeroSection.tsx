@@ -90,7 +90,7 @@ export default function HeroSection({ onNavigate }: HeroSectionProps) {
           <span
             style={{
               fontWeight: 700,
-              display: 'block',
+              display: 'inline-block',
               position: 'relative',
             }}
           >
@@ -99,6 +99,7 @@ export default function HeroSection({ onNavigate }: HeroSectionProps) {
               style={{
                 position: 'relative',
                 zIndex: 2,
+                display: 'block',
               }}
             >
               decisiones que importan.
@@ -107,11 +108,10 @@ export default function HeroSection({ onNavigate }: HeroSectionProps) {
               aria-hidden="true"
               style={{
                 position: 'absolute',
-                top: '50%',
+                top: '45%',
                 left: 0,
-                right: 0,
                 width: '100%',
-                height: '0.2em',
+                height: '0.15em',
                 backgroundColor: '#f32735',
                 transform: 'translateY(-50%)',
                 zIndex: 1,
