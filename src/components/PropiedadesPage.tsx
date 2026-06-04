@@ -221,6 +221,45 @@ export default function PropiedadesPage() {
             </Button>
           </div>
         )}
+
+        {/* Cross-linking CTAs */}
+        <div className="mt-16 grid md:grid-cols-2 gap-6">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="bg-gradient-to-br from-brand-red/5 to-transparent border border-brand-red/20 rounded-xl p-8"
+          >
+            <h3 className="text-2xl font-bold text-brand-dark mb-3">¿Tienes un inmueble para arrendar o vender?</h3>
+            <p className="text-gray-600 mb-6">
+              Consigna tu propiedad con nosotros y accede a nuestra red de miles de clientes potenciales.
+            </p>
+            <Button
+              onClick={() => window.location.href = '/consignacion'}
+              className="bg-brand-red hover:bg-brand-red-hover text-white rounded-full"
+            >
+              Consigna tu propiedad
+            </Button>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            className="bg-gradient-to-br from-blue-50 to-transparent border border-blue-200 rounded-xl p-8"
+          >
+            <h3 className="text-2xl font-bold text-brand-dark mb-3">¿Buscas oportunidades de inversión?</h3>
+            <p className="text-gray-600 mb-6">
+              Descubre nuestras propiedades con mayor potencial de retorno e inversión en Antioquia.
+            </p>
+            <Button
+              onClick={() => window.location.href = '/inversionistas'}
+              className="bg-blue-600 hover:bg-blue-700 text-white rounded-full"
+            >
+              Ver oportunidades de inversión
+            </Button>
+          </motion.div>
+        </div>
       </div>
     </div>
   );
