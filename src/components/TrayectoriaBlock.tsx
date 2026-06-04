@@ -39,7 +39,7 @@ export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) 
           <div className="lg:col-span-6">
             <h2
               ref={titleRef}
-              className="trayectoria-title-split text-2xl sm:text-3xl lg:text-5xl text-brand-red leading-tight"
+              className="trayectoria-title-split text-xl sm:text-3xl lg:text-5xl text-brand-red leading-tight"
               style={{
                 fontFamily:
                   "'Avenir Next Ultra Light', 'Avenir LT Pro 65 Medium', 'Avenir', 'Outfit', system-ui, sans-serif",
@@ -59,7 +59,7 @@ export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) 
               </span>
               en Antioquia
             </h2>
-            <p className="mt-5 text-base sm:text-lg text-gray-600 leading-relaxed max-w-xl">
+            <p className="mt-3 sm:mt-5 text-sm sm:text-base lg:text-lg text-gray-600 leading-relaxed w-full">
               Desde 1966 acompañamos a personas, familias y propietarios en
               decisiones de arrendamiento, venta, administración e inversión
               inmobiliaria.
