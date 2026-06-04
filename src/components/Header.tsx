@@ -175,6 +175,8 @@ export default function Header({ currentPage, onNavigate, isHeroPage = true }: H
                           rel="noopener noreferrer"
                           className="block w-full text-left px-5 py-2.5 text-[15px] text-gray-700 hover:text-white hover:bg-brand-red transition-colors duration-150 first:rounded-t-2xl last:rounded-b-2xl"
                           style={{ fontFamily: "'Avenir LT Pro', 'Outfit', system-ui, sans-serif", fontWeight: 300 }}
+                          onMouseEnter={(e) => e.target.style.color = 'white'}
+                          onMouseLeave={(e) => e.target.style.color = '#374151'}
                         >
                           {sub.label}
                         </a>
@@ -184,8 +186,10 @@ export default function Header({ currentPage, onNavigate, isHeroPage = true }: H
                           onClick={() => {
                             if (sub.page) handleNav(sub.page);
                           }}
-                          className="block w-full text-left px-5 py-2.5 text-[15px] hover:text-white hover:bg-brand-red transition-colors duration-150 first:rounded-t-2xl last:rounded-b-2xl"
+                          className="block w-full text-left px-5 py-2.5 text-[15px] text-gray-700 hover:text-white hover:bg-brand-red transition-colors duration-150 first:rounded-t-2xl last:rounded-b-2xl"
                           style={{ fontFamily: "'Avenir LT Pro', 'Outfit', system-ui, sans-serif", fontWeight: 300, color: '#666' }}
+                          onMouseEnter={(e) => e.currentTarget.style.color = 'white'}
+                          onMouseLeave={(e) => e.currentTarget.style.color = '#666'}
                         >
                           {sub.label}
                         </button>
