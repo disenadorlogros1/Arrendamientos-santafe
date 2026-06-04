@@ -99,20 +99,21 @@ export default function HeroSection({ onNavigate }: HeroSectionProps) {
               style={{
                 position: 'relative',
                 zIndex: 2,
-                background: 'rgba(0, 0, 0, 0.3)',
-                paddingX: '0.05em',
-                display: 'inline-block',
               }}
             >
               decisiones que importan.
             </span>
             <span
               aria-hidden="true"
-              className="absolute left-0 w-full bg-brand-red z-1"
               style={{
-                bottom: '0.15em',
-                height: '0.25em',
+                position: 'absolute',
+                top: '50%',
+                left: 0,
+                right: 0,
+                width: '100%',
+                height: '0.2em',
                 backgroundColor: '#f32735',
+                transform: 'translateY(-50%)',
                 zIndex: 1,
               }}
             />
