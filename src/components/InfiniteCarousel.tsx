@@ -217,7 +217,19 @@ export default function InfiniteCarousel({ properties }: InfiniteCarouselProps) 
   }, [cards.length, windowWidth]);
 
   return (
-    <div className="wrapper">
+    <div className="wrapper" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '12px' }}>
+      {/* Botón Anterior */}
+      <button
+        type="button"
+        onClick={() => navigate(false)}
+        className="flex-shrink-0 w-10 h-10 rounded-full border border-gray-300 flex items-center justify-center text-gray-500 hover:border-brand-red hover:text-brand-red hover:bg-brand-red/5 transition-all duration-200"
+        aria-label="Anterior"
+      >
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <polyline points="15 18 9 12 15 6" />
+        </svg>
+      </button>
+
       {/* Contenedor horizontal de cards */}
       <div
         ref={containerRef}
@@ -247,30 +259,17 @@ export default function InfiniteCarousel({ properties }: InfiniteCarouselProps) 
         ))}
       </div>
 
-      {/* Botones */}
-      <div className="buttons">
-        <button
-          type="button"
-          onClick={() => navigate(false)}
-          className="w-10 h-10 rounded-full border border-gray-300 flex items-center justify-center text-gray-500 hover:border-brand-red hover:text-brand-red hover:bg-brand-red/5 transition-all duration-200"
-          aria-label="Anterior"
-        >
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <polyline points="15 18 9 12 15 6" />
-          </svg>
-        </button>
-
-        <button
-          type="button"
-          onClick={() => navigate(true)}
-          className="w-10 h-10 rounded-full border border-gray-300 flex items-center justify-center text-gray-500 hover:border-brand-red hover:text-brand-red hover:bg-brand-red/5 transition-all duration-200"
-          aria-label="Siguiente"
-        >
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <polyline points="9 18 15 12 9 6" />
-          </svg>
-        </button>
-      </div>
+      {/* Botón Siguiente */}
+      <button
+        type="button"
+        onClick={() => navigate(true)}
+        className="flex-shrink-0 w-10 h-10 rounded-full border border-gray-300 flex items-center justify-center text-gray-500 hover:border-brand-red hover:text-brand-red hover:bg-brand-red/5 transition-all duration-200"
+        aria-label="Siguiente"
+      >
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <polyline points="9 18 15 12 9 6" />
+        </svg>
+      </button>
     </div>
   );
 }
