@@ -29,18 +29,18 @@ const AnimatedText = ({ text, startIndex = 0 }: { text: string; startIndex?: num
 
 export default function HeroSection({ onNavigate }: HeroSectionProps) {
   const titleRef = useSplitTextAnimation('.hero-title-split');
-  const underlineRef = useRef<HTMLSpanElement>(null);
+  const boldTextRef = useRef<HTMLSpanElement>(null);
 
   // Animar el subrayado después de que termine el título (1.4s duración del título)
   useEffect(() => {
-    if (!underlineRef.current) return;
+    if (!boldTextRef.current) return;
 
     // Iniciar invisible
-    gsap.set(underlineRef.current, { scaleX: 0, transformOrigin: 'left center' });
+    gsap.set(boldTextRef.current, { backgroundSize: '0% 100%' });
 
     // Aparecer deslizándose de izquierda a derecha después del título
-    gsap.to(underlineRef.current, {
-      scaleX: 1,
+    gsap.to(boldTextRef.current, {
+      backgroundSize: '100% 100%',
       duration: 0.9,
       delay: 1.6,
       ease: 'power3.out',
@@ -85,28 +85,18 @@ export default function HeroSection({ onNavigate }: HeroSectionProps) {
         >
           60 años acompañando
           <span
+            ref={boldTextRef}
             style={{
               fontWeight: 700,
-              position: 'relative',
               display: 'block',
+              backgroundImage: 'linear-gradient(to top, #f32735 10px, transparent 10px)',
+              backgroundSize: '0% 100%',
+              backgroundRepeat: 'no-repeat',
+              backgroundPosition: 'left bottom',
+              transition: 'background-size 0.9s cubic-bezier(0.16, 1, 0.3, 1)',
             }}
           >
             decisiones que importan.
-            {/* Subrayado independiente — no afecta el texto ni el interlineado */}
-            <span
-              ref={underlineRef}
-              aria-hidden="true"
-              style={{
-                position: 'absolute',
-                bottom: -6,
-                left: 0,
-                width: '100%',
-                height: 10,
-                backgroundColor: '#f32735',
-                borderRadius: 2,
-                display: 'block',
-              }}
-            />
           </span>
         </h1>
         <p
