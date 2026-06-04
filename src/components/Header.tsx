@@ -123,12 +123,13 @@ export default function Header({ currentPage, onNavigate, isHeroPage = true }: H
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  // En páginas no-hero, mostrar background gris oscuro; en hero, cambiar con scroll
-  const headerBackground = !isHeroPage
-    ? 'shadow-md'
-    : scrolled ? 'header-scrolled' : '';
-
-  const headerBgColor = !isHeroPage ? '#2d2d2d' : 'transparent';
+  // Header dinámico: blanco sobre contenido blanco, oscuro sobre contenido oscuro
+  const shouldBeWhite = !isHeroPage || scrolled;
+  const headerBackground = 'shadow-md';
+  const headerBgColor = shouldBeWhite ? '#ffffff' : '#2d2d2d';
+  const headerTextColor = shouldBeWhite ? '#1a1a1a' : '#ffffff';
+  const navBgColor = shouldBeWhite ? 'rgba(0, 0, 0, 0.05)' : 'rgba(255, 255, 255, 0.08)';
+  const navBorderColor = shouldBeWhite ? 'rgba(0, 0, 0, 0.1)' : 'rgba(255, 255, 255, 0.2)';
 
   return (
     <header className={`fixed top-0 left-0 right-0 pt-4 pb-3 px-4 sm:px-6 lg:px-8 transition-all duration-300 ${headerBackground}`}
@@ -136,7 +137,7 @@ export default function Header({ currentPage, onNavigate, isHeroPage = true }: H
       <div className="flex items-center justify-center gap-4 h-[58px]">
         {/* Logo — extremo izquierdo FIJO */}
         <button onClick={() => handleNav('home')} className="shrink-0 absolute left-4 sm:left-6 lg:left-8">
-          <img src="/icons/icon-santa-fe-logo.png" alt="Arrendamientos Santa Fe" className="h-10 md:h-11 w-auto object-contain drop-shadow-lg" />
+          <img src="/icons/icon-santa-fe-logo.png" alt="Arrendamientos Santa Fe" className="h-10 md:h-11 w-auto object-contain drop-shadow-lg" style={{ filter: shouldBeWhite ? 'brightness(0.2)' : 'brightness(1)' }} />
         </button>
 
         {/* Nav capsula — centrada */}
@@ -145,8 +146,8 @@ export default function Header({ currentPage, onNavigate, isHeroPage = true }: H
             overflow: 'visible',
             width: '100%',
             maxWidth: '64rem',
-            backgroundColor: !isHeroPage ? 'rgba(255, 255, 255, 0.08)' : 'rgba(255, 255, 255, 0.4)',
-            borderColor: !isHeroPage ? 'rgba(255, 255, 255, 0.2)' : 'rgba(255, 255, 255, 0.3)',
+            backgroundColor: navBgColor,
+            borderColor: navBorderColor,
             backdropFilter: 'blur(10px)',
           }}>
           {navItems.map((item) =>
@@ -154,8 +155,8 @@ export default function Header({ currentPage, onNavigate, isHeroPage = true }: H
               /* Item con dropdown — CSS puro, sin JS */
               <div key={item.label} className="relative group flex-1">
                 <button
-                  className="w-full px-2 py-2 text-sm font-medium text-white rounded-full transition-all duration-300 ease-out hover:bg-brand-red"
-                  style={{ fontFamily: "'Avenir LT Pro', 'Outfit', system-ui, sans-serif", fontWeight: 300 }}
+                  className="w-full px-2 py-2 text-sm font-medium rounded-full transition-all duration-300 ease-out hover:bg-brand-red"
+                  style={{ fontFamily: "'Avenir LT Pro', 'Outfit', system-ui, sans-serif", fontWeight: 300, color: headerTextColor }}
                 >
                   {item.label}
                 </button>
@@ -181,8 +182,8 @@ export default function Header({ currentPage, onNavigate, isHeroPage = true }: H
                           onClick={() => {
                             if (sub.page) handleNav(sub.page);
                           }}
-                          className="block w-full text-left px-5 py-2.5 text-[15px] text-gray-700 hover:text-white hover:bg-brand-red transition-colors duration-150 first:rounded-t-2xl last:rounded-b-2xl"
-                          style={{ fontFamily: "'Avenir LT Pro', 'Outfit', system-ui, sans-serif", fontWeight: 300 }}
+                          className="block w-full text-left px-5 py-2.5 text-[15px] hover:text-white hover:bg-brand-red transition-colors duration-150 first:rounded-t-2xl last:rounded-b-2xl"
+                          style={{ fontFamily: "'Avenir LT Pro', 'Outfit', system-ui, sans-serif", fontWeight: 300, color: '#666' }}
                         >
                           {sub.label}
                         </button>
@@ -196,10 +197,8 @@ export default function Header({ currentPage, onNavigate, isHeroPage = true }: H
               <button
                 key={item.label}
                 onClick={() => handleNav(item.page || 'home')}
-                className={`flex-1 px-2 py-2 text-sm font-medium text-white rounded-full transition-all duration-300 ease-out hover:bg-brand-red ${
-                  currentPage === item.page ? 'text-white' : 'text-white'
-                }`}
-                style={{ fontFamily: "'Avenir LT Pro 35 Thin', 'Avenir LT Pro', 'Outfit', system-ui, sans-serif" }}
+                className={`flex-1 px-2 py-2 text-sm font-medium rounded-full transition-all duration-300 ease-out hover:bg-brand-red`}
+                style={{ fontFamily: "'Avenir LT Pro 35 Thin', 'Avenir LT Pro', 'Outfit', system-ui, sans-serif", color: headerTextColor }}
               >
                 {item.label}
               </button>
@@ -221,8 +220,8 @@ export default function Header({ currentPage, onNavigate, isHeroPage = true }: H
           <MobilePSEButton />
           <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
             <SheetTrigger asChild>
-              <button className="text-white p-1.5 hover:bg-white/10 rounded-full transition-colors" aria-label="Abrir menú">
-                <img src="/icons/icon-menu-white.gif" alt="Menú" className="h-5 w-5" />
+              <button className="p-1.5 hover:bg-white/10 rounded-full transition-colors" style={{ color: headerTextColor }} aria-label="Abrir menú">
+                <img src={shouldBeWhite ? "/icons/icon-menu-black.gif" : "/icons/icon-menu-white.gif"} alt="Menú" className="h-5 w-5" />
               </button>
             </SheetTrigger>
             <SheetContent side="right" className="w-80 bg-brand-dark border-brand-dark-secondary p-0">
