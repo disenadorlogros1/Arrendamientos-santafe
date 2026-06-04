@@ -209,7 +209,7 @@ export default function InfiniteCarousel({ properties }: InfiniteCarouselProps) 
   }, [cards.length, windowWidth]);
 
   return (
-    <div className="wrapper" style={{ display: 'grid', gridTemplateColumns: '44px 1fr 44px', alignItems: 'center', gap: '12px', width: '100%' }}>
+    <div className="wrapper" style={{ display: 'grid', gridTemplateColumns: '44px 1fr 44px', alignItems: 'flex-start', gap: '12px', width: '100%' }}>
       {/* Botón Anterior - Izquierda */}
       <button
         type="button"
