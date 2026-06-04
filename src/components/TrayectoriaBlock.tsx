@@ -37,12 +37,9 @@ export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) 
         <div className="grid lg:grid-cols-12 gap-10 items-center">
           {/* Texto */}
           <div className="lg:col-span-6">
-            <span className="inline-block text-xs sm:text-sm font-semibold tracking-widest text-brand-red uppercase mb-3">
-              Nuestra trayectoria
-            </span>
             <h2
               ref={titleRef}
-              className="trayectoria-title-split text-3xl sm:text-4xl lg:text-5xl text-brand-red leading-tight"
+              className="trayectoria-title-split text-2xl sm:text-3xl lg:text-5xl text-brand-red leading-tight"
               style={{
                 fontFamily:
                   "'Avenir Next Ultra Light', 'Avenir LT Pro 65 Medium', 'Avenir', 'Outfit', system-ui, sans-serif",
