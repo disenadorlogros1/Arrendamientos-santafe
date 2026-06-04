@@ -243,8 +243,8 @@ es una de mis favoritas en arrendamiento Santa Fe`;
           </div>
         </div>
 
-        {/* Content — Flex-grow solo en desktop/tablet */}
-        <div className="flex-grow-0 sm:flex-grow flex flex-col justify-between p-1 sm:p-2">
+        {/* Content — Flex-grow en todos los tamaños */}
+        <div className="flex-grow flex flex-col justify-between p-1 sm:p-2">
           {/* Información Principal */}
           <div>
             {/* Precio */}
