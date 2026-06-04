@@ -45,36 +45,30 @@ export default function InfiniteCarousel({ properties }: InfiniteCarouselProps) 
         const leavingSlot = slots[0];
 
         const isMobileView = windowWidth < 640;
-        const duration = isMobileView ? 0.4 : 0.7;
+        const duration = isMobileView ? 0.5 : 0.7;
 
         if (isMobileView) {
-          // MOBILE: Animación simple de fade
-          gsap.to(leavingSlot, {
-            opacity: 0,
-            duration: duration,
-            ease: 'power2.in',
-            onComplete: () => {
-              flushSync(() => {
-                setStartIndex((prev) => (prev + 1) % cards.length);
-              });
+          // MOBILE: Animación suave de fade (crossfade)
+          flushSync(() => {
+            setStartIndex((prev) => (prev + 1) % cards.length);
+          });
 
-              requestAnimationFrame(() => {
-                const newSlots = containerRef.current?.querySelectorAll<HTMLElement>('[data-slot]');
-                if (!newSlots) return;
-                const enteringSlot = newSlots[newSlots.length - 1];
+          requestAnimationFrame(() => {
+            const newSlots = containerRef.current?.querySelectorAll<HTMLElement>('[data-slot]');
+            if (!newSlots) return;
 
-                gsap.set(enteringSlot, { opacity: 0 });
+            // Obtener el slot actual (que recién entró) y el anterior
+            const currentSlot = newSlots[0];
 
-                gsap.to(enteringSlot, {
-                  opacity: 1,
-                  duration: duration,
-                  ease: 'power2.out',
-                  onComplete: () => {
-                    isAnimating.current = false;
-                  },
-                });
-              });
-            },
+            gsap.set(currentSlot, { opacity: 0 });
+            gsap.to(currentSlot, {
+              opacity: 1,
+              duration: duration,
+              ease: 'power2.inOut',
+              onComplete: () => {
+                isAnimating.current = false;
+              },
+            });
           });
         } else {
           // DESKTOP: Animación 3D (mantener la original)
