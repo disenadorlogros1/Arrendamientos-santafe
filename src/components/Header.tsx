@@ -126,7 +126,7 @@ export default function Header({ currentPage, onNavigate, isHeroPage = true }: H
   // Header dinámico: blanco solo cuando hay fondo blanco debajo
   const shouldBeWhite = !isHeroPage; // Solo en páginas internas
   const headerBackground = 'shadow-md';
-  const headerBgColor = shouldBeWhite ? '#ffffff' : '#2d2d2d';
+  const headerBgColor = shouldBeWhite ? 'rgba(255, 255, 255, 0.5)' : 'rgba(45, 45, 45, 0.5)';
   const headerTextColor = shouldBeWhite ? '#1a1a1a' : '#ffffff';
   const navBgColor = shouldBeWhite ? 'rgba(0, 0, 0, 0.3)' : 'rgba(255, 255, 255, 0.3)';
   const navBorderColor = shouldBeWhite ? 'rgba(0, 0, 0, 0.2)' : 'rgba(255, 255, 255, 0.3)';
