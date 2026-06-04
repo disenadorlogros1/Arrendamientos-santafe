@@ -105,12 +105,10 @@ export default function HeroSection({ onNavigate }: HeroSectionProps) {
             </span>
             <span
               aria-hidden="true"
+              className="absolute left-0 w-full bg-brand-red z-1"
               style={{
-                position: 'absolute',
-                bottom: 8,
-                left: 0,
-                width: '100%',
-                height: 10,
+                bottom: '0.15em',
+                height: '0.25em',
                 backgroundColor: '#f32735',
                 zIndex: 1,
               }}
@@ -142,6 +140,10 @@ export default function HeroSection({ onNavigate }: HeroSectionProps) {
               textShadow: '0 1px 3px rgba(0,0,0,0.4)',
               fontFamily: "'Avenir LT Pro 65 Medium', 'Avenir', 'Outfit', system-ui, sans-serif",
               fontWeight: 300,
+              fontSize: 'inherit',
+              lineHeight: '1.5',
+              appearance: 'none',
+              WebkitAppearance: 'none',
             }}
           >
             Ver propiedades disponibles
@@ -157,6 +159,9 @@ export default function HeroSection({ onNavigate }: HeroSectionProps) {
               textShadow: '0 1px 3px rgba(0,0,0,0.4)',
               fontFamily: "'Avenir LT Pro 65 Medium', 'Avenir', 'Outfit', system-ui, sans-serif",
               fontWeight: 300,
+              fontSize: 'inherit',
+              lineHeight: '1.5',
+              textDecoration: 'none',
             }}
           >
             <span>Hablar con un asesor</span>
