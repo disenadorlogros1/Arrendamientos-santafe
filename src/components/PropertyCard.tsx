@@ -66,7 +66,7 @@ es una de mis favoritas en arrendamiento Santa Fe`;
   return (
     <>
       <div
-        className="group bg-white rounded-lg overflow-hidden border border-gray-100 flex flex-col h-full"
+        className="group bg-white rounded-lg overflow-hidden border border-gray-100 flex flex-col h-auto sm:h-full"
         style={{
           boxShadow: isHovered
             ? '0 8px 25px -5px rgba(0,0,0,0.12), 0 4px 10px -6px rgba(0,0,0,0.06)'
