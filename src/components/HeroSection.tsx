@@ -108,7 +108,7 @@ export default function HeroSection({ onNavigate }: HeroSectionProps) {
               aria-hidden="true"
               style={{
                 position: 'absolute',
-                top: '45%',
+                top: '52%',
                 left: 0,
                 width: '100%',
                 height: '0.15em',
