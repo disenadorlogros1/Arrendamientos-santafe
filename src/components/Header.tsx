@@ -154,7 +154,7 @@ export default function Header({ currentPage, onNavigate, isHeroPage = true }: H
       <div className="flex items-center justify-center gap-4 h-[58px]">
         {/* Logo — extremo izquierdo FIJO */}
         <button onClick={() => handleNav('home')} className="shrink-0 absolute left-4 sm:left-6 lg:left-8">
-          <img src="/icons/icon-santa-fe-logo.png" alt="Arrendamientos Santa Fe" className="h-10 md:h-11 w-auto object-contain drop-shadow-lg" style={{ filter: shouldBeWhite ? 'brightness(0.2)' : 'brightness(1)' }} />
+          <img src="/icons/icon-santa-fe-logo.png" alt="Arrendamientos Santa Fe" className="h-10 md:h-11 w-auto object-contain drop-shadow-lg" style={{ filter: isDarkBackground ? 'brightness(1)' : 'brightness(0.2)' }} />
         </button>
 
         {/* Nav capsula — centrada */}
@@ -238,7 +238,7 @@ export default function Header({ currentPage, onNavigate, isHeroPage = true }: H
           <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
             <SheetTrigger asChild>
               <button className="p-1.5 hover:bg-white/10 rounded-full transition-colors" style={{ color: headerTextColor }} aria-label="Abrir menú">
-                <img src={shouldBeWhite ? "/icons/icon-menu-black.gif" : "/icons/icon-menu-white.gif"} alt="Menú" className="h-5 w-5" />
+                <img src={isDarkBackground ? "/icons/icon-menu-white.gif" : "/icons/icon-menu-black.gif"} alt="Menú" className="h-5 w-5" />
               </button>
             </SheetTrigger>
             <SheetContent side="right" className="w-80 bg-brand-dark border-brand-dark-secondary p-0">
