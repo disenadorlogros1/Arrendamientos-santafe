@@ -99,6 +99,9 @@ export default function HeroSection({ onNavigate }: HeroSectionProps) {
               style={{
                 position: 'relative',
                 zIndex: 2,
+                background: 'rgba(0, 0, 0, 0.3)',
+                paddingX: '0.05em',
+                display: 'inline-block',
               }}
             >
               decisiones que importan.
@@ -161,10 +164,13 @@ export default function HeroSection({ onNavigate }: HeroSectionProps) {
               fontWeight: 300,
               fontSize: 'inherit',
               lineHeight: '1.5',
+              appearance: 'none',
+              WebkitAppearance: 'none',
               textDecoration: 'none',
+              display: 'inline-flex',
             }}
           >
-            <span>Hablar con un asesor</span>
+            Hablar con un asesor
           </a>
         </div>
       </div>
