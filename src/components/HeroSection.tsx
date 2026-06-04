@@ -36,11 +36,11 @@ export default function HeroSection({ onNavigate }: HeroSectionProps) {
     if (!boldTextRef.current) return;
 
     // Iniciar invisible
-    gsap.set(boldTextRef.current, { backgroundSize: '0% 100%' });
+    gsap.set(boldTextRef.current, { borderBottomWidth: '0px' });
 
     // Aparecer deslizándose de izquierda a derecha después del título
     gsap.to(boldTextRef.current, {
-      backgroundSize: '100% 100%',
+      borderBottomWidth: '10px',
       duration: 0.9,
       delay: 1.6,
       ease: 'power3.out',
@@ -89,11 +89,9 @@ export default function HeroSection({ onNavigate }: HeroSectionProps) {
             style={{
               fontWeight: 700,
               display: 'block',
-              backgroundImage: 'linear-gradient(to top, #f32735 10px, transparent 10px)',
-              backgroundSize: '0% 100%',
-              backgroundRepeat: 'no-repeat',
-              backgroundPosition: 'left bottom',
-              transition: 'background-size 0.9s cubic-bezier(0.16, 1, 0.3, 1)',
+              borderBottom: '10px solid #f32735',
+              borderBottomWidth: '0px',
+              paddingBottom: '5px',
             }}
           >
             decisiones que importan.
