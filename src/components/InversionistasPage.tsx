@@ -394,6 +394,49 @@ export default function InversionistasPage() {
           </div>
         </div>
       </section>
+
+      {/* Cross-linking CTAs */}
+      <section className="py-12 md:py-16 bg-white">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="grid md:grid-cols-2 gap-6">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              className="bg-gradient-to-br from-brand-red/5 to-transparent border border-brand-red/20 rounded-xl p-8"
+            >
+              <h3 className="text-2xl font-bold text-brand-dark mb-3">Explora nuestro catálogo de propiedades</h3>
+              <p className="text-gray-600 mb-6">
+                Consulta todas nuestras propiedades disponibles para inversión en Medellín y Antioquia.
+              </p>
+              <Button
+                onClick={() => window.location.href = '/propiedades'}
+                className="bg-brand-red hover:bg-brand-red-hover text-white rounded-full"
+              >
+                Ver propiedades de inversión
+              </Button>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              className="bg-gradient-to-br from-orange-50 to-transparent border border-orange-200 rounded-xl p-8"
+            >
+              <h3 className="text-2xl font-bold text-brand-dark mb-3">¿Tienes una propiedad para publicar?</h3>
+              <p className="text-gray-600 mb-6">
+                Consigna tu propiedad con nosotros y llega a miles de inversionistas potenciales.
+              </p>
+              <Button
+                onClick={() => window.location.href = '/consignacion'}
+                className="bg-orange-600 hover:bg-orange-700 text-white rounded-full"
+              >
+                Consigna tu propiedad
+              </Button>
+            </motion.div>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }
