@@ -1,8 +1,8 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { motion, useScroll, useTransform } from 'framer-motion';
+import { useRef } from 'react';
 import { useSplitTextAnimation } from '@/hooks/useSplitTextAnimation';
-import { useParallax } from '@/hooks/useParallax';
 import type { PageType } from '@/components/Header';
 
 interface PropietariosBlockProps {
@@ -14,7 +14,21 @@ const WHATSAPP_URL =
 
 export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps) {
   const { ref: titleRef, titleAnimating } = useSplitTextAnimation('.propietarios-title-split', 0, true);
-  const { containerRef: parallaxContainerRef, y: parallaxY, x: parallaxX } = useParallax({ speed: 0.5, direction: 'both' });
+
+  // Contenedor para el parallax
+  const parallaxContainerRef = useRef<HTMLDivElement>(null);
+
+  // useScroll relativo al contenedor
+  const { scrollYProgress } = useScroll({
+    target: parallaxContainerRef,
+    offset: ['start end', 'end start'],
+  });
+
+  // Capa 1 (fondo): se mueve lentamente (0.3x)
+  const y1 = useTransform(scrollYProgress, [0, 1], ['20%', '-20%']);
+
+  // Capa 2 (adelante): se mueve más rápido (0.6x)
+  const y2 = useTransform(scrollYProgress, [0, 1], ['40%', '-40%']);
 
   return (
     <section className="relative py-16 sm:py-20 bg-brand-dark text-white overflow-hidden">
@@ -120,9 +134,9 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
               ref={parallaxContainerRef}
               className="relative w-full h-96 md:h-[500px] rounded-xl overflow-hidden shadow-2xl"
             >
-              {/* Capa 1: Fondo (parallax lento - se mueve a 0.3x) */}
+              {/* Capa 1: Fondo (parallax lento) */}
               <motion.div
-                style={{ y: parallaxY, scale: 1.2 }}
+                style={{ y: y1, scale: 1.2 }}
                 className="absolute inset-0 w-full h-full"
               >
                 <img
@@ -132,10 +146,10 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
                 />
               </motion.div>
 
-              {/* Capa 2: Adelante (parallax más rápido - se mueve a 0.6x) */}
+              {/* Capa 2: Adelante (parallax más rápido) */}
               <motion.div
                 style={{
-                  y: parallaxY,
+                  y: y2,
                   scale: 1.15,
                 }}
                 className="absolute inset-0 w-full h-full"
