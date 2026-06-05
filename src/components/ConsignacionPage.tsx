@@ -3,11 +3,14 @@
 import { motion } from 'framer-motion';
 import { Calendar, Home, DollarSign } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useSplitTextAnimation } from '@/hooks/useSplitTextAnimation';
 
 const WHATSAPP_URL = 'https://wa.me/573006557529?text=Hola%2C%20quisiera%20consignar%20una%20propiedad%20con%20Arrendamientos%20Santa%20Fe.';
 const PRIVACY_POLICY_URL = 'https://bit.ly/34WpJ7H';
 
 export default function ConsignacionPage() {
+  const { ref: titleRef, titleAnimating } = useSplitTextAnimation('.consignacion-title-split', 0, false);
+
   return (
     <div className="min-h-screen bg-white">
       {/* Hero Section */}
@@ -23,26 +26,51 @@ export default function ConsignacionPage() {
         />
 
         {/* Content */}
-        <div className="relative z-10 text-center px-4 sm:px-6 lg:px-8 max-w-4xl">
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-8 leading-tight"
+        <div className="relative z-10 text-center px-4 sm:px-6 lg:px-8 max-w-4xl" ref={titleRef}>
+          <h1
+            className="consignacion-title-split text-3xl sm:text-4xl lg:text-5xl leading-tight text-white"
+            style={{
+              fontFamily: "'Avenir Next Ultra Light', 'Avenir LT Pro 65 Medium', 'Avenir', 'Outfit', system-ui, sans-serif",
+              fontWeight: 300,
+              lineHeight: '1.2',
+            }}
           >
-            Ten la tranquilidad de dejar tu inmueble en buenas manos
-          </motion.h1>
+            Ten la tranquilidad de dejar tu inmueble en{' '}
+            <span
+              className="text-brand-red inline-block"
+              style={{
+                fontWeight: 700,
+              }}
+            >
+              buenas manos
+            </span>
+          </h1>
+
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={titleAnimating ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+            transition={{ duration: 0.4, ease: 'easeOut' }}
+            className="mt-5 text-base sm:text-lg text-white/80 max-w-2xl mx-auto leading-relaxed"
+            style={{
+              fontFamily: "'Avenir LT Pro 65 Medium', 'Avenir LT Pro', 'Avenir', 'Outfit', system-ui, sans-serif",
+              fontWeight: 300,
+              lineHeight: '1.45',
+            }}
+          >
+            Consigna tu inmueble con nosotros y deja que nuestro equipo experto se encargue de todo. Más de 60 años generando resultados.
+          </motion.p>
 
           <motion.div
             initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
+            animate={titleAnimating ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+            transition={{ duration: 0.4, ease: 'easeOut', delay: 0.1 }}
+            className="mt-8"
           >
             <a
               href={WHATSAPP_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 h-12 px-8 bg-brand-red hover:bg-brand-red-hover text-white font-semibold rounded-full transition-all duration-300 transform hover:scale-105"
+              className="inline-flex items-center gap-2 h-12 px-8 bg-brand-red hover:bg-white hover:text-brand-red text-white font-semibold rounded-full transition-all duration-300 transform hover:scale-105"
             >
               <span>EMPECEMOS AHORA MISMO</span>
               <img src="/icons/icon-whatsapp-white.gif" alt="WhatsApp" className="w-5 h-5" />

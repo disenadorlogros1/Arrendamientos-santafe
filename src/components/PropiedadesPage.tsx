@@ -7,12 +7,14 @@ import PropertyCard from './PropertyCard';
 import InfiniteCarousel from './InfiniteCarousel';
 import { properties } from '@/data/properties';
 import { Button } from '@/components/ui/button';
+import { useSplitTextAnimation } from '@/hooks/useSplitTextAnimation';
 
 const locations = ['Todas', 'Poblado', 'Envigado', 'Laureles', 'Buenos Aires', 'Sabaneta', 'Bello', 'Itagüí', 'Copacabana', 'La Strada'];
 const types = ['Todos', 'Apartamento', 'Casa'];
 const priceRanges = ['Todos', 'Hasta $800,000', '$800,000 - $1.500,000', '$1.500,000 - $2.500,000', 'Más de $2.500,000'];
 
 export default function PropiedadesPage() {
+  const { ref: titleRef, titleAnimating } = useSplitTextAnimation('.propiedades-title-split', 0, false);
   const [selectedBusinessType, setSelectedBusinessType] = useState<'Todos' | 'Arrendar' | 'Comprar'>('Todos');
   const [selectedLocation, setSelectedLocation] = useState('Todas');
   const [selectedType, setSelectedType] = useState('Todos');
@@ -30,19 +32,38 @@ export default function PropiedadesPage() {
     <div className="min-h-screen bg-white">
       {/* Page Header */}
       <div className="bg-brand-dark py-12 md:py-16">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8" ref={titleRef}>
+          <h1
+            className="propiedades-title-split text-3xl sm:text-4xl lg:text-5xl leading-tight text-white"
+            style={{
+              fontFamily: "'Avenir Next Ultra Light', 'Avenir LT Pro 65 Medium', 'Avenir', 'Outfit', system-ui, sans-serif",
+              fontWeight: 300,
+              lineHeight: '1.2',
+            }}
           >
-            <h1 className="text-3xl sm:text-4xl font-bold text-white">
-              Propiedades
-            </h1>
-            <p className="mt-2 text-white/60">
-              Encuentra tu próximo hogar en Medellín y área metropolitana
-            </p>
-          </motion.div>
+            Ver{' '}
+            <span
+              className="text-brand-red inline-block"
+              style={{
+                fontWeight: 700,
+              }}
+            >
+              propiedades
+            </span>
+          </h1>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={titleAnimating ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+            transition={{ duration: 0.4, ease: 'easeOut' }}
+            className="mt-5 text-base sm:text-lg text-white/80 max-w-2xl leading-relaxed"
+            style={{
+              fontFamily: "'Avenir LT Pro 65 Medium', 'Avenir LT Pro', 'Avenir', 'Outfit', system-ui, sans-serif",
+              fontWeight: 300,
+              lineHeight: '1.45',
+            }}
+          >
+            Encuentra tu próximo hogar en Medellín y área metropolitana. Explora nuestro inventario de propiedades disponibles.
+          </motion.p>
         </div>
       </div>
 

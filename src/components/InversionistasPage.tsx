@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { TrendingUp, BarChart3, DollarSign, MapPin, ChevronDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { investmentZones } from '@/data/investment-zones';
+import { useSplitTextAnimation } from '@/hooks/useSplitTextAnimation';
 
 const beneficios = [
   { icon: TrendingUp, title: 'Rentabilidad comprobada', description: '60 años de experiencia generando retornos consistentes para nuestros inversionistas' },
@@ -16,28 +17,54 @@ const beneficios = [
 const WHATSAPP_URL = 'https://wa.me/573006557529?text=Hola%2C%20quisiera%20consultar%20oportunidades%20de%20inversión%20inmobiliaria.';
 
 export default function InversionistasPage() {
+  const { ref: titleRef, titleAnimating } = useSplitTextAnimation('.inversionistas-title-split', 0, false);
   const [expandedZone, setExpandedZone] = useState<string | null>(null);
 
   return (
     <div className="min-h-screen bg-white">
       {/* Hero Section */}
       <section className="bg-gradient-to-br from-brand-dark to-gray-900 py-16 md:py-24">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8" ref={titleRef}>
+          <h1
+            className="inversionistas-title-split text-3xl sm:text-4xl lg:text-5xl leading-tight text-white text-center"
+            style={{
+              fontFamily: "'Avenir Next Ultra Light', 'Avenir LT Pro 65 Medium', 'Avenir', 'Outfit', system-ui, sans-serif",
+              fontWeight: 300,
+              lineHeight: '1.2',
+            }}
+          >
+            Inversión inmobiliaria en Medellín y el Valle de{' '}
+            <span
+              className="text-brand-red inline-block"
+              style={{
+                fontWeight: 700,
+              }}
+            >
+              Aburrá
+            </span>
+          </h1>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={titleAnimating ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+            transition={{ duration: 0.4, ease: 'easeOut' }}
+            className="mt-5 text-base sm:text-lg text-white/80 max-w-2xl mx-auto leading-relaxed text-center"
+            style={{
+              fontFamily: "'Avenir LT Pro 65 Medium', 'Avenir LT Pro', 'Avenir', 'Outfit', system-ui, sans-serif",
+              fontWeight: 300,
+              lineHeight: '1.45',
+            }}
+          >
+            Conoce las zonas con mayor potencial de valorización y rentabilidad inmobiliaria en Antioquia.
+          </motion.p>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="text-center"
+            animate={titleAnimating ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+            transition={{ duration: 0.4, ease: 'easeOut', delay: 0.1 }}
+            className="mt-8 text-center"
           >
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
-              Inversión inmobiliaria en Medellín y el Valle de Aburrá
-            </h1>
-            <p className="text-lg sm:text-xl text-gray-300 max-w-3xl mx-auto mb-8">
-              Conoce las zonas con mayor potencial de valorización y rentabilidad inmobiliaria en Antioquia.
-            </p>
             <a
               href="#zonas"
-              className="inline-flex items-center gap-2 h-12 px-8 bg-brand-red hover:bg-brand-red-hover text-white font-semibold rounded-full transition-all duration-300"
+              className="inline-flex items-center gap-2 h-12 px-8 bg-brand-red hover:bg-white hover:text-brand-red text-white font-semibold rounded-full transition-all duration-300 transform hover:scale-105"
             >
               Ver zonas estratégicas
             </a>
