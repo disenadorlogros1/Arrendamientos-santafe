@@ -120,11 +120,20 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
               viewport={{ once: true, amount: 0.3 }}
               transition={{ duration: 0.8, ease: 'easeOut' }}
             >
+              {/* Capa 1: Fondo */}
               <img
-                src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1200&q=80"
-                alt="Propiedad moderna en Medellín"
-                className="w-full h-full object-cover"
+                src="/images/parallax-consignacion-1.png"
+                alt="Fondo - Propiedad"
+                className="absolute inset-0 w-full h-full object-cover"
               />
+
+              {/* Capa 2: Adelante con opacidad para ver ambas */}
+              <img
+                src="/images/parallax-consignacion-2.png"
+                alt="Frente - Propiedad"
+                className="absolute inset-0 w-full h-full object-cover opacity-90"
+              />
+
               {/* Overlay gradient */}
               <div
                 aria-hidden="true"
