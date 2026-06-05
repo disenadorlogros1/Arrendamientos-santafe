@@ -28,9 +28,9 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
       const x = (e.clientX - rect.left) / rect.width - 0.5;
       const y = (e.clientY - rect.top) / rect.height - 0.5;
 
-      // Aplica el parallax (máximo ±50px)
-      setOffsetX(x * 50);
-      setOffsetY(y * 50);
+      // Aplica el parallax (máximo ±25px)
+      setOffsetX(x * 25);
+      setOffsetY(y * 25);
     }
   };
 
@@ -184,7 +184,7 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
                   className="w-full h-full"
                   style={{
                     objectFit: 'cover',
-                    objectPosition: 'center 20%'
+                    objectPosition: 'center top'
                   }}
                 />
               </div>
