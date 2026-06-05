@@ -1,5 +1,6 @@
 'use client';
 
+import { motion } from 'framer-motion';
 import { useSplitTextAnimation } from '@/hooks/useSplitTextAnimation';
 import { Button } from '@/components/ui/button';
 import InfiniteCarousel from '@/components/InfiniteCarousel';
@@ -37,7 +38,11 @@ export default function FeaturedSection({ onNavigate }: FeaturedSectionProps) {
               destacadas
             </span>
           </h2>
-          <p
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7, delay: 0.3, ease: 'easeOut' }}
             className="mt-1 text-sm sm:text-base max-w-xl"
             style={{
               color: '#808080',
@@ -47,7 +52,7 @@ export default function FeaturedSection({ onNavigate }: FeaturedSectionProps) {
             }}
           >
             Inmuebles disponibles ahora. Consulta, agenda o pide asesoría.
-          </p>
+          </motion.p>
         </div>
         <Button
           onClick={() => {

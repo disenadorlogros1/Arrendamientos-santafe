@@ -119,7 +119,10 @@ export default function HeroSection({ onNavigate }: HeroSectionProps) {
             />
           </span>
         </h1>
-        <p
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.8, ease: 'easeOut' }}
           className="mt-5 text-base sm:text-lg text-white max-w-2xl"
           style={{
             fontFamily:
@@ -131,7 +134,7 @@ export default function HeroSection({ onNavigate }: HeroSectionProps) {
           }}
         >
           Respaldo y experiencia para encontrar o gestionar tu propiedad ideal en Antioquia.
-        </p>
+        </motion.p>
 
         {/* CTAs jerárquicos — botones cápsula con hover blanco + resplandor rojo */}
         <div className="mt-7 flex flex-wrap items-center gap-1.5 sm:gap-3">

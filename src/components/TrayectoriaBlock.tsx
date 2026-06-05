@@ -59,11 +59,17 @@ export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) 
               </span>
               en Antioquia
             </h2>
-            <p className="mt-3 sm:mt-5 text-sm sm:text-base lg:text-lg text-gray-600 leading-relaxed w-full">
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7, delay: 0.3, ease: 'easeOut' }}
+              className="mt-3 sm:mt-5 text-sm sm:text-base lg:text-lg text-gray-600 leading-relaxed w-full"
+            >
               Desde 1966 acompañamos a personas, familias y propietarios en
               decisiones de arrendamiento, venta, administración e inversión
               inmobiliaria.
-            </p>
+            </motion.p>
 
             {/* Cifras clave */}
             <div className="mt-6 sm:mt-8 grid grid-cols-3 gap-2 sm:gap-3 max-w-md">

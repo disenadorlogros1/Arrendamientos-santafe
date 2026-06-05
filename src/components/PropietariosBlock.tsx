@@ -1,5 +1,6 @@
 'use client';
 
+import { motion } from 'framer-motion';
 import { MessageCircle } from 'lucide-react';
 import { useSplitTextAnimation } from '@/hooks/useSplitTextAnimation';
 import type { PageType } from '@/components/Header';
@@ -48,9 +49,15 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
                 arrendar o vender?
               </span>
             </h2>
-            <p className="mt-5 text-base sm:text-lg text-white/80 max-w-2xl leading-relaxed">
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7, delay: 0.3, ease: 'easeOut' }}
+              className="mt-5 text-base sm:text-lg text-white/80 max-w-2xl leading-relaxed"
+            >
               Más de 60 años gestionando propiedades en Antioquia. Tu inmueble en manos de quienes conocen el mercado inmobiliario regional.
-            </p>
+            </motion.p>
 
             {/* CTAs jerárquicos */}
             <div className="mt-8 flex flex-col md:flex-row items-center gap-3">
