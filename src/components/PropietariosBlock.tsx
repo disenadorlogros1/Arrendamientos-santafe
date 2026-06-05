@@ -52,7 +52,7 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
       />
 
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-stretch">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
           {/* Columna izquierda: Contenido */}
           <div className="md:col-span-6">
             <h2
@@ -125,24 +125,38 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
             {/* Bloque unificado con borde blanco */}
             <div className="mt-8 border-2 border-white p-8">
               {/* Estadísticas en una fila */}
-              <div className="flex gap-16 md:gap-32 mb-8 items-center">
+              <div className="flex flex-col md:flex-row gap-8 md:gap-16 lg:gap-32 mb-8 items-center">
                 {/* Estadística 1 */}
-                <div ref={statsRef} className="flex items-center gap-4">
+                <motion.div
+                  ref={statsRef}
+                  className="flex items-center gap-4"
+                  initial={{ opacity: 0, x: -20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5 }}
+                >
                   <p className="text-6xl md:text-7xl font-bold text-white leading-none">{count60}</p>
                   <div className="text-3xl md:text-4xl text-white/90 leading-none">
                     <p className="font-semibold">años</p>
                     <p className="text-sm md:text-base leading-[0.75]">de experiencia</p>
                   </div>
-                </div>
+                </motion.div>
 
                 {/* Estadística 2 */}
-                <div ref={countRef3} className="flex items-center gap-4">
+                <motion.div
+                  ref={countRef3}
+                  className="flex items-center gap-4"
+                  initial={{ opacity: 0, x: -20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: 0.1 }}
+                >
                   <p className="text-6xl md:text-7xl font-bold text-white leading-none">{count3}</p>
                   <div className="text-3xl md:text-4xl text-white/90 leading-none">
                     <p className="font-semibold">sedes</p>
                     <p className="text-sm md:text-base leading-[0.75]">en Antioquia</p>
                   </div>
-                </div>
+                </motion.div>
               </div>
 
               {/* Texto descriptivo - ancho completo */}
