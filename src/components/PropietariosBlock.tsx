@@ -28,9 +28,9 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
       const x = (e.clientX - rect.left) / rect.width - 0.5;
       const y = (e.clientY - rect.top) / rect.height - 0.5;
 
-      // Aplica el parallax (máximo ±40px) - reducido para evitar cortes
-      setOffsetX(x * 40);
-      setOffsetY(y * 40);
+      // Aplica el parallax (máximo ±50px)
+      setOffsetX(x * 50);
+      setOffsetY(y * 50);
     }
   };
 
@@ -181,14 +181,10 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
                 <img
                   src="/images/parallax-consignacion-2.png"
                   alt="Frente - Propiedad"
-                  className="absolute w-full h-full"
+                  className="w-full h-full"
                   style={{
                     objectFit: 'cover',
-                    objectPosition: 'center',
-                    minHeight: '140%',
-                    minWidth: '140%',
-                    top: '-20%',
-                    left: '-20%'
+                    objectPosition: 'center'
                   }}
                 />
               </div>
