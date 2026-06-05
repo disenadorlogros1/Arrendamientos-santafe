@@ -64,7 +64,7 @@ export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) 
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.7, delay: 0.3, ease: 'easeOut' }}
+              transition={{ duration: 0.7, delay: 1.8, ease: 'easeOut' }}
               className="mt-3 sm:mt-5 text-sm sm:text-base lg:text-lg text-gray-600 leading-relaxed w-full"
             >
               Desde 1966 acompañamos a personas, familias y propietarios en

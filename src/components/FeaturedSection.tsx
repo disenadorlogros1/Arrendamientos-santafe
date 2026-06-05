@@ -42,7 +42,7 @@ export default function FeaturedSection({ onNavigate }: FeaturedSectionProps) {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.7, delay: 0.3, ease: 'easeOut' }}
+            transition={{ duration: 0.7, delay: 1.8, ease: 'easeOut' }}
             className="mt-1 text-sm sm:text-base max-w-xl"
             style={{
               color: '#808080',

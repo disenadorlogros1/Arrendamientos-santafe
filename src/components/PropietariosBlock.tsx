@@ -56,7 +56,7 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.7, delay: 0.3, ease: 'easeOut' }}
+              transition={{ duration: 0.7, delay: 1.8, ease: 'easeOut' }}
               className="mt-5 text-base sm:text-lg text-white/80 max-w-2xl leading-relaxed"
             >
               Más de 60 años gestionando propiedades en Antioquia. Tu inmueble en manos de quienes conocen el mercado inmobiliario regional.
