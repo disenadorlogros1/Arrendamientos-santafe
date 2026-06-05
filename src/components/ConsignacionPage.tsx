@@ -17,9 +17,9 @@ export default function ConsignacionPage() {
       <section className="relative h-[550px] md:h-[720px] flex items-center justify-center overflow-hidden bg-gradient-to-br from-gray-900 to-gray-800">
         {/* Background Image */}
         <div
-          className="absolute inset-0 opacity-40"
+          className="absolute inset-0"
           style={{
-            backgroundImage: 'url(https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=1920&q=80)',
+            backgroundImage: 'url(/images/banner_consigna_propiedad.jpg)',
             backgroundSize: 'cover',
             backgroundPosition: 'center',
           }}
