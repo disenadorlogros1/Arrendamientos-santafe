@@ -28,9 +28,9 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
       const x = (e.clientX - rect.left) / rect.width - 0.5;
       const y = (e.clientY - rect.top) / rect.height - 0.5;
 
-      // Aplica el parallax (máximo ±25px)
-      setOffsetX(x * 25);
-      setOffsetY(y * 25);
+      // Aplica el parallax: imagen superior 50% más de movimiento (±40px) que el fondo (±25px)
+      setOffsetX(x * 40);
+      setOffsetY(y * 40);
     }
   };
 
@@ -176,8 +176,14 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
               ref={containerRef}
               className="relative w-full h-64 md:h-[420px] overflow-hidden shadow-2xl cursor-move"
             >
-              {/* Capa 1: Fondo - ESTÁTICA */}
-              <div className="absolute inset-0 w-full h-full overflow-hidden">
+              {/* Capa 1: Fondo - PARALLAX LENTO */}
+              <div
+                className="absolute inset-0 w-full h-full overflow-hidden"
+                style={{
+                  transform: `translate(${offsetX * 0.625}px, ${offsetY * 0.625}px)`,
+                  transition: 'transform 0.1s ease-out',
+                }}
+              >
                 <img
                   src="/images/parallax-consignacion-1.png"
                   alt="Fondo - Propiedad"
