@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion';
 import { useEffect, useRef, useState } from 'react';
 import { useSplitTextAnimation } from '@/hooks/useSplitTextAnimation';
+import { useCountAnimation } from '@/hooks/useCountAnimation';
 import type { PageType } from '@/components/Header';
 
 interface PropietariosBlockProps {
@@ -15,6 +16,8 @@ const WHATSAPP_URL =
 export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps) {
   const { ref: titleRef, titleAnimating } = useSplitTextAnimation('.propietarios-title-split', 0, true);
   const containerRef = useRef<HTMLDivElement>(null);
+  const { ref: statsRef, count: count60 } = useCountAnimation(60, 2000);
+  const { ref: countRef3, count: count3 } = useCountAnimation(3, 1500);
   const [offsetX, setOffsetX] = useState(0);
   const [offsetY, setOffsetY] = useState(0);
 
@@ -25,9 +28,9 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
       const x = (e.clientX - rect.left) / rect.width - 0.5;
       const y = (e.clientY - rect.top) / rect.height - 0.5;
 
-      // Aplica el parallax (máximo ±30px)
-      setOffsetX(x * 60);
-      setOffsetY(y * 60);
+      // Aplica el parallax (máximo ±40px) - reducido para evitar cortes
+      setOffsetX(x * 40);
+      setOffsetY(y * 40);
     }
   };
 
@@ -124,19 +127,19 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
               {/* Estadísticas en una fila */}
               <div className="flex gap-16 md:gap-32 mb-8 items-center">
                 {/* Estadística 1 */}
-                <div className="flex items-center gap-4">
-                  <p className="text-6xl md:text-7xl font-bold text-white leading-none">60</p>
-                  <div className="text-sm text-white/90 leading-tight">
-                    <p>años</p>
+                <div ref={statsRef} className="flex items-center gap-4">
+                  <p className="text-6xl md:text-7xl font-bold text-white leading-none">{count60}</p>
+                  <div className="text-base md:text-lg text-white/90 leading-tight">
+                    <p className="font-semibold">años</p>
                     <p>de experiencia</p>
                   </div>
                 </div>
 
                 {/* Estadística 2 */}
-                <div className="flex items-center gap-4">
-                  <p className="text-6xl md:text-7xl font-bold text-white leading-none">3</p>
-                  <div className="text-sm text-white/90 leading-tight">
-                    <p>sedes</p>
+                <div ref={countRef3} className="flex items-center gap-4">
+                  <p className="text-6xl md:text-7xl font-bold text-white leading-none">{count3}</p>
+                  <div className="text-base md:text-lg text-white/90 leading-tight">
+                    <p className="font-semibold">sedes</p>
                     <p>en Antioquia</p>
                   </div>
                 </div>
@@ -178,12 +181,14 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
                 <img
                   src="/images/parallax-consignacion-2.png"
                   alt="Frente - Propiedad"
-                  className="w-full h-full"
+                  className="absolute w-full h-full"
                   style={{
                     objectFit: 'cover',
                     objectPosition: 'center',
-                    minHeight: '110%',
-                    minWidth: '110%'
+                    minHeight: '140%',
+                    minWidth: '140%',
+                    top: '-20%',
+                    left: '-20%'
                   }}
                 />
               </div>
