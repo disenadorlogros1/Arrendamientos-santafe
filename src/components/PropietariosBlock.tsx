@@ -56,7 +56,7 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
           onMouseLeave={handleMouseLeave}
         >
           {/* Columna izquierda: Contenido */}
-          <div className="md:col-span-6 flex flex-col justify-center max-h-64 md:max-h-[420px]">
+          <div className="md:col-span-6 flex flex-col justify-center md:max-h-[420px]">
             <h2
               ref={titleRef}
               className="propietarios-title-split text-3xl sm:text-4xl lg:text-5xl leading-tight text-white"
