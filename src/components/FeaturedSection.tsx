@@ -42,7 +42,7 @@ export default function FeaturedSection({ onNavigate }: FeaturedSectionProps) {
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={titleDone ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-            transition={{ duration: 0.7, ease: 'easeOut' }}
+            transition={{ duration: 0.4, ease: 'easeOut' }}
             className="mt-1 text-sm sm:text-base max-w-xl"
             style={{
               color: '#808080',

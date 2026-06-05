@@ -62,7 +62,7 @@ export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) 
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={titleDone ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-              transition={{ duration: 0.7, ease: 'easeOut' }}
+              transition={{ duration: 0.4, ease: 'easeOut' }}
               className="mt-3 sm:mt-5 text-sm sm:text-base lg:text-lg text-gray-600 leading-relaxed w-full"
             >
               Desde 1966 acompañamos a personas, familias y propietarios en

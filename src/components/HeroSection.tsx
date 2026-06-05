@@ -123,7 +123,7 @@ export default function HeroSection({ onNavigate }: HeroSectionProps) {
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={titleDone ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-          transition={{ duration: 0.7, ease: 'easeOut' }}
+          transition={{ duration: 0.4, ease: 'easeOut' }}
           className="mt-5 text-base sm:text-lg text-white max-w-2xl"
           style={{
             fontFamily:
