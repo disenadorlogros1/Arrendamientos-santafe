@@ -13,7 +13,7 @@ const WHATSAPP_URL =
   'https://wa.me/573006557529?text=Hola%2C%20quisiera%20consignar%20una%20propiedad%20con%20Arrendamientos%20Santa%20Fe.';
 
 export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps) {
-  const { ref: titleRef, titleDone } = useSplitTextAnimation('.propietarios-title-split', 0, true);
+  const { ref: titleRef, titleAnimating } = useSplitTextAnimation('.propietarios-title-split', 0, true);
   const { containerRef: parallaxContainerRef, y: parallaxY, x: parallaxX } = useParallax({ speed: 0.5, direction: 'both' });
 
   return (
@@ -54,7 +54,7 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
             </h2>
             <motion.p
               initial={{ opacity: 0, y: 20 }}
-              animate={titleDone ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+              animate={titleAnimating ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
               transition={{ duration: 0.4, ease: 'easeOut' }}
               className="mt-5 text-base sm:text-lg text-white/80 max-w-2xl leading-relaxed"
             >

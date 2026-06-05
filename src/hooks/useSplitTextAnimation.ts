@@ -10,8 +10,8 @@ export const useSplitTextAnimation = (
   const splitRef = useRef<any>(null);
   const gsapRef = useRef<any>(null);
 
-  // titleDone: true cuando el título terminó de animar, false cuando está animando OUT
-  const [titleDone, setTitleDone] = useState(false);
+  // titleAnimating: true mientras el título ESTÁ animando (IN o OUT)
+  const [titleAnimating, setTitleAnimating] = useState(false);
 
   useEffect(() => {
     if (!ref.current) return;
@@ -45,6 +45,8 @@ export const useSplitTextAnimation = (
       if (!result) return;
       const { gsap, target, split } = result;
 
+      setTitleAnimating(true); // ← comienza animación: ¡activa subtítulo YA!
+
       gsap.killTweensOf([target, split.lines]);
       gsap.to(target, { opacity: 1, y: 0, duration: 1.2, ease: 'power3.out' });
       gsap.to(split.lines, {
@@ -53,12 +55,12 @@ export const useSplitTextAnimation = (
         duration: 1.2,
         stagger: 0.2,
         ease: 'expo.out',
-        onComplete: () => setTitleDone(true), // ← notifica al subtítulo
+        onComplete: () => {}, // no necesita onComplete
       });
     };
 
     const animateOut = async () => {
-      setTitleDone(false); // ← oculta subtítulo inmediatamente
+      setTitleAnimating(false); // ← oculta subtítulo inmediatamente
       const result = await setup();
       if (!result) return;
       const { gsap, target, split } = result;
@@ -118,5 +120,5 @@ export const useSplitTextAnimation = (
     }
   }, [selector, initialDelay, scrollBased]);
 
-  return { ref, titleDone };
+  return { ref, titleAnimating };
 };
