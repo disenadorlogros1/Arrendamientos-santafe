@@ -1,6 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import { useEffect, useRef, useState } from 'react';
 import { useSplitTextAnimation } from '@/hooks/useSplitTextAnimation';
 import type { PageType } from '@/components/Header';
 
@@ -13,6 +14,22 @@ const WHATSAPP_URL =
 
 export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps) {
   const { ref: titleRef, titleAnimating } = useSplitTextAnimation('.propietarios-title-split', 0, true);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [offsetY, setOffsetY] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (containerRef.current) {
+        const rect = containerRef.current.getBoundingClientRect();
+        // Calcula cuánto ha scrolleado el elemento en relación a la viewport
+        const scrolled = window.innerHeight - rect.top;
+        setOffsetY(scrolled * 0.3); // Parallax a 0.3x
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   return (
     <section className="relative py-16 sm:py-20 bg-brand-dark text-white overflow-hidden">
@@ -111,35 +128,48 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
             </div>
           </div>
 
-          {/* Columna derecha: Imagen con efecto de zoom/escala */}
+          {/* Columna derecha: Imagen con parallax real */}
           <div className="md:col-span-6 flex items-center justify-center">
-            <motion.div
+            <div
+              ref={containerRef}
               className="relative w-full h-96 md:h-[500px] rounded-xl overflow-hidden shadow-2xl"
-              initial={{ scale: 0.95, opacity: 0 }}
-              whileInView={{ scale: 1, opacity: 1 }}
-              viewport={{ once: true, amount: 0.3 }}
-              transition={{ duration: 0.8, ease: 'easeOut' }}
             >
-              {/* Capa 1: Fondo */}
-              <img
-                src="/images/parallax-consignacion-1.png"
-                alt="Fondo - Propiedad"
-                className="absolute inset-0 w-full h-full object-cover"
-              />
+              {/* Capa 1: Fondo - se mueve lentamente */}
+              <div
+                className="absolute inset-0 w-full h-full"
+                style={{
+                  transform: `translateY(${offsetY * 0.5}px)`,
+                  transition: 'transform 0.1s ease-out',
+                }}
+              >
+                <img
+                  src="/images/parallax-consignacion-1.png"
+                  alt="Fondo - Propiedad"
+                  className="w-full h-full object-cover"
+                />
+              </div>
 
-              {/* Capa 2: Adelante con opacidad para ver ambas */}
-              <img
-                src="/images/parallax-consignacion-2.png"
-                alt="Frente - Propiedad"
-                className="absolute inset-0 w-full h-full object-cover opacity-90"
-              />
+              {/* Capa 2: Adelante - se mueve más rápido */}
+              <div
+                className="absolute inset-0 w-full h-full"
+                style={{
+                  transform: `translateY(${offsetY}px)`,
+                  transition: 'transform 0.1s ease-out',
+                }}
+              >
+                <img
+                  src="/images/parallax-consignacion-2.png"
+                  alt="Frente - Propiedad"
+                  className="w-full h-full object-cover opacity-90"
+                />
+              </div>
 
               {/* Overlay gradient */}
               <div
                 aria-hidden="true"
                 className="absolute inset-0 bg-gradient-to-t from-brand-dark/40 to-transparent pointer-events-none z-10"
               />
-            </motion.div>
+            </div>
           </div>
         </div>
       </div>
