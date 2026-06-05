@@ -1,4 +1,4 @@
-import { useScroll, useTransform } from 'framer-motion';
+import { useScroll, useTransform, MotionValue } from 'framer-motion';
 import { useRef } from 'react';
 
 interface ParallaxConfig {
@@ -12,19 +12,20 @@ export function useParallax(config: ParallaxConfig = {}) {
   const { scrollY } = useScroll();
 
   // Y-axis parallax: moves slower than scroll
-  // Positive value: moves DOWN as you scroll DOWN (parallax effect)
+  // Negative value = moves UP when scrolling DOWN (classic parallax effect)
   const y = useTransform(scrollY, (latest) => {
-    return latest * speed * -0.3; // Reduced multiplier for subtle effect
+    return -latest * speed * 0.5; // Subtle vertical effect
   });
 
   // X-axis parallax: subtle side-to-side movement
   const x = useTransform(scrollY, (latest) => {
     // Oscillating X movement for interest
-    return Math.sin(latest * 0.005) * 15 * speed; // Reduced from 30 to 15
+    return Math.sin(latest * 0.004) * 20 * speed;
   });
 
   return {
     ref,
-    style: direction === 'both' ? { x, y } : { y },
+    y,
+    x,
   };
 }

@@ -2,7 +2,6 @@
 
 import { motion } from 'framer-motion';
 import { useSplitTextAnimation } from '@/hooks/useSplitTextAnimation';
-import { useSubtitleAnimation } from '@/hooks/useSubtitleAnimation';
 import { Button } from '@/components/ui/button';
 import InfiniteCarousel from '@/components/InfiniteCarousel';
 import { properties } from '@/data/properties';
@@ -15,11 +14,10 @@ interface FeaturedSectionProps {
 export default function FeaturedSection({ onNavigate }: FeaturedSectionProps) {
   const featured = properties.filter((p) => p.featured);
   const titleRef = useSplitTextAnimation('.featured-title-split', 0, true);
-  const { ref: subtitleRef, isVisible: subtitleVisible } = useSubtitleAnimation(1800);
 
   return (
     <section className="py-6 md:py-10">
-      <div ref={subtitleRef} className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3 mb-6">
+      <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3 mb-6">
         <div>
           <h2
             ref={titleRef}
@@ -42,8 +40,9 @@ export default function FeaturedSection({ onNavigate }: FeaturedSectionProps) {
           </h2>
           <motion.p
             initial={{ opacity: 0, y: 20 }}
-            animate={subtitleVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-            transition={{ duration: 0.7, ease: 'easeOut' }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.5 }}
+            transition={{ duration: 0.7, delay: 1.5, ease: 'easeOut' }}
             className="mt-1 text-sm sm:text-base max-w-xl"
             style={{
               color: '#808080',

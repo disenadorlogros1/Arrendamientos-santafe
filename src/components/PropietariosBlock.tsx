@@ -2,7 +2,6 @@
 
 import { motion } from 'framer-motion';
 import { useSplitTextAnimation } from '@/hooks/useSplitTextAnimation';
-import { useSubtitleAnimation } from '@/hooks/useSubtitleAnimation';
 import { useParallax } from '@/hooks/useParallax';
 import type { PageType } from '@/components/Header';
 
@@ -15,8 +14,7 @@ const WHATSAPP_URL =
 
 export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps) {
   const titleRef = useSplitTextAnimation('.propietarios-title-split', 0, true);
-  const { ref: subtitleRef, isVisible: subtitleVisible } = useSubtitleAnimation(1800);
-  const { style: parallaxStyle, ref: parallaxRef } = useParallax({ speed: 0.5, direction: 'both' });
+  const { ref: parallaxRef, y: parallaxY, x: parallaxX } = useParallax({ speed: 0.5, direction: 'both' });
 
   return (
     <section className="relative py-16 sm:py-20 bg-brand-dark text-white overflow-hidden">
@@ -31,7 +29,7 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
       />
 
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div ref={subtitleRef} className="grid md:grid-cols-12 gap-8 items-start">
+        <div className="grid md:grid-cols-12 gap-8 items-start">
           {/* Columna izquierda: Contenido */}
           <div className="md:col-span-6">
             <h2
@@ -56,8 +54,9 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
             </h2>
             <motion.p
               initial={{ opacity: 0, y: 20 }}
-              animate={subtitleVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-              transition={{ duration: 0.7, ease: 'easeOut' }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.5 }}
+              transition={{ duration: 0.7, delay: 1.5, ease: 'easeOut' }}
               className="mt-5 text-base sm:text-lg text-white/80 max-w-2xl leading-relaxed"
             >
               Más de 60 años gestionando propiedades en Antioquia. Tu inmueble en manos de quienes conocen el mercado inmobiliario regional.
@@ -121,9 +120,9 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
               ref={parallaxRef}
               className="relative w-full h-96 md:h-[500px] rounded-xl overflow-hidden shadow-2xl"
               style={{
-                perspective: '1000px',
-                ...parallaxStyle,
-              } as any}
+                y: parallaxY,
+                x: parallaxX,
+              }}
             >
               <motion.img
                 src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&q=80"
