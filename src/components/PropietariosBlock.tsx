@@ -141,7 +141,7 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
                 className="absolute inset-0 w-full h-full"
               >
                 <img
-                  src="/images/parallax-consignacion-1.png"
+                  src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1200&q=80"
                   alt="Fondo propiedad"
                   className="w-full h-full object-cover"
                 />
@@ -156,7 +156,7 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
                 className="absolute inset-0 w-full h-full"
               >
                 <img
-                  src="/images/parallax-consignacion-2.png"
+                  src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=1200&q=80"
                   alt="Propiedad moderna en Medellín"
                   className="w-full h-full object-cover"
                 />
