@@ -1,8 +1,8 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { MessageCircle } from 'lucide-react';
 import { useSplitTextAnimation } from '@/hooks/useSplitTextAnimation';
+import { useParallax } from '@/hooks/useParallax';
 import type { PageType } from '@/components/Header';
 
 interface PropietariosBlockProps {
@@ -14,6 +14,8 @@ const WHATSAPP_URL =
 
 export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps) {
   const titleRef = useSplitTextAnimation('.propietarios-title-split', 0, true);
+  const { animate: parallaxAnimate, ref: parallaxRef } = useParallax({ speed: 0.5, direction: 'both' });
+
   return (
     <section className="relative py-16 sm:py-20 bg-brand-dark text-white overflow-hidden">
       {/* Acento visual sutil */}
@@ -27,8 +29,9 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
       />
 
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="grid md:grid-cols-12 gap-8 items-center">
-          <div className="md:col-span-7">
+        <div className="grid md:grid-cols-12 gap-8 items-start">
+          {/* Columna izquierda: Contenido */}
+          <div className="md:col-span-6">
             <h2
               ref={titleRef}
               className="propietarios-title-split text-3xl sm:text-4xl lg:text-5xl leading-tight text-white"
@@ -36,7 +39,7 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
                 fontFamily:
                   "'Avenir Next Ultra Light', 'Avenir LT Pro 65 Medium', 'Avenir', 'Outfit', system-ui, sans-serif",
                 fontWeight: 300,
-                lineHeight: '0.35',
+                lineHeight: '1.2',
               }}
             >
               ¿Tienes un inmueble para{' '}
@@ -92,11 +95,9 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
                 Hablar con un asesor
               </a>
             </div>
-          </div>
 
-          {/* Bloque visual / valores clave */}
-          <div className="md:col-span-5">
-            <div className="grid grid-cols-2 gap-4">
+            {/* Bloque visual / valores clave */}
+            <div className="mt-8 grid grid-cols-2 gap-4">
               <div className="bg-white/5 border border-white/10 rounded-lg p-5 backdrop-blur-sm">
                 <p className="text-3xl font-bold text-brand-red">60</p>
                 <p className="text-sm text-white/70 mt-1">años de experiencia</p>
@@ -111,6 +112,34 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
                 </p>
               </div>
             </div>
+          </div>
+
+          {/* Columna derecha: Imagen con Parallax */}
+          <div className="md:col-span-6 flex items-center justify-center">
+            <motion.div
+              ref={parallaxRef}
+              animate={parallaxAnimate}
+              transition={{ type: 'tween', ease: 'easeOut' }}
+              className="relative w-full h-96 md:h-[500px] rounded-xl overflow-hidden shadow-2xl"
+              style={{
+                perspective: '1000px',
+              }}
+            >
+              <motion.img
+                src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&q=80"
+                alt="Propiedad moderna"
+                className="w-full h-full object-cover"
+                initial={{ scale: 1.1 }}
+                whileInView={{ scale: 1 }}
+                transition={{ duration: 0.8, ease: 'easeOut' }}
+                viewport={{ once: true }}
+              />
+              {/* Overlay gradient */}
+              <div
+                aria-hidden="true"
+                className="absolute inset-0 bg-gradient-to-t from-brand-dark/40 to-transparent pointer-events-none"
+              />
+            </motion.div>
           </div>
         </div>
       </div>
