@@ -35,7 +35,7 @@ export default function FeaturedSection({ onNavigate }: FeaturedSectionProps) {
             initial={{ opacity: 0, y: 20 }}
             animate={titleAnimating ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
             transition={{ duration: 0.4, ease: 'easeOut' }}
-            className="mt-1 text-sm sm:text-base max-w-xl"
+            className="mt-5 text-sm sm:text-base max-w-xl"
             style={{
               color: '#808080',
               fontFamily: "'Avenir LT Pro 65 Medium', 'Avenir LT Pro', 'Avenir', 'Outfit', system-ui, sans-serif",
@@ -46,15 +46,17 @@ export default function FeaturedSection({ onNavigate }: FeaturedSectionProps) {
             Inmuebles disponibles ahora. Consulta, agenda o pide asesoría.
           </motion.p>
         </div>
-        <Button
+        <button
+          type="button"
           onClick={() => {
             onNavigate('propiedades');
             window.scrollTo({ top: 0, behavior: 'smooth' });
           }}
-          className="shrink-0 bg-brand-red hover:bg-brand-red-hover text-white rounded-full px-6 h-12 text-sm font-semibold"
+          className="shrink-0 bg-brand-red hover:bg-white text-white hover:text-brand-red px-6 h-12 text-sm font-semibold transition-all duration-300 hover:scale-105"
+          style={{ lineHeight: '1.2' }}
         >
           Ver más
-        </Button>
+        </button>
       </div>
 
       {/* Infinite Carousel */}

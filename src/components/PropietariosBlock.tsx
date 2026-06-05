@@ -129,18 +129,18 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
                 {/* Estadística 1 */}
                 <div ref={statsRef} className="flex items-center gap-4">
                   <p className="text-6xl md:text-7xl font-bold text-white leading-none">{count60}</p>
-                  <div className="text-base md:text-lg text-white/90 leading-tight">
+                  <div className="text-xl md:text-2xl text-white/90 leading-tight">
                     <p className="font-semibold">años</p>
-                    <p>de experiencia</p>
+                    <p className="text-sm md:text-base">de experiencia</p>
                   </div>
                 </div>
 
                 {/* Estadística 2 */}
                 <div ref={countRef3} className="flex items-center gap-4">
                   <p className="text-6xl md:text-7xl font-bold text-white leading-none">{count3}</p>
-                  <div className="text-base md:text-lg text-white/90 leading-tight">
+                  <div className="text-xl md:text-2xl text-white/90 leading-tight">
                     <p className="font-semibold">sedes</p>
-                    <p>en Antioquia</p>
+                    <p className="text-sm md:text-base">en Antioquia</p>
                   </div>
                 </div>
               </div>
