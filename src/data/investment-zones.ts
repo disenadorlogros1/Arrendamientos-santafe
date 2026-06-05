@@ -19,7 +19,7 @@ export const investmentZones: InvestmentZone[] = [
     slug: 'el-poblado',
     name: 'El Poblado',
     rentability: '4-6%',
-    pricePerM2: '$4,500 - $7,500 USD',
+    pricePerM2: '$18,000,000 - $30,000,000',
     strata: '5-6',
     advantages: [
       'Zona comercial y turística más dinámica de Medellín',
@@ -46,7 +46,7 @@ export const investmentZones: InvestmentZone[] = [
     slug: 'laureles',
     name: 'Laureles',
     rentability: '5-7%',
-    pricePerM2: '$2,800 - $4,500 USD',
+    pricePerM2: '$11,200,000 - $18,000,000',
     strata: '4-5',
     advantages: [
       'Mejor relación precio-rentabilidad de Medellín',
@@ -73,7 +73,7 @@ export const investmentZones: InvestmentZone[] = [
     slug: 'envigado',
     name: 'Envigado',
     rentability: '4-5%',
-    pricePerM2: '$2,000 - $3,500 USD',
+    pricePerM2: '$8,000,000 - $14,000,000',
     strata: '3-5',
     advantages: [
       'Municipio con administración independiente y seguro',
@@ -100,7 +100,7 @@ export const investmentZones: InvestmentZone[] = [
     slug: 'sabaneta',
     name: 'Sabaneta',
     rentability: '4-6%',
-    pricePerM2: '$1,800 - $3,200 USD',
+    pricePerM2: '$7,200,000 - $12,800,000',
     strata: '3-4',
     advantages: [
       'Zona emergente con alto potencial de crecimiento',

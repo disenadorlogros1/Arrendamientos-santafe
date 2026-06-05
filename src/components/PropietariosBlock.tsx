@@ -52,7 +52,7 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
       />
 
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="grid md:grid-cols-12 gap-8 items-start">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-stretch">
           {/* Columna izquierda: Contenido */}
           <div className="md:col-span-6">
             <h2
@@ -123,7 +123,7 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
             </div>
 
             {/* Bloque unificado con borde blanco */}
-            <div className="mt-8 border-2 border-white rounded-lg p-8">
+            <div className="mt-8 border-2 border-white p-8">
               {/* Estadísticas en una fila */}
               <div className="flex gap-16 md:gap-32 mb-8 items-center">
                 {/* Estadística 1 */}
@@ -131,7 +131,7 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
                   <p className="text-6xl md:text-7xl font-bold text-white leading-none">{count60}</p>
                   <div className="text-3xl md:text-4xl text-white/90 leading-none">
                     <p className="font-semibold">años</p>
-                    <p className="text-sm md:text-base leading-tight">de experiencia</p>
+                    <p className="text-sm md:text-base leading-[0.75]">de experiencia</p>
                   </div>
                 </div>
 
@@ -140,13 +140,13 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
                   <p className="text-6xl md:text-7xl font-bold text-white leading-none">{count3}</p>
                   <div className="text-3xl md:text-4xl text-white/90 leading-none">
                     <p className="font-semibold">sedes</p>
-                    <p className="text-sm md:text-base leading-tight">en Antioquia</p>
+                    <p className="text-sm md:text-base leading-[0.75]">en Antioquia</p>
                   </div>
                 </div>
               </div>
 
               {/* Texto descriptivo - ancho completo */}
-              <p className="text-white/90 leading-relaxed border-t border-white/30 pt-6 text-sm md:text-base">
+              <p className="text-white/90 leading-relaxed text-sm md:text-base">
                 Te avisamos cuando haya un arrendatario interesado. <span className="font-bold">Sin demoras, sin contratiempos.</span>
               </p>
             </div>
@@ -158,7 +158,7 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
               ref={containerRef}
               onMouseMove={handleMouseMove}
               onMouseLeave={handleMouseLeave}
-              className="relative w-full h-64 md:h-[420px] rounded-xl overflow-hidden shadow-2xl cursor-move"
+              className="relative w-full h-64 md:h-[420px] overflow-hidden shadow-2xl cursor-move"
             >
               {/* Capa 1: Fondo - ESTÁTICA */}
               <div className="absolute inset-0 w-full h-full overflow-hidden">
