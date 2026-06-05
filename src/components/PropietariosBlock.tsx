@@ -1,7 +1,6 @@
 'use client';
 
-import { motion, useScroll, useTransform } from 'framer-motion';
-import { useRef } from 'react';
+import { motion } from 'framer-motion';
 import { useSplitTextAnimation } from '@/hooks/useSplitTextAnimation';
 import type { PageType } from '@/components/Header';
 
@@ -14,22 +13,6 @@ const WHATSAPP_URL =
 
 export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps) {
   const { ref: titleRef, titleAnimating } = useSplitTextAnimation('.propietarios-title-split', 0, true);
-
-  // Contenedor para el parallax
-  const parallaxContainerRef = useRef<HTMLDivElement>(null);
-
-  // Scroll global de la página
-  const { scrollY } = useScroll();
-
-  // Capa 1 (fondo): se mueve lentamente
-  const y1 = useTransform(scrollY, (latest) => {
-    return -latest * 0.3; // Se mueve a 0.3x del scroll
-  });
-
-  // Capa 2 (adelante): se mueve más rápido
-  const y2 = useTransform(scrollY, (latest) => {
-    return -latest * 0.6; // Se mueve a 0.6x del scroll
-  });
 
   return (
     <section className="relative py-16 sm:py-20 bg-brand-dark text-white overflow-hidden">
@@ -128,46 +111,26 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
             </div>
           </div>
 
-          {/* Columna derecha: Imagen con Parallax de dos capas */}
+          {/* Columna derecha: Imagen con efecto de zoom/escala */}
           <div className="md:col-span-6 flex items-center justify-center">
-            {/* containerRef en el wrapper con overflow-hidden → recorta el movimiento */}
-            <div
-              ref={parallaxContainerRef}
+            <motion.div
               className="relative w-full h-96 md:h-[500px] rounded-xl overflow-hidden shadow-2xl"
+              initial={{ scale: 0.95, opacity: 0 }}
+              whileInView={{ scale: 1, opacity: 1 }}
+              viewport={{ once: true, amount: 0.3 }}
+              transition={{ duration: 0.8, ease: 'easeOut' }}
             >
-              {/* Capa 1: Fondo (parallax lento) */}
-              <motion.div
-                style={{ y: y1, scale: 1.2 }}
-                className="absolute inset-0 w-full h-full"
-              >
-                <img
-                  src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1200&q=80"
-                  alt="Fondo propiedad"
-                  className="w-full h-full object-cover"
-                />
-              </motion.div>
-
-              {/* Capa 2: Adelante (parallax más rápido) */}
-              <motion.div
-                style={{
-                  y: y2,
-                  scale: 1.15,
-                }}
-                className="absolute inset-0 w-full h-full"
-              >
-                <img
-                  src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=1200&q=80"
-                  alt="Propiedad moderna en Medellín"
-                  className="w-full h-full object-cover"
-                />
-              </motion.div>
-
+              <img
+                src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1200&q=80"
+                alt="Propiedad moderna en Medellín"
+                className="w-full h-full object-cover"
+              />
               {/* Overlay gradient */}
               <div
                 aria-hidden="true"
                 className="absolute inset-0 bg-gradient-to-t from-brand-dark/40 to-transparent pointer-events-none z-10"
               />
-            </div>
+            </motion.div>
           </div>
         </div>
       </div>
