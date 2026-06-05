@@ -158,6 +158,7 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
                   src="/images/parallax-consignacion-1.png"
                   alt="Fondo - Propiedad"
                   className="w-full h-full object-cover"
+                  style={{ objectPosition: 'center' }}
                 />
               </div>
 
@@ -172,8 +173,13 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
                 <img
                   src="/images/parallax-consignacion-2.png"
                   alt="Frente - Propiedad"
-                  className="w-full h-full object-cover"
-                  style={{ minHeight: '130%', minWidth: '130%' }}
+                  className="w-full h-full"
+                  style={{
+                    objectFit: 'cover',
+                    objectPosition: 'center',
+                    minHeight: '110%',
+                    minWidth: '110%'
+                  }}
                 />
               </div>
 
