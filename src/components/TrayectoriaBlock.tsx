@@ -1,5 +1,6 @@
 'use client';
 
+import { motion } from 'framer-motion';
 import { useSplitTextAnimation } from '@/hooks/useSplitTextAnimation';
 
 import { ArrowRight, Award, Users, Building2 } from 'lucide-react';
