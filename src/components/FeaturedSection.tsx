@@ -28,15 +28,7 @@ export default function FeaturedSection({ onNavigate }: FeaturedSectionProps) {
               lineHeight: '1.2',
             }}
           >
-            Propiedades{' '}
-            <span
-              style={{
-                fontWeight: 700,
-                display: 'block',
-              }}
-            >
-              destacadas
-            </span>
+            Propiedades <span style={{ fontWeight: 700 }}>destacadas</span>
           </h2>
           {/* Subtítulo: se activa cuando titleAnimating=true (COMIENZA la animación) */}
           <motion.p

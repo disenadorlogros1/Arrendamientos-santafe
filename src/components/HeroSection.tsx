@@ -126,12 +126,9 @@ export default function HeroSection({ onNavigate }: HeroSectionProps) {
           transition={{ duration: 0.4, ease: 'easeOut' }}
           className="mt-5 text-base sm:text-lg text-white max-w-2xl"
           style={{
-            fontFamily:
-              "'Avenir Next Ultra Light', 'Avenir LT Pro 65 Medium', 'Avenir', 'Outfit', system-ui, sans-serif",
-            fontWeight: 200,
-            letterSpacing: '0.2em',
-            lineHeight: '1.32',
-            textShadow: '0 1px 10px rgba(0,0,0,0.4)',
+            fontFamily: "'Avenir LT Pro 65 Medium', 'Avenir LT Pro', 'Avenir', 'Outfit', system-ui, sans-serif",
+            fontWeight: 300,
+            lineHeight: '1.45',
           }}
         >
           Respaldo y experiencia para encontrar o gestionar tu propiedad ideal en Antioquia.

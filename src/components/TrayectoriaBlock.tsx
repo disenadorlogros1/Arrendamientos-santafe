@@ -64,6 +64,11 @@ export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) 
               animate={titleAnimating ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
               transition={{ duration: 0.4, ease: 'easeOut' }}
               className="mt-3 sm:mt-5 text-sm sm:text-base lg:text-lg text-gray-600 leading-relaxed w-full"
+              style={{
+                fontFamily: "'Avenir LT Pro 65 Medium', 'Avenir LT Pro', 'Avenir', 'Outfit', system-ui, sans-serif",
+                fontWeight: 300,
+                lineHeight: '1.45',
+              }}
             >
               Desde 1966 acompañamos a personas, familias y propietarios en
               decisiones de arrendamiento, venta, administración e inversión
