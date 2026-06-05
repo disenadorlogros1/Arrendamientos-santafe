@@ -28,7 +28,7 @@ export default function InversionistasPage() {
         <div
           className="absolute inset-0"
           style={{
-            backgroundImage: 'url(/images/banner_inversionistas.jpg)',
+            backgroundImage: 'url(/images/banner_inversionistas.png)',
             backgroundSize: 'cover',
             backgroundPosition: 'center',
           }}
