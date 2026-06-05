@@ -157,7 +157,7 @@ export default function Header({ currentPage, onNavigate, isHeroPage = true }: H
               /* Item con dropdown — CSS puro, sin JS */
               <div key={item.label} className="relative group flex-1">
                 <button
-                  className="w-full px-2 py-2 text-sm font-medium rounded-full transition-all duration-300 ease-out hover:bg-brand-red"
+                  className="w-full px-2 py-2 text-sm font-medium rounded-full transition-all duration-300 ease-out hover:bg-brand-red group-hover:bg-brand-red group-hover:text-white"
                   style={{ fontFamily: "'Avenir LT Pro', 'Outfit', system-ui, sans-serif", fontWeight: 300, color: headerTextColor }}
                 >
                   {item.label}
