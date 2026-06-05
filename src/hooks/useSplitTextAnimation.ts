@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 export const useSplitTextAnimation = (
   selector: string,
@@ -10,11 +10,13 @@ export const useSplitTextAnimation = (
   const splitRef = useRef<any>(null);
   const gsapRef = useRef<any>(null);
 
+  // titleDone: true cuando el título terminó de animar, false cuando está animando OUT
+  const [titleDone, setTitleDone] = useState(false);
+
   useEffect(() => {
     if (!ref.current) return;
 
     const setup = async () => {
-      // Buscar el elemento: primero dentro del ref, si no, usar el ref directamente
       const target = (ref.current?.querySelector(selector) ?? ref.current) as HTMLElement | null;
       if (!target) return null;
 
@@ -26,13 +28,11 @@ export const useSplitTextAnimation = (
 
       gsapRef.current = gsap;
 
-      // Crear SplitText solo una vez
       if (!splitRef.current) {
         splitRef.current = new SplitText(target, {
           type: 'lines',
           linesClass: 'split-line',
         });
-        // Estado inicial oculto
         gsap.set(target, { opacity: 0, y: 25 });
         gsap.set(splitRef.current.lines, { opacity: 0, y: 30 });
       }
@@ -53,10 +53,12 @@ export const useSplitTextAnimation = (
         duration: 1.2,
         stagger: 0.2,
         ease: 'expo.out',
+        onComplete: () => setTitleDone(true), // ← notifica al subtítulo
       });
     };
 
     const animateOut = async () => {
+      setTitleDone(false); // ← oculta subtítulo inmediatamente
       const result = await setup();
       if (!result) return;
       const { gsap, target, split } = result;
@@ -92,7 +94,6 @@ export const useSplitTextAnimation = (
       if (ref.current) observer.observe(ref.current);
       return () => observer.disconnect();
     } else {
-      // Hero: anima una sola vez cuando es visible
       const observer = new IntersectionObserver(
         (entries) => {
           entries.forEach((entry) => {
@@ -117,5 +118,5 @@ export const useSplitTextAnimation = (
     }
   }, [selector, initialDelay, scrollBased]);
 
-  return ref;
+  return { ref, titleDone };
 };

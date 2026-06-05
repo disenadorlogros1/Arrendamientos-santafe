@@ -1,4 +1,4 @@
-import { useScroll, useTransform, MotionValue } from 'framer-motion';
+import { useScroll, useTransform } from 'framer-motion';
 import { useRef } from 'react';
 
 interface ParallaxConfig {
@@ -8,23 +8,28 @@ interface ParallaxConfig {
 
 export function useParallax(config: ParallaxConfig = {}) {
   const { speed = 0.5, direction = 'vertical' } = config;
-  const ref = useRef(null);
-  const { scrollY } = useScroll();
 
-  // Y-axis parallax: moves slower than scroll
-  // Negative value = moves UP when scrolling DOWN (classic parallax effect)
-  const y = useTransform(scrollY, (latest) => {
-    return -latest * speed * 0.5; // Subtle vertical effect
+  // containerRef va en el <div> con overflow-hidden
+  // imageRef va en el <motion.div> que se mueve
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  // useScroll relativo al contenedor: progress va de 0 a 1
+  // mientras el contenedor está visible en pantalla
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ['start end', 'end start'], // desde que entra hasta que sale del viewport
   });
 
-  // X-axis parallax: subtle side-to-side movement
-  const x = useTransform(scrollY, (latest) => {
-    // Oscillating X movement for interest
-    return Math.sin(latest * 0.004) * 20 * speed;
-  });
+  // Y: imagen se mueve -20% → +20% mientras el contenedor pasa por el viewport
+  const yRange = 20 * speed; // ej: 0.5 speed → ±10%
+  const y = useTransform(scrollYProgress, [0, 1], [`${yRange}%`, `-${yRange}%`]);
+
+  // X: movimiento lateral muy sutil
+  const xRange = direction === 'both' ? 5 * speed : 0;
+  const x = useTransform(scrollYProgress, [0, 1], [`-${xRange}%`, `${xRange}%`]);
 
   return {
-    ref,
+    containerRef,
     y,
     x,
   };

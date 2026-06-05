@@ -29,7 +29,7 @@ const AnimatedText = ({ text, startIndex = 0 }: { text: string; startIndex?: num
 };
 
 export default function HeroSection({ onNavigate }: HeroSectionProps) {
-  const titleRef = useSplitTextAnimation('.hero-title-split');
+  const { ref: titleRef, titleDone } = useSplitTextAnimation('.hero-title-split');
   const boldTextRef = useRef<HTMLSpanElement>(null);
 
   // Animar la línea roja detrás del texto después de que termine el título
@@ -122,8 +122,8 @@ export default function HeroSection({ onNavigate }: HeroSectionProps) {
         </h1>
         <motion.p
           initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 1.8, ease: 'easeOut' }}
+          animate={titleDone ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+          transition={{ duration: 0.7, ease: 'easeOut' }}
           className="mt-5 text-base sm:text-lg text-white max-w-2xl"
           style={{
             fontFamily:

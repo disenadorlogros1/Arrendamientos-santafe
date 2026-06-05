@@ -19,7 +19,7 @@ const HITOS = [
 ];
 
 export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) {
-  const titleRef = useSplitTextAnimation('.trayectoria-title-split', 0, true);
+  const { ref: titleRef, titleDone } = useSplitTextAnimation('.trayectoria-title-split', 0, true);
 
   return (
     <section className="relative py-8 sm:py-16 lg:py-24 bg-gradient-to-br from-gray-50 to-white overflow-hidden">
@@ -61,9 +61,8 @@ export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) 
             </h2>
             <motion.p
               initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.5 }}
-              transition={{ duration: 0.7, delay: 1.5, ease: 'easeOut' }}
+              animate={titleDone ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+              transition={{ duration: 0.7, ease: 'easeOut' }}
               className="mt-3 sm:mt-5 text-sm sm:text-base lg:text-lg text-gray-600 leading-relaxed w-full"
             >
               Desde 1966 acompañamos a personas, familias y propietarios en

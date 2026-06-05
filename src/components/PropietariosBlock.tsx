@@ -13,8 +13,8 @@ const WHATSAPP_URL =
   'https://wa.me/573006557529?text=Hola%2C%20quisiera%20consignar%20una%20propiedad%20con%20Arrendamientos%20Santa%20Fe.';
 
 export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps) {
-  const titleRef = useSplitTextAnimation('.propietarios-title-split', 0, true);
-  const { ref: parallaxRef, y: parallaxY, x: parallaxX } = useParallax({ speed: 0.5, direction: 'both' });
+  const { ref: titleRef, titleDone } = useSplitTextAnimation('.propietarios-title-split', 0, true);
+  const { containerRef: parallaxContainerRef, y: parallaxY, x: parallaxX } = useParallax({ speed: 0.5, direction: 'both' });
 
   return (
     <section className="relative py-16 sm:py-20 bg-brand-dark text-white overflow-hidden">
@@ -54,9 +54,8 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
             </h2>
             <motion.p
               initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.5 }}
-              transition={{ duration: 0.7, delay: 1.5, ease: 'easeOut' }}
+              animate={titleDone ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+              transition={{ duration: 0.7, ease: 'easeOut' }}
               className="mt-5 text-base sm:text-lg text-white/80 max-w-2xl leading-relaxed"
             >
               Más de 60 años gestionando propiedades en Antioquia. Tu inmueble en manos de quienes conocen el mercado inmobiliario regional.
@@ -116,29 +115,28 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
 
           {/* Columna derecha: Imagen con Parallax */}
           <div className="md:col-span-6 flex items-center justify-center">
-            <motion.div
-              ref={parallaxRef}
+            {/* containerRef en el wrapper con overflow-hidden → recorta el movimiento */}
+            <div
+              ref={parallaxContainerRef}
               className="relative w-full h-96 md:h-[500px] rounded-xl overflow-hidden shadow-2xl"
-              style={{
-                y: parallaxY,
-                x: parallaxX,
-              }}
             >
-              <motion.img
-                src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&q=80"
-                alt="Propiedad moderna"
-                className="w-full h-full object-cover"
-                initial={{ scale: 1.1 }}
-                whileInView={{ scale: 1 }}
-                transition={{ duration: 0.8, ease: 'easeOut' }}
-                viewport={{ once: true }}
-              />
+              {/* La imagen es más grande que el contenedor y se mueve con parallax */}
+              <motion.div
+                style={{ y: parallaxY, x: parallaxX, scale: 1.15 }}
+                className="absolute inset-0 w-full h-full"
+              >
+                <img
+                  src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&q=80"
+                  alt="Propiedad moderna en Medellín"
+                  className="w-full h-full object-cover"
+                />
+              </motion.div>
               {/* Overlay gradient */}
               <div
                 aria-hidden="true"
-                className="absolute inset-0 bg-gradient-to-t from-brand-dark/40 to-transparent pointer-events-none"
+                className="absolute inset-0 bg-gradient-to-t from-brand-dark/40 to-transparent pointer-events-none z-10"
               />
-            </motion.div>
+            </div>
           </div>
         </div>
       </div>

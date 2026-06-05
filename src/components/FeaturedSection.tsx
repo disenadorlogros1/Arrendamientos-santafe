@@ -13,7 +13,7 @@ interface FeaturedSectionProps {
 
 export default function FeaturedSection({ onNavigate }: FeaturedSectionProps) {
   const featured = properties.filter((p) => p.featured);
-  const titleRef = useSplitTextAnimation('.featured-title-split', 0, true);
+  const { ref: titleRef, titleDone } = useSplitTextAnimation('.featured-title-split', 0, true);
 
   return (
     <section className="py-6 md:py-10">
@@ -38,11 +38,11 @@ export default function FeaturedSection({ onNavigate }: FeaturedSectionProps) {
               destacadas
             </span>
           </h2>
+          {/* Subtítulo: se activa sólo cuando titleDone=true (onComplete de GSAP) */}
           <motion.p
             initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.5 }}
-            transition={{ duration: 0.7, delay: 1.5, ease: 'easeOut' }}
+            animate={titleDone ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+            transition={{ duration: 0.7, ease: 'easeOut' }}
             className="mt-1 text-sm sm:text-base max-w-xl"
             style={{
               color: '#808080',
