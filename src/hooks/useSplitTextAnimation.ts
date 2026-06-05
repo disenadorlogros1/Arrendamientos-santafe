@@ -50,8 +50,8 @@ export const useSplitTextAnimation = (
       gsap.to(split.lines, {
         opacity: 1,
         y: 0,
-        duration: 0.7,
-        stagger: 0.08,
+        duration: 1.2,
+        stagger: 0.2,
         ease: 'expo.out',
         onComplete: () => setTitleDone(true), // ← notifica al subtítulo
       });
