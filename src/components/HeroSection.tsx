@@ -2,6 +2,7 @@
 
 import { useRef, useEffect } from 'react';
 import gsap from 'gsap';
+import { motion } from 'framer-motion';
 import { useSplitTextAnimation } from '@/hooks/useSplitTextAnimation';
 
 interface HeroSectionProps {
