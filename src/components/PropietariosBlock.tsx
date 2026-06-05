@@ -15,21 +15,26 @@ const WHATSAPP_URL =
 export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps) {
   const { ref: titleRef, titleAnimating } = useSplitTextAnimation('.propietarios-title-split', 0, true);
   const containerRef = useRef<HTMLDivElement>(null);
+  const [offsetX, setOffsetX] = useState(0);
   const [offsetY, setOffsetY] = useState(0);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      if (containerRef.current) {
-        const rect = containerRef.current.getBoundingClientRect();
-        // Calcula cuánto ha scrolleado el elemento en relación a la viewport
-        const scrolled = window.innerHeight - rect.top;
-        setOffsetY(scrolled * 0.3); // Parallax a 0.3x
-      }
-    };
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (containerRef.current) {
+      const rect = containerRef.current.getBoundingClientRect();
+      // Calcula la posición del mouse dentro del contenedor (-1 a 1)
+      const x = (e.clientX - rect.left) / rect.width - 0.5;
+      const y = (e.clientY - rect.top) / rect.height - 0.5;
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+      // Aplica el parallax (máximo ±30px)
+      setOffsetX(x * 60);
+      setOffsetY(y * 60);
+    }
+  };
+
+  const handleMouseLeave = () => {
+    setOffsetX(0);
+    setOffsetY(0);
+  };
 
   return (
     <section className="relative py-16 sm:py-20 bg-brand-dark text-white overflow-hidden">
@@ -113,40 +118,43 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
             {/* Bloque unificado con borde blanco */}
             <div className="mt-8 border-2 border-white rounded-lg p-8">
               {/* Estadísticas en una fila */}
-              <div className="flex gap-12 md:gap-20 mb-6">
-                <div className="flex items-baseline gap-3">
-                  <p className="text-5xl md:text-6xl font-bold text-white">60</p>
-                  <div>
-                    <p className="text-sm text-white/90">años</p>
-                    <p className="text-sm text-white/90">de experiencia</p>
+              <div className="flex gap-16 md:gap-32 mb-8 items-center">
+                {/* Estadística 1 */}
+                <div className="flex items-center gap-4">
+                  <p className="text-6xl md:text-7xl font-bold text-white leading-none">60</p>
+                  <div className="text-sm text-white/90 leading-tight">
+                    <p>años</p>
+                    <p>de experiencia</p>
                   </div>
                 </div>
-                <div className="flex items-baseline gap-3">
-                  <p className="text-5xl md:text-6xl font-bold text-white">3</p>
-                  <div>
-                    <p className="text-sm text-white/90">sedes</p>
-                    <p className="text-sm text-white/90">en Antioquia</p>
+
+                {/* Estadística 2 */}
+                <div className="flex items-center gap-4">
+                  <p className="text-6xl md:text-7xl font-bold text-white leading-none">3</p>
+                  <div className="text-sm text-white/90 leading-tight">
+                    <p>sedes</p>
+                    <p>en Antioquia</p>
                   </div>
                 </div>
               </div>
 
               {/* Texto descriptivo - ancho completo */}
-              <p className="text-white/90 leading-relaxed border-t border-white/30 pt-6">
+              <p className="text-white/90 leading-relaxed border-t border-white/30 pt-6 text-sm md:text-base">
                 Te avisamos cuando haya un arrendatario interesado. <span className="font-bold">Sin demoras, sin contratiempos.</span>
               </p>
             </div>
           </div>
 
-          {/* Columna derecha: Imagen con parallax real */}
+          {/* Columna derecha: Imagen con parallax del mouse */}
           <div className="md:col-span-6 flex items-center justify-center">
             <div
               ref={containerRef}
-              className="relative w-full h-96 md:h-[500px] rounded-xl overflow-hidden shadow-2xl"
+              onMouseMove={handleMouseMove}
+              onMouseLeave={handleMouseLeave}
+              className="relative w-full h-96 md:h-[500px] rounded-xl overflow-hidden shadow-2xl cursor-move"
             >
               {/* Capa 1: Fondo - ESTÁTICA */}
-              <div
-                className="absolute inset-0 w-full h-full overflow-hidden"
-              >
+              <div className="absolute inset-0 w-full h-full overflow-hidden">
                 <img
                   src="/images/parallax-consignacion-1.png"
                   alt="Fondo - Propiedad"
@@ -154,11 +162,11 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
                 />
               </div>
 
-              {/* Capa 2: Adelante - CON PARALLAX */}
+              {/* Capa 2: Adelante - PARALLAX DEL MOUSE */}
               <div
                 className="absolute inset-0 w-full h-full overflow-hidden"
                 style={{
-                  transform: `translateY(${offsetY}px)`,
+                  transform: `translate(${offsetX}px, ${offsetY}px)`,
                   transition: 'transform 0.1s ease-out',
                 }}
               >
