@@ -158,7 +158,7 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
               ref={containerRef}
               onMouseMove={handleMouseMove}
               onMouseLeave={handleMouseLeave}
-              className="relative w-full h-96 md:h-[500px] rounded-xl overflow-hidden shadow-2xl cursor-move"
+              className="relative w-full h-96 md:h-[550px] rounded-xl overflow-hidden shadow-2xl cursor-move"
             >
               {/* Capa 1: Fondo - ESTÁTICA */}
               <div className="absolute inset-0 w-full h-full overflow-hidden">
@@ -184,7 +184,7 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
                   className="w-full h-full"
                   style={{
                     objectFit: 'cover',
-                    objectPosition: 'center'
+                    objectPosition: 'center 20%'
                   }}
                 />
               </div>
