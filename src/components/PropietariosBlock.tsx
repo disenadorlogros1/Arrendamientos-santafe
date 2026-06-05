@@ -183,8 +183,8 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
                   alt="Frente - Propiedad"
                   className="w-full h-full"
                   style={{
-                    objectFit: 'cover',
-                    objectPosition: 'center top'
+                    objectFit: 'contain',
+                    objectPosition: 'center'
                   }}
                 />
               </div>
