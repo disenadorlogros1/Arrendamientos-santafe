@@ -19,7 +19,7 @@ export default function ConsignacionPage() {
         <div
           className="absolute inset-0"
           style={{
-            backgroundImage: 'url(/images/banner_consigna_propiedad.png)',
+            backgroundImage: 'url(/images/Banner_consigna_propiedad.png)',
             backgroundSize: 'cover',
             backgroundPosition: 'center',
           }}
