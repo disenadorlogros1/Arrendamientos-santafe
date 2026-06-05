@@ -23,7 +23,7 @@ export default function InversionistasPage() {
   return (
     <div className="min-h-screen bg-white">
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-brand-dark to-gray-900 py-16 md:py-24">
+      <section className="bg-gradient-to-br from-brand-dark to-gray-900 py-20 md:py-32">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8" ref={titleRef}>
           <h1
             className="inversionistas-title-split text-3xl sm:text-4xl lg:text-5xl leading-tight text-white text-center"

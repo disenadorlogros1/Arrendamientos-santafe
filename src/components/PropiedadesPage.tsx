@@ -31,7 +31,7 @@ export default function PropiedadesPage() {
   return (
     <div className="min-h-screen bg-white">
       {/* Page Header */}
-      <div className="bg-brand-dark py-12 md:py-16">
+      <div className="bg-brand-dark py-20 md:py-32">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8" ref={titleRef}>
           <h1
             className="propiedades-title-split text-3xl sm:text-4xl lg:text-5xl leading-tight text-white"
