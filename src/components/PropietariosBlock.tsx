@@ -38,7 +38,7 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
   };
 
   return (
-    <section className="relative py-16 sm:py-20 bg-brand-dark text-white overflow-hidden">
+    <section className="relative bg-brand-dark text-white overflow-hidden" style={{ padding: 'clamp(2rem, 5vw, 5rem) clamp(1rem, 4vw, 2rem)' }}>
       {/* Acento visual sutil */}
       <div
         aria-hidden="true"
@@ -49,14 +49,15 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
         }}
       />
 
-      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div className="relative" style={{ width: '100%', maxWidth: 'min(100% - 2rem, 90rem)', margin: '0 auto' }}>
         <div
-          className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center"
+          className="grid grid-cols-1 md:grid-cols-12 items-center"
+          style={{ gap: 'clamp(2rem, 5vw, 3rem)' }}
           onMouseMove={handleMouseMove}
           onMouseLeave={handleMouseLeave}
         >
           {/* Columna izquierda: Contenido */}
-          <div className="md:col-span-6 flex flex-col justify-center md:max-h-[420px]">
+          <div className="md:col-span-6 flex flex-col justify-center" style={{ maxHeight: 'clamp(300px, 60vh, 420px)' }}>
             <h2
               ref={titleRef}
               className="propietarios-title-split text-3xl sm:text-4xl lg:text-5xl leading-tight text-white"
@@ -172,7 +173,8 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
           <div className="md:col-span-6 flex items-center justify-center">
             <div
               ref={containerRef}
-              className="relative w-full h-64 md:h-[420px] overflow-hidden shadow-2xl cursor-move"
+              className="relative w-full overflow-hidden shadow-2xl cursor-move"
+              style={{ height: 'clamp(200px, 50vw, 420px)', aspectRatio: '16 / 9' }}
             >
               {/* Capa 1: Fondo - PARALLAX LENTO */}
               <div
