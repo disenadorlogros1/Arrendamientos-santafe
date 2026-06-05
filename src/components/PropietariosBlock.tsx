@@ -111,27 +111,29 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
             </div>
 
             {/* Bloque unificado con borde blanco */}
-            <div className="mt-8 border-2 border-white rounded-lg p-6">
-              <div className="grid md:grid-cols-2 gap-6 md:gap-12">
-                {/* Estadísticas lado a lado */}
-                <div className="flex gap-8">
+            <div className="mt-8 border-2 border-white rounded-lg p-8">
+              {/* Estadísticas en una fila */}
+              <div className="flex gap-12 md:gap-20 mb-6">
+                <div className="flex items-baseline gap-3">
+                  <p className="text-5xl md:text-6xl font-bold text-white">60</p>
                   <div>
-                    <p className="text-4xl font-bold text-white">60</p>
-                    <p className="text-sm text-white/80 mt-2">años<br />de experiencia</p>
-                  </div>
-                  <div>
-                    <p className="text-4xl font-bold text-white">3</p>
-                    <p className="text-sm text-white/80 mt-2">sedes<br />en Antioquia</p>
+                    <p className="text-sm text-white/90">años</p>
+                    <p className="text-sm text-white/90">de experiencia</p>
                   </div>
                 </div>
-
-                {/* Texto descriptivo */}
-                <div className="flex items-center">
-                  <p className="text-white/90 leading-relaxed">
-                    Te avisamos cuando haya un arrendatario interesado. <span className="font-bold">Sin demoras, sin contratiempos.</span>
-                  </p>
+                <div className="flex items-baseline gap-3">
+                  <p className="text-5xl md:text-6xl font-bold text-white">3</p>
+                  <div>
+                    <p className="text-sm text-white/90">sedes</p>
+                    <p className="text-sm text-white/90">en Antioquia</p>
+                  </div>
                 </div>
               </div>
+
+              {/* Texto descriptivo - ancho completo */}
+              <p className="text-white/90 leading-relaxed border-t border-white/30 pt-6">
+                Te avisamos cuando haya un arrendatario interesado. <span className="font-bold">Sin demoras, sin contratiempos.</span>
+              </p>
             </div>
           </div>
 
@@ -141,23 +143,18 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
               ref={containerRef}
               className="relative w-full h-96 md:h-[500px] rounded-xl overflow-hidden shadow-2xl"
             >
-              {/* Capa 1: Fondo - se mueve lentamente */}
+              {/* Capa 1: Fondo - ESTÁTICA */}
               <div
                 className="absolute inset-0 w-full h-full overflow-hidden"
-                style={{
-                  transform: `translateY(${offsetY * 0.5}px)`,
-                  transition: 'transform 0.1s ease-out',
-                }}
               >
                 <img
                   src="/images/parallax-consignacion-1.png"
                   alt="Fondo - Propiedad"
                   className="w-full h-full object-cover"
-                  style={{ minHeight: '120%' }}
                 />
               </div>
 
-              {/* Capa 2: Adelante - se mueve más rápido */}
+              {/* Capa 2: Adelante - CON PARALLAX */}
               <div
                 className="absolute inset-0 w-full h-full overflow-hidden"
                 style={{
