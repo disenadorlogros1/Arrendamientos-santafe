@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { useSplitTextAnimation } from '@/hooks/useSplitTextAnimation';
-
+import { useSubtitleAnimation } from '@/hooks/useSubtitleAnimation';
 import { ArrowRight, Award, Users, Building2 } from 'lucide-react';
 import type { PageType } from '@/components/Header';
 
@@ -21,6 +21,7 @@ const HITOS = [
 
 export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) {
   const titleRef = useSplitTextAnimation('.trayectoria-title-split', 0, true);
+  const { ref: subtitleRef, isVisible: subtitleVisible } = useSubtitleAnimation(1800);
 
   return (
     <section className="relative py-8 sm:py-16 lg:py-24 bg-gradient-to-br from-gray-50 to-white overflow-hidden">
@@ -35,7 +36,7 @@ export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) 
       />
 
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="grid lg:grid-cols-12 gap-4 sm:gap-10 items-start sm:items-center">
+        <div ref={subtitleRef} className="grid lg:grid-cols-12 gap-4 sm:gap-10 items-start sm:items-center">
           {/* Texto */}
           <div className="lg:col-span-6">
             <h2
@@ -62,9 +63,8 @@ export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) 
             </h2>
             <motion.p
               initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.7, delay: 1.8, ease: 'easeOut' }}
+              animate={subtitleVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+              transition={{ duration: 0.7, ease: 'easeOut' }}
               className="mt-3 sm:mt-5 text-sm sm:text-base lg:text-lg text-gray-600 leading-relaxed w-full"
             >
               Desde 1966 acompañamos a personas, familias y propietarios en
