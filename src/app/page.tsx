@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { type PageType } from '@/components/Header';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -23,68 +23,33 @@ import TerminosPage from '@/components/TerminosPage';
 
 function HomePage({ onNavigate }: { onNavigate: (page: PageType) => void }) {
   const [mobileExpanded, setMobileExpanded] = useState(false);
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const [scroll, setScroll] = useState(0);
-  const [totalHeight, setTotalHeight] = useState(0);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const scrollY = window.scrollY;
-      setScroll(scrollY);
-
-      if (scrollContainerRef.current) {
-        scrollContainerRef.current.style.transform = `translateY(-${scrollY}px)`;
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
 
   return (
     <>
-      {/* Contenedor Fixed con Parallax */}
-      <div
-        ref={scrollContainerRef}
-        style={{
-          width: '100%',
-          position: 'fixed',
-          left: 0,
-          top: 0,
-          zIndex: 0,
-        }}
-      >
-        {/* Sección 1: Hero Principal como Header Parallax */}
-        <HeroSection onNavigate={onNavigate} />
+      {/* Sección 1: Hero Principal */}
+      <HeroSection onNavigate={onNavigate} />
+
+      {/* Buscador (anclado al hero) */}
+      <div id="buscador">
+        <SearchForm mobileExpanded={mobileExpanded} onMobileExpand={setMobileExpanded} onNavigate={onNavigate} />
+      </div>
+      <UserLocation mobileExpanded={mobileExpanded} />
+
+      {/* Sección 2: Propiedades Destacadas */}
+      <div className="bg-brand-light py-6">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <FeaturedSection onNavigate={onNavigate} />
+        </div>
       </div>
 
-      {/* Contenido que se desplaza sobre el header */}
-      <div style={{ position: 'relative', zIndex: 10 }}>
-        {/* Buscador (anclado al hero) */}
-        <div id="buscador">
-          <SearchForm mobileExpanded={mobileExpanded} onMobileExpand={setMobileExpanded} onNavigate={onNavigate} />
-        </div>
-        <UserLocation mobileExpanded={mobileExpanded} />
+      {/* Sección 3: Bloque para Propietarios (Consignación) */}
+      <PropietariosBlock onNavigate={onNavigate} />
 
-        {/* Sección 2: Propiedades Destacadas */}
-        <div className="bg-brand-light py-6">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <FeaturedSection onNavigate={onNavigate} />
-          </div>
-        </div>
+      {/* Sección 4: Servicios Principales */}
+      <ServiciosBlock onNavigate={onNavigate} />
 
-        {/* Sección 3: Bloque para Propietarios (Consignación) */}
-        <PropietariosBlock onNavigate={onNavigate} />
-
-        {/* Sección 4: Servicios Principales */}
-        <ServiciosBlock onNavigate={onNavigate} />
-
-        {/* Sección 5: Bloque Institucional 60 años */}
-        <TrayectoriaBlock onNavigate={onNavigate} />
-      </div>
-
-      {/* Espaciador para permitir scroll sobre el header */}
-      <div style={{ height: 'calc(100vh + 1000px)', backgroundColor: 'transparent' }} />
+      {/* Sección 5: Bloque Institucional 60 años */}
+      <TrayectoriaBlock onNavigate={onNavigate} />
     </>
   );
 }
