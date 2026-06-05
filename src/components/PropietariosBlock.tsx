@@ -113,24 +113,40 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
             </div>
           </div>
 
-          {/* Columna derecha: Imagen con Parallax */}
+          {/* Columna derecha: Imagen con Parallax de dos capas */}
           <div className="md:col-span-6 flex items-center justify-center">
             {/* containerRef en el wrapper con overflow-hidden → recorta el movimiento */}
             <div
               ref={parallaxContainerRef}
               className="relative w-full h-96 md:h-[500px] rounded-xl overflow-hidden shadow-2xl"
             >
-              {/* La imagen es más grande que el contenedor y se mueve con parallax */}
+              {/* Capa 1: Fondo (parallax lento - se mueve a 0.3x) */}
               <motion.div
-                style={{ y: parallaxY, x: parallaxX, scale: 1.15 }}
+                style={{ y: parallaxY, scale: 1.2 }}
                 className="absolute inset-0 w-full h-full"
               >
                 <img
-                  src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&q=80"
+                  src="/images/parallax-consignacion-1.png"
+                  alt="Fondo propiedad"
+                  className="w-full h-full object-cover"
+                />
+              </motion.div>
+
+              {/* Capa 2: Adelante (parallax más rápido - se mueve a 0.6x) */}
+              <motion.div
+                style={{
+                  y: parallaxY,
+                  scale: 1.15,
+                }}
+                className="absolute inset-0 w-full h-full"
+              >
+                <img
+                  src="/images/parallax-consignacion-2.png"
                   alt="Propiedad moderna en Medellín"
                   className="w-full h-full object-cover"
                 />
               </motion.div>
+
               {/* Overlay gradient */}
               <div
                 aria-hidden="true"
