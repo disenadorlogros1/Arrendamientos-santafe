@@ -76,13 +76,13 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
               Más de 60 años gestionando propiedades en Antioquia. Tu inmueble en manos de quienes conocen el mercado inmobiliario regional.
             </motion.p>
 
-            {/* CTAs jerárquicos */}
+            {/* CTAs en ROJO */}
             <div className="mt-8 flex flex-col md:flex-row items-center gap-3">
               {/* CTA Principal */}
               <button
                 type="button"
                 onClick={() => onNavigate('consignacion')}
-                className="w-full md:w-auto inline-flex items-center justify-center h-12 px-6 bg-white text-brand-red text-sm sm:text-base font-semibold transition-all duration-300 hover:scale-105 hover:bg-brand-red hover:text-white"
+                className="w-full md:w-auto inline-flex items-center justify-center h-12 px-6 bg-brand-red text-white text-sm sm:text-base font-semibold transition-all duration-300 hover:scale-105 hover:bg-white hover:text-brand-red"
                 style={{ lineHeight: '1.2' }}
               >
                 Consignar mi propiedad
@@ -92,10 +92,10 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
               <button
                 type="button"
                 onClick={() => onNavigate('consignacion')}
-                className="w-full md:w-auto inline-flex items-center justify-center h-12 px-6 bg-white text-brand-red text-sm sm:text-base font-semibold transition-all duration-300 hover:scale-105 hover:bg-brand-red hover:text-white"
+                className="w-full md:w-auto inline-flex items-center justify-center h-12 px-6 bg-brand-red text-white text-sm sm:text-base font-semibold transition-all duration-300 hover:scale-105 hover:bg-white hover:text-brand-red"
                 style={{ lineHeight: '1.2' }}
               >
-                Conocer cómo funciona
+                Conoce más
               </button>
 
               {/* CTA Operativo */}
@@ -103,27 +103,34 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
                 href={WHATSAPP_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full md:w-auto inline-flex items-center justify-center h-12 px-6 bg-white text-brand-red text-sm font-semibold transition-all duration-300 hover:scale-105 hover:bg-brand-red hover:text-white"
+                className="w-full md:w-auto inline-flex items-center justify-center h-12 px-6 bg-brand-red text-white text-sm font-semibold transition-all duration-300 hover:scale-105 hover:bg-white hover:text-brand-red"
                 style={{ lineHeight: '1.2' }}
               >
                 Hablar con un asesor
               </a>
             </div>
 
-            {/* Bloque visual / valores clave */}
-            <div className="mt-8 grid grid-cols-2 gap-4">
-              <div className="bg-white/5 border border-white/10 rounded-lg p-5 backdrop-blur-sm">
-                <p className="text-3xl font-bold text-brand-red">60</p>
-                <p className="text-sm text-white/70 mt-1">años de experiencia</p>
-              </div>
-              <div className="bg-white/5 border border-white/10 rounded-lg p-5 backdrop-blur-sm">
-                <p className="text-3xl font-bold text-brand-red">3</p>
-                <p className="text-sm text-white/70 mt-1">sedes en Antioquia</p>
-              </div>
-              <div className="bg-white/5 border border-white/10 rounded-lg p-5 backdrop-blur-sm col-span-2">
-                <p className="text-sm text-white/80 leading-relaxed">
-                  Te avisamos cuando haya un arrendatario interesado. Sin demoras, sin contratiempos.
-                </p>
+            {/* Bloque unificado con borde blanco */}
+            <div className="mt-8 border-2 border-white rounded-lg p-6">
+              <div className="grid md:grid-cols-2 gap-6 md:gap-12">
+                {/* Estadísticas lado a lado */}
+                <div className="flex gap-8">
+                  <div>
+                    <p className="text-4xl font-bold text-white">60</p>
+                    <p className="text-sm text-white/80 mt-2">años<br />de experiencia</p>
+                  </div>
+                  <div>
+                    <p className="text-4xl font-bold text-white">3</p>
+                    <p className="text-sm text-white/80 mt-2">sedes<br />en Antioquia</p>
+                  </div>
+                </div>
+
+                {/* Texto descriptivo */}
+                <div className="flex items-center">
+                  <p className="text-white/90 leading-relaxed">
+                    Te avisamos cuando haya un arrendatario interesado. <span className="font-bold">Sin demoras, sin contratiempos.</span>
+                  </p>
+                </div>
               </div>
             </div>
           </div>
