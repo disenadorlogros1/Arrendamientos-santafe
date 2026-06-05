@@ -54,7 +54,7 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
           {/* Columna izquierda: Contenido */}
-          <div className="md:col-span-6">
+          <div className="md:col-span-6 flex flex-col justify-center max-h-64 md:max-h-[420px]">
             <h2
               ref={titleRef}
               className="propietarios-title-split text-3xl sm:text-4xl lg:text-5xl leading-tight text-white"
@@ -89,7 +89,7 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
             </motion.p>
 
             {/* CTAs en ROJO */}
-            <div className="mt-8 flex flex-col md:flex-row items-center gap-3">
+            <div className="mt-5 flex flex-col md:flex-row items-center gap-2 md:gap-3">
               {/* CTA Principal */}
               <button
                 type="button"
@@ -123,7 +123,7 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
             </div>
 
             {/* Bloque unificado con borde blanco */}
-            <div className="mt-8 border-2 border-white p-8">
+            <div className="mt-4 border-2 border-white p-4 md:p-6">
               {/* Estadísticas en una fila */}
               <div className="flex flex-col md:flex-row gap-8 md:gap-16 lg:gap-32 mb-8 items-center">
                 {/* Estadística 1 */}
