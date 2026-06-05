@@ -143,7 +143,7 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
             >
               {/* Capa 1: Fondo - se mueve lentamente */}
               <div
-                className="absolute inset-0 w-full h-full"
+                className="absolute inset-0 w-full h-full overflow-hidden"
                 style={{
                   transform: `translateY(${offsetY * 0.5}px)`,
                   transition: 'transform 0.1s ease-out',
@@ -153,12 +153,13 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
                   src="/images/parallax-consignacion-1.png"
                   alt="Fondo - Propiedad"
                   className="w-full h-full object-cover"
+                  style={{ minHeight: '120%' }}
                 />
               </div>
 
               {/* Capa 2: Adelante - se mueve más rápido */}
               <div
-                className="absolute inset-0 w-full h-full"
+                className="absolute inset-0 w-full h-full overflow-hidden"
                 style={{
                   transform: `translateY(${offsetY}px)`,
                   transition: 'transform 0.1s ease-out',
@@ -168,6 +169,7 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
                   src="/images/parallax-consignacion-2.png"
                   alt="Frente - Propiedad"
                   className="w-full h-full object-cover opacity-90"
+                  style={{ minHeight: '120%' }}
                 />
               </div>
 
