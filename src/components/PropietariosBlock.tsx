@@ -18,17 +18,18 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
   // Contenedor para el parallax
   const parallaxContainerRef = useRef<HTMLDivElement>(null);
 
-  // useScroll relativo al contenedor
-  const { scrollYProgress } = useScroll({
-    target: parallaxContainerRef,
-    offset: ['start end', 'end start'],
+  // Scroll global de la página
+  const { scrollY } = useScroll();
+
+  // Capa 1 (fondo): se mueve lentamente
+  const y1 = useTransform(scrollY, (latest) => {
+    return -latest * 0.3; // Se mueve a 0.3x del scroll
   });
 
-  // Capa 1 (fondo): se mueve lentamente (0.3x)
-  const y1 = useTransform(scrollYProgress, [0, 1], ['20%', '-20%']);
-
-  // Capa 2 (adelante): se mueve más rápido (0.6x)
-  const y2 = useTransform(scrollYProgress, [0, 1], ['40%', '-40%']);
+  // Capa 2 (adelante): se mueve más rápido
+  const y2 = useTransform(scrollY, (latest) => {
+    return -latest * 0.6; // Se mueve a 0.6x del scroll
+  });
 
   return (
     <section className="relative py-16 sm:py-20 bg-brand-dark text-white overflow-hidden">
