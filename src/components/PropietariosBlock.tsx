@@ -22,16 +22,14 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
   const [offsetY, setOffsetY] = useState(0);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (containerRef.current) {
-      const rect = containerRef.current.getBoundingClientRect();
-      // Calcula la posición del mouse dentro del contenedor (-1 a 1)
-      const x = (e.clientX - rect.left) / rect.width - 0.5;
-      const y = (e.clientY - rect.top) / rect.height - 0.5;
+    const rect = e.currentTarget.getBoundingClientRect();
+    // Calcula la posición del mouse dentro del contenedor (-1 a 1)
+    const x = (e.clientX - rect.left) / rect.width - 0.5;
+    const y = (e.clientY - rect.top) / rect.height - 0.5;
 
-      // Aplica el parallax: imagen superior 50% más de movimiento (±40px) que el fondo (±25px)
-      setOffsetX(x * 40);
-      setOffsetY(y * 40);
-    }
+    // Aplica el parallax: imagen superior 50% más de movimiento (±40px) que el fondo (±25px)
+    setOffsetX(x * 40);
+    setOffsetY(y * 40);
   };
 
   const handleMouseLeave = () => {
