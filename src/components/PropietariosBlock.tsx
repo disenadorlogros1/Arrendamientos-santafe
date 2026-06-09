@@ -1,7 +1,6 @@
 'use client';
 
 import { useRef } from 'react';
-import { useSplitTextAnimation } from '@/hooks/useSplitTextAnimation';
 import type { PageType } from '@/components/Header';
 
 interface PropietariosBlockProps {
@@ -12,327 +11,360 @@ const WHATSAPP_URL =
   'https://wa.me/573006557529?text=Hola%2C%20quisiera%20consignar%20una%20propiedad%20con%20Arrendamientos%20Santa%20Fe.';
 
 export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps) {
-  const { ref: titleRef } = useSplitTextAnimation('.propietarios-title-split', 0, true);
-  const containerRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<SVGSVGElement>(null);
 
   return (
-    <section
-      className="relative overflow-hidden"
-      style={{
-        backgroundColor: '#121212',
-        padding: '20px',
-        minHeight: '100vh',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-      }}
-    >
-      {/* Responsive styles with inline media queries */}
-      <style>{`
-        @media (max-width: 900px) {
-          .propietarios-grid {
-            grid-template-columns: repeat(2, 1fr) !important;
-          }
-          .propietarios-cta {
-            grid-column: span 2 !important;
-          }
-        }
-
-        @media (max-width: 550px) {
-          .propietarios-grid {
-            grid-template-columns: 1fr !important;
-          }
-          .propietarios-cta,
-          .propietarios-metric,
-          .propietarios-image,
-          .propietarios-data {
-            grid-column: span 1 !important;
-          }
-          .propietarios-cta {
-            grid-row: span 1 !important;
-          }
-          .propietarios-grid h1 {
-            font-size: 1.2rem !important;
-          }
-          .propietarios-grid p {
-            font-size: 0.75rem !important;
-          }
-          .propietarios-grid button,
-          .propietarios-grid a {
-            font-size: 0.75rem !important;
-            padding: 8px 16px !important;
-          }
-        }
-      `}</style>
-
-      {/* Bento Grid Container */}
-      <div
-        ref={containerRef}
-        className="propietarios-grid"
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(4, 1fr)',
-          gridAutoRows: 'minmax(140px, auto)',
-          gap: '12px',
-          maxWidth: '1100px',
-          width: '100%',
-          backgroundColor: '#000000',
-          padding: '16px',
-          borderRadius: '12px',
-          boxShadow: '0 20px 40px rgba(0,0,0,0.5)',
-        }}
-      >
-        {/* CTA Block - Lado Izquierdo (2x2) */}
-        <div
-          className="propietarios-cta"
-          style={{
-            gridColumn: 'span 2',
-            gridRow: 'span 2',
-            backgroundColor: '#000000',
-            borderRadius: '8px',
-            padding: '24px',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'space-between',
-            position: 'relative',
-            overflow: 'hidden',
-            border: '1px solid #2d2d2d',
-            transition: 'transform 0.3s ease, box-shadow 0.3s ease',
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.transform = 'translateY(-2px)';
-            e.currentTarget.style.boxShadow = '0 8px 20px rgba(255,255,255,0.05)';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.transform = 'none';
-            e.currentTarget.style.boxShadow = 'none';
-          }}
+    <section className="relative w-full overflow-hidden bg-black py-12 md:py-20">
+      <div className="flex w-full justify-center px-4">
+        <svg
+          ref={containerRef}
+          viewBox="0 0 1920 496.09"
+          className="w-full max-w-6xl"
+          style={{ height: 'auto' }}
         >
-          <div>
-            <h1
-              ref={titleRef}
-              className="propietarios-title-split"
-              style={{
-                fontSize: '1.8rem',
-                fontWeight: 700,
-                lineHeight: 1.3,
-                marginBottom: '12px',
-                color: '#ffffff',
-                fontFamily: "'Avenir Next Ultra Light', 'Avenir LT Pro 65 Medium', 'Avenir', 'Outfit', system-ui, sans-serif",
-              }}
-            >
-              ¿Tienes un inmueble para <br />
-              <span style={{ color: '#e53935' }}>arrendar o vender?</span>
-            </h1>
-            <p
-              style={{
-                fontSize: '0.85rem',
-                color: '#b0b0b0',
-                lineHeight: 1.5,
-                marginBottom: '24px',
-                fontFamily: "'Avenir LT Pro 65 Medium', 'Avenir LT Pro', 'Avenir', 'Outfit', system-ui, sans-serif",
-              }}
-            >
-              Más de 60 años gestionando propiedades en Antioquia. Tu inmueble en manos de quienes conocen el mercado inmobiliario regional.
-            </p>
-          </div>
+          <defs>
+            <style>
+              {`
+              .cls-1, .cls-2, .cls-3, .cls-4 {
+                font-family: AvenirLTPro-Black, 'Avenir LT Pro';
+                font-weight: 800;
+              }
 
-          {/* Button Group */}
-          <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
-            <button
-              type="button"
+              .cls-5, .cls-6, .cls-7, .cls-3, .cls-8, .cls-4 {
+                fill: #fff;
+              }
+
+              .cls-5, .cls-6, .cls-9, .cls-10, .cls-11 {
+                font-family: AvenirLTPro-Light, 'Avenir LT Pro';
+                font-weight: 300;
+              }
+
+              .cls-5, .cls-2, .cls-3 {
+                font-size: 39px;
+              }
+
+              .cls-12, .cls-2 {
+                fill: #ce0e2d;
+              }
+
+              .cls-6, .cls-8 {
+                font-size: 20px;
+              }
+
+              .cls-13 {
+                letter-spacing: 0em;
+              }
+
+              .cls-14 {
+                letter-spacing: -.02em;
+              }
+
+              .cls-15 {
+                fill: none;
+              }
+
+              .cls-16 {
+                letter-spacing: .02em;
+              }
+
+              .cls-17 {
+                clip-path: url(#clippath-1);
+              }
+
+              .cls-18, .cls-10 {
+                letter-spacing: -.02em;
+              }
+
+              .cls-19 {
+                letter-spacing: 0em;
+              }
+
+              .cls-20 {
+                opacity: .2;
+              }
+
+              .cls-21 {
+                letter-spacing: -.09em;
+              }
+
+              .cls-22 {
+                letter-spacing: -.02em;
+              }
+
+              .cls-11 {
+                letter-spacing: -.11em;
+              }
+
+              .cls-23 {
+                clip-path: url(#clippath-2);
+              }
+
+              .cls-24 {
+                clip-path: url(#clippath);
+              }
+
+              .cls-4 {
+                font-size: 70px;
+              }
+              `}
+            </style>
+            <clipPath id="clippath">
+              <rect className="cls-15" x="1160.82" y="58.95" width="321.12" height="186.73" />
+            </clipPath>
+            <clipPath id="clippath-1">
+              <rect className="cls-15" x="1487.75" y="58.95" width="321.12" height="186.73" />
+            </clipPath>
+            <clipPath id="clippath-2">
+              <rect className="cls-15" x="835" y="251.21" width="321.12" height="186.73" />
+            </clipPath>
+          </defs>
+
+          {/* Background */}
+          <g id="Vectores_de_fondo" data-name="Vectores de fondo">
+            <rect x="1.05" y="-3.56" width="1917.89" height="501.75" fill="#000" />
+          </g>
+
+          {/* Vectors/Shapes */}
+          <g id="Vectores">
+            {/* Button backgrounds */}
+            <rect
+              className="cls-12 cursor-pointer hover:opacity-90 transition-opacity"
+              x="132.43"
+              y="257.96"
+              width="330.48"
+              height="54"
               onClick={() => onNavigate('consignacion')}
-              style={{
-                padding: '12px 20px',
-                borderRadius: '6px',
-                fontSize: '0.85rem',
-                fontWeight: 600,
-                backgroundColor: '#e53935',
-                color: '#ffffff',
-                border: 'none',
-                cursor: 'pointer',
-                transition: 'background-color 0.2s ease',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = '#d32f2f';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = '#e53935';
-              }}
+            />
+            <rect
+              className="cls-12 cursor-pointer hover:opacity-90 transition-opacity"
+              x="471.07"
+              y="257.96"
+              width="330.48"
+              height="54"
+              onClick={() => window.open(WHATSAPP_URL, '_blank')}
+            />
+
+            {/* Decorative boxes */}
+            <g className="cls-20">
+              <rect className="cls-7" x="833.99" y="58.95" width="321.12" height="186.73" />
+              <rect className="cls-7" x="1160.82" y="250.42" width="321.12" height="186.73" />
+              <rect className="cls-7" x="1487.64" y="58.95" width="321.12" height="186.73" />
+              <rect className="cls-7" x="1487.64" y="250.42" width="321.12" height="186.73" />
+            </g>
+          </g>
+
+          {/* Texts */}
+          <g id="Textos_inferiores" data-name="Textos inferiores">
+            {/* Main title */}
+            <text
+              className="cls-5"
+              transform="translate(132.16 145.13)"
+              style={{ cursor: 'default' }}
             >
-              Consignar mi propiedad
-            </button>
+              <tspan x="0" y="0">
+                ¿
+              </tspan>
+              <tspan className="cls-16" x="18.06" y="0">
+                T
+              </tspan>
+              <tspan x="41.38" y="0">
+                ienes un inmueble para{' '}
+              </tspan>
+            </text>
 
-            <a
-              href={WHATSAPP_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{
-                padding: '12px 20px',
-                borderRadius: '6px',
-                fontSize: '0.85rem',
-                fontWeight: 600,
-                backgroundColor: 'transparent',
-                color: '#ffffff',
-                border: '1px solid #e53935',
-                cursor: 'pointer',
-                transition: 'background-color 0.2s ease',
-                textDecoration: 'none',
-                textAlign: 'center',
-                display: 'inline-block',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = 'rgba(229, 57, 53, 0.1)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = 'transparent';
-              }}
+            {/* Red title */}
+            <text className="cls-2" transform="translate(132.16 178.36)">
+              <tspan x="0" y="0">
+                ar
+              </tspan>
+              <tspan className="cls-14" x="36.82" y="0">
+                r
+              </tspan>
+              <tspan x="51.99" y="0">
+                endar o vender?
+              </tspan>
+            </text>
+
+            {/* Button 1 text */}
+            <text
+              className="cls-6 cursor-pointer"
+              transform="translate(181.26 291.59)"
+              onClick={() => onNavigate('consignacion')}
             >
-              Hablar con un asesor
-            </a>
-          </div>
-        </div>
+              <tspan x="0" y="0">
+                Consignar mi p
+              </tspan>
+              <tspan className="cls-22" x="135.24" y="0">
+                r
+              </tspan>
+              <tspan x="141.54" y="0">
+                opiedad
+              </tspan>
+            </text>
 
-        {/* Metric Block +1000 */}
-        <div
-          className="propietarios-metric"
-          style={{
-            gridColumn: 'span 1',
-            gridRow: 'span 1',
-            backgroundColor: '#262626',
-            borderRadius: '8px',
-            padding: '24px',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: 'center',
-            textAlign: 'center',
-            position: 'relative',
-            overflow: 'hidden',
-            transition: 'transform 0.3s ease, box-shadow 0.3s ease',
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.transform = 'translateY(-2px)';
-            e.currentTarget.style.boxShadow = '0 8px 20px rgba(255,255,255,0.05)';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.transform = 'none';
-            e.currentTarget.style.boxShadow = 'none';
-          }}
-        >
-          <div style={{ fontSize: '2rem', fontWeight: 700, color: '#ffffff' }}>+1000</div>
-          <div style={{ fontSize: '0.8rem', color: '#a0a0a0', marginTop: '4px' }}>inmuebles en gestión activa</div>
-        </div>
+            {/* Button 2 text */}
+            <text
+              className="cls-6 cursor-pointer"
+              transform="translate(539.63 291.59)"
+              onClick={() => window.open(WHATSAPP_URL, '_blank')}
+            >
+              <tspan x="0" y="0">
+                Hablar con un asesor
+              </tspan>
+            </text>
 
-        {/* Image Block 1 */}
-        <div
-          className="propietarios-image"
-          style={{
-            gridColumn: 'span 1',
-            gridRow: 'span 1',
-            backgroundImage: 'url(https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=400&q=80)',
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            borderRadius: '8px',
-            position: 'relative',
-            overflow: 'hidden',
-            transition: 'transform 0.3s ease, box-shadow 0.3s ease',
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.transform = 'translateY(-2px)';
-            e.currentTarget.style.boxShadow = '0 8px 20px rgba(255,255,255,0.05)';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.transform = 'none';
-            e.currentTarget.style.boxShadow = 'none';
-          }}
-        />
+            {/* Description text */}
+            <text className="cls-6" transform="translate(133.57 212.26)">
+              <tspan x="0" y="0">
+                Más de 60 años ges
+              </tspan>
+              <tspan className="cls-19" x="175.38" y="0">
+                t
+              </tspan>
+              <tspan x="182.06" y="0">
+                ionando p
+              </tspan>
+              <tspan className="cls-18" x="272.88" y="0">
+                r
+              </tspan>
+              <tspan x="279.18" y="0">
+                opiedades en An
+              </tspan>
+              <tspan className="cls-13" x="431.11" y="0">
+                t
+              </tspan>
+              <tspan x="437.79" y="0">
+                ioquia.
+              </tspan>
+              <tspan className="cls-21" x="503.39" y="0">
+                T
+              </tspan>
+              <tspan x="513.03" y="0">
+                u inmueble en
+              </tspan>
+              <tspan x="0" y="20">
+                manos de quienes conocen el me
+              </tspan>
+              <tspan className="cls-18" x="298.74" y="20">
+                r
+              </tspan>
+              <tspan x="305.04" y="20">
+                cado inmobi
+              </tspan>
+              <tspan className="cls-19" x="416.19" y="20">
+                l
+              </tspan>
+              <tspan x="421.01" y="20">
+                iario
+              </tspan>
+              <tspan className="cls-18" x="464.73" y="20">
+                r
+              </tspan>
+              <tspan x="471.03" y="20">
+                egional.
+              </tspan>
+            </text>
 
-        {/* Image Block 2 */}
-        <div
-          className="propietarios-image"
-          style={{
-            gridColumn: 'span 1',
-            gridRow: 'span 1',
-            backgroundImage: 'url(https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=400&q=80)',
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            borderRadius: '8px',
-            position: 'relative',
-            overflow: 'hidden',
-            transition: 'transform 0.3s ease, box-shadow 0.3s ease',
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.transform = 'translateY(-2px)';
-            e.currentTarget.style.boxShadow = '0 8px 20px rgba(255,255,255,0.05)';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.transform = 'none';
-            e.currentTarget.style.boxShadow = 'none';
-          }}
-        />
+            {/* Bottom description */}
+            <text className="cls-8" transform="translate(134.15 348.58)">
+              <tspan className="cls-11" x="0" y="0">
+                T
+              </tspan>
+              <tspan className="cls-9" x="9.26" y="0">
+                e avisamos cuando haya un ar
+              </tspan>
+              <tspan className="cls-10" x="273.92" y="0">
+                r
+              </tspan>
+              <tspan className="cls-9" x="280.22" y="0">
+                endatario inte
+              </tspan>
+              <tspan className="cls-10" x="404.33" y="0">
+                r
+              </tspan>
+              <tspan className="cls-9" x="410.63" y="0">
+                esado.
+              </tspan>
+              <tspan className="cls-1" x="475.15" y="0">
+                Sin demoras, sin{' '}
+              </tspan>
+              <tspan className="cls-1">
+                <tspan x="0" y="20">
+                  contratiempos.
+                </tspan>
+              </tspan>
+            </text>
 
-        {/* Data Block 60 años */}
-        <div
-          className="propietarios-data"
-          style={{
-            gridColumn: 'span 1',
-            gridRow: 'span 1',
-            backgroundColor: '#333333',
-            borderRadius: '8px',
-            padding: '24px',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: 'center',
-            textAlign: 'center',
-            position: 'relative',
-            overflow: 'hidden',
-            transition: 'transform 0.3s ease, box-shadow 0.3s ease',
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.transform = 'translateY(-2px)';
-            e.currentTarget.style.boxShadow = '0 8px 20px rgba(255,255,255,0.05)';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.transform = 'none';
-            e.currentTarget.style.boxShadow = 'none';
-          }}
-        >
-          <div style={{ fontSize: '1.8rem', fontWeight: 700, color: '#ffffff' }}>60</div>
-          <div style={{ fontSize: '0.75rem', color: '#cccccc', marginTop: '2px' }}>años de experiencia</div>
-        </div>
+            {/* Metrics - 60 years */}
+            <text className="cls-4" transform="translate(1286.7917 342.4838)">
+              <tspan x="0" y="0">
+                60
+              </tspan>
+            </text>
+            <text className="cls-3" transform="translate(1285.6432 382.275)">
+              <tspan x="0" y="0">
+                años
+              </tspan>
+            </text>
+            <text className="cls-6" transform="translate(1262.6715 403.6371)">
+              <tspan x="0" y="0">
+                de experiencia
+              </tspan>
+            </text>
 
-        {/* Data Block 3 sedes */}
-        <div
-          className="propietarios-data"
-          style={{
-            gridColumn: 'span 1',
-            gridRow: 'span 1',
-            backgroundColor: '#333333',
-            borderRadius: '8px',
-            padding: '24px',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: 'center',
-            textAlign: 'center',
-            position: 'relative',
-            overflow: 'hidden',
-            transition: 'transform 0.3s ease, box-shadow 0.3s ease',
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.transform = 'translateY(-2px)';
-            e.currentTarget.style.boxShadow = '0 8px 20px rgba(255,255,255,0.05)';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.transform = 'none';
-            e.currentTarget.style.boxShadow = 'none';
-          }}
-        >
-          <div style={{ fontSize: '1.8rem', fontWeight: 700, color: '#ffffff' }}>3</div>
-          <div style={{ fontSize: '0.75rem', color: '#cccccc', marginTop: '2px' }}>sedes en Antioquia</div>
-        </div>
+            {/* Metrics - +1000 */}
+            <text className="cls-4" transform="translate(883.8 151.01)">
+              <tspan x="0" y="0">
+                +1000
+              </tspan>
+            </text>
+            <text className="cls-3" transform="translate(896.8 190.8)">
+              <tspan x="0" y="0">
+                inmuebles
+              </tspan>
+            </text>
+            <text className="cls-6" transform="translate(914.94 212.16)">
+              <tspan x="0" y="0">
+                en ges
+              </tspan>
+              <tspan className="cls-19" x="59.3" y="0">
+                t
+              </tspan>
+              <tspan x="65.98" y="0">
+                ión ac
+              </tspan>
+              <tspan className="cls-19" x="118.98" y="0">
+                t
+              </tspan>
+              <tspan x="125.66" y="0">
+                iva
+              </tspan>
+            </text>
+
+            {/* Metrics - 3 sedes */}
+            <text className="cls-4" transform="translate(1625.973 337.7366)">
+              <tspan x="0" y="0">
+                3
+              </tspan>
+            </text>
+            <text className="cls-3" transform="translate(1593.9647 377.5277)">
+              <tspan x="0" y="0">
+                sedes
+              </tspan>
+            </text>
+            <text className="cls-6" transform="translate(1589.6229 398.8899)">
+              <tspan x="0" y="0">
+                en An
+              </tspan>
+              <tspan className="cls-19" x="52.26" y="0">
+                t
+              </tspan>
+              <tspan x="58.94" y="0">
+                ioquia
+              </tspan>
+            </text>
+          </g>
+        </svg>
       </div>
     </section>
   );
