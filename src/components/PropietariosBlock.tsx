@@ -206,22 +206,33 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
           </div>
 
           {/* Columna derecha: Bento Grid de Estadísticas */}
-          <div className="md:col-span-6 flex items-center justify-center">
+          <div className="md:col-span-6 flex items-center justify-center" style={{ perspective: '1200px' }}>
             <div className="w-full grid grid-cols-3 gap-3 md:gap-4">
               {bentoStats.map((stat, index) => {
                 const isLarge = stat.size === 'large';
                 const isMedium = stat.size === 'medium';
                 const colSpan = isLarge ? 'col-span-2 row-span-2' : isMedium ? 'col-span-2' : 'col-span-1';
 
+                // Calcular rotación y translación basada en scroll y índice
+                const rotateY = Math.sin((scrollProgress + index * 0.1) * Math.PI) * 5;
+                const rotateX = Math.cos((scrollProgress + index * 0.15) * Math.PI) * 5;
+                const translateY = Math.sin((scrollProgress + index * 0.12) * Math.PI) * 20;
+
                 return (
                   <motion.div
                     key={stat.id}
-                    className={`${colSpan} bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg p-4 md:p-6 flex flex-col justify-center items-center text-center cursor-pointer overflow-hidden relative group`}
+                    className={`${colSpan} bg-white/10 backdrop-blur-sm border border-white/20 p-4 md:p-6 flex flex-col justify-center items-center text-center cursor-pointer overflow-hidden relative group`}
                     initial={{ opacity: 0, scale: 0.8 }}
                     whileInView={{ opacity: 1, scale: 1 }}
                     transition={{ ...springTransition, delay: index * 0.05 }}
                     viewport={{ once: true }}
                     whileHover={{ scale: 1.05, y: -10 }}
+                    style={{
+                      rotateY,
+                      rotateX,
+                      transform: `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(${translateY}px)`,
+                      transition: 'transform 0.1s ease-out',
+                    }}
                   >
                     {/* Hover gradient effect */}
                     <div
