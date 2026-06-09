@@ -3,7 +3,6 @@
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { useRef } from 'react';
 import { useSplitTextAnimation } from '@/hooks/useSplitTextAnimation';
-import { useCountAnimation } from '@/hooks/useCountAnimation';
 import type { PageType } from '@/components/Header';
 
 interface PropietariosBlockProps {
@@ -13,7 +12,7 @@ interface PropietariosBlockProps {
 const WHATSAPP_URL =
   'https://wa.me/573006557529?text=Hola%2C%20quisiera%20consignar%20una%20propiedad%20con%20Arrendamientos%20Santa%20Fe.';
 
-// Spring physics configuration para movimiento natural
+// Spring physics configuration
 const springTransition = {
   type: 'spring' as const,
   damping: 20,
@@ -31,21 +30,33 @@ const statsData = [
   { id: 6, value: 4.2, label: 'Rentabilidad', suffix: '%' },
 ];
 
-// Componente individual de tarjeta
+// Componente individual de tarjeta con efecto Staggered Pinning
 function StatsCard({ stat, index, scrollY }: any) {
-  // Animación sutil de scroll: desplazamiento vertical leve
-  const cardY = useTransform(scrollY, [0, 500], [20 - index * 3, -20 - index * 3]);
+  // FASE 1: ENTRADA (0-400px) - Las tarjetas convergen hacia Y: 0
+  // Cada tarjeta comienza desplazada hacia abajo (index * 80px)
+  const cardY = useTransform(scrollY, [0, 400], [index * 80, 0]);
+
+  // FASE 2: APILAMIENTO (400px-800px) - Las tarjetas se "apilan"
+  // Permanecen en Y: 0 pero cambian Z-index
+  const cardYStack = useTransform(scrollY, [400, 800], [0, -index * 60]);
+
+  // Combinar ambas fases
+  const finalY = useTransform(scrollY, [0, 800], [index * 80, -index * 60]);
+
+  // Z-index escalonado para crear el efecto de apilamiento visual
+  const zIndex = statsData.length - index;
 
   return (
     <motion.div
-      className="bg-white/10 backdrop-blur-sm border border-white/20 p-6 md:p-8 flex flex-col justify-center items-center text-center cursor-pointer overflow-hidden relative group"
+      className="bg-white/10 backdrop-blur-sm border border-white/20 p-6 md:p-8 flex flex-col justify-center items-center text-center cursor-pointer overflow-hidden relative group min-h-[180px]"
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ ...springTransition, delay: index * 0.08 }}
       viewport={{ once: true }}
-      whileHover={{ scale: 1.08, y: -5 }}
+      whileHover={{ scale: 1.05 }}
       style={{
-        y: cardY,
+        y: finalY,
+        zIndex,
       }}
     >
       {/* Hover gradient effect */}
@@ -72,7 +83,7 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
   const { ref: titleRef, titleAnimating } = useSplitTextAnimation('.propietarios-title-split', 0, true);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Usar useScroll para detectar scroll en el contenedor del Bento Grid
+  // Detectar scroll en el contenedor
   const { scrollY } = useScroll({
     target: containerRef,
     offset: ['start end', 'end start'],
@@ -81,7 +92,6 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
   return (
     <motion.section
       className="relative bg-brand-dark text-white overflow-hidden"
-      layout
       style={{ padding: 'clamp(2rem, 5vw, 5rem) clamp(1rem, 4vw, 2rem)' }}
     >
       {/* Acento visual sutil */}
@@ -167,15 +177,30 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
                 Hablar con un asesor
               </a>
             </div>
-
           </div>
 
-          {/* Columna derecha: Grid de Estadísticas */}
-          <div className="md:col-span-6 flex items-center justify-center" ref={containerRef}>
-            <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
-              {statsData.map((stat, index) => (
-                <StatsCard key={stat.id} stat={stat} index={index} scrollY={scrollY} />
-              ))}
+          {/* Columna derecha: Grid con Staggered Pinning */}
+          <div
+            className="md:col-span-6 flex items-center justify-center"
+            ref={containerRef}
+            style={{
+              minHeight: '600px',
+              position: 'relative',
+            }}
+          >
+            <div
+              style={{
+                width: '100%',
+                position: 'relative',
+                height: '100%',
+              }}
+            >
+              {/* Grid container que contiene las tarjetas apiladas */}
+              <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5 relative">
+                {statsData.map((stat, index) => (
+                  <StatsCard key={stat.id} stat={stat} index={index} scrollY={scrollY} />
+                ))}
+              </div>
             </div>
           </div>
         </div>
