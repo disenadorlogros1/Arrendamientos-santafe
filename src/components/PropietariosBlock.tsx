@@ -1,7 +1,7 @@
 'use client';
 
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { useRef } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { useSplitTextAnimation } from '@/hooks/useSplitTextAnimation';
 import type { PageType } from '@/components/Header';
 
@@ -31,17 +31,22 @@ const statsData = [
 ];
 
 // Componente individual de tarjeta con efecto Staggered Pinning
-function StatsCard({ stat, index, scrollY }: any) {
+function StatsCard({ stat, index, scrollY, containerTop }: any) {
+  // Convertir scroll global a scroll relativo del contenedor
+  // Comenzar el efecto cuando el contenedor está en el viewport
+  const relativeScroll = useTransform(scrollY,
+    [containerTop - 400, containerTop + 400],  // Rango donde ocurre el efecto
+    [0, 800]  // Mapear a progresión del efecto
+  );
+
   // FASE 1: ENTRADA (0-400px) - Las tarjetas convergen hacia Y: 0
-  // Cada tarjeta comienza desplazada hacia abajo (index * 80px)
-  const cardY = useTransform(scrollY, [0, 400], [index * 80, 0]);
+  const cardY = useTransform(relativeScroll, [0, 400], [index * 80, 0]);
 
   // FASE 2: APILAMIENTO (400px-800px) - Las tarjetas se "apilan"
-  // Permanecen en Y: 0 pero cambian Z-index
-  const cardYStack = useTransform(scrollY, [400, 800], [0, -index * 60]);
+  const cardYStack = useTransform(relativeScroll, [400, 800], [0, -index * 60]);
 
   // Combinar ambas fases
-  const finalY = useTransform(scrollY, [0, 800], [index * 80, -index * 60]);
+  const finalY = useTransform(relativeScroll, [0, 800], [index * 80, -index * 60]);
 
   // Z-index escalonado para crear el efecto de apilamiento visual
   const zIndex = statsData.length - index;
@@ -82,12 +87,24 @@ function StatsCard({ stat, index, scrollY }: any) {
 export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps) {
   const { ref: titleRef, titleAnimating } = useSplitTextAnimation('.propietarios-title-split', 0, true);
   const containerRef = useRef<HTMLDivElement>(null);
+  const [containerTop, setContainerTop] = useState(0);
 
-  // Detectar scroll en el contenedor
-  const { scrollY } = useScroll({
-    target: containerRef,
-    offset: ['start end', 'end start'],
-  });
+  // Usar scroll global
+  const { scrollY } = useScroll();
+
+  // Calcular el offset del contenedor respecto al viewport
+  useEffect(() => {
+    const updateOffset = () => {
+      if (containerRef.current) {
+        const rect = containerRef.current.getBoundingClientRect();
+        setContainerTop(window.scrollY + rect.top);
+      }
+    };
+
+    updateOffset();
+    window.addEventListener('resize', updateOffset);
+    return () => window.removeEventListener('resize', updateOffset);
+  }, []);
 
   return (
     <motion.section
@@ -198,7 +215,7 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
               {/* Grid container que contiene las tarjetas apiladas */}
               <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5 relative">
                 {statsData.map((stat, index) => (
-                  <StatsCard key={stat.id} stat={stat} index={index} scrollY={scrollY} />
+                  <StatsCard key={stat.id} stat={stat} index={index} scrollY={scrollY} containerTop={containerTop} />
                 ))}
               </div>
             </div>
