@@ -281,12 +281,18 @@
             <h2>📋 Resultado</h2>
 
             <div class="tabs">
-                <button class="tab-btn active" onclick="openTab(event, 'html')">HTML</button>
-                <button class="tab-btn" onclick="openTab(event, 'react')">React</button>
-                <button class="tab-btn" onclick="openTab(event, 'preview')">Vista Previa</button>
+                <button class="tab-btn active" onclick="openTab(event, 'svg')">📄 SVG Puro</button>
+                <button class="tab-btn" onclick="openTab(event, 'html')">HTML</button>
+                <button class="tab-btn" onclick="openTab(event, 'react')">⚛️ React</button>
+                <button class="tab-btn" onclick="openTab(event, 'preview')">👁️ Vista Previa</button>
             </div>
 
-            <div id="html" class="tab-content active">
+            <div id="svg" class="tab-content active">
+                <div class="code-box" id="svgCode"></div>
+                <button class="copy-btn" onclick="copyCode('svgCode')">📋 Copiar SVG Puro</button>
+            </div>
+
+            <div id="html" class="tab-content">
                 <div class="code-box" id="htmlCode"></div>
                 <button class="copy-btn" onclick="copyCode('htmlCode')">📋 Copiar HTML</button>
             </div>
@@ -369,21 +375,29 @@
                 // Nombre del componente
                 const comp = nombre.replace('.svg', '')
                     .split('-')
+                    .split('_')
                     .map(w => w.charAt(0).toUpperCase() + w.slice(1))
                     .join('');
 
+                // Extraer SOLO el SVG (sin HTML wrapper)
+                const svgMatch = svg.match(/<svg[\s\S]*<\/svg>/i);
+                let svgPuro = svgMatch ? svgMatch[0] : svg;
+
                 // Limpiar SVG
-                let clean = svg
+                let clean = svgPuro
                     .replace(/xmlns="[^"]*"/g, '')
                     .replace(/xmlns:xlink="[^"]*"/g, '')
                     .replace(/<\?xml[^?]*\?>/g, '')
                     .trim();
 
                 // ViewBox
-                const match = svg.match(/viewBox="([^"]*)"/);
+                const match = clean.match(/viewBox="([^"]*)"/);
                 const viewBox = match ? match[1] : '0 0 100 100';
 
-                // HTML
+                // SOLO SVG PURO
+                const soloSvg = clean;
+
+                // HTML para preview
                 const html = `<!DOCTYPE html>
 <html lang="es">
 <head>
@@ -391,23 +405,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>${comp}</title>
     <style>
-        body {
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            background-color: #f5f5f5;
-        }
-        .container {
-            background: white;
-            padding: 40px;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            max-width: 1200px;
-        }
-        svg { width: 100%; height: auto; }
+        body { margin: 0; padding: 20px; background: #f5f5f5; }
+        .container { background: white; padding: 40px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); max-width: 1200px; margin: 0 auto; }
+        svg { width: 100%; height: auto; display: block; }
     </style>
 </head>
 <body>
@@ -417,32 +417,44 @@
 </body>
 </html>`;
 
-                // React
+                // React Component
                 const react = `'use client';
 
 import React from 'react';
 
-export const ${comp} = React.forwardRef((props, ref) => (
-    <svg
-        ref={ref}
-        viewBox="${viewBox}"
-        {...props}
-    >
-        ${clean.split('\n').slice(1).join('\n        ')}
-    </svg>
-));
+interface ${comp}Props {
+    className?: string;
+    width?: string | number;
+    height?: string | number;
+}
+
+export const ${comp} = React.forwardRef<SVGSVGElement, ${comp}Props>(
+    ({ className = '', width = '100%', height = 'auto' }, ref) => (
+        <svg
+            ref={ref}
+            width={width}
+            height={height}
+            viewBox="${viewBox}"
+            className={className}
+            style={{ display: 'block' }}
+        >
+            ${clean.split('<svg')[1].split('</svg>')[0]}
+        </svg>
+    )
+);
 
 ${comp}.displayName = '${comp}';
 export default ${comp};`;
 
-                // Mostrar
+                // Mostrar resultados
+                document.getElementById('svgCode').textContent = soloSvg;
                 document.getElementById('htmlCode').textContent = html;
                 document.getElementById('reactCode').textContent = react;
                 document.getElementById('previewBox').innerHTML = clean;
 
                 result.classList.add('show');
                 loader.classList.remove('show');
-                mostrarExito('¡SVG convertido correctamente!');
+                mostrarExito('✅ SVG extraído y convertido correctamente!');
 
             } catch (err) {
                 mostrarError('Error: ' + err.message);
