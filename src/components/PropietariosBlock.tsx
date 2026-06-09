@@ -22,12 +22,9 @@ const springTransition = {
 
 // Estadísticas del Grid
 const statsData = [
-  { id: 1, value: 2500, label: 'Propiedades', suffix: '+' },
-  { id: 2, value: 15000, label: 'Clientes', suffix: '+' },
-  { id: 3, value: 98, label: 'Satisfacción', suffix: '%' },
-  { id: 4, value: 12, label: 'Ciudades', suffix: '' },
-  { id: 5, value: 8500, label: 'Transacciones', suffix: '+' },
-  { id: 6, value: 4.2, label: 'Rentabilidad', suffix: '%' },
+  { id: 1, value: 60, label: 'años de', suffix: '', label2: 'experiencia' },
+  { id: 2, value: 3, label: 'sedes en', suffix: '', label2: 'Antioquia' },
+  { id: 3, value: 1000, label: 'inmuebles en', suffix: '+', label2: 'gestión activa' },
 ];
 
 // Componente individual de tarjeta con efecto Staggered Pinning
@@ -72,13 +69,14 @@ function StatsCard({ stat, index, scrollY, containerTop }: any) {
 
       {/* Content */}
       <div className="relative z-10">
-        <p className="text-4xl md:text-5xl font-bold text-white mb-3">
+        <p className="text-5xl md:text-6xl font-bold text-white mb-4">
           {stat.value.toLocaleString('es-ES')}
           <span className="text-brand-red">{stat.suffix}</span>
         </p>
-        <p className="text-base md:text-lg text-white/80 font-medium">
-          {stat.label}
-        </p>
+        <div className="text-base md:text-lg text-white/80 font-medium leading-tight">
+          <p>{stat.label}</p>
+          <p>{stat.label2}</p>
+        </div>
       </div>
     </motion.div>
   );
@@ -212,8 +210,8 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
                 height: '100%',
               }}
             >
-              {/* Grid container que contiene las tarjetas apiladas */}
-              <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5 relative">
+              {/* Grid container que contiene las 3 tarjetas apiladas */}
+              <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 relative">
                 {statsData.map((stat, index) => (
                   <StatsCard key={stat.id} stat={stat} index={index} scrollY={scrollY} containerTop={containerTop} />
                 ))}
