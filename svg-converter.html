@@ -386,17 +386,24 @@
 
             // Leer archivo
             const reader = new FileReader();
+            reader.onerror = () => {
+                showError('❌ Error al leer el archivo');
+            };
             reader.onload = (e) => {
-                const svgContent = e.target.result;
-                convertSVG(svgContent, file.name);
+                try {
+                    const svgContent = e.target.result;
+                    convertSVG(svgContent, file.name);
+                } catch (error) {
+                    showError('❌ Error al procesar: ' + error.message);
+                }
             };
             reader.readAsText(file);
         }
 
         function convertSVG(svgContent, fileName) {
-            loader.classList.add('show');
-            errorMessage.classList.remove('show');
-            successMessage.classList.remove('show');
+            if (loader) loader.classList.add('show');
+            if (errorMessage) errorMessage.classList.remove('show');
+            if (successMessage) successMessage.classList.remove('show');
 
             try {
                 // Generar nombre del componente
@@ -488,20 +495,24 @@ ${componentName}.displayName = '${componentName}';
 export default ${componentName};`;
 
                 // Mostrar resultados
-                document.getElementById('htmlOutput').textContent = htmlContent;
-                document.getElementById('reactOutput').textContent = reactContent;
-                document.getElementById('previewOutput').innerHTML = cleanSvg;
+                const htmlOutput = document.getElementById('htmlOutput');
+                const reactOutput = document.getElementById('reactOutput');
+                const previewOutput = document.getElementById('previewOutput');
 
-                outputSection.classList.add('active');
-                successMessage.classList.add('show');
-                loader.classList.remove('show');
+                if (htmlOutput) htmlOutput.textContent = htmlContent;
+                if (reactOutput) reactOutput.textContent = reactContent;
+                if (previewOutput) previewOutput.innerHTML = cleanSvg;
+
+                if (outputSection) outputSection.classList.add('active');
+                if (successMessage) successMessage.classList.add('show');
+                if (loader) loader.classList.remove('show');
 
                 // Focus en HTML tab
                 switchTab('html');
 
             } catch (error) {
-                showError('❌ Error al convertir: ' + error.message);
-                loader.classList.remove('show');
+                showError('❌ Error al convertir: ' + (error.message || error));
+                if (loader) loader.classList.remove('show');
             }
         }
 
@@ -529,14 +540,24 @@ export default ${componentName};`;
             });
 
             // Show selected tab
-            document.getElementById(tabName + '-tab').classList.add('active');
-            event.target.classList.add('active');
+            const selectedTab = document.getElementById(tabName + '-tab');
+            if (selectedTab) {
+                selectedTab.classList.add('active');
+            }
+            if (event && event.target) {
+                event.target.classList.add('active');
+            }
         }
 
         function showError(message) {
-            errorMessage.textContent = message;
-            errorMessage.classList.add('show');
-            loader.classList.remove('show');
+            if (errorMessage) {
+                errorMessage.textContent = message;
+                errorMessage.classList.add('show');
+            }
+            if (loader) {
+                loader.classList.remove('show');
+            }
+            console.error(message);
         }
     </script>
 </body>
