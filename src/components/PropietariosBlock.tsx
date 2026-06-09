@@ -1,7 +1,7 @@
 'use client';
 
-import { motion, useScroll, useTransform } from 'framer-motion';
-import { useRef, useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import { useRef } from 'react';
 import { useSplitTextAnimation } from '@/hooks/useSplitTextAnimation';
 import type { PageType } from '@/components/Header';
 
@@ -70,15 +70,8 @@ const bentoItems = [
   },
 ];
 
-// Componente de tarjeta individual
-function BentoCard({ item, index, scrollY, containerTop }: any) {
-  // Convertir scroll global a scroll relativo del contenedor
-  const relativeScroll = useTransform(scrollY, [containerTop - 400, containerTop + 400], [0, 800]);
-
-  // Animaciones de Staggered Pinning
-  const finalY = useTransform(relativeScroll, [0, 800], [index * 80, -index * 60]);
-  const zIndex = bentoItems.length - index;
-
+// Componente de tarjeta individual - SIN animación de scroll
+function BentoCard({ item, index }: any) {
   // Size classes
   const isLarge = item.size === 'large';
   const colSpan = isLarge ? 'col-span-2 row-span-2' : 'col-span-1';
@@ -88,14 +81,12 @@ function BentoCard({ item, index, scrollY, containerTop }: any) {
     return (
       <motion.div
         className={`${colSpan} ${minHeight} bg-white/10 backdrop-blur-sm border border-white/20 overflow-hidden relative group`}
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ ...springTransition, delay: index * 0.08 }}
+        initial={{ opacity: 0, scale: 0.95 }}
+        whileInView={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.5, ease: 'easeOut', delay: index * 0.05 }}
         viewport={{ once: true }}
         whileHover={{ scale: 1.05 }}
         style={{
-          y: finalY,
-          zIndex,
           backgroundImage: `url(${item.bgImage})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
@@ -110,14 +101,12 @@ function BentoCard({ item, index, scrollY, containerTop }: any) {
   return (
     <motion.div
       className={`${colSpan} ${minHeight} bg-white/10 backdrop-blur-sm border border-white/20 p-6 md:p-8 flex flex-col justify-center items-center text-center cursor-pointer overflow-hidden relative group`}
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      transition={{ ...springTransition, delay: index * 0.08 }}
+      initial={{ opacity: 0, scale: 0.95 }}
+      whileInView={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.5, ease: 'easeOut', delay: index * 0.05 }}
       viewport={{ once: true }}
       whileHover={{ scale: 1.05 }}
       style={{
-        y: finalY,
-        zIndex,
         backgroundImage: item.bgImage ? `url(${item.bgImage})` : 'none',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
@@ -154,24 +143,6 @@ function BentoCard({ item, index, scrollY, containerTop }: any) {
 export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps) {
   const { ref: titleRef, titleAnimating } = useSplitTextAnimation('.propietarios-title-split', 0, true);
   const containerRef = useRef<HTMLDivElement>(null);
-  const [containerTop, setContainerTop] = useState(0);
-
-  // Usar scroll global
-  const { scrollY } = useScroll();
-
-  // Calcular el offset del contenedor respecto al viewport
-  useEffect(() => {
-    const updateOffset = () => {
-      if (containerRef.current) {
-        const rect = containerRef.current.getBoundingClientRect();
-        setContainerTop(window.scrollY + rect.top);
-      }
-    };
-
-    updateOffset();
-    window.addEventListener('resize', updateOffset);
-    return () => window.removeEventListener('resize', updateOffset);
-  }, []);
 
   return (
     <motion.section
@@ -287,7 +258,7 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
               {/* Bento Grid 3x2 */}
               <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4 relative">
                 {bentoItems.map((item, index) => (
-                  <BentoCard key={item.id} item={item} index={index} scrollY={scrollY} containerTop={containerTop} />
+                  <BentoCard key={item.id} item={item} index={index} />
                 ))}
               </div>
             </div>
