@@ -75,7 +75,7 @@ function BentoCard({ item, index }: any) {
   // Size classes
   const isLarge = item.size === 'large';
   const colSpan = isLarge ? 'col-span-2 row-span-2' : 'col-span-1';
-  const minHeight = isLarge ? 'min-h-[240px]' : 'min-h-[240px]';
+  const minHeight = isLarge ? 'min-h-[200px]' : 'min-h-[130px]';
 
   if (item.type === 'image') {
     return (
@@ -162,10 +162,10 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
       <div className="relative" style={{ width: '100%', maxWidth: 'min(100% - 2rem, 90rem)', margin: '0 auto' }}>
         <div
           className="grid grid-cols-1 md:grid-cols-12 items-start"
-          style={{ gap: 'clamp(2rem, 5vw, 3rem)' }}
+          style={{ gap: 'clamp(1.5rem, 3vw, 2rem)' }}
         >
           {/* Columna izquierda: Contenido */}
-          <div className="md:col-span-5 flex flex-col justify-start pt-0 md:pt-4">
+          <div className="md:col-span-5 lg:col-span-4 flex flex-col justify-start pt-0 md:pt-4">
             <h2
               ref={titleRef}
               className="propietarios-title-split text-3xl sm:text-4xl lg:text-5xl leading-tight text-white"
@@ -241,7 +241,7 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
 
           {/* Columna derecha: Bento Grid */}
           <div
-            className="md:col-span-7 flex items-start justify-center"
+            className="md:col-span-7 lg:col-span-8 flex items-start justify-center"
             ref={containerRef}
             style={{
               minHeight: '500px',
@@ -256,7 +256,7 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
               }}
             >
               {/* Bento Grid 3x2 */}
-              <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-2 md:gap-3 relative">
+              <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-1.5 md:gap-2 relative">
                 {bentoItems.map((item, index) => (
                   <BentoCard key={item.id} item={item} index={index} />
                 ))}
