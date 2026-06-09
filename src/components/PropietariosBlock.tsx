@@ -75,7 +75,7 @@ function BentoCard({ item, index }: any) {
   // Size classes
   const isLarge = item.size === 'large';
   const colSpan = isLarge ? 'col-span-2 row-span-2' : 'col-span-1';
-  const minHeight = isLarge ? 'min-h-[360px]' : 'min-h-[180px]';
+  const minHeight = isLarge ? 'min-h-[240px]' : 'min-h-[240px]';
 
   if (item.type === 'image') {
     return (
@@ -100,7 +100,7 @@ function BentoCard({ item, index }: any) {
 
   return (
     <motion.div
-      className={`${colSpan} ${minHeight} bg-white/10 backdrop-blur-sm border border-white/20 p-6 md:p-8 flex flex-col justify-center items-center text-center cursor-pointer overflow-hidden relative group`}
+      className={`${colSpan} ${minHeight} bg-white/10 backdrop-blur-sm border border-white/20 p-4 md:p-6 flex flex-col justify-center items-center text-center cursor-pointer overflow-hidden relative group`}
       initial={{ opacity: 0, scale: 0.95 }}
       whileInView={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.5, ease: 'easeOut', delay: index * 0.05 }}
@@ -127,11 +127,11 @@ function BentoCard({ item, index }: any) {
 
       {/* Content */}
       <div className="relative z-10">
-        <p className={`${isLarge ? 'text-5xl md:text-6xl' : 'text-4xl md:text-5xl'} font-bold text-white mb-3 md:mb-4`}>
+        <p className={`${isLarge ? 'text-4xl md:text-5xl' : 'text-3xl md:text-4xl'} font-bold text-white mb-2 md:mb-3`}>
           {item.value.toLocaleString('es-ES')}
           <span className="text-brand-red">{item.suffix}</span>
         </p>
-        <div className={`${isLarge ? 'text-lg md:text-xl' : 'text-base md:text-lg'} text-white/90 font-medium leading-tight`}>
+        <div className={`${isLarge ? 'text-base md:text-lg' : 'text-sm md:text-base'} text-white/90 font-medium leading-tight`}>
           <p>{item.label}</p>
           <p>{item.label2}</p>
         </div>
@@ -256,7 +256,7 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
               }}
             >
               {/* Bento Grid 3x2 */}
-              <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4 relative">
+              <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-2 md:gap-3 relative">
                 {bentoItems.map((item, index) => (
                   <BentoCard key={item.id} item={item} index={index} />
                 ))}
