@@ -13,13 +13,37 @@ interface PropietariosBlockProps {
 const WHATSAPP_URL =
   'https://wa.me/573006557529?text=Hola%2C%20quisiera%20consignar%20una%20propiedad%20con%20Arrendamientos%20Santa%20Fe.';
 
+// Spring physics configuration para movimiento natural
+const springTransition = {
+  type: 'spring' as const,
+  damping: 20,
+  stiffness: 300,
+  mass: 1,
+};
+
 export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps) {
   const { ref: titleRef, titleAnimating } = useSplitTextAnimation('.propietarios-title-split', 0, true);
   const containerRef = useRef<HTMLDivElement>(null);
+  const sectionRef = useRef<HTMLDivElement>(null);
   const { ref: statsRef, count: count60 } = useCountAnimation(60, 2000);
   const { ref: countRef3, count: count3 } = useCountAnimation(3, 1500);
   const [offsetX, setOffsetX] = useState(0);
   const [offsetY, setOffsetY] = useState(0);
+  const [scrollProgress, setScrollProgress] = useState(0);
+  const [isBentoExpanded, setIsBentoExpanded] = useState(false);
+
+  // Scroll-driven animation: detecta scroll y actualiza el estado
+  useEffect(() => {
+    const handleScroll = () => {
+      if (!sectionRef.current) return;
+      const rect = sectionRef.current.getBoundingClientRect();
+      const progress = Math.max(0, Math.min(1, 1 - rect.top / window.innerHeight));
+      setScrollProgress(progress);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -38,7 +62,12 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
   };
 
   return (
-    <section className="relative bg-brand-dark text-white overflow-hidden" style={{ padding: 'clamp(2rem, 5vw, 5rem) clamp(1rem, 4vw, 2rem)' }}>
+    <motion.section
+      ref={sectionRef}
+      className="relative bg-brand-dark text-white overflow-hidden"
+      layout
+      style={{ padding: 'clamp(2rem, 5vw, 5rem) clamp(1rem, 4vw, 2rem)' }}
+    >
       {/* Acento visual sutil */}
       <div
         aria-hidden="true"
@@ -125,18 +154,35 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
               </a>
             </div>
 
-            {/* Bloque unificado con borde blanco */}
-            <div className="mt-4 border-2 border-white p-4 md:p-6">
-              {/* Estadísticas en una fila */}
-              <div className="flex flex-col md:flex-row gap-8 md:gap-16 lg:gap-32 mb-8 items-center">
-                {/* Estadística 1 */}
+            {/* Bloque unificado con borde blanco - Bento Grid Dinámico */}
+            <motion.div
+              className="mt-4 border-2 border-white p-4 md:p-6"
+              layout
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              transition={springTransition}
+              viewport={{ once: true }}
+              style={{
+                transform: `translateY(${scrollProgress * 20}px)`,
+              }}
+            >
+              {/* Estadísticas en Bento Grid dinámico */}
+              <motion.div
+                className="flex flex-col md:flex-row gap-8 md:gap-16 lg:gap-32 mb-8 items-center"
+                layout
+                onClick={() => setIsBentoExpanded(!isBentoExpanded)}
+                style={{ cursor: 'pointer' }}
+              >
+                {/* Estadística 1 - Spring Physics */}
                 <motion.div
                   ref={statsRef}
-                  className="flex items-center gap-4"
+                  className="flex items-center gap-4 flex-1"
+                  layout
                   initial={{ opacity: 0, x: -20 }}
                   whileInView={{ opacity: 1, x: 0 }}
+                  transition={springTransition}
                   viewport={{ once: true }}
-                  transition={{ duration: 0.5 }}
+                  whileHover={{ scale: 1.05, x: 10 }}
                 >
                   <p className="text-6xl md:text-7xl font-bold text-white leading-none">{count60}</p>
                   <div className="text-3xl md:text-4xl text-white/90 leading-none">
@@ -145,14 +191,16 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
                   </div>
                 </motion.div>
 
-                {/* Estadística 2 */}
+                {/* Estadística 2 - Spring Physics */}
                 <motion.div
                   ref={countRef3}
-                  className="flex items-center gap-4"
+                  className="flex items-center gap-4 flex-1"
+                  layout
                   initial={{ opacity: 0, x: -20 }}
                   whileInView={{ opacity: 1, x: 0 }}
+                  transition={{ ...springTransition, delay: 0.1 }}
                   viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: 0.1 }}
+                  whileHover={{ scale: 1.05, x: 10 }}
                 >
                   <p className="text-6xl md:text-7xl font-bold text-white leading-none">{count3}</p>
                   <div className="text-3xl md:text-4xl text-white/90 leading-none">
@@ -160,13 +208,13 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
                     <p className="text-sm md:text-base leading-[0.75]">en Antioquia</p>
                   </div>
                 </motion.div>
-              </div>
+              </motion.div>
 
               {/* Texto descriptivo - ancho completo */}
               <p className="text-white/90 leading-relaxed text-sm md:text-base">
                 Te avisamos cuando haya un arrendatario interesado. <span className="font-bold">Sin demoras, sin contratiempos.</span>
               </p>
-            </div>
+            </motion.div>
           </div>
 
           {/* Columna derecha: Imagen con parallax del mouse */}
@@ -220,6 +268,6 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
           </div>
         </div>
       </div>
-    </section>
+    </motion.section>
   );
 }
