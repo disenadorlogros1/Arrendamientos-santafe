@@ -374,8 +374,9 @@
             try {
                 // Nombre del componente
                 const comp = nombre.replace('.svg', '')
-                    .split('-')
-                    .split('_')
+                    .replace(/[-_]/g, ' ')
+                    .split(' ')
+                    .filter(w => w.length > 0)
                     .map(w => w.charAt(0).toUpperCase() + w.slice(1))
                     .join('');
 
