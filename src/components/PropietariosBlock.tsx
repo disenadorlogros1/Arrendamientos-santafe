@@ -21,39 +21,31 @@ const springTransition = {
   mass: 1,
 };
 
-// Estadísticas del Bento Grid
-const bentoStats = [
-  { id: 1, value: 2500, label: 'Propiedades', suffix: '+', size: 'large' },
-  { id: 2, value: 15000, label: 'Clientes', suffix: '+', size: 'medium' },
-  { id: 3, value: 98, label: 'Satisfacción', suffix: '%', size: 'medium' },
-  { id: 4, value: 12, label: 'Ciudades', suffix: '', size: 'small' },
-  { id: 5, value: 8500, label: 'Transacciones', suffix: '+', size: 'medium' },
-  { id: 6, value: 4.2, label: 'Rentabilidad', suffix: '%', size: 'small' },
+// Estadísticas del Grid
+const statsData = [
+  { id: 1, value: 2500, label: 'Propiedades', suffix: '+' },
+  { id: 2, value: 15000, label: 'Clientes', suffix: '+' },
+  { id: 3, value: 98, label: 'Satisfacción', suffix: '%' },
+  { id: 4, value: 12, label: 'Ciudades', suffix: '' },
+  { id: 5, value: 8500, label: 'Transacciones', suffix: '+' },
+  { id: 6, value: 4.2, label: 'Rentabilidad', suffix: '%' },
 ];
 
-// Componente individual de tarjeta Bento
-function BentoCard({ stat, index, scrollY }: any) {
-  const isLarge = stat.size === 'large';
-  const isMedium = stat.size === 'medium';
-  const colSpan = isLarge ? 'col-span-2 row-span-2' : isMedium ? 'col-span-2' : 'col-span-1';
-
-  // Crear transformaciones dinámicas basadas en índice
-  const cardRotateY = useTransform(scrollY, [0, 800], [-10 + index * 2, 10 + index * 2]);
-  const cardRotateX = useTransform(scrollY, [0, 800], [10 - index * 2, -10 - index * 2]);
-  const cardTranslateY = useTransform(scrollY, [0, 800], [30 - index * 5, -30 - index * 5]);
+// Componente individual de tarjeta
+function StatsCard({ stat, index, scrollY }: any) {
+  // Animación sutil de scroll: desplazamiento vertical leve
+  const cardY = useTransform(scrollY, [0, 500], [20 - index * 3, -20 - index * 3]);
 
   return (
     <motion.div
-      className={`${colSpan} bg-white/10 backdrop-blur-sm border border-white/20 p-4 md:p-6 flex flex-col justify-center items-center text-center cursor-pointer overflow-hidden relative group`}
-      initial={{ opacity: 0, scale: 0.8 }}
-      whileInView={{ opacity: 1, scale: 1 }}
-      transition={{ ...springTransition, delay: index * 0.05 }}
+      className="bg-white/10 backdrop-blur-sm border border-white/20 p-6 md:p-8 flex flex-col justify-center items-center text-center cursor-pointer overflow-hidden relative group"
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ ...springTransition, delay: index * 0.08 }}
       viewport={{ once: true }}
-      whileHover={{ scale: 1.05, y: -10 }}
+      whileHover={{ scale: 1.08, y: -5 }}
       style={{
-        rotateY: cardRotateY,
-        rotateX: cardRotateX,
-        y: cardTranslateY,
+        y: cardY,
       }}
     >
       {/* Hover gradient effect */}
@@ -64,20 +56,13 @@ function BentoCard({ stat, index, scrollY }: any) {
 
       {/* Content */}
       <div className="relative z-10">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ ...springTransition, delay: index * 0.05 + 0.2 }}
-          viewport={{ once: true }}
-        >
-          <p className={`${isLarge ? 'text-5xl md:text-6xl' : isMedium ? 'text-4xl md:text-5xl' : 'text-3xl md:text-4xl'} font-bold text-white mb-2`}>
-            {stat.value.toLocaleString('es-ES')}
-            <span className="text-brand-red">{stat.suffix}</span>
-          </p>
-          <p className={`${isLarge ? 'text-lg md:text-xl' : isMedium ? 'text-base md:text-lg' : 'text-sm md:text-base'} text-white/80 font-medium`}>
-            {stat.label}
-          </p>
-        </motion.div>
+        <p className="text-4xl md:text-5xl font-bold text-white mb-3">
+          {stat.value.toLocaleString('es-ES')}
+          <span className="text-brand-red">{stat.suffix}</span>
+        </p>
+        <p className="text-base md:text-lg text-white/80 font-medium">
+          {stat.label}
+        </p>
       </div>
     </motion.div>
   );
@@ -185,11 +170,11 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
 
           </div>
 
-          {/* Columna derecha: Bento Grid de Estadísticas */}
-          <div className="md:col-span-6 flex items-center justify-center" ref={containerRef} style={{ perspective: '1200px' }}>
-            <div className="w-full grid grid-cols-3 gap-3 md:gap-4">
-              {bentoStats.map((stat, index) => (
-                <BentoCard key={stat.id} stat={stat} index={index} scrollY={scrollY} />
+          {/* Columna derecha: Grid de Estadísticas */}
+          <div className="md:col-span-6 flex items-center justify-center" ref={containerRef}>
+            <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
+              {statsData.map((stat, index) => (
+                <StatsCard key={stat.id} stat={stat} index={index} scrollY={scrollY} />
               ))}
             </div>
           </div>
