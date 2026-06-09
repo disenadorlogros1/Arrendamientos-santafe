@@ -156,37 +156,27 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
                 lineHeight: '1.45',
               }}
             >
-              Más de 60 años gestionando propiedades en Antioquia. Tu inmueble en manos de quienes conocen el mercado inmobiliario regional.
+              60 años gestionando propiedades en Antioquia. Sabemos cómo cuidar tu inmueble y encontrar el arrendatario indicado.
             </motion.p>
 
-            {/* CTAs en ROJO */}
+            {/* CTAs */}
             <div className="mt-5 flex flex-col md:flex-row items-center gap-2 md:gap-3">
               {/* CTA Principal */}
               <button
                 type="button"
                 onClick={() => onNavigate('consignacion')}
-                className="w-full md:w-auto inline-flex items-center justify-center h-12 px-4 sm:px-6 bg-brand-red text-white text-sm sm:text-base font-semibold transition-all duration-300 hover:scale-105 hover:bg-white hover:text-brand-red"
+                className="w-full md:w-auto inline-flex items-center justify-center h-12 px-6 sm:px-8 bg-brand-red text-white text-sm sm:text-base font-semibold transition-all duration-300 hover:scale-105 hover:bg-white hover:text-brand-red"
                 style={{ lineHeight: '1.2' }}
               >
                 Consignar mi propiedad
               </button>
 
-              {/* CTA Secundario */}
-              <button
-                type="button"
-                onClick={() => onNavigate('consignacion')}
-                className="w-full md:w-auto inline-flex items-center justify-center h-12 px-4 sm:px-6 bg-brand-red text-white text-sm sm:text-base font-semibold transition-all duration-300 hover:scale-105 hover:bg-white hover:text-brand-red"
-                style={{ lineHeight: '1.2' }}
-              >
-                Conoce más
-              </button>
-
-              {/* CTA Operativo */}
+              {/* CTA Secundario - WhatsApp */}
               <a
                 href={WHATSAPP_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full md:w-auto inline-flex items-center justify-center h-12 px-4 sm:px-6 bg-brand-red text-white text-sm font-semibold transition-all duration-300 hover:scale-105 hover:bg-white hover:text-brand-red"
+                className="w-full md:w-auto inline-flex items-center justify-center h-12 px-6 sm:px-8 bg-brand-red text-white text-sm font-semibold transition-all duration-300 hover:scale-105 hover:bg-white hover:text-brand-red"
                 style={{ lineHeight: '1.2' }}
               >
                 Hablar con un asesor
