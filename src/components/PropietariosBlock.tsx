@@ -20,37 +20,96 @@ const springTransition = {
   mass: 1,
 };
 
-// Estadísticas del Grid
-const statsData = [
-  { id: 1, value: 60, label: 'años de', suffix: '', label2: 'experiencia' },
-  { id: 2, value: 3, label: 'sedes en', suffix: '', label2: 'Antioquia' },
-  { id: 3, value: 1000, label: 'inmuebles en', suffix: '+', label2: 'gestión activa' },
+// Bento Grid items - Mix de tarjetas e imágenes
+const bentoItems = [
+  {
+    id: 1,
+    type: 'stat',
+    size: 'large',
+    value: 1000,
+    label: 'inmuebles en',
+    label2: 'gestión activa',
+    suffix: '+',
+    bgImage: 'https://images.unsplash.com/photo-1570129477492-45ac003f2e18?w=600&h=500&fit=crop',
+  },
+  {
+    id: 2,
+    type: 'image',
+    size: 'small',
+    bgImage: 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=400&h=400&fit=crop',
+  },
+  {
+    id: 3,
+    type: 'image',
+    size: 'small',
+    bgImage: 'https://images.unsplash.com/photo-1512917774080-9991f1c52e8e?w=400&h=400&fit=crop',
+  },
+  {
+    id: 4,
+    type: 'image',
+    size: 'small',
+    bgImage: 'https://images.unsplash.com/photo-1494145904049-0dca59b4bbad?w=400&h=400&fit=crop',
+  },
+  {
+    id: 5,
+    type: 'stat',
+    size: 'small',
+    value: 60,
+    label: 'años de',
+    label2: 'experiencia',
+    suffix: '',
+  },
+  {
+    id: 6,
+    type: 'stat',
+    size: 'small',
+    value: 3,
+    label: 'sedes en',
+    label2: 'Antioquia',
+    suffix: '',
+  },
 ];
 
-// Componente individual de tarjeta con efecto Staggered Pinning
-function StatsCard({ stat, index, scrollY, containerTop }: any) {
+// Componente de tarjeta individual
+function BentoCard({ item, index, scrollY, containerTop }: any) {
   // Convertir scroll global a scroll relativo del contenedor
-  // Comenzar el efecto cuando el contenedor está en el viewport
-  const relativeScroll = useTransform(scrollY,
-    [containerTop - 400, containerTop + 400],  // Rango donde ocurre el efecto
-    [0, 800]  // Mapear a progresión del efecto
-  );
+  const relativeScroll = useTransform(scrollY, [containerTop - 400, containerTop + 400], [0, 800]);
 
-  // FASE 1: ENTRADA (0-400px) - Las tarjetas convergen hacia Y: 0
-  const cardY = useTransform(relativeScroll, [0, 400], [index * 80, 0]);
-
-  // FASE 2: APILAMIENTO (400px-800px) - Las tarjetas se "apilan"
-  const cardYStack = useTransform(relativeScroll, [400, 800], [0, -index * 60]);
-
-  // Combinar ambas fases
+  // Animaciones de Staggered Pinning
   const finalY = useTransform(relativeScroll, [0, 800], [index * 80, -index * 60]);
+  const zIndex = bentoItems.length - index;
 
-  // Z-index escalonado para crear el efecto de apilamiento visual
-  const zIndex = statsData.length - index;
+  // Size classes
+  const isLarge = item.size === 'large';
+  const colSpan = isLarge ? 'col-span-2 row-span-2' : 'col-span-1';
+  const minHeight = isLarge ? 'min-h-[360px]' : 'min-h-[180px]';
+
+  if (item.type === 'image') {
+    return (
+      <motion.div
+        className={`${colSpan} ${minHeight} bg-white/10 backdrop-blur-sm border border-white/20 overflow-hidden relative group`}
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ ...springTransition, delay: index * 0.08 }}
+        viewport={{ once: true }}
+        whileHover={{ scale: 1.05 }}
+        style={{
+          y: finalY,
+          zIndex,
+          backgroundImage: `url(${item.bgImage})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+        }}
+      >
+        {/* Overlay gradient */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+      </motion.div>
+    );
+  }
 
   return (
     <motion.div
-      className="bg-white/10 backdrop-blur-sm border border-white/20 p-6 md:p-8 flex flex-col justify-center items-center text-center cursor-pointer overflow-hidden relative group min-h-[180px]"
+      className={`${colSpan} ${minHeight} bg-white/10 backdrop-blur-sm border border-white/20 p-6 md:p-8 flex flex-col justify-center items-center text-center cursor-pointer overflow-hidden relative group`}
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ ...springTransition, delay: index * 0.08 }}
@@ -59,23 +118,33 @@ function StatsCard({ stat, index, scrollY, containerTop }: any) {
       style={{
         y: finalY,
         zIndex,
+        backgroundImage: item.bgImage ? `url(${item.bgImage})` : 'none',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
       }}
     >
+      {/* Overlay para tarjetas con imagen */}
+      {item.bgImage && (
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/50 to-black/30" />
+      )}
+
       {/* Hover gradient effect */}
-      <div
-        aria-hidden="true"
-        className="absolute inset-0 opacity-0 group-hover:opacity-100 bg-gradient-to-br from-brand-red/20 to-transparent transition-opacity duration-300 pointer-events-none"
-      />
+      {!item.bgImage && (
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 opacity-0 group-hover:opacity-100 bg-gradient-to-br from-brand-red/20 to-transparent transition-opacity duration-300 pointer-events-none"
+        />
+      )}
 
       {/* Content */}
       <div className="relative z-10">
-        <p className="text-5xl md:text-6xl font-bold text-white mb-4">
-          {stat.value.toLocaleString('es-ES')}
-          <span className="text-brand-red">{stat.suffix}</span>
+        <p className={`${isLarge ? 'text-5xl md:text-6xl' : 'text-4xl md:text-5xl'} font-bold text-white mb-3 md:mb-4`}>
+          {item.value.toLocaleString('es-ES')}
+          <span className="text-brand-red">{item.suffix}</span>
         </p>
-        <div className="text-base md:text-lg text-white/80 font-medium leading-tight">
-          <p>{stat.label}</p>
-          <p>{stat.label2}</p>
+        <div className={`${isLarge ? 'text-lg md:text-xl' : 'text-base md:text-lg'} text-white/90 font-medium leading-tight`}>
+          <p>{item.label}</p>
+          <p>{item.label2}</p>
         </div>
       </div>
     </motion.div>
@@ -121,11 +190,11 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
 
       <div className="relative" style={{ width: '100%', maxWidth: 'min(100% - 2rem, 90rem)', margin: '0 auto' }}>
         <div
-          className="grid grid-cols-1 md:grid-cols-12 items-center"
+          className="grid grid-cols-1 md:grid-cols-12 items-start"
           style={{ gap: 'clamp(2rem, 5vw, 3rem)' }}
         >
           {/* Columna izquierda: Contenido */}
-          <div className="md:col-span-6 flex flex-col justify-center" style={{ maxHeight: 'clamp(300px, 60vh, 420px)' }}>
+          <div className="md:col-span-5 flex flex-col justify-start pt-0 md:pt-4">
             <h2
               ref={titleRef}
               className="propietarios-title-split text-3xl sm:text-4xl lg:text-5xl leading-tight text-white"
@@ -199,12 +268,12 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
             </motion.p>
           </div>
 
-          {/* Columna derecha: Grid con Staggered Pinning */}
+          {/* Columna derecha: Bento Grid */}
           <div
-            className="md:col-span-6 flex items-center justify-center"
+            className="md:col-span-7 flex items-start justify-center"
             ref={containerRef}
             style={{
-              minHeight: '600px',
+              minHeight: '500px',
               position: 'relative',
             }}
           >
@@ -215,10 +284,10 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
                 height: '100%',
               }}
             >
-              {/* Grid container que contiene las 3 tarjetas apiladas */}
-              <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 relative">
-                {statsData.map((stat, index) => (
-                  <StatsCard key={stat.id} stat={stat} index={index} scrollY={scrollY} containerTop={containerTop} />
+              {/* Bento Grid 3x2 */}
+              <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4 relative">
+                {bentoItems.map((item, index) => (
+                  <BentoCard key={item.id} item={item} index={index} scrollY={scrollY} containerTop={containerTop} />
                 ))}
               </div>
             </div>
