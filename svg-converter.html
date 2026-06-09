@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎨 Conversor SVG a HTML/React</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 600px;
+            width: 100%;
+            padding: 40px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .drop-zone {
+            border: 3px dashed #667eea;
+            border-radius: 12px;
+            padding: 60px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background-color: #f8f9ff;
+            margin-bottom: 20px;
+        }
+
+        .drop-zone:hover {
+            border-color: #764ba2;
+            background-color: #f0f0ff;
+            transform: translateY(-2px);
+        }
+
+        .drop-zone.dragover {
+            border-color: #764ba2;
+            background-color: #e8e8ff;
+            box-shadow: 0 0 0 8px rgba(118, 75, 162, 0.1);
+        }
+
+        .drop-zone-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .drop-zone-text {
+            font-size: 16px;
+            color: #333;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .drop-zone-subtext {
+            font-size: 13px;
+            color: #999;
+        }
+
+        #fileInput {
+            display: none;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        button {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-browse {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-browse:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-browse:active {
+            transform: translateY(0);
+        }
+
+        .output-section {
+            display: none;
+            margin-top: 30px;
+            padding-top: 30px;
+            border-top: 2px solid #f0f0f0;
+        }
+
+        .output-section.active {
+            display: block;
+        }
+
+        .output-section h2 {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .output-box {
+            background: #f5f5f5;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            max-height: 300px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            line-height: 1.4;
+            color: #333;
+            border: 1px solid #ddd;
+        }
+
+        .copy-btn {
+            background: #667eea;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            margin-top: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .copy-btn:hover {
+            background: #764ba2;
+            transform: translateY(-1px);
+        }
+
+        .success-message {
+            display: none;
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+
+        .loader {
+            display: none;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .loader.show {
+            display: block;
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .error-message {
+            display: none;
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        .preview {
+            margin-top: 20px;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+
+        .preview svg {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .tab-btn {
+            padding: 10px 15px;
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid transparent;
+            cursor: pointer;
+            font-weight: 500;
+            color: #999;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>🎨 Conversor SVG</h1>
+            <p>Convierte tus diseños SVG de Illustrator a HTML/React</p>
+        </div>
+
+        <!-- Messages -->
+        <div class="error-message" id="errorMessage"></div>
+        <div class="success-message" id="successMessage">
+            ✅ ¡Conversión exitosa! Tu SVG fue convertido correctamente
+        </div>
+
+        <!-- File Input -->
+        <input type="file" id="fileInput" accept=".svg" />
+
+        <!-- Drop Zone -->
+        <div class="drop-zone" id="dropZone">
+            <div class="drop-zone-icon">📁</div>
+            <div class="drop-zone-text">Arrastra tu archivo SVG aquí</div>
+            <div class="drop-zone-subtext">o haz click para seleccionar</div>
+        </div>
+
+        <!-- Buttons -->
+        <div class="button-group">
+            <button class="btn-browse" onclick="document.getElementById('fileInput').click()">
+                📂 Seleccionar archivo
+            </button>
+        </div>
+
+        <!-- Loader -->
+        <div class="loader" id="loader">
+            <div class="spinner"></div>
+            <p>Convirtiendo tu SVG...</p>
+        </div>
+
+        <!-- Output Section -->
+        <div class="output-section" id="outputSection">
+            <h2>📋 Resultado</h2>
+
+            <div class="tabs">
+                <button class="tab-btn active" onclick="switchTab('html')">HTML</button>
+                <button class="tab-btn" onclick="switchTab('react')">React Component</button>
+                <button class="tab-btn" onclick="switchTab('preview')">Vista Previa</button>
+            </div>
+
+            <!-- HTML Tab -->
+            <div class="tab-content active" id="html-tab">
+                <div class="output-box" id="htmlOutput"></div>
+                <button class="copy-btn" onclick="copyToClipboard('htmlOutput')">
+                    📋 Copiar HTML
+                </button>
+            </div>
+
+            <!-- React Tab -->
+            <div class="tab-content" id="react-tab">
+                <div class="output-box" id="reactOutput"></div>
+                <button class="copy-btn" onclick="copyToClipboard('reactOutput')">
+                    📋 Copiar React Component
+                </button>
+            </div>
+
+            <!-- Preview Tab -->
+            <div class="tab-content" id="preview-tab">
+                <div class="preview" id="previewOutput"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('fileInput');
+        const outputSection = document.getElementById('outputSection');
+        const loader = document.getElementById('loader');
+        const errorMessage = document.getElementById('errorMessage');
+        const successMessage = document.getElementById('successMessage');
+
+        // Drag and drop
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.classList.add('dragover');
+        });
+
+        dropZone.addEventListener('dragleave', () => {
+            dropZone.classList.remove('dragover');
+        });
+
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('dragover');
+            handleFile(e.dataTransfer.files[0]);
+        });
+
+        dropZone.addEventListener('click', () => {
+            fileInput.click();
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            handleFile(e.target.files[0]);
+        });
+
+        function handleFile(file) {
+            if (!file) return;
+
+            // Validar tipo
+            if (!file.name.endsWith('.svg')) {
+                showError('❌ Por favor selecciona un archivo .svg');
+                return;
+            }
+
+            // Leer archivo
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const svgContent = e.target.result;
+                convertSVG(svgContent, file.name);
+            };
+            reader.readAsText(file);
+        }
+
+        function convertSVG(svgContent, fileName) {
+            loader.classList.add('show');
+            errorMessage.classList.remove('show');
+            successMessage.classList.remove('show');
+
+            try {
+                // Generar nombre del componente
+                const componentName = fileName
+                    .replace('.svg', '')
+                    .split('-')
+                    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                    .join('');
+
+                // Limpiar SVG
+                let cleanSvg = svgContent
+                    .replace(/xmlns="[^"]*"/g, '')
+                    .replace(/xmlns:xlink="[^"]*"/g, '')
+                    .trim();
+                cleanSvg = cleanSvg.replace(/<\?xml[^?]*\?>/g, '').trim();
+
+                // Extraer viewBox
+                const viewBoxMatch = svgContent.match(/viewBox="([^"]*)"/);
+                const viewBox = viewBoxMatch ? viewBoxMatch[1] : '0 0 100 100';
+
+                // Generar HTML
+                const htmlContent = `<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>${componentName}</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f5f5f5;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            max-width: 1200px;
+            width: 100%;
+        }
+        svg {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        ${cleanSvg}
+    </div>
+</body>
+</html>`;
+
+                // Generar React Component
+                const reactContent = `'use client';
+
+import React from 'react';
+
+interface ${componentName}Props {
+  className?: string;
+  width?: number | string;
+  height?: number | string;
+}
+
+export const ${componentName} = React.forwardRef<SVGSVGElement, ${componentName}Props>(
+  ({ className = '', width = '100%', height = 'auto' }, ref) => (
+    <svg
+      ref={ref}
+      width={width}
+      height={height}
+      viewBox="${viewBox}"
+      className={className}
+      style={{ display: 'block' }}
+    >
+      ${cleanSvg.split('\n').slice(1).join('\n      ')}
+    </svg>
+  )
+);
+
+${componentName}.displayName = '${componentName}';
+
+export default ${componentName};`;
+
+                // Mostrar resultados
+                document.getElementById('htmlOutput').textContent = htmlContent;
+                document.getElementById('reactOutput').textContent = reactContent;
+                document.getElementById('previewOutput').innerHTML = cleanSvg;
+
+                outputSection.classList.add('active');
+                successMessage.classList.add('show');
+                loader.classList.remove('show');
+
+                // Focus en HTML tab
+                switchTab('html');
+
+            } catch (error) {
+                showError('❌ Error al convertir: ' + error.message);
+                loader.classList.remove('show');
+            }
+        }
+
+        function copyToClipboard(elementId) {
+            const element = document.getElementById(elementId);
+            const text = element.textContent;
+
+            navigator.clipboard.writeText(text).then(() => {
+                const btn = event.target;
+                const originalText = btn.textContent;
+                btn.textContent = '✅ ¡Copiado!';
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                }, 2000);
+            });
+        }
+
+        function switchTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(el => {
+                el.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-btn').forEach(el => {
+                el.classList.remove('active');
+            });
+
+            // Show selected tab
+            document.getElementById(tabName + '-tab').classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorMessage.classList.add('show');
+            loader.classList.remove('show');
+        }
+    </script>
+</body>
+</html>
