@@ -14,19 +14,20 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
   const containerRef = useRef<SVGSVGElement>(null);
 
   return (
-    <section className="relative w-full overflow-hidden bg-black py-12 md:py-20">
-      <div className="flex w-full justify-center px-4">
+    <section className="relative w-full overflow-hidden bg-black" style={{ padding: 'clamp(2rem, 5vw, 5rem) clamp(1rem, 4vw, 2rem)' }}>
+      <div className="flex w-full justify-center">
         <svg
           ref={containerRef}
           viewBox="0 0 1920 496.09"
-          className="w-full max-w-6xl"
-          style={{ height: 'auto' }}
+          className="w-full"
+          style={{ height: 'auto', maxWidth: '1400px' }}
+          preserveAspectRatio="xMidYMid meet"
         >
           <defs>
             <style>
               {`
               .cls-1, .cls-2, .cls-3, .cls-4 {
-                font-family: AvenirLTPro-Black, 'Avenir LT Pro';
+                font-family: 'Avenir LT Pro 65 Medium', 'Avenir LT Pro', 'Avenir', 'Outfit', system-ui, sans-serif;
                 font-weight: 800;
               }
 
@@ -35,12 +36,12 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
               }
 
               .cls-5, .cls-6, .cls-9, .cls-10, .cls-11 {
-                font-family: AvenirLTPro-Light, 'Avenir LT Pro';
+                font-family: 'Avenir LT Pro 65 Medium', 'Avenir LT Pro', 'Avenir', 'Outfit', system-ui, sans-serif;
                 font-weight: 300;
               }
 
               .cls-5, .cls-2, .cls-3 {
-                font-size: 39px;
+                font-size: clamp(28px, 5vw, 39px);
               }
 
               .cls-12, .cls-2 {
@@ -48,7 +49,7 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
               }
 
               .cls-6, .cls-8 {
-                font-size: 20px;
+                font-size: clamp(14px, 2.5vw, 20px);
               }
 
               .cls-13 {
@@ -104,7 +105,7 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
               }
 
               .cls-4 {
-                font-size: 70px;
+                font-size: clamp(48px, 8vw, 70px);
               }
               `}
             </style>
