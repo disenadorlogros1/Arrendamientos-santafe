@@ -25,28 +25,26 @@
             background: white;
             border-radius: 16px;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            max-width: 600px;
+            max-width: 700px;
             width: 100%;
             padding: 40px;
         }
 
-        .header {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-
-        .header h1 {
+        h1 {
             font-size: 32px;
             margin-bottom: 10px;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            text-align: center;
         }
 
-        .header p {
+        .subtitle {
+            text-align: center;
             color: #666;
             font-size: 14px;
+            margin-bottom: 30px;
         }
 
         .drop-zone {
@@ -63,7 +61,6 @@
         .drop-zone:hover {
             border-color: #764ba2;
             background-color: #f0f0ff;
-            transform: translateY(-2px);
         }
 
         .drop-zone.dragover {
@@ -72,19 +69,19 @@
             box-shadow: 0 0 0 8px rgba(118, 75, 162, 0.1);
         }
 
-        .drop-zone-icon {
+        .drop-icon {
             font-size: 48px;
             margin-bottom: 15px;
         }
 
-        .drop-zone-text {
+        .drop-text {
             font-size: 16px;
             color: #333;
             font-weight: 500;
-            margin-bottom: 8px;
+            margin-bottom: 5px;
         }
 
-        .drop-zone-subtext {
+        .drop-subtext {
             font-size: 13px;
             color: #999;
         }
@@ -93,15 +90,11 @@
             display: none;
         }
 
-        .button-group {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 30px;
-        }
-
         button {
-            flex: 1;
-            padding: 12px 20px;
+            width: 100%;
+            padding: 14px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
             border: none;
             border-radius: 8px;
             font-size: 14px;
@@ -110,42 +103,69 @@
             transition: all 0.3s ease;
         }
 
-        .btn-browse {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-        }
-
-        .btn-browse:hover {
+        button:hover {
             transform: translateY(-2px);
             box-shadow: 0 8px 16px rgba(102, 126, 234, 0.4);
         }
 
-        .btn-browse:active {
+        button:active {
             transform: translateY(0);
         }
 
-        .output-section {
+        .result {
             display: none;
             margin-top: 30px;
             padding-top: 30px;
             border-top: 2px solid #f0f0f0;
         }
 
-        .output-section.active {
+        .result.show {
             display: block;
         }
 
-        .output-section h2 {
+        .result h2 {
             font-size: 18px;
             color: #333;
             margin-bottom: 15px;
         }
 
-        .output-box {
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .tab-btn {
+            padding: 10px 15px;
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid transparent;
+            cursor: pointer;
+            font-weight: 500;
+            color: #999;
+            transition: all 0.3s;
+            width: auto;
+            font-size: 14px;
+        }
+
+        .tab-btn.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .code-box {
             background: #f5f5f5;
             border-radius: 8px;
             padding: 15px;
-            margin-bottom: 15px;
             max-height: 300px;
             overflow-y: auto;
             font-family: 'Courier New', monospace;
@@ -153,31 +173,41 @@
             line-height: 1.4;
             color: #333;
             border: 1px solid #ddd;
+            word-break: break-all;
+            white-space: pre-wrap;
         }
 
         .copy-btn {
             background: #667eea;
             color: white;
-            padding: 8px 16px;
+            padding: 10px 16px;
             border-radius: 6px;
             border: none;
             cursor: pointer;
             font-size: 12px;
             font-weight: 600;
             margin-top: 10px;
-            transition: all 0.3s ease;
+            transition: all 0.3s;
         }
 
         .copy-btn:hover {
             background: #764ba2;
-            transform: translateY(-1px);
         }
 
-        .success-message {
+        .preview-box {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+
+        .preview-box svg {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .message {
             display: none;
-            background: #d4edda;
-            border: 1px solid #c3e6cb;
-            color: #155724;
             padding: 15px;
             border-radius: 8px;
             margin-bottom: 20px;
@@ -185,8 +215,18 @@
             font-weight: 500;
         }
 
-        .success-message.show {
+        .message.success {
             display: block;
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+
+        .message.error {
+            display: block;
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
         }
 
         .loader {
@@ -213,132 +253,51 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
-
-        .error-message {
-            display: none;
-            background: #f8d7da;
-            border: 1px solid #f5c6cb;
-            color: #721c24;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-        }
-
-        .error-message.show {
-            display: block;
-        }
-
-        .preview {
-            margin-top: 20px;
-            padding: 20px;
-            background: #f9f9f9;
-            border-radius: 8px;
-            border: 1px solid #ddd;
-        }
-
-        .preview svg {
-            max-width: 100%;
-            height: auto;
-        }
-
-        .tabs {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 15px;
-            border-bottom: 2px solid #f0f0f0;
-        }
-
-        .tab-btn {
-            padding: 10px 15px;
-            background: transparent;
-            border: none;
-            border-bottom: 2px solid transparent;
-            cursor: pointer;
-            font-weight: 500;
-            color: #999;
-            transition: all 0.3s ease;
-        }
-
-        .tab-btn.active {
-            color: #667eea;
-            border-bottom-color: #667eea;
-        }
-
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- Header -->
-        <div class="header">
-            <h1>🎨 Conversor SVG</h1>
-            <p>Convierte tus diseños SVG de Illustrator a HTML/React</p>
-        </div>
+        <h1>🎨 Conversor SVG</h1>
+        <p class="subtitle">Convierte tus diseños SVG de Illustrator a HTML/React</p>
 
-        <!-- Messages -->
-        <div class="error-message" id="errorMessage"></div>
-        <div class="success-message" id="successMessage">
-            ✅ ¡Conversión exitosa! Tu SVG fue convertido correctamente
-        </div>
+        <div id="successMsg" class="message success"></div>
+        <div id="errorMsg" class="message error"></div>
 
-        <!-- File Input -->
-        <input type="file" id="fileInput" accept=".svg" />
-
-        <!-- Drop Zone -->
         <div class="drop-zone" id="dropZone">
-            <div class="drop-zone-icon">📁</div>
-            <div class="drop-zone-text">Arrastra tu archivo SVG aquí</div>
-            <div class="drop-zone-subtext">o haz click para seleccionar</div>
+            <div class="drop-icon">📁</div>
+            <div class="drop-text">Arrastra tu archivo SVG aquí</div>
+            <div class="drop-subtext">o haz click para seleccionar</div>
         </div>
 
-        <!-- Buttons -->
-        <div class="button-group">
-            <button class="btn-browse" onclick="document.getElementById('fileInput').click()">
-                📂 Seleccionar archivo
-            </button>
-        </div>
+        <input type="file" id="fileInput" accept=".svg" />
+        <button onclick="selectFile()">📂 Seleccionar archivo</button>
 
-        <!-- Loader -->
         <div class="loader" id="loader">
             <div class="spinner"></div>
-            <p>Convirtiendo tu SVG...</p>
+            <p>Convirtiendo...</p>
         </div>
 
-        <!-- Output Section -->
-        <div class="output-section" id="outputSection">
+        <div class="result" id="result">
             <h2>📋 Resultado</h2>
 
             <div class="tabs">
-                <button class="tab-btn active" onclick="switchTab('html')">HTML</button>
-                <button class="tab-btn" onclick="switchTab('react')">React Component</button>
-                <button class="tab-btn" onclick="switchTab('preview')">Vista Previa</button>
+                <button class="tab-btn active" onclick="openTab(event, 'html')">HTML</button>
+                <button class="tab-btn" onclick="openTab(event, 'react')">React</button>
+                <button class="tab-btn" onclick="openTab(event, 'preview')">Vista Previa</button>
             </div>
 
-            <!-- HTML Tab -->
-            <div class="tab-content active" id="html-tab">
-                <div class="output-box" id="htmlOutput"></div>
-                <button class="copy-btn" onclick="copyToClipboard('htmlOutput')">
-                    📋 Copiar HTML
-                </button>
+            <div id="html" class="tab-content active">
+                <div class="code-box" id="htmlCode"></div>
+                <button class="copy-btn" onclick="copyCode('htmlCode')">📋 Copiar HTML</button>
             </div>
 
-            <!-- React Tab -->
-            <div class="tab-content" id="react-tab">
-                <div class="output-box" id="reactOutput"></div>
-                <button class="copy-btn" onclick="copyToClipboard('reactOutput')">
-                    📋 Copiar React Component
-                </button>
+            <div id="react" class="tab-content">
+                <div class="code-box" id="reactCode"></div>
+                <button class="copy-btn" onclick="copyCode('reactCode')">📋 Copiar React</button>
             </div>
 
-            <!-- Preview Tab -->
-            <div class="tab-content" id="preview-tab">
-                <div class="preview" id="previewOutput"></div>
+            <div id="preview" class="tab-content">
+                <div class="preview-box" id="previewBox"></div>
             </div>
         </div>
     </div>
@@ -346,12 +305,12 @@
     <script>
         const dropZone = document.getElementById('dropZone');
         const fileInput = document.getElementById('fileInput');
-        const outputSection = document.getElementById('outputSection');
+        const result = document.getElementById('result');
         const loader = document.getElementById('loader');
-        const errorMessage = document.getElementById('errorMessage');
-        const successMessage = document.getElementById('successMessage');
+        const successMsg = document.getElementById('successMsg');
+        const errorMsg = document.getElementById('errorMsg');
 
-        // Drag and drop
+        // Drag & drop
         dropZone.addEventListener('dragover', (e) => {
             e.preventDefault();
             dropZone.classList.add('dragover');
@@ -364,73 +323,73 @@
         dropZone.addEventListener('drop', (e) => {
             e.preventDefault();
             dropZone.classList.remove('dragover');
-            handleFile(e.dataTransfer.files[0]);
+            if (e.dataTransfer.files[0]) {
+                procesarArchivo(e.dataTransfer.files[0]);
+            }
         });
 
-        dropZone.addEventListener('click', () => {
-            fileInput.click();
-        });
+        dropZone.addEventListener('click', selectFile);
 
         fileInput.addEventListener('change', (e) => {
-            handleFile(e.target.files[0]);
+            if (e.target.files[0]) {
+                procesarArchivo(e.target.files[0]);
+            }
         });
 
-        function handleFile(file) {
-            if (!file) return;
+        function selectFile() {
+            fileInput.click();
+        }
 
-            // Validar tipo
-            if (!file.name.endsWith('.svg')) {
-                showError('❌ Por favor selecciona un archivo .svg');
+        function procesarArchivo(archivo) {
+            if (!archivo.name.endsWith('.svg')) {
+                mostrarError('Por favor selecciona un archivo .svg');
                 return;
             }
 
-            // Leer archivo
+            mostrarMensaje(false);
+            loader.classList.add('show');
+
             const reader = new FileReader();
-            reader.onerror = () => {
-                showError('❌ Error al leer el archivo');
-            };
-            reader.onload = (e) => {
+            reader.onload = function(e) {
                 try {
-                    const svgContent = e.target.result;
-                    convertSVG(svgContent, file.name);
-                } catch (error) {
-                    showError('❌ Error al procesar: ' + error.message);
+                    const svg = e.target.result;
+                    convertir(svg, archivo.name);
+                } catch (err) {
+                    mostrarError('Error: ' + err.message);
                 }
             };
-            reader.readAsText(file);
+            reader.onerror = function() {
+                mostrarError('Error al leer el archivo');
+            };
+            reader.readAsText(archivo);
         }
 
-        function convertSVG(svgContent, fileName) {
-            if (loader) loader.classList.add('show');
-            if (errorMessage) errorMessage.classList.remove('show');
-            if (successMessage) successMessage.classList.remove('show');
-
+        function convertir(svg, nombre) {
             try {
-                // Generar nombre del componente
-                const componentName = fileName
-                    .replace('.svg', '')
+                // Nombre del componente
+                const comp = nombre.replace('.svg', '')
                     .split('-')
-                    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                    .map(w => w.charAt(0).toUpperCase() + w.slice(1))
                     .join('');
 
                 // Limpiar SVG
-                let cleanSvg = svgContent
+                let clean = svg
                     .replace(/xmlns="[^"]*"/g, '')
                     .replace(/xmlns:xlink="[^"]*"/g, '')
+                    .replace(/<\?xml[^?]*\?>/g, '')
                     .trim();
-                cleanSvg = cleanSvg.replace(/<\?xml[^?]*\?>/g, '').trim();
 
-                // Extraer viewBox
-                const viewBoxMatch = svgContent.match(/viewBox="([^"]*)"/);
-                const viewBox = viewBoxMatch ? viewBoxMatch[1] : '0 0 100 100';
+                // ViewBox
+                const match = svg.match(/viewBox="([^"]*)"/);
+                const viewBox = match ? match[1] : '0 0 100 100';
 
-                // Generar HTML
-                const htmlContent = `<!DOCTYPE html>
+                // HTML
+                const html = `<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>${componentName}</title>
+    <title>${comp}</title>
     <style>
         body {
             margin: 0;
@@ -440,7 +399,6 @@
             align-items: center;
             min-height: 100vh;
             background-color: #f5f5f5;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         }
         .container {
             background: white;
@@ -448,116 +406,89 @@
             border-radius: 8px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
             max-width: 1200px;
-            width: 100%;
         }
-        svg {
-            width: 100%;
-            height: auto;
-            display: block;
-        }
+        svg { width: 100%; height: auto; }
     </style>
 </head>
 <body>
     <div class="container">
-        ${cleanSvg}
+        ${clean}
     </div>
 </body>
 </html>`;
 
-                // Generar React Component
-                const reactContent = `'use client';
+                // React
+                const react = `'use client';
 
 import React from 'react';
 
-interface ${componentName}Props {
-  className?: string;
-  width?: number | string;
-  height?: number | string;
-}
-
-export const ${componentName} = React.forwardRef<SVGSVGElement, ${componentName}Props>(
-  ({ className = '', width = '100%', height = 'auto' }, ref) => (
+export const ${comp} = React.forwardRef((props, ref) => (
     <svg
-      ref={ref}
-      width={width}
-      height={height}
-      viewBox="${viewBox}"
-      className={className}
-      style={{ display: 'block' }}
+        ref={ref}
+        viewBox="${viewBox}"
+        {...props}
     >
-      ${cleanSvg.split('\n').slice(1).join('\n      ')}
+        ${clean.split('\n').slice(1).join('\n        ')}
     </svg>
-  )
-);
+));
 
-${componentName}.displayName = '${componentName}';
+${comp}.displayName = '${comp}';
+export default ${comp};`;
 
-export default ${componentName};`;
+                // Mostrar
+                document.getElementById('htmlCode').textContent = html;
+                document.getElementById('reactCode').textContent = react;
+                document.getElementById('previewBox').innerHTML = clean;
 
-                // Mostrar resultados
-                const htmlOutput = document.getElementById('htmlOutput');
-                const reactOutput = document.getElementById('reactOutput');
-                const previewOutput = document.getElementById('previewOutput');
+                result.classList.add('show');
+                loader.classList.remove('show');
+                mostrarExito('¡SVG convertido correctamente!');
 
-                if (htmlOutput) htmlOutput.textContent = htmlContent;
-                if (reactOutput) reactOutput.textContent = reactContent;
-                if (previewOutput) previewOutput.innerHTML = cleanSvg;
-
-                if (outputSection) outputSection.classList.add('active');
-                if (successMessage) successMessage.classList.add('show');
-                if (loader) loader.classList.remove('show');
-
-                // Focus en HTML tab
-                switchTab('html');
-
-            } catch (error) {
-                showError('❌ Error al convertir: ' + (error.message || error));
-                if (loader) loader.classList.remove('show');
-            }
-        }
-
-        function copyToClipboard(elementId) {
-            const element = document.getElementById(elementId);
-            const text = element.textContent;
-
-            navigator.clipboard.writeText(text).then(() => {
-                const btn = event.target;
-                const originalText = btn.textContent;
-                btn.textContent = '✅ ¡Copiado!';
-                setTimeout(() => {
-                    btn.textContent = originalText;
-                }, 2000);
-            });
-        }
-
-        function switchTab(tabName) {
-            // Hide all tabs
-            document.querySelectorAll('.tab-content').forEach(el => {
-                el.classList.remove('active');
-            });
-            document.querySelectorAll('.tab-btn').forEach(el => {
-                el.classList.remove('active');
-            });
-
-            // Show selected tab
-            const selectedTab = document.getElementById(tabName + '-tab');
-            if (selectedTab) {
-                selectedTab.classList.add('active');
-            }
-            if (event && event.target) {
-                event.target.classList.add('active');
-            }
-        }
-
-        function showError(message) {
-            if (errorMessage) {
-                errorMessage.textContent = message;
-                errorMessage.classList.add('show');
-            }
-            if (loader) {
+            } catch (err) {
+                mostrarError('Error: ' + err.message);
                 loader.classList.remove('show');
             }
-            console.error(message);
+        }
+
+        function openTab(evt, tabName) {
+            const contents = document.querySelectorAll('.tab-content');
+            contents.forEach(el => el.classList.remove('active'));
+
+            const btns = document.querySelectorAll('.tab-btn');
+            btns.forEach(el => el.classList.remove('active'));
+
+            document.getElementById(tabName).classList.add('active');
+            evt.currentTarget.classList.add('active');
+        }
+
+        function copyCode(elementId) {
+            const text = document.getElementById(elementId).textContent;
+            navigator.clipboard.writeText(text).then(() => {
+                const btn = event.target;
+                const original = btn.textContent;
+                btn.textContent = '✅ ¡Copiado!';
+                setTimeout(() => { btn.textContent = original; }, 2000);
+            });
+        }
+
+        function mostrarExito(msg) {
+            successMsg.textContent = '✅ ' + msg;
+            successMsg.style.display = 'block';
+            errorMsg.style.display = 'none';
+            setTimeout(() => { successMsg.style.display = 'none'; }, 4000);
+        }
+
+        function mostrarError(msg) {
+            errorMsg.textContent = '❌ ' + msg;
+            errorMsg.style.display = 'block';
+            successMsg.style.display = 'none';
+        }
+
+        function mostrarMensaje(mostrar) {
+            if (!mostrar) {
+                successMsg.style.display = 'none';
+                errorMsg.style.display = 'none';
+            }
         }
     </script>
 </body>
