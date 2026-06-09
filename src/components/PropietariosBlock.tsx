@@ -1,6 +1,5 @@
 'use client';
 
-import { motion } from 'framer-motion';
 import { useRef } from 'react';
 import { useSplitTextAnimation } from '@/hooks/useSplitTextAnimation';
 import type { PageType } from '@/components/Header';
@@ -12,259 +11,329 @@ interface PropietariosBlockProps {
 const WHATSAPP_URL =
   'https://wa.me/573006557529?text=Hola%2C%20quisiera%20consignar%20una%20propiedad%20con%20Arrendamientos%20Santa%20Fe.';
 
-// Spring physics configuration
-const springTransition = {
-  type: 'spring' as const,
-  damping: 20,
-  stiffness: 300,
-  mass: 1,
-};
-
-// Bento Grid items - Mix de tarjetas e imágenes
-const bentoItems = [
-  {
-    id: 1,
-    type: 'stat',
-    size: 'large',
-    value: 1000,
-    label: 'inmuebles en',
-    label2: 'gestión activa',
-    suffix: '+',
-    bgImage: 'https://images.unsplash.com/photo-1570129477492-45ac003f2e18?w=600&h=500&fit=crop',
-  },
-  {
-    id: 2,
-    type: 'image',
-    size: 'small',
-    bgImage: 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=400&h=400&fit=crop',
-  },
-  {
-    id: 3,
-    type: 'image',
-    size: 'small',
-    bgImage: 'https://images.unsplash.com/photo-1512917774080-9991f1c52e8e?w=400&h=400&fit=crop',
-  },
-  {
-    id: 4,
-    type: 'image',
-    size: 'small',
-    bgImage: 'https://images.unsplash.com/photo-1494145904049-0dca59b4bbad?w=400&h=400&fit=crop',
-  },
-  {
-    id: 5,
-    type: 'stat',
-    size: 'small',
-    value: 60,
-    label: 'años de',
-    label2: 'experiencia',
-    suffix: '',
-  },
-  {
-    id: 6,
-    type: 'stat',
-    size: 'small',
-    value: 3,
-    label: 'sedes en',
-    label2: 'Antioquia',
-    suffix: '',
-  },
-];
-
-// Componente de tarjeta individual - SIN animación de scroll
-function BentoCard({ item, index }: any) {
-  // Size classes
-  const isLarge = item.size === 'large';
-  const colSpan = isLarge ? 'col-span-2 row-span-2' : 'col-span-1';
-  const minHeight = isLarge ? 'min-h-[200px]' : 'min-h-[130px]';
-
-  if (item.type === 'image') {
-    return (
-      <motion.div
-        className={`${colSpan} ${minHeight} bg-white/10 backdrop-blur-sm border border-white/20 overflow-hidden relative group`}
-        initial={{ opacity: 0, scale: 0.95 }}
-        whileInView={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.5, ease: 'easeOut', delay: index * 0.05 }}
-        viewport={{ once: true }}
-        whileHover={{ scale: 1.05 }}
-        style={{
-          backgroundImage: `url(${item.bgImage})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-        }}
-      >
-        {/* Overlay gradient */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-      </motion.div>
-    );
-  }
-
-  return (
-    <motion.div
-      className={`${colSpan} ${minHeight} bg-white/10 backdrop-blur-sm border border-white/20 p-4 md:p-6 flex flex-col justify-center items-center text-center cursor-pointer overflow-hidden relative group`}
-      initial={{ opacity: 0, scale: 0.95 }}
-      whileInView={{ opacity: 1, scale: 1 }}
-      transition={{ duration: 0.5, ease: 'easeOut', delay: index * 0.05 }}
-      viewport={{ once: true }}
-      whileHover={{ scale: 1.05 }}
-      style={{
-        backgroundImage: item.bgImage ? `url(${item.bgImage})` : 'none',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-      }}
-    >
-      {/* Overlay para tarjetas con imagen */}
-      {item.bgImage && (
-        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/50 to-black/30" />
-      )}
-
-      {/* Hover gradient effect */}
-      {!item.bgImage && (
-        <div
-          aria-hidden="true"
-          className="absolute inset-0 opacity-0 group-hover:opacity-100 bg-gradient-to-br from-brand-red/20 to-transparent transition-opacity duration-300 pointer-events-none"
-        />
-      )}
-
-      {/* Content */}
-      <div className="relative z-10">
-        <p className={`${isLarge ? 'text-4xl md:text-5xl' : 'text-3xl md:text-4xl'} font-bold text-white mb-2 md:mb-3`}>
-          {item.value.toLocaleString('es-ES')}
-          <span className="text-brand-red">{item.suffix}</span>
-        </p>
-        <div className={`${isLarge ? 'text-base md:text-lg' : 'text-sm md:text-base'} text-white/90 font-medium leading-tight`}>
-          <p>{item.label}</p>
-          <p>{item.label2}</p>
-        </div>
-      </div>
-    </motion.div>
-  );
-}
-
 export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps) {
-  const { ref: titleRef, titleAnimating } = useSplitTextAnimation('.propietarios-title-split', 0, true);
+  const { ref: titleRef } = useSplitTextAnimation('.propietarios-title-split', 0, true);
   const containerRef = useRef<HTMLDivElement>(null);
 
   return (
-    <motion.section
-      className="relative bg-brand-dark text-white overflow-hidden"
-      style={{ padding: 'clamp(2rem, 5vw, 5rem) clamp(1rem, 4vw, 2rem)' }}
+    <section
+      className="relative overflow-hidden"
+      style={{
+        backgroundColor: '#121212',
+        padding: '20px',
+        minHeight: '100vh',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}
     >
-      {/* Acento visual sutil */}
+      {/* Responsive styles with inline media queries */}
+      <style>{`
+        @media (max-width: 900px) {
+          .propietarios-grid {
+            grid-template-columns: repeat(2, 1fr) !important;
+          }
+          .propietarios-cta {
+            grid-column: span 2 !important;
+          }
+        }
+
+        @media (max-width: 550px) {
+          .propietarios-grid {
+            grid-template-columns: 1fr !important;
+          }
+          .propietarios-cta,
+          .propietarios-metric,
+          .propietarios-image,
+          .propietarios-data {
+            grid-column: span 1 !important;
+          }
+          .propietarios-cta {
+            grid-row: span 1 !important;
+          }
+          .propietarios-grid h1 {
+            font-size: 1.2rem !important;
+          }
+          .propietarios-grid p {
+            font-size: 0.75rem !important;
+          }
+          .propietarios-grid button,
+          .propietarios-grid a {
+            font-size: 0.75rem !important;
+            padding: 8px 16px !important;
+          }
+        }
+      `}</style>
+
+      {/* Bento Grid Container */}
       <div
-        aria-hidden="true"
-        className="absolute inset-0 opacity-[0.07] pointer-events-none"
+        ref={containerRef}
+        className="propietarios-grid"
         style={{
-          backgroundImage:
-            'radial-gradient(circle at 80% 20%, #f32735 0%, transparent 50%), radial-gradient(circle at 20% 80%, #f32735 0%, transparent 40%)',
+          display: 'grid',
+          gridTemplateColumns: 'repeat(4, 1fr)',
+          gridAutoRows: 'minmax(140px, auto)',
+          gap: '12px',
+          maxWidth: '1100px',
+          width: '100%',
+          backgroundColor: '#000000',
+          padding: '16px',
+          borderRadius: '12px',
+          boxShadow: '0 20px 40px rgba(0,0,0,0.5)',
         }}
-      />
-
-      <div className="relative" style={{ width: '100%', maxWidth: 'min(100% - 2rem, 90rem)', margin: '0 auto' }}>
+      >
+        {/* CTA Block - Lado Izquierdo (2x2) */}
         <div
-          className="grid grid-cols-1 md:grid-cols-12 items-start"
-          style={{ gap: 'clamp(1.5rem, 3vw, 2rem)' }}
+          className="propietarios-cta"
+          style={{
+            gridColumn: 'span 2',
+            gridRow: 'span 2',
+            backgroundColor: '#000000',
+            borderRadius: '8px',
+            padding: '24px',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-between',
+            position: 'relative',
+            overflow: 'hidden',
+            border: '1px solid #2d2d2d',
+            transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.transform = 'translateY(-2px)';
+            e.currentTarget.style.boxShadow = '0 8px 20px rgba(255,255,255,0.05)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.transform = 'none';
+            e.currentTarget.style.boxShadow = 'none';
+          }}
         >
-          {/* Columna izquierda: Contenido */}
-          <div className="md:col-span-5 lg:col-span-4 flex flex-col justify-start pt-0 md:pt-4">
-            <h2
+          <div>
+            <h1
               ref={titleRef}
-              className="propietarios-title-split text-3xl sm:text-4xl lg:text-5xl leading-tight text-white"
+              className="propietarios-title-split"
               style={{
+                fontSize: '1.8rem',
+                fontWeight: 700,
+                lineHeight: 1.3,
+                marginBottom: '12px',
+                color: '#ffffff',
                 fontFamily: "'Avenir Next Ultra Light', 'Avenir LT Pro 65 Medium', 'Avenir', 'Outfit', system-ui, sans-serif",
-                fontWeight: 300,
-                lineHeight: '1.2',
               }}
             >
-              ¿Tienes un inmueble para{' '}
-              <span
-                className="text-brand-red inline-block"
-                style={{
-                  fontWeight: 700,
-                }}
-              >
-                arrendar o vender?
-              </span>
-            </h2>
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={titleAnimating ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-              transition={{ duration: 0.4, ease: 'easeOut' }}
-              className="mt-5 text-base sm:text-lg text-white/80 max-w-2xl leading-relaxed"
+              ¿Tienes un inmueble para <br />
+              <span style={{ color: '#e53935' }}>arrendar o vender?</span>
+            </h1>
+            <p
               style={{
+                fontSize: '0.85rem',
+                color: '#b0b0b0',
+                lineHeight: 1.5,
+                marginBottom: '24px',
                 fontFamily: "'Avenir LT Pro 65 Medium', 'Avenir LT Pro', 'Avenir', 'Outfit', system-ui, sans-serif",
-                fontWeight: 300,
-                lineHeight: '1.45',
               }}
             >
-              60 años gestionando propiedades en Antioquia. Sabemos cómo cuidar tu inmueble y encontrar el arrendatario indicado.
-            </motion.p>
-
-            {/* CTAs */}
-            <div className="mt-5 flex flex-col md:flex-row items-center gap-2 md:gap-3">
-              {/* CTA Principal */}
-              <button
-                type="button"
-                onClick={() => onNavigate('consignacion')}
-                className="w-full md:w-auto inline-flex items-center justify-center h-12 px-6 sm:px-8 bg-brand-red text-white text-sm sm:text-base font-semibold transition-all duration-300 hover:scale-105 hover:bg-white hover:text-brand-red"
-                style={{ lineHeight: '1.2' }}
-              >
-                Consignar mi propiedad
-              </button>
-
-              {/* CTA Secundario - WhatsApp */}
-              <a
-                href={WHATSAPP_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-full md:w-auto inline-flex items-center justify-center h-12 px-6 sm:px-8 bg-brand-red text-white text-sm font-semibold transition-all duration-300 hover:scale-105 hover:bg-white hover:text-brand-red"
-                style={{ lineHeight: '1.2' }}
-              >
-                Hablar con un asesor
-              </a>
-            </div>
-
-            {/* Descripción después de CTAs */}
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={titleAnimating ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-              transition={{ duration: 0.4, ease: 'easeOut', delay: 0.2 }}
-              className="mt-6 text-sm sm:text-base text-white/80 max-w-xl leading-relaxed"
-              style={{
-                fontFamily: "'Avenir LT Pro 65 Medium', 'Avenir LT Pro', 'Avenir', 'Outfit', system-ui, sans-serif",
-                fontWeight: 300,
-                lineHeight: '1.45',
-              }}
-            >
-              Te avisamos cuando haya un arrendatario interesado. <span className="font-semibold text-white">Sin demoras, sin contratiempos.</span>
-            </motion.p>
+              Más de 60 años gestionando propiedades en Antioquia. Tu inmueble en manos de quienes conocen el mercado inmobiliario regional.
+            </p>
           </div>
 
-          {/* Columna derecha: Bento Grid */}
-          <div
-            className="md:col-span-7 lg:col-span-8 flex items-start justify-center"
-            ref={containerRef}
-            style={{
-              minHeight: '500px',
-              position: 'relative',
-            }}
-          >
-            <div
+          {/* Button Group */}
+          <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+            <button
+              type="button"
+              onClick={() => onNavigate('consignacion')}
               style={{
-                width: '100%',
-                position: 'relative',
-                height: '100%',
+                padding: '12px 20px',
+                borderRadius: '6px',
+                fontSize: '0.85rem',
+                fontWeight: 600,
+                backgroundColor: '#e53935',
+                color: '#ffffff',
+                border: 'none',
+                cursor: 'pointer',
+                transition: 'background-color 0.2s ease',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = '#d32f2f';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = '#e53935';
               }}
             >
-              {/* Bento Grid 3x2 */}
-              <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-1.5 md:gap-2 relative">
-                {bentoItems.map((item, index) => (
-                  <BentoCard key={item.id} item={item} index={index} />
-                ))}
-              </div>
-            </div>
+              Consignar mi propiedad
+            </button>
+
+            <a
+              href={WHATSAPP_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                padding: '12px 20px',
+                borderRadius: '6px',
+                fontSize: '0.85rem',
+                fontWeight: 600,
+                backgroundColor: 'transparent',
+                color: '#ffffff',
+                border: '1px solid #e53935',
+                cursor: 'pointer',
+                transition: 'background-color 0.2s ease',
+                textDecoration: 'none',
+                textAlign: 'center',
+                display: 'inline-block',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = 'rgba(229, 57, 53, 0.1)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = 'transparent';
+              }}
+            >
+              Hablar con un asesor
+            </a>
           </div>
         </div>
+
+        {/* Metric Block +1000 */}
+        <div
+          className="propietarios-metric"
+          style={{
+            gridColumn: 'span 1',
+            gridRow: 'span 1',
+            backgroundColor: '#262626',
+            borderRadius: '8px',
+            padding: '24px',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+            textAlign: 'center',
+            position: 'relative',
+            overflow: 'hidden',
+            transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.transform = 'translateY(-2px)';
+            e.currentTarget.style.boxShadow = '0 8px 20px rgba(255,255,255,0.05)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.transform = 'none';
+            e.currentTarget.style.boxShadow = 'none';
+          }}
+        >
+          <div style={{ fontSize: '2rem', fontWeight: 700, color: '#ffffff' }}>+1000</div>
+          <div style={{ fontSize: '0.8rem', color: '#a0a0a0', marginTop: '4px' }}>inmuebles en gestión activa</div>
+        </div>
+
+        {/* Image Block 1 */}
+        <div
+          className="propietarios-image"
+          style={{
+            gridColumn: 'span 1',
+            gridRow: 'span 1',
+            backgroundImage: 'url(https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=400&q=80)',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            borderRadius: '8px',
+            position: 'relative',
+            overflow: 'hidden',
+            transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.transform = 'translateY(-2px)';
+            e.currentTarget.style.boxShadow = '0 8px 20px rgba(255,255,255,0.05)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.transform = 'none';
+            e.currentTarget.style.boxShadow = 'none';
+          }}
+        />
+
+        {/* Image Block 2 */}
+        <div
+          className="propietarios-image"
+          style={{
+            gridColumn: 'span 1',
+            gridRow: 'span 1',
+            backgroundImage: 'url(https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=400&q=80)',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            borderRadius: '8px',
+            position: 'relative',
+            overflow: 'hidden',
+            transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.transform = 'translateY(-2px)';
+            e.currentTarget.style.boxShadow = '0 8px 20px rgba(255,255,255,0.05)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.transform = 'none';
+            e.currentTarget.style.boxShadow = 'none';
+          }}
+        />
+
+        {/* Data Block 60 años */}
+        <div
+          className="propietarios-data"
+          style={{
+            gridColumn: 'span 1',
+            gridRow: 'span 1',
+            backgroundColor: '#333333',
+            borderRadius: '8px',
+            padding: '24px',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+            textAlign: 'center',
+            position: 'relative',
+            overflow: 'hidden',
+            transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.transform = 'translateY(-2px)';
+            e.currentTarget.style.boxShadow = '0 8px 20px rgba(255,255,255,0.05)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.transform = 'none';
+            e.currentTarget.style.boxShadow = 'none';
+          }}
+        >
+          <div style={{ fontSize: '1.8rem', fontWeight: 700, color: '#ffffff' }}>60</div>
+          <div style={{ fontSize: '0.75rem', color: '#cccccc', marginTop: '2px' }}>años de experiencia</div>
+        </div>
+
+        {/* Data Block 3 sedes */}
+        <div
+          className="propietarios-data"
+          style={{
+            gridColumn: 'span 1',
+            gridRow: 'span 1',
+            backgroundColor: '#333333',
+            borderRadius: '8px',
+            padding: '24px',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+            textAlign: 'center',
+            position: 'relative',
+            overflow: 'hidden',
+            transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.transform = 'translateY(-2px)';
+            e.currentTarget.style.boxShadow = '0 8px 20px rgba(255,255,255,0.05)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.transform = 'none';
+            e.currentTarget.style.boxShadow = 'none';
+          }}
+        >
+          <div style={{ fontSize: '1.8rem', fontWeight: 700, color: '#ffffff' }}>3</div>
+          <div style={{ fontSize: '0.75rem', color: '#cccccc', marginTop: '2px' }}>sedes en Antioquia</div>
+        </div>
       </div>
-    </motion.section>
+    </section>
   );
 }
