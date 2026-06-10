@@ -16,11 +16,12 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
       style={{
         background: '#000000',
         display: 'grid',
-        gridTemplateColumns: '1fr 1.76fr 1fr 1fr',
-        gap: '10px',
-        padding: '80px 60px',
-        minHeight: '100vh',
-        width: '100%',
+        gridTemplateColumns: '410px 1fr',
+        gap: '20px',
+        padding: '120px 65px',
+        maxWidth: '1920px',
+        minHeight: '1080px',
+        margin: '0 auto',
       }}
     >
       {/* LEFT COLUMN - Textos y botones */}
@@ -28,17 +29,16 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
         style={{
           display: 'flex',
           flexDirection: 'column',
-          justifyContent: 'flex-start',
-          gap: '20px',
-          paddingRight: '40px',
+          justifyContent: 'center',
+          gap: '25px',
         }}
       >
-        {/* Título línea 1 */}
+        {/* Título línea 1 y 2 */}
         <div>
           <p
             style={{
               fontFamily: "'Avenir LT Pro 65 Medium', 'Avenir LT Pro', 'Avenir', sans-serif",
-              fontSize: '32px',
+              fontSize: '36px',
               fontWeight: 400,
               color: '#FFFFFF',
               margin: '0 0 5px 0',
@@ -50,7 +50,7 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
           <p
             style={{
               fontFamily: "'Avenir LT Pro 65 Medium', 'Avenir LT Pro', 'Avenir', sans-serif",
-              fontSize: '32px',
+              fontSize: '36px',
               fontWeight: 700,
               color: '#D62828',
               margin: 0,
@@ -65,24 +65,24 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
         <p
           style={{
             fontFamily: "'Avenir LT Pro 65 Medium', 'Avenir LT Pro', 'Avenir', sans-serif",
-            fontSize: '14px',
+            fontSize: '16px',
             fontWeight: 400,
             color: 'rgba(255, 255, 255, 0.8)',
             margin: 0,
-            lineHeight: 1.5,
+            lineHeight: 1.45,
+            marginBottom: '20px',
           }}
         >
           Más de 60 años gestionando propiedades en Antioquia. Tu inmueble en manos de quienes conocen el
           mercado inmobiliario regional.
         </p>
 
-        {/* Botones - GRANDES */}
+        {/* Botones - HORIZONTALES */}
         <div
           style={{
             display: 'flex',
-            flexDirection: 'column',
-            gap: '12px',
-            marginTop: '20px',
+            flexDirection: 'row',
+            gap: '10px',
           }}
         >
           <button
@@ -90,17 +90,17 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
             style={{
               background: '#D62828',
               color: '#FFFFFF',
-              padding: '16px 20px',
-              fontSize: '16px',
-              fontWeight: 600,
+              padding: '14px 24px',
+              fontSize: '15px',
+              fontWeight: 500,
               border: 'none',
-              borderRadius: '0px',
+              borderRadius: '4px',
               cursor: 'pointer',
               fontFamily: "'Avenir LT Pro 65 Medium', 'Avenir LT Pro', 'Avenir', sans-serif",
-              width: '100%',
+              flex: 1,
               transition: 'opacity 0.2s',
             }}
-            onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.85')}
+            onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.9')}
             onMouseLeave={(e) => (e.currentTarget.style.opacity = '1')}
           >
             Consignar mi propiedad
@@ -111,17 +111,17 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
             style={{
               background: '#D62828',
               color: '#FFFFFF',
-              padding: '16px 20px',
-              fontSize: '16px',
-              fontWeight: 600,
+              padding: '14px 24px',
+              fontSize: '15px',
+              fontWeight: 500,
               border: 'none',
-              borderRadius: '0px',
+              borderRadius: '4px',
               cursor: 'pointer',
               fontFamily: "'Avenir LT Pro 65 Medium', 'Avenir LT Pro', 'Avenir', sans-serif",
-              width: '100%',
+              flex: 1,
               transition: 'opacity 0.2s',
             }}
-            onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.85')}
+            onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.9')}
             onMouseLeave={(e) => (e.currentTarget.style.opacity = '1')}
           >
             Hablar con un asesor
@@ -134,9 +134,9 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
             fontFamily: "'Avenir LT Pro 65 Medium', 'Avenir LT Pro', 'Avenir', sans-serif",
             fontSize: '13px',
             fontWeight: 400,
-            color: 'rgba(255, 255, 255, 0.7)',
-            margin: '20px 0 0 0',
-            lineHeight: 1.5,
+            color: 'rgba(255, 255, 255, 0.6)',
+            margin: 0,
+            lineHeight: 1.45,
           }}
         >
           Te avisamos cuando haya un arrendatario interesado.{' '}
@@ -144,33 +144,32 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
         </p>
       </div>
 
-      {/* RIGHT GRID - 3 columnas × 2 filas */}
+      {/* RIGHT GRID - 3 COLUMNAS × 2 FILAS */}
       <div
         style={{
           display: 'grid',
-          gridColumn: '2 / 5',
-          gridTemplateColumns: '1.76fr 1fr 1fr',
-          gridTemplateRows: '240px 360px',
+          gridTemplateColumns: '1fr 1fr 1fr',
+          gridTemplateRows: 'auto auto',
           gap: '10px',
-          height: 'fit-content',
         }}
       >
-        {/* Tarjeta +1000 */}
+        {/* +1000 - arriba-izq */}
         <div
           style={{
             gridArea: '1 / 1 / 2 / 2',
-            background: 'linear-gradient(180deg, #222222 0%, #1A1A1A 100%)',
+            background: 'linear-gradient(180deg, #222222, #1A1A1A)',
             borderRadius: '0px',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'center',
-            padding: '30px',
+            padding: '40px 50px',
+            minHeight: '250px',
           }}
         >
           <div
             style={{
-              fontSize: '56px',
+              fontSize: '64px',
               fontWeight: 700,
               color: '#FFFFFF',
               fontFamily: "'Avenir LT Pro 65 Medium', 'Avenir LT Pro', 'Avenir', sans-serif",
@@ -181,80 +180,84 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
           </div>
           <div
             style={{
-              fontSize: '18px',
+              fontSize: '20px',
               fontWeight: 400,
               color: '#FFFFFF',
               fontFamily: "'Avenir LT Pro 65 Medium', 'Avenir LT Pro', 'Avenir', sans-serif",
-              marginTop: '12px',
+              marginTop: '20px',
             }}
           >
             inmuebles
           </div>
           <div
             style={{
-              fontSize: '14px',
+              fontSize: '16px',
               fontWeight: 400,
               color: 'rgba(255, 255, 255, 0.7)',
               fontFamily: "'Avenir LT Pro 65 Medium', 'Avenir LT Pro', 'Avenir', sans-serif",
-              marginTop: '4px',
+              marginTop: '5px',
             }}
           >
             en gestión activa
           </div>
         </div>
 
-        {/* Imagen 1 */}
+        {/* Imagen 1 - arriba-centro */}
         <div
           style={{
             gridArea: '1 / 2 / 2 / 3',
             backgroundImage:
-              'url(https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=400&q=80)',
+              'url(https://images.unsplash.com/photo-1570129477492-45ac003f2e18?auto=format&fit=crop&w=400&h=300&q=80)',
             backgroundSize: 'cover',
             backgroundPosition: 'center',
             borderRadius: '0px',
+            minHeight: '250px',
           }}
         />
 
-        {/* Imagen 2 */}
+        {/* Imagen 2 - arriba-der */}
         <div
           style={{
             gridArea: '1 / 3 / 2 / 4',
             backgroundImage:
-              'url(https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=400&q=80)',
+              'url(https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=400&h=300&q=80)',
             backgroundSize: 'cover',
             backgroundPosition: 'center',
             borderRadius: '0px',
+            minHeight: '250px',
           }}
         />
 
-        {/* Imagen 3 - GRANDE (ocupa col 1) */}
+        {/* Imagen 3 - abajo-izq */}
         <div
           style={{
             gridArea: '2 / 1 / 3 / 2',
             backgroundImage:
-              'url(https://images.unsplash.com/photo-1570129477492-45ac003f2e18?auto=format&fit=crop&w=400&q=80)',
+              'url(https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=400&h=300&q=80)',
             backgroundSize: 'cover',
             backgroundPosition: 'center',
             borderRadius: '0px',
+            minHeight: '380px',
           }}
         />
 
-        {/* Tarjeta 60 años */}
+        {/* 60 años - abajo-centro */}
         <div
           style={{
             gridArea: '2 / 2 / 3 / 3',
-            background: 'linear-gradient(180deg, #222222 0%, #1A1A1A 100%)',
+            background: 'linear-gradient(180deg, #222222, #1A1A1A)',
             borderRadius: '0px',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'center',
-            padding: '30px',
+            padding: '40px 50px',
+            minHeight: '380px',
           }}
         >
           <div
             style={{
-              fontSize: '56px',
+              fontSize: '64px',
               fontWeight: 700,
               color: '#FFFFFF',
               fontFamily: "'Avenir LT Pro 65 Medium', 'Avenir LT Pro', 'Avenir', sans-serif",
@@ -265,44 +268,45 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
           </div>
           <div
             style={{
-              fontSize: '18px',
+              fontSize: '20px',
               fontWeight: 400,
               color: '#FFFFFF',
               fontFamily: "'Avenir LT Pro 65 Medium', 'Avenir LT Pro', 'Avenir', sans-serif",
-              marginTop: '12px',
+              marginTop: '20px',
             }}
           >
             años
           </div>
           <div
             style={{
-              fontSize: '14px',
+              fontSize: '16px',
               fontWeight: 400,
               color: 'rgba(255, 255, 255, 0.7)',
               fontFamily: "'Avenir LT Pro 65 Medium', 'Avenir LT Pro', 'Avenir', sans-serif",
-              marginTop: '4px',
+              marginTop: '5px',
             }}
           >
             de experiencia
           </div>
         </div>
 
-        {/* Tarjeta 3 sedes */}
+        {/* 3 sedes - abajo-der */}
         <div
           style={{
             gridArea: '2 / 3 / 3 / 4',
-            background: 'linear-gradient(180deg, #222222 0%, #1A1A1A 100%)',
+            background: 'linear-gradient(180deg, #222222, #1A1A1A)',
             borderRadius: '0px',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'center',
-            padding: '30px',
+            padding: '40px 50px',
+            minHeight: '380px',
           }}
         >
           <div
             style={{
-              fontSize: '56px',
+              fontSize: '64px',
               fontWeight: 700,
               color: '#FFFFFF',
               fontFamily: "'Avenir LT Pro 65 Medium', 'Avenir LT Pro', 'Avenir', sans-serif",
@@ -313,22 +317,22 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
           </div>
           <div
             style={{
-              fontSize: '18px',
+              fontSize: '20px',
               fontWeight: 400,
               color: '#FFFFFF',
               fontFamily: "'Avenir LT Pro 65 Medium', 'Avenir LT Pro', 'Avenir', sans-serif",
-              marginTop: '12px',
+              marginTop: '20px',
             }}
           >
             sedes
           </div>
           <div
             style={{
-              fontSize: '14px',
+              fontSize: '16px',
               fontWeight: 400,
               color: 'rgba(255, 255, 255, 0.7)',
               fontFamily: "'Avenir LT Pro 65 Medium', 'Avenir LT Pro', 'Avenir', sans-serif",
-              marginTop: '4px',
+              marginTop: '5px',
             }}
           >
             en Antioquia
