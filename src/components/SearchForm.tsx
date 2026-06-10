@@ -137,8 +137,8 @@ function CustomSelect({
 /* ── Props ───────────────────────────────────────────────────────── */
 
 interface SearchFormProps {
-  mobileExpanded: boolean;
-  onMobileExpand: (expanded: boolean) => void;
+  mobileExpanded?: boolean;
+  onMobileExpand?: (expanded: boolean) => void;
   onNavigate?: (page: 'propiedades') => void;
 }
 
@@ -327,8 +327,84 @@ export default function SearchForm({ onNavigate }: SearchFormProps) {
         })}
       </div>
 
-      {/* ── Fila 2: Filtros + Botón buscar ──────────────────────── */}
-      <div ref={rowRef} style={{ display: 'flex', background: '#fff' }}>
+      {/* ── Fila 2 mobile: filtros desplegables + CTA ─────────── */}
+      <div className="sm:hidden">
+
+        {/* Filtros: animan con max-height cuando hay tab activo */}
+        <div
+          style={{
+            maxHeight: searchType ? '260px' : '0px',
+            overflow: 'hidden',
+            transition: 'max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1)',
+            background: '#fff',
+          }}
+        >
+          {/* Código inmueble */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '14px', padding: '13px 16px', borderBottom: '1px solid rgba(0,0,0,0.06)' }}>
+            <img src="/icons/icon-code-red.gif" alt="" width={20} height={20} style={{ flexShrink: 0 }} />
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <p style={labelStyle}>Código inmueble</p>
+              <input
+                type="text"
+                value={codigo}
+                onChange={e => setCodigo(e.target.value)}
+                placeholder="Ej: 12345"
+                style={{ fontFamily: FONT, fontSize: '13px', color: codigo ? COLOR_VALUE : '#b8b8b8', background: 'transparent', border: 'none', outline: 'none', width: '100%', lineHeight: 1 }}
+              />
+            </div>
+          </div>
+
+          {/* Ubicación */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '14px', padding: '13px 16px', borderBottom: '1px solid rgba(0,0,0,0.06)' }}>
+            <img src="/icons/icon-location-red.gif" alt="" width={20} height={20} style={{ flexShrink: 0 }} />
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <p style={labelStyle}>Ubicación</p>
+              <CustomSelect label="Ubicación" value={sector} onChange={setSector} options={SECTORES} placeholder="Seleccionar" />
+            </div>
+          </div>
+
+          {/* Tipo de propiedad */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '14px', padding: '13px 16px', borderBottom: '1px solid rgba(0,0,0,0.06)' }}>
+            <img src="/icons/icon-home-red.gif" alt="" width={20} height={20} style={{ flexShrink: 0 }} />
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <p style={labelStyle}>Tipo de propiedad</p>
+              <CustomSelect label="Tipo" value={tipo} onChange={setTipo} options={TIPOS_INMUEBLE} placeholder="Seleccionar" />
+            </div>
+          </div>
+
+          {/* Precio */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '14px', padding: '13px 16px' }}>
+            <img src="/icons/icon-dollar-red.gif" alt="" width={20} height={20} style={{ flexShrink: 0 }} />
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <p style={labelStyle}>Precio</p>
+              <CustomSelect label="Precio" value={precio} onChange={setPrecio} options={PRESUPUESTO[searchType ?? 'arrendar']} placeholder="Seleccionar" />
+            </div>
+          </div>
+        </div>
+
+        {/* CTA siempre visible */}
+        <button
+          type="button"
+          onClick={() => onNavigate?.('propiedades')}
+          style={{
+            width: '100%',
+            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px',
+            background: RED, color: '#fff',
+            fontFamily: FONT, fontSize: '15px', fontWeight: 600,
+            border: 'none', cursor: 'pointer',
+            padding: '16px 0',
+            transition: 'background 0.2s ease',
+          }}
+          onMouseEnter={e => (e.currentTarget.style.background = RED_HOVER)}
+          onMouseLeave={e => (e.currentTarget.style.background = RED)}
+        >
+          <img src="/icons/icon-search-white.gif" alt="" width={18} height={18} />
+          <span>Buscar inmueble</span>
+        </button>
+      </div>
+
+      {/* ── Fila 2 desktop: filtros + botón buscar ───────────── */}
+      <div ref={rowRef} className="hidden sm:flex" style={{ background: '#fff' }}>
 
         {/* Cuatro celdas — grid en móvil, flex en desktop */}
         <div className="flex-1 grid grid-cols-2 sm:flex sm:flex-row">

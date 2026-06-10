@@ -79,24 +79,26 @@ export default function HeroSection({ onNavigate, searchFormSlot }: HeroSectionP
           >
             <div style={{ maxWidth: '700px', width: '100%', textAlign: 'center' }}>
               <h1
-                className="hero-title-split"
+                className="hero-title-split text-[clamp(42px,12vw,54px)] sm:text-[clamp(28px,3vw,52px)]"
                 style={{
                   fontFamily: FONT_HEADING,
                   fontWeight: 300,
-                  fontSize: 'clamp(28px, 3vw, 52px)',
-                  color: '#fff',
-                  lineHeight: 1.2,
+                  lineHeight: 1.15,
                   margin: 0,
                   textAlign: 'center',
+                  color: '#fff',
                 }}
               >
-                60 años{' '}
+                60 años
+                <br className="sm:hidden" />
+                {' '}
                 <span style={{ fontWeight: 700, display: 'inline-block', position: 'relative' }}>
                   <span ref={boldTextRef} style={{ position: 'relative', zIndex: 2, display: 'block' }}>
                     conectando personas
                   </span>
                   <span
                     aria-hidden="true"
+                    className="hidden sm:block"
                     style={{
                       position: 'absolute',
                       top: '48%',
@@ -128,13 +130,13 @@ export default function HeroSection({ onNavigate, searchFormSlot }: HeroSectionP
                 con el lugar donde vivir, trabajar y crecer.
               </motion.p>
 
-              <div className="flex flex-wrap items-center justify-center gap-2 mt-7">
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-2 mt-7 w-full sm:w-auto">
                 <button
                   type="button"
                   onClick={() => onNavigate?.('propiedades')}
                   onMouseEnter={applyInkFill}
                   onMouseLeave={applyInkFill}
-                  className="hero-btn-fill inline-flex items-center justify-center h-[42px] px-6 rounded-full text-sm"
+                  className="hero-btn-fill w-full sm:w-auto inline-flex items-center justify-center h-[42px] px-6 rounded-full text-sm"
                   style={{ fontFamily: FONT_BODY, fontWeight: 300 }}
                 >
                   <span>Ver propiedades disponibles</span>
@@ -146,7 +148,7 @@ export default function HeroSection({ onNavigate, searchFormSlot }: HeroSectionP
                   rel="noopener noreferrer"
                   onMouseEnter={applyInkFill}
                   onMouseLeave={applyInkFill}
-                  className="hero-btn-fill inline-flex items-center justify-center h-[42px] px-5 rounded-full text-sm"
+                  className="hero-btn-fill w-full sm:w-auto inline-flex items-center justify-center h-[42px] px-6 rounded-full text-sm"
                   style={{ fontFamily: FONT_BODY, fontWeight: 300, textDecoration: 'none' }}
                 >
                   <span>Hablar con un asesor</span>
