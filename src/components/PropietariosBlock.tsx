@@ -9,6 +9,7 @@ interface PropietariosBlockProps {
 const WHATSAPP_URL =
   'https://wa.me/573006557529?text=Hola%2C%20quisiera%20consignar%20una%20propiedad%20con%20Arrendamientos%20Santa%20Fe.';
 
+const FONT_LIGHT   = "'Avenir Next Ultra Light', 'Avenir LT Pro 65 Medium', 'Avenir', 'Outfit', system-ui, sans-serif";
 const FONT_BODY    = "'Avenir LT Pro 65 Medium', 'Avenir LT Pro', 'Avenir', 'Outfit', system-ui, sans-serif";
 const FONT_HEADING = "'Avenir LT Pro 85 Heavy',  'Avenir LT Pro', 'Avenir', 'Outfit', system-ui, sans-serif";
 const RED          = '#f32735';
@@ -26,13 +27,13 @@ function StatCard({ number, label, sublabel }: { number: string; label: string; 
         justifyContent: 'center',
       }}
     >
-      <span style={{ fontFamily: FONT_HEADING, fontSize: 'clamp(32px, 3.8vw, 64px)', fontWeight: 800, color: '#fff', lineHeight: 1 }}>
+      <span style={{ fontFamily: FONT_HEADING, fontSize: 'clamp(28px, 3.2vw, 56px)', fontWeight: 800, color: '#fff', lineHeight: 1 }}>
         {number}
       </span>
-      <span style={{ fontFamily: FONT_BODY, fontSize: 'clamp(13px, 1.2vw, 20px)', fontWeight: 500, color: '#fff', marginTop: '8px', lineHeight: 1 }}>
+      <span style={{ fontFamily: FONT_BODY, fontSize: 'clamp(12px, 1vw, 16px)', fontWeight: 300, color: '#fff', marginTop: '6px', lineHeight: 1 }}>
         {label}
       </span>
-      <span style={{ fontFamily: FONT_BODY, fontSize: 'clamp(11px, 0.9vw, 14px)', fontWeight: 400, color: 'rgba(255,255,255,0.6)', marginTop: '4px', lineHeight: 1 }}>
+      <span style={{ fontFamily: FONT_BODY, fontSize: 'clamp(10px, 0.8vw, 12px)', fontWeight: 300, color: 'rgba(255,255,255,0.6)', marginTop: '3px', lineHeight: 1 }}>
         {sublabel}
       </span>
     </div>
@@ -58,25 +59,25 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
     <section className="bg-black w-full overflow-hidden" style={{ maxWidth: '1920px', margin: '0 auto' }}>
 
       {/* Layout: columna en móvil → dos columnas en desktop */}
-      <div className="flex flex-col lg:flex-row lg:h-[500px]">
+      <div className="flex flex-col lg:flex-row lg:h-[460px]">
 
         {/* ── COLUMNA IZQUIERDA ─────────────────────────────────── */}
         <div
-          className="flex flex-col justify-center gap-5 px-8 py-12 sm:px-14 sm:py-14 lg:py-0 lg:pl-16 lg:pr-14 lg:flex-shrink-0"
-          style={{ flexBasis: '615px' }}
+          className="flex flex-col justify-center gap-5 px-8 py-10 sm:px-14 sm:py-12 lg:py-0 lg:pl-16 lg:pr-14 lg:flex-shrink-0 lg:flex-grow-0"
+          style={{ flexBasis: '560px' }}
         >
           {/* Título */}
           <div>
-            <p style={{ fontFamily: FONT_BODY, fontSize: 'clamp(22px, 2.2vw, 34px)', fontWeight: 400, color: '#fff', margin: 0, lineHeight: 1.2 }}>
+            <p style={{ fontFamily: FONT_LIGHT, fontSize: 'clamp(22px, 2.2vw, 34px)', fontWeight: 300, color: '#fff', margin: 0, lineHeight: 1.2 }}>
               ¿Tienes un inmueble para
             </p>
-            <p style={{ fontFamily: FONT_HEADING, fontSize: 'clamp(22px, 2.2vw, 34px)', fontWeight: 800, fontStyle: 'italic', color: RED, margin: 0, lineHeight: 1.2 }}>
+            <p style={{ fontFamily: FONT_LIGHT, fontSize: 'clamp(22px, 2.2vw, 34px)', fontWeight: 700, fontStyle: 'italic', color: RED, margin: 0, lineHeight: 1.2 }}>
               arrendar o vender?
             </p>
           </div>
 
           {/* Descripción */}
-          <p style={{ fontFamily: FONT_BODY, fontSize: 'clamp(13px, 1vw, 15px)', fontWeight: 400, color: 'rgba(255,255,255,0.75)', margin: 0, lineHeight: 1.55 }}>
+          <p style={{ fontFamily: FONT_BODY, fontSize: 'clamp(13px, 1vw, 15px)', fontWeight: 300, color: 'rgba(255,255,255,0.75)', margin: 0, lineHeight: 1.55 }}>
             Más de 60 años gestionando propiedades en Antioquia. Tu inmueble en
             manos de quienes conocen el mercado inmobiliario regional.
           </p>
@@ -105,7 +106,7 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
           </div>
 
           {/* Nota */}
-          <p style={{ fontFamily: FONT_BODY, fontSize: 'clamp(12px, 0.85vw, 13px)', fontWeight: 400, color: 'rgba(255,255,255,0.55)', margin: 0, lineHeight: 1.5 }}>
+          <p style={{ fontFamily: FONT_BODY, fontSize: 'clamp(12px, 0.85vw, 13px)', fontWeight: 300, color: 'rgba(255,255,255,0.55)', margin: 0, lineHeight: 1.5 }}>
             Te avisamos cuando haya un arrendatario interesado.{' '}
             <strong style={{ fontWeight: 700, color: '#fff' }}>Sin demoras, sin contratiempos.</strong>
           </p>
@@ -113,7 +114,7 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
 
         {/* ── GRID DERECHO 3 × 2 ───────────────────────────────── */}
         <div
-          className="flex-1 grid grid-cols-3 grid-rows-2 h-[260px] sm:h-[340px] lg:h-full"
+          className="flex-1 grid grid-cols-3 grid-rows-2 h-[200px] sm:h-[260px] lg:h-full"
           style={{ gap: '3px' }}
         >
           {/* Fila 1 */}
