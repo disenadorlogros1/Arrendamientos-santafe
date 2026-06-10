@@ -179,6 +179,7 @@
   color: #ffffff;
 }
 
+/* Relleno rojo que se expande desde el punto de entrada */
 .hero-btn-fill::before {
   content: '';
   position: absolute;
@@ -191,10 +192,22 @@
   transform: translate(-50%, -50%) scale(0);
   transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   pointer-events: none;
+  z-index: 0;
 }
 
 .hero-btn-fill:hover::before {
   transform: translate(-50%, -50%) scale(1);
+}
+
+/* Borde siempre visible por encima del relleno */
+.hero-btn-fill::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  pointer-events: none;
+  z-index: 2;
 }
 
 .hero-btn-fill > span {

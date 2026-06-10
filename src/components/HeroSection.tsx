@@ -133,7 +133,7 @@ export default function HeroSection({ onNavigate, searchFormSlot }: HeroSectionP
                 onClick={() => onNavigate?.('propiedades')}
                 onMouseEnter={applyInkFill}
                 onMouseLeave={applyInkFill}
-                className="hero-btn-fill inline-flex items-center justify-center h-[42px] px-6 rounded-full border border-white/30 text-sm"
+                className="hero-btn-fill inline-flex items-center justify-center h-[42px] px-6 rounded-full text-sm"
                 style={{ fontFamily: FONT_BODY, fontWeight: 300 }}
               >
                 <span>Ver propiedades disponibles</span>
@@ -145,7 +145,7 @@ export default function HeroSection({ onNavigate, searchFormSlot }: HeroSectionP
                 rel="noopener noreferrer"
                 onMouseEnter={applyInkFill}
                 onMouseLeave={applyInkFill}
-                className="hero-btn-fill inline-flex items-center justify-center h-[42px] px-5 rounded-full border border-white/30 text-sm"
+                className="hero-btn-fill inline-flex items-center justify-center h-[42px] px-5 rounded-full text-sm"
                 style={{ fontFamily: FONT_BODY, fontWeight: 300, textDecoration: 'none' }}
               >
                 <span>Hablar con un asesor</span>
