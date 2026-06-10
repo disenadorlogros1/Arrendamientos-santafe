@@ -7,175 +7,181 @@ import { useSplitTextAnimation } from '@/hooks/useSplitTextAnimation';
 
 interface HeroSectionProps {
   onNavigate?: (page: 'propiedades' | 'consignacion') => void;
+  searchFormSlot?: React.ReactNode;
 }
 
 const WHATSAPP_URL =
   'https://wa.me/573006557529?text=Hola%2C%20quisiera%20hablar%20con%20un%20asesor%20de%20Arrendamientos%20Santa%20Fe.';
 
-const AnimatedText = ({ text, startIndex = 0 }: { text: string; startIndex?: number }) => {
-  return (
-    <>
-      {text.split('').map((char, i) => (
-        <span
-          key={i}
-          className="letter-animate"
-          style={{ animationDelay: `${(startIndex + i) * 0.06}s` }}
-        >
-          {char === ' ' ? ' ' : char}
-        </span>
-      ))}
-    </>
-  );
-};
+const FONT_BODY    = "'Avenir LT Pro 65 Medium', 'Avenir LT Pro', 'Avenir', 'Outfit', system-ui, sans-serif";
+const FONT_HEADING = "'Avenir Next Ultra Light', 'Avenir LT Pro 65 Medium', 'Avenir', 'Outfit', system-ui, sans-serif";
+const RED          = '#f32735';
 
-export default function HeroSection({ onNavigate }: HeroSectionProps) {
+export default function HeroSection({ onNavigate, searchFormSlot }: HeroSectionProps) {
   const { ref: titleRef, titleAnimating } = useSplitTextAnimation('.hero-title-split');
   const boldTextRef = useRef<HTMLSpanElement>(null);
 
-  // Animar la línea roja detrás del texto después de que termine el título
   useEffect(() => {
     if (!boldTextRef.current) return;
-
     const underlineEl = boldTextRef.current.nextElementSibling;
     if (!underlineEl) return;
-
-    // Iniciar invisible
     gsap.set(underlineEl, { scaleX: 0, transformOrigin: 'left center' });
-
-    // Aparecer deslizándose de izquierda a derecha después del título
-    gsap.to(underlineEl, {
-      scaleX: 1,
-      duration: 0.9,
-      delay: 1.6,
-      ease: 'power3.out',
-    });
+    gsap.to(underlineEl, { scaleX: 1, duration: 0.9, delay: 1.6, ease: 'power3.out' });
   }, []);
 
-  const scrollToSearch = () => {
-    onNavigate?.('propiedades');
-  };
-
   return (
-    <section className="relative w-full h-[calc(100vh-100px)] lg:h-[70vh] flex flex-col items-center justify-center overflow-hidden">
-      {/* Background Video */}
-      <video
-        autoPlay
-        muted
-        loop
-        playsInline
-        className="absolute inset-0 w-full h-full object-cover"
-        poster="https://images.unsplash.com/photo-1588392382834-a891154bca4d?w=1920&q=80"
-      >
-        <source src="/hero-video.mp4" type="video/mp4" />
-      </video>
+    <section style={{ background: '#000' }} className="w-full overflow-hidden">
 
-      {/* Dark overlay */}
-      <div className="absolute inset-0 hero-video-overlay" />
+      {/* Fila 1: celda video (flex-1) + celda stat (desktop) */}
+      <div className="flex flex-col lg:flex-row" style={{ gap: '3px' }}>
 
-      {/* Content — Centrado en la mitad del viewport */}
-      <div
-        className="relative w-full px-6 sm:px-12 md:px-16 mx-auto"
-        style={{ zIndex: 10, maxWidth: '56rem' }}
-        ref={titleRef}
-      >
-        <h1
-          className="hero-title-split text-3xl sm:text-4xl lg:text-5xl text-white"
-          style={{
-            fontFamily:
-              "'Avenir Next Ultra Light', 'Avenir LT Pro 65 Medium', 'Avenir', 'Outfit', system-ui, sans-serif",
-            fontWeight: 300,
-            lineHeight: '1.2',
-          }}
+        {/* Celda principal: video + contenido */}
+        <div
+          className="relative flex items-center overflow-hidden flex-1"
+          style={{ minHeight: 'clamp(340px, 65vh, 700px)' }}
+          ref={titleRef}
         >
-          60 años acompañando
-          <span
-            style={{
-              fontWeight: 700,
-              display: 'inline-block',
-              position: 'relative',
-            }}
+          {/* Video de fondo */}
+          <video
+            autoPlay
+            muted
+            loop
+            playsInline
+            className="absolute inset-0 w-full h-full object-cover"
+            poster="https://images.unsplash.com/photo-1588392382834-a891154bca4d?w=1920&q=80"
           >
-            <span
-              ref={boldTextRef}
+            <source src="/hero-video.mp4" type="video/mp4" />
+          </video>
+
+          {/* Overlay oscuro */}
+          <div className="absolute inset-0 hero-video-overlay" />
+
+          {/* Contenido */}
+          <div
+            className="relative px-8 py-14 sm:px-14 lg:px-16"
+            style={{ zIndex: 10, maxWidth: '700px' }}
+          >
+            <h1
+              className="hero-title-split"
               style={{
-                position: 'relative',
-                zIndex: 2,
-                display: 'block',
+                fontFamily: FONT_HEADING,
+                fontWeight: 300,
+                fontSize: 'clamp(28px, 3vw, 52px)',
+                color: '#fff',
+                lineHeight: 1.2,
+                margin: 0,
               }}
             >
-              decisiones que importan.
-            </span>
-            <span
-              aria-hidden="true"
+              60 años acompañando
+              <span style={{ fontWeight: 700, display: 'inline-block', position: 'relative' }}>
+                <span ref={boldTextRef} style={{ position: 'relative', zIndex: 2, display: 'block' }}>
+                  decisiones que importan.
+                </span>
+                <span
+                  aria-hidden="true"
+                  style={{
+                    position: 'absolute',
+                    top: '48%',
+                    left: 0,
+                    width: '100%',
+                    height: '0.15em',
+                    backgroundColor: RED,
+                    transform: 'translateY(-50%)',
+                    zIndex: 1,
+                  }}
+                />
+              </span>
+            </h1>
+
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={titleAnimating ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+              transition={{ duration: 0.4, ease: 'easeOut' }}
               style={{
-                position: 'absolute',
-                top: '48%',
-                left: 0,
-                width: '100%',
-                height: '0.15em',
-                backgroundColor: '#f32735',
-                transform: 'translateY(-50%)',
-                zIndex: 1,
+                fontFamily: FONT_BODY,
+                fontWeight: 300,
+                fontSize: 'clamp(13px, 1.1vw, 17px)',
+                color: 'rgba(255,255,255,0.85)',
+                marginTop: '20px',
+                lineHeight: 1.45,
               }}
-            />
-          </span>
-        </h1>
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={titleAnimating ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-          transition={{ duration: 0.4, ease: 'easeOut' }}
-          className="mt-5 text-base sm:text-lg text-white max-w-2xl"
-          style={{
-            fontFamily: "'Avenir LT Pro 65 Medium', 'Avenir LT Pro', 'Avenir', 'Outfit', system-ui, sans-serif",
-            fontWeight: 300,
-            lineHeight: '1.45',
-          }}
+            >
+              Respaldo y experiencia para encontrar o gestionar tu propiedad ideal en Antioquia.
+            </motion.p>
+
+            <div className="flex flex-wrap items-center gap-2 mt-7">
+              <button
+                type="button"
+                onClick={() => onNavigate?.('propiedades')}
+                className="inline-flex items-center justify-center h-[42px] px-6 rounded-full border border-white/30 bg-black/30 hover:bg-white/60 text-white text-sm transition-all duration-300 hover:scale-105"
+                style={{ fontFamily: FONT_BODY, fontWeight: 300 }}
+              >
+                Ver propiedades disponibles
+              </button>
+
+              <a
+                href={WHATSAPP_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 h-[42px] px-5 rounded-full border border-white/30 bg-black/30 hover:bg-white/60 text-white text-sm transition-all duration-300 hover:scale-105"
+                style={{ fontFamily: FONT_BODY, fontWeight: 300, textDecoration: 'none' }}
+              >
+                Hablar con un asesor
+              </a>
+            </div>
+          </div>
+        </div>
+
+        {/* Celda stat lateral — solo desktop */}
+        <div
+          className="hidden lg:flex flex-col items-center justify-center gap-2 flex-shrink-0"
+          style={{ background: '#1a1a1a', width: '200px' }}
         >
-          Respaldo y experiencia para encontrar o gestionar tu propiedad ideal en Antioquia.
-        </motion.p>
-
-        {/* CTAs jerárquicos — botones cápsula con hover blanco + resplandor rojo */}
-        <div className="mt-7 flex flex-wrap items-center gap-1.5 sm:gap-3">
-          {/* CTA Principal: Ver propiedades disponibles */}
-          <button
-            type="button"
-            onClick={scrollToSearch}
-            className="hero-btn group inline-flex items-center justify-center h-[42px] px-6 bg-black/30 hover:bg-white/60 text-white text-sm sm:text-base rounded-full border border-white/30 transition-all duration-300 hover:scale-105"
+          <span
             style={{
-              textShadow: '0 1px 3px rgba(0,0,0,0.4)',
-              fontFamily: "'Avenir LT Pro 65 Medium', 'Avenir', 'Outfit', system-ui, sans-serif",
-              fontWeight: 300,
-              fontSize: 'inherit',
-              lineHeight: '1.5',
-              appearance: 'none',
-              WebkitAppearance: 'none',
+              fontFamily: "'Avenir LT Pro 85 Heavy', 'Avenir LT Pro', system-ui, sans-serif",
+              fontSize: 'clamp(48px, 4vw, 72px)',
+              fontWeight: 800,
+              color: '#fff',
+              lineHeight: 1,
             }}
           >
-            Ver propiedades disponibles
-          </button>
-
-          {/* CTA Operativo: Hablar con un asesor (WhatsApp) */}
-          <a
-            href={WHATSAPP_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hero-btn group inline-flex items-center gap-2 h-[42px] px-5 bg-black/30 hover:bg-white/60 text-white text-sm sm:text-base rounded-full border border-white/30 transition-all duration-300 hover:scale-105"
+            60
+          </span>
+          <span
             style={{
-              textShadow: '0 1px 3px rgba(0,0,0,0.4)',
-              fontFamily: "'Avenir LT Pro 65 Medium', 'Avenir', 'Outfit', system-ui, sans-serif",
-              fontWeight: 300,
-              fontSize: 'inherit',
-              lineHeight: '1.5',
-              appearance: 'none',
-              WebkitAppearance: 'none',
-              textDecoration: 'none',
-              display: 'inline-flex',
+              fontFamily: FONT_BODY,
+              fontSize: '15px',
+              fontWeight: 500,
+              color: '#fff',
+              lineHeight: 1,
             }}
           >
-            Hablar con un asesor
-          </a>
+            años
+          </span>
+          <span
+            style={{
+              fontFamily: FONT_BODY,
+              fontSize: '12px',
+              fontWeight: 400,
+              color: 'rgba(255,255,255,0.45)',
+              lineHeight: 1,
+              textAlign: 'center',
+              padding: '0 16px',
+            }}
+          >
+            de experiencia en Antioquia
+          </span>
         </div>
       </div>
+
+      {/* Fila 2: celda SearchForm */}
+      {searchFormSlot && (
+        <div id="buscador" style={{ marginTop: '3px' }}>
+          {searchFormSlot}
+        </div>
+      )}
+
     </section>
   );
 }

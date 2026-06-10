@@ -26,21 +26,21 @@ function HomePage({ onNavigate }: { onNavigate: (page: PageType) => void }) {
 
   return (
     <>
-      {/* Sección 1: Hero Principal */}
-      <HeroSection onNavigate={onNavigate} />
-
-      {/* Buscador (anclado al hero) */}
-      <div id="buscador">
-        <SearchForm mobileExpanded={mobileExpanded} onMobileExpand={setMobileExpanded} onNavigate={onNavigate} />
-      </div>
+      {/* Sección 1: Hero + Buscador integrado como celda bento */}
+      <HeroSection
+        onNavigate={onNavigate}
+        searchFormSlot={
+          <SearchForm
+            mobileExpanded={mobileExpanded}
+            onMobileExpand={setMobileExpanded}
+            onNavigate={onNavigate}
+          />
+        }
+      />
       <UserLocation mobileExpanded={mobileExpanded} />
 
       {/* Sección 2: Propiedades Destacadas */}
-      <div className="bg-brand-light py-6">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <FeaturedSection onNavigate={onNavigate} />
-        </div>
-      </div>
+      <FeaturedSection onNavigate={onNavigate} />
 
       {/* Sección 3: Bloque para Propietarios (Consignación) */}
       <PropietariosBlock onNavigate={onNavigate} />
