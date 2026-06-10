@@ -13,16 +13,14 @@ const WHATSAPP_URL =
 export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps) {
   return (
     <section
-      className="w-full"
       style={{
         background: '#000000',
         display: 'grid',
-        gridTemplateColumns: '410px 1fr',
+        gridTemplateColumns: '1fr 1.76fr 1fr 1fr',
         gap: '10px',
-        padding: '120px 65px',
-        maxWidth: '1920px',
-        minHeight: '1080px',
-        margin: '0 auto',
+        padding: '80px 60px',
+        minHeight: '100vh',
+        width: '100%',
       }}
     >
       {/* LEFT COLUMN - Textos y botones */}
@@ -30,61 +28,61 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
         style={{
           display: 'flex',
           flexDirection: 'column',
-          justifyContent: 'center',
-          gap: '25px',
+          justifyContent: 'flex-start',
+          gap: '20px',
+          paddingRight: '40px',
         }}
       >
         {/* Título línea 1 */}
-        <h2
-          style={{
-            fontFamily: "'Avenir LT Pro 65 Medium', 'Avenir LT Pro', 'Avenir', 'Outfit', system-ui, sans-serif",
-            fontSize: '36px',
-            fontWeight: 400,
-            color: '#FFFFFF',
-            margin: 0,
-            lineHeight: 1.2,
-          }}
-        >
-          ¿Tienes un inmueble para
-        </h2>
-
-        {/* Título línea 2 (rojo) */}
-        <h2
-          style={{
-            fontFamily: "'Avenir LT Pro 65 Medium', 'Avenir LT Pro', 'Avenir', 'Outfit', system-ui, sans-serif",
-            fontSize: '36px',
-            fontWeight: 700,
-            color: '#D62828',
-            margin: 0,
-            lineHeight: 1.2,
-            marginTop: '-15px',
-          }}
-        >
-          arrendar o vender?
-        </h2>
+        <div>
+          <p
+            style={{
+              fontFamily: "'Avenir LT Pro 65 Medium', 'Avenir LT Pro', 'Avenir', sans-serif",
+              fontSize: '32px',
+              fontWeight: 400,
+              color: '#FFFFFF',
+              margin: '0 0 5px 0',
+              lineHeight: 1.2,
+            }}
+          >
+            ¿Tienes un inmueble para
+          </p>
+          <p
+            style={{
+              fontFamily: "'Avenir LT Pro 65 Medium', 'Avenir LT Pro', 'Avenir', sans-serif",
+              fontSize: '32px',
+              fontWeight: 700,
+              color: '#D62828',
+              margin: 0,
+              lineHeight: 1.2,
+            }}
+          >
+            arrendar o vender?
+          </p>
+        </div>
 
         {/* Párrafo descriptivo */}
         <p
           style={{
-            fontFamily: "'Avenir LT Pro 65 Medium', 'Avenir LT Pro', 'Avenir', 'Outfit', system-ui, sans-serif",
-            fontSize: '16px',
+            fontFamily: "'Avenir LT Pro 65 Medium', 'Avenir LT Pro', 'Avenir', sans-serif",
+            fontSize: '14px',
             fontWeight: 400,
             color: 'rgba(255, 255, 255, 0.8)',
             margin: 0,
-            lineHeight: 1.45,
-            marginTop: '10px',
+            lineHeight: 1.5,
           }}
         >
           Más de 60 años gestionando propiedades en Antioquia. Tu inmueble en manos de quienes conocen el
           mercado inmobiliario regional.
         </p>
 
-        {/* Botones */}
+        {/* Botones - GRANDES */}
         <div
           style={{
             display: 'flex',
-            gap: '10px',
-            marginTop: '5px',
+            flexDirection: 'column',
+            gap: '12px',
+            marginTop: '20px',
           }}
         >
           <button
@@ -92,17 +90,17 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
             style={{
               background: '#D62828',
               color: '#FFFFFF',
-              padding: '14px 24px',
-              fontSize: '15px',
-              fontWeight: 500,
+              padding: '16px 20px',
+              fontSize: '16px',
+              fontWeight: 600,
               border: 'none',
-              borderRadius: '4px',
+              borderRadius: '0px',
               cursor: 'pointer',
-              fontFamily: "'Avenir LT Pro 65 Medium', 'Avenir LT Pro', 'Avenir', 'Outfit', system-ui, sans-serif",
-              width: '190px',
+              fontFamily: "'Avenir LT Pro 65 Medium', 'Avenir LT Pro', 'Avenir', sans-serif",
+              width: '100%',
               transition: 'opacity 0.2s',
             }}
-            onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.9')}
+            onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.85')}
             onMouseLeave={(e) => (e.currentTarget.style.opacity = '1')}
           >
             Consignar mi propiedad
@@ -113,17 +111,17 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
             style={{
               background: '#D62828',
               color: '#FFFFFF',
-              padding: '14px 24px',
-              fontSize: '15px',
-              fontWeight: 500,
+              padding: '16px 20px',
+              fontSize: '16px',
+              fontWeight: 600,
               border: 'none',
-              borderRadius: '4px',
+              borderRadius: '0px',
               cursor: 'pointer',
-              fontFamily: "'Avenir LT Pro 65 Medium', 'Avenir LT Pro', 'Avenir', 'Outfit', system-ui, sans-serif",
-              width: '190px',
+              fontFamily: "'Avenir LT Pro 65 Medium', 'Avenir LT Pro', 'Avenir', sans-serif",
+              width: '100%',
               transition: 'opacity 0.2s',
             }}
-            onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.9')}
+            onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.85')}
             onMouseLeave={(e) => (e.currentTarget.style.opacity = '1')}
           >
             Hablar con un asesor
@@ -133,13 +131,12 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
         {/* Texto de aviso */}
         <p
           style={{
-            fontFamily: "'Avenir LT Pro 65 Medium', 'Avenir LT Pro', 'Avenir', 'Outfit', system-ui, sans-serif",
+            fontFamily: "'Avenir LT Pro 65 Medium', 'Avenir LT Pro', 'Avenir', sans-serif",
             fontSize: '13px',
             fontWeight: 400,
-            color: 'rgba(255, 255, 255, 0.6)',
-            margin: 0,
-            lineHeight: 1.45,
-            marginTop: '5px',
+            color: 'rgba(255, 255, 255, 0.7)',
+            margin: '20px 0 0 0',
+            lineHeight: 1.5,
           }}
         >
           Te avisamos cuando haya un arrendatario interesado.{' '}
@@ -147,34 +144,36 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
         </p>
       </div>
 
-      {/* RIGHT COLUMN - Grid de tarjetas e imágenes */}
+      {/* RIGHT GRID - 3 columnas × 2 filas */}
       <div
         style={{
           display: 'grid',
+          gridColumn: '2 / 5',
           gridTemplateColumns: '1.76fr 1fr 1fr',
-          gridTemplateRows: '250px 380px',
+          gridTemplateRows: '240px 360px',
           gap: '10px',
+          height: 'fit-content',
         }}
       >
         {/* Tarjeta +1000 */}
         <div
           style={{
             gridArea: '1 / 1 / 2 / 2',
-            background: 'linear-gradient(180deg, #222222, #1A1A1A)',
+            background: 'linear-gradient(180deg, #222222 0%, #1A1A1A 100%)',
             borderRadius: '0px',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'center',
-            padding: '40px 50px',
+            padding: '30px',
           }}
         >
           <div
             style={{
-              fontSize: '64px',
+              fontSize: '56px',
               fontWeight: 700,
               color: '#FFFFFF',
-              fontFamily: "'Avenir LT Pro 65 Medium', 'Avenir LT Pro', 'Avenir', 'Outfit', system-ui, sans-serif",
+              fontFamily: "'Avenir LT Pro 65 Medium', 'Avenir LT Pro', 'Avenir', sans-serif",
               lineHeight: 1,
             }}
           >
@@ -182,22 +181,22 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
           </div>
           <div
             style={{
-              fontSize: '20px',
+              fontSize: '18px',
               fontWeight: 400,
               color: '#FFFFFF',
-              fontFamily: "'Avenir LT Pro 65 Medium', 'Avenir LT Pro', 'Avenir', 'Outfit', system-ui, sans-serif",
-              marginTop: '20px',
+              fontFamily: "'Avenir LT Pro 65 Medium', 'Avenir LT Pro', 'Avenir', sans-serif",
+              marginTop: '12px',
             }}
           >
             inmuebles
           </div>
           <div
             style={{
-              fontSize: '16px',
+              fontSize: '14px',
               fontWeight: 400,
               color: 'rgba(255, 255, 255, 0.7)',
-              fontFamily: "'Avenir LT Pro 65 Medium', 'Avenir LT Pro', 'Avenir', 'Outfit', system-ui, sans-serif",
-              marginTop: '5px',
+              fontFamily: "'Avenir LT Pro 65 Medium', 'Avenir LT Pro', 'Avenir', sans-serif",
+              marginTop: '4px',
             }}
           >
             en gestión activa
@@ -228,7 +227,7 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
           }}
         />
 
-        {/* Imagen 3 */}
+        {/* Imagen 3 - GRANDE (ocupa col 1) */}
         <div
           style={{
             gridArea: '2 / 1 / 3 / 2',
@@ -244,21 +243,21 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
         <div
           style={{
             gridArea: '2 / 2 / 3 / 3',
-            background: 'linear-gradient(180deg, #222222, #1A1A1A)',
+            background: 'linear-gradient(180deg, #222222 0%, #1A1A1A 100%)',
             borderRadius: '0px',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'center',
-            padding: '40px 50px',
+            padding: '30px',
           }}
         >
           <div
             style={{
-              fontSize: '64px',
+              fontSize: '56px',
               fontWeight: 700,
               color: '#FFFFFF',
-              fontFamily: "'Avenir LT Pro 65 Medium', 'Avenir LT Pro', 'Avenir', 'Outfit', system-ui, sans-serif",
+              fontFamily: "'Avenir LT Pro 65 Medium', 'Avenir LT Pro', 'Avenir', sans-serif",
               lineHeight: 1,
             }}
           >
@@ -266,22 +265,22 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
           </div>
           <div
             style={{
-              fontSize: '20px',
+              fontSize: '18px',
               fontWeight: 400,
               color: '#FFFFFF',
-              fontFamily: "'Avenir LT Pro 65 Medium', 'Avenir LT Pro', 'Avenir', 'Outfit', system-ui, sans-serif",
-              marginTop: '20px',
+              fontFamily: "'Avenir LT Pro 65 Medium', 'Avenir LT Pro', 'Avenir', sans-serif",
+              marginTop: '12px',
             }}
           >
             años
           </div>
           <div
             style={{
-              fontSize: '16px',
+              fontSize: '14px',
               fontWeight: 400,
               color: 'rgba(255, 255, 255, 0.7)',
-              fontFamily: "'Avenir LT Pro 65 Medium', 'Avenir LT Pro', 'Avenir', 'Outfit', system-ui, sans-serif",
-              marginTop: '5px',
+              fontFamily: "'Avenir LT Pro 65 Medium', 'Avenir LT Pro', 'Avenir', sans-serif",
+              marginTop: '4px',
             }}
           >
             de experiencia
@@ -292,21 +291,21 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
         <div
           style={{
             gridArea: '2 / 3 / 3 / 4',
-            background: 'linear-gradient(180deg, #222222, #1A1A1A)',
+            background: 'linear-gradient(180deg, #222222 0%, #1A1A1A 100%)',
             borderRadius: '0px',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'center',
-            padding: '40px 50px',
+            padding: '30px',
           }}
         >
           <div
             style={{
-              fontSize: '64px',
+              fontSize: '56px',
               fontWeight: 700,
               color: '#FFFFFF',
-              fontFamily: "'Avenir LT Pro 65 Medium', 'Avenir LT Pro', 'Avenir', 'Outfit', system-ui, sans-serif",
+              fontFamily: "'Avenir LT Pro 65 Medium', 'Avenir LT Pro', 'Avenir', sans-serif",
               lineHeight: 1,
             }}
           >
@@ -314,22 +313,22 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
           </div>
           <div
             style={{
-              fontSize: '20px',
+              fontSize: '18px',
               fontWeight: 400,
               color: '#FFFFFF',
-              fontFamily: "'Avenir LT Pro 65 Medium', 'Avenir LT Pro', 'Avenir', 'Outfit', system-ui, sans-serif",
-              marginTop: '20px',
+              fontFamily: "'Avenir LT Pro 65 Medium', 'Avenir LT Pro', 'Avenir', sans-serif",
+              marginTop: '12px',
             }}
           >
             sedes
           </div>
           <div
             style={{
-              fontSize: '16px',
+              fontSize: '14px',
               fontWeight: 400,
               color: 'rgba(255, 255, 255, 0.7)',
-              fontFamily: "'Avenir LT Pro 65 Medium', 'Avenir LT Pro', 'Avenir', 'Outfit', system-ui, sans-serif",
-              marginTop: '5px',
+              fontFamily: "'Avenir LT Pro 65 Medium', 'Avenir LT Pro', 'Avenir', sans-serif",
+              marginTop: '4px',
             }}
           >
             en Antioquia
