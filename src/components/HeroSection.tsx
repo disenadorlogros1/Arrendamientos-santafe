@@ -10,6 +10,22 @@ interface HeroSectionProps {
   searchFormSlot?: React.ReactNode;
 }
 
+function applyInkFill(e: React.MouseEvent<HTMLElement>) {
+  const el = e.currentTarget;
+  const rect = el.getBoundingClientRect();
+  const x = e.clientX - rect.left;
+  const y = e.clientY - rect.top;
+  const size = Math.max(
+    Math.hypot(x, y),
+    Math.hypot(rect.width - x, y),
+    Math.hypot(x, rect.height - y),
+    Math.hypot(rect.width - x, rect.height - y),
+  ) * 2;
+  el.style.setProperty('--x', `${x}px`);
+  el.style.setProperty('--y', `${y}px`);
+  el.style.setProperty('--size', `${size}px`);
+}
+
 const WHATSAPP_URL =
   'https://wa.me/573006557529?text=Hola%2C%20quisiera%20hablar%20con%20un%20asesor%20de%20Arrendamientos%20Santa%20Fe.';
 
@@ -115,6 +131,8 @@ export default function HeroSection({ onNavigate, searchFormSlot }: HeroSectionP
               <button
                 type="button"
                 onClick={() => onNavigate?.('propiedades')}
+                onMouseEnter={applyInkFill}
+                onMouseLeave={applyInkFill}
                 className="hero-btn-fill inline-flex items-center justify-center h-[42px] px-6 rounded-full border border-white/30 text-sm"
                 style={{ fontFamily: FONT_BODY, fontWeight: 300 }}
               >
@@ -125,6 +143,8 @@ export default function HeroSection({ onNavigate, searchFormSlot }: HeroSectionP
                 href={WHATSAPP_URL}
                 target="_blank"
                 rel="noopener noreferrer"
+                onMouseEnter={applyInkFill}
+                onMouseLeave={applyInkFill}
                 className="hero-btn-fill inline-flex items-center justify-center h-[42px] px-5 rounded-full border border-white/30 text-sm"
                 style={{ fontFamily: FONT_BODY, fontWeight: 300, textDecoration: 'none' }}
               >

@@ -171,33 +171,30 @@
   animation: bounce-subtle 2s ease-in-out infinite;
 }
 
-/* Hero buttons: fill-slide animation */
+/* Hero buttons: directional ink fill */
 .hero-btn-fill {
   position: relative;
   overflow: hidden;
   background: rgba(0, 0, 0, 0.25);
   color: #ffffff;
-  transition: color 0.4s ease;
 }
 
 .hero-btn-fill::before {
   content: '';
   position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  background: #ffffff;
-  transform: scaleX(0);
-  transform-origin: left center;
-  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  z-index: 0;
-}
-
-.hero-btn-fill:hover {
-  color: #1a1a1a;
+  border-radius: 50%;
+  background: #f32735;
+  width: var(--size, 300px);
+  height: var(--size, 300px);
+  left: var(--x, 50%);
+  top: var(--y, 50%);
+  transform: translate(-50%, -50%) scale(0);
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
 }
 
 .hero-btn-fill:hover::before {
-  transform: scaleX(1);
+  transform: translate(-50%, -50%) scale(1);
 }
 
 .hero-btn-fill > span {
