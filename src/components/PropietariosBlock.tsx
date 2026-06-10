@@ -19,8 +19,8 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
         gridTemplateColumns: '410px 1fr',
         gap: '20px',
         padding: '120px 65px',
-        maxWidth: '1920px',
-        minHeight: '1080px',
+        width: '1920px',
+        height: '500px',
         margin: '0 auto',
       }}
     >
