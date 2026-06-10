@@ -178,6 +178,13 @@ export default function SearchForm({ onNavigate }: SearchFormProps) {
   // Rastrea si ya fijamos anchos explícitos (para hacer lock en la primera interacción)
   const widthsLocked = useRef(false);
 
+  /* Estado inicial de iconos via GSAP (no en style prop de React) */
+  useEffect(() => {
+    iconRefs.current.forEach(el => {
+      if (el) gsap.set(el, { opacity: 0, scale: 0.7 });
+    });
+  }, []);
+
   /* Fija anchos explícitos justo antes de la primera animación */
   const lockWidths = useCallback(() => {
     if (widthsLocked.current) return;
@@ -216,16 +223,19 @@ export default function SearchForm({ onNavigate }: SearchFormProps) {
 
     /* Ancho de cada celda: power4.out = mismo impulso que las cards */
     cellRefs.current.forEach((cell, i) => {
-      if (cell) gsap.to(cell, { width: widths[i], duration: 0.65, ease: 'power4.out' });
+      if (!cell) return;
+      // Deshabilitar flex siempre (no solo en lockWidths) para que GSAP controle el ancho
+      gsap.set(cell, { flexGrow: 0, flexShrink: 0 });
+      gsap.to(cell, { width: widths[i], duration: 0.65, ease: 'power4.out', overwrite: 'auto' });
     });
 
     /* Contenido que colapsa: encoge y desaparece (como card saliente) */
     contentRefs.current.forEach((el, i) => {
       if (!el) return;
       if (collapsed[i]) {
-        gsap.to(el, { opacity: 0, scale: 0.85, duration: 0.2, ease: 'power2.in' });
+        gsap.to(el, { opacity: 0, scale: 0.85, duration: 0.2, ease: 'power2.in', overwrite: 'auto' });
       } else {
-        gsap.to(el, { opacity: 1, scale: 1, duration: 0.4, ease: 'power3.out', delay: 0.25 });
+        gsap.to(el, { opacity: 1, scale: 1, duration: 0.4, ease: 'power3.out', delay: 0.25, overwrite: 'auto' });
       }
     });
 
@@ -233,9 +243,9 @@ export default function SearchForm({ onNavigate }: SearchFormProps) {
     iconRefs.current.forEach((el, i) => {
       if (!el) return;
       if (collapsed[i]) {
-        gsap.to(el, { opacity: 1, scale: 1, duration: 0.3, ease: 'power3.out', delay: 0.2 });
+        gsap.to(el, { opacity: 1, scale: 1, duration: 0.3, ease: 'power3.out', delay: 0.2, overwrite: 'auto' });
       } else {
-        gsap.to(el, { opacity: 0, scale: 0.7, duration: 0.15, ease: 'power2.in' });
+        gsap.to(el, { opacity: 0, scale: 0.7, duration: 0.15, ease: 'power2.in', overwrite: 'auto' });
       }
     });
   }, [lockWidths]);
@@ -271,9 +281,8 @@ export default function SearchForm({ onNavigate }: SearchFormProps) {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    opacity: 0,
     pointerEvents: 'none',
-    transform: 'scale(0.7)',
+    // opacity y transform los controla GSAP (no React) para evitar que el re-render los resetee
   };
 
   const labelStyle: React.CSSProperties = {
@@ -349,7 +358,6 @@ export default function SearchForm({ onNavigate }: SearchFormProps) {
                   type="text"
                   value={codigo}
                   onChange={e => setCodigo(e.target.value)}
-                  onFocus={() => handleCellClick('codigo')}
                   placeholder="Ej: 12345"
                   style={{ fontFamily: FONT, fontSize: '14px', color: codigo ? COLOR_VALUE : '#b8b8b8',
                     background: 'transparent', border: 'none', outline: 'none', width: '100%', lineHeight: 1 }}

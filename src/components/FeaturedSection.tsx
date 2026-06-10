@@ -25,7 +25,7 @@ export default function FeaturedSection({ onNavigate }: FeaturedSectionProps) {
 
         {/* Celda título */}
         <div
-          className="flex-1 flex flex-col justify-center px-8 py-5 sm:px-12 sm:py-6 lg:px-16"
+          className="flex-1 flex flex-col justify-center px-8 py-4 sm:px-12 sm:py-0 lg:px-16 sm:h-[44px] overflow-hidden"
           style={{ background: '#fff' }}
         >
           <h2
@@ -34,7 +34,7 @@ export default function FeaturedSection({ onNavigate }: FeaturedSectionProps) {
             style={{
               fontFamily: FONT_HEADING,
               fontWeight: 300,
-              fontSize: 'clamp(26px, 2.6vw, 46px)',
+              fontSize: 'clamp(22px, 2vw, 34px)',
               color: RED,
               lineHeight: 1.2,
               margin: 0,
