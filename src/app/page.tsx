@@ -41,16 +41,24 @@ function HomePage({ onNavigate }: { onNavigate: (page: PageType) => void }) {
       <UserLocation mobileExpanded={mobileExpanded} />
 
       {/* Sección 2: Propiedades Destacadas */}
-      <FeaturedSection onNavigate={onNavigate} />
+      <ScrollReveal y={50} start="top 90%">
+        <FeaturedSection onNavigate={onNavigate} />
+      </ScrollReveal>
 
       {/* Sección 3: Bloque para Propietarios (Consignación) */}
-      <PropietariosBlock onNavigate={onNavigate} />
+      <ScrollReveal y={40} start="top 88%">
+        <PropietariosBlock onNavigate={onNavigate} />
+      </ScrollReveal>
 
       {/* Sección 4: Servicios Principales */}
-      <ServiciosBlock onNavigate={onNavigate} />
+      <ScrollReveal y={40} start="top 88%">
+        <ServiciosBlock onNavigate={onNavigate} />
+      </ScrollReveal>
 
       {/* Sección 5: Bloque Institucional 60 años */}
-      <TrayectoriaBlock onNavigate={onNavigate} />
+      <ScrollReveal y={40} start="top 88%">
+        <TrayectoriaBlock onNavigate={onNavigate} />
+      </ScrollReveal>
     </>
   );
 }
