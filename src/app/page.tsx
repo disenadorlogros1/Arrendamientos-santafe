@@ -11,6 +11,7 @@ import FeaturedSection from '@/components/FeaturedSection';
 import PropietariosBlock from '@/components/PropietariosBlock';
 import ServiciosBlock from '@/components/ServiciosBlock';
 import TrayectoriaBlock from '@/components/TrayectoriaBlock';
+import ScrollReveal from '@/components/ScrollReveal';
 import PropiedadesPage from '@/components/PropiedadesPage';
 import ConsignacionPage from '@/components/ConsignacionPage';
 import HipotecasPage from '@/components/HipotecasPage';
