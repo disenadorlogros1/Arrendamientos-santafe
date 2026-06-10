@@ -76,11 +76,11 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
   const { ref: titleRef, titleAnimating } = useSplitTextAnimation('.propietarios-title-split', 0, true);
   const sectionRef = useRef<HTMLDivElement>(null);
 
-  /* Scroll: empieza cuando el borde superior cruza el corte 2 (67% viewport)
-     y termina cuando cruza el corte 1 (33% viewport) — sección en franja media */
+  /* Scroll: empieza cuando el borde superior de la sección llega a corte 1 (33%)
+     y termina cuando el borde inferior llega a corte 2 (67%)                  */
   const { scrollYProgress } = useScroll({
     target: sectionRef,
-    offset: ['start 0.67', 'start 0.33'],
+    offset: ['start 0.33', 'end 0.67'],
   });
 
   /* Tres pares con stagger leve — usan todo el rango 0→1 del offset */

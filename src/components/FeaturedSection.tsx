@@ -66,10 +66,10 @@ export default function FeaturedSection({ onNavigate }: FeaturedSectionProps) {
         </button>
       </div>
 
-      {/* Carrusel — mismo padding que el header */}
+      {/* Carrusel — mismo padding que el header, 10% arriba y abajo */}
       <div
         className="px-6 sm:px-10 lg:px-14"
-        style={{ paddingBottom: '32px' }}
+        style={{ paddingTop: '5%', paddingBottom: '5%' }}
       >
         <InfiniteCarousel properties={featured} />
       </div>
