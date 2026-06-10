@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { useSplitTextAnimation } from '@/hooks/useSplitTextAnimation';
+import { useCountAnimation } from '@/hooks/useCountAnimation';
 import type { PageType } from '@/components/Header';
 
 interface PropietariosBlockProps {
@@ -13,15 +14,31 @@ const WHATSAPP_URL =
 
 const FONT_BODY    = "'Avenir LT Pro 65 Medium', 'Avenir LT Pro', 'Avenir', 'Outfit', system-ui, sans-serif";
 const FONT_HEADING = "'Avenir Next Ultra Light', 'Avenir LT Pro 65 Medium', 'Avenir', 'Outfit', system-ui, sans-serif";
+const FONT_HEAVY   = "'Avenir LT Pro 85 Heavy', 'Avenir LT Pro', 'Avenir', 'Outfit', system-ui, sans-serif";
 const RED          = '#f32735';
 
 const EASE_BENTO = [0.25, 0.46, 0.45, 0.94] as const;
 
 /* ── Sub-componentes ─────────────────────────────────────────────── */
 
-function StatCard({ number, label, sublabel }: { number: string; label: string; sublabel: string }) {
+function StatCard({
+  endValue,
+  prefix = '',
+  label,
+  sublabel,
+  duration = 2000,
+}: {
+  endValue: number;
+  prefix?: string;
+  label: string;
+  sublabel: string;
+  duration?: number;
+}) {
+  const { ref: countRef, count } = useCountAnimation(endValue, duration);
+
   return (
     <motion.div
+      ref={countRef}
       style={{
         background: '#2d2d2d',
         display: 'flex',
@@ -35,7 +52,7 @@ function StatCard({ number, label, sublabel }: { number: string; label: string; 
     >
       <motion.span
         style={{
-          fontFamily: "'Avenir LT Pro 85 Heavy', 'Avenir LT Pro', 'Avenir', system-ui, sans-serif",
+          fontFamily: FONT_HEAVY,
           fontSize: 'clamp(28px, 3.2vw, 56px)',
           fontWeight: 800,
           color: '#fff',
@@ -45,7 +62,7 @@ function StatCard({ number, label, sublabel }: { number: string; label: string; 
         whileHover={{ scale: 1.06 }}
         transition={{ duration: 0.3, ease: 'easeOut' }}
       >
-        {number}
+        {prefix}{count}
       </motion.span>
       <span style={{ fontFamily: FONT_BODY, fontSize: 'clamp(12px, 1vw, 16px)', fontWeight: 300, color: '#fff', marginTop: '6px', lineHeight: 1 }}>
         {label}
@@ -79,12 +96,12 @@ function PhotoCell({ url, position = 'center' }: { url: string; position?: strin
 /* ── Datos del grid ──────────────────────────────────────────────── */
 
 const GRID = [
-  { type: 'stat',  number: '+1000', label: 'inmuebles', sublabel: 'en gestión activa' },
+  { type: 'stat',  endValue: 1000, prefix: '+', label: 'inmuebles', sublabel: 'en gestión activa',  duration: 2000 },
   { type: 'photo', url: '/images/Banner_consigna_propiedad.png', position: 'center top' },
   { type: 'photo', url: '/images/banner_inversionistas.png',     position: 'center top' },
   { type: 'photo', url: '/images/banner_propietarios.png',       position: 'center' },
-  { type: 'stat',  number: '60',    label: 'años',      sublabel: 'de experiencia' },
-  { type: 'stat',  number: '3',     label: 'sedes',     sublabel: 'en Antioquia' },
+  { type: 'stat',  endValue: 60,   prefix: '',  label: 'años',      sublabel: 'de experiencia',      duration: 1600 },
+  { type: 'stat',  endValue: 3,    prefix: '',  label: 'sedes',     sublabel: 'en Antioquia',         duration: 800  },
 ] as const;
 
 /* ── Componente principal ────────────────────────────────────────── */
@@ -97,12 +114,12 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
 
       <div className="flex flex-col lg:flex-row lg:h-[460px]">
 
-        {/* ── COLUMNA IZQUIERDA ─────────────────────────────────── */}
+        {/* ── COLUMNA IZQUIERDA (+20% ancho) ───────────────────── */}
         <div
           className="flex flex-col justify-center gap-5 px-8 py-10 sm:px-14 sm:py-12 lg:py-0 lg:pl-16 lg:pr-14 lg:flex-shrink-0 lg:flex-grow-0"
-          style={{ flexBasis: '560px' }}
+          style={{ flexBasis: '672px' }}
         >
-          {/* Título — mismo tamaño que "Propiedades destacadas" */}
+          {/* Título */}
           <h2
             ref={titleRef}
             className="propietarios-title-split"
@@ -121,7 +138,7 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
             </span>
           </h2>
 
-          {/* Descripción — mismo tamaño que el subtítulo del Hero */}
+          {/* Descripción — interlineado −30% (1.55 → 1.08) */}
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={titleAnimating ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
@@ -132,7 +149,7 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
               fontWeight: 300,
               color: 'rgba(255,255,255,0.75)',
               margin: 0,
-              lineHeight: 1.55,
+              lineHeight: 1.08,
             }}
           >
             Más de 60 años gestionando propiedades en Antioquia. Tu inmueble en
@@ -167,12 +184,12 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
             </button>
           </motion.div>
 
-          {/* Nota */}
+          {/* Nota — mismo tamaño que subtítulo del Hero */}
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={titleAnimating ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
             transition={{ duration: 0.4, delay: 0.2, ease: 'easeOut' }}
-            style={{ fontFamily: FONT_BODY, fontSize: 'clamp(12px, 0.85vw, 13px)', fontWeight: 300, color: 'rgba(255,255,255,0.55)', margin: 0, lineHeight: 1.5 }}
+            style={{ fontFamily: FONT_BODY, fontSize: 'clamp(13px, 1.1vw, 17px)', fontWeight: 300, color: 'rgba(255,255,255,0.55)', margin: 0, lineHeight: 1.45 }}
           >
             Te avisamos cuando haya un arrendatario interesado.{' '}
             <strong style={{ fontWeight: 700, color: '#fff' }}>Sin demoras, sin contratiempos.</strong>
@@ -194,7 +211,13 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
               style={{ overflow: 'hidden' }}
             >
               {cell.type === 'stat' ? (
-                <StatCard number={cell.number} label={cell.label} sublabel={cell.sublabel} />
+                <StatCard
+                  endValue={cell.endValue}
+                  prefix={cell.prefix}
+                  label={cell.label}
+                  sublabel={cell.sublabel}
+                  duration={cell.duration}
+                />
               ) : (
                 <PhotoCell url={cell.url} position={cell.position} />
               )}
