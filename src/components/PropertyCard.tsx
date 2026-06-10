@@ -24,8 +24,8 @@ export default function PropertyCard({ property }: PropertyCardProps) {
       className="flex flex-col h-full rounded-lg overflow-hidden"
       style={{
         boxShadow: isHovered
-          ? '0 12px 32px -6px rgba(0,0,0,0.18)'
-          : '0 2px 8px rgba(0,0,0,0.06)',
+          ? '0 0 28px rgba(0,0,0,0.26)'
+          : '0 1px 4px rgba(0,0,0,0.06)',
         transition: 'box-shadow 0.3s ease',
       }}
       onMouseEnter={() => setIsHovered(true)}
