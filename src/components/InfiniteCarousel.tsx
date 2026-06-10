@@ -31,8 +31,9 @@ function applyInkFill(e: React.MouseEvent<HTMLElement>) {
   el.style.setProperty('--size', `${size}px`);
 }
 
-const NAV_W = 40; // px — ancho del botón flecha
-const GAP   = 12; // px — gap entre cards y entre flechas/contenedor
+const GAP      = 12; // px entre cards
+const NAV_W    = 40; // px ancho botón flecha
+const NAV_OFF  = 16; // px desde el borde de la card hasta la flecha
 
 export default function InfiniteCarousel({ properties }: InfiniteCarouselProps) {
   const [cards] = useState(() => buildCards(properties));
@@ -41,11 +42,12 @@ export default function InfiniteCarousel({ properties }: InfiniteCarouselProps) 
   const [containerWidth, setContainerWidth] = useState(0);
   const [isMounted, setIsMounted] = useState(false);
 
-  const containerRef = useRef<HTMLDivElement>(null); // overflow:hidden — medido con ResizeObserver
+  const containerRef = useRef<HTMLDivElement>(null);
   const trackRef     = useRef<HTMLDivElement>(null);
   const isAnimating  = useRef(false);
+  const isPaused     = useRef(false); // pausa autoplay cuando el mouse está sobre el carrusel
 
-  /* Viewport width — para decidir cuántas cards */
+  /* Viewport width — para número de cards */
   useEffect(() => {
     setIsMounted(true);
     const onResize = () => setWindowWidth(window.innerWidth);
@@ -69,13 +71,15 @@ export default function InfiniteCarousel({ properties }: InfiniteCarouselProps) 
   }, [isMounted]);
 
   const VISIBLE = windowWidth < 640 ? 1 : windowWidth < 1024 ? 2 : windowWidth < 1280 ? 3 : windowWidth < 1536 ? 4 : 5;
-
-  /* CARD_W llena el contenedor exactamente */
-  const CARD_W = containerWidth > 0
+  const CARD_W  = containerWidth > 0
     ? Math.floor((containerWidth - (VISIBLE - 1) * GAP) / VISIBLE)
     : 0;
-  const CARD_H = Math.round(CARD_W * 16 / 9);
-  const SLOT   = CARD_W + GAP;
+  const CARD_H  = Math.round(CARD_W * 16 / 9);
+  const SLOT    = CARD_W + GAP;
+
+  // Posición vertical de las flechas: centrado en la zona de imagen (sin el panel inferior ~90px)
+  const INFO_H     = 90;
+  const arrowTopPx = CARD_H > 0 ? Math.round((CARD_H - INFO_H) / 2) : 0;
 
   const visibleCards = Array.from({ length: VISIBLE + 1 }, (_, i) => {
     const idx = (startIndex + i) % cards.length;
@@ -124,11 +128,11 @@ export default function InfiniteCarousel({ properties }: InfiniteCarouselProps) 
     }
   }, [cards.length, SLOT, CARD_W]);
 
-  /* Autoplay */
+  /* Autoplay — se pausa cuando isPaused.current es true */
   useEffect(() => {
     if (!isMounted) return;
     const interval = setInterval(() => {
-      if (!isAnimating.current) navigate(true);
+      if (!isAnimating.current && !isPaused.current) navigate(true);
     }, 4000);
     return () => clearInterval(interval);
   }, [isMounted, navigate]);
@@ -136,27 +140,17 @@ export default function InfiniteCarousel({ properties }: InfiniteCarouselProps) 
   const trackW = CARD_W > 0 ? (VISIBLE + 1) * CARD_W + VISIBLE * GAP : 0;
 
   return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: `${GAP}px`, width: '100%' }}>
+    /* Wrapper relativo: las flechas se posicionan absolute sobre las cards */
+    <div
+      style={{ position: 'relative', width: '100%' }}
+      onMouseEnter={() => { isPaused.current = true; }}
+      onMouseLeave={() => { isPaused.current = false; }}
+    >
 
-      {/* Flecha izquierda */}
-      <button
-        type="button"
-        onClick={() => navigate(false)}
-        onMouseEnter={applyInkFill}
-        onMouseLeave={applyInkFill}
-        className="carousel-nav-btn rounded-full flex items-center justify-center"
-        style={{ width: `${NAV_W}px`, height: `${NAV_W}px`, flexShrink: 0 }}
-        aria-label="Anterior"
-      >
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <polyline points="15 18 9 12 15 6" />
-        </svg>
-      </button>
-
-      {/* Contenedor: clipea la card extra off-screen */}
+      {/* Contenedor que clipea la card extra off-screen */}
       <div
         ref={containerRef}
-        style={{ overflow: 'hidden', flex: 1, minWidth: 0 }}
+        style={{ overflow: 'hidden', width: '100%' }}
       >
         {CARD_W > 0 && (
           <div
@@ -187,20 +181,55 @@ export default function InfiniteCarousel({ properties }: InfiniteCarouselProps) 
         )}
       </div>
 
-      {/* Flecha derecha */}
-      <button
-        type="button"
-        onClick={() => navigate(true)}
-        onMouseEnter={applyInkFill}
-        onMouseLeave={applyInkFill}
-        className="carousel-nav-btn rounded-full flex items-center justify-center"
-        style={{ width: `${NAV_W}px`, height: `${NAV_W}px`, flexShrink: 0 }}
-        aria-label="Siguiente"
-      >
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <polyline points="9 18 15 12 9 6" />
-        </svg>
-      </button>
+      {/* Flecha izquierda — superpuesta sobre card 1 */}
+      {arrowTopPx > 0 && (
+        <button
+          type="button"
+          onClick={() => navigate(false)}
+          onMouseEnter={applyInkFill}
+          onMouseLeave={applyInkFill}
+          className="carousel-nav-btn rounded-full flex items-center justify-center"
+          style={{
+            position: 'absolute',
+            left: `${NAV_OFF}px`,
+            top: `${arrowTopPx}px`,
+            transform: 'translateY(-50%)',
+            width: `${NAV_W}px`,
+            height: `${NAV_W}px`,
+            zIndex: 10,
+          }}
+          aria-label="Anterior"
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <polyline points="15 18 9 12 15 6" />
+          </svg>
+        </button>
+      )}
+
+      {/* Flecha derecha — superpuesta sobre la última card visible */}
+      {arrowTopPx > 0 && (
+        <button
+          type="button"
+          onClick={() => navigate(true)}
+          onMouseEnter={applyInkFill}
+          onMouseLeave={applyInkFill}
+          className="carousel-nav-btn rounded-full flex items-center justify-center"
+          style={{
+            position: 'absolute',
+            right: `${NAV_OFF}px`,
+            top: `${arrowTopPx}px`,
+            transform: 'translateY(-50%)',
+            width: `${NAV_W}px`,
+            height: `${NAV_W}px`,
+            zIndex: 10,
+          }}
+          aria-label="Siguiente"
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <polyline points="9 18 15 12 9 6" />
+          </svg>
+        </button>
+      )}
 
     </div>
   );

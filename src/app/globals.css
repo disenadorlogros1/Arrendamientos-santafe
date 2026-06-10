@@ -231,14 +231,14 @@ html.lenis, html.lenis body { height: auto; }
 .card-arrow-btn {
   position: relative;
   overflow: hidden;
-  background: rgba(0, 0, 0, 0.38);
-  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: #f32735;
+  border: 1px solid #f32735;
   color: #fff;
   transition: background 0.25s ease, border-color 0.25s ease;
 }
 .card-arrow-btn:hover {
-  background: #f32735;
-  border-color: #f32735;
+  background: #aa182c;
+  border-color: #aa182c;
 }
 .card-arrow-btn .arr-primary {
   display: flex;
