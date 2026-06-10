@@ -21,7 +21,7 @@ export default function FeaturedSection({ onNavigate }: FeaturedSectionProps) {
     <section style={{ background: '#F5F5F5' }} className="w-full overflow-hidden">
 
       {/* Fila header: celda título + celda botón */}
-      <div className="flex flex-col sm:flex-row" style={{ gap: '3px' }}>
+      <div className="flex flex-col sm:flex-row sm:items-center" style={{ gap: '3px' }}>
 
         {/* Celda título */}
         <div
@@ -44,15 +44,15 @@ export default function FeaturedSection({ onNavigate }: FeaturedSectionProps) {
           </h2>
         </div>
 
-        {/* Celda botón */}
+        {/* Celda botón — 44px alto, ancho desde donde empieza el botón WPP del header */}
         <button
           type="button"
           onClick={() => {
             onNavigate('propiedades');
             window.scrollTo({ top: 0, behavior: 'smooth' });
           }}
-          className="flex items-center justify-center transition-colors duration-200 py-8 sm:py-0"
-          style={{ background: '#888888', flexShrink: 0, minWidth: '280px' }}
+          className="flex items-center justify-center transition-colors duration-200 w-full sm:w-[340px] h-[44px]"
+          style={{ background: '#888888', flexShrink: 0 }}
           onMouseEnter={(e) => (e.currentTarget.style.background = RED)}
           onMouseLeave={(e) => (e.currentTarget.style.background = '#888888')}
         >
