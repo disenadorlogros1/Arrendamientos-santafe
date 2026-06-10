@@ -76,27 +76,25 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
   const { ref: titleRef, titleAnimating } = useSplitTextAnimation('.propietarios-title-split', 0, true);
   const sectionRef = useRef<HTMLDivElement>(null);
 
-  /* Scroll progress de la sección completa */
+  /* Scroll: empieza cuando el borde superior cruza el corte 2 (67% viewport)
+     y termina cuando cruza el corte 1 (33% viewport) — sección en franja media */
   const { scrollYProgress } = useScroll({
     target: sectionRef,
-    offset: ['start end', 'end start'],
+    offset: ['start 0.67', 'start 0.33'],
   });
 
-  /* Par A: celda 2 (foto, derecha) invade celda 1 (stat, izquierda)
-     Termina al llegar al centro de pantalla (~scrollYProgress 0.45)  */
-  const progressA = useTransform(scrollYProgress, [0.1, 0.45], [0, 1]);
+  /* Tres pares con stagger leve — usan todo el rango 0→1 del offset */
+  const progressA = useTransform(scrollYProgress, [0,    0.88], [0, 1]);
   const clipA     = useTransform(progressA, (p) => `inset(0 0 0 ${(1 - p) * 50}%)`);
   const bgOpA     = useTransform(progressA, [0, 1], [1, 0]);
   const gradOpA   = useTransform(progressA, [0.3, 1], [0, 1]);
 
-  /* Par B: celda 3 (foto, arriba) invade celda 6 (stat, abajo)      */
-  const progressB = useTransform(scrollYProgress, [0.12, 0.47], [0, 1]);
+  const progressB = useTransform(scrollYProgress, [0.06, 0.94], [0, 1]);
   const clipB     = useTransform(progressB, (p) => `inset(0 0 ${(1 - p) * 50}% 0)`);
   const bgOpB     = useTransform(progressB, [0, 1], [1, 0]);
   const gradOpB   = useTransform(progressB, [0.3, 1], [0, 1]);
 
-  /* Par C: celda 4 (foto, izquierda) invade celda 5 (stat, derecha) */
-  const progressC = useTransform(scrollYProgress, [0.14, 0.49], [0, 1]);
+  const progressC = useTransform(scrollYProgress, [0.12, 1],    [0, 1]);
   const clipC     = useTransform(progressC, (p) => `inset(0 ${(1 - p) * 50}% 0 0)`);
   const bgOpC     = useTransform(progressC, [0, 1], [1, 0]);
   const gradOpC   = useTransform(progressC, [0.3, 1], [0, 1]);
