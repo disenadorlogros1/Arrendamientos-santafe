@@ -18,60 +18,59 @@ export default function FeaturedSection({ onNavigate }: FeaturedSectionProps) {
   const { ref: titleRef } = useSplitTextAnimation('.featured-title-split', 0, false);
 
   return (
-    <section style={{ background: '#F5F5F5' }} className="w-full overflow-hidden">
+    <section style={{ background: '#fff' }} className="w-full overflow-hidden">
 
-      {/* Fila header: celda título + celda botón */}
-      <div className="flex flex-col sm:flex-row" style={{ gap: '3px' }}>
-
-        {/* Celda título */}
-        <div
-          className="flex-1 flex flex-col justify-center px-8 py-4 sm:px-12 sm:py-0 lg:px-16 sm:h-[44px] overflow-hidden"
-          style={{ background: '#fff' }}
+      {/* Header: título + botón — sin línea gris */}
+      <div
+        className="flex items-center justify-between px-6 sm:px-10 lg:px-14"
+        style={{ paddingTop: '28px', paddingBottom: '20px' }}
+      >
+        <h2
+          ref={titleRef}
+          className="featured-title-split"
+          style={{
+            fontFamily: FONT_HEADING,
+            fontWeight: 300,
+            fontSize: 'clamp(26px, 2.6vw, 46px)',
+            color: RED,
+            lineHeight: 1.2,
+            margin: 0,
+          }}
         >
-          <h2
-            ref={titleRef}
-            className="featured-title-split"
-            style={{
-              fontFamily: FONT_HEADING,
-              fontWeight: 300,
-              fontSize: 'clamp(22px, 2vw, 34px)',
-              color: RED,
-              lineHeight: 1.2,
-              margin: 0,
-            }}
-          >
-            Propiedades <span style={{ fontWeight: 700 }}>destacadas</span>
-          </h2>
-        </div>
+          Propiedades <span style={{ fontWeight: 700 }}>destacadas</span>
+        </h2>
 
-        {/* Celda botón — 44px alto, ancho desde donde empieza el botón WPP del header */}
         <button
           type="button"
           onClick={() => {
             onNavigate('propiedades');
             window.scrollTo({ top: 0, behavior: 'smooth' });
           }}
-          className="flex items-center justify-center transition-colors duration-200 w-full sm:w-[340px]"
-          style={{ background: '#888888', flexShrink: 0 }}
+          style={{
+            background: '#888',
+            color: '#fff',
+            fontFamily: FONT_BODY,
+            fontWeight: 600,
+            fontSize: 'clamp(13px, 1vw, 16px)',
+            letterSpacing: '0.02em',
+            border: 'none',
+            cursor: 'pointer',
+            padding: '10px 24px',
+            flexShrink: 0,
+            transition: 'background 0.2s ease',
+          }}
           onMouseEnter={(e) => (e.currentTarget.style.background = RED)}
-          onMouseLeave={(e) => (e.currentTarget.style.background = '#888888')}
+          onMouseLeave={(e) => (e.currentTarget.style.background = '#888')}
         >
-          <span
-            style={{
-              fontFamily: FONT_BODY,
-              fontWeight: 600,
-              fontSize: 'clamp(15px, 1.2vw, 18px)',
-              color: '#fff',
-              letterSpacing: '0.02em',
-            }}
-          >
-            Ver más
-          </span>
+          Ver más
         </button>
       </div>
 
-      {/* Celda carrusel */}
-      <div style={{ marginTop: '3px', background: '#fff', paddingTop: '24px', paddingBottom: '24px' }}>
+      {/* Carrusel — mismo padding que el header */}
+      <div
+        className="px-6 sm:px-10 lg:px-14"
+        style={{ paddingBottom: '32px' }}
+      >
         <InfiniteCarousel properties={featured} />
       </div>
 
