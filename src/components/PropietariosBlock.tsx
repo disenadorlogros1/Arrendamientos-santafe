@@ -83,22 +83,20 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
   });
 
   /* Par A: celda 2 (foto, derecha) invade celda 1 (stat, izquierda)
-     clip-path: inset(0 0 0 50%) → inset(0 0 0 0%)                   */
-  const progressA = useTransform(scrollYProgress, [0.1, 0.62], [0, 1]);
+     Termina al llegar al centro de pantalla (~scrollYProgress 0.45)  */
+  const progressA = useTransform(scrollYProgress, [0.1, 0.45], [0, 1]);
   const clipA     = useTransform(progressA, (p) => `inset(0 0 0 ${(1 - p) * 50}%)`);
   const bgOpA     = useTransform(progressA, [0, 1], [1, 0]);
   const gradOpA   = useTransform(progressA, [0.3, 1], [0, 1]);
 
-  /* Par B: celda 3 (foto, arriba) invade celda 6 (stat, abajo)
-     clip-path: inset(0 0 50% 0) → inset(0 0 0 0%)                   */
-  const progressB = useTransform(scrollYProgress, [0.13, 0.65], [0, 1]);
+  /* Par B: celda 3 (foto, arriba) invade celda 6 (stat, abajo)      */
+  const progressB = useTransform(scrollYProgress, [0.12, 0.47], [0, 1]);
   const clipB     = useTransform(progressB, (p) => `inset(0 0 ${(1 - p) * 50}% 0)`);
   const bgOpB     = useTransform(progressB, [0, 1], [1, 0]);
   const gradOpB   = useTransform(progressB, [0.3, 1], [0, 1]);
 
-  /* Par C: celda 4 (foto, izquierda) invade celda 5 (stat, derecha)
-     clip-path: inset(0 50% 0 0) → inset(0 0% 0 0)                   */
-  const progressC = useTransform(scrollYProgress, [0.16, 0.68], [0, 1]);
+  /* Par C: celda 4 (foto, izquierda) invade celda 5 (stat, derecha) */
+  const progressC = useTransform(scrollYProgress, [0.14, 0.49], [0, 1]);
   const clipC     = useTransform(progressC, (p) => `inset(0 ${(1 - p) * 50}% 0 0)`);
   const bgOpC     = useTransform(progressC, [0, 1], [1, 0]);
   const gradOpC   = useTransform(progressC, [0.3, 1], [0, 1]);
