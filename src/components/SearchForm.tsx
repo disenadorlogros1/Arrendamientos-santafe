@@ -45,26 +45,27 @@ const PRESUPUESTO = {
   ],
 };
 
-/* ── Estilos compartidos ─────────────────────────────────────────── */
+/* ── Constantes de estilo ────────────────────────────────────────── */
 
-const FONT       = "'Avenir LT Pro 65 Medium', 'Avenir LT Pro', 'Avenir', 'Outfit', system-ui, sans-serif";
+const FONT        = "'Avenir LT Pro 65 Medium', 'Avenir LT Pro', 'Avenir', 'Outfit', system-ui, sans-serif";
 const COLOR_LABEL = '#909090';
 const COLOR_VALUE = '#232222';
+const RED         = '#f32735';
+const RED_HOVER   = '#aa182c';
 
 /* ── CustomSelect ────────────────────────────────────────────────── */
 
-function CustomSelect({ label, value, onChange, options, placeholder }: {
-  label: string;
-  value: string;
-  onChange: (val: string) => void;
-  options: string[];
-  placeholder?: string;
+function CustomSelect({
+  label, value, onChange, options, placeholder,
+}: {
+  label: string; value: string; onChange: (v: string) => void;
+  options: string[]; placeholder?: string;
 }) {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen]       = useState(false);
   const [mounted, setMounted] = useState(false);
-  const triggerRef = useRef<HTMLButtonElement>(null);
-  const dropdownRef = useRef<HTMLDivElement>(null);
-  const [pos, setPos] = useState({ top: 0, left: 0, width: 0 });
+  const triggerRef            = useRef<HTMLButtonElement>(null);
+  const dropdownRef           = useRef<HTMLDivElement>(null);
+  const [pos, setPos]         = useState({ top: 0, left: 0, width: 0 });
 
   useEffect(() => { setMounted(true); }, []);
 
@@ -78,43 +79,30 @@ function CustomSelect({ label, value, onChange, options, placeholder }: {
   const toggle = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
     if (!open) updatePos();
-    setOpen(prev => !prev);
+    setOpen(p => !p);
   }, [open, updatePos]);
-
-  const select = useCallback((val: string) => {
-    onChange(val);
-    setOpen(false);
-  }, [onChange]);
 
   useEffect(() => {
     if (!open || !mounted) return;
     const handler = (e: MouseEvent) => {
       const t = e.target as Node;
-      if (dropdownRef.current && !dropdownRef.current.contains(t) &&
-          triggerRef.current && !triggerRef.current.contains(t)) setOpen(false);
+      if (!dropdownRef.current?.contains(t) && !triggerRef.current?.contains(t)) setOpen(false);
     };
     const id = setTimeout(() => document.addEventListener('mousedown', handler), 0);
     return () => { clearTimeout(id); document.removeEventListener('mousedown', handler); };
   }, [open, mounted]);
 
   const dropdown = mounted && open ? (
-    <div
-      ref={dropdownRef}
-      style={{ position: 'fixed', top: `${pos.top}px`, left: `${pos.left}px`, width: `${pos.width}px`, zIndex: 2147483647 }}
-    >
+    <div ref={dropdownRef}
+      style={{ position: 'fixed', top: pos.top, left: pos.left, width: pos.width, zIndex: 2147483647 }}>
       <div className="bg-white shadow-2xl border border-gray-100 max-h-[240px] overflow-y-auto custom-scrollbar">
-        {options.map((opt) => (
-          <button
-            key={opt}
-            type="button"
-            onClick={(e) => { e.stopPropagation(); select(opt); }}
+        {options.map(opt => (
+          <button key={opt} type="button"
+            onClick={e => { e.stopPropagation(); onChange(opt); setOpen(false); }}
             className={`block w-full text-left px-4 py-2.5 transition-colors duration-100 ${
-              value === opt
-                ? 'bg-brand-red text-white'
-                : 'text-gray-700 hover:bg-brand-red hover:text-white'
+              value === opt ? 'bg-brand-red text-white' : 'text-gray-700 hover:bg-brand-red hover:text-white'
             }`}
-            style={{ fontFamily: FONT, fontSize: '13px' }}
-          >
+            style={{ fontFamily: FONT, fontSize: '13px' }}>
             {opt}
           </button>
         ))}
@@ -124,22 +112,15 @@ function CustomSelect({ label, value, onChange, options, placeholder }: {
 
   return (
     <div className="min-w-0 w-full">
-      <p style={{ fontFamily: FONT, fontSize: '11px', color: COLOR_LABEL, fontWeight: 300, marginBottom: '2px', lineHeight: 1 }}>
-        {label}
-      </p>
-      <button
-        ref={triggerRef}
-        type="button"
-        onClick={toggle}
-        className="w-full flex items-center justify-between bg-transparent border-none outline-none cursor-pointer text-left gap-1"
-      >
-        <span style={{ fontFamily: FONT, fontSize: '14px', fontWeight: 400, color: value ? COLOR_VALUE : '#b8b8b8', lineHeight: 1 }}>
+      <button ref={triggerRef} type="button" onClick={toggle}
+        className="w-full flex items-center justify-between bg-transparent border-none outline-none cursor-pointer text-left gap-1">
+        <span style={{ fontFamily: FONT, fontSize: '14px', fontWeight: 400,
+          color: value ? COLOR_VALUE : '#b8b8b8', lineHeight: 1 }}>
           {value || placeholder || 'Seleccionar'}
         </span>
-        <svg
-          width="10" height="6" viewBox="0 0 10 6" fill="none"
-          style={{ flexShrink: 0, opacity: 0.35, transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 0.15s' }}
-        >
+        <svg width="10" height="6" viewBox="0 0 10 6" fill="none"
+          style={{ flexShrink: 0, opacity: 0.4,
+            transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 0.15s' }}>
           <path d="M1 1l4 4 4-4" stroke="#232222" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
       </button>
@@ -147,12 +128,6 @@ function CustomSelect({ label, value, onChange, options, placeholder }: {
     </div>
   );
 }
-
-/* ── Iconos ──────────────────────────────────────────────────────── */
-
-const Icon = ({ src, alt }: { src: string; alt: string }) => (
-  <img src={src} alt={alt} width={22} height={22} style={{ flexShrink: 0, display: 'block' }} />
-);
 
 /* ── Props ───────────────────────────────────────────────────────── */
 
@@ -166,78 +141,94 @@ interface SearchFormProps {
 
 export default function SearchForm({ onNavigate }: SearchFormProps) {
   const [searchType, setSearchType] = useState<'arrendar' | 'comprar'>('arrendar');
-  const [codigo, setCodigo] = useState('');
-  const [sector, setSector] = useState('');
-  const [tipo, setTipo] = useState('');
-  const [presupuesto, setPresupuesto] = useState('');
+  const [codigo,     setCodigo]     = useState('');
+  const [sector,     setSector]     = useState('');
+  const [tipo,       setTipo]       = useState('');
+  const [precio,     setPrecio]     = useState('');
 
-  const handleTabClick = (type: 'arrendar' | 'comprar') => {
-    setSearchType(type);
-    setPresupuesto('');
+  const handleTabClick = (t: 'arrendar' | 'comprar') => {
+    setSearchType(t);
+    setPrecio('');
   };
 
-  const handleSearch = () => {
-    onNavigate?.('propiedades');
-  };
-
-  const CELL = "flex items-center px-5 py-3.5 min-w-0";
+  /* Celda de campo compartida */
+  const FieldCell = ({
+    icon, label, children, border = true,
+  }: {
+    icon: string; label: string; children: React.ReactNode; border?: boolean;
+  }) => (
+    <div
+      className={`flex items-center gap-3 flex-1 px-5 py-4 min-w-0${border ? ' border-r border-gray-100' : ''}`}
+    >
+      <img src={icon} alt="" width={24} height={24} style={{ flexShrink: 0 }} />
+      <div className="min-w-0 flex-1">
+        <p style={{ fontFamily: FONT, fontSize: '11px', color: COLOR_LABEL,
+          fontWeight: 300, marginBottom: '3px', lineHeight: 1 }}>
+          {label}
+        </p>
+        {children}
+      </div>
+    </div>
+  );
 
   return (
-    <div className="w-full">
+    <div className="w-full overflow-hidden" style={{ boxShadow: '0 8px 40px rgba(0,0,0,0.35)' }}>
 
-      {/* ── Fila 1: Arrendar / Comprar ─────────────────────────── */}
-      <div className="flex" style={{ borderBottom: '1px solid rgba(0,0,0,0.06)' }}>
-        {(['arrendar', 'comprar'] as const).map((t, i) => (
-          <button
-            key={t}
-            type="button"
-            onClick={() => handleTabClick(t)}
-            className="flex-1 flex items-center justify-center transition-colors duration-200"
-            style={{
-              height: '44px',
-              fontFamily: FONT,
-              fontSize: '15px',
-              fontWeight: searchType === t ? 600 : 400,
-              color: searchType === t ? '#fff' : '#555',
-              background: searchType === t ? '#f32735' : '#fff',
-              borderRight: i === 0 ? '1px solid rgba(0,0,0,0.06)' : 'none',
-              border: 'none',
-              cursor: 'pointer',
-            }}
-          >
-            {t === 'arrendar' ? 'Arrendar' : 'Comprar'}
-          </button>
-        ))}
+      {/* ── Fila 1: Tabs Arrendar / Comprar ── */}
+      <div className="flex" style={{ height: '44px' }}>
+        {(['arrendar', 'comprar'] as const).map((t, i) => {
+          const active = searchType === t;
+          return (
+            <button
+              key={t}
+              type="button"
+              onClick={() => handleTabClick(t)}
+              className="flex-1 flex items-center justify-center transition-all duration-200"
+              style={{
+                background: active ? RED : 'rgba(255,255,255,0.4)',
+                backdropFilter: active ? 'none' : 'blur(6px)',
+                WebkitBackdropFilter: active ? 'none' : 'blur(6px)',
+                color: active ? '#fff' : 'rgba(255,255,255,0.92)',
+                fontFamily: FONT,
+                fontSize: '15px',
+                fontWeight: active ? 600 : 400,
+                border: 'none',
+                borderRight: i === 0 ? '1px solid rgba(255,255,255,0.2)' : 'none',
+                cursor: 'pointer',
+                letterSpacing: '0.01em',
+              }}
+              onMouseEnter={e => { if (!active) e.currentTarget.style.background = 'rgba(255,255,255,0.55)'; }}
+              onMouseLeave={e => { if (!active) e.currentTarget.style.background = 'rgba(255,255,255,0.4)'; }}
+            >
+              {t === 'arrendar' ? 'Arrendar' : 'Comprar'}
+            </button>
+          );
+        })}
       </div>
 
-      {/* ── Fila 2: Campos + Botón buscar ──────────────────────── */}
-      {/* Desktop: todos en fila | Móvil: grid 2×2 + botón abajo */}
-      <div className="flex flex-col sm:flex-row bg-white">
+      {/* ── Fila 2: Campos + Buscar ── */}
+      <div className="flex bg-white">
 
         {/* Grid 2×2 en móvil, fila en desktop */}
         <div className="flex-1 grid grid-cols-2 sm:flex sm:flex-row">
 
-          {/* Código — móvil: borde-der + borde-abajo | desktop: borde-der */}
-          <div className={`${CELL} border-r border-b sm:border-b-0 border-gray-100`}>
-            <Icon src="/icons/icon-code-red.gif" alt="Código" />
-            <div className="min-w-0 w-full">
-              <p style={{ fontFamily: FONT, fontSize: '11px', color: COLOR_LABEL, fontWeight: 300, marginBottom: '2px', lineHeight: 1 }}>
-                Código
-              </p>
-              <input
-                type="text"
-                value={codigo}
-                onChange={(e) => setCodigo(e.target.value)}
-                placeholder="Ej: 12345"
-                className="w-full bg-transparent border-none outline-none"
-                style={{ fontFamily: FONT, fontSize: '14px', color: codigo ? COLOR_VALUE : '#b8b8b8', fontWeight: 400, lineHeight: 1 }}
-              />
-            </div>
-          </div>
+          <FieldCell icon="/icons/icon-code-red.gif" label="Código inmueble">
+            <input
+              type="text"
+              value={codigo}
+              onChange={e => setCodigo(e.target.value)}
+              placeholder="Ej: 12345"
+              className="w-full bg-transparent border-none outline-none"
+              style={{ fontFamily: FONT, fontSize: '14px',
+                color: codigo ? COLOR_VALUE : '#b8b8b8', lineHeight: 1 }}
+            />
+          </FieldCell>
 
-          {/* Ubicación — móvil: borde-abajo | desktop: borde-der */}
-          <div className={`${CELL} border-b sm:border-b-0 sm:border-r border-gray-100`}>
-            <Icon src="/icons/icon-location-red.gif" alt="Ubicación" />
+          <FieldCell
+            icon="/icons/icon-location-red.gif"
+            label="Ubicación"
+            border={false}
+          >
             <CustomSelect
               label="Ubicación"
               value={sector}
@@ -245,55 +236,61 @@ export default function SearchForm({ onNavigate }: SearchFormProps) {
               options={SECTORES}
               placeholder="Seleccionar"
             />
+          </FieldCell>
+
+          {/* En móvil, estas dos celdas están en la segunda fila del grid */}
+          <div className="flex items-center gap-3 flex-1 px-5 py-4 min-w-0 border-t sm:border-t-0 border-r border-gray-100">
+            <img src="/icons/icon-home-red.gif" alt="" width={24} height={24} style={{ flexShrink: 0 }} />
+            <div className="min-w-0 flex-1">
+              <p style={{ fontFamily: FONT, fontSize: '11px', color: COLOR_LABEL,
+                fontWeight: 300, marginBottom: '3px', lineHeight: 1 }}>
+                Tipo de propiedad
+              </p>
+              <CustomSelect
+                label="Tipo de propiedad"
+                value={tipo}
+                onChange={setTipo}
+                options={TIPOS_INMUEBLE}
+                placeholder="Seleccionar"
+              />
+            </div>
           </div>
 
-          {/* Tipo de inmueble — móvil: borde-der | desktop: borde-der */}
-          <div className={`${CELL} border-r border-gray-100`}>
-            <Icon src="/icons/icon-home-red.gif" alt="Tipo de inmueble" />
-            <CustomSelect
-              label="Tipo de inmueble"
-              value={tipo}
-              onChange={setTipo}
-              options={TIPOS_INMUEBLE}
-              placeholder="Seleccionar"
-            />
-          </div>
-
-          {/* Presupuesto — sin bordes */}
-          <div className={CELL}>
-            <Icon src="/icons/icon-dollar-red.gif" alt="Presupuesto" />
-            <CustomSelect
-              label="Presupuesto"
-              value={presupuesto}
-              onChange={setPresupuesto}
-              options={PRESUPUESTO[searchType]}
-              placeholder="Seleccionar"
-            />
+          <div className="flex items-center gap-3 flex-1 px-5 py-4 min-w-0 border-t sm:border-t-0 border-gray-100">
+            <img src="/icons/icon-dollar-red.gif" alt="" width={24} height={24} style={{ flexShrink: 0 }} />
+            <div className="min-w-0 flex-1">
+              <p style={{ fontFamily: FONT, fontSize: '11px', color: COLOR_LABEL,
+                fontWeight: 300, marginBottom: '3px', lineHeight: 1 }}>
+                Precio
+              </p>
+              <CustomSelect
+                label="Precio"
+                value={precio}
+                onChange={setPrecio}
+                options={PRESUPUESTO[searchType]}
+                placeholder="Seleccionar"
+              />
+            </div>
           </div>
         </div>
 
-        {/* Botón Buscar */}
+        {/* Botón Buscar inmueble */}
         <button
           type="button"
-          onClick={handleSearch}
-          className="flex items-center justify-center gap-2 transition-colors duration-200 active:scale-[0.98]"
+          onClick={() => onNavigate?.('propiedades')}
+          className="flex items-center justify-center gap-2.5 transition-colors duration-200 active:scale-[0.98] flex-shrink-0"
           style={{
-            background: '#f32735',
-            color: '#fff',
-            fontFamily: FONT,
-            fontSize: '15px',
-            fontWeight: 500,
-            border: 'none',
-            cursor: 'pointer',
-            padding: '0 32px',
-            minHeight: '52px',
-            flexShrink: 0,
+            background: RED, color: '#fff',
+            fontFamily: FONT, fontSize: '15px', fontWeight: 500,
+            border: 'none', cursor: 'pointer',
+            padding: '0 28px',
+            minWidth: '160px',
           }}
-          onMouseEnter={(e) => (e.currentTarget.style.background = '#aa182c')}
-          onMouseLeave={(e) => (e.currentTarget.style.background = '#f32735')}
+          onMouseEnter={e => (e.currentTarget.style.background = RED_HOVER)}
+          onMouseLeave={e => (e.currentTarget.style.background = RED)}
         >
           <img src="/icons/icon-search-white.gif" alt="" width={18} height={18} />
-          <span>Buscar</span>
+          <span>Buscar inmueble</span>
         </button>
       </div>
 
