@@ -155,10 +155,12 @@ export default function HeroSection({ onNavigate, searchFormSlot }: HeroSectionP
             </div>
           </div>
 
-          {/* Buscador al fondo del hero — mismo ancho que el header */}
+          {/* Buscador al fondo del hero — mismo ancho que el nav del header */}
           {searchFormSlot && (
-            <div id="buscador" className="relative w-full px-4 sm:px-6 lg:px-8 pb-2" style={{ zIndex: 10 }}>
-              {searchFormSlot}
+            <div className="relative w-full px-4 sm:px-6 lg:px-8 pb-2" style={{ zIndex: 10 }}>
+              <div id="buscador" style={{ width: '100%', maxWidth: '64rem', margin: '0 auto' }}>
+                {searchFormSlot}
+              </div>
             </div>
           )}
 
