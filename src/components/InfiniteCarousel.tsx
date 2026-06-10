@@ -21,24 +21,31 @@ function applyInkFill(e: React.MouseEvent<HTMLElement>) {
   const x = e.clientX - rect.left;
   const y = e.clientY - rect.top;
   const size = Math.max(
-    Math.hypot(x, y), Math.hypot(rect.width - x, y),
-    Math.hypot(x, rect.height - y), Math.hypot(rect.width - x, rect.height - y),
+    Math.hypot(x, y),
+    Math.hypot(rect.width - x, y),
+    Math.hypot(x, rect.height - y),
+    Math.hypot(rect.width - x, rect.height - y),
   ) * 2;
   el.style.setProperty('--x', `${x}px`);
   el.style.setProperty('--y', `${y}px`);
   el.style.setProperty('--size', `${size}px`);
 }
 
-export default function InfiniteCarousel({ properties }: InfiniteCarouselProps) {
-  const [cards]      = useState(() => buildCards(properties));
-  const [startIndex, setStartIndex] = useState(0);
-  const [windowWidth, setWindowWidth] = useState(375);
-  const [isMounted,  setIsMounted]   = useState(false);
-  const trackRef     = useRef<HTMLDivElement>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const isAnimating  = useRef(false);
-  const directionRef = useRef(true); // true = adelante, false = atrás
+const NAV_W = 40; // px — ancho del botón flecha
+const GAP   = 12; // px — gap entre cards y entre flechas/contenedor
 
+export default function InfiniteCarousel({ properties }: InfiniteCarouselProps) {
+  const [cards] = useState(() => buildCards(properties));
+  const [startIndex, setStartIndex] = useState(0);
+  const [windowWidth, setWindowWidth]       = useState(375);
+  const [containerWidth, setContainerWidth] = useState(0);
+  const [isMounted, setIsMounted] = useState(false);
+
+  const containerRef = useRef<HTMLDivElement>(null); // overflow:hidden — medido con ResizeObserver
+  const trackRef     = useRef<HTMLDivElement>(null);
+  const isAnimating  = useRef(false);
+
+  /* Viewport width — para decidir cuántas cards */
   useEffect(() => {
     setIsMounted(true);
     const onResize = () => setWindowWidth(window.innerWidth);
@@ -47,19 +54,26 @@ export default function InfiniteCarousel({ properties }: InfiniteCarouselProps) 
     return () => window.removeEventListener('resize', onResize);
   }, []);
 
-  // Responsive: 1 → 2 → 3 → 4 → 5 → 6 cards
-  const VISIBLE =
-    windowWidth < 640  ? 1 :
-    windowWidth < 1024 ? 2 :
-    windowWidth < 1280 ? 3 :
-    windowWidth < 1536 ? 4 :
-    windowWidth < 1920 ? 5 : 6;
+  /* Ancho real del contenedor via ResizeObserver */
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const measure = () => {
+      const w = el.getBoundingClientRect().width;
+      if (w > 0) setContainerWidth(w);
+    };
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [isMounted]);
 
-  // 56px cada lado = zona de los botones (siempre dentro del viewport)
-  const SIDE = 56;
-  const GAP  = windowWidth < 640 ? 10 : 18;
-  // Cards llenan el área central (viewport − 2×SIDE − gaps internos)
-  const CARD_W = Math.max(160, Math.floor((windowWidth - SIDE * 2 - (VISIBLE - 1) * GAP) / VISIBLE));
+  const VISIBLE = windowWidth < 640 ? 1 : windowWidth < 1024 ? 2 : windowWidth < 1280 ? 3 : 4;
+
+  /* CARD_W llena el contenedor exactamente */
+  const CARD_W = containerWidth > 0
+    ? Math.floor((containerWidth - (VISIBLE - 1) * GAP) / VISIBLE)
+    : 0;
   const CARD_H = Math.round(CARD_W * 16 / 9);
   const SLOT   = CARD_W + GAP;
 
@@ -70,8 +84,8 @@ export default function InfiniteCarousel({ properties }: InfiniteCarouselProps) 
 
   const navigate = useCallback((forward: boolean) => {
     if (isAnimating.current || !trackRef.current || !containerRef.current) return;
-    isAnimating.current  = true;
-    directionRef.current = forward; // registra la dirección elegida por el usuario
+    if (CARD_W === 0) return;
+    isAnimating.current = true;
 
     if (forward) {
       const slots    = containerRef.current.querySelectorAll<HTMLElement>('[data-slot]');
@@ -87,9 +101,9 @@ export default function InfiniteCarousel({ properties }: InfiniteCarouselProps) 
           isAnimating.current = false;
         },
       })
-        .to(trackRef.current, { x: -SLOT, duration: 0.9, ease: 'power4.out' }, 0)
-        .to(exiting,  { scale: 0.75, opacity: 0, duration: 0.42, ease: 'power2.in' }, 0)
-        .to(entering, { scale: 1,    opacity: 1, duration: 0.66, ease: 'power3.out' }, 0.2);
+        .to(trackRef.current, { x: -SLOT,  duration: 0.9,  ease: 'power4.out'  }, 0)
+        .to(exiting,          { scale: 0.75, opacity: 0, duration: 0.42, ease: 'power2.in'  }, 0)
+        .to(entering,         { scale: 1,    opacity: 1, duration: 0.66, ease: 'power3.out' }, 0.2);
 
     } else {
       flushSync(() => setStartIndex((prev) => (prev - 1 + cards.length) % cards.length));
@@ -99,40 +113,39 @@ export default function InfiniteCarousel({ properties }: InfiniteCarouselProps) 
       const exiting  = slots[slots.length - 1];
 
       gsap.set(trackRef.current, { x: -SLOT });
-      gsap.set(entering, { scale: 0.75, opacity: 0 });
+      gsap.set(entering,         { scale: 0.75, opacity: 0 });
 
       gsap.timeline({
         onComplete: () => { isAnimating.current = false; },
       })
-        .to(trackRef.current, { x: 0, duration: 0.9, ease: 'power4.out' }, 0)
-        .to(exiting,  { scale: 0.75, opacity: 0, duration: 0.42, ease: 'power2.in' }, 0)
-        .to(entering, { scale: 1,    opacity: 1, duration: 0.66, ease: 'power3.out' }, 0.2);
+        .to(trackRef.current, { x: 0,    duration: 0.9,  ease: 'power4.out'  }, 0)
+        .to(exiting,          { scale: 0.75, opacity: 0, duration: 0.42, ease: 'power2.in'  }, 0)
+        .to(entering,         { scale: 1,    opacity: 1, duration: 0.66, ease: 'power3.out' }, 0.2);
     }
-  }, [cards.length, SLOT]);
+  }, [cards.length, SLOT, CARD_W]);
 
-  // Autoplay — continúa en la última dirección elegida
+  /* Autoplay */
   useEffect(() => {
     if (!isMounted) return;
-    const id = setInterval(() => {
-      if (!isAnimating.current) navigate(directionRef.current);
+    const interval = setInterval(() => {
+      if (!isAnimating.current) navigate(true);
     }, 4000);
-    return () => clearInterval(id);
+    return () => clearInterval(interval);
   }, [isMounted, navigate]);
 
-  const trackW = (VISIBLE + 1) * CARD_W + VISIBLE * GAP;
+  const trackW = CARD_W > 0 ? (VISIBLE + 1) * CARD_W + VISIBLE * GAP : 0;
 
   return (
-    // Wrapper relativo — botones absolutos nunca salen del viewport
-    <div style={{ position: 'relative', width: '100%', paddingLeft: `${SIDE}px`, paddingRight: `${SIDE}px` }}>
+    <div style={{ display: 'flex', alignItems: 'center', gap: `${GAP}px`, width: '100%' }}>
 
-      {/* Botón Anterior — flota sobre el padding izquierdo */}
+      {/* Flecha izquierda */}
       <button
         type="button"
         onClick={() => navigate(false)}
         onMouseEnter={applyInkFill}
         onMouseLeave={applyInkFill}
-        className="carousel-nav-btn w-10 h-10 rounded-full flex items-center justify-center absolute top-1/2 -translate-y-1/2 z-10"
-        style={{ left: '8px' }}
+        className="carousel-nav-btn rounded-full flex items-center justify-center"
+        style={{ width: `${NAV_W}px`, height: `${NAV_W}px`, flexShrink: 0 }}
         aria-label="Anterior"
       >
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -140,41 +153,48 @@ export default function InfiniteCarousel({ properties }: InfiniteCarouselProps) 
         </svg>
       </button>
 
-      {/* Contenedor — recorta la card off-screen */}
+      {/* Contenedor: clipea la card extra off-screen */}
       <div
         ref={containerRef}
-        style={{ overflow: 'hidden', width: '100%' }}
+        style={{ overflow: 'hidden', flex: 1, minWidth: 0 }}
       >
-        <div
-          ref={trackRef}
-          style={{ display: 'flex', gap: `${GAP}px`, width: `${trackW}px`, willChange: 'transform' }}
-        >
-          {visibleCards.map((property) => (
-            <div
-              key={property.uid}
-              data-slot={property.slotIndex}
-              style={{
-                width: `${CARD_W}px`,
-                minWidth: `${CARD_W}px`,
-                height: `${CARD_H}px`,
-                flexShrink: 0,
-                willChange: 'transform, opacity',
-              }}
-            >
-              <PropertyCard property={property} />
-            </div>
-          ))}
-        </div>
+        {CARD_W > 0 && (
+          <div
+            ref={trackRef}
+            style={{
+              display: 'flex',
+              gap: `${GAP}px`,
+              width: `${trackW}px`,
+              willChange: 'transform',
+            }}
+          >
+            {visibleCards.map((property) => (
+              <div
+                key={property.uid}
+                data-slot={property.slotIndex}
+                style={{
+                  width: `${CARD_W}px`,
+                  minWidth: `${CARD_W}px`,
+                  height: `${CARD_H}px`,
+                  flexShrink: 0,
+                  willChange: 'transform, opacity',
+                }}
+              >
+                <PropertyCard property={property} />
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
-      {/* Botón Siguiente — flota sobre el padding derecho */}
+      {/* Flecha derecha */}
       <button
         type="button"
         onClick={() => navigate(true)}
         onMouseEnter={applyInkFill}
         onMouseLeave={applyInkFill}
-        className="carousel-nav-btn w-10 h-10 rounded-full flex items-center justify-center absolute top-1/2 -translate-y-1/2 z-10"
-        style={{ right: '8px' }}
+        className="carousel-nav-btn rounded-full flex items-center justify-center"
+        style={{ width: `${NAV_W}px`, height: `${NAV_W}px`, flexShrink: 0 }}
         aria-label="Siguiente"
       >
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
