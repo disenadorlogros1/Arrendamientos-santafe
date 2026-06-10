@@ -50,16 +50,15 @@ function MobilePSEButton() {
 const navItems: NavItem[] = [
   { label: 'Inicio', page: 'home' },
   { label: 'Propiedades', children: [
-    { label: 'Ver propiedades', page: 'propiedades' },
-    { label: 'Consigna tu propiedad', page: 'consignacion' },
+    { label: 'Arriendo', page: 'propiedades' },
+    { label: 'Venta', page: 'propiedades' },
     { label: 'Para inversionistas', page: 'inversionistas' },
   ]},
-  { label: 'Servicios', page: 'servicios', children: [
-    { label: 'Todos los servicios', page: 'servicios' },
+  { label: 'Servicios', children: [
     { label: 'Solicitud de arrendamiento', href: SOLICITUD_ARRENDAMIENTO_URL },
     { label: 'Reportar reparación', href: REPARACIONES_URL },
   ]},
-  { label: 'Nosotros', page: 'nosotros', children: [
+  { label: 'Nosotros', children: [
     { label: 'Quiénes somos', page: 'nosotros' },
     { label: 'Blog', page: 'blog' },
   ]},
