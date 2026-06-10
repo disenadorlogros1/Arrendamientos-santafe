@@ -227,6 +227,46 @@ html.lenis, html.lenis body { height: auto; }
   z-index: 1;
 }
 
+/* Card arrow button: 45° sliding arrow animation */
+.card-arrow-btn {
+  position: relative;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.38);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  color: #fff;
+  transition: background 0.25s ease, border-color 0.25s ease;
+}
+.card-arrow-btn:hover {
+  background: #f32735;
+  border-color: #f32735;
+}
+.card-arrow-btn .arr-primary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s ease;
+  transform: translate(0, 0);
+  opacity: 1;
+}
+.card-arrow-btn:hover .arr-primary {
+  transform: translate(130%, -130%);
+  opacity: 0;
+}
+.card-arrow-btn .arr-secondary {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s ease;
+  transform: translate(-130%, 130%);
+  opacity: 0;
+}
+.card-arrow-btn:hover .arr-secondary {
+  transform: translate(0, 0);
+  opacity: 1;
+}
+
 /* Carousel nav buttons: ink-fill (sobre fondo blanco) */
 .carousel-nav-btn {
   position: relative;

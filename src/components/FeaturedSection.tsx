@@ -25,7 +25,7 @@ export default function FeaturedSection({ onNavigate }: FeaturedSectionProps) {
 
         {/* Celda título */}
         <div
-          className="flex-1 flex flex-col justify-center px-8 py-10 sm:px-12 sm:py-12 lg:px-16"
+          className="flex-1 flex flex-col justify-center px-8 py-5 sm:px-12 sm:py-6 lg:px-16"
           style={{ background: '#fff' }}
         >
           <h2
@@ -52,15 +52,15 @@ export default function FeaturedSection({ onNavigate }: FeaturedSectionProps) {
             window.scrollTo({ top: 0, behavior: 'smooth' });
           }}
           className="flex items-center justify-center transition-colors duration-200 py-8 sm:py-0"
-          style={{ background: '#1a1a1a', flexShrink: 0, minWidth: '220px' }}
+          style={{ background: '#888888', flexShrink: 0, minWidth: '280px' }}
           onMouseEnter={(e) => (e.currentTarget.style.background = RED)}
-          onMouseLeave={(e) => (e.currentTarget.style.background = '#1a1a1a')}
+          onMouseLeave={(e) => (e.currentTarget.style.background = '#888888')}
         >
           <span
             style={{
               fontFamily: FONT_BODY,
               fontWeight: 600,
-              fontSize: 'clamp(13px, 1vw, 15px)',
+              fontSize: 'clamp(15px, 1.2vw, 18px)',
               color: '#fff',
               letterSpacing: '0.02em',
             }}

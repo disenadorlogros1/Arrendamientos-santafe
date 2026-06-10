@@ -11,22 +11,6 @@ interface PropertyCardProps {
 const FONT = "'Avenir LT Pro 65 Medium', 'Avenir LT Pro', 'Avenir', 'Outfit', system-ui, sans-serif";
 const RED  = '#f32735';
 
-function applyInkFill(e: React.MouseEvent<HTMLElement>) {
-  const el = e.currentTarget;
-  const rect = el.getBoundingClientRect();
-  const x = e.clientX - rect.left;
-  const y = e.clientY - rect.top;
-  const size = Math.max(
-    Math.hypot(x, y),
-    Math.hypot(rect.width - x, y),
-    Math.hypot(x, rect.height - y),
-    Math.hypot(rect.width - x, rect.height - y),
-  ) * 2;
-  el.style.setProperty('--x', `${x}px`);
-  el.style.setProperty('--y', `${y}px`);
-  el.style.setProperty('--size', `${size}px`);
-}
-
 export default function PropertyCard({ property }: PropertyCardProps) {
   const router = useRouter();
   const [isHovered, setIsHovered] = useState(false);
@@ -63,18 +47,23 @@ export default function PropertyCard({ property }: PropertyCardProps) {
           loading="lazy"
         />
 
-        {/* Botón único — flecha superior derecha, ink-fill animation */}
+        {/* Botón único — flecha 45° animada superior derecha */}
         <button
           type="button"
           onClick={(e) => { e.stopPropagation(); handleViewMore(); }}
-          onMouseEnter={applyInkFill}
-          onMouseLeave={applyInkFill}
-          className="hero-btn-fill absolute top-3 right-3 flex items-center justify-center rounded-full"
+          className="card-arrow-btn absolute top-3 right-3 flex items-center justify-center rounded-full"
           aria-label="Ver propiedad"
           style={{ width: '36px', height: '36px' }}
         >
-          <span style={{ position: 'relative', zIndex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <img src="/icons/icon-more-white.gif" alt="" width={16} height={16} style={{ objectFit: 'contain' }} />
+          <span className="arr-primary">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <path d="M2.5 11.5L11.5 2.5M11.5 2.5H5M11.5 2.5V9" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </span>
+          <span className="arr-secondary" aria-hidden="true">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <path d="M2.5 11.5L11.5 2.5M11.5 2.5H5M11.5 2.5V9" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
           </span>
         </button>
       </div>
