@@ -148,13 +148,10 @@ function CustomSelect({ label, value, onChange, options, placeholder }: {
   );
 }
 
-/* ── Icono buscar ────────────────────────────────────────────────── */
+/* ── Iconos ──────────────────────────────────────────────────────── */
 
-const SearchIcon = () => (
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-    <circle cx="11" cy="11" r="8" />
-    <line x1="21" y1="21" x2="16.65" y2="16.65" />
-  </svg>
+const Icon = ({ src, alt }: { src: string; alt: string }) => (
+  <img src={src} alt={alt} width={22} height={22} style={{ flexShrink: 0, display: 'block' }} />
 );
 
 /* ── Props ───────────────────────────────────────────────────────── */
@@ -222,6 +219,7 @@ export default function SearchForm({ onNavigate }: SearchFormProps) {
 
           {/* Código — móvil: borde-der + borde-abajo | desktop: borde-der */}
           <div className={`${CELL} border-r border-b sm:border-b-0 border-gray-100`}>
+            <Icon src="/icons/icon-code-red.gif" alt="Código" />
             <div className="min-w-0 w-full">
               <p style={{ fontFamily: FONT, fontSize: '11px', color: COLOR_LABEL, fontWeight: 300, marginBottom: '2px', lineHeight: 1 }}>
                 Código
@@ -239,6 +237,7 @@ export default function SearchForm({ onNavigate }: SearchFormProps) {
 
           {/* Ubicación — móvil: borde-abajo | desktop: borde-der */}
           <div className={`${CELL} border-b sm:border-b-0 sm:border-r border-gray-100`}>
+            <Icon src="/icons/icon-location-red.gif" alt="Ubicación" />
             <CustomSelect
               label="Ubicación"
               value={sector}
@@ -250,6 +249,7 @@ export default function SearchForm({ onNavigate }: SearchFormProps) {
 
           {/* Tipo de inmueble — móvil: borde-der | desktop: borde-der */}
           <div className={`${CELL} border-r border-gray-100`}>
+            <Icon src="/icons/icon-home-red.gif" alt="Tipo de inmueble" />
             <CustomSelect
               label="Tipo de inmueble"
               value={tipo}
@@ -261,6 +261,7 @@ export default function SearchForm({ onNavigate }: SearchFormProps) {
 
           {/* Presupuesto — sin bordes */}
           <div className={CELL}>
+            <Icon src="/icons/icon-dollar-red.gif" alt="Presupuesto" />
             <CustomSelect
               label="Presupuesto"
               value={presupuesto}
@@ -291,7 +292,7 @@ export default function SearchForm({ onNavigate }: SearchFormProps) {
           onMouseEnter={(e) => (e.currentTarget.style.background = '#aa182c')}
           onMouseLeave={(e) => (e.currentTarget.style.background = '#f32735')}
         >
-          <SearchIcon />
+          <img src="/icons/icon-search-white.gif" alt="" width={18} height={18} />
           <span>Buscar</span>
         </button>
       </div>
