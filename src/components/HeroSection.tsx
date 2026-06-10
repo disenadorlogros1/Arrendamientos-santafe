@@ -115,20 +115,20 @@ export default function HeroSection({ onNavigate, searchFormSlot }: HeroSectionP
               <button
                 type="button"
                 onClick={() => onNavigate?.('propiedades')}
-                className="inline-flex items-center justify-center h-[42px] px-6 rounded-full border border-white/30 bg-black/30 hover:bg-white/60 text-white text-sm transition-all duration-300 hover:scale-105"
+                className="hero-btn-fill inline-flex items-center justify-center h-[42px] px-6 rounded-full border border-white/30 text-sm"
                 style={{ fontFamily: FONT_BODY, fontWeight: 300 }}
               >
-                Ver propiedades disponibles
+                <span>Ver propiedades disponibles</span>
               </button>
 
               <a
                 href={WHATSAPP_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 h-[42px] px-5 rounded-full border border-white/30 bg-black/30 hover:bg-white/60 text-white text-sm transition-all duration-300 hover:scale-105"
+                className="hero-btn-fill inline-flex items-center justify-center h-[42px] px-5 rounded-full border border-white/30 text-sm"
                 style={{ fontFamily: FONT_BODY, fontWeight: 300, textDecoration: 'none' }}
               >
-                Hablar con un asesor
+                <span>Hablar con un asesor</span>
               </a>
             </div>
           </div>
