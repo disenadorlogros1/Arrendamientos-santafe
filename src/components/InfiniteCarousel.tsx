@@ -21,6 +21,7 @@ export default function InfiniteCarousel({ properties }: InfiniteCarouselProps) 
   const [windowWidth, setWindowWidth] = useState(375);
   const [isMounted, setIsMounted] = useState(false);
   const trackRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const isAnimating = useRef(false);
 
   useEffect(() => {
@@ -31,47 +32,68 @@ export default function InfiniteCarousel({ properties }: InfiniteCarouselProps) 
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const VISIBLE  = windowWidth < 640 ? 1 : windowWidth < 1024 ? 2 : 4;
-  const CARD_W   = windowWidth < 640 ? 280 : windowWidth < 1024 ? 240 : 312;
-  const CARD_H   = windowWidth < 640 ? 497 : 'auto';
-  const GAP      = windowWidth < 640 ? 8 : 12;
-  const SLOT     = CARD_W + GAP;
+  const VISIBLE = windowWidth < 640 ? 1 : windowWidth < 1024 ? 2 : 4;
+  const CARD_W  = windowWidth < 640 ? 280 : windowWidth < 1024 ? 240 : 312;
+  const CARD_H  = windowWidth < 640 ? 497 : 'auto';
+  const GAP     = windowWidth < 640 ? 8 : 12;
+  const SLOT    = CARD_W + GAP;
 
-  // Renderizar VISIBLE + 1 cards (una extra fuera de pantalla)
+  // Renderizar VISIBLE + 1 cards (una off-screen lista para entrar)
   const visibleCards = Array.from({ length: VISIBLE + 1 }, (_, i) => {
     const idx = (startIndex + i) % cards.length;
     return { ...cards[idx], slotIndex: i };
   });
 
   const navigate = useCallback((forward: boolean) => {
-    if (isAnimating.current || !trackRef.current) return;
+    if (isAnimating.current || !trackRef.current || !containerRef.current) return;
     isAnimating.current = true;
 
     if (forward) {
-      // Deslizar todo el track a la izquierda, luego actualizar estado
-      gsap.to(trackRef.current, {
-        x: -SLOT,
-        duration: 0.65,
-        ease: 'power4.out',
+      const slots = containerRef.current.querySelectorAll<HTMLElement>('[data-slot]');
+      const exiting  = slots[0];
+      const entering = slots[slots.length - 1];
+
+      // Card entrante arranca invisible y encogida
+      gsap.set(entering, { scale: 0.75, opacity: 0 });
+
+      gsap.timeline({
         onComplete: () => {
           flushSync(() => setStartIndex((prev) => (prev + 1) % cards.length));
           gsap.set(trackRef.current, { x: 0 });
           isAnimating.current = false;
         },
-      });
+      })
+        // Track desliza a la izquierda
+        .to(trackRef.current, { x: -SLOT, duration: 0.75, ease: 'power4.out' }, 0)
+        // Card saliente encoge y desaparece
+        .to(exiting, { scale: 0.75, opacity: 0, duration: 0.35, ease: 'power2.in' }, 0)
+        // Card entrante crece y aparece (con pequeño delay para el efecto visual)
+        .to(entering, { scale: 1, opacity: 1, duration: 0.55, ease: 'power3.out' }, 0.2);
+
     } else {
-      // Actualizar estado primero (nuevo card queda en posición 0)
-      // Reposicionar el track off-screen izquierda, luego animar a 0
+      // Backward: el nuevo card entra desde la izquierda
+      // Actualizar estado PRIMERO para que la nueva card esté en el DOM
       flushSync(() => setStartIndex((prev) => (prev - 1 + cards.length) % cards.length));
+
+      const slots = containerRef.current.querySelectorAll<HTMLElement>('[data-slot]');
+      const entering = slots[0];
+      const exiting  = slots[slots.length - 1];
+
+      // Pre-posicionar: track off-screen izquierda, card entrante invisible
       gsap.set(trackRef.current, { x: -SLOT });
-      gsap.to(trackRef.current, {
-        x: 0,
-        duration: 0.65,
-        ease: 'power4.out',
+      gsap.set(entering, { scale: 0.75, opacity: 0 });
+
+      gsap.timeline({
         onComplete: () => {
           isAnimating.current = false;
         },
-      });
+      })
+        // Track desliza a la derecha hasta posición natural
+        .to(trackRef.current, { x: 0, duration: 0.75, ease: 'power4.out' }, 0)
+        // Card saliente (derecha) encoge y desaparece
+        .to(exiting, { scale: 0.75, opacity: 0, duration: 0.35, ease: 'power2.in' }, 0)
+        // Card entrante (izquierda) crece y aparece
+        .to(entering, { scale: 1, opacity: 1, duration: 0.55, ease: 'power3.out' }, 0.2);
     }
   }, [cards.length, SLOT]);
 
@@ -89,7 +111,6 @@ export default function InfiniteCarousel({ properties }: InfiniteCarouselProps) 
 
   return (
     <div
-      className="wrapper"
       style={{ display: 'grid', gridTemplateColumns: '44px 1fr 44px', alignItems: 'center', gap: '12px', width: '100%' }}
     >
       {/* Botón Anterior */}
@@ -104,20 +125,16 @@ export default function InfiniteCarousel({ properties }: InfiniteCarouselProps) 
         </svg>
       </button>
 
-      {/* Contenedor — recorta el card extra */}
+      {/* Contenedor — recorta la card off-screen */}
       <div
-        style={{
-          overflow: 'hidden',
-          width: `${containerW}px`,
-          margin: '0 auto',
-        }}
+        ref={containerRef}
+        style={{ overflow: 'hidden', width: `${containerW}px`, margin: '0 auto' }}
       >
-        {/* Track — este elemento es el que se mueve */}
+        {/* Track — se mueve horizontalmente */}
         <div
           ref={trackRef}
           style={{
             display: 'flex',
-            flexDirection: 'row',
             gap: `${GAP}px`,
             width: `${trackW}px`,
             willChange: 'transform',
@@ -127,11 +144,12 @@ export default function InfiniteCarousel({ properties }: InfiniteCarouselProps) 
             <div
               key={property.uid}
               data-slot={property.slotIndex}
-              className="flex-shrink-0"
               style={{
                 width: `${CARD_W}px`,
                 minWidth: `${CARD_W}px`,
                 height: CARD_H,
+                flexShrink: 0,
+                willChange: 'transform, opacity',
               }}
             >
               <PropertyCard property={property} />
