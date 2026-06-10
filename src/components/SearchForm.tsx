@@ -241,8 +241,10 @@ export default function SearchForm({ onNavigate }: SearchFormProps) {
 
   const handleCellClick = useCallback((clickedType: 'codigo' | 'filters') => {
     if (typeof window !== 'undefined' && window.innerWidth < 640) return;
-    // Mientras los filtros estén activos, el campo código permanece siempre contraído
-    if (filterMode === 'filters' && clickedType === 'codigo') return;
+    // En modo filtros, clic sobre los filtros no hace nada (evita que el toggle
+    // regrese a 'default' y descomprima el campo código).
+    // Solo el clic sobre el icono de código puede salir del modo filtros.
+    if (filterMode === 'filters' && clickedType === 'filters') return;
     const newMode: FilterMode = filterMode === clickedType ? 'default' : clickedType;
     setFilterMode(newMode);
     animateMode(newMode);
