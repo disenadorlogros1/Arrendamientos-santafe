@@ -15,6 +15,22 @@ const buildCards = (properties: Property[]) =>
     properties.map((p) => ({ ...p, uid: `${p.id}-${rep}` }))
   ).flat();
 
+function applyInkFill(e: React.MouseEvent<HTMLElement>) {
+  const el = e.currentTarget;
+  const rect = el.getBoundingClientRect();
+  const x = e.clientX - rect.left;
+  const y = e.clientY - rect.top;
+  const size = Math.max(
+    Math.hypot(x, y),
+    Math.hypot(rect.width - x, y),
+    Math.hypot(x, rect.height - y),
+    Math.hypot(rect.width - x, rect.height - y),
+  ) * 2;
+  el.style.setProperty('--x', `${x}px`);
+  el.style.setProperty('--y', `${y}px`);
+  el.style.setProperty('--size', `${size}px`);
+}
+
 export default function InfiniteCarousel({ properties }: InfiniteCarouselProps) {
   const [cards] = useState(() => buildCards(properties));
   const [startIndex, setStartIndex] = useState(0);
@@ -32,13 +48,14 @@ export default function InfiniteCarousel({ properties }: InfiniteCarouselProps) 
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const VISIBLE = windowWidth < 640 ? 1 : windowWidth < 1024 ? 2 : 4;
-  const CARD_W  = windowWidth < 640 ? 280 : windowWidth < 1024 ? 240 : 312;
-  const CARD_H  = windowWidth < 640 ? 497 : 'auto';
+  // Responsive: 1 → 2 → 3 → 4 cards
+  const VISIBLE = windowWidth < 640 ? 1 : windowWidth < 1024 ? 2 : windowWidth < 1280 ? 3 : 4;
+  const CARD_W  = windowWidth < 640 ? 260 : windowWidth < 1024 ? 220 : windowWidth < 1280 ? 230 : 240;
+  // Cards verticales: proporción 9/16 (1080×1920)
+  const CARD_H  = Math.round(CARD_W * 16 / 9);
   const GAP     = windowWidth < 640 ? 8 : 12;
   const SLOT    = CARD_W + GAP;
 
-  // Renderizar VISIBLE + 1 cards (una off-screen lista para entrar)
   const visibleCards = Array.from({ length: VISIBLE + 1 }, (_, i) => {
     const idx = (startIndex + i) % cards.length;
     return { ...cards[idx], slotIndex: i };
@@ -53,7 +70,6 @@ export default function InfiniteCarousel({ properties }: InfiniteCarouselProps) 
       const exiting  = slots[0];
       const entering = slots[slots.length - 1];
 
-      // Card entrante arranca invisible y encogida
       gsap.set(entering, { scale: 0.75, opacity: 0 });
 
       gsap.timeline({
@@ -63,23 +79,18 @@ export default function InfiniteCarousel({ properties }: InfiniteCarouselProps) 
           isAnimating.current = false;
         },
       })
-        // Track desliza a la izquierda
-        .to(trackRef.current, { x: -SLOT, duration: 0.75, ease: 'power4.out' }, 0)
-        // Card saliente encoge y desaparece
-        .to(exiting, { scale: 0.75, opacity: 0, duration: 0.35, ease: 'power2.in' }, 0)
-        // Card entrante crece y aparece (con pequeño delay para el efecto visual)
-        .to(entering, { scale: 1, opacity: 1, duration: 0.55, ease: 'power3.out' }, 0.2);
+        // 20% más lento: 0.75 → 0.9, 0.35 → 0.42, 0.55 → 0.66
+        .to(trackRef.current, { x: -SLOT, duration: 0.9, ease: 'power4.out' }, 0)
+        .to(exiting,  { scale: 0.75, opacity: 0, duration: 0.42, ease: 'power2.in' }, 0)
+        .to(entering, { scale: 1, opacity: 1, duration: 0.66, ease: 'power3.out' }, 0.2);
 
     } else {
-      // Backward: el nuevo card entra desde la izquierda
-      // Actualizar estado PRIMERO para que la nueva card esté en el DOM
       flushSync(() => setStartIndex((prev) => (prev - 1 + cards.length) % cards.length));
 
       const slots = containerRef.current.querySelectorAll<HTMLElement>('[data-slot]');
       const entering = slots[0];
       const exiting  = slots[slots.length - 1];
 
-      // Pre-posicionar: track off-screen izquierda, card entrante invisible
       gsap.set(trackRef.current, { x: -SLOT });
       gsap.set(entering, { scale: 0.75, opacity: 0 });
 
@@ -88,12 +99,9 @@ export default function InfiniteCarousel({ properties }: InfiniteCarouselProps) 
           isAnimating.current = false;
         },
       })
-        // Track desliza a la derecha hasta posición natural
-        .to(trackRef.current, { x: 0, duration: 0.75, ease: 'power4.out' }, 0)
-        // Card saliente (derecha) encoge y desaparece
-        .to(exiting, { scale: 0.75, opacity: 0, duration: 0.35, ease: 'power2.in' }, 0)
-        // Card entrante (izquierda) crece y aparece
-        .to(entering, { scale: 1, opacity: 1, duration: 0.55, ease: 'power3.out' }, 0.2);
+        .to(trackRef.current, { x: 0, duration: 0.9, ease: 'power4.out' }, 0)
+        .to(exiting,  { scale: 0.75, opacity: 0, duration: 0.42, ease: 'power2.in' }, 0)
+        .to(entering, { scale: 1, opacity: 1, duration: 0.66, ease: 'power3.out' }, 0.2);
     }
   }, [cards.length, SLOT]);
 
@@ -117,7 +125,9 @@ export default function InfiniteCarousel({ properties }: InfiniteCarouselProps) 
       <button
         type="button"
         onClick={() => navigate(false)}
-        className="w-10 h-10 rounded-full border border-gray-300 flex items-center justify-center text-gray-500 hover:border-brand-red hover:text-brand-red hover:bg-brand-red/5 transition-all duration-200"
+        onMouseEnter={applyInkFill}
+        onMouseLeave={applyInkFill}
+        className="carousel-nav-btn w-10 h-10 rounded-full flex items-center justify-center"
         aria-label="Anterior"
       >
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -147,7 +157,7 @@ export default function InfiniteCarousel({ properties }: InfiniteCarouselProps) 
               style={{
                 width: `${CARD_W}px`,
                 minWidth: `${CARD_W}px`,
-                height: CARD_H,
+                height: `${CARD_H}px`,
                 flexShrink: 0,
                 willChange: 'transform, opacity',
               }}
@@ -162,7 +172,9 @@ export default function InfiniteCarousel({ properties }: InfiniteCarouselProps) 
       <button
         type="button"
         onClick={() => navigate(true)}
-        className="w-10 h-10 rounded-full border border-gray-300 flex items-center justify-center text-gray-500 hover:border-brand-red hover:text-brand-red hover:bg-brand-red/5 transition-all duration-200"
+        onMouseEnter={applyInkFill}
+        onMouseLeave={applyInkFill}
+        className="carousel-nav-btn w-10 h-10 rounded-full flex items-center justify-center"
         aria-label="Siguiente"
       >
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

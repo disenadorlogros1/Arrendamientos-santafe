@@ -227,6 +227,41 @@ html.lenis, html.lenis body { height: auto; }
   z-index: 1;
 }
 
+/* Carousel nav buttons: ink-fill (sobre fondo blanco) */
+.carousel-nav-btn {
+  position: relative;
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.10);
+  color: #666;
+  transition: border-color 0.3s ease, color 0.3s ease;
+}
+.carousel-nav-btn::before {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  background: #f32735;
+  width: var(--size, 200px);
+  height: var(--size, 200px);
+  left: var(--x, 50%);
+  top: var(--y, 50%);
+  transform: translate(-50%, -50%) scale(0);
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+  z-index: 0;
+}
+.carousel-nav-btn:hover::before {
+  transform: translate(-50%, -50%) scale(1);
+}
+.carousel-nav-btn:hover {
+  color: #fff;
+  border-color: #f32735;
+}
+.carousel-nav-btn > svg {
+  position: relative;
+  z-index: 1;
+}
+
 /* Video hero overlay */
 .hero-video-overlay {
   background: linear-gradient(

@@ -1,6 +1,5 @@
 'use client';
 
-import { motion } from 'framer-motion';
 import { useSplitTextAnimation } from '@/hooks/useSplitTextAnimation';
 import InfiniteCarousel from '@/components/InfiniteCarousel';
 import { properties } from '@/data/properties';
@@ -16,7 +15,7 @@ const RED          = '#f32735';
 
 export default function FeaturedSection({ onNavigate }: FeaturedSectionProps) {
   const featured = properties.filter((p) => p.featured);
-  const { ref: titleRef, titleAnimating } = useSplitTextAnimation('.featured-title-split', 0, false);
+  const { ref: titleRef } = useSplitTextAnimation('.featured-title-split', 0, false);
 
   return (
     <section style={{ background: '#F5F5F5' }} className="w-full overflow-hidden">
@@ -43,22 +42,6 @@ export default function FeaturedSection({ onNavigate }: FeaturedSectionProps) {
           >
             Propiedades <span style={{ fontWeight: 700 }}>destacadas</span>
           </h2>
-
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={titleAnimating ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-            transition={{ duration: 0.4, ease: 'easeOut' }}
-            style={{
-              fontFamily: FONT_BODY,
-              fontWeight: 300,
-              fontSize: 'clamp(13px, 1vw, 15px)',
-              color: '#808080',
-              marginTop: '12px',
-              lineHeight: 1.45,
-            }}
-          >
-            Inmuebles disponibles ahora. Consulta, agenda o pide asesoría.
-          </motion.p>
         </div>
 
         {/* Celda botón */}
@@ -68,8 +51,8 @@ export default function FeaturedSection({ onNavigate }: FeaturedSectionProps) {
             onNavigate('propiedades');
             window.scrollTo({ top: 0, behavior: 'smooth' });
           }}
-          className="flex items-center justify-center transition-colors duration-200 sm:w-48 lg:w-56 py-8 sm:py-0"
-          style={{ background: '#1a1a1a', flexShrink: 0 }}
+          className="flex items-center justify-center transition-colors duration-200 py-8 sm:py-0"
+          style={{ background: '#1a1a1a', flexShrink: 0, minWidth: '220px' }}
           onMouseEnter={(e) => (e.currentTarget.style.background = RED)}
           onMouseLeave={(e) => (e.currentTarget.style.background = '#1a1a1a')}
         >
