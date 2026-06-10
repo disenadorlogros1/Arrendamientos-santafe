@@ -68,7 +68,7 @@ export default function InfiniteCarousel({ properties }: InfiniteCarouselProps) 
     return () => ro.disconnect();
   }, [isMounted]);
 
-  const VISIBLE = windowWidth < 640 ? 1 : windowWidth < 1024 ? 2 : windowWidth < 1280 ? 3 : 4;
+  const VISIBLE = windowWidth < 640 ? 1 : windowWidth < 1024 ? 2 : windowWidth < 1280 ? 3 : windowWidth < 1536 ? 4 : 5;
 
   /* CARD_W llena el contenedor exactamente */
   const CARD_W = containerWidth > 0

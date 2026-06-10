@@ -46,21 +46,21 @@ export default function FeaturedSection({ onNavigate }: FeaturedSectionProps) {
             onNavigate('propiedades');
             window.scrollTo({ top: 0, behavior: 'smooth' });
           }}
+          className="flex items-center justify-center transition-colors duration-200 sm:w-[340px] w-auto"
           style={{
-            background: '#888',
+            background: '#888888',
             color: '#fff',
             fontFamily: FONT_BODY,
             fontWeight: 600,
-            fontSize: 'clamp(13px, 1vw, 16px)',
+            fontSize: 'clamp(15px, 1.2vw, 18px)',
             letterSpacing: '0.02em',
             border: 'none',
             cursor: 'pointer',
-            padding: '10px 24px',
+            padding: '10px 32px',
             flexShrink: 0,
-            transition: 'background 0.2s ease',
           }}
           onMouseEnter={(e) => (e.currentTarget.style.background = RED)}
-          onMouseLeave={(e) => (e.currentTarget.style.background = '#888')}
+          onMouseLeave={(e) => (e.currentTarget.style.background = '#888888')}
         >
           Ver más
         </button>
