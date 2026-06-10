@@ -3,6 +3,7 @@ import { Outfit } from "next/font/google";
 import { Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
+import SmoothScrollProvider from "@/components/SmoothScrollProvider";
 
 const outfit = Outfit({
   variable: "--font-outfit",
@@ -158,7 +159,9 @@ export default function RootLayout({
         className={`${outfit.variable} ${geistMono.variable} antialiased bg-background text-foreground`}
         style={{ fontFamily: "'Avenir LT Pro', 'Avenir', 'Outfit', var(--font-outfit), system-ui, -apple-system, sans-serif" }}
       >
-        {children}
+        <SmoothScrollProvider>
+          {children}
+        </SmoothScrollProvider>
         <Toaster />
       </body>
     </html>
