@@ -22,25 +22,21 @@ const HITOS = [
   { year: '2026', label: '60 años creciendo con Antioquia. Celebramos con la apertura de nuestra sede en Rionegro.' },
 ];
 
-const STATS = [
-  { number: '60+', label: 'años', sublabel: 'de experiencia' },
-  { number: '3',   label: 'sedes', sublabel: 'en Antioquia' },
-  { number: '+1K', label: 'inmuebles', sublabel: 'en gestión activa' },
-];
-
 export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) {
   const { ref: titleRef, titleAnimating } = useSplitTextAnimation('.trayectoria-title-split', 0, true);
 
   return (
-    <section style={{ background: '#0a0a0a' }} className="w-full overflow-hidden">
-
-      {/* Fila 1: Celda de texto + 3 celdas de stats */}
-      <div className="flex flex-col lg:flex-row" style={{ gap: '3px' }}>
+    <section style={{ background: '#fff' }} className="w-full overflow-hidden">
+      <div className="flex flex-col lg:flex-row">
 
         {/* Celda título */}
         <div
           className="flex flex-col justify-center gap-6 px-8 py-12 sm:px-14 sm:py-14 lg:py-16 lg:px-16 lg:flex-shrink-0"
-          style={{ background: '#1a1a1a', flexBasis: '520px' }}
+          style={{
+            flexBasis: '460px',
+            borderRight: '1px solid #f0f0f0',
+            borderBottom: '1px solid #f0f0f0',
+          }}
         >
           <h2
             ref={titleRef}
@@ -67,9 +63,9 @@ export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) 
             transition={{ duration: 0.4, ease: 'easeOut' }}
             style={{
               fontFamily: FONT_BODY,
-              fontWeight: 300,
+              fontWeight: 400,
               fontSize: 'clamp(13px, 1vw, 15px)',
-              color: 'rgba(255,255,255,0.6)',
+              color: '#666',
               lineHeight: 1.55,
               margin: 0,
             }}
@@ -95,6 +91,7 @@ export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) 
               border: 'none',
               cursor: 'pointer',
               fontFamily: FONT_BODY,
+              borderRadius: '2px',
             }}
             onMouseEnter={(e) => (e.currentTarget.style.background = '#aa182c')}
             onMouseLeave={(e) => (e.currentTarget.style.background = RED)}
@@ -104,134 +101,123 @@ export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) 
           </button>
         </div>
 
-        {/* 3 celdas de stats */}
-        <div className="flex-1 grid grid-cols-3" style={{ gap: '3px' }}>
-          {STATS.map((s) => (
-            <div
-              key={s.number}
-              className="flex flex-col items-center justify-center py-12 px-4"
-              style={{ background: '#2d2d2d' }}
-            >
-              <span
-                style={{
-                  fontFamily: "'Avenir LT Pro 85 Heavy', 'Avenir LT Pro', 'Avenir', system-ui, sans-serif",
-                  fontSize: 'clamp(36px, 3.5vw, 60px)',
-                  fontWeight: 800,
-                  color: '#fff',
-                  lineHeight: 1,
-                }}
-              >
-                {s.number}
-              </span>
-              <span
-                style={{
-                  fontFamily: FONT_BODY,
-                  fontSize: 'clamp(14px, 1.1vw, 18px)',
-                  fontWeight: 500,
-                  color: '#fff',
-                  marginTop: '8px',
-                  lineHeight: 1,
-                }}
-              >
-                {s.label}
-              </span>
-              <span
-                style={{
-                  fontFamily: FONT_BODY,
-                  fontSize: 'clamp(11px, 0.8vw, 13px)',
-                  fontWeight: 400,
-                  color: 'rgba(255,255,255,0.5)',
-                  marginTop: '4px',
-                  lineHeight: 1,
-                }}
-              >
-                {s.sublabel}
-              </span>
-            </div>
-          ))}
-        </div>
-      </div>
+        {/* Timeline — ocupa el espacio donde estaban las stats */}
+        <div style={{ flex: 1, overflow: 'hidden', borderBottom: '1px solid #f0f0f0' }}>
 
-      {/* Fila 2: Timeline full-width */}
-      <div style={{ background: '#1a1a1a', marginTop: '3px', padding: '40px 0' }}>
-        <p
-          className="px-8 sm:px-14 lg:px-16 mb-8"
-          style={{
-            fontFamily: FONT_BODY,
-            fontWeight: 600,
-            fontSize: '11px',
-            letterSpacing: '0.12em',
-            color: 'rgba(255,255,255,0.35)',
-            textTransform: 'uppercase',
-            margin: '0 0 32px',
-          }}
-        >
-          Línea de tiempo
-        </p>
-
-        <div className="relative overflow-x-auto">
-          {/* Franja horizontal de fondo */}
-          <div
-            className="absolute top-1/2 -translate-y-1/2 w-full pointer-events-none"
-            style={{ height: '56px', background: 'rgba(243,39,53,0.08)' }}
-          />
-
-          <div
-            className="flex pb-2 min-w-max md:min-w-full px-8 sm:px-14 lg:px-16"
-            style={{ gap: '16px' }}
+          {/* Etiqueta "Línea de tiempo" */}
+          <p
+            className="px-8 sm:px-10 lg:px-12"
+            style={{
+              fontFamily: FONT_BODY,
+              fontWeight: 600,
+              fontSize: '11px',
+              letterSpacing: '0.12em',
+              color: '#bbb',
+              textTransform: 'uppercase',
+              margin: '32px 0 0',
+            }}
           >
-            {HITOS.map((hito) => (
-              <div
-                key={hito.year}
-                className="flex flex-col items-center flex-1"
-                style={{ minWidth: '140px', gap: '12px' }}
-              >
-                {/* Texto arriba */}
-                <div className="flex items-end" style={{ height: '64px' }}>
-                  <p
-                    style={{
-                      fontFamily: FONT_BODY,
-                      fontSize: 'clamp(10px, 0.75vw, 12px)',
-                      fontWeight: 400,
-                      color: 'rgba(255,255,255,0.45)',
-                      lineHeight: 1.4,
-                      textAlign: 'center',
-                    }}
-                  >
-                    {hito.label}
-                  </p>
-                </div>
+            Línea de tiempo
+          </p>
 
-                {/* Badge de año */}
-                <div
-                  className="relative z-10 flex items-center justify-center"
-                  style={{
-                    background: RED,
-                    padding: '10px 20px',
-                    minWidth: '110px',
-                  }}
-                >
-                  <span
-                    style={{
-                      fontFamily: "'Avenir LT Pro 85 Heavy', system-ui, sans-serif",
-                      fontSize: 'clamp(20px, 1.8vw, 28px)',
-                      fontWeight: 900,
-                      color: '#fff',
-                      lineHeight: 1,
-                    }}
-                  >
-                    {hito.year}
-                  </span>
-                </div>
+          {/* Timeline horizontal */}
+          <div className="relative overflow-x-auto" style={{ padding: '0 0 32px' }}>
 
-                {/* Espacio abajo */}
-                <div style={{ height: '64px' }} />
-              </div>
-            ))}
+            {/* Franja de fondo centrada en los badges */}
+            <div
+              className="absolute pointer-events-none"
+              style={{
+                top: '50%',
+                left: 0,
+                right: 0,
+                height: '60px',
+                transform: 'translateY(-50%)',
+                background: 'rgba(243,39,53,0.07)',
+              }}
+            />
+
+            <div
+              className="flex min-w-max lg:min-w-full px-8 sm:px-10 lg:px-12"
+              style={{ gap: '12px', paddingTop: '28px', paddingBottom: '8px' }}
+            >
+              {HITOS.map((hito, i) => {
+                const above = i % 2 === 0;
+                return (
+                  <div
+                    key={hito.year}
+                    className="flex flex-col items-center flex-1"
+                    style={{ minWidth: '130px', gap: '10px' }}
+                  >
+                    {/* Label — alterna arriba / abajo */}
+                    <div
+                      className="flex items-end"
+                      style={{ height: '60px', visibility: above ? 'visible' : 'hidden' }}
+                    >
+                      <p
+                        style={{
+                          fontFamily: FONT_BODY,
+                          fontSize: 'clamp(10px, 0.72vw, 12px)',
+                          fontWeight: 400,
+                          color: '#888',
+                          lineHeight: 1.45,
+                          textAlign: 'center',
+                          margin: 0,
+                        }}
+                      >
+                        {hito.label}
+                      </p>
+                    </div>
+
+                    {/* Badge año */}
+                    <div
+                      className="relative z-10 flex items-center justify-center"
+                      style={{
+                        background: RED,
+                        padding: '9px 18px',
+                        minWidth: '100px',
+                        borderRadius: '2px',
+                      }}
+                    >
+                      <span
+                        style={{
+                          fontFamily: "'Avenir LT Pro 85 Heavy', system-ui, sans-serif",
+                          fontSize: 'clamp(18px, 1.6vw, 26px)',
+                          fontWeight: 900,
+                          color: '#fff',
+                          lineHeight: 1,
+                        }}
+                      >
+                        {hito.year}
+                      </span>
+                    </div>
+
+                    {/* Label — abajo para los ítems pares */}
+                    <div
+                      className="flex items-start"
+                      style={{ height: '60px', visibility: above ? 'hidden' : 'visible' }}
+                    >
+                      <p
+                        style={{
+                          fontFamily: FONT_BODY,
+                          fontSize: 'clamp(10px, 0.72vw, 12px)',
+                          fontWeight: 400,
+                          color: '#888',
+                          lineHeight: 1.45,
+                          textAlign: 'center',
+                          margin: 0,
+                        }}
+                      >
+                        {hito.label}
+                      </p>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </div>
-      </div>
 
+      </div>
     </section>
   );
 }
