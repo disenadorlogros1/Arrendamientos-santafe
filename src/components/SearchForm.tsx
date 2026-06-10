@@ -218,13 +218,10 @@ export default function SearchForm({ onNavigate }: SearchFormProps) {
       <div className="flex flex-col sm:flex-row bg-white">
 
         {/* Grid 2×2 en móvil, fila en desktop */}
-        <div className="flex-1 grid grid-cols-2 sm:flex sm:flex-row sm:divide-x divide-gray-100">
+        <div className="flex-1 grid grid-cols-2 sm:flex sm:flex-row">
 
-          {/* Código */}
-          <div
-            className={`${CELL} border-b sm:border-b-0 border-gray-100`}
-            style={{ borderRight: '1px solid #f0f0f0' }}
-          >
+          {/* Código — móvil: borde-der + borde-abajo | desktop: borde-der */}
+          <div className={`${CELL} border-r border-b sm:border-b-0 border-gray-100`}>
             <div className="min-w-0 w-full">
               <p style={{ fontFamily: FONT, fontSize: '11px', color: COLOR_LABEL, fontWeight: 300, marginBottom: '2px', lineHeight: 1 }}>
                 Código
@@ -240,11 +237,8 @@ export default function SearchForm({ onNavigate }: SearchFormProps) {
             </div>
           </div>
 
-          {/* Ubicación */}
-          <div
-            className={`${CELL} border-b sm:border-b-0 border-gray-100`}
-            style={{ borderRight: '1px solid #f0f0f0' }}
-          >
+          {/* Ubicación — móvil: borde-abajo | desktop: borde-der */}
+          <div className={`${CELL} border-b sm:border-b-0 sm:border-r border-gray-100`}>
             <CustomSelect
               label="Ubicación"
               value={sector}
@@ -254,11 +248,8 @@ export default function SearchForm({ onNavigate }: SearchFormProps) {
             />
           </div>
 
-          {/* Tipo de inmueble */}
-          <div
-            className={CELL}
-            style={{ borderRight: '1px solid #f0f0f0' }}
-          >
+          {/* Tipo de inmueble — móvil: borde-der | desktop: borde-der */}
+          <div className={`${CELL} border-r border-gray-100`}>
             <CustomSelect
               label="Tipo de inmueble"
               value={tipo}
@@ -268,7 +259,7 @@ export default function SearchForm({ onNavigate }: SearchFormProps) {
             />
           </div>
 
-          {/* Presupuesto */}
+          {/* Presupuesto — sin bordes */}
           <div className={CELL}>
             <CustomSelect
               label="Presupuesto"
