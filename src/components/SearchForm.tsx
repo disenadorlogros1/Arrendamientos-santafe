@@ -192,7 +192,10 @@ export default function SearchForm({ onNavigate }: SearchFormProps) {
       if (!cell) return;
       const w = cell.getBoundingClientRect().width;
       if (w > 0) {
-        gsap.set(cell, { width: w, flexGrow: 0, flexShrink: 0 });
+        // flexBasis:'auto' es crítico: Tailwind flex-1 pone flex-basis:0%
+        // Con flex-grow:0 y flex-basis:0% la celda colapsa a 0. 'auto' hace que
+        // el width explícito sea respetado por el navegador.
+        gsap.set(cell, { width: w, flexGrow: 0, flexShrink: 0, flexBasis: 'auto' });
       }
     });
     widthsLocked.current = true;
@@ -224,8 +227,8 @@ export default function SearchForm({ onNavigate }: SearchFormProps) {
     /* Ancho de cada celda: power4.out = mismo impulso que las cards */
     cellRefs.current.forEach((cell, i) => {
       if (!cell) return;
-      // Deshabilitar flex siempre (no solo en lockWidths) para que GSAP controle el ancho
-      gsap.set(cell, { flexGrow: 0, flexShrink: 0 });
+      // Deshabilitar flex siempre para que GSAP controle el ancho
+      gsap.set(cell, { flexGrow: 0, flexShrink: 0, flexBasis: 'auto' });
       gsap.to(cell, { width: widths[i], duration: 0.65, ease: 'power4.out', overwrite: 'auto' });
     });
 

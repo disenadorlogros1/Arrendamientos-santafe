@@ -15,9 +15,13 @@ const FONT_BODY    = "'Avenir LT Pro 65 Medium', 'Avenir LT Pro', 'Avenir', 'Out
 const FONT_HEADING = "'Avenir Next Ultra Light', 'Avenir LT Pro 65 Medium', 'Avenir', 'Outfit', system-ui, sans-serif";
 const RED          = '#f32735';
 
+const EASE_BENTO = [0.25, 0.46, 0.45, 0.94] as const;
+
+/* ── Sub-componentes ─────────────────────────────────────────────── */
+
 function StatCard({ number, label, sublabel }: { number: string; label: string; sublabel: string }) {
   return (
-    <div
+    <motion.div
       style={{
         background: '#2d2d2d',
         display: 'flex',
@@ -26,32 +30,64 @@ function StatCard({ number, label, sublabel }: { number: string; label: string; 
         justifyContent: 'center',
         height: '100%',
       }}
+      whileHover={{ backgroundColor: '#3a3a3a' }}
+      transition={{ duration: 0.3 }}
     >
-      <span style={{ fontFamily: "'Avenir LT Pro 85 Heavy', 'Avenir LT Pro', 'Avenir', system-ui, sans-serif", fontSize: 'clamp(28px, 3.2vw, 56px)', fontWeight: 800, color: '#fff', lineHeight: 1 }}>
+      <motion.span
+        style={{
+          fontFamily: "'Avenir LT Pro 85 Heavy', 'Avenir LT Pro', 'Avenir', system-ui, sans-serif",
+          fontSize: 'clamp(28px, 3.2vw, 56px)',
+          fontWeight: 800,
+          color: '#fff',
+          lineHeight: 1,
+          display: 'block',
+        }}
+        whileHover={{ scale: 1.06 }}
+        transition={{ duration: 0.3, ease: 'easeOut' }}
+      >
         {number}
-      </span>
+      </motion.span>
       <span style={{ fontFamily: FONT_BODY, fontSize: 'clamp(12px, 1vw, 16px)', fontWeight: 300, color: '#fff', marginTop: '6px', lineHeight: 1 }}>
         {label}
       </span>
       <span style={{ fontFamily: FONT_BODY, fontSize: 'clamp(10px, 0.8vw, 12px)', fontWeight: 300, color: 'rgba(255,255,255,0.6)', marginTop: '3px', lineHeight: 1 }}>
         {sublabel}
       </span>
-    </div>
+    </motion.div>
   );
 }
 
 function PhotoCell({ url, position = 'center' }: { url: string; position?: string }) {
   return (
-    <div
-      style={{
-        backgroundImage: `url(${url})`,
-        backgroundSize: 'cover',
-        backgroundPosition: position,
-        height: '100%',
-      }}
-    />
+    <div style={{ overflow: 'hidden', height: '100%', position: 'relative' }}>
+      <motion.div
+        style={{
+          backgroundImage: `url(${url})`,
+          backgroundSize: 'cover',
+          backgroundPosition: position,
+          height: '100%',
+          width: '100%',
+          transformOrigin: 'center center',
+        }}
+        whileHover={{ scale: 1.08 }}
+        transition={{ duration: 0.65, ease: EASE_BENTO }}
+      />
+    </div>
   );
 }
+
+/* ── Datos del grid ──────────────────────────────────────────────── */
+
+const GRID = [
+  { type: 'stat',  number: '+1000', label: 'inmuebles', sublabel: 'en gestión activa' },
+  { type: 'photo', url: '/images/Banner_consigna_propiedad.png', position: 'center top' },
+  { type: 'photo', url: '/images/banner_inversionistas.png',     position: 'center top' },
+  { type: 'photo', url: '/images/banner_propietarios.png',       position: 'center' },
+  { type: 'stat',  number: '60',    label: 'años',      sublabel: 'de experiencia' },
+  { type: 'stat',  number: '3',     label: 'sedes',     sublabel: 'en Antioquia' },
+] as const;
+
+/* ── Componente principal ────────────────────────────────────────── */
 
 export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps) {
   const { ref: titleRef, titleAnimating } = useSplitTextAnimation('.propietarios-title-split', 0, true);
@@ -66,14 +102,14 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
           className="flex flex-col justify-center gap-5 px-8 py-10 sm:px-14 sm:py-12 lg:py-0 lg:pl-16 lg:pr-14 lg:flex-shrink-0 lg:flex-grow-0"
           style={{ flexBasis: '560px' }}
         >
-          {/* Título — misma estructura que TrayectoriaBlock / FeaturedSection */}
+          {/* Título — mismo tamaño que "Propiedades destacadas" */}
           <h2
             ref={titleRef}
             className="propietarios-title-split"
             style={{
               fontFamily: FONT_HEADING,
               fontWeight: 300,
-              fontSize: 'clamp(22px, 2.2vw, 34px)',
+              fontSize: 'clamp(26px, 2.6vw, 46px)',
               color: '#fff',
               margin: 0,
               lineHeight: 1.2,
@@ -85,12 +121,19 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
             </span>
           </h2>
 
-          {/* Descripción */}
+          {/* Descripción — mismo tamaño que el subtítulo del Hero */}
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={titleAnimating ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
             transition={{ duration: 0.4, ease: 'easeOut' }}
-            style={{ fontFamily: FONT_BODY, fontSize: 'clamp(13px, 1vw, 15px)', fontWeight: 300, color: 'rgba(255,255,255,0.75)', margin: 0, lineHeight: 1.55 }}
+            style={{
+              fontFamily: FONT_BODY,
+              fontSize: 'clamp(13px, 1.1vw, 17px)',
+              fontWeight: 300,
+              color: 'rgba(255,255,255,0.75)',
+              margin: 0,
+              lineHeight: 1.55,
+            }}
           >
             Más de 60 años gestionando propiedades en Antioquia. Tu inmueble en
             manos de quienes conocen el mercado inmobiliario regional.
@@ -136,25 +179,28 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
           </motion.p>
         </div>
 
-        {/* ── GRID DERECHO 3 × 2 ───────────────────────────────── */}
-        <motion.div
+        {/* ── GRID DERECHO 3 × 2 — efecto Bento stagger ───────── */}
+        <div
           className="flex-1 grid grid-cols-3 grid-rows-2 h-[200px] sm:h-[260px] lg:h-full"
           style={{ gap: '3px' }}
-          initial={{ opacity: 0, x: 40 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true, amount: 0.2 }}
-          transition={{ duration: 0.8, ease: 'easeOut' }}
         >
-          {/* Fila 1 */}
-          <StatCard number="+1000" label="inmuebles" sublabel="en gestión activa" />
-          <PhotoCell url="/images/Banner_consigna_propiedad.png" position="center top" />
-          <PhotoCell url="/images/banner_inversionistas.png" position="center top" />
-
-          {/* Fila 2 */}
-          <PhotoCell url="/images/banner_propietarios.png" />
-          <StatCard number="60" label="años" sublabel="de experiencia" />
-          <StatCard number="3" label="sedes" sublabel="en Antioquia" />
-        </motion.div>
+          {GRID.map((cell, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, scale: 0.92 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true, amount: 0.15 }}
+              transition={{ duration: 0.55, delay: i * 0.09, ease: EASE_BENTO }}
+              style={{ overflow: 'hidden' }}
+            >
+              {cell.type === 'stat' ? (
+                <StatCard number={cell.number} label={cell.label} sublabel={cell.sublabel} />
+              ) : (
+                <PhotoCell url={cell.url} position={cell.position} />
+              )}
+            </motion.div>
+          ))}
+        </div>
 
       </div>
     </section>
