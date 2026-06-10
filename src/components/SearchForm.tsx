@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { createPortal } from 'react-dom';
+import gsap from 'gsap';
 
 /* ── Datos ───────────────────────────────────────────────────────── */
 
@@ -30,18 +31,12 @@ const TIPOS_INMUEBLE = [
 
 const PRESUPUESTO = {
   arrendar: [
-    'Hasta $500.000',
-    '$500.000 – $1.000.000',
-    '$1.000.000 – $2.000.000',
-    '$2.000.000 – $3.000.000',
-    'Más de $3.000.000',
+    'Hasta $500.000', '$500.000 – $1.000.000', '$1.000.000 – $2.000.000',
+    '$2.000.000 – $3.000.000', 'Más de $3.000.000',
   ],
   comprar: [
-    'Hasta $100M',
-    '$100M – $200M',
-    '$200M – $400M',
-    '$400M – $600M',
-    'Más de $600M',
+    'Hasta $100M', '$100M – $200M', '$200M – $400M',
+    '$400M – $600M', 'Más de $600M',
   ],
 };
 
@@ -52,14 +47,38 @@ const COLOR_LABEL = '#909090';
 const COLOR_VALUE = '#232222';
 const RED         = '#f32735';
 const RED_HOVER   = '#aa182c';
+const ICON_W      = 52; // ancho de celda colapsada (solo icono)
+
+/* ── Iconos SVG para estado colapsado ────────────────────────────── */
+
+const IconCodigo = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#aaa" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <polyline points="16 18 22 12 16 6" /><polyline points="8 6 2 12 8 18" />
+  </svg>
+);
+const IconUbicacion = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#aaa" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" /><circle cx="12" cy="10" r="3" />
+  </svg>
+);
+const IconTipo = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#aaa" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /><polyline points="9 22 9 12 15 12 15 22" />
+  </svg>
+);
+const IconPrecio = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#aaa" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <line x1="12" y1="1" x2="12" y2="23" /><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+  </svg>
+);
 
 /* ── CustomSelect ────────────────────────────────────────────────── */
 
 function CustomSelect({
-  label, value, onChange, options, placeholder,
+  label, value, onChange, options, placeholder, onOpen,
 }: {
   label: string; value: string; onChange: (v: string) => void;
-  options: string[]; placeholder?: string;
+  options: string[]; placeholder?: string; onOpen?: () => void;
 }) {
   const [open, setOpen]       = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -76,11 +95,13 @@ function CustomSelect({
     }
   }, []);
 
-  const toggle = useCallback((e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (!open) updatePos();
+  const toggle = useCallback(() => {
+    if (!open) {
+      updatePos();
+      onOpen?.();
+    }
     setOpen(p => !p);
-  }, [open, updatePos]);
+  }, [open, updatePos, onOpen]);
 
   useEffect(() => {
     if (!open || !mounted) return;
@@ -93,12 +114,11 @@ function CustomSelect({
   }, [open, mounted]);
 
   const dropdown = mounted && open ? (
-    <div ref={dropdownRef}
-      style={{ position: 'fixed', top: pos.top, left: pos.left, width: pos.width, zIndex: 2147483647 }}>
+    <div ref={dropdownRef} style={{ position: 'fixed', top: pos.top, left: pos.left, width: pos.width, zIndex: 2147483647 }}>
       <div className="bg-white shadow-2xl border border-gray-100 max-h-[240px] overflow-y-auto custom-scrollbar">
         {options.map(opt => (
           <button key={opt} type="button"
-            onClick={e => { e.stopPropagation(); onChange(opt); setOpen(false); }}
+            onClick={() => { onChange(opt); setOpen(false); }}
             className={`block w-full text-left px-4 py-2.5 transition-colors duration-100 ${
               value === opt ? 'bg-brand-red text-white' : 'text-gray-700 hover:bg-brand-red hover:text-white'
             }`}
@@ -119,8 +139,7 @@ function CustomSelect({
           {value || placeholder || 'Seleccionar'}
         </span>
         <svg width="10" height="6" viewBox="0 0 10 6" fill="none"
-          style={{ flexShrink: 0, opacity: 0.4,
-            transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 0.15s' }}>
+          style={{ flexShrink: 0, opacity: 0.4, transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 0.15s' }}>
           <path d="M1 1l4 4 4-4" stroke="#232222" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
       </button>
@@ -137,39 +156,102 @@ interface SearchFormProps {
   onNavigate?: (page: 'propiedades') => void;
 }
 
+type FilterMode = 'default' | 'codigo' | 'filters';
+
 /* ── Componente principal ────────────────────────────────────────── */
 
 export default function SearchForm({ onNavigate }: SearchFormProps) {
   const [searchType, setSearchType] = useState<'arrendar' | 'comprar'>('arrendar');
+  const [filterMode, setFilterMode] = useState<FilterMode>('default');
+  const [isMounted,  setIsMounted]  = useState(false);
   const [codigo,     setCodigo]     = useState('');
   const [sector,     setSector]     = useState('');
   const [tipo,       setTipo]       = useState('');
   const [precio,     setPrecio]     = useState('');
 
-  const handleTabClick = (t: 'arrendar' | 'comprar') => {
-    setSearchType(t);
-    setPrecio('');
-  };
+  /* Refs para animación GSAP ─────────────────────────────────── */
+  const rowRef      = useRef<HTMLDivElement>(null);
+  const buscarRef   = useRef<HTMLButtonElement>(null);
+  const cellRefs    = useRef<(HTMLDivElement | null)[]>([null, null, null, null]);
+  const contentRefs = useRef<(HTMLDivElement | null)[]>([null, null, null, null]);
+  const iconRefs    = useRef<(HTMLDivElement | null)[]>([null, null, null, null]);
 
-  /* Celda de campo compartida */
-  const FieldCell = ({
-    icon, label, children, border = true,
-  }: {
-    icon: string; label: string; children: React.ReactNode; border?: boolean;
-  }) => (
-    <div
-      className={`flex items-center gap-3 flex-1 px-5 py-4 min-w-0${border ? ' border-r border-gray-100' : ''}`}
-    >
-      <img src={icon} alt="" width={24} height={24} style={{ flexShrink: 0 }} />
-      <div className="min-w-0 flex-1">
-        <p style={{ fontFamily: FONT, fontSize: '11px', color: COLOR_LABEL,
-          fontWeight: 300, marginBottom: '3px', lineHeight: 1 }}>
-          {label}
-        </p>
-        {children}
-      </div>
-    </div>
-  );
+  useEffect(() => { setIsMounted(true); }, []);
+
+  /* Fijar anchos explícitos en desktop para que GSAP los pueda animar */
+  useEffect(() => {
+    if (!isMounted || typeof window === 'undefined' || window.innerWidth < 640) return;
+    cellRefs.current.forEach(cell => {
+      if (!cell) return;
+      const w = cell.getBoundingClientRect().width;
+      gsap.set(cell, { width: w, flexGrow: 0, flexShrink: 0 });
+    });
+  }, [isMounted]);
+
+  /* Animación de colapso/expansión ─────────────────────────────── */
+  const animateMode = useCallback((mode: FilterMode) => {
+    if (typeof window === 'undefined' || window.innerWidth < 640) return;
+    if (!rowRef.current || !buscarRef.current) return;
+
+    const totalW = rowRef.current.getBoundingClientRect().width;
+    const btnW   = buscarRef.current.getBoundingClientRect().width;
+    const avail  = totalW - btnW;
+
+    const widths: [number, number, number, number] =
+      mode === 'default'
+        ? [avail / 4, avail / 4, avail / 4, avail / 4]
+        : mode === 'codigo'
+        ? [avail - 3 * ICON_W, ICON_W, ICON_W, ICON_W]
+        : [ICON_W, (avail - ICON_W) / 3, (avail - ICON_W) / 3, (avail - ICON_W) / 3];
+
+    const collapsed: boolean[] =
+      mode === 'default' ? [false, false, false, false]
+      : mode === 'codigo' ? [false, true,  true,  true]
+      :                     [true,  false, false, false];
+
+    /* Ancho de cada celda — misma curva que el carrusel */
+    cellRefs.current.forEach((cell, i) => {
+      if (cell) gsap.to(cell, { width: widths[i], duration: 0.65, ease: 'power4.out' });
+    });
+
+    /* Contenido: desaparece encogido (como card saliente) */
+    contentRefs.current.forEach((el, i) => {
+      if (!el) return;
+      if (collapsed[i]) {
+        gsap.to(el, { opacity: 0, scale: 0.85, duration: 0.2, ease: 'power2.in' });
+      } else {
+        gsap.to(el, { opacity: 1, scale: 1, duration: 0.4, ease: 'power3.out', delay: 0.25 });
+      }
+    });
+
+    /* Icono colapsado: aparece creciendo (como card entrante) */
+    iconRefs.current.forEach((el, i) => {
+      if (!el) return;
+      if (collapsed[i]) {
+        gsap.to(el, { opacity: 1, scale: 1, duration: 0.3, ease: 'power3.out', delay: 0.2 });
+      } else {
+        gsap.to(el, { opacity: 0, scale: 0.7, duration: 0.15, ease: 'power2.in' });
+      }
+    });
+  }, []);
+
+  const handleCellClick = useCallback((clickedType: 'codigo' | 'filters') => {
+    if (typeof window !== 'undefined' && window.innerWidth < 640) return;
+    const newMode: FilterMode = filterMode === clickedType ? 'default' : clickedType;
+    setFilterMode(newMode);
+    animateMode(newMode);
+  }, [filterMode, animateMode]);
+
+  /* ── Render ──────────────────────────────────────────────────── */
+
+  const BORDER_R = '1px solid rgba(0,0,0,0.07)';
+  const CELL_BASE: React.CSSProperties = {
+    position: 'relative',
+    overflow: 'hidden',
+    display: 'flex',
+    alignItems: 'stretch',
+    cursor: 'pointer',
+  };
 
   return (
     <div className="w-full overflow-hidden" style={{ boxShadow: '0 8px 40px rgba(0,0,0,0.35)' }}>
@@ -182,7 +264,7 @@ export default function SearchForm({ onNavigate }: SearchFormProps) {
             <button
               key={t}
               type="button"
-              onClick={() => handleTabClick(t)}
+              onClick={() => { setSearchType(t); setPrecio(''); }}
               className="flex-1 flex items-center justify-center transition-all duration-200"
               style={{
                 background: active ? RED : 'rgba(255,255,255,0.4)',
@@ -206,76 +288,147 @@ export default function SearchForm({ onNavigate }: SearchFormProps) {
         })}
       </div>
 
-      {/* ── Fila 2: Campos + Buscar ── */}
-      <div className="flex bg-white">
+      {/* ── Fila 2: Filtros + Botón buscar ── */}
+      <div ref={rowRef} className="flex bg-white">
 
-        {/* Grid 2×2 en móvil, fila en desktop */}
+        {/* Cuatro celdas de filtro */}
         <div className="flex-1 grid grid-cols-2 sm:flex sm:flex-row">
 
-          <FieldCell icon="/icons/icon-code-red.gif" label="Código inmueble">
-            <input
-              type="text"
-              value={codigo}
-              onChange={e => setCodigo(e.target.value)}
-              placeholder="Ej: 12345"
-              className="w-full bg-transparent border-none outline-none"
-              style={{ fontFamily: FONT, fontSize: '14px',
-                color: codigo ? COLOR_VALUE : '#b8b8b8', lineHeight: 1 }}
-            />
-          </FieldCell>
-
-          <FieldCell
-            icon="/icons/icon-location-red.gif"
-            label="Ubicación"
-            border={false}
+          {/* ── Celda 0: Código ── */}
+          <div
+            ref={el => { cellRefs.current[0] = el; }}
+            style={{ ...CELL_BASE, borderRight: BORDER_R, borderBottom: 'none' }}
+            className="sm:flex-1 border-b sm:border-b-0 border-gray-100"
+            onClick={() => handleCellClick('codigo')}
           >
-            <CustomSelect
-              label="Ubicación"
-              value={sector}
-              onChange={setSector}
-              options={SECTORES}
-              placeholder="Seleccionar"
-            />
-          </FieldCell>
-
-          {/* En móvil, estas dos celdas están en la segunda fila del grid */}
-          <div className="flex items-center gap-3 flex-1 px-5 py-4 min-w-0 border-t sm:border-t-0 border-r border-gray-100">
-            <img src="/icons/icon-home-red.gif" alt="" width={24} height={24} style={{ flexShrink: 0 }} />
-            <div className="min-w-0 flex-1">
-              <p style={{ fontFamily: FONT, fontSize: '11px', color: COLOR_LABEL,
-                fontWeight: 300, marginBottom: '3px', lineHeight: 1 }}>
-                Tipo de propiedad
-              </p>
-              <CustomSelect
-                label="Tipo de propiedad"
-                value={tipo}
-                onChange={setTipo}
-                options={TIPOS_INMUEBLE}
-                placeholder="Seleccionar"
-              />
+            {/* Icono colapsado */}
+            <div
+              ref={el => { iconRefs.current[0] = el; }}
+              style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: 0, pointerEvents: 'none', transform: 'scale(0.7)' }}
+            >
+              <IconCodigo />
+            </div>
+            {/* Contenido expandido */}
+            <div
+              ref={el => { contentRefs.current[0] = el; }}
+              className="flex items-center gap-3 px-5 py-4 min-w-0 w-full"
+            >
+              <img src="/icons/icon-code-red.gif" alt="" width={24} height={24} style={{ flexShrink: 0 }} />
+              <div className="min-w-0 flex-1">
+                <p style={{ fontFamily: FONT, fontSize: '11px', color: COLOR_LABEL, fontWeight: 300, marginBottom: '3px', lineHeight: 1 }}>
+                  Código inmueble
+                </p>
+                <input
+                  type="text"
+                  value={codigo}
+                  onChange={e => setCodigo(e.target.value)}
+                  onFocus={() => handleCellClick('codigo')}
+                  placeholder="Ej: 12345"
+                  className="w-full bg-transparent border-none outline-none"
+                  style={{ fontFamily: FONT, fontSize: '14px', color: codigo ? COLOR_VALUE : '#b8b8b8', lineHeight: 1 }}
+                />
+              </div>
             </div>
           </div>
 
-          <div className="flex items-center gap-3 flex-1 px-5 py-4 min-w-0 border-t sm:border-t-0 border-gray-100">
-            <img src="/icons/icon-dollar-red.gif" alt="" width={24} height={24} style={{ flexShrink: 0 }} />
-            <div className="min-w-0 flex-1">
-              <p style={{ fontFamily: FONT, fontSize: '11px', color: COLOR_LABEL,
-                fontWeight: 300, marginBottom: '3px', lineHeight: 1 }}>
-                Precio
-              </p>
-              <CustomSelect
-                label="Precio"
-                value={precio}
-                onChange={setPrecio}
-                options={PRESUPUESTO[searchType]}
-                placeholder="Seleccionar"
-              />
+          {/* ── Celda 1: Ubicación ── */}
+          <div
+            ref={el => { cellRefs.current[1] = el; }}
+            style={{ ...CELL_BASE, borderRight: BORDER_R }}
+            className="sm:flex-1 border-b sm:border-b-0 border-gray-100"
+            onClick={() => handleCellClick('filters')}
+          >
+            <div
+              ref={el => { iconRefs.current[1] = el; }}
+              style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: 0, pointerEvents: 'none', transform: 'scale(0.7)' }}
+            >
+              <IconUbicacion />
+            </div>
+            <div
+              ref={el => { contentRefs.current[1] = el; }}
+              className="flex items-center gap-3 px-5 py-4 min-w-0 w-full"
+            >
+              <img src="/icons/icon-location-red.gif" alt="" width={24} height={24} style={{ flexShrink: 0 }} />
+              <div className="min-w-0 flex-1">
+                <p style={{ fontFamily: FONT, fontSize: '11px', color: COLOR_LABEL, fontWeight: 300, marginBottom: '3px', lineHeight: 1 }}>
+                  Ubicación
+                </p>
+                <CustomSelect
+                  label="Ubicación" value={sector} onChange={setSector}
+                  options={SECTORES} placeholder="Seleccionar"
+                  onOpen={() => handleCellClick('filters')}
+                />
+              </div>
             </div>
           </div>
+
+          {/* ── Celda 2: Tipo de propiedad ── */}
+          <div
+            ref={el => { cellRefs.current[2] = el; }}
+            style={{ ...CELL_BASE, borderRight: BORDER_R }}
+            className="sm:flex-1"
+            onClick={() => handleCellClick('filters')}
+          >
+            <div
+              ref={el => { iconRefs.current[2] = el; }}
+              style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: 0, pointerEvents: 'none', transform: 'scale(0.7)' }}
+            >
+              <IconTipo />
+            </div>
+            <div
+              ref={el => { contentRefs.current[2] = el; }}
+              className="flex items-center gap-3 px-5 py-4 min-w-0 w-full"
+            >
+              <img src="/icons/icon-home-red.gif" alt="" width={24} height={24} style={{ flexShrink: 0 }} />
+              <div className="min-w-0 flex-1">
+                <p style={{ fontFamily: FONT, fontSize: '11px', color: COLOR_LABEL, fontWeight: 300, marginBottom: '3px', lineHeight: 1 }}>
+                  Tipo de propiedad
+                </p>
+                <CustomSelect
+                  label="Tipo" value={tipo} onChange={setTipo}
+                  options={TIPOS_INMUEBLE} placeholder="Seleccionar"
+                  onOpen={() => handleCellClick('filters')}
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* ── Celda 3: Precio ── */}
+          <div
+            ref={el => { cellRefs.current[3] = el; }}
+            style={CELL_BASE}
+            className="sm:flex-1"
+            onClick={() => handleCellClick('filters')}
+          >
+            <div
+              ref={el => { iconRefs.current[3] = el; }}
+              style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: 0, pointerEvents: 'none', transform: 'scale(0.7)' }}
+            >
+              <IconPrecio />
+            </div>
+            <div
+              ref={el => { contentRefs.current[3] = el; }}
+              className="flex items-center gap-3 px-5 py-4 min-w-0 w-full"
+            >
+              <img src="/icons/icon-dollar-red.gif" alt="" width={24} height={24} style={{ flexShrink: 0 }} />
+              <div className="min-w-0 flex-1">
+                <p style={{ fontFamily: FONT, fontSize: '11px', color: COLOR_LABEL, fontWeight: 300, marginBottom: '3px', lineHeight: 1 }}>
+                  Precio
+                </p>
+                <CustomSelect
+                  label="Precio" value={precio} onChange={setPrecio}
+                  options={PRESUPUESTO[searchType]} placeholder="Seleccionar"
+                  onOpen={() => handleCellClick('filters')}
+                />
+              </div>
+            </div>
+          </div>
+
         </div>
 
-        {/* Botón Buscar inmueble */}
+        {/* ── Botón Buscar inmueble ── */}
         <button
+          ref={buscarRef}
           type="button"
           onClick={() => onNavigate?.('propiedades')}
           className="flex items-center justify-center gap-2.5 transition-colors duration-200 active:scale-[0.98] flex-shrink-0"
@@ -283,8 +436,7 @@ export default function SearchForm({ onNavigate }: SearchFormProps) {
             background: RED, color: '#fff',
             fontFamily: FONT, fontSize: '15px', fontWeight: 500,
             border: 'none', cursor: 'pointer',
-            padding: '0 28px',
-            minWidth: '160px',
+            padding: '0 28px', minWidth: '160px',
           }}
           onMouseEnter={e => (e.currentTarget.style.background = RED_HOVER)}
           onMouseLeave={e => (e.currentTarget.style.background = RED)}
@@ -292,8 +444,8 @@ export default function SearchForm({ onNavigate }: SearchFormProps) {
           <img src="/icons/icon-search-white.gif" alt="" width={18} height={18} />
           <span>Buscar inmueble</span>
         </button>
-      </div>
 
+      </div>
     </div>
   );
 }
