@@ -6,7 +6,6 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import HeroSection from '@/components/HeroSection';
 import SearchForm from '@/components/SearchForm';
-import UserLocation from '@/components/UserLocation';
 import FeaturedSection from '@/components/FeaturedSection';
 import PropietariosBlock from '@/components/PropietariosBlock';
 import ServiciosBlock from '@/components/ServiciosBlock';
@@ -38,7 +37,6 @@ function HomePage({ onNavigate }: { onNavigate: (page: PageType) => void }) {
           />
         }
       />
-      <UserLocation mobileExpanded={mobileExpanded} />
 
       {/* Sección 2: Propiedades Destacadas */}
       <ScrollReveal y={50} start="top 90%">

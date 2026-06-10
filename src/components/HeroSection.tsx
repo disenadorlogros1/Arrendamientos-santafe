@@ -157,12 +157,29 @@ export default function HeroSection({ onNavigate, searchFormSlot }: HeroSectionP
 
           {/* Buscador al fondo del hero, sobre el video */}
           {searchFormSlot && (
-            <div id="buscador" className="relative w-full px-4 sm:px-8 lg:px-14 pb-8" style={{ zIndex: 10 }}>
+            <div id="buscador" className="relative w-full px-4 sm:px-8 lg:px-14 pb-2" style={{ zIndex: 10 }}>
               <div style={{ maxWidth: '900px', margin: '0 auto' }}>
                 {searchFormSlot}
               </div>
             </div>
           )}
+
+          {/* Ubicación — siempre debajo del buscador, sobre el video */}
+          <div
+            className="relative w-full flex items-center justify-center gap-2 pb-5 pt-3"
+            style={{ zIndex: 10 }}
+          >
+            <img src="/icons/icon-location-white.gif" alt="" width={14} height={14} style={{ opacity: 0.75 }} />
+            <span style={{
+              fontFamily: FONT_BODY,
+              fontSize: '13px',
+              fontWeight: 300,
+              color: 'rgba(255,255,255,0.7)',
+              letterSpacing: '0.01em',
+            }}>
+              Propiedades en Medellín, Antioquia
+            </span>
+          </div>
         </div>
 
       </div>
