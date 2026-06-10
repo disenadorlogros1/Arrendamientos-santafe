@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "skills": {
+    "framer-motion": {
+      "source": "pproenca/dot-skills",
+      "sourceType": "github",
+      "skillPath": "skills/.experimental/framer-motion/SKILL.md",
+      "computedHash": "938929d1d1fa30fe881c59e259e4346f6d901e3449eda09427fc7eea11966292"
+    },
+    "gsap-framer-scroll-animation": {
+      "source": "github/awesome-copilot",
+      "sourceType": "github",
+      "skillPath": "skills/gsap-framer-scroll-animation/SKILL.md",
+      "computedHash": "e6a4caf23b818ffc5185d51339e941ca783944b6693da877fc1206693b2dff66"
+    },
+    "motion-designer": {
+      "source": "dylantarre/animation-principles",
+      "sourceType": "github",
+      "skillPath": "skills/03-by-role-persona/motion-designer/SKILL.md",
+      "computedHash": "e76c8c21a54272229f357f8c76bb4101c46e448438d36db52c711e01c0743e26"
+    }
+  }
+}
