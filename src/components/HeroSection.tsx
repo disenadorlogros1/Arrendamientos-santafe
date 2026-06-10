@@ -72,9 +72,9 @@ export default function HeroSection({ onNavigate, searchFormSlot }: HeroSectionP
           {/* Overlay oscuro */}
           <div className="absolute inset-0 hero-video-overlay" />
 
-          {/* Contenido centrado — ocupa el espacio disponible */}
+          {/* Contenido — empujado hacia el buscador inferior */}
           <div
-            className="relative flex-1 flex flex-col items-center justify-center px-8 py-14 sm:px-14 lg:px-16"
+            className="relative flex-1 flex flex-col items-center justify-end px-8 pb-12 pt-16 sm:px-14 sm:pb-14 lg:px-16 lg:pb-16"
             style={{ zIndex: 10 }}
           >
             <div style={{ maxWidth: '700px', width: '100%', textAlign: 'center' }}>
