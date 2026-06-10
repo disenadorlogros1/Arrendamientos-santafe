@@ -37,7 +37,7 @@ export default function HeroSection({ onNavigate, searchFormSlot }: HeroSectionP
 
         {/* Celda principal: video + contenido */}
         <div
-          className="relative flex items-center overflow-hidden flex-1"
+          className="relative flex items-center justify-center overflow-hidden flex-1"
           style={{ minHeight: 'clamp(340px, 65vh, 700px)' }}
           ref={titleRef}
         >
@@ -58,8 +58,8 @@ export default function HeroSection({ onNavigate, searchFormSlot }: HeroSectionP
 
           {/* Contenido */}
           <div
-            className="relative px-8 py-14 sm:px-14 lg:px-16"
-            style={{ zIndex: 10, maxWidth: '700px' }}
+            className="relative w-full flex flex-col items-center px-8 py-14 sm:px-14 lg:px-16"
+            style={{ zIndex: 10, maxWidth: '700px', margin: '0 auto' }}
           >
             <h1
               className="hero-title-split"
@@ -70,12 +70,13 @@ export default function HeroSection({ onNavigate, searchFormSlot }: HeroSectionP
                 color: '#fff',
                 lineHeight: 1.2,
                 margin: 0,
+                textAlign: 'center',
               }}
             >
-              60 años acompañando
+              60 años{' '}
               <span style={{ fontWeight: 700, display: 'inline-block', position: 'relative' }}>
                 <span ref={boldTextRef} style={{ position: 'relative', zIndex: 2, display: 'block' }}>
-                  decisiones que importan.
+                  conectando personas
                 </span>
                 <span
                   aria-hidden="true"
@@ -104,12 +105,13 @@ export default function HeroSection({ onNavigate, searchFormSlot }: HeroSectionP
                 color: 'rgba(255,255,255,0.85)',
                 marginTop: '20px',
                 lineHeight: 1.45,
+                textAlign: 'center',
               }}
             >
-              Respaldo y experiencia para encontrar o gestionar tu propiedad ideal en Antioquia.
+              con el lugar donde vivir, trabajar y crecer.
             </motion.p>
 
-            <div className="flex flex-wrap items-center gap-2 mt-7">
+            <div className="flex flex-wrap items-center justify-center gap-2 mt-7">
               <button
                 type="button"
                 onClick={() => onNavigate?.('propiedades')}
