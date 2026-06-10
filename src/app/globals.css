@@ -199,7 +199,7 @@
   transform: translate(-50%, -50%) scale(1);
 }
 
-/* Borde siempre visible por encima del relleno */
+/* Borde que desaparece cuando el botón se llena */
 .hero-btn-fill::after {
   content: '';
   position: absolute;
@@ -208,6 +208,11 @@
   border: 1px solid rgba(255, 255, 255, 0.3);
   pointer-events: none;
   z-index: 2;
+  transition: opacity 0.3s ease;
+}
+
+.hero-btn-fill:hover::after {
+  opacity: 0;
 }
 
 .hero-btn-fill > span {
