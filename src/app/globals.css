@@ -267,13 +267,15 @@ html.lenis, html.lenis body { height: auto; }
   opacity: 1;
 }
 
-/* Carousel nav buttons: ink-fill (sobre fondo blanco) */
+/* Carousel nav buttons: transparente con blur — mismo estilo que header */
 .carousel-nav-btn {
   position: relative;
   overflow: hidden;
-  background: #fff;
-  border: 1px solid #aaaaaa;
-  color: #aaaaaa;
+  background: rgba(255, 255, 255, 0.3);
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   transition: border-color 0.3s ease, color 0.3s ease;
 }
 .carousel-nav-btn::before {

@@ -1,14 +1,5 @@
 'use client';
 
-import {
-  Home,
-  TrendingUp,
-  Key,
-  ClipboardList,
-  BadgeCheck,
-  Calculator,
-  ArrowRight,
-} from 'lucide-react';
 import type { PageType } from '@/components/Header';
 
 interface ServiciosBlockProps {
@@ -16,131 +7,172 @@ interface ServiciosBlockProps {
 }
 
 const FONT_BODY    = "'Avenir LT Pro 65 Medium', 'Avenir LT Pro', 'Avenir', 'Outfit', system-ui, sans-serif";
-const FONT_HEADING = "'Avenir LT Pro 85 Heavy',  'Avenir LT Pro', 'Avenir', 'Outfit', system-ui, sans-serif";
+const FONT_HEADING = "'Avenir Next Ultra Light', 'Avenir LT Pro 65 Medium', 'Avenir', 'Outfit', system-ui, sans-serif";
 const RED          = '#f32735';
+const PHONE        = '573006557529';
+
+function applyInkFill(e: React.MouseEvent<HTMLElement>) {
+  const el = e.currentTarget;
+  const rect = el.getBoundingClientRect();
+  const x = e.clientX - rect.left;
+  const y = e.clientY - rect.top;
+  const size = Math.max(
+    Math.hypot(x, y),
+    Math.hypot(rect.width - x, y),
+    Math.hypot(x, rect.height - y),
+    Math.hypot(rect.width - x, rect.height - y),
+  ) * 2;
+  el.style.setProperty('--x', `${x}px`);
+  el.style.setProperty('--y', `${y}px`);
+  el.style.setProperty('--size', `${size}px`);
+}
 
 const servicios = [
   {
-    icon: Home,
+    icon: '/icons/icon-home-red.gif',
     title: 'Arrendamientos',
-    description: 'Encuentra tu próximo hogar o local. Te acompañamos desde la búsqueda hasta la firma.',
-    page: 'propiedades' as PageType,
-    colSpan: 'lg:col-span-2',
-    accent: false,
+    description:
+      'Sabemos que encontrar el inmueble indicado no es solo buscar, es encontrar el lugar donde vas a vivir o trabajar. Estamos aquí para que ese proceso sea fácil, seguro y a tu medida.',
+    waMsg:
+      'Hola, estoy buscando un inmueble para arrendar y me gustaría recibir asesoría. ¿Me pueden ayudar?',
   },
   {
-    icon: TrendingUp,
+    icon: '/icons/icon-credit-card-red.gif',
     title: 'Ventas',
-    description: 'Vende al precio justo. Valoramos tu inmueble con criterio de mercado.',
-    page: 'propiedades' as PageType,
-    colSpan: 'lg:col-span-1',
-    accent: false,
+    description:
+      'Comprar un inmueble es una de las decisiones más importantes de tu vida. Te acompañamos con el conocimiento del mercado y la experiencia para que elijas con seguridad.',
+    waMsg:
+      'Hola, estoy interesado/a en comprar un inmueble y quisiera recibir orientación. ¿Me pueden ayudar?',
   },
   {
-    icon: Key,
+    icon: '/icons/icon-consult-red.gif',
     title: 'Consignación',
-    description: 'Nosotros conseguimos el arrendatario. Tú recibes el pago.',
-    page: 'consignacion' as PageType,
-    colSpan: 'lg:col-span-1',
-    accent: false,
+    description:
+      'Tu propiedad merece estar en buenas manos. Nos encargamos de encontrar el cliente adecuado con la seriedad y el respaldo de 60 años en el mercado inmobiliario antioqueño.',
+    waMsg:
+      'Hola, tengo un inmueble disponible y me interesa consignarlo con Arrendamientos Santa Fe. ¿Me pueden dar más información sobre el proceso?',
   },
   {
-    icon: ClipboardList,
-    title: 'Administración',
-    description: 'Manejamos el cobro, los contratos y las reparaciones por ti.',
-    page: 'servicios' as PageType,
-    colSpan: 'lg:col-span-2',
-    accent: true,
-  },
-  {
-    icon: BadgeCheck,
+    icon: '/icons/icon-area-red.gif',
     title: 'Avalúos',
-    description: 'Recibe orientación sobre el valor comercial de tu inmueble.',
-    page: 'servicios' as PageType,
-    colSpan: 'lg:col-span-1',
-    accent: false,
+    description:
+      'Conocer el valor real de tu inmueble es el primer paso para tomar buenas decisiones. Te damos una valoración técnica, honesta y ajustada al mercado actual.',
+    waMsg:
+      'Hola, quisiera solicitar un avalúo comercial para mi inmueble. ¿Me pueden indicar cómo funciona el proceso?',
   },
   {
-    icon: Calculator,
+    icon: '/icons/icon-dollar-red.gif',
     title: 'Hipotecas',
-    description: 'Conoce alternativas de préstamo sobre propiedad raíz.',
-    page: 'hipotecas' as PageType,
-    colSpan: 'lg:col-span-2',
-    accent: false,
+    description:
+      '¿Necesitas dinero? Préstamos en hipoteca al 1.5% de interés, pagos anticipados sin penalización y abonos a capital desde $1.000.000',
+    waMsg:
+      'Hola, tengo un inmueble y estoy explorando la posibilidad de obtener un préstamo hipotecario. Me gustaría saber cómo funciona el proceso con Arrendamientos Santa Fe.',
   },
 ];
 
-export default function ServiciosBlock({ onNavigate }: ServiciosBlockProps) {
+export default function ServiciosBlock({ onNavigate: _onNavigate }: ServiciosBlockProps) {
   return (
-    <section style={{ background: '#0a0a0a' }} className="w-full overflow-hidden">
+    <section style={{ background: '#fff' }} className="w-full overflow-hidden">
+
+      {/* Título — mismo formato que FeaturedSection */}
       <div
-        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
-        style={{ gap: '3px' }}
+        className="px-6 sm:px-10 lg:px-14"
+        style={{ paddingTop: '28px', paddingBottom: '28px' }}
+      >
+        <h2
+          style={{
+            fontFamily: FONT_HEADING,
+            fontWeight: 300,
+            fontSize: 'clamp(26px, 2.6vw, 46px)',
+            color: RED,
+            lineHeight: 1.2,
+            margin: 0,
+          }}
+        >
+          Nuestros <span style={{ fontWeight: 700 }}>servicios</span>
+        </h2>
+      </div>
+
+      {/* Grid de servicios */}
+      <div
+        className="px-6 sm:px-10 lg:px-14 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5"
+        style={{ paddingBottom: '52px', gap: '20px' }}
       >
         {servicios.map((s) => {
-          const Icon = s.icon;
-          const bg   = s.accent ? RED : '#1a1a1a';
-          const hoverBg = s.accent ? '#aa182c' : '#2d2d2d';
-
+          const url = `https://wa.me/${PHONE}?text=${encodeURIComponent(s.waMsg)}`;
           return (
-            <button
+            <div
               key={s.title}
-              type="button"
-              onClick={() => {
-                onNavigate(s.page);
-                window.scrollTo({ top: 0, behavior: 'smooth' });
+              className="flex flex-col"
+              style={{
+                gap: '14px',
+                padding: '24px 20px 20px',
+                borderRadius: '10px',
+                border: '1px solid #eeeeee',
+                background: '#fff',
+                boxShadow: '0 2px 10px rgba(0,0,0,0.05)',
               }}
-              className={`group text-left ${s.colSpan} flex flex-col justify-between gap-6 p-8 lg:p-10 transition-colors duration-200 min-h-[200px]`}
-              style={{ background: bg }}
-              onMouseEnter={(e) => (e.currentTarget.style.background = hoverBg)}
-              onMouseLeave={(e) => (e.currentTarget.style.background = bg)}
             >
-              <div className="flex items-start gap-4">
-                <Icon
-                  style={{ color: s.accent ? '#fff' : RED, flexShrink: 0 }}
-                  className="w-7 h-7 mt-0.5"
-                />
-                <div>
-                  <h3
-                    style={{
-                      fontFamily: FONT_HEADING,
-                      fontWeight: 700,
-                      fontSize: 'clamp(17px, 1.3vw, 22px)',
-                      color: '#fff',
-                      margin: 0,
-                      lineHeight: 1.2,
-                    }}
-                  >
-                    {s.title}
-                  </h3>
-                  <p
-                    style={{
-                      fontFamily: FONT_BODY,
-                      fontWeight: 400,
-                      fontSize: 'clamp(13px, 0.95vw, 15px)',
-                      color: s.accent ? 'rgba(255,255,255,0.85)' : 'rgba(255,255,255,0.55)',
-                      marginTop: '8px',
-                      lineHeight: 1.55,
-                    }}
-                  >
-                    {s.description}
-                  </p>
-                </div>
-              </div>
+              {/* Ícono */}
+              <img
+                src={s.icon}
+                alt=""
+                width={40}
+                height={40}
+                style={{ flexShrink: 0, display: 'block' }}
+              />
 
-              <span
-                className="inline-flex items-center gap-1.5 group-hover:gap-2.5 transition-all duration-200"
+              {/* Título */}
+              <h3
                 style={{
-                  fontFamily: FONT_BODY,
-                  fontWeight: 600,
-                  fontSize: '13px',
-                  color: s.accent ? '#fff' : RED,
+                  fontFamily: FONT_HEADING,
+                  fontWeight: 700,
+                  fontSize: 'clamp(16px, 1.2vw, 20px)',
+                  color: '#232222',
+                  margin: 0,
+                  lineHeight: 1.2,
                 }}
               >
-                Ver más
-                <ArrowRight className="w-4 h-4" />
-              </span>
-            </button>
+                {s.title}
+              </h3>
+
+              {/* Descripción */}
+              <p
+                style={{
+                  fontFamily: FONT_BODY,
+                  fontSize: 'clamp(12.5px, 0.9vw, 14px)',
+                  color: '#666',
+                  margin: 0,
+                  lineHeight: 1.65,
+                  flexGrow: 1,
+                }}
+              >
+                {s.description}
+              </p>
+
+              {/* CTA WhatsApp con hero-btn-fill */}
+              <a
+                href={url}
+                target="_blank"
+                rel="noopener noreferrer"
+                onMouseEnter={applyInkFill}
+                onMouseLeave={applyInkFill}
+                className="hero-btn-fill inline-flex items-center justify-center rounded-full"
+                style={{
+                  fontFamily: FONT_BODY,
+                  fontWeight: 300,
+                  fontSize: 'clamp(13px, 0.95vw, 15px)',
+                  textDecoration: 'none',
+                  height: '42px',
+                  paddingLeft: '20px',
+                  paddingRight: '20px',
+                  alignSelf: 'flex-start',
+                  background: '#232222',
+                }}
+              >
+                <span>Hablar con un asesor</span>
+              </a>
+            </div>
           );
         })}
       </div>
