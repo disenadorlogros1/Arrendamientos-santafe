@@ -18,7 +18,7 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
         display: 'grid',
         gridTemplateColumns: '410px 1fr',
         gap: '20px',
-        padding: '120px 65px',
+        padding: '30px 65px',
         width: '1920px',
         height: '500px',
         margin: '0 auto',
@@ -164,7 +164,7 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
             alignItems: 'center',
             justifyContent: 'center',
             padding: '40px 50px',
-            minHeight: '250px',
+            minHeight: '200px',
           }}
         >
           <div
@@ -211,7 +211,7 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
             backgroundSize: 'cover',
             backgroundPosition: 'center',
             borderRadius: '0px',
-            minHeight: '250px',
+            minHeight: '200px',
           }}
         />
 
@@ -224,7 +224,7 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
             backgroundSize: 'cover',
             backgroundPosition: 'center',
             borderRadius: '0px',
-            minHeight: '250px',
+            minHeight: '200px',
           }}
         />
 
@@ -237,7 +237,7 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
             backgroundSize: 'cover',
             backgroundPosition: 'center',
             borderRadius: '0px',
-            minHeight: '380px',
+            minHeight: '230px',
           }}
         />
 
@@ -252,7 +252,7 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
             alignItems: 'center',
             justifyContent: 'center',
             padding: '40px 50px',
-            minHeight: '380px',
+            minHeight: '230px',
           }}
         >
           <div
@@ -301,7 +301,7 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
             alignItems: 'center',
             justifyContent: 'center',
             padding: '40px 50px',
-            minHeight: '380px',
+            minHeight: '230px',
           }}
         >
           <div
