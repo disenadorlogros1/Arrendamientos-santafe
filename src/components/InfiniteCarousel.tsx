@@ -48,12 +48,18 @@ export default function InfiniteCarousel({ properties }: InfiniteCarouselProps) 
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Responsive: 1 → 2 → 3 → 4 cards (+15% vs tamaño anterior)
-  const VISIBLE = windowWidth < 640 ? 1 : windowWidth < 1024 ? 2 : windowWidth < 1280 ? 3 : 4;
-  const CARD_W  = windowWidth < 640 ? 299 : windowWidth < 1024 ? 253 : windowWidth < 1280 ? 265 : 276;
-  // Cards verticales: proporción 9/16 (1080×1920)
+  // Responsive: 1 → 2 → 3 → 4 → 5 → 6 cards según viewport
+  const VISIBLE =
+    windowWidth < 640  ? 1 :
+    windowWidth < 1024 ? 2 :
+    windowWidth < 1280 ? 3 :
+    windowWidth < 1536 ? 4 :
+    windowWidth < 1920 ? 5 : 6;
+  const GAP = windowWidth < 640 ? 10 : 18;
+  // Cards llenan el ancho disponible (viewport - arrows 2×44 - outer gaps 2×12)
+  const CARD_W = Math.max(180, Math.floor((windowWidth - 112 - (VISIBLE - 1) * GAP) / VISIBLE));
+  // Proporción 9/16 (1080×1920)
   const CARD_H  = Math.round(CARD_W * 16 / 9);
-  const GAP     = windowWidth < 640 ? 8 : 12;
   const SLOT    = CARD_W + GAP;
 
   const visibleCards = Array.from({ length: VISIBLE + 1 }, (_, i) => {

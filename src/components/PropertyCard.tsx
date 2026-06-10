@@ -94,7 +94,7 @@ export default function PropertyCard({ property }: PropertyCardProps) {
         </div>
 
         {/* Línea roja separadora */}
-        <div style={{ height: '2px', background: RED, margin: '7px 0 6px' }} />
+        <div style={{ height: '2px', background: RED, margin: '3px 0 3px' }} />
 
         {/* Código de referencia */}
         <p style={{ fontFamily: FONT, fontSize: '12px', color: '#909090', fontWeight: 400, margin: 0 }}>

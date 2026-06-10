@@ -21,7 +21,7 @@ export default function FeaturedSection({ onNavigate }: FeaturedSectionProps) {
     <section style={{ background: '#F5F5F5' }} className="w-full overflow-hidden">
 
       {/* Fila header: celda título + celda botón */}
-      <div className="flex flex-col sm:flex-row sm:items-center" style={{ gap: '3px' }}>
+      <div className="flex flex-col sm:flex-row" style={{ gap: '3px' }}>
 
         {/* Celda título */}
         <div
@@ -51,7 +51,7 @@ export default function FeaturedSection({ onNavigate }: FeaturedSectionProps) {
             onNavigate('propiedades');
             window.scrollTo({ top: 0, behavior: 'smooth' });
           }}
-          className="flex items-center justify-center transition-colors duration-200 w-full sm:w-[340px] h-[44px]"
+          className="flex items-center justify-center transition-colors duration-200 w-full sm:w-[340px]"
           style={{ background: '#888888', flexShrink: 0 }}
           onMouseEnter={(e) => (e.currentTarget.style.background = RED)}
           onMouseLeave={(e) => (e.currentTarget.style.background = '#888888')}

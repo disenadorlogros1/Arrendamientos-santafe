@@ -272,8 +272,8 @@ html.lenis, html.lenis body { height: auto; }
   position: relative;
   overflow: hidden;
   background: #fff;
-  border: 1px solid rgba(0, 0, 0, 0.10);
-  color: #666;
+  border: 1px solid #aaaaaa;
+  color: #aaaaaa;
   transition: border-color 0.3s ease, color 0.3s ease;
 }
 .carousel-nav-btn::before {
