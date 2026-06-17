@@ -73,7 +73,7 @@ function StatOverlay({
 /* ── Componente principal ────────────────────────────────────────── */
 
 export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps) {
-  const { ref: titleRef, titleAnimating } = useSplitTextAnimation('.propietarios-title-split', 0, true);
+  const { ref: titleRef, titleAnimating } = useSplitTextAnimation('.propietarios-title-split', 0, false);
   const sectionRef = useRef<HTMLDivElement>(null);
 
   /* Scroll: empieza cuando el borde superior llega a corte 1 (20%)

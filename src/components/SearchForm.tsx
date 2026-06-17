@@ -29,16 +29,51 @@ const TIPOS_INMUEBLE = [
   'Local comercial', 'Bodega', 'Lote', 'Finca',
 ];
 
-const PRESUPUESTO = {
-  arrendar: [
-    'Hasta $500.000', '$500.000 – $1.000.000', '$1.000.000 – $2.000.000',
-    '$2.000.000 – $3.000.000', 'Más de $3.000.000',
-  ],
-  comprar: [
-    'Hasta $100M', '$100M – $200M', '$200M – $400M',
-    '$400M – $600M', 'Más de $600M',
-  ],
-};
+function fmtCOP(n: number): string {
+  if (n === 0) return '$ 0';
+  if (n >= 1_000_000) {
+    const m = n / 1_000_000;
+    return `$ ${Number.isInteger(m) ? m : m.toFixed(1)}M`;
+  }
+  return `$ ${Math.round(n / 1_000)}K`;
+}
+
+interface PriceRangeProps {
+  min: number; max: number; step: number;
+  value: [number, number]; onChange: (v: [number, number]) => void;
+}
+
+function PriceRangeSlider({ min, max, step, value, onChange }: PriceRangeProps) {
+  const [low, high] = value;
+  const pctLow  = ((low  - min) / (max - min)) * 100;
+  const pctHigh = ((high - min) / (max - min)) * 100;
+  return (
+    <div style={{ flex: 1, minWidth: 0 }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', margin: '3px 0 10px' }}>
+        <span style={{ fontFamily: FONT, fontSize: '12px', color: COLOR_VALUE, fontWeight: 500 }}>{fmtCOP(low)}</span>
+        <span style={{ fontFamily: FONT, fontSize: '12px', color: COLOR_VALUE, fontWeight: 500 }}>{fmtCOP(high)}</span>
+      </div>
+      <div style={{ position: 'relative', height: '20px' }}>
+        {/* Track visual */}
+        <div style={{ position: 'absolute', top: '50%', left: 0, right: 0, height: '3px', transform: 'translateY(-50%)', background: '#e0e0e0', borderRadius: '2px', pointerEvents: 'none' }}>
+          <div style={{ position: 'absolute', left: `${pctLow}%`, right: `${100 - pctHigh}%`, top: 0, bottom: 0, background: RED, borderRadius: '2px' }} />
+        </div>
+        {/* Low thumb */}
+        <input type="range" className="sf-range"
+          min={min} max={max} step={step} value={low}
+          onChange={e => onChange([Math.min(Number(e.target.value), high - step), high])}
+          style={{ zIndex: low >= high - step ? 5 : 3 }}
+        />
+        {/* High thumb */}
+        <input type="range" className="sf-range"
+          min={min} max={max} step={step} value={high}
+          onChange={e => onChange([low, Math.max(Number(e.target.value), low + step)])}
+          style={{ zIndex: 4 }}
+        />
+      </div>
+    </div>
+  );
+}
 
 /* ── Constantes ──────────────────────────────────────────────────── */
 
@@ -171,11 +206,6 @@ function CustomSelect({
               border: 'none', outline: 'none', flex: 1, minWidth: 0, lineHeight: 1,
             }}
           />
-          <svg width="10" height="6" viewBox="0 0 10 6" fill="none"
-            style={{ flexShrink: 0, opacity: 0.4, transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 0.15s', cursor: 'pointer' }}
-            onMouseDown={e => { e.preventDefault(); toggle(); }}>
-            <path d="M1 1l4 4 4-4" stroke="#232222" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
         </div>
         {dropdown && createPortal(dropdown, document.body)}
       </div>
@@ -185,15 +215,11 @@ function CustomSelect({
   return (
     <div className="min-w-0 w-full">
       <button ref={buttonRef} type="button" onClick={toggle}
-        className="w-full flex items-center justify-between bg-transparent border-none outline-none cursor-pointer text-left gap-1">
+        className="w-full flex items-center bg-transparent border-none outline-none cursor-pointer text-left">
         <span style={{ fontFamily: FONT, fontSize: '14px', fontWeight: 400,
           color: value ? COLOR_VALUE : '#b8b8b8', lineHeight: 1, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
           {value || placeholder || 'Seleccionar'}
         </span>
-        <svg width="10" height="6" viewBox="0 0 10 6" fill="none"
-          style={{ flexShrink: 0, opacity: 0.4, transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 0.15s' }}>
-          <path d="M1 1l4 4 4-4" stroke="#232222" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
       </button>
       {dropdown && createPortal(dropdown, document.body)}
     </div>
@@ -216,10 +242,10 @@ export default function SearchForm({ onNavigate }: SearchFormProps) {
   // null = ningún tab seleccionado (ambos en blanco 40%)
   const [searchType, setSearchType] = useState<'arrendar' | 'comprar' | null>(null);
   const [filterMode, setFilterMode] = useState<FilterMode>('default');
-  const [codigo,     setCodigo]     = useState('');
-  const [sector,     setSector]     = useState('');
-  const [tipo,       setTipo]       = useState('');
-  const [precio,     setPrecio]     = useState('');
+  const [codigo,      setCodigo]      = useState('');
+  const [sector,      setSector]      = useState('');
+  const [tipo,        setTipo]        = useState('');
+  const [precioRange, setPrecioRange] = useState<[number, number]>([0, 15_000_000]);
 
   /* Refs GSAP */
   const rowRef      = useRef<HTMLDivElement>(null);
@@ -367,7 +393,7 @@ export default function SearchForm({ onNavigate }: SearchFormProps) {
             <button
               key={t}
               type="button"
-              onClick={() => { setSearchType(t); setPrecio(''); }}
+              onClick={() => { setSearchType(t); setPrecioRange(t === 'comprar' ? [30_000_000, 500_000_000] : [0, 15_000_000]); }}
               style={{
                 flex: 1,
                 height: '100%',
@@ -438,13 +464,19 @@ export default function SearchForm({ onNavigate }: SearchFormProps) {
             </div>
           </div>
 
-          {/* Precio */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '14px', padding: '13px 16px' }}>
-            <img src="/icons/icon-dollar-red.gif" alt="" width={20} height={20} style={{ flexShrink: 0 }} />
-            <div style={{ flex: 1, minWidth: 0 }}>
+          {/* Precio — slider de rango */}
+          <div style={{ padding: '13px 16px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '6px' }}>
+              <img src="/icons/icon-dollar-red.gif" alt="" width={20} height={20} style={{ flexShrink: 0 }} />
               <p style={labelStyle}>Precio</p>
-              <CustomSelect label="Precio" value={precio} onChange={setPrecio} options={PRESUPUESTO[searchType ?? 'arrendar']} placeholder="Seleccionar" />
             </div>
+            <PriceRangeSlider
+              min={searchType === 'comprar' ? 30_000_000 : 0}
+              max={searchType === 'comprar' ? 500_000_000 : 15_000_000}
+              step={searchType === 'comprar' ? 5_000_000 : 250_000}
+              value={precioRange}
+              onChange={setPrecioRange}
+            />
           </div>
         </div>
 
@@ -560,13 +592,15 @@ export default function SearchForm({ onNavigate }: SearchFormProps) {
               <IconPrecio />
             </div>
             <div ref={el => { contentRefs.current[3] = el; }} style={contentStyle}>
-              <img src="/icons/icon-dollar-red.gif" alt="" width={24} height={24} style={{ flexShrink: 0 }} />
+              <img src="/icons/icon-dollar-red.gif" alt="" width={24} height={24} style={{ flexShrink: 0, alignSelf: 'flex-start', marginTop: '2px' }} />
               <div style={{ minWidth: 0, flex: 1 }}>
                 <p style={labelStyle}>Precio</p>
-                <CustomSelect
-                  label="Precio" value={precio} onChange={setPrecio}
-                  options={PRESUPUESTO[searchType ?? 'arrendar']} placeholder="Seleccionar"
-                  onOpen={() => handleCellClick('filters')}
+                <PriceRangeSlider
+                  min={searchType === 'comprar' ? 30_000_000 : 0}
+                  max={searchType === 'comprar' ? 500_000_000 : 15_000_000}
+                  step={searchType === 'comprar' ? 5_000_000 : 250_000}
+                  value={precioRange}
+                  onChange={setPrecioRange}
                 />
               </div>
             </div>
