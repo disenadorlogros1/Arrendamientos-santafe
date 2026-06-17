@@ -21,36 +21,42 @@ const events = [
     title: 'Donde todo comenzó',
     body: 'Arrendamientos Santa Fe nace en Medellín con una visión de servicio, confianza y acompañamiento inmobiliario.',
     img: '/images/1966_Donde_todo_comenz%C3%B3.jpeg',
+    objectPos: '70% 20%',
   },
   {
     year: '1974',
     title: 'Primeros cimientos',
     body: 'La empresa fortalece su presencia y consolida una operación más cercana para propietarios y clientes.',
     img: '/images/1974_primeros_cimientos.jpeg',
+    objectPos: '100% 20%',
   },
   {
     year: '2006',
     title: 'Reconocimiento y consolidación',
     body: 'Cuatro décadas de trabajo reflejan una trayectoria construida con compromiso, seriedad y respaldo.',
     img: '/images/2006_Reconocimiento_consolidaci%C3%B3n.png',
+    objectPos: '60% 20%',
   },
   {
     year: '2017',
     title: 'Más cerca de nuestros clientes',
     body: 'Con la apertura de la sede en Envigado, Santa Fe amplía su presencia y fortalece su cercanía con nuevas zonas del Valle de Aburrá.',
     img: '/images/2017_M%C3%A1s_cerca_de_nuestros%20clientes.png',
+    objectPos: '80% 20%',
   },
   {
     year: '2018',
     title: 'Evolución de marca',
     body: 'Arrendamientos Santa Fe renueva su imagen para proyectar una empresa más actual, cercana y coherente con su evolución, sin perder la esencia que ha construido durante décadas.',
     img: '/images/2018_Evoluci%C3%B3n_de_marca.png',
+    objectPos: '50% 20%',
   },
   {
     year: '2026',
     title: '60 años acompañando nuevas decisiones',
     body: 'Santa Fe celebra seis décadas de historia con una nueva etapa: la apertura de su sede en Rionegro, un paso que reafirma su compromiso de estar más cerca de quienes toman decisiones inmobiliarias en el Oriente Antioqueño.',
     img: '/images/2026_60_a%C3%B1os.png',
+    objectPos: '0% 20%',
   },
 ];
 
@@ -94,12 +100,6 @@ export default function Historia60Page({ onNavigate }: Props) {
             </svg>
             Volver al blog
           </button>
-
-          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} style={{ marginBottom: '8px' }}>
-            <span style={{ fontFamily: FONT_HEAVY, fontSize: '11px', letterSpacing: '0.12em', textTransform: 'uppercase' as const, color: RED }}>
-              Historia de la marca · 1966 – 2026
-            </span>
-          </motion.div>
 
           <motion.h1
             initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.55, delay: 0.08 }}
