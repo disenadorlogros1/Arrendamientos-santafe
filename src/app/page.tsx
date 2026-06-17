@@ -89,7 +89,8 @@ export default function Home() {
         {currentPage === 'hipotecas' && <HipotecasPage />}
         {currentPage === 'servicios' && <ServiciosPage />}
         {currentPage === 'nosotros' && <InstitucionalPage onNavigate={handleNavigate} />}
-        {currentPage === 'blog' && <BlogPage onNavigate={handleNavigate} />}
+        {currentPage === 'blog' && <BlogPage onNavigate={handleNavigate} onOpenArticle={handleOpenArticle} />}
+        {currentPage === 'blog-article' && <BlogArticlePage articleId={articleId} onNavigate={handleNavigate} />}
         {currentPage === 'historia-60' && <Historia60Page onNavigate={handleNavigate} />}
         {currentPage === 'inversionistas' && <InversionistasPage />}
         {currentPage === 'politicas' && <PoliticasPage />}
