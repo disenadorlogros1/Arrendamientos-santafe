@@ -621,3 +621,13 @@ input[type="range"]::-moz-range-track {
   line-height: inherit;
   opacity: 0;
 }
+
+@media (max-width: 639px) {
+  .hero-title-split,
+  .featured-title-split,
+  .trayectoria-title-split,
+  .propietarios-title-split {
+    opacity: 1;
+    transform: none;
+  }
+}
