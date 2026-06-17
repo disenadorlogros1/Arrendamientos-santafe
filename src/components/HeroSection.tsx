@@ -79,38 +79,36 @@ export default function HeroSection({ onNavigate, searchFormSlot }: HeroSectionP
           >
             <div style={{ maxWidth: '700px', width: '100%', textAlign: 'center' }}>
               <h1
-                className="hero-title-split"
+                className="hero-title-split text-[clamp(36px,10vw,54px)] sm:text-[clamp(28px,3vw,52px)]"
                 style={{
                   fontFamily: FONT_HEADING,
                   fontWeight: 300,
-                  lineHeight: 1.15,
+                  lineHeight: 1.2,
                   margin: 0,
                   textAlign: 'center',
                   color: '#fff',
-                  fontSize: 'clamp(36px, 10vw, 54px)',
                 }}
               >
-                <span style={{ display: 'block' }}>60 años</span>
-                <span style={{ display: 'block' }}>
-                  <span style={{ fontWeight: 700, display: 'inline-block', position: 'relative' }}>
-                    <span ref={boldTextRef} style={{ position: 'relative', zIndex: 2 }}>
-                      conectando personas
-                    </span>
-                    <span
-                      aria-hidden="true"
-                      className="hidden sm:block"
-                      style={{
-                        position: 'absolute',
-                        top: '48%',
-                        left: 0,
-                        width: '100%',
-                        height: '0.15em',
-                        backgroundColor: RED,
-                        transform: 'translateY(-50%)',
-                        zIndex: 1,
-                      }}
-                    />
+                60 años
+                <br />
+                <span style={{ fontWeight: 700, display: 'inline-block', position: 'relative' }}>
+                  <span ref={boldTextRef} style={{ position: 'relative', zIndex: 2 }}>
+                    conectando personas
                   </span>
+                  <span
+                    aria-hidden="true"
+                    className="hidden sm:block"
+                    style={{
+                      position: 'absolute',
+                      top: '48%',
+                      left: 0,
+                      width: '100%',
+                      height: '0.15em',
+                      backgroundColor: RED,
+                      transform: 'translateY(-50%)',
+                      zIndex: 1,
+                    }}
+                  />
                 </span>
               </h1>
 
