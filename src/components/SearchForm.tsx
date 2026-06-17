@@ -45,31 +45,105 @@ interface PriceRangeProps {
 
 function PriceRangeSlider({ min, max, step, value, onChange }: PriceRangeProps) {
   const [low, high] = value;
+  const trackRef  = useRef<HTMLDivElement>(null);
+  const dragging  = useRef<'low' | 'high' | null>(null);
+  const lowRef    = useRef(low);
+  const highRef   = useRef(high);
+  lowRef.current  = low;
+  highRef.current = high;
+
   const pctLow  = ((low  - min) / (max - min)) * 100;
   const pctHigh = ((high - min) / (max - min)) * 100;
+
+  const valFromX = (clientX: number) => {
+    if (!trackRef.current) return null;
+    const r   = trackRef.current.getBoundingClientRect();
+    const pct = Math.max(0, Math.min(1, (clientX - r.left) / r.width));
+    return Math.round((min + pct * (max - min)) / step) * step;
+  };
+
+  const move = (clientX: number) => {
+    const v = valFromX(clientX);
+    if (v === null) return;
+    if (dragging.current === 'low')
+      onChange([Math.max(min, Math.min(v, highRef.current - step)), highRef.current]);
+    else
+      onChange([lowRef.current, Math.min(max, Math.max(v, lowRef.current + step))]);
+  };
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    e.preventDefault();
+    const v = valFromX(e.clientX);
+    if (v === null) return;
+    dragging.current = Math.abs(v - lowRef.current) <= Math.abs(v - highRef.current) ? 'low' : 'high';
+    move(e.clientX);
+    const onMove = (ev: MouseEvent) => move(ev.clientX);
+    const onUp   = () => { dragging.current = null; window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseup', onUp); };
+    window.addEventListener('mousemove', onMove);
+    window.addEventListener('mouseup', onUp);
+  };
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    const v = valFromX(e.touches[0].clientX);
+    if (v === null) return;
+    dragging.current = Math.abs(v - lowRef.current) <= Math.abs(v - highRef.current) ? 'low' : 'high';
+    move(e.touches[0].clientX);
+    const onMove = (ev: TouchEvent) => { ev.preventDefault(); move(ev.touches[0].clientX); };
+    const onEnd  = () => { dragging.current = null; window.removeEventListener('touchmove', onMove); window.removeEventListener('touchend', onEnd); };
+    window.addEventListener('touchmove', onMove, { passive: false });
+    window.addEventListener('touchend', onEnd);
+  };
+
   return (
-    <div style={{ flex: 1, minWidth: 0 }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', margin: '3px 0 10px' }}>
-        <span style={{ fontFamily: FONT, fontSize: '12px', color: COLOR_VALUE, fontWeight: 500 }}>{fmtCOP(low)}</span>
-        <span style={{ fontFamily: FONT, fontSize: '12px', color: COLOR_VALUE, fontWeight: 500 }}>{fmtCOP(high)}</span>
-      </div>
-      <div style={{ position: 'relative', height: '20px' }}>
-        {/* Track visual */}
-        <div style={{ position: 'absolute', top: '50%', left: 0, right: 0, height: '3px', transform: 'translateY(-50%)', background: '#e0e0e0', borderRadius: '2px', pointerEvents: 'none' }}>
-          <div style={{ position: 'absolute', left: `${pctLow}%`, right: `${100 - pctHigh}%`, top: 0, bottom: 0, background: RED, borderRadius: '2px' }} />
+    <div style={{ flex: 1, minWidth: 0, userSelect: 'none' }}>
+      {/* Track + thumbs */}
+      <div
+        ref={trackRef}
+        style={{ position: 'relative', height: '20px', cursor: 'pointer', marginTop: '4px' }}
+        onMouseDown={handleMouseDown}
+        onTouchStart={handleTouchStart}
+      >
+        {/* Track fondo */}
+        <div style={{
+          position: 'absolute', top: '50%', left: 0, right: 0,
+          height: '3px', transform: 'translateY(-50%)',
+          background: '#e8e8e8', borderRadius: '2px', pointerEvents: 'none',
+        }}>
+          {/* Relleno activo */}
+          <div style={{
+            position: 'absolute', left: `${pctLow}%`, right: `${100 - pctHigh}%`,
+            top: 0, bottom: 0, background: RED, borderRadius: '2px',
+          }} />
         </div>
-        {/* Low thumb */}
-        <input type="range" className="sf-range"
-          min={min} max={max} step={step} value={low}
-          onChange={e => onChange([Math.min(Number(e.target.value), high - step), high])}
-          style={{ zIndex: low >= high - step ? 5 : 3 }}
-        />
-        {/* High thumb */}
-        <input type="range" className="sf-range"
-          min={min} max={max} step={step} value={high}
-          onChange={e => onChange([low, Math.max(Number(e.target.value), low + step)])}
-          style={{ zIndex: 4 }}
-        />
+        {/* Thumb mínimo */}
+        <div style={{
+          position: 'absolute', left: `${pctLow}%`, top: '50%',
+          transform: 'translate(-50%, -50%)',
+          width: '10px', height: '10px',
+          background: RED, borderRadius: '50%',
+          pointerEvents: 'none', zIndex: 2,
+        }} />
+        {/* Thumb máximo */}
+        <div style={{
+          position: 'absolute', left: `${pctHigh}%`, top: '50%',
+          transform: 'translate(-50%, -50%)',
+          width: '10px', height: '10px',
+          background: RED, borderRadius: '50%',
+          pointerEvents: 'none', zIndex: 2,
+        }} />
+      </div>
+      {/* Etiquetas de valor bajo cada thumb */}
+      <div style={{ position: 'relative', height: '14px', marginTop: '5px' }}>
+        <span style={{
+          position: 'absolute', left: `${pctLow}%`, transform: 'translateX(-50%)',
+          fontFamily: FONT, fontSize: '10px', color: COLOR_LABEL,
+          whiteSpace: 'nowrap', lineHeight: 1,
+        }}>{fmtCOP(low)}</span>
+        <span style={{
+          position: 'absolute', left: `${pctHigh}%`, transform: 'translateX(-50%)',
+          fontFamily: FONT, fontSize: '10px', color: COLOR_LABEL,
+          whiteSpace: 'nowrap', lineHeight: 1,
+        }}>{fmtCOP(high)}</span>
       </div>
     </div>
   );
