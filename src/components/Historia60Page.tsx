@@ -20,43 +20,44 @@ const events = [
     year: '1966',
     title: 'Donde todo comenzó',
     body: 'Arrendamientos Santa Fe nace en Medellín con una visión de servicio, confianza y acompañamiento inmobiliario.',
-    above: true,
+    img: '/images/1966_Donde_todo_comenz%C3%B3.jpeg',
   },
   {
     year: '1974',
     title: 'Primeros cimientos',
     body: 'La empresa fortalece su presencia y consolida una operación más cercana para propietarios y clientes.',
-    above: false,
+    img: '/images/1974_primeros_cimientos.jpeg',
   },
   {
     year: '2006',
     title: 'Reconocimiento y consolidación',
     body: 'Cuatro décadas de trabajo reflejan una trayectoria construida con compromiso, seriedad y respaldo.',
-    above: true,
+    img: '/images/2006_Reconocimiento_consolidaci%C3%B3n.png',
   },
   {
     year: '2017',
     title: 'Más cerca de nuestros clientes',
     body: 'Con la apertura de la sede en Envigado, Santa Fe amplía su presencia y fortalece su cercanía con nuevas zonas del Valle de Aburrá.',
-    above: false,
+    img: '/images/2017_M%C3%A1s_cerca_de_nuestros%20clientes.png',
   },
   {
     year: '2018',
     title: 'Evolución de marca',
     body: 'Arrendamientos Santa Fe renueva su imagen para proyectar una empresa más actual, cercana y coherente con su evolución, sin perder la esencia que ha construido durante décadas.',
-    above: true,
+    img: '/images/2018_Evoluci%C3%B3n_de_marca.png',
   },
   {
     year: '2026',
     title: '60 años acompañando nuevas decisiones',
     body: 'Santa Fe celebra seis décadas de historia con una nueva etapa: la apertura de su sede en Rionegro, un paso que reafirma su compromiso de estar más cerca de quienes toman decisiones inmobiliarias en el Oriente Antioqueño.',
-    above: false,
+    img: '/images/2026_60_a%C3%B1os.png',
   },
 ];
 
-const CONNECTOR_H = 36;
+// Axis geometry
+const CONNECTOR_H = 32;
 const DOT_SIZE    = 10;
-const LINE_TOP    = CONNECTOR_H + DOT_SIZE / 2; // 41px — aligns line with dot center
+const LINE_TOP    = CONNECTOR_H + DOT_SIZE / 2; // px from top of axis row to line center
 
 export default function Historia60Page({ onNavigate }: Props) {
   return (
@@ -78,7 +79,6 @@ export default function Historia60Page({ onNavigate }: Props) {
         >60</span>
 
         <div style={{ position: 'relative', zIndex: 1, maxWidth: '900px', padding: 'clamp(48px, 7vw, 80px) clamp(20px, 5vw, 80px)' }}>
-
           <button
             type="button"
             onClick={() => onNavigate('blog')}
@@ -123,30 +123,29 @@ export default function Historia60Page({ onNavigate }: Props) {
             <span style={{ width: '1px', height: '12px', background: 'rgba(255,255,255,0.12)' }} />
             <span style={{ fontFamily: FONT_BODY, fontSize: '12px', color: 'rgba(255,255,255,0.28)', letterSpacing: '0.02em' }}>5 min de lectura</span>
           </motion.div>
-
         </div>
       </div>
 
       {/* ── Timeline Section ──────────────────────────────────── */}
-      <div style={{ padding: 'clamp(56px, 7vw, 96px) 0' }}>
+      <div style={{ padding: 'clamp(56px, 7vw, 80px) 0' }}>
 
-        <div style={{ textAlign: 'center', marginBottom: 'clamp(48px, 6vw, 72px)' }}>
+        <div style={{ textAlign: 'center', marginBottom: 'clamp(40px, 5vw, 60px)' }}>
           <span style={{ fontFamily: FONT_HEAVY, fontSize: '11px', letterSpacing: '0.16em', textTransform: 'uppercase' as const, color: 'rgba(0,0,0,0.3)' }}>
             Línea de tiempo
           </span>
         </div>
 
-        {/* ── Desktop (lg+) — horizontal alternating ── */}
+        {/* ── Desktop (lg+) — imágenes arriba, texto abajo ── */}
         <div
           className="hidden lg:grid"
           style={{
             gridTemplateRows: 'auto auto auto',
             gridTemplateColumns: 'repeat(6, 1fr)',
+            columnGap: '3px',
             padding: '0 clamp(32px, 4vw, 72px)',
-            position: 'relative',
           }}
         >
-          {/* Solid horizontal line — draws left-to-right on whileInView */}
+          {/* Línea horizontal — se dibuja de izquierda a derecha */}
           <div style={{ gridRow: '2', gridColumn: '1 / -1', position: 'relative', zIndex: 0 }}>
             <motion.div
               initial={{ scaleX: 0 }}
@@ -166,55 +165,58 @@ export default function Historia60Page({ onNavigate }: Props) {
           </div>
 
           {events.map((event, i) => {
-            // Line draws in 1.1s — each dot appears as the line reaches it
-            const lineDelay = (i / (events.length - 1)) * 1.1;
-            const dotDelay  = lineDelay + 0.05;
-            const contentDelay = lineDelay + 0.18;
-            const isLast = event.year === '2026';
+            const lineDelay    = (i / (events.length - 1)) * 1.1;
+            const dotDelay     = lineDelay + 0.05;
+            const imgDelay     = lineDelay + 0.0;
+            const textDelay    = lineDelay + 0.20;
+            const isLast       = event.year === '2026';
+
             return (
               <Fragment key={event.year}>
 
-                {/* Row 1 — above content */}
+                {/* Row 1 — IMAGEN vertical (todos arriba) */}
                 <motion.div
-                  initial={{ opacity: 0, y: 18 }}
+                  initial={{ opacity: 0, y: -20 }}
                   whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, amount: 0.15 }}
-                  transition={{ duration: 0.45, delay: contentDelay }}
-                  style={{
-                    gridRow: '1',
-                    gridColumn: i + 1,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'flex-end',
-                    padding: event.above ? '40px 18px 16px 18px' : '0 18px',
-                    minHeight: event.above ? '180px' : undefined,
-                  }}
+                  viewport={{ once: true, amount: 0.1 }}
+                  transition={{ duration: 0.55, delay: imgDelay }}
+                  style={{ gridRow: '1', gridColumn: i + 1 }}
                 >
-                  {event.above && <>
-                    <h3 style={{ fontFamily: FONT_HEAVY, fontSize: 'clamp(12px, 0.92vw, 14px)', color: DARK, margin: '0 0 7px 0', lineHeight: 1.35 }}>
-                      {event.title}
-                    </h3>
-                    <p style={{ fontFamily: FONT_BODY, fontSize: 'clamp(11px, 0.8vw, 12.5px)', color: '#888', margin: 0, lineHeight: 1.6 }}>
-                      {event.body}
-                    </p>
-                  </>}
+                  <div
+                    className="group overflow-hidden"
+                    style={{
+                      width: '100%',
+                      height: 'clamp(200px, 23vw, 340px)',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    <img
+                      src={event.img}
+                      alt={event.title}
+                      className="w-full h-full object-cover object-top grayscale group-hover:grayscale-0 transition-all duration-700 ease-out"
+                    />
+                  </div>
                 </motion.div>
 
-                {/* Row 2 — axis marker */}
-                <div style={{ gridRow: '2', gridColumn: i + 1, position: 'relative', zIndex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-
-                  {/* Top: connector (above) or spacer */}
-                  {event.above
-                    ? <div style={{ height: `${CONNECTOR_H}px`, width: '1px', borderLeft: '1px dashed rgba(0,0,0,0.28)' }} />
-                    : <div style={{ height: `${CONNECTOR_H}px` }} />
-                  }
+                {/* Row 2 — EJE: conector arriba + dot + año + conector abajo */}
+                <div style={{
+                  gridRow: '2',
+                  gridColumn: i + 1,
+                  position: 'relative',
+                  zIndex: 1,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                }}>
+                  {/* Conector punteado hacia imagen */}
+                  <div style={{ height: `${CONNECTOR_H}px`, width: '1px', borderLeft: '1px dashed rgba(0,0,0,0.25)' }} />
 
                   {/* Dot */}
                   <motion.div
                     initial={{ scale: 0 }}
                     whileInView={{ scale: 1 }}
                     viewport={{ once: true, amount: 0.5 }}
-                    transition={{ duration: 0.35, delay: dotDelay, type: 'spring', stiffness: 300, damping: 18 }}
+                    transition={{ duration: 0.32, delay: dotDelay, type: 'spring', stiffness: 320, damping: 18 }}
                     style={{
                       width: `${DOT_SIZE}px`, height: `${DOT_SIZE}px`,
                       borderRadius: '50%',
@@ -224,42 +226,48 @@ export default function Historia60Page({ onNavigate }: Props) {
                     }}
                   />
 
-                  {/* Year */}
-                  <span style={{ fontFamily: FONT_HEAVY, fontSize: 'clamp(10px, 0.8vw, 12px)', color: isLast ? RED : DARK, letterSpacing: '0.05em', marginTop: '6px', flexShrink: 0 }}>
+                  {/* Año */}
+                  <span style={{
+                    fontFamily: FONT_HEAVY,
+                    fontSize: 'clamp(10px, 0.8vw, 12px)',
+                    color: isLast ? RED : DARK,
+                    letterSpacing: '0.05em',
+                    marginTop: '6px',
+                    flexShrink: 0,
+                  }}>
                     {event.year}
                   </span>
 
-                  {/* Bottom: connector (below) or spacer */}
-                  {!event.above
-                    ? <div style={{ height: `${CONNECTOR_H}px`, width: '1px', borderLeft: '1px dashed rgba(0,0,0,0.28)', marginTop: '6px' }} />
-                    : <div style={{ height: `${CONNECTOR_H}px`, marginTop: '6px' }} />
-                  }
+                  {/* Conector punteado hacia texto */}
+                  <div style={{ height: `${CONNECTOR_H}px`, width: '1px', borderLeft: '1px dashed rgba(0,0,0,0.25)', marginTop: '6px' }} />
                 </div>
 
-                {/* Row 3 — below content */}
+                {/* Row 3 — TEXTO (todos abajo) */}
                 <motion.div
-                  initial={{ opacity: 0, y: -18 }}
+                  initial={{ opacity: 0, y: 16 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, amount: 0.15 }}
-                  transition={{ duration: 0.45, delay: contentDelay }}
+                  transition={{ duration: 0.45, delay: textDelay }}
                   style={{
                     gridRow: '3',
                     gridColumn: i + 1,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'flex-start',
-                    padding: !event.above ? '16px 18px 40px 18px' : '0 18px',
-                    minHeight: !event.above ? '180px' : undefined,
+                    padding: '14px 10px 40px 10px',
                   }}
                 >
-                  {!event.above && <>
-                    <h3 style={{ fontFamily: FONT_HEAVY, fontSize: 'clamp(12px, 0.92vw, 14px)', color: DARK, margin: '0 0 7px 0', lineHeight: 1.35 }}>
-                      {event.title}
-                    </h3>
-                    <p style={{ fontFamily: FONT_BODY, fontSize: 'clamp(11px, 0.8vw, 12.5px)', color: '#888', margin: 0, lineHeight: 1.6 }}>
-                      {event.body}
-                    </p>
-                  </>}
+                  <h3 style={{
+                    fontFamily: FONT_HEAVY,
+                    fontSize: 'clamp(11px, 0.88vw, 13px)',
+                    color: DARK, margin: '0 0 7px 0', lineHeight: 1.35,
+                  }}>
+                    {event.title}
+                  </h3>
+                  <p style={{
+                    fontFamily: FONT_BODY,
+                    fontSize: 'clamp(10px, 0.78vw, 12px)',
+                    color: '#999', margin: 0, lineHeight: 1.65,
+                  }}>
+                    {event.body}
+                  </p>
                 </motion.div>
 
               </Fragment>
@@ -267,7 +275,7 @@ export default function Historia60Page({ onNavigate }: Props) {
           })}
         </div>
 
-        {/* ── Mobile (< lg) — vertical ── */}
+        {/* ── Mobile (< lg) — vertical con imagen ── */}
         <div className="lg:hidden" style={{ padding: '0 clamp(20px, 5vw, 40px)', position: 'relative' }}>
           <div style={{
             position: 'absolute',
@@ -283,12 +291,12 @@ export default function Historia60Page({ onNavigate }: Props) {
                 key={event.year}
                 initial={{ opacity: 0, x: -14 }}
                 whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true, amount: 0.3 }}
-                transition={{ duration: 0.45, delay: i * 0.06 }}
-                style={{ display: 'flex', gap: '24px', paddingBottom: i < events.length - 1 ? '40px' : 0 }}
+                viewport={{ once: true, amount: 0.2 }}
+                transition={{ duration: 0.45, delay: i * 0.07 }}
+                style={{ display: 'flex', gap: '20px', paddingBottom: i < events.length - 1 ? '36px' : 0 }}
               >
                 {/* Dot */}
-                <div style={{ width: '40px', flexShrink: 0, paddingTop: '4px', position: 'relative' }}>
+                <div style={{ width: '40px', flexShrink: 0, paddingTop: '6px', position: 'relative' }}>
                   <div style={{
                     width: `${DOT_SIZE}px`, height: `${DOT_SIZE}px`,
                     borderRadius: '50%',
@@ -299,14 +307,29 @@ export default function Historia60Page({ onNavigate }: Props) {
                 </div>
 
                 {/* Content */}
-                <div style={{ flex: 1, paddingBottom: '4px' }}>
-                  <span style={{ fontFamily: FONT_HEAVY, fontSize: '12px', color: isLast ? RED : DARK, letterSpacing: '0.06em', display: 'block', marginBottom: '8px' }}>
+                <div style={{ flex: 1 }}>
+                  {/* Imagen mobile: proporción más horizontal */}
+                  <div
+                    className="group overflow-hidden mb-3"
+                    style={{ width: '100%', height: 'clamp(140px, 42vw, 200px)' }}
+                  >
+                    <img
+                      src={event.img}
+                      alt={event.title}
+                      className="w-full h-full object-cover object-top grayscale group-hover:grayscale-0 transition-all duration-700 ease-out"
+                    />
+                  </div>
+                  <span style={{
+                    fontFamily: FONT_HEAVY, fontSize: '12px',
+                    color: isLast ? RED : DARK, letterSpacing: '0.06em',
+                    display: 'block', marginBottom: '6px',
+                  }}>
                     {event.year}
                   </span>
-                  <h3 style={{ fontFamily: FONT_HEAVY, fontSize: 'clamp(15px, 3.8vw, 18px)', color: DARK, margin: '0 0 8px 0', lineHeight: 1.3 }}>
+                  <h3 style={{ fontFamily: FONT_HEAVY, fontSize: 'clamp(14px, 3.8vw, 17px)', color: DARK, margin: '0 0 6px 0', lineHeight: 1.3 }}>
                     {event.title}
                   </h3>
-                  <p style={{ fontFamily: FONT_BODY, fontSize: 'clamp(13px, 3.2vw, 15px)', color: '#888', margin: 0, lineHeight: 1.6 }}>
+                  <p style={{ fontFamily: FONT_BODY, fontSize: 'clamp(13px, 3.2vw, 14px)', color: '#888', margin: 0, lineHeight: 1.6 }}>
                     {event.body}
                   </p>
                 </div>
