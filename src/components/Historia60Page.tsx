@@ -186,14 +186,15 @@ export default function Historia60Page({ onNavigate }: Props) {
                     className="group overflow-hidden"
                     style={{
                       width: '100%',
-                      height: 'clamp(200px, 23vw, 340px)',
+                      height: 'clamp(300px, 34vw, 520px)',
                       cursor: 'pointer',
                     }}
                   >
                     <img
                       src={event.img}
                       alt={event.title}
-                      className="w-full h-full object-cover object-top grayscale group-hover:grayscale-0 transition-all duration-700 ease-out"
+                      className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 ease-out"
+                      style={{ objectPosition: 'center 20%' }}
                     />
                   </div>
                 </motion.div>
