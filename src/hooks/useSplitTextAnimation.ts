@@ -18,6 +18,11 @@ export const useSplitTextAnimation = (
     if (!ref.current) return;
 
     if (disableOnMobile && typeof window !== 'undefined' && window.innerWidth < 640) {
+      const mobileTarget = (ref.current?.querySelector(selector) ?? ref.current) as HTMLElement | null;
+      if (mobileTarget) {
+        mobileTarget.style.opacity = '1';
+        mobileTarget.style.transform = 'none';
+      }
       setTitleAnimating(true);
       return;
     }
@@ -145,7 +150,7 @@ export const useSplitTextAnimation = (
       if (ref.current) observer.observe(ref.current);
       return () => observer.disconnect();
     }
-  }, [selector, initialDelay, scrollBased]);
+  }, [selector, initialDelay, scrollBased, disableOnMobile]);
 
   return { ref, titleAnimating };
 };

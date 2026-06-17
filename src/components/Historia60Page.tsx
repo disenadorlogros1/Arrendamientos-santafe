@@ -21,28 +21,28 @@ const events = [
     title: 'Donde todo comenzó',
     body: 'Arrendamientos Santa Fe nace en Medellín con una visión de servicio, confianza y acompañamiento inmobiliario.',
     img: '/images/1966_Donde_todo_comenz%C3%B3.jpeg',
-    objectPos: '70% 20%',
+    objectPos: '60% 20%',
   },
   {
     year: '1974',
     title: 'Primeros cimientos',
     body: 'La empresa fortalece su presencia y consolida una operación más cercana para propietarios y clientes.',
     img: '/images/1974_primeros_cimientos.jpeg',
-    objectPos: '100% 20%',
+    objectPos: '85% 20%',
   },
   {
     year: '2006',
     title: 'Reconocimiento y consolidación',
     body: 'Cuatro décadas de trabajo reflejan una trayectoria construida con compromiso, seriedad y respaldo.',
     img: '/images/2006_Reconocimiento_consolidaci%C3%B3n.png',
-    objectPos: '60% 20%',
+    objectPos: '55% 20%',
   },
   {
     year: '2017',
     title: 'Más cerca de nuestros clientes',
     body: 'Con la apertura de la sede en Envigado, Santa Fe amplía su presencia y fortalece su cercanía con nuevas zonas del Valle de Aburrá.',
     img: '/images/2017_M%C3%A1s_cerca_de_nuestros%20clientes.png',
-    objectPos: '80% 20%',
+    objectPos: '70% 20%',
   },
   {
     year: '2018',
@@ -56,7 +56,7 @@ const events = [
     title: '60 años acompañando nuevas decisiones',
     body: 'Santa Fe celebra seis décadas de historia con una nueva etapa: la apertura de su sede en Rionegro, un paso que reafirma su compromiso de estar más cerca de quienes toman decisiones inmobiliarias en el Oriente Antioqueño.',
     img: '/images/2026_60_a%C3%B1os.png',
-    objectPos: '0% 20%',
+    objectPos: '15% 20%',
   },
 ];
 

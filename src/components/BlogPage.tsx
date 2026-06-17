@@ -132,12 +132,12 @@ export default function BlogPage({
               {/* Collage: 6 tiras verticales en B&N */}
               <div className="absolute inset-0 flex gap-[2px]">
                 {[
-                  { src: '/images/1966_Donde_todo_comenz%C3%B3.jpeg', pos: '70% 20%' },
-                  { src: '/images/1974_primeros_cimientos.jpeg', pos: '100% 20%' },
-                  { src: '/images/2006_Reconocimiento_consolidaci%C3%B3n.png', pos: '60% 20%' },
-                  { src: '/images/2017_M%C3%A1s_cerca_de_nuestros%20clientes.png', pos: '80% 20%' },
+                  { src: '/images/1966_Donde_todo_comenz%C3%B3.jpeg', pos: '60% 20%' },
+                  { src: '/images/1974_primeros_cimientos.jpeg', pos: '85% 20%' },
+                  { src: '/images/2006_Reconocimiento_consolidaci%C3%B3n.png', pos: '55% 20%' },
+                  { src: '/images/2017_M%C3%A1s_cerca_de_nuestros%20clientes.png', pos: '70% 20%' },
                   { src: '/images/2018_Evoluci%C3%B3n_de_marca.png', pos: '50% 20%' },
-                  { src: '/images/2026_60_a%C3%B1os.png', pos: '0% 20%' },
+                  { src: '/images/2026_60_a%C3%B1os.png', pos: '15% 20%' },
                 ].map((item, j) => (
                   <div key={j} className="flex-1 overflow-hidden">
                     <img
