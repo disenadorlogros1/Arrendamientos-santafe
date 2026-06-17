@@ -622,7 +622,7 @@ input[type="range"]::-moz-range-track {
   opacity: 0;
 }
 
-@media (max-width: 767px) {
+@media (max-width: 1023px) {
   .hero-title-split,
   .featured-title-split,
   .trayectoria-title-split,

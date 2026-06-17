@@ -399,7 +399,7 @@ export default function SearchForm({ onNavigate }: SearchFormProps) {
 
   /* Animación coordinada (misma curva que el carrusel) */
   const animateMode = useCallback((mode: FilterMode) => {
-    if (typeof window === 'undefined' || window.innerWidth < 768) return;
+    if (typeof window === 'undefined' || window.innerWidth < 1024) return;
     if (!rowRef.current || !buscarRef.current) return;
 
     lockWidths(); // lock en la primera interacción, no en el mount
@@ -450,7 +450,7 @@ export default function SearchForm({ onNavigate }: SearchFormProps) {
   }, [lockWidths]);
 
   const handleCellClick = useCallback((clickedType: 'codigo' | 'filters') => {
-    if (typeof window !== 'undefined' && window.innerWidth < 768) return;
+    if (typeof window !== 'undefined' && window.innerWidth < 1024) return;
     // En modo filtros, clic sobre los filtros no hace nada (evita que el toggle
     // regrese a 'default' y descomprima el campo código).
     // Solo el clic sobre el icono de código puede salir del modo filtros.
@@ -538,7 +538,7 @@ export default function SearchForm({ onNavigate }: SearchFormProps) {
       </div>
 
       {/* ── Fila 2 mobile: filtros desplegables + CTA ─────────── */}
-      <div className="md:hidden">
+      <div className="lg:hidden">
 
         {/* Filtros: animan con max-height cuando hay tab activo */}
         <div
@@ -620,15 +620,15 @@ export default function SearchForm({ onNavigate }: SearchFormProps) {
       </div>
 
       {/* ── Fila 2 desktop: filtros + botón buscar ───────────── */}
-      <div ref={rowRef} className="hidden md:flex" style={{ background: '#fff' }}>
+      <div ref={rowRef} className="hidden lg:flex" style={{ background: '#fff' }}>
 
         {/* Cuatro celdas — grid en móvil, flex en desktop */}
-        <div className="flex-1 grid grid-cols-2 md:flex md:flex-row">
+        <div className="flex-1 grid grid-cols-2 lg:flex lg:flex-row">
 
           {/* ── 0: Código ── */}
           <div
             ref={el => { cellRefs.current[0] = el; }}
-            className="md:flex-1 border-b md:border-b-0"
+            className="lg:flex-1 border-b lg:border-b-0"
             style={cellStyle({ borderRight: '1px solid rgba(0,0,0,0.07)' })}
             onClick={() => handleCellClick('codigo')}
           >
@@ -654,7 +654,7 @@ export default function SearchForm({ onNavigate }: SearchFormProps) {
           {/* ── 1: Ubicación ── */}
           <div
             ref={el => { cellRefs.current[1] = el; }}
-            className="md:flex-1 border-b md:border-b-0"
+            className="lg:flex-1 border-b lg:border-b-0"
             style={cellStyle({ borderRight: '1px solid rgba(0,0,0,0.07)' })}
             onClick={() => handleCellClick('filters')}
           >
@@ -678,7 +678,7 @@ export default function SearchForm({ onNavigate }: SearchFormProps) {
           {/* ── 2: Tipo de propiedad ── */}
           <div
             ref={el => { cellRefs.current[2] = el; }}
-            className="md:flex-1"
+            className="lg:flex-1"
             style={cellStyle({ borderRight: '1px solid rgba(0,0,0,0.07)' })}
             onClick={() => handleCellClick('filters')}
           >
@@ -702,7 +702,7 @@ export default function SearchForm({ onNavigate }: SearchFormProps) {
           {/* ── 3: Precio ── */}
           <div
             ref={el => { cellRefs.current[3] = el; }}
-            className="md:flex-1"
+            className="lg:flex-1"
             style={cellStyle()}
             onClick={() => handleCellClick('filters')}
           >

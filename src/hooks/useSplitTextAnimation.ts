@@ -17,7 +17,7 @@ export const useSplitTextAnimation = (
   useEffect(() => {
     if (!ref.current) return;
 
-    if (disableOnMobile && typeof window !== 'undefined' && window.innerWidth < 768) {
+    if (disableOnMobile && typeof window !== 'undefined' && window.innerWidth < 1024) {
       const mobileTarget = (ref.current?.querySelector(selector) ?? ref.current) as HTMLElement | null;
       if (mobileTarget) {
         mobileTarget.style.opacity = '1';
