@@ -18,6 +18,7 @@ import ServiciosPage from '@/components/ServiciosPage';
 import InstitucionalPage from '@/components/InstitucionalPage';
 import BlogPage from '@/components/BlogPage';
 import Historia60Page from '@/components/Historia60Page';
+import BlogArticlePage from '@/components/BlogArticlePage';
 import InversionistasPage from '@/components/InversionistasPage';
 import PoliticasPage from '@/components/PoliticasPage';
 import TerminosPage from '@/components/TerminosPage';
@@ -62,9 +63,15 @@ function HomePage({ onNavigate }: { onNavigate: (page: PageType) => void }) {
 
 export default function Home() {
   const [currentPage, setCurrentPage] = useState<PageType>('home');
+  const [articleId, setArticleId] = useState<number>(0);
 
   const handleNavigate = (page: PageType) => {
     setCurrentPage(page);
+  };
+
+  const handleOpenArticle = (id: number) => {
+    setArticleId(id);
+    setCurrentPage('blog-article');
   };
 
   useEffect(() => {

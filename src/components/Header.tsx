@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from '@/components/ui/sheet';
 
-export type PageType = 'home' | 'propiedades' | 'consignacion' | 'hipotecas' | 'servicios' | 'nosotros' | 'blog' | 'historia-60' | 'inversionistas' | 'politicas' | 'terminos';
+export type PageType = 'home' | 'propiedades' | 'consignacion' | 'hipotecas' | 'servicios' | 'nosotros' | 'blog' | 'historia-60' | 'blog-article' | 'inversionistas' | 'politicas' | 'terminos';
 
 interface HeaderProps { currentPage: PageType; onNavigate: (page: PageType) => void; isHeroPage?: boolean; }
 interface SubItem { label: string; page?: PageType; href?: string; }

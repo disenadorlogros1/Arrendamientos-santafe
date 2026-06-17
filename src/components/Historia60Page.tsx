@@ -146,20 +146,30 @@ export default function Historia60Page({ onNavigate }: Props) {
             position: 'relative',
           }}
         >
-          {/* Solid horizontal line — from center of col 1 to center of col 6 */}
+          {/* Solid horizontal line — draws left-to-right on whileInView */}
           <div style={{ gridRow: '2', gridColumn: '1 / -1', position: 'relative', zIndex: 0 }}>
-            <div style={{
-              position: 'absolute',
-              top: `${LINE_TOP}px`,
-              left: 'calc(100% / 12)',
-              right: 'calc(100% / 12)',
-              height: '2px',
-              background: DARK,
-            }} />
+            <motion.div
+              initial={{ scaleX: 0 }}
+              whileInView={{ scaleX: 1 }}
+              viewport={{ once: true, amount: 0.6 }}
+              transition={{ duration: 1.1, ease: [0.25, 0.46, 0.45, 0.94] }}
+              style={{
+                position: 'absolute',
+                top: `${LINE_TOP}px`,
+                left: 'calc(100% / 12)',
+                right: 'calc(100% / 12)',
+                height: '2px',
+                background: DARK,
+                transformOrigin: 'left center',
+              }}
+            />
           </div>
 
           {events.map((event, i) => {
-            const delay = i * 0.1;
+            // Line draws in 1.1s — each dot appears as the line reaches it
+            const lineDelay = (i / (events.length - 1)) * 1.1;
+            const dotDelay  = lineDelay + 0.05;
+            const contentDelay = lineDelay + 0.18;
             const isLast = event.year === '2026';
             return (
               <Fragment key={event.year}>
@@ -169,7 +179,7 @@ export default function Historia60Page({ onNavigate }: Props) {
                   initial={{ opacity: 0, y: 18 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, amount: 0.15 }}
-                  transition={{ duration: 0.5, delay }}
+                  transition={{ duration: 0.45, delay: contentDelay }}
                   style={{
                     gridRow: '1',
                     gridColumn: i + 1,
@@ -204,7 +214,7 @@ export default function Historia60Page({ onNavigate }: Props) {
                     initial={{ scale: 0 }}
                     whileInView={{ scale: 1 }}
                     viewport={{ once: true, amount: 0.5 }}
-                    transition={{ duration: 0.35, delay: delay + 0.15, type: 'spring', stiffness: 280 }}
+                    transition={{ duration: 0.35, delay: dotDelay, type: 'spring', stiffness: 300, damping: 18 }}
                     style={{
                       width: `${DOT_SIZE}px`, height: `${DOT_SIZE}px`,
                       borderRadius: '50%',
@@ -231,7 +241,7 @@ export default function Historia60Page({ onNavigate }: Props) {
                   initial={{ opacity: 0, y: -18 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, amount: 0.15 }}
-                  transition={{ duration: 0.5, delay }}
+                  transition={{ duration: 0.45, delay: contentDelay }}
                   style={{
                     gridRow: '3',
                     gridColumn: i + 1,

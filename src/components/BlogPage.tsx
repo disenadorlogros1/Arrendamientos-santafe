@@ -72,7 +72,13 @@ const blogPosts: BlogPost[] = [
   },
 ];
 
-export default function BlogPage({ onNavigate }: { onNavigate?: (page: PageType) => void }) {
+export default function BlogPage({
+  onNavigate,
+  onOpenArticle,
+}: {
+  onNavigate?: (page: PageType) => void;
+  onOpenArticle?: (id: number) => void;
+}) {
   return (
     <div className="min-h-screen bg-white">
       {/* Page Header */}
@@ -161,6 +167,7 @@ export default function BlogPage({ onNavigate }: { onNavigate?: (page: PageType)
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3, delay: idx * 0.05 }}
+              onClick={() => onOpenArticle?.(post.id)}
               className="group bg-white rounded-lg overflow-hidden border border-gray-200 hover:shadow-lg transition-all duration-300 cursor-pointer flex flex-col"
             >
               {/* Image */}
