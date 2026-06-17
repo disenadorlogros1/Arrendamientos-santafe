@@ -45,9 +45,7 @@ function HomePage({ onNavigate }: { onNavigate: (page: PageType) => void }) {
       </ScrollReveal>
 
       {/* Sección 3: Bloque para Propietarios (Consignación) */}
-      <ScrollReveal y={40} start="top 88%">
-        <PropietariosBlock onNavigate={onNavigate} />
-      </ScrollReveal>
+      <PropietariosBlock onNavigate={onNavigate} />
 
       {/* Sección 4: Servicios Principales */}
       <ScrollReveal y={40} start="top 88%">
