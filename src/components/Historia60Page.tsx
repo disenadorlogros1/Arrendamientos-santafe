@@ -186,7 +186,7 @@ export default function Historia60Page({ onNavigate }: Props) {
                     className="group overflow-hidden"
                     style={{
                       width: '100%',
-                      height: 'clamp(300px, 34vw, 520px)',
+                      height: 'clamp(400px, 52vw, 720px)',
                       cursor: 'pointer',
                     }}
                   >
