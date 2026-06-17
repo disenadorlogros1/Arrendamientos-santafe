@@ -29,125 +29,16 @@ const TIPOS_INMUEBLE = [
   'Local comercial', 'Bodega', 'Lote', 'Finca',
 ];
 
-function fmtCOP(n: number): string {
-  if (n === 0) return '$ 0';
-  if (n >= 1_000_000) {
-    const m = n / 1_000_000;
-    return `$ ${Number.isInteger(m) ? m : m.toFixed(1)}M`;
-  }
-  return `$ ${Math.round(n / 1_000)}K`;
-}
-
-interface PriceRangeProps {
-  min: number; max: number; step: number;
-  value: [number, number]; onChange: (v: [number, number]) => void;
-}
-
-function PriceRangeSlider({ min, max, step, value, onChange }: PriceRangeProps) {
-  const [low, high] = value;
-  const trackRef  = useRef<HTMLDivElement>(null);
-  const dragging  = useRef<'low' | 'high' | null>(null);
-  const lowRef    = useRef(low);
-  const highRef   = useRef(high);
-  lowRef.current  = low;
-  highRef.current = high;
-
-  const pctLow  = ((low  - min) / (max - min)) * 100;
-  const pctHigh = ((high - min) / (max - min)) * 100;
-
-  const valFromX = (clientX: number) => {
-    if (!trackRef.current) return null;
-    const r   = trackRef.current.getBoundingClientRect();
-    const pct = Math.max(0, Math.min(1, (clientX - r.left) / r.width));
-    return Math.round((min + pct * (max - min)) / step) * step;
-  };
-
-  const move = (clientX: number) => {
-    const v = valFromX(clientX);
-    if (v === null) return;
-    if (dragging.current === 'low')
-      onChange([Math.max(min, Math.min(v, highRef.current - step)), highRef.current]);
-    else
-      onChange([lowRef.current, Math.min(max, Math.max(v, lowRef.current + step))]);
-  };
-
-  const handleMouseDown = (e: React.MouseEvent) => {
-    e.preventDefault();
-    const v = valFromX(e.clientX);
-    if (v === null) return;
-    dragging.current = Math.abs(v - lowRef.current) <= Math.abs(v - highRef.current) ? 'low' : 'high';
-    move(e.clientX);
-    const onMove = (ev: MouseEvent) => move(ev.clientX);
-    const onUp   = () => { dragging.current = null; window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseup', onUp); };
-    window.addEventListener('mousemove', onMove);
-    window.addEventListener('mouseup', onUp);
-  };
-
-  const handleTouchStart = (e: React.TouchEvent) => {
-    const v = valFromX(e.touches[0].clientX);
-    if (v === null) return;
-    dragging.current = Math.abs(v - lowRef.current) <= Math.abs(v - highRef.current) ? 'low' : 'high';
-    move(e.touches[0].clientX);
-    const onMove = (ev: TouchEvent) => { ev.preventDefault(); move(ev.touches[0].clientX); };
-    const onEnd  = () => { dragging.current = null; window.removeEventListener('touchmove', onMove); window.removeEventListener('touchend', onEnd); };
-    window.addEventListener('touchmove', onMove, { passive: false });
-    window.addEventListener('touchend', onEnd);
-  };
-
-  return (
-    <div style={{ flex: 1, minWidth: 0, userSelect: 'none' }}>
-      {/* Track + thumbs */}
-      <div
-        ref={trackRef}
-        style={{ position: 'relative', height: '20px', cursor: 'pointer', marginTop: '4px' }}
-        onMouseDown={handleMouseDown}
-        onTouchStart={handleTouchStart}
-      >
-        {/* Track fondo */}
-        <div style={{
-          position: 'absolute', top: '50%', left: 0, right: 0,
-          height: '3px', transform: 'translateY(-50%)',
-          background: '#e8e8e8', borderRadius: '2px', pointerEvents: 'none',
-        }}>
-          {/* Relleno activo */}
-          <div style={{
-            position: 'absolute', left: `${pctLow}%`, right: `${100 - pctHigh}%`,
-            top: 0, bottom: 0, background: RED, borderRadius: '2px',
-          }} />
-        </div>
-        {/* Thumb mínimo */}
-        <div style={{
-          position: 'absolute', left: `${pctLow}%`, top: '50%',
-          transform: 'translate(-50%, -50%)',
-          width: '10px', height: '10px',
-          background: RED, borderRadius: '50%',
-          pointerEvents: 'none', zIndex: 2,
-        }} />
-        {/* Thumb máximo */}
-        <div style={{
-          position: 'absolute', left: `${pctHigh}%`, top: '50%',
-          transform: 'translate(-50%, -50%)',
-          width: '10px', height: '10px',
-          background: RED, borderRadius: '50%',
-          pointerEvents: 'none', zIndex: 2,
-        }} />
-      </div>
-      {/* Etiquetas de valor bajo cada thumb */}
-      <div style={{ position: 'relative', height: '14px', marginTop: '5px' }}>
-        <span style={{
-          position: 'absolute', left: `${pctLow}%`, transform: 'translateX(-50%)',
-          fontFamily: FONT, fontSize: '10px', color: COLOR_LABEL,
-          whiteSpace: 'nowrap', lineHeight: 1,
-        }}>{fmtCOP(low)}</span>
-        <span style={{
-          position: 'absolute', left: `${pctHigh}%`, transform: 'translateX(-50%)',
-          fontFamily: FONT, fontSize: '10px', color: COLOR_LABEL,
-          whiteSpace: 'nowrap', lineHeight: 1,
-        }}>{fmtCOP(high)}</span>
-      </div>
-    </div>
-  );
-}
+const PRESUPUESTO = {
+  arrendar: [
+    'Hasta $500.000', '$500.000 – $1.000.000', '$1.000.000 – $2.000.000',
+    '$2.000.000 – $3.000.000', 'Más de $3.000.000',
+  ],
+  comprar: [
+    'Hasta $100M', '$100M – $200M', '$200M – $400M',
+    '$400M – $600M', 'Más de $600M',
+  ],
+};
 
 /* ── Constantes ──────────────────────────────────────────────────── */
 
@@ -319,7 +210,7 @@ export default function SearchForm({ onNavigate }: SearchFormProps) {
   const [codigo,      setCodigo]      = useState('');
   const [sector,      setSector]      = useState('');
   const [tipo,        setTipo]        = useState('');
-  const [precioRange, setPrecioRange] = useState<[number, number]>([0, 15_000_000]);
+  const [precio,      setPrecio]      = useState('');
 
   /* Refs GSAP */
   const rowRef      = useRef<HTMLDivElement>(null);
@@ -467,7 +358,7 @@ export default function SearchForm({ onNavigate }: SearchFormProps) {
             <button
               key={t}
               type="button"
-              onClick={() => { setSearchType(t); setPrecioRange(t === 'comprar' ? [30_000_000, 500_000_000] : [0, 15_000_000]); }}
+              onClick={() => { setSearchType(t); setPrecio(''); }}
               style={{
                 flex: 1,
                 height: '100%',
@@ -538,19 +429,13 @@ export default function SearchForm({ onNavigate }: SearchFormProps) {
             </div>
           </div>
 
-          {/* Precio — slider de rango */}
-          <div style={{ padding: '13px 16px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '6px' }}>
-              <img src="/icons/icon-dollar-red.gif" alt="" width={20} height={20} style={{ flexShrink: 0 }} />
+          {/* Precio */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '14px', padding: '13px 16px' }}>
+            <img src="/icons/icon-dollar-red.gif" alt="" width={20} height={20} style={{ flexShrink: 0 }} />
+            <div style={{ flex: 1, minWidth: 0 }}>
               <p style={labelStyle}>Precio</p>
+              <CustomSelect label="Precio" value={precio} onChange={setPrecio} options={PRESUPUESTO[searchType ?? 'arrendar']} placeholder="Seleccionar" />
             </div>
-            <PriceRangeSlider
-              min={searchType === 'comprar' ? 30_000_000 : 0}
-              max={searchType === 'comprar' ? 500_000_000 : 15_000_000}
-              step={searchType === 'comprar' ? 5_000_000 : 250_000}
-              value={precioRange}
-              onChange={setPrecioRange}
-            />
           </div>
         </div>
 
@@ -669,12 +554,10 @@ export default function SearchForm({ onNavigate }: SearchFormProps) {
               <img src="/icons/icon-dollar-red.gif" alt="" width={24} height={24} style={{ flexShrink: 0, alignSelf: 'flex-start', marginTop: '2px' }} />
               <div style={{ minWidth: 0, flex: 1 }}>
                 <p style={labelStyle}>Precio</p>
-                <PriceRangeSlider
-                  min={searchType === 'comprar' ? 30_000_000 : 0}
-                  max={searchType === 'comprar' ? 500_000_000 : 15_000_000}
-                  step={searchType === 'comprar' ? 5_000_000 : 250_000}
-                  value={precioRange}
-                  onChange={setPrecioRange}
+                <CustomSelect
+                  label="Precio" value={precio} onChange={setPrecio}
+                  options={PRESUPUESTO[searchType ?? 'arrendar']} placeholder="Seleccionar"
+                  onOpen={() => handleCellClick('filters')}
                 />
               </div>
             </div>
