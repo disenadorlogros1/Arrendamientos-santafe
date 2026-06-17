@@ -128,12 +128,29 @@ export default function BlogPage({
             onClick={() => onNavigate?.('historia-60')}
             className="group bg-white rounded-lg overflow-hidden border border-gray-200 hover:shadow-lg transition-all duration-300 cursor-pointer flex flex-col"
           >
-            <div className="relative h-48 overflow-hidden bg-gray-200">
-              <img
-                src="/images/banner_propietarios.png"
-                alt="60 años de historia"
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-              />
+            <div className="relative h-48 overflow-hidden bg-gray-900">
+              {/* Collage: 6 tiras verticales en B&N */}
+              <div className="absolute inset-0 flex gap-[2px]">
+                {[
+                  '/images/1966_Donde_todo_comenz%C3%B3.jpeg',
+                  '/images/1974_primeros_cimientos.jpeg',
+                  '/images/2006_Reconocimiento_consolidaci%C3%B3n.png',
+                  '/images/2017_M%C3%A1s_cerca_de_nuestros%20clientes.png',
+                  '/images/2018_Evoluci%C3%B3n_de_marca.png',
+                  '/images/2026_60_a%C3%B1os.png',
+                ].map((src, j) => (
+                  <div key={j} className="flex-1 overflow-hidden">
+                    <img
+                      src={src}
+                      alt=""
+                      className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
+                      style={{ objectPosition: 'center 20%' }}
+                    />
+                  </div>
+                ))}
+              </div>
+              {/* Overlay sutil para legibilidad del badge */}
+              <div className="absolute inset-0 bg-black/10" />
               <div className="absolute top-3 right-3">
                 <span className="inline-block px-3 py-1 bg-brand-red text-white text-xs font-semibold rounded-full">
                   Historia

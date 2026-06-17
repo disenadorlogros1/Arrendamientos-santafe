@@ -61,18 +61,61 @@ function HomePage({ onNavigate }: { onNavigate: (page: PageType) => void }) {
   );
 }
 
+const VALID_PAGES: PageType[] = ['home', 'propiedades', 'consignacion', 'hipotecas', 'servicios', 'nosotros', 'blog', 'historia-60', 'blog-article', 'inversionistas', 'politicas', 'terminos'];
+
+function pageFromHash(hash: string): { page: PageType; filter: 'Todos' | 'Arrendar' | 'Comprar' } {
+  if (hash === 'propiedades-arrendar') return { page: 'propiedades', filter: 'Arrendar' };
+  if (hash === 'propiedades-comprar') return { page: 'propiedades', filter: 'Comprar' };
+  const page = VALID_PAGES.includes(hash as PageType) ? (hash as PageType) : 'home';
+  return { page, filter: 'Todos' };
+}
+
 export default function Home() {
   const [currentPage, setCurrentPage] = useState<PageType>('home');
   const [articleId, setArticleId] = useState<number>(0);
+  const [propiedadesFilter, setPropiedadesFilter] = useState<'Todos' | 'Arrendar' | 'Comprar'>('Todos');
 
-  const handleNavigate = (page: PageType) => {
+  const handleNavigate = (page: PageType, filter?: string) => {
+    const f = (filter as 'Todos' | 'Arrendar' | 'Comprar') || 'Todos';
     setCurrentPage(page);
+    if (page === 'propiedades') {
+      setPropiedadesFilter(f);
+      const suffix = f === 'Arrendar' ? '-arrendar' : f === 'Comprar' ? '-comprar' : '';
+      window.history.pushState({ page, filter: f }, '', `#propiedades${suffix}`);
+    } else if (page === 'home') {
+      setPropiedadesFilter('Todos');
+      window.history.pushState({ page }, '', '/');
+    } else {
+      window.history.pushState({ page }, '', `#${page}`);
+    }
   };
 
   const handleOpenArticle = (id: number) => {
     setArticleId(id);
     setCurrentPage('blog-article');
+    window.history.pushState({ page: 'blog-article', articleId: id }, '', '#blog-article');
   };
+
+  // Restore page from hash on mount
+  useEffect(() => {
+    const hash = window.location.hash.slice(1);
+    if (!hash) return;
+    const { page, filter } = pageFromHash(hash);
+    setCurrentPage(page);
+    setPropiedadesFilter(filter);
+  }, []);
+
+  // Browser back/forward
+  useEffect(() => {
+    const onPopState = () => {
+      const hash = window.location.hash.slice(1);
+      const { page, filter } = pageFromHash(hash);
+      setCurrentPage(page);
+      setPropiedadesFilter(filter);
+    };
+    window.addEventListener('popstate', onPopState);
+    return () => window.removeEventListener('popstate', onPopState);
+  }, []);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -84,7 +127,7 @@ export default function Home() {
 
       <main className="flex-1 relative">
         {currentPage === 'home' && <HomePage onNavigate={handleNavigate} />}
-        {currentPage === 'propiedades' && <PropiedadesPage />}
+        {currentPage === 'propiedades' && <PropiedadesPage initialFilter={propiedadesFilter} />}
         {currentPage === 'consignacion' && <ConsignacionPage />}
         {currentPage === 'hipotecas' && <HipotecasPage />}
         {currentPage === 'servicios' && <ServiciosPage />}

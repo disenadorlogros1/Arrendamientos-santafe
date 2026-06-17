@@ -5,8 +5,8 @@ import { Sheet, SheetContent, SheetTrigger, SheetTitle } from '@/components/ui/s
 
 export type PageType = 'home' | 'propiedades' | 'consignacion' | 'hipotecas' | 'servicios' | 'nosotros' | 'blog' | 'historia-60' | 'blog-article' | 'inversionistas' | 'politicas' | 'terminos';
 
-interface HeaderProps { currentPage: PageType; onNavigate: (page: PageType) => void; isHeroPage?: boolean; }
-interface SubItem { label: string; page?: PageType; href?: string; }
+interface HeaderProps { currentPage: PageType; onNavigate: (page: PageType, filter?: string) => void; isHeroPage?: boolean; }
+interface SubItem { label: string; page?: PageType; href?: string; filter?: string; }
 interface NavItem { label: string; page?: PageType; children?: SubItem[]; }
 
 const PSE_URL = 'https://www.psepagos.co/PSEHostingUI/ShowTicketOffice.aspx?ID=9011';
@@ -49,9 +49,9 @@ function MobilePSEButton() {
 
 const navItems: NavItem[] = [
   { label: 'Inicio', page: 'home' },
-  { label: 'Propiedades', children: [
-    { label: 'Arriendo', page: 'propiedades' },
-    { label: 'Venta', page: 'propiedades' },
+  { label: 'Propiedades', page: 'propiedades', children: [
+    { label: 'Arriendo', page: 'propiedades', filter: 'Arrendar' },
+    { label: 'Venta', page: 'propiedades', filter: 'Comprar' },
     { label: 'Para inversionistas', page: 'inversionistas' },
   ]},
   { label: 'Servicios', children: [
@@ -116,8 +116,8 @@ export default function Header({ currentPage, onNavigate, isHeroPage = true }: H
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  const handleNav = (page: PageType) => {
-    onNavigate(page);
+  const handleNav = (page: PageType, filter?: string) => {
+    onNavigate(page, filter);
     setMobileOpen(false);
     setExpandedMobile(null);
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -156,6 +156,7 @@ export default function Header({ currentPage, onNavigate, isHeroPage = true }: H
               /* Item con dropdown — CSS puro, sin JS */
               <div key={item.label} className="relative group flex-1">
                 <button
+                  onClick={() => { if (item.page) handleNav(item.page); }}
                   className="w-full px-2 py-2 text-sm font-medium rounded-full transition-all duration-300 ease-out hover:bg-brand-red group-hover:bg-brand-red group-hover:text-white"
                   style={{ fontFamily: "'Avenir LT Pro', 'Outfit', system-ui, sans-serif", fontWeight: 300, color: headerTextColor }}
                 >
@@ -183,7 +184,7 @@ export default function Header({ currentPage, onNavigate, isHeroPage = true }: H
                         <button
                           key={sub.label}
                           onClick={() => {
-                            if (sub.page) handleNav(sub.page);
+                            if (sub.page) handleNav(sub.page, sub.filter);
                           }}
                           className="block w-full text-left px-5 py-2.5 text-[15px] text-gray-700 hover:text-white hover:bg-brand-red transition-colors duration-150 first:rounded-t-2xl last:rounded-b-2xl"
                           style={{ fontFamily: "'Avenir LT Pro', 'Outfit', system-ui, sans-serif", fontWeight: 300, color: '#666' }}
@@ -262,7 +263,7 @@ export default function Header({ currentPage, onNavigate, isHeroPage = true }: H
                                 {sub.label}
                               </a>
                             ) : (
-                              <button key={sub.label} onClick={() => { if (sub.page) handleNav(sub.page); }}
+                              <button key={sub.label} onClick={() => { if (sub.page) handleNav(sub.page, sub.filter); }}
                                 className="w-full text-left px-4 py-1.5 rounded-lg text-sm text-white/50 hover:text-white hover:bg-white/5 transition-all duration-200"
                                 style={{ fontFamily: "'Avenir LT Pro', 'Outfit', system-ui, sans-serif", fontWeight: 300 }}>
                                 {sub.label}

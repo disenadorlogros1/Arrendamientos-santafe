@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Search, SlidersHorizontal } from 'lucide-react';
 import PropertyCard from './PropertyCard';
@@ -13,9 +13,11 @@ const locations = ['Todas', 'Poblado', 'Envigado', 'Laureles', 'Buenos Aires', '
 const types = ['Todos', 'Apartamento', 'Casa'];
 const priceRanges = ['Todos', 'Hasta $800,000', '$800,000 - $1.500,000', '$1.500,000 - $2.500,000', 'Más de $2.500,000'];
 
-export default function PropiedadesPage() {
+export default function PropiedadesPage({ initialFilter = 'Todos' }: { initialFilter?: 'Todos' | 'Arrendar' | 'Comprar' }) {
   const { ref: titleRef, titleAnimating } = useSplitTextAnimation('.propiedades-title-split', 0, false);
-  const [selectedBusinessType, setSelectedBusinessType] = useState<'Todos' | 'Arrendar' | 'Comprar'>('Todos');
+  const [selectedBusinessType, setSelectedBusinessType] = useState<'Todos' | 'Arrendar' | 'Comprar'>(initialFilter);
+
+  useEffect(() => { setSelectedBusinessType(initialFilter); }, [initialFilter]);
   const [selectedLocation, setSelectedLocation] = useState('Todas');
   const [selectedType, setSelectedType] = useState('Todos');
   const [selectedPrice, setSelectedPrice] = useState('Todos');

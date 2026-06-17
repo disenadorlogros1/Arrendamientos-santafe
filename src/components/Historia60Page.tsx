@@ -129,12 +129,6 @@ export default function Historia60Page({ onNavigate }: Props) {
       {/* ── Timeline Section ──────────────────────────────────── */}
       <div style={{ padding: 'clamp(56px, 7vw, 80px) 0' }}>
 
-        <div style={{ textAlign: 'center', marginBottom: 'clamp(40px, 5vw, 60px)' }}>
-          <span style={{ fontFamily: FONT_HEAVY, fontSize: '11px', letterSpacing: '0.16em', textTransform: 'uppercase' as const, color: 'rgba(0,0,0,0.3)' }}>
-            Línea de tiempo
-          </span>
-        </div>
-
         {/* ── Desktop (lg+) — imágenes arriba, texto abajo ── */}
         <div
           className="hidden lg:grid"
