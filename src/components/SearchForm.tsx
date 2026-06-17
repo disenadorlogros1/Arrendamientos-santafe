@@ -120,6 +120,13 @@ function CustomSelect({
     return () => el.removeEventListener('wheel', stop);
   }, [open]);
 
+  /* Recalcula posición al hacer scroll para que el dropdown siga al trigger */
+  useEffect(() => {
+    if (!open) return;
+    window.addEventListener('scroll', updatePos, { passive: true });
+    return () => window.removeEventListener('scroll', updatePos);
+  }, [open, updatePos]);
+
   const filtered = searchable && query
     ? options.filter(o => o.toLowerCase().includes(query.toLowerCase()))
     : options;
