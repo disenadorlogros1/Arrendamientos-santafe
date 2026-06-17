@@ -730,19 +730,20 @@ export default function SearchForm({ onNavigate }: SearchFormProps) {
           ref={buscarRef}
           type="button"
           onClick={() => onNavigate?.('propiedades')}
+          className="lg:px-4 xl:px-7 lg:min-w-[52px] xl:min-w-[160px]"
           style={{
-            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px',
+            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
             background: RED, color: '#fff',
             fontFamily: FONT, fontSize: '15px', fontWeight: 500,
             border: 'none', cursor: 'pointer',
-            padding: '0 28px', minWidth: '160px', flexShrink: 0,
+            flexShrink: 0,
             transition: 'background 0.2s ease',
           }}
           onMouseEnter={e => (e.currentTarget.style.background = RED_HOVER)}
           onMouseLeave={e => (e.currentTarget.style.background = RED)}
         >
           <img src="/icons/icon-search-white.gif" alt="" width={18} height={18} />
-          <span>Buscar inmueble</span>
+          <span className="hidden xl:inline">Buscar inmueble</span>
         </button>
 
       </div>
