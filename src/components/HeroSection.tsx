@@ -34,7 +34,7 @@ const FONT_HEADING = "'Avenir Next Ultra Light', 'Avenir LT Pro 65 Medium', 'Ave
 const RED          = '#f32735';
 
 export default function HeroSection({ onNavigate, searchFormSlot }: HeroSectionProps) {
-  const { ref: titleRef, titleAnimating } = useSplitTextAnimation('.hero-title-split');
+  const { ref: titleRef, titleAnimating } = useSplitTextAnimation('.hero-title-split', 0, false, true);
   const boldTextRef = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {

@@ -3,7 +3,8 @@ import { useEffect, useRef, useState } from 'react';
 export const useSplitTextAnimation = (
   selector: string,
   initialDelay: number = 0,
-  scrollBased: boolean = false
+  scrollBased: boolean = false,
+  disableOnMobile: boolean = false
 ) => {
   const ref = useRef<HTMLElement>(null);
   const hasAnimated = useRef(false);
@@ -15,6 +16,11 @@ export const useSplitTextAnimation = (
 
   useEffect(() => {
     if (!ref.current) return;
+
+    if (disableOnMobile && typeof window !== 'undefined' && window.innerWidth < 640) {
+      setTitleAnimating(true);
+      return;
+    }
 
     const setup = async () => {
       const target = (ref.current?.querySelector(selector) ?? ref.current) as HTMLElement | null;

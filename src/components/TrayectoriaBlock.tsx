@@ -14,12 +14,12 @@ const FONT_HEADING = "'Avenir Next Ultra Light', 'Avenir LT Pro 65 Medium', 'Ave
 const RED          = '#f32735';
 
 const HITOS = [
-  { year: '1966', label: 'Nacemos en Medellín con una promesa: acompañar cada decisión con confianza y cercanía.' },
-  { year: '1974', label: 'Consolidamos nuestra operación y ganamos la confianza de propietarios y clientes en Antioquia.' },
-  { year: '2006', label: 'Cuatro décadas de trayectoria avalan nuestro respaldo y seriedad en el sector inmobiliario.' },
-  { year: '2017', label: 'Abrimos sede en Envigado y ampliamos nuestra presencia en el sur del Valle de Aburrá.' },
-  { year: '2018', label: 'Renovamos nuestra imagen para proyectar lo que siempre hemos sido: cercanos, serios y vigentes.' },
-  { year: '2026', label: '60 años creciendo con Antioquia. Celebramos con la apertura de nuestra sede en Rionegro.' },
+  { year: '1966', label: 'Nacemos en Medellín con una promesa: acompañar cada decisión con confianza y cercanía.', img: '/images/1966_Donde_todo_comenz%C3%B3.jpeg', objectPos: '70% 20%' },
+  { year: '1974', label: 'Consolidamos nuestra operación y ganamos la confianza de propietarios y clientes en Antioquia.', img: '/images/1974_primeros_cimientos.jpeg', objectPos: '100% 20%' },
+  { year: '2006', label: 'Cuatro décadas de trayectoria avalan nuestro respaldo y seriedad en el sector inmobiliario.', img: '/images/2006_Reconocimiento_consolidaci%C3%B3n.png', objectPos: '60% 20%' },
+  { year: '2017', label: 'Abrimos sede en Envigado y ampliamos nuestra presencia en el sur del Valle de Aburrá.', img: '/images/2017_M%C3%A1s_cerca_de_nuestros%20clientes.png', objectPos: '80% 20%' },
+  { year: '2018', label: 'Renovamos nuestra imagen para proyectar lo que siempre hemos sido: cercanos, serios y vigentes.', img: '/images/2018_Evoluci%C3%B3n_de_marca.png', objectPos: '50% 20%' },
+  { year: '2026', label: '60 años creciendo con Antioquia. Celebramos con la apertura de nuestra sede en Rionegro.', img: '/images/2026_60_a%C3%B1os.png', objectPos: '0% 20%' },
 ];
 
 export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) {
@@ -122,23 +122,9 @@ export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) 
 
           {/* Timeline horizontal */}
           <div className="relative overflow-x-auto" style={{ padding: '0 0 32px' }}>
-
-            {/* Franja de fondo centrada en los badges */}
-            <div
-              className="absolute pointer-events-none"
-              style={{
-                top: '50%',
-                left: 0,
-                right: 0,
-                height: '60px',
-                transform: 'translateY(-50%)',
-                background: 'rgba(243,39,53,0.07)',
-              }}
-            />
-
             <div
               className="flex min-w-max lg:min-w-full px-8 sm:px-10 lg:px-12"
-              style={{ gap: '12px', paddingTop: '28px', paddingBottom: '8px' }}
+              style={{ gap: '8px', paddingTop: '28px', paddingBottom: '8px' }}
             >
               {HITOS.map((hito, i) => {
                 const above = i % 2 === 0;
@@ -146,17 +132,17 @@ export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) 
                   <div
                     key={hito.year}
                     className="flex flex-col items-center flex-1"
-                    style={{ minWidth: '130px', gap: '10px' }}
+                    style={{ minWidth: '120px', gap: '10px' }}
                   >
                     {/* Label — alterna arriba / abajo */}
                     <div
                       className="flex items-end"
-                      style={{ height: '60px', visibility: above ? 'visible' : 'hidden' }}
+                      style={{ height: '64px', visibility: above ? 'visible' : 'hidden' }}
                     >
                       <p
                         style={{
                           fontFamily: FONT_BODY,
-                          fontSize: 'clamp(10px, 0.72vw, 12px)',
+                          fontSize: 'clamp(10px, 0.72vw, 11px)',
                           fontWeight: 400,
                           color: '#888',
                           lineHeight: 1.45,
@@ -168,38 +154,44 @@ export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) 
                       </p>
                     </div>
 
-                    {/* Badge año */}
+                    {/* Franja de imagen con año superpuesto */}
                     <div
-                      className="relative z-10 flex items-center justify-center"
-                      style={{
-                        background: RED,
-                        padding: '9px 18px',
-                        minWidth: '100px',
-                        borderRadius: '2px',
-                      }}
+                      className="group relative z-10 overflow-hidden w-full"
+                      style={{ height: '150px' }}
                     >
-                      <span
-                        style={{
+                      <img
+                        src={hito.img}
+                        alt={hito.year}
+                        className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
+                        style={{ objectPosition: hito.objectPos }}
+                      />
+                      <div style={{
+                        position: 'absolute', bottom: 0, left: 0, right: 0,
+                        background: 'linear-gradient(to top, rgba(0,0,0,0.72) 0%, transparent 100%)',
+                        padding: '20px 0 6px',
+                        textAlign: 'center',
+                      }}>
+                        <span style={{
                           fontFamily: "'Avenir LT Pro 85 Heavy', system-ui, sans-serif",
-                          fontSize: 'clamp(18px, 1.6vw, 26px)',
+                          fontSize: 'clamp(14px, 1.3vw, 18px)',
                           fontWeight: 900,
                           color: '#fff',
                           lineHeight: 1,
-                        }}
-                      >
-                        {hito.year}
-                      </span>
+                        }}>
+                          {hito.year}
+                        </span>
+                      </div>
                     </div>
 
-                    {/* Label — abajo para los ítems pares */}
+                    {/* Label — abajo para los ítems impares */}
                     <div
                       className="flex items-start"
-                      style={{ height: '60px', visibility: above ? 'hidden' : 'visible' }}
+                      style={{ height: '64px', visibility: above ? 'hidden' : 'visible' }}
                     >
                       <p
                         style={{
                           fontFamily: FONT_BODY,
-                          fontSize: 'clamp(10px, 0.72vw, 12px)',
+                          fontSize: 'clamp(10px, 0.72vw, 11px)',
                           fontWeight: 400,
                           color: '#888',
                           lineHeight: 1.45,

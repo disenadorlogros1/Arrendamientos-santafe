@@ -179,7 +179,7 @@ export default function Historia60Page({ onNavigate }: Props) {
                       src={event.img}
                       alt={event.title}
                       className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 ease-out"
-                      style={{ objectPosition: 'center 20%' }}
+                      style={{ objectPosition: event.objectPos }}
                     />
                   </div>
                 </motion.div>
@@ -302,7 +302,8 @@ export default function Historia60Page({ onNavigate }: Props) {
                     <img
                       src={event.img}
                       alt={event.title}
-                      className="w-full h-full object-cover object-top grayscale group-hover:grayscale-0 transition-all duration-700 ease-out"
+                      className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 ease-out"
+                      style={{ objectPosition: event.objectPos }}
                     />
                   </div>
                   <span style={{
