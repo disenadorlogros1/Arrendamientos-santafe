@@ -135,18 +135,18 @@ export default function Header({ currentPage, onNavigate, isHeroPage = true }: H
   return (
     <header className={`fixed top-0 left-0 right-0 pt-4 pb-3 px-4 sm:px-6 lg:px-8 transition-all duration-300 ${headerBackground}`}
       style={{ zIndex: 50, backgroundColor: headerBgColor, backfaceVisibility: 'hidden' }}>
-      <div className="flex items-center justify-center gap-4 h-[58px]">
-        {/* Logo — extremo izquierdo FIJO */}
-        <button onClick={() => handleNav('home')} className="shrink-0 absolute left-4 sm:left-6 lg:left-8">
+      <div className="flex items-center h-[58px] gap-3">
+        {/* Logo */}
+        <button onClick={() => handleNav('home')} className="shrink-0">
           <img src="/icons/icon-santa-fe-logo.png" alt="Arrendamientos Santa Fe" className="h-10 md:h-11 w-auto object-contain drop-shadow-lg" style={{ filter: isHeroPage ? 'brightness(1)' : 'brightness(0.2)' }} />
         </button>
 
-        {/* Nav capsula — centrada */}
-        <nav className={`hidden lg:flex items-center justify-between gap-1 rounded-full px-2 h-[42px] border shadow-lg`}
+        {/* Nav capsula — ocupa el espacio central */}
+        <div className="hidden lg:flex flex-1 justify-center min-w-0">
+        <nav className={`flex items-center justify-between gap-1 rounded-full px-2 h-[42px] border shadow-lg w-full`}
           style={{
             overflow: 'visible',
-            width: '100%',
-            maxWidth: '64rem',
+            maxWidth: '52rem',
             backgroundColor: navBgColor,
             borderColor: navBorderColor,
             backdropFilter: 'blur(10px)',
@@ -211,15 +211,19 @@ export default function Header({ currentPage, onNavigate, isHeroPage = true }: H
             )
           )}
         </nav>
+        </div>
 
-        {/* WhatsApp + PSE desktop — extremo derecho FIJO */}
-        <div className="hidden lg:flex shrink-0 items-center gap-2 absolute right-4 sm:right-6 lg:right-8">
+        {/* Spacer mobile — empuja iconos a la derecha */}
+        <div className="flex-1 lg:hidden" />
+
+        {/* WhatsApp + PSE desktop */}
+        <div className="hidden lg:flex shrink-0 items-center gap-2">
           <WhatsAppButton />
           <PSEButton />
         </div>
 
         {/* Mobile */}
-        <div className="flex items-center gap-2 lg:hidden absolute right-4 sm:right-6">
+        <div className="flex items-center gap-2 lg:hidden">
           {/* Mobile WhatsApp: Icono, alterna cada 5 segundos */}
           <MobileWhatsAppButton />
           {/* Mobile PSE: Icono, alterna cada 5 segundos */}

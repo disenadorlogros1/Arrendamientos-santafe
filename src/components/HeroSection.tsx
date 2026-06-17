@@ -177,7 +177,7 @@ export default function HeroSection({ onNavigate, searchFormSlot }: HeroSectionP
               color: 'rgba(255,255,255,0.7)',
               letterSpacing: '0.01em',
             }}>
-              Propiedades en Medellín, Antioquia
+              Propiedades en Medellín
             </span>
           </div>
         </div>
