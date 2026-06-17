@@ -108,10 +108,13 @@ function PriceRangeSlider({ min, max, step, value, onChange }: PriceRangeProps) 
         <div style={{ position: 'absolute', left: `${pctLow}%`, top: '50%', transform: 'translate(-50%,-50%)', width: '10px', height: '10px', background: RED, borderRadius: '50%', pointerEvents: 'none', zIndex: 2 }} />
         <div style={{ position: 'absolute', left: `${pctHigh}%`, top: '50%', transform: 'translate(-50%,-50%)', width: '10px', height: '10px', background: RED, borderRadius: '50%', pointerEvents: 'none', zIndex: 2 }} />
       </div>
-      <div style={{ position: 'relative', height: '14px', marginTop: '5px' }}>
-        <span style={{ position: 'absolute', left: `${pctLow}%`, transform: 'translateX(-50%)', fontFamily: FONT, fontSize: '10px', color: COLOR_LABEL, whiteSpace: 'nowrap', lineHeight: 1 }}>{fmtCOP(low)}</span>
-        <span style={{ position: 'absolute', left: `${pctHigh}%`, transform: 'translateX(-50%)', fontFamily: FONT, fontSize: '10px', color: COLOR_LABEL, whiteSpace: 'nowrap', lineHeight: 1 }}>{fmtCOP(high)}</span>
-      </div>
+      <p style={{
+        fontFamily: FONT, fontSize: '12px', fontWeight: 500,
+        color: COLOR_VALUE, textAlign: 'center',
+        margin: '8px 0 0', lineHeight: 1,
+      }}>
+        {fmtCOP(low)} – {fmtCOP(high)}
+      </p>
     </div>
   );
 }
@@ -166,7 +169,7 @@ function PriceSelect({
   const display  = pristine ? null : `${fmtCOP(low)} – ${fmtCOP(high)}`;
 
   const dropdown = mounted && open ? (
-    <div ref={dropdownRef} style={{ position: 'fixed', top: pos.top, left: pos.left, width: pos.width, zIndex: 2147483647 }}>
+    <div ref={dropdownRef} style={{ position: 'fixed', top: pos.top, left: pos.left, width: pos.width, zIndex: 49 }}>
       <div className="bg-white shadow-2xl border border-gray-100" style={{ padding: '16px 20px 22px' }}>
         <PriceRangeSlider min={min} max={max} step={step} value={value} onChange={onChange} />
       </div>
@@ -284,7 +287,7 @@ function CustomSelect({
   const selectOption = (opt: string) => { onChange(opt); setOpen(false); setQuery(''); };
 
   const dropdown = mounted && open ? (
-    <div ref={dropdownRef} style={{ position: 'fixed', top: pos.top, left: pos.left, width: pos.width, zIndex: 2147483647 }}>
+    <div ref={dropdownRef} style={{ position: 'fixed', top: pos.top, left: pos.left, width: pos.width, zIndex: 49 }}>
       <div className="bg-white shadow-2xl border border-gray-100 max-h-[240px] overflow-y-auto custom-scrollbar">
         {filtered.length === 0
           ? <p style={{ fontFamily: FONT, fontSize: '13px', padding: '10px 16px', color: '#aaa' }}>Sin resultados</p>

@@ -76,26 +76,27 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
   const { ref: titleRef, titleAnimating } = useSplitTextAnimation('.propietarios-title-split', 0, true);
   const sectionRef = useRef<HTMLDivElement>(null);
 
-  /* Scroll: empieza cuando el borde superior llega a corte 1 (20%)
-     y termina cuando el borde inferior llega a corte 2 (80%)        */
+  /* Scroll: progress 0 cuando el borde superior entra al 80% del viewport (20% desde abajo),
+     progress 1 cuando el borde superior llega al 20% del viewport (80% desde abajo).
+     Ambos puntos anclan al START (top) para que el orden sea correcto al scrollear hacia abajo. */
   const { scrollYProgress } = useScroll({
     target: sectionRef,
-    offset: ['start 0.2', 'end 0.8'],
+    offset: ['start 0.8', 'start 0.2'],
   });
 
   /* Tres pares con stagger leve — usan todo el rango 0→1 del offset */
   const progressA = useTransform(scrollYProgress, [0,    0.88], [0, 1]);
-  const clipA     = useTransform(progressA, (p) => `inset(0 0 0 ${(1 - p) * 50}%)`);
+  const clipA     = useTransform(progressA, (p) => `inset(0 0 0 ${(1 - p) * 100}%)`);
   const bgOpA     = useTransform(progressA, [0, 1], [1, 0]);
   const gradOpA   = useTransform(progressA, [0.3, 1], [0, 1]);
 
   const progressB = useTransform(scrollYProgress, [0.06, 0.94], [0, 1]);
-  const clipB     = useTransform(progressB, (p) => `inset(0 0 ${(1 - p) * 50}% 0)`);
+  const clipB     = useTransform(progressB, (p) => `inset(0 0 ${(1 - p) * 100}% 0)`);
   const bgOpB     = useTransform(progressB, [0, 1], [1, 0]);
   const gradOpB   = useTransform(progressB, [0.3, 1], [0, 1]);
 
   const progressC = useTransform(scrollYProgress, [0.12, 1],    [0, 1]);
-  const clipC     = useTransform(progressC, (p) => `inset(0 ${(1 - p) * 50}% 0 0)`);
+  const clipC     = useTransform(progressC, (p) => `inset(0 ${(1 - p) * 100}% 0 0)`);
   const bgOpC     = useTransform(progressC, [0, 1], [1, 0]);
   const gradOpC   = useTransform(progressC, [0.3, 1], [0, 1]);
 
