@@ -18,7 +18,7 @@ const HITOS = [
   { year: '1974', label: 'Consolidamos nuestra operación y ganamos la confianza de propietarios y clientes en Antioquia.', img: '/images/1974_primeros_cimientos.jpeg', objectPos: '85% 20%' },
   { year: '2006', label: 'Cuatro décadas de trayectoria avalan nuestro respaldo y seriedad en el sector inmobiliario.', img: '/images/2006_Reconocimiento_consolidaci%C3%B3n.png', objectPos: '55% 20%' },
   { year: '2017', label: 'Abrimos sede en Envigado y ampliamos nuestra presencia en el sur del Valle de Aburrá.', img: '/images/2017_M%C3%A1s_cerca_de_nuestros%20clientes.png', objectPos: '70% 20%' },
-  { year: '2018', label: 'Renovamos nuestra imagen para proyectar lo que siempre hemos sido: cercanos, serios y vigentes.', img: '/images/2018_Evoluci%C3%B3n_de_marca.png', objectPos: '50% 20%' },
+  { year: '2018', label: 'Renovamos nuestra imagen para proyectar lo que siempre hemos sido: cercanos, serios y vigentes.', img: '/images/2018_Evoluci%C3%B3n_de_marca.png', objectPos: '40% 20%' },
   { year: '2026', label: '60 años creciendo con Antioquia. Celebramos con la apertura de nuestra sede en Rionegro.', img: '/images/2026_60_a%C3%B1os.png', objectPos: '15% 20%' },
 ];
 
