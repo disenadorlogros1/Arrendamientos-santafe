@@ -78,7 +78,7 @@ export default function Historia60Page({ onNavigate }: Props) {
           }}
         >60</span>
 
-        <div style={{ position: 'relative', zIndex: 1, maxWidth: '900px', padding: 'clamp(48px, 7vw, 80px) clamp(20px, 5vw, 80px)' }}>
+        <div style={{ position: 'relative', zIndex: 1, maxWidth: '900px', padding: '90px clamp(20px, 5vw, 80px) 20px' }}>
           <button
             type="button"
             onClick={() => onNavigate('blog')}
@@ -86,7 +86,7 @@ export default function Historia60Page({ onNavigate }: Props) {
               display: 'inline-flex', alignItems: 'center', gap: '6px',
               fontFamily: FONT_BODY, fontSize: '13px', fontWeight: 300,
               color: 'rgba(255,255,255,0.4)', background: 'transparent',
-              border: 'none', cursor: 'pointer', padding: 0, marginBottom: '32px',
+              border: 'none', cursor: 'pointer', padding: 0, marginBottom: '16px',
             }}
           >
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -95,7 +95,7 @@ export default function Historia60Page({ onNavigate }: Props) {
             Volver al blog
           </button>
 
-          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} style={{ marginBottom: '18px' }}>
+          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} style={{ marginBottom: '8px' }}>
             <span style={{ fontFamily: FONT_HEAVY, fontSize: '11px', letterSpacing: '0.12em', textTransform: 'uppercase' as const, color: RED }}>
               Historia de la marca · 1966 – 2026
             </span>
@@ -103,22 +103,13 @@ export default function Historia60Page({ onNavigate }: Props) {
 
           <motion.h1
             initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.55, delay: 0.08 }}
-            style={{ fontFamily: FONT_HEADING, fontSize: 'clamp(28px, 4vw, 54px)', fontWeight: 300, color: '#fff', lineHeight: 1.18, margin: '0 0 22px 0' }}
+            style={{ fontFamily: FONT_HEADING, fontSize: 'clamp(24px, 3.2vw, 44px)', fontWeight: 300, color: '#fff', lineHeight: 1.18, margin: '0 0 14px 0' }}
           >
-            60 años de historia<br />
+            60 años de historia{' '}
             <span style={{ fontWeight: 700 }}>en el corazón de Antioquia</span>
           </motion.h1>
 
-          <motion.p
-            initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.16 }}
-            style={{ fontFamily: FONT_BODY, fontSize: 'clamp(14px, 1.2vw, 17px)', fontWeight: 300, color: 'rgba(255,255,255,0.55)', lineHeight: 1.65, margin: '0 0 36px 0', maxWidth: '560px' }}
-          >
-            De una oficina en Medellín a tres sedes en Antioquia.
-            La historia de una empresa que ha acompañado a miles de familias
-            a tomar sus decisiones inmobiliarias más importantes.
-          </motion.p>
-
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.4, delay: 0.24 }} style={{ display: 'flex', gap: '20px', alignItems: 'center' }}>
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.4, delay: 0.16 }} style={{ display: 'flex', gap: '20px', alignItems: 'center' }}>
             <span style={{ fontFamily: FONT_BODY, fontSize: '12px', color: 'rgba(255,255,255,0.28)', letterSpacing: '0.02em' }}>Junio 2026</span>
             <span style={{ width: '1px', height: '12px', background: 'rgba(255,255,255,0.12)' }} />
             <span style={{ fontFamily: FONT_BODY, fontSize: '12px', color: 'rgba(255,255,255,0.28)', letterSpacing: '0.02em' }}>5 min de lectura</span>
@@ -127,7 +118,7 @@ export default function Historia60Page({ onNavigate }: Props) {
       </div>
 
       {/* ── Timeline Section ──────────────────────────────────── */}
-      <div style={{ padding: 'clamp(56px, 7vw, 80px) 0' }}>
+      <div style={{ padding: '20px 0' }}>
 
         {/* ── Desktop (lg+) — imágenes arriba, texto abajo ── */}
         <div
@@ -180,7 +171,7 @@ export default function Historia60Page({ onNavigate }: Props) {
                     className="group overflow-hidden"
                     style={{
                       width: '100%',
-                      height: 'clamp(500px, 70vw, 1000px)',
+                      height: 'clamp(200px, calc(100vh - 390px), 680px)',
                       cursor: 'pointer',
                     }}
                   >

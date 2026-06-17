@@ -92,8 +92,8 @@ export default function HeroSection({ onNavigate, searchFormSlot }: HeroSectionP
                 60 años
                 <br className="sm:hidden" />
                 {' '}
-                <span style={{ fontWeight: 700, display: 'inline-block', position: 'relative', lineHeight: 1.0 }}>
-                  <span ref={boldTextRef} style={{ position: 'relative', zIndex: 2, display: 'block' }}>
+                <span style={{ fontWeight: 700, display: 'inline-block', position: 'relative' }}>
+                  <span ref={boldTextRef} style={{ position: 'relative', zIndex: 2 }}>
                     conectando personas
                   </span>
                   <span
