@@ -141,7 +141,7 @@ export default function Historia60Page({ onNavigate }: Props) {
           style={{
             gridTemplateRows: 'auto auto auto',
             gridTemplateColumns: 'repeat(6, 1fr)',
-            columnGap: '3px',
+            columnGap: '14px',
             padding: '0 clamp(32px, 4vw, 72px)',
           }}
         >
@@ -186,7 +186,7 @@ export default function Historia60Page({ onNavigate }: Props) {
                     className="group overflow-hidden"
                     style={{
                       width: '100%',
-                      height: 'clamp(400px, 52vw, 720px)',
+                      height: 'clamp(500px, 70vw, 1000px)',
                       cursor: 'pointer',
                     }}
                   >
