@@ -17,6 +17,7 @@ import HipotecasPage from '@/components/HipotecasPage';
 import ServiciosPage from '@/components/ServiciosPage';
 import InstitucionalPage from '@/components/InstitucionalPage';
 import BlogPage from '@/components/BlogPage';
+import Historia60Page from '@/components/Historia60Page';
 import InversionistasPage from '@/components/InversionistasPage';
 import PoliticasPage from '@/components/PoliticasPage';
 import TerminosPage from '@/components/TerminosPage';
@@ -83,7 +84,8 @@ export default function Home() {
         {currentPage === 'hipotecas' && <HipotecasPage />}
         {currentPage === 'servicios' && <ServiciosPage />}
         {currentPage === 'nosotros' && <InstitucionalPage onNavigate={handleNavigate} />}
-        {currentPage === 'blog' && <BlogPage />}
+        {currentPage === 'blog' && <BlogPage onNavigate={handleNavigate} />}
+        {currentPage === 'historia-60' && <Historia60Page onNavigate={handleNavigate} />}
         {currentPage === 'inversionistas' && <InversionistasPage />}
         {currentPage === 'politicas' && <PoliticasPage />}
         {currentPage === 'terminos' && <TerminosPage />}
