@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Tipografía — Arrendamientos Santa Fe</title>
+  <style>
+    body {
+      font-family: Calibri, sans-serif;
+      font-size: 11pt;
+      color: #222;
+      margin: 2.5cm 3cm;
+      line-height: 1.5;
+    }
+    h1 {
+      font-size: 20pt;
+      font-weight: bold;
+      color: #f32735;
+      margin-bottom: 4pt;
+    }
+    h2 {
+      font-size: 14pt;
+      font-weight: bold;
+      color: #1a1a1a;
+      margin-top: 22pt;
+      margin-bottom: 6pt;
+      border-bottom: 1px solid #e0e0e0;
+      padding-bottom: 4pt;
+    }
+    h3 {
+      font-size: 11pt;
+      font-weight: bold;
+      color: #333;
+      margin-top: 14pt;
+      margin-bottom: 4pt;
+    }
+    p { margin: 4pt 0 8pt; }
+    code {
+      font-family: Consolas, monospace;
+      font-size: 9.5pt;
+      background: #f5f5f5;
+      padding: 1pt 4pt;
+      border-radius: 2pt;
+      color: #c7254e;
+    }
+    pre {
+      font-family: Consolas, monospace;
+      font-size: 9pt;
+      background: #f5f5f5;
+      border: 1px solid #ddd;
+      padding: 10pt 14pt;
+      margin: 8pt 0 14pt;
+      white-space: pre-wrap;
+      color: #333;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 10pt 0 16pt;
+      font-size: 10.5pt;
+    }
+    th {
+      background: #f32735;
+      color: #fff;
+      padding: 6pt 10pt;
+      text-align: left;
+      font-weight: bold;
+    }
+    td {
+      padding: 5pt 10pt;
+      border-bottom: 1px solid #ebebeb;
+      vertical-align: top;
+    }
+    tr:nth-child(even) td { background: #fafafa; }
+    .tag {
+      display: inline-block;
+      background: #f32735;
+      color: #fff;
+      font-size: 8.5pt;
+      padding: 1pt 6pt;
+      border-radius: 10pt;
+      margin-right: 4pt;
+    }
+    .note {
+      background: #fff8e1;
+      border-left: 3pt solid #f0a500;
+      padding: 8pt 12pt;
+      margin: 10pt 0;
+      font-size: 10pt;
+    }
+    .separator { height: 1px; background: #e0e0e0; margin: 20pt 0; }
+  </style>
+</head>
+<body>
+
+  <h1>Sistema Tipográfico<br>Arrendamientos Santa Fe</h1>
+  <p style="color:#888; font-size:9.5pt;">Documento de referencia — Proyecto web santafe.com.co · Junio 2026</p>
+
+  <div class="separator"></div>
+
+
+  <h2>1. Familias tipográficas en uso</h2>
+
+  <p>El proyecto utiliza dos familias principales y una fuente de respaldo:</p>
+
+  <table>
+    <tr>
+      <th>Familia</th>
+      <th>Variante principal en uso</th>
+      <th>Rol</th>
+    </tr>
+    <tr>
+      <td><strong>Avenir LT Pro</strong></td>
+      <td>65 Medium</td>
+      <td>Cuerpo, UI, formularios, botones</td>
+    </tr>
+    <tr>
+      <td><strong>Avenir Next</strong></td>
+      <td>Ultra Light</td>
+      <td>Títulos hero y secciones grandes</td>
+    </tr>
+    <tr>
+      <td><strong>Outfit</strong></td>
+      <td>300 / 400 / 500 / 600 / 700 / 800</td>
+      <td>Fallback si Avenir no carga</td>
+    </tr>
+  </table>
+
+
+  <h2>2. Pesos tipográficos por uso</h2>
+
+  <table>
+    <tr>
+      <th>Uso</th>
+      <th>Fuente</th>
+      <th>Peso (font-weight)</th>
+    </tr>
+    <tr>
+      <td>Títulos hero (h1 grandes)</td>
+      <td>Avenir Next Ultra Light</td>
+      <td>200 – 300</td>
+    </tr>
+    <tr>
+      <td>Palabra bold dentro del título</td>
+      <td>Avenir LT Pro 65 Medium</td>
+      <td>700</td>
+    </tr>
+    <tr>
+      <td>Párrafos y subtítulos</td>
+      <td>Avenir LT Pro 65 Medium</td>
+      <td>300</td>
+    </tr>
+    <tr>
+      <td>Labels pequeños (formularios)</td>
+      <td>Avenir LT Pro 65 Medium</td>
+      <td>300</td>
+    </tr>
+    <tr>
+      <td>Valores seleccionados / precios</td>
+      <td>Avenir LT Pro 65 Medium</td>
+      <td>400 – 500</td>
+    </tr>
+    <tr>
+      <td>Botones / CTA principales</td>
+      <td>Avenir LT Pro 65 Medium</td>
+      <td>500 – 600</td>
+    </tr>
+    <tr>
+      <td>Títulos h1–h6 por defecto (CSS global)</td>
+      <td>Avenir LT Pro 85 Heavy</td>
+      <td>800</td>
+    </tr>
+  </table>
+
+
+  <h2>3. Cómo están cargadas las fuentes</h2>
+
+  <h3>A) Avenir LT Pro / Avenir Next — Adobe Fonts (Typekit)</h3>
+
+  <p>Se carga mediante una hoja de estilos externa en el <code>&lt;head&gt;</code> del layout principal (<code>src/app/layout.tsx</code>):</p>
+
+  <pre>&lt;link rel="stylesheet" href="https://use.typekit.net/jpo1mmh.css" /&gt;</pre>
+
+  <p><strong>Cómo funciona:</strong> Al cargar la página, el navegador hace una petición a los servidores de Adobe Fonts (<code>use.typekit.net</code>) y descarga las fuentes del kit <code>jpo1mmh</code>. Los pesos y variantes disponibles son los que estén activados dentro de ese kit en el panel de Adobe Fonts.</p>
+
+  <div class="note">
+    <strong>Punto crítico:</strong> Esta fuente depende de una conexión externa en cada visita. Si Adobe Fonts falla, tarda o es bloqueada por un ad-blocker, el navegador cae directamente en <em>Outfit</em> o en la fuente del sistema. No hay archivos locales de Avenir en el proyecto.
+  </div>
+
+  <h3>B) Outfit — Google Fonts via Next.js</h3>
+
+  <p>Se carga en el mismo archivo <code>src/app/layout.tsx</code> usando el sistema nativo de Next.js (<code>next/font/google</code>):</p>
+
+  <pre>import { Outfit } from "next/font/google";
+
+const outfit = Outfit({
+  variable: "--font-outfit",
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700", "800"],
+});</pre>
+
+  <p><strong>Cómo funciona:</strong> Next.js descarga los archivos de Outfit desde Google Fonts en el momento del <em>build</em> y los sirve desde el propio servidor del proyecto. Esto significa:</p>
+  <ul>
+    <li>Sin peticiones externas en producción (cero dependencia de Google).</li>
+    <li>Aplica <code>font-display: swap</code> automáticamente.</li>
+    <li>Es la fuente más performante del proyecto.</li>
+  </ul>
+
+
+  <h2>4. Orden de fallback (font stack)</h2>
+
+  <p>Así están declaradas las pilas en el código. El navegador usa la primera fuente disponible:</p>
+
+  <table>
+    <tr>
+      <th>Variable CSS / constante</th>
+      <th>Stack completo</th>
+    </tr>
+    <tr>
+      <td><code>FONT_HEADING</code><br>(títulos)</td>
+      <td>Avenir Next Ultra Light → Avenir LT Pro 65 Medium → Avenir → Outfit → system-ui</td>
+    </tr>
+    <tr>
+      <td><code>FONT_BODY</code><br>(cuerpo / UI)</td>
+      <td>Avenir LT Pro 65 Medium → Avenir LT Pro → Avenir → Outfit → system-ui</td>
+    </tr>
+    <tr>
+      <td>CSS global <code>body</code></td>
+      <td>Avenir LT Pro → Avenir → Outfit → var(--font-outfit) → system-ui</td>
+    </tr>
+    <tr>
+      <td>CSS global <code>h1–h6</code></td>
+      <td>Avenir LT Pro 85 Heavy → Avenir LT Pro → Avenir → Outfit → system-ui</td>
+    </tr>
+  </table>
+
+
+  <h2>5. Archivos relevantes</h2>
+
+  <table>
+    <tr>
+      <th>Archivo</th>
+      <th>Qué contiene</th>
+    </tr>
+    <tr>
+      <td><code>src/app/layout.tsx</code></td>
+      <td>Carga de Outfit (next/font) y enlace al kit de Adobe Fonts (Typekit)</td>
+    </tr>
+    <tr>
+      <td><code>src/app/globals.css</code></td>
+      <td>Definición global de font-family para body, h1–h6 y clases específicas</td>
+    </tr>
+    <tr>
+      <td><code>src/components/HeroSection.tsx</code></td>
+      <td>Constantes <code>FONT_HEADING</code> y <code>FONT_BODY</code> aplicadas en inline styles</td>
+    </tr>
+    <tr>
+      <td><code>src/components/SearchForm.tsx</code></td>
+      <td>Constante <code>FONT</code> (Avenir LT Pro 65 Medium) usada en toda la UI del buscador</td>
+    </tr>
+    <tr>
+      <td><code>public/fonts/</code></td>
+      <td><em>Vacío — no hay archivos de fuente locales.</em></td>
+    </tr>
+  </table>
+
+  <div class="separator"></div>
+
+  <p style="color:#aaa; font-size:9pt; text-align:center;">Arrendamientos Santa Fe · Sistema tipográfico · Generado jun. 2026</p>
+
+</body>
+</html>
