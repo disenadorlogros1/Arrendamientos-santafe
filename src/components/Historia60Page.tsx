@@ -1,9 +1,7 @@
 'use client';
 
-import { Fragment, useRef, useEffect } from 'react';
+import { Fragment } from 'react';
 import { motion } from 'framer-motion';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import type { PageType } from '@/components/Header';
 
 interface Props {
@@ -68,39 +66,6 @@ const DOT_SIZE    = 10;
 const LINE_TOP    = CONNECTOR_H + DOT_SIZE / 2; // px from top of axis row to line center
 
 export default function Historia60Page({ onNavigate }: Props) {
-  const gridRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const grid = gridRef.current;
-    if (!grid) return;
-
-    gsap.registerPlugin(ScrollTrigger);
-
-    const imgEls = grid.querySelectorAll<HTMLElement>('[data-reveal-img]');
-    gsap.set(imgEls, { clipPath: 'inset(0 100% 0 0)' });
-
-    const ctx = gsap.context(() => {
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: grid,
-          pin: true,
-          scrub: 1.2,
-          start: 'top 86px',
-          end: `+=${imgEls.length * 300}`,
-        },
-      });
-
-      imgEls.forEach((el, i) => {
-        tl.to(el, {
-          clipPath: 'inset(0 0% 0 0)',
-          ease: 'power2.inOut',
-          duration: 1,
-        }, i);
-      });
-    }, grid);
-
-    return () => ctx.revert();
-  }, []);
 
   return (
     <div style={{ background: BG, minHeight: '100vh' }}>
@@ -158,14 +123,12 @@ export default function Historia60Page({ onNavigate }: Props) {
 
         {/* ── Desktop (lg+) — imágenes arriba, texto abajo ── */}
         <div
-          ref={gridRef}
           className="hidden lg:grid"
           style={{
             gridTemplateRows: 'auto auto auto',
             gridTemplateColumns: 'repeat(6, 1fr)',
             columnGap: '14px',
             padding: '0 clamp(32px, 4vw, 72px)',
-            background: BG,
           }}
         >
           {/* Línea horizontal — se dibuja de izquierda a derecha */}
@@ -190,22 +153,24 @@ export default function Historia60Page({ onNavigate }: Props) {
           {events.map((event, i) => {
             const lineDelay = (i / (events.length - 1)) * 1.1;
             const dotDelay  = lineDelay + 0.05;
+            const imgDelay  = lineDelay + 0.0;
             const textDelay = lineDelay + 0.20;
             const isLast    = event.year === '2026';
 
             return (
               <Fragment key={event.year}>
 
-                {/* Row 1 — IMAGEN vertical — reveal por GSAP */}
-                <div style={{ gridRow: '1', gridColumn: i + 1 }}>
+                {/* Row 1 — IMAGEN horizontal completa */}
+                <motion.div
+                  initial={{ opacity: 0, y: -20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, amount: 0.1 }}
+                  transition={{ duration: 0.55, delay: imgDelay }}
+                  style={{ gridRow: '1', gridColumn: i + 1 }}
+                >
                   <div
-                    data-reveal-img
                     className="group overflow-hidden"
-                    style={{
-                      width: '100%',
-                      height: 'clamp(200px, calc(100vh - 390px), 680px)',
-                      cursor: 'pointer',
-                    }}
+                    style={{ width: '100%', aspectRatio: '4/3', cursor: 'pointer' }}
                   >
                     <img
                       src={event.img}
@@ -214,7 +179,7 @@ export default function Historia60Page({ onNavigate }: Props) {
                       style={{ objectPosition: event.objectPos }}
                     />
                   </div>
-                </div>
+                </motion.div>
 
                 {/* Row 2 — EJE: conector arriba + dot + año + conector abajo */}
                 <div style={{
