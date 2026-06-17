@@ -146,9 +146,16 @@ export default function Historia60Page({ onNavigate }: Props) {
             position: 'relative',
           }}
         >
-          {/* Solid horizontal line — spans all 6 cols, aligned with dot centers */}
+          {/* Solid horizontal line — from center of col 1 to center of col 6 */}
           <div style={{ gridRow: '2', gridColumn: '1 / -1', position: 'relative', zIndex: 0 }}>
-            <div style={{ position: 'absolute', top: `${LINE_TOP}px`, left: 0, right: 0, height: '2px', background: DARK }} />
+            <div style={{
+              position: 'absolute',
+              top: `${LINE_TOP}px`,
+              left: 'calc(100% / 12)',
+              right: 'calc(100% / 12)',
+              height: '2px',
+              background: DARK,
+            }} />
           </div>
 
           {events.map((event, i) => {

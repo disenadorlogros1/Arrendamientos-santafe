@@ -4,10 +4,6 @@ import { motion } from 'framer-motion';
 import { Calendar, ArrowRight } from 'lucide-react';
 import type { PageType } from '@/components/Header';
 
-const FONT_BODY    = "'Avenir LT Pro 65 Medium', 'Avenir LT Pro', 'Avenir', 'Outfit', system-ui, sans-serif";
-const FONT_HEADING = "'Avenir Next Ultra Light', 'Avenir LT Pro 65 Medium', 'Avenir', 'Outfit', system-ui, sans-serif";
-const FONT_HEAVY   = "'Avenir LT Pro 85 Heavy', 'Avenir LT Pro', 'Avenir', 'Outfit', system-ui, sans-serif";
-const RED = '#f32735';
 
 interface BlogPost {
   id: number;
@@ -115,59 +111,50 @@ export default function BlogPage({ onNavigate }: { onNavigate?: (page: PageType)
           ))}
         </div>
 
-        {/* ── Ficha destacada 60 años ── */}
-        <motion.article
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.45 }}
-          onClick={() => onNavigate?.('historia-60')}
-          className="cursor-pointer mb-8 overflow-hidden"
-          style={{ background: '#0d0d0d', position: 'relative', borderRadius: '4px' }}
-        >
-          <span
-            aria-hidden="true"
-            style={{
-              position: 'absolute', right: '-20px', top: '50%',
-              transform: 'translateY(-50%)',
-              fontFamily: FONT_HEAVY,
-              fontSize: 'clamp(100px, 16vw, 240px)',
-              fontWeight: 800,
-              color: 'rgba(255,255,255,0.042)',
-              lineHeight: 1, userSelect: 'none', pointerEvents: 'none',
-            }}
-          >60</span>
-
-          <div style={{ position: 'relative', zIndex: 1, padding: 'clamp(28px, 4vw, 48px) clamp(24px, 5vw, 56px)', maxWidth: '640px', display: 'flex', flexDirection: 'column', gap: '14px' }}>
-            <span style={{ fontFamily: FONT_HEAVY, fontSize: '11px', letterSpacing: '0.12em', textTransform: 'uppercase' as const, color: RED }}>
-              Historia de la marca · 1966 – 2026
-            </span>
-
-            <h3 style={{ fontFamily: FONT_HEADING, fontSize: 'clamp(20px, 2.4vw, 34px)', fontWeight: 300, color: '#fff', lineHeight: 1.2, margin: 0 }}>
-              60 años de historia<br />
-              <span style={{ fontWeight: 700 }}>en el corazón de Antioquia</span>
-            </h3>
-
-            <p style={{ fontFamily: FONT_BODY, fontSize: 'clamp(13px, 1vw, 15px)', color: 'rgba(255,255,255,0.5)', lineHeight: 1.65, margin: 0 }}>
-              De una oficina en Medellín a tres sedes en Antioquia. La historia de una empresa
-              que ha acompañado a miles de familias a tomar sus decisiones inmobiliarias más importantes.
-            </p>
-
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingTop: '8px' }}>
-              <span style={{ fontFamily: FONT_BODY, fontSize: '12px', color: 'rgba(255,255,255,0.28)', letterSpacing: '0.02em' }}>
-                Junio 2026 · 5 min de lectura
-              </span>
-              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', fontFamily: FONT_BODY, fontSize: '13px', fontWeight: 600, color: RED }}>
-                Leer historia
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <polyline points="9 18 15 12 9 6" />
-                </svg>
-              </span>
-            </div>
-          </div>
-        </motion.article>
-
         {/* Blog Posts Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+
+          {/* ── Ficha 60 años — misma estructura que las otras fichas ── */}
+          <motion.article
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+            onClick={() => onNavigate?.('historia-60')}
+            className="group bg-white rounded-lg overflow-hidden border border-gray-200 hover:shadow-lg transition-all duration-300 cursor-pointer flex flex-col"
+          >
+            <div className="relative h-48 overflow-hidden bg-gray-200">
+              <img
+                src="/images/banner_propietarios.png"
+                alt="60 años de historia"
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+              />
+              <div className="absolute top-3 right-3">
+                <span className="inline-block px-3 py-1 bg-brand-red text-white text-xs font-semibold rounded-full">
+                  Historia
+                </span>
+              </div>
+            </div>
+            <div className="p-5 flex flex-col flex-grow">
+              <h3 className="text-lg font-bold text-gray-900 mb-2 line-clamp-2 group-hover:text-brand-red transition-colors">
+                60 años de historia en el corazón de Antioquia
+              </h3>
+              <p className="text-gray-600 text-sm mb-4 line-clamp-2 flex-grow">
+                De una oficina en Medellín a tres sedes en Antioquia. La historia de cómo construimos confianza durante seis décadas.
+              </p>
+              <div className="flex items-center justify-between pt-4 border-t border-gray-100 text-xs text-gray-500">
+                <div className="flex items-center gap-1">
+                  <Calendar className="w-4 h-4" />
+                  Junio 17, 2026
+                </div>
+                <span>5 min de lectura</span>
+              </div>
+              <button className="mt-4 inline-flex items-center gap-2 text-brand-red font-semibold text-sm group/btn">
+                Leer más
+                <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
+              </button>
+            </div>
+          </motion.article>
+
           {blogPosts.map((post, idx) => (
             <motion.article
               key={post.id}
