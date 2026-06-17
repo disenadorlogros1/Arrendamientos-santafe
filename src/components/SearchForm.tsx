@@ -61,64 +61,123 @@ const IconPrecio    = () => <img src="/icons/icon-dollar-red.gif"    alt="" widt
 /* ── CustomSelect ────────────────────────────────────────────────── */
 
 function CustomSelect({
-  value, onChange, options, placeholder, onOpen,
+  value, onChange, options, placeholder, onOpen, searchable = false,
 }: {
   label: string; value: string; onChange: (v: string) => void;
-  options: string[]; placeholder?: string; onOpen?: () => void;
+  options: string[]; placeholder?: string; onOpen?: () => void; searchable?: boolean;
 }) {
-  const [open, setOpen]       = useState(false);
+  const [open, setOpen]     = useState(false);
   const [mounted, setMounted] = useState(false);
-  const triggerRef            = useRef<HTMLButtonElement>(null);
-  const dropdownRef           = useRef<HTMLDivElement>(null);
-  const [pos, setPos]         = useState({ top: 0, left: 0, width: 0 });
+  const [query, setQuery]   = useState('');
+  const buttonRef           = useRef<HTMLButtonElement>(null);
+  const inputRef            = useRef<HTMLInputElement>(null);
+  const dropdownRef         = useRef<HTMLDivElement>(null);
+  const [pos, setPos]       = useState({ top: 0, left: 0, width: 0 });
 
   useEffect(() => { setMounted(true); }, []);
 
   const updatePos = useCallback(() => {
-    if (triggerRef.current) {
-      const r = triggerRef.current.getBoundingClientRect();
+    const el = searchable ? inputRef.current : buttonRef.current;
+    if (el) {
+      const r = el.getBoundingClientRect();
       setPos({ top: r.bottom + 2, left: r.left, width: Math.max(r.width, 200) });
     }
-  }, []);
+  }, [searchable]);
+
+  const openDropdown = useCallback(() => {
+    updatePos();
+    onOpen?.();
+    setQuery('');
+    setOpen(true);
+  }, [updatePos, onOpen]);
 
   const toggle = useCallback(() => {
-    if (!open) {
-      updatePos();
-      onOpen?.();
-    }
-    setOpen(p => !p);
-  }, [open, updatePos, onOpen]);
+    if (!open) openDropdown();
+    else setOpen(false);
+  }, [open, openDropdown]);
 
+  /* Cierra al hacer click fuera */
   useEffect(() => {
     if (!open || !mounted) return;
     const handler = (e: MouseEvent) => {
       const t = e.target as Node;
-      if (!dropdownRef.current?.contains(t) && !triggerRef.current?.contains(t)) setOpen(false);
+      const anchor = searchable ? inputRef.current : buttonRef.current;
+      if (!dropdownRef.current?.contains(t) && !anchor?.contains(t)) {
+        setOpen(false);
+        setQuery('');
+      }
     };
     const id = setTimeout(() => document.addEventListener('mousedown', handler), 0);
     return () => { clearTimeout(id); document.removeEventListener('mousedown', handler); };
-  }, [open, mounted]);
+  }, [open, mounted, searchable]);
+
+  /* Evita que el scroll del dropdown haga scroll a la página */
+  useEffect(() => {
+    const el = dropdownRef.current;
+    if (!el || !open) return;
+    const stop = (e: WheelEvent) => e.stopPropagation();
+    el.addEventListener('wheel', stop, { passive: false });
+    return () => el.removeEventListener('wheel', stop);
+  }, [open]);
+
+  const filtered = searchable && query
+    ? options.filter(o => o.toLowerCase().includes(query.toLowerCase()))
+    : options;
+
+  const selectOption = (opt: string) => { onChange(opt); setOpen(false); setQuery(''); };
 
   const dropdown = mounted && open ? (
     <div ref={dropdownRef} style={{ position: 'fixed', top: pos.top, left: pos.left, width: pos.width, zIndex: 2147483647 }}>
       <div className="bg-white shadow-2xl border border-gray-100 max-h-[240px] overflow-y-auto custom-scrollbar">
-        {options.map(opt => (
-          <button key={opt} type="button"
-            onClick={() => { onChange(opt); setOpen(false); }}
-            className={`block w-full text-left px-4 py-2.5 transition-colors duration-100 ${
-              value === opt ? 'bg-brand-red text-white' : 'text-gray-700 hover:bg-brand-red hover:text-white'
-            }`}
-            style={{ fontFamily: FONT, fontSize: '13px' }}>
-            {opt}
-          </button>
-        ))}
+        {filtered.length === 0
+          ? <p style={{ fontFamily: FONT, fontSize: '13px', padding: '10px 16px', color: '#aaa' }}>Sin resultados</p>
+          : filtered.map(opt => (
+            <button key={opt} type="button"
+              onMouseDown={e => e.preventDefault()}
+              onClick={() => selectOption(opt)}
+              className={`block w-full text-left px-4 py-2.5 transition-colors duration-100 ${
+                value === opt ? 'bg-brand-red text-white' : 'text-gray-700 hover:bg-brand-red hover:text-white'
+              }`}
+              style={{ fontFamily: FONT, fontSize: '13px' }}>
+              {opt}
+            </button>
+          ))
+        }
       </div>
     </div>
   ) : null;
 
+  if (searchable) {
+    return (
+      <div className="min-w-0 w-full">
+        <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+          <input
+            ref={inputRef}
+            type="text"
+            value={open ? query : value}
+            onChange={e => { setQuery(e.target.value); if (!open) openDropdown(); }}
+            onFocus={openDropdown}
+            placeholder={open ? (value || 'Buscar...') : (placeholder || 'Seleccionar')}
+            style={{
+              fontFamily: FONT, fontSize: '14px', fontWeight: 400,
+              color: COLOR_VALUE, background: 'transparent',
+              border: 'none', outline: 'none', flex: 1, minWidth: 0, lineHeight: 1,
+            }}
+          />
+          <svg width="10" height="6" viewBox="0 0 10 6" fill="none"
+            style={{ flexShrink: 0, opacity: 0.4, transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 0.15s', cursor: 'pointer' }}
+            onMouseDown={e => { e.preventDefault(); toggle(); }}>
+            <path d="M1 1l4 4 4-4" stroke="#232222" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </div>
+        {dropdown && createPortal(dropdown, document.body)}
+      </div>
+    );
+  }
+
   return (
     <div className="min-w-0 w-full">
-      <button ref={triggerRef} type="button" onClick={toggle}
+      <button ref={buttonRef} type="button" onClick={toggle}
         className="w-full flex items-center justify-between bg-transparent border-none outline-none cursor-pointer text-left gap-1">
         <span style={{ fontFamily: FONT, fontSize: '14px', fontWeight: 400,
           color: value ? COLOR_VALUE : '#b8b8b8', lineHeight: 1, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
@@ -453,6 +512,7 @@ export default function SearchForm({ onNavigate }: SearchFormProps) {
                   label="Ubicación" value={sector} onChange={setSector}
                   options={SECTORES} placeholder="Seleccionar"
                   onOpen={() => handleCellClick('filters')}
+                  searchable
                 />
               </div>
             </div>
@@ -476,6 +536,7 @@ export default function SearchForm({ onNavigate }: SearchFormProps) {
                   label="Tipo" value={tipo} onChange={setTipo}
                   options={TIPOS_INMUEBLE} placeholder="Seleccionar"
                   onOpen={() => handleCellClick('filters')}
+                  searchable
                 />
               </div>
             </div>
