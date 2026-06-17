@@ -78,7 +78,7 @@ export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) 
           <button
             type="button"
             onClick={() => {
-              onNavigate('nosotros');
+              onNavigate('historia-60');
               window.scrollTo({ top: 0, behavior: 'smooth' });
             }}
             className="inline-flex items-center gap-2 self-start transition-colors duration-200"
