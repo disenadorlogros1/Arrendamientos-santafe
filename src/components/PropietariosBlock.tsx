@@ -235,7 +235,7 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
             <motion.div style={{ position: 'absolute', inset: 0, clipPath: clipB, zIndex: 0, overflow: 'hidden' }}>
               <div
                 className="absolute inset-0 transition-transform duration-[650ms] ease-out group-hover:scale-[1.06]"
-                style={{ backgroundImage: 'url(/images/banner_propietarios_2.png)', backgroundSize: 'cover', backgroundPosition: 'center top' }}
+                style={{ backgroundImage: 'url(/images/banner_propietarios_3.png)', backgroundSize: 'cover', backgroundPosition: 'center top' }}
               />
             </motion.div>
 
@@ -269,7 +269,7 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
             <motion.div style={{ position: 'absolute', inset: 0, clipPath: clipC, zIndex: 0, overflow: 'hidden' }}>
               <div
                 className="absolute inset-0 transition-transform duration-[650ms] ease-out group-hover:scale-[1.06]"
-                style={{ backgroundImage: 'url(/images/banner_propietarios_3.png)', backgroundSize: 'cover', backgroundPosition: 'center' }}
+                style={{ backgroundImage: 'url(/images/banner_propietarios_2.png)', backgroundSize: 'cover', backgroundPosition: 'center' }}
               />
             </motion.div>
 
