@@ -99,7 +99,7 @@ export default function HeroSection({ onNavigate, searchFormSlot }: HeroSectionP
                     className="hidden sm:block"
                     style={{
                       position: 'absolute',
-                      top: '48%',
+                      top: '72%',
                       left: 0,
                       width: '100%',
                       height: '0.15em',
