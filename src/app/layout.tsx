@@ -147,7 +147,6 @@ export default function RootLayout({
     <html lang="es" suppressHydrationWarning>
       <head>
         <link rel="canonical" href={SITE_URL} />
-        <link rel="stylesheet" href="https://use.typekit.net/jpo1mmh.css" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -157,7 +156,7 @@ export default function RootLayout({
       </head>
       <body
         className={`${outfit.variable} ${geistMono.variable} antialiased bg-background text-foreground`}
-        style={{ fontFamily: "'Avenir LT Pro', 'Avenir', 'Outfit', var(--font-outfit), system-ui, -apple-system, sans-serif" }}
+        style={{ fontFamily: "'Avenir LT Std', 'Outfit', var(--font-outfit), system-ui, -apple-system, sans-serif" }}
       >
         <SmoothScrollProvider>
           {children}

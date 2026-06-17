@@ -195,7 +195,7 @@ function PriceSelect({
 
 /* ── Constantes ──────────────────────────────────────────────────── */
 
-const FONT        = "'Avenir LT Pro 65 Medium', 'Avenir LT Pro', 'Avenir', 'Outfit', system-ui, sans-serif";
+const FONT        = "'Avenir LT Std', 'Outfit', system-ui, sans-serif";
 const COLOR_LABEL = '#909090';
 const COLOR_VALUE = '#232222';
 const RED         = '#f32735';

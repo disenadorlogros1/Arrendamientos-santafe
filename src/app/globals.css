@@ -1,6 +1,57 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+/* ── Avenir LT Std — fuentes locales ──────────────────────────── */
+@font-face {
+  font-family: 'Avenir LT Std';
+  src: url('/fonts/AvenirLTStd-Light.otf') format('opentype');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Avenir LT Std';
+  src: url('/fonts/AvenirLTStd-Book.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Avenir LT Std';
+  src: url('/fonts/AvenirLTStd-Oblique.otf') format('opentype');
+  font-weight: 400;
+  font-style: oblique;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Avenir LT Std';
+  src: url('/fonts/AvenirLTStd-Medium.otf') format('opentype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Avenir LT Std';
+  src: url('/fonts/AvenirLTStd-Heavy.otf') format('opentype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Avenir LT Std';
+  src: url('/fonts/AvenirLTStd-Black.otf') format('opentype');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Avenir LT Std';
+  src: url('/fonts/AvenirLTStd-BlackOblique.otf') format('opentype');
+  font-weight: 900;
+  font-style: oblique;
+  font-display: swap;
+}
+
 /* Lenis smooth scroll */
 html.lenis, html.lenis body { height: auto; }
 .lenis.lenis-smooth { scroll-behavior: auto !important; }
@@ -134,16 +185,16 @@ html.lenis, html.lenis body { height: auto; }
   }
   body {
     @apply bg-background text-foreground;
-    font-family: 'Avenir LT Pro', 'Avenir', 'Outfit', var(--font-outfit), system-ui, -apple-system, sans-serif;
+    font-family: 'Avenir LT Std', 'Outfit', var(--font-outfit), system-ui, -apple-system, sans-serif;
   }
-  /* Todos los títulos: Avenir LT Pro 85 Heavy */
+  /* Todos los títulos: Avenir LT Std Black (900) */
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Avenir LT Pro 85 Heavy', 'Avenir LT Pro', 'Avenir', 'Outfit', system-ui, sans-serif;
-    font-weight: 800;
+    font-family: 'Avenir LT Std', 'Outfit', system-ui, sans-serif;
+    font-weight: 900;
   }
-  /* Todos los párrafos y texto de cuerpo: Avenir LT Pro 65 Medium, #808080, interlineado reducido */
+  /* Todos los párrafos y texto de cuerpo: Avenir LT Std Medium (500) */
   p, span:not(.sr-only), li, label, a, td, th, input::placeholder, select {
-    font-family: 'Avenir LT Pro 65 Medium', 'Avenir LT Pro', 'Avenir', 'Outfit', system-ui, sans-serif;
+    font-family: 'Avenir LT Std', 'Outfit', system-ui, sans-serif;
     font-weight: 500;
     line-height: 1.45;
   }
@@ -480,8 +531,8 @@ select option {
 
 /* ── Hero title: interlineado ajustado ── */
 .hero-title-text {
-  font-family: "Avenir Next Ultra Light", "avenir-lt-pro", sans-serif;
-  font-weight: 200;
+  font-family: 'Avenir LT Std', 'Outfit', sans-serif;
+  font-weight: 300;
   font-style: normal;
   line-height: 1.035;
   text-shadow: 0 2px 20px rgba(0,0,0,0.4);
