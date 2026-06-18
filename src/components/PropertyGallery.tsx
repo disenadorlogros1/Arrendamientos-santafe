@@ -304,10 +304,52 @@ const navArrowStyle: React.CSSProperties = {
   cursor: 'pointer', color: '#fff', zIndex: 2, transition: 'background 0.2s',
 };
 
-/* ── Preview — 3 fotos acordeón ──────────────────────────────────── */
+/* ── Celda del preview ───────────────────────────────────────────── */
+
+function PreviewCell({ img, alt, rowSpan, onClick, overlay }: {
+  img: string; alt: string; rowSpan?: boolean;
+  onClick: () => void; overlay?: string;
+}) {
+  const [hov, setHov] = useState(false);
+  return (
+    <div
+      style={{
+        gridRow: rowSpan ? '1 / 3' : undefined,
+        position: 'relative', overflow: 'hidden',
+        cursor: 'pointer', borderRadius: '10px',
+      }}
+      onClick={onClick}
+      onMouseEnter={() => setHov(true)}
+      onMouseLeave={() => setHov(false)}
+    >
+      <img
+        src={img} alt={alt} draggable={false}
+        style={{
+          width: '100%', height: '100%', objectFit: 'cover', display: 'block',
+          transform: hov ? 'scale(1.04)' : 'scale(1)',
+          transition: 'transform 0.45s ease',
+          pointerEvents: 'none',
+        }}
+      />
+      {/* Overlay "+N fotos" */}
+      {overlay && (
+        <div style={{
+          position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.48)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          pointerEvents: 'none',
+        }}>
+          <span style={{ fontFamily: FONT, fontSize: '15px', fontWeight: 600, color: '#fff' }}>
+            {overlay}
+          </span>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ── Preview — 1 grande izquierda + 2 apiladas derecha ────────── */
 
 export default function PropertyGallery({ images, title }: PropertyGalleryProps) {
-  const [hoveredIdx,   setHoveredIdx]   = useState<number | null>(null);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [startIdx,     setStartIdx]     = useState(0);
   const [mounted,      setMounted]      = useState(false);
@@ -316,83 +358,32 @@ export default function PropertyGallery({ images, title }: PropertyGalleryProps)
 
   const open = (i: number) => { setStartIdx(i); setLightboxOpen(true); };
 
-  const gridImages = images.slice(0, 3);
-  const remaining  = images.length - 3;
+  const remaining = images.length - 3;
 
   return (
     <>
-      {/* ── Acordeón 3 fotos ─────────────────────────────────── */}
-      <div style={{ display: 'flex', gap: '6px', height: '460px', marginBottom: '8px' }}>
-        {gridImages.map((img, i) => {
-          const isHov      = hoveredIdx === i;
-          const anyHov     = hoveredIdx !== null;
-          const defaultGrow = i === 0 ? 1.8 : 1;
-          const growVal    = anyHov
-            ? (isHov ? 4 : (i === 0 ? 1.2 : 0.8))
-            : defaultGrow;
-          const showCount  = i === 2 && remaining > 0 && !isHov;
+      {/* ── Grid fijo: col izquierda grande + col derecha 2 apiladas */}
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: '2fr 1fr',
+        gridTemplateRows: '1fr 1fr',
+        gap: '6px',
+        height: '460px',
+        marginBottom: '8px',
+      }}>
+        {/* Foto principal — ocupa las 2 filas */}
+        <PreviewCell img={images[0]} alt={title} rowSpan onClick={() => open(0)} />
 
-          return (
-            <div
-              key={i}
-              style={{
-                flexGrow: growVal, flexShrink: 1, flexBasis: '0px', minWidth: 0,
-                position: 'relative', overflow: 'hidden', cursor: 'pointer',
-                borderRadius: '10px',
-                transition: 'flex-grow 0.65s cubic-bezier(0.25, 1, 0.5, 1)',
-              }}
-              onMouseEnter={() => setHoveredIdx(i)}
-              onMouseLeave={() => setHoveredIdx(null)}
-              onClick={() => open(i)}
-            >
-              <img
-                src={img}
-                alt={`${title} - foto ${i + 1}`}
-                draggable={false}
-                style={{
-                  width: '100%', height: '100%', objectFit: 'cover',
-                  transform: isHov ? 'scale(1.05)' : 'scale(1)',
-                  transition: 'transform 0.65s cubic-bezier(0.25, 1, 0.5, 1)',
-                  pointerEvents: 'none', userSelect: 'none', display: 'block',
-                }}
-              />
+        {/* Foto 2 — fila superior derecha */}
+        <PreviewCell img={images[1] ?? images[0]} alt={`${title} 2`} onClick={() => open(1)} />
 
-              {/* Gradiente hover */}
-              <div style={{
-                position: 'absolute', inset: 0,
-                background: 'linear-gradient(to top, rgba(0,0,0,0.70) 0%, rgba(0,0,0,0) 55%)',
-                opacity: isHov ? 1 : 0, transition: 'opacity 0.4s ease', pointerEvents: 'none',
-              }} />
-
-              {/* Contador en hover */}
-              <div style={{
-                position: 'absolute', bottom: '14px', left: '16px', right: '16px',
-                display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                opacity: isHov ? 1 : 0,
-                transform: isHov ? 'translateY(0)' : 'translateY(10px)',
-                transition: 'opacity 0.35s ease 0.12s, transform 0.35s ease 0.12s',
-                pointerEvents: 'none',
-              }}>
-                <span style={{ fontFamily: FONT, fontSize: '13px', fontWeight: 500, color: 'rgba(255,255,255,0.85)', whiteSpace: 'nowrap' }}>
-                  {i + 1} / {images.length}
-                </span>
-                <Grid2x2 size={14} color="rgba(255,255,255,0.75)" />
-              </div>
-
-              {/* +N fotos */}
-              {showCount && (
-                <div style={{
-                  position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.48)',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center', pointerEvents: 'none',
-                }}>
-                  <span style={{ fontFamily: FONT, fontSize: '15px', fontWeight: 600, color: '#fff', whiteSpace: 'nowrap' }}>
-                    +{remaining} fotos
-                  </span>
-                </div>
-              )}
-            </div>
-          );
-        })}
+        {/* Foto 3 — fila inferior derecha, con overlay "+N" si hay más */}
+        <PreviewCell
+          img={images[2] ?? images[0]}
+          alt={`${title} 3`}
+          onClick={() => open(2)}
+          overlay={remaining > 0 ? `+${remaining} fotos` : undefined}
+        />
       </div>
 
       {/* Botón "Ver todas" */}
