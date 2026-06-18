@@ -123,7 +123,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <Header currentPage={currentPage} onNavigate={handleNavigate} />
+      <Header currentPage={currentPage} onNavigate={handleNavigate} isHeroPage={currentPage === 'home'} />
 
       <main className="flex-1 relative" style={{ paddingTop: currentPage === 'home' ? 0 : '86px' }}>
         {currentPage === 'home' && <HomePage onNavigate={handleNavigate} />}
