@@ -23,8 +23,19 @@ function parseArea(s: string): number {
 
 function applyFilters(filters: PropSearchFilters) {
   return properties.filter((p) => {
-    // Tipo de negocio
-    if (p.businessType && p.businessType !== filters.tipo) return false;
+    // Tipo de negocio ('Todos' muestra todos)
+    if (filters.tipo !== 'Todos' && p.businessType && p.businessType !== filters.tipo) return false;
+
+    // Código inmueble (busca en referencia o id)
+    if (filters.codigo) {
+      const q = filters.codigo.toLowerCase();
+      const matchRef = p.reference?.toLowerCase().includes(q);
+      const matchId  = String(p.id).includes(q);
+      if (!matchRef && !matchId) return false;
+    }
+
+    // Tipo de propiedad
+    if (filters.tipoPropiedad && p.type.toLowerCase() !== filters.tipoPropiedad.toLowerCase()) return false;
 
     // Sector
     if (filters.sector && p.location.toLowerCase() !== filters.sector.toLowerCase()) return false;
@@ -89,11 +100,12 @@ function applyFilters(filters: PropSearchFilters) {
 export default function PropiedadesPage({ initialFilter = 'Todos' }: { initialFilter?: 'Todos' | 'Arrendar' | 'Comprar' }) {
   const { ref: titleRef, titleAnimating } = useSplitTextAnimation('.propiedades-title-split', 0, false);
 
-  const initialTipo: 'Arrendar' | 'Comprar' = initialFilter === 'Comprar' ? 'Comprar' : 'Arrendar';
   const [showMap, setShowMap] = useState(false);
   const [appliedFilters, setAppliedFilters] = useState<PropSearchFilters>({
-    tipo: initialTipo,
+    tipo: initialFilter || 'Todos',
+    codigo: '',
     sector: '',
+    tipoPropiedad: '',
     precioMin: 0,
     precioMax: 15_000_000,
     habitaciones: null,
@@ -106,10 +118,7 @@ export default function PropiedadesPage({ initialFilter = 'Todos' }: { initialFi
   });
 
   useEffect(() => {
-    setAppliedFilters(prev => ({
-      ...prev,
-      tipo: initialFilter === 'Comprar' ? 'Comprar' : 'Arrendar',
-    }));
+    setAppliedFilters(prev => ({ ...prev, tipo: initialFilter || 'Todos' }));
   }, [initialFilter]);
 
   const filtered = applyFilters(appliedFilters);
@@ -153,9 +162,9 @@ export default function PropiedadesPage({ initialFilter = 'Todos' }: { initialFi
       </div>
 
       {/* Search Bar — sticky flotante bajo el header */}
-      <div style={{ position: 'sticky', top: '86px', zIndex: 40, padding: '10px clamp(16px, 3vw, 52px)', background: 'rgba(247,246,244,0.92)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)' }}>
+      <div style={{ position: 'sticky', top: '86px', zIndex: 40, background: 'rgba(247,246,244,0.92)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)' }}>
         <PropiedadesSearchBar
-          initialTipo={initialTipo}
+          initialTipo={initialFilter || 'Todos'}
           onApply={setAppliedFilters}
         />
       </div>

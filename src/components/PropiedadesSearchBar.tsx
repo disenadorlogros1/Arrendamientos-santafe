@@ -1,37 +1,8 @@
 'use client';
 
 import { useState, useRef, useEffect, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 import { ChevronDown, ChevronUp } from 'lucide-react';
-
-/* ── Tipos ─────────────────────────────────────────────────────────── */
-
-export interface PropSearchFilters {
-  tipo: 'Arrendar' | 'Comprar';
-  sector: string;
-  precioMin: number;
-  precioMax: number;
-  habitaciones: number | null;
-  banos: number | null;
-  parqueadero: 'con' | 'sin' | null;
-  areaMin: string;
-  areaMax: string;
-  estrato: string[];
-  comodidades: string[];
-}
-
-const DEFAULT_FILTERS: PropSearchFilters = {
-  tipo: 'Arrendar',
-  sector: '',
-  precioMin: 0,
-  precioMax: 15_000_000,
-  habitaciones: null,
-  banos: null,
-  parqueadero: null,
-  areaMin: '',
-  areaMax: '',
-  estrato: [],
-  comodidades: [],
-};
 
 /* ── Datos ─────────────────────────────────────────────────────────── */
 
@@ -53,21 +24,59 @@ const SECTORES = [
   'Sevilla', 'Simón Bolívar', 'Toscana', 'Tricentenario', 'Velódromo', 'Villa Hermosa',
 ];
 
-const COMODIDADES = [
-  'Amoblado', 'Balcón', 'Unidad Cerrada', 'Cuarto útil',
-  'Piscina', 'Juegos infantiles', 'Ascensor',
+const TIPOS_INMUEBLE = [
+  'Apartamento', 'Apartaestudio', 'Casa', 'Oficina',
+  'Local', 'Bodega', 'Lote', 'Finca',
 ];
 
-const ESTRATOS = ['1', '2', '3', '4', '5', '6'];
+const ESTRATOS    = ['1', '2', '3', '4', '5', '6'];
+const COMODIDADES = ['Amoblado', 'Piscina', 'Balcón', 'Unidad Cerrada', 'Cuarto útil', 'Ascensor', 'Juegos infantiles'];
 
-/* ── Constantes de estilo ──────────────────────────────────────────── */
+/* ── Constantes ─────────────────────────────────────────────────────── */
 
-const FONT      = "'Avenir LT Pro 65 Medium', 'Avenir LT Pro', 'Avenir', 'Outfit', system-ui, sans-serif";
-const RED       = '#f32735';
-const RED_HOVER = '#aa182c';
-const CELL_H    = 58; // px — igual que el hero
+const FONT        = "'Avenir LT Std', 'Outfit', system-ui, sans-serif";
+const COLOR_LABEL = '#909090';
+const COLOR_VALUE = '#232222';
+const RED         = '#f32735';
+const RED_HOVER   = '#aa182c';
+const CELL_H      = 56;
+const DIVIDER     = '1px solid rgba(0,0,0,0.07)';
 
-/* ── Utilidad: formato precio ─────────────────────────────────────── */
+/* ── Types ──────────────────────────────────────────────────────────── */
+
+export interface PropSearchFilters {
+  tipo: 'Todos' | 'Arrendar' | 'Comprar';
+  codigo: string;
+  sector: string;
+  tipoPropiedad: string;
+  precioMin: number;
+  precioMax: number;
+  habitaciones: number | null;
+  banos: number | null;
+  parqueadero: 'con' | 'sin' | null;
+  areaMin: string;
+  areaMax: string;
+  estrato: string[];
+  comodidades: string[];
+}
+
+export const DEFAULT_FILTERS: PropSearchFilters = {
+  tipo: 'Todos',
+  codigo: '',
+  sector: '',
+  tipoPropiedad: '',
+  precioMin: 0,
+  precioMax: 15_000_000,
+  habitaciones: null,
+  banos: null,
+  parqueadero: null,
+  areaMin: '',
+  areaMax: '',
+  estrato: [],
+  comodidades: [],
+};
+
+/* ── Helpers ────────────────────────────────────────────────────────── */
 
 function fmtCOP(n: number): string {
   if (n === 0) return '$ 0';
@@ -78,32 +87,31 @@ function fmtCOP(n: number): string {
   return `$ ${Math.round(n / 1_000)}K`;
 }
 
-/* ── PriceSlider ─────────────────────────────────────────────────── */
+/* ── PriceRangeSlider — mismo estilo que el hero ────────────────────── */
 
-function PriceSlider({ min, max, step, value, onChange }: {
-  min: number; max: number; step: number;
-  value: [number, number]; onChange: (v: [number, number]) => void;
-}) {
+function PriceRangeSlider({
+  min, max, step, value, onChange,
+}: { min: number; max: number; step: number; value: [number, number]; onChange: (v: [number, number]) => void }) {
   const [low, high] = value;
-  const trackRef    = useRef<HTMLDivElement>(null);
-  const dragging    = useRef<'low' | 'high' | null>(null);
-  const lowRef      = useRef(low);
-  const highRef     = useRef(high);
-  lowRef.current    = low;
-  highRef.current   = high;
+  const trackRef  = useRef<HTMLDivElement>(null);
+  const dragging  = useRef<'low' | 'high' | null>(null);
+  const lowRef    = useRef(low);
+  const highRef   = useRef(high);
+  lowRef.current  = low;
+  highRef.current = high;
 
   const pctLow  = ((low  - min) / (max - min)) * 100;
   const pctHigh = ((high - min) / (max - min)) * 100;
 
-  const valFromX = (x: number) => {
+  const valFromX = (clientX: number) => {
     if (!trackRef.current) return null;
-    const r = trackRef.current.getBoundingClientRect();
-    const pct = Math.max(0, Math.min(1, (x - r.left) / r.width));
+    const r   = trackRef.current.getBoundingClientRect();
+    const pct = Math.max(0, Math.min(1, (clientX - r.left) / r.width));
     return Math.round((min + pct * (max - min)) / step) * step;
   };
 
-  const move = (x: number) => {
-    const v = valFromX(x);
+  const move = (clientX: number) => {
+    const v = valFromX(clientX);
     if (v === null) return;
     if (dragging.current === 'low')
       onChange([Math.max(min, Math.min(v, highRef.current - step)), highRef.current]);
@@ -111,7 +119,7 @@ function PriceSlider({ min, max, step, value, onChange }: {
       onChange([lowRef.current, Math.min(max, Math.max(v, lowRef.current + step))]);
   };
 
-  const onMouseDown = (e: React.MouseEvent) => {
+  const handleMouseDown = (e: React.MouseEvent) => {
     e.preventDefault();
     const v = valFromX(e.clientX);
     if (v === null) return;
@@ -123,23 +131,207 @@ function PriceSlider({ min, max, step, value, onChange }: {
     window.addEventListener('mouseup', onUp);
   };
 
+  const handleTouchStart = (e: React.TouchEvent) => {
+    const v = valFromX(e.touches[0].clientX);
+    if (v === null) return;
+    dragging.current = Math.abs(v - lowRef.current) <= Math.abs(v - highRef.current) ? 'low' : 'high';
+    move(e.touches[0].clientX);
+    const onMove = (ev: TouchEvent) => { ev.preventDefault(); move(ev.touches[0].clientX); };
+    const onEnd  = () => { dragging.current = null; window.removeEventListener('touchmove', onMove); window.removeEventListener('touchend', onEnd); };
+    window.addEventListener('touchmove', onMove, { passive: false });
+    window.addEventListener('touchend', onEnd);
+  };
+
   return (
-    <div style={{ userSelect: 'none', padding: '0 2px' }}>
-      <div ref={trackRef} style={{ position: 'relative', height: '20px', cursor: 'pointer' }} onMouseDown={onMouseDown}>
-        <div style={{ position: 'absolute', top: '50%', left: 0, right: 0, height: '3px', transform: 'translateY(-50%)', background: '#e8e8e8', borderRadius: '2px' }}>
+    <div style={{ userSelect: 'none' }}>
+      <div
+        ref={trackRef}
+        style={{ position: 'relative', height: '20px', cursor: 'pointer', marginTop: '4px' }}
+        onMouseDown={handleMouseDown}
+        onTouchStart={handleTouchStart}
+      >
+        <div style={{ position: 'absolute', top: '50%', left: 0, right: 0, height: '3px', transform: 'translateY(-50%)', background: '#e8e8e8', borderRadius: '2px', pointerEvents: 'none' }}>
           <div style={{ position: 'absolute', left: `${pctLow}%`, right: `${100 - pctHigh}%`, top: 0, bottom: 0, background: RED, borderRadius: '2px' }} />
         </div>
-        <div style={{ position: 'absolute', left: `${pctLow}%`, top: '50%', transform: 'translate(-50%,-50%)', width: '12px', height: '12px', background: RED, border: '2px solid #fff', borderRadius: '50%', boxShadow: '0 1px 4px rgba(0,0,0,0.2)', zIndex: 2 }} />
-        <div style={{ position: 'absolute', left: `${pctHigh}%`, top: '50%', transform: 'translate(-50%,-50%)', width: '12px', height: '12px', background: RED, border: '2px solid #fff', borderRadius: '50%', boxShadow: '0 1px 4px rgba(0,0,0,0.2)', zIndex: 2 }} />
+        <div style={{ position: 'absolute', left: `${pctLow}%`, top: '50%', transform: 'translate(-50%,-50%)', width: '10px', height: '10px', background: RED, borderRadius: '50%', pointerEvents: 'none', zIndex: 2 }} />
+        <div style={{ position: 'absolute', left: `${pctHigh}%`, top: '50%', transform: 'translate(-50%,-50%)', width: '10px', height: '10px', background: RED, borderRadius: '50%', pointerEvents: 'none', zIndex: 2 }} />
       </div>
-      <p style={{ fontFamily: FONT, fontSize: '12px', color: RED, textAlign: 'center', margin: '6px 0 0', fontWeight: 500 }}>
+      <p style={{ fontFamily: FONT, fontSize: '12px', fontWeight: 500, color: COLOR_VALUE, textAlign: 'center', margin: '8px 0 0', lineHeight: 1 }}>
         {fmtCOP(low)} – {fmtCOP(high)}
       </p>
     </div>
   );
 }
 
-/* ── Chip genérico ──────────────────────────────────────────────────── */
+/* ── PriceSelect — dropdown portal ──────────────────────────────────── */
+
+function PriceSelect({
+  value, onChange, searchType,
+}: { value: [number, number]; onChange: (v: [number, number]) => void; searchType: 'arrendar' | 'comprar' | null }) {
+  const [open, setOpen]       = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const buttonRef             = useRef<HTMLButtonElement>(null);
+  const dropdownRef           = useRef<HTMLDivElement>(null);
+  const [pos, setPos]         = useState({ top: 0, left: 0, width: 0 });
+
+  const isComprar = searchType === 'comprar';
+  const min  = isComprar ? 30_000_000  : 0;
+  const max  = isComprar ? 500_000_000 : 15_000_000;
+  const step = isComprar ? 5_000_000   : 250_000;
+
+  useEffect(() => { setMounted(true); }, []);
+
+  const updatePos = useCallback(() => {
+    if (buttonRef.current) {
+      const r = buttonRef.current.getBoundingClientRect();
+      setPos({ top: r.bottom + 2, left: r.left, width: Math.max(r.width, 260) });
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!open || !mounted) return;
+    const handler = (e: MouseEvent) => {
+      const t = e.target as Node;
+      if (!dropdownRef.current?.contains(t) && !buttonRef.current?.contains(t)) setOpen(false);
+    };
+    const id = setTimeout(() => document.addEventListener('mousedown', handler), 0);
+    return () => { clearTimeout(id); document.removeEventListener('mousedown', handler); };
+  }, [open, mounted]);
+
+  useEffect(() => {
+    if (!open) return;
+    window.addEventListener('scroll', updatePos, { passive: true });
+    return () => window.removeEventListener('scroll', updatePos);
+  }, [open, updatePos]);
+
+  const [low, high] = value;
+  const pristine = low === min && high === max;
+  const display  = pristine ? null : `${fmtCOP(low)} – ${fmtCOP(high)}`;
+
+  const dropdown = mounted && open ? (
+    <div ref={dropdownRef} style={{ position: 'fixed', top: pos.top, left: pos.left, width: pos.width, zIndex: 9999 }}>
+      <div className="bg-white shadow-2xl border border-gray-100" style={{ padding: '16px 20px 22px' }}>
+        <PriceRangeSlider min={min} max={max} step={step} value={value} onChange={onChange} />
+      </div>
+    </div>
+  ) : null;
+
+  return (
+    <div className="min-w-0 w-full">
+      <button
+        ref={buttonRef}
+        type="button"
+        onClick={() => { if (!open) { updatePos(); setOpen(true); } else setOpen(false); }}
+        className="w-full flex items-center bg-transparent border-none outline-none cursor-pointer text-left"
+      >
+        <span style={{ fontFamily: FONT, fontSize: '14px', fontWeight: 400, color: display ? COLOR_VALUE : '#b8b8b8', lineHeight: 1, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+          {display || 'Seleccionar'}
+        </span>
+      </button>
+      {dropdown && createPortal(dropdown, document.body)}
+    </div>
+  );
+}
+
+/* ── CustomSelect — dropdown buscable portal ─────────────────────────── */
+
+function CustomSelect({
+  value, onChange, options, placeholder, searchable = false,
+}: { value: string; onChange: (v: string) => void; options: string[]; placeholder?: string; searchable?: boolean }) {
+  const [open, setOpen]       = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const [query, setQuery]     = useState('');
+  const buttonRef             = useRef<HTMLButtonElement>(null);
+  const inputRef              = useRef<HTMLInputElement>(null);
+  const dropdownRef           = useRef<HTMLDivElement>(null);
+  const [pos, setPos]         = useState({ top: 0, left: 0, width: 0 });
+
+  useEffect(() => { setMounted(true); }, []);
+
+  const updatePos = useCallback(() => {
+    const el = searchable ? inputRef.current : buttonRef.current;
+    if (el) {
+      const r = el.getBoundingClientRect();
+      setPos({ top: r.bottom + 2, left: r.left, width: Math.max(r.width, 200) });
+    }
+  }, [searchable]);
+
+  const openDropdown = useCallback(() => { updatePos(); setQuery(''); setOpen(true); }, [updatePos]);
+  const toggle = useCallback(() => { if (!open) openDropdown(); else setOpen(false); }, [open, openDropdown]);
+
+  useEffect(() => {
+    if (!open || !mounted) return;
+    const handler = (e: MouseEvent) => {
+      const t = e.target as Node;
+      const anchor = searchable ? inputRef.current : buttonRef.current;
+      if (!dropdownRef.current?.contains(t) && !anchor?.contains(t)) { setOpen(false); setQuery(''); }
+    };
+    const id = setTimeout(() => document.addEventListener('mousedown', handler), 0);
+    return () => { clearTimeout(id); document.removeEventListener('mousedown', handler); };
+  }, [open, mounted, searchable]);
+
+  useEffect(() => {
+    if (!open) return;
+    window.addEventListener('scroll', updatePos, { passive: true });
+    return () => window.removeEventListener('scroll', updatePos);
+  }, [open, updatePos]);
+
+  const filtered = searchable && query
+    ? options.filter(o => o.toLowerCase().includes(query.toLowerCase()))
+    : options;
+
+  const selectOption = (opt: string) => { onChange(opt); setOpen(false); setQuery(''); };
+
+  const dropdown = mounted && open ? (
+    <div ref={dropdownRef} style={{ position: 'fixed', top: pos.top, left: pos.left, width: pos.width, zIndex: 9999 }}>
+      <div className="bg-white shadow-2xl border border-gray-100 max-h-[240px] overflow-y-auto custom-scrollbar">
+        {filtered.length === 0
+          ? <p style={{ fontFamily: FONT, fontSize: '13px', padding: '10px 16px', color: '#aaa' }}>Sin resultados</p>
+          : filtered.map(opt => (
+            <button key={opt} type="button"
+              onMouseDown={e => e.preventDefault()}
+              onClick={() => selectOption(opt)}
+              className={`block w-full text-left px-4 py-2.5 transition-colors duration-100 ${value === opt ? 'bg-brand-red text-white' : 'text-gray-700 hover:bg-brand-red hover:text-white'}`}
+              style={{ fontFamily: FONT, fontSize: '13px' }}>
+              {opt}
+            </button>
+          ))
+        }
+      </div>
+    </div>
+  ) : null;
+
+  if (searchable) {
+    return (
+      <div className="min-w-0 w-full">
+        <input
+          ref={inputRef}
+          type="text"
+          value={open ? query : value}
+          onChange={e => { setQuery(e.target.value); if (!open) openDropdown(); }}
+          onFocus={openDropdown}
+          placeholder={open ? (value || 'Buscar...') : (placeholder || 'Seleccionar')}
+          style={{ fontFamily: FONT, fontSize: '14px', fontWeight: 400, color: COLOR_VALUE, background: 'transparent', border: 'none', outline: 'none', width: '100%', lineHeight: 1 }}
+        />
+        {dropdown && createPortal(dropdown, document.body)}
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-w-0 w-full">
+      <button ref={buttonRef} type="button" onClick={toggle}
+        className="w-full flex items-center bg-transparent border-none outline-none cursor-pointer text-left">
+        <span style={{ fontFamily: FONT, fontSize: '14px', fontWeight: 400, color: value ? COLOR_VALUE : '#b8b8b8', lineHeight: 1, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+          {value || placeholder || 'Seleccionar'}
+        </span>
+      </button>
+      {dropdown && createPortal(dropdown, document.body)}
+    </div>
+  );
+}
+
+/* ── Chip ───────────────────────────────────────────────────────────── */
 
 function Chip({ label, active, onClick }: { label: string; active: boolean; onClick: () => void }) {
   return (
@@ -147,11 +339,14 @@ function Chip({ label, active, onClick }: { label: string; active: boolean; onCl
       type="button"
       onClick={onClick}
       style={{
-        fontFamily: FONT, fontSize: '12px', fontWeight: active ? 600 : 400,
-        padding: '5px 12px', borderRadius: '20px', cursor: 'pointer',
-        border: active ? `1.5px solid ${RED}` : '1.5px solid #e5e7eb',
-        background: active ? `${RED}12` : '#fff',
-        color: active ? RED : '#555',
+        padding: '5px 14px',
+        border: `1px solid ${active ? RED : 'rgba(0,0,0,0.15)'}`,
+        background: active ? RED : 'transparent',
+        color: active ? '#fff' : '#555',
+        fontFamily: FONT,
+        fontSize: '13px',
+        fontWeight: active ? 600 : 400,
+        cursor: 'pointer',
         transition: 'all 0.15s ease',
         whiteSpace: 'nowrap',
       }}
@@ -161,413 +356,299 @@ function Chip({ label, active, onClick }: { label: string; active: boolean; onCl
   );
 }
 
-/* ── Contador (habitaciones / baños) ─────────────────────────────── */
+/* ── Estilos compartidos ────────────────────────────────────────────── */
 
-function CounterDropdown({ value, onChange, max = 5 }: {
-  value: number | null; onChange: (v: number | null) => void; max?: number;
-}) {
-  const options: Array<{ label: string; val: number | null }> = [
-    { label: 'Cualquiera', val: null },
-    ...Array.from({ length: max }, (_, i) => ({
-      label: i + 1 < max ? `${i + 1}` : `${i + 1}+`,
-      val: i + 1,
-    })),
-  ];
-  return (
-    <div style={{ padding: '12px 14px', display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
-      {options.map(o => (
-        <Chip key={o.label} label={o.label} active={value === o.val} onClick={() => onChange(o.val)} />
-      ))}
-    </div>
-  );
-}
+const contentStyle: React.CSSProperties = {
+  display: 'flex',
+  alignItems: 'center',
+  gap: '12px',
+  padding: '14px 20px',
+  height: `${CELL_H}px`,
+  minWidth: 0,
+};
 
-/* ── Segmento con ícono — estilo hero ─────────────────────────────── */
+const labelStyle: React.CSSProperties = {
+  fontFamily: FONT,
+  fontSize: '11px',
+  color: COLOR_LABEL,
+  fontWeight: 300,
+  marginBottom: '3px',
+  lineHeight: 1,
+  whiteSpace: 'nowrap',
+};
 
-function Segment({
-  icon, label, valueLabel, isOpen, onClick, children, minWidth = 120,
-}: {
-  icon: string;
-  label: string;
-  valueLabel?: string;
-  isOpen: boolean;
-  onClick: () => void;
-  children?: React.ReactNode;
-  minWidth?: number;
-}) {
-  const Chevron  = isOpen ? ChevronUp : ChevronDown;
-  const hasValue = !!valueLabel;
+const advLabelStyle: React.CSSProperties = {
+  fontFamily: FONT,
+  fontSize: '11px',
+  color: '#555',
+  fontWeight: 500,
+  marginBottom: '10px',
+  lineHeight: 1,
+};
 
-  return (
-    <div style={{ position: 'relative', minWidth }}>
-      <button
-        type="button"
-        onClick={onClick}
-        style={{
-          display: 'flex', alignItems: 'center', gap: '10px',
-          padding: `0 16px`, height: `${CELL_H}px`, width: '100%',
-          background: 'transparent', border: 'none', cursor: 'pointer',
-          transition: 'background 0.15s',
-        }}
-        onMouseEnter={e => { e.currentTarget.style.background = '#fafafa'; }}
-        onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; }}
-      >
-        {/* Ícono GIF */}
-        <img
-          src={`/icons/${icon}`}
-          alt=""
-          width={22}
-          height={22}
-          style={{
-            flexShrink: 0,
-            filter: hasValue ? 'none' : 'grayscale(1) opacity(0.45)',
-            transition: 'filter 0.2s',
-          }}
-        />
+/* ── Componente principal ────────────────────────────────────────────── */
 
-        {/* Label + valor apilados */}
-        <div style={{ textAlign: 'left', minWidth: 0, flex: 1 }}>
-          <p style={{ fontFamily: FONT, fontSize: '10px', color: '#909090', fontWeight: 300, margin: 0, lineHeight: 1, whiteSpace: 'nowrap' }}>
-            {label}
-          </p>
-          <span style={{
-            fontFamily: FONT, fontSize: '13px', lineHeight: 1.3, display: 'block',
-            color: hasValue ? RED : '#bbb',
-            fontWeight: hasValue ? 600 : 400,
-            whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
-          }}>
-            {hasValue ? valueLabel : 'Seleccionar'}
-          </span>
-        </div>
-
-        {/* Chevron */}
-        <Chevron size={12} strokeWidth={2.5} style={{ flexShrink: 0, color: hasValue ? RED : '#ccc' }} />
-      </button>
-
-      {/* Dropdown */}
-      {isOpen && children && (
-        <div style={{
-          position: 'absolute', top: 'calc(100% + 4px)', left: 0, zIndex: 100,
-          background: '#fff', border: '1px solid #e5e7eb',
-          boxShadow: '0 8px 32px rgba(0,0,0,0.12)', borderRadius: '6px',
-          minWidth: '220px', overflow: 'hidden',
-        }}>
-          {children}
-        </div>
-      )}
-    </div>
-  );
-}
-
-/* ── Separador vertical ───────────────────────────────────────────── */
-
-const SEP = <div style={{ width: '1px', height: '28px', background: '#ebebeb', flexShrink: 0 }} />;
-
-/* ── Componente principal ─────────────────────────────────────────── */
-
-export default function PropiedadesSearchBar({
-  initialTipo = 'Arrendar',
-  onApply,
-}: {
-  initialTipo?: 'Arrendar' | 'Comprar';
+interface Props {
+  initialTipo?: 'Todos' | 'Arrendar' | 'Comprar';
   onApply: (f: PropSearchFilters) => void;
-}) {
-  const [f, setF]                     = useState<PropSearchFilters>({ ...DEFAULT_FILTERS, tipo: initialTipo });
-  const [open, setOpen]               = useState<string | null>(null);
-  const [sectorQuery, setSectorQuery] = useState('');
-  const barRef                        = useRef<HTMLDivElement>(null);
+}
 
-  useEffect(() => { setF(prev => ({ ...prev, tipo: initialTipo })); }, [initialTipo]);
+export default function PropiedadesSearchBar({ initialTipo = 'Todos', onApply }: Props) {
+  const [tipo,          setTipo]          = useState<'Todos' | 'Arrendar' | 'Comprar'>(initialTipo);
+  const [codigo,        setCodigo]        = useState('');
+  const [sector,        setSector]        = useState('');
+  const [tipoPropiedad, setTipoPropiedad] = useState('');
+  const [precioRange,   setPrecioRange]   = useState<[number, number]>([0, 15_000_000]);
+  const [showAdvanced,  setShowAdvanced]  = useState(false);
 
-  /* Cierra al clic fuera */
-  useEffect(() => {
-    const handler = (e: MouseEvent) => {
-      if (!barRef.current?.contains(e.target as Node)) setOpen(null);
-    };
-    document.addEventListener('mousedown', handler);
-    return () => document.removeEventListener('mousedown', handler);
-  }, []);
+  const [habitaciones, setHabitaciones] = useState<number | null>(null);
+  const [banos,        setBanos]        = useState<number | null>(null);
+  const [parqueadero,  setParqueadero]  = useState<'con' | 'sin' | null>(null);
+  const [areaMin,      setAreaMin]      = useState('');
+  const [areaMax,      setAreaMax]      = useState('');
+  const [estrato,      setEstrato]      = useState<string[]>([]);
+  const [comodidades,  setComodidades]  = useState<string[]>([]);
 
-  const toggle = useCallback((name: string) => setOpen(prev => prev === name ? null : name), []);
+  useEffect(() => { setTipo(initialTipo); }, [initialTipo]);
 
-  const update = useCallback(<K extends keyof PropSearchFilters>(key: K, val: PropSearchFilters[K]) => {
-    setF(prev => ({ ...prev, [key]: val }));
-  }, []);
+  const searchType: 'arrendar' | 'comprar' | null =
+    tipo === 'Comprar' ? 'comprar' : tipo === 'Arrendar' ? 'arrendar' : null;
 
-  const toggleComodidad = useCallback((c: string) => {
-    setF(prev => ({
-      ...prev,
-      comodidades: prev.comodidades.includes(c)
-        ? prev.comodidades.filter(x => x !== c)
-        : [...prev.comodidades, c],
-    }));
-  }, []);
+  const handleApply = () => {
+    onApply({
+      tipo, codigo, sector, tipoPropiedad,
+      precioMin: precioRange[0], precioMax: precioRange[1],
+      habitaciones, banos, parqueadero,
+      areaMin, areaMax, estrato, comodidades,
+    });
+  };
 
-  const toggleEstrato = useCallback((e: string) => {
-    setF(prev => ({
-      ...prev,
-      estrato: prev.estrato.includes(e)
-        ? prev.estrato.filter(x => x !== e)
-        : [...prev.estrato, e],
-    }));
-  }, []);
+  const handleClear = () => {
+    setCodigo(''); setSector(''); setTipoPropiedad('');
+    setPrecioRange([0, 15_000_000]);
+    setHabitaciones(null); setBanos(null); setParqueadero(null);
+    setAreaMin(''); setAreaMax(''); setEstrato([]); setComodidades([]);
+    onApply({ ...DEFAULT_FILTERS, tipo });
+  };
 
-  const clear = useCallback(() => {
-    const reset = { ...DEFAULT_FILTERS, tipo: f.tipo };
-    setF(reset);
-    setOpen(null);
-    onApply(reset);
-  }, [f.tipo, onApply]);
-
-  const apply = useCallback(() => {
-    setOpen(null);
-    onApply(f);
-  }, [f, onApply]);
-
-  /* Labels resumen */
-  const precioIsDefault = (f.tipo === 'Arrendar' ? f.precioMax === 15_000_000 : f.precioMax === 500_000_000) && f.precioMin === 0;
-  const precioLabel     = !precioIsDefault ? `${fmtCOP(f.precioMin)} – ${fmtCOP(f.precioMax)}` : undefined;
-  const habLabel        = f.habitaciones !== null ? (f.habitaciones >= 5 ? '5+' : `${f.habitaciones} hab`) : undefined;
-  const banosLabel      = f.banos !== null ? (f.banos >= 4 ? '4+' : `${f.banos} baños`) : undefined;
-  const parqLabel       = f.parqueadero ? (f.parqueadero === 'con' ? 'Con parq.' : 'Sin parq.') : undefined;
-  const extraCount      = (f.estrato.length > 0 ? 1 : 0) + f.comodidades.length + (f.areaMin || f.areaMax ? 1 : 0);
-  const masLabel        = extraCount > 0 ? `${extraCount} filtro${extraCount > 1 ? 's' : ''}` : undefined;
-
-  const isArrendar  = f.tipo === 'Arrendar';
-  const precioMin   = isArrendar ? 0 : 30_000_000;
-  const precioMax   = isArrendar ? 15_000_000 : 500_000_000;
-  const precioStep  = isArrendar ? 250_000 : 5_000_000;
-
-  const filteredSectores = sectorQuery
-    ? SECTORES.filter(s => s.toLowerCase().includes(sectorQuery.toLowerCase()))
-    : SECTORES;
+  const toggleEstrato   = (e: string) => setEstrato(prev => prev.includes(e) ? prev.filter(x => x !== e) : [...prev, e]);
+  const toggleComodidad = (c: string) => setComodidades(prev => prev.includes(c) ? prev.filter(x => x !== c) : [...prev, c]);
 
   return (
-    <div
-      ref={barRef}
-      style={{
+    <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '10px clamp(16px, 3vw, 52px)' }}>
+      <div style={{
         background: '#fff',
         border: '1px solid #e8e8e8',
-        borderRadius: '10px',
         boxShadow: '0 4px 24px rgba(0,0,0,0.10), 0 1px 4px rgba(0,0,0,0.06)',
-        position: 'relative',
-        zIndex: 40,
         overflow: 'hidden',
-      }}
-    >
-      {/* Contenedor centrado — igual que el resto de la página */}
-      <div style={{
-        maxWidth: '1400px',
-        margin: '0 auto',
-        display: 'flex',
-        alignItems: 'center',
-        overflow: 'visible',
       }}>
 
-        {/* ── Tipo: Arrendar / Comprar ── */}
-        <Segment
-          icon="icon-search-red.gif"
-          label="Tipo de negocio"
-          valueLabel={f.tipo}
-          isOpen={open === 'tipo'}
-          onClick={() => toggle('tipo')}
-          minWidth={140}
-        >
-          <div style={{ padding: '12px 14px', display: 'flex', gap: '8px' }}>
-            <Chip label="Arrendar" active={f.tipo === 'Arrendar'} onClick={() => {
-              const newF = { ...f, tipo: 'Arrendar' as const, precioMin: 0, precioMax: 15_000_000 };
-              setF(newF);
-              setOpen(null);
-            }} />
-            <Chip label="Comprar" active={f.tipo === 'Comprar'} onClick={() => {
-              const newF = { ...f, tipo: 'Comprar' as const, precioMin: 0, precioMax: 500_000_000 };
-              setF(newF);
-              setOpen(null);
-            }} />
-          </div>
-        </Segment>
+        {/* ── Fila 1: Tabs ──────────────────────────────────────────── */}
+        <div style={{ display: 'flex', height: '44px', borderBottom: DIVIDER }}>
+          {(['Todos', 'Arrendar', 'Comprar'] as const).map((t, i) => {
+            const active = tipo === t;
+            return (
+              <button
+                key={t}
+                type="button"
+                onClick={() => {
+                  setTipo(t);
+                  if (t === 'Comprar') setPrecioRange([30_000_000, 500_000_000]);
+                  else setPrecioRange([0, 15_000_000]);
+                }}
+                style={{
+                  flex: 1,
+                  height: '100%',
+                  background: active ? RED : 'transparent',
+                  color: active ? '#fff' : '#666',
+                  fontFamily: FONT,
+                  fontSize: '14px',
+                  fontWeight: active ? 600 : 400,
+                  border: 'none',
+                  borderRight: i < 2 ? DIVIDER : 'none',
+                  cursor: 'pointer',
+                  letterSpacing: '0.01em',
+                  transition: 'background 0.2s ease, color 0.2s ease',
+                }}
+                onMouseEnter={e => { if (!active) e.currentTarget.style.background = 'rgba(0,0,0,0.03)'; }}
+                onMouseLeave={e => { if (!active) e.currentTarget.style.background = 'transparent'; }}
+              >
+                {t}
+              </button>
+            );
+          })}
+        </div>
 
-        {SEP}
+        {/* ── Fila 2: Celdas de filtros — mismo look que hero ───────── */}
+        <div style={{ display: 'flex', borderBottom: DIVIDER }}>
 
-        {/* ── Sector ── */}
-        <Segment
-          icon="icon-location-red.gif"
-          label="Sector / Ubicación"
-          valueLabel={f.sector || undefined}
-          isOpen={open === 'sector'}
-          onClick={() => toggle('sector')}
-          minWidth={150}
-        >
-          <div style={{ padding: '10px 12px 6px' }}>
-            <input
-              autoFocus
-              type="text"
-              placeholder="Buscar sector..."
-              value={sectorQuery}
-              onChange={e => setSectorQuery(e.target.value)}
-              style={{
-                width: '100%', fontFamily: FONT, fontSize: '13px', padding: '7px 10px',
-                border: '1px solid #e5e7eb', borderRadius: '4px', outline: 'none', color: '#333',
-              }}
-            />
+          {/* Código inmueble */}
+          <div style={{ flex: 1, borderRight: DIVIDER }}>
+            <div style={contentStyle}>
+              <img src="/icons/icon-code-red.gif" alt="" width={24} height={24} style={{ flexShrink: 0 }} />
+              <div style={{ minWidth: 0, flex: 1 }}>
+                <p style={labelStyle}>Código inmueble</p>
+                <input
+                  type="text"
+                  value={codigo}
+                  onChange={e => setCodigo(e.target.value)}
+                  placeholder="Ej: A11636"
+                  style={{ fontFamily: FONT, fontSize: '14px', color: codigo ? COLOR_VALUE : '#b8b8b8', background: 'transparent', border: 'none', outline: 'none', width: '100%', lineHeight: 1 }}
+                />
+              </div>
+            </div>
           </div>
-          <div style={{ maxHeight: '200px', overflowY: 'auto' }}>
+
+          {/* Ubicación */}
+          <div style={{ flex: 1, borderRight: DIVIDER }}>
+            <div style={contentStyle}>
+              <img src="/icons/icon-location-red.gif" alt="" width={24} height={24} style={{ flexShrink: 0 }} />
+              <div style={{ minWidth: 0, flex: 1 }}>
+                <p style={labelStyle}>Ubicación</p>
+                <CustomSelect value={sector} onChange={setSector} options={SECTORES} placeholder="Seleccionar" searchable />
+              </div>
+            </div>
+          </div>
+
+          {/* Tipo de propiedad */}
+          <div style={{ flex: 1, borderRight: DIVIDER }}>
+            <div style={contentStyle}>
+              <img src="/icons/icon-home-red.gif" alt="" width={24} height={24} style={{ flexShrink: 0 }} />
+              <div style={{ minWidth: 0, flex: 1 }}>
+                <p style={labelStyle}>Tipo de propiedad</p>
+                <CustomSelect value={tipoPropiedad} onChange={setTipoPropiedad} options={TIPOS_INMUEBLE} placeholder="Seleccionar" searchable />
+              </div>
+            </div>
+          </div>
+
+          {/* Precio */}
+          <div style={{ flex: 1 }}>
+            <div style={contentStyle}>
+              <img src="/icons/icon-dollar-red.gif" alt="" width={24} height={24} style={{ flexShrink: 0, alignSelf: 'flex-start', marginTop: '2px' }} />
+              <div style={{ minWidth: 0, flex: 1 }}>
+                <p style={labelStyle}>Precio</p>
+                <PriceSelect value={precioRange} onChange={setPrecioRange} searchType={searchType} />
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        {/* ── Panel búsqueda avanzada ───────────────────────────────── */}
+        {showAdvanced && (
+          <div style={{ padding: '20px 24px', borderBottom: DIVIDER, background: '#fafafa' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '20px 32px' }}>
+
+              <div>
+                <p style={advLabelStyle}>Habitaciones</p>
+                <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+                  {[1, 2, 3, 4, 5].map(n => (
+                    <Chip key={n} label={n === 5 ? '5+' : String(n)} active={habitaciones === n} onClick={() => setHabitaciones(habitaciones === n ? null : n)} />
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <p style={advLabelStyle}>Baños</p>
+                <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+                  {[1, 2, 3, 4].map(n => (
+                    <Chip key={n} label={n === 4 ? '4+' : String(n)} active={banos === n} onClick={() => setBanos(banos === n ? null : n)} />
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <p style={advLabelStyle}>Parqueadero</p>
+                <div style={{ display: 'flex', gap: '6px' }}>
+                  <Chip label="Con parqueadero" active={parqueadero === 'con'} onClick={() => setParqueadero(parqueadero === 'con' ? null : 'con')} />
+                  <Chip label="Sin parqueadero" active={parqueadero === 'sin'} onClick={() => setParqueadero(parqueadero === 'sin' ? null : 'sin')} />
+                </div>
+              </div>
+
+              <div>
+                <p style={advLabelStyle}>Área (m²)</p>
+                <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                  <input
+                    type="number" value={areaMin} onChange={e => setAreaMin(e.target.value)} placeholder="Mín"
+                    style={{ fontFamily: FONT, fontSize: '13px', color: COLOR_VALUE, background: '#fff', border: '1px solid rgba(0,0,0,0.15)', outline: 'none', padding: '6px 10px', width: '80px' }}
+                  />
+                  <span style={{ fontFamily: FONT, fontSize: '12px', color: '#aaa' }}>–</span>
+                  <input
+                    type="number" value={areaMax} onChange={e => setAreaMax(e.target.value)} placeholder="Máx"
+                    style={{ fontFamily: FONT, fontSize: '13px', color: COLOR_VALUE, background: '#fff', border: '1px solid rgba(0,0,0,0.15)', outline: 'none', padding: '6px 10px', width: '80px' }}
+                  />
+                </div>
+              </div>
+
+              <div>
+                <p style={advLabelStyle}>Estrato</p>
+                <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+                  {ESTRATOS.map(e => (
+                    <Chip key={e} label={e} active={estrato.includes(e)} onClick={() => toggleEstrato(e)} />
+                  ))}
+                </div>
+              </div>
+
+              <div style={{ gridColumn: '1 / -1' }}>
+                <p style={advLabelStyle}>Comodidades</p>
+                <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+                  {COMODIDADES.map(c => (
+                    <Chip key={c} label={c} active={comodidades.includes(c)} onClick={() => toggleComodidad(c)} />
+                  ))}
+                </div>
+              </div>
+
+            </div>
+          </div>
+        )}
+
+        {/* ── Fila 3: Acciones ──────────────────────────────────────── */}
+        <div style={{ display: 'flex', alignItems: 'stretch', justifyContent: 'space-between', height: '48px', background: '#fafafa' }}>
+
+          <button
+            type="button"
+            onClick={() => setShowAdvanced(v => !v)}
+            style={{
+              display: 'flex', alignItems: 'center', gap: '6px',
+              background: 'transparent', border: 'none', cursor: 'pointer',
+              padding: '0 20px',
+              fontFamily: FONT, fontSize: '13px', color: '#555', fontWeight: 400,
+            }}
+          >
+            {showAdvanced ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+            Búsqueda avanzada
+          </button>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '16px', paddingRight: '4px' }}>
             <button
               type="button"
-              onClick={() => { update('sector', ''); setSectorQuery(''); setOpen(null); }}
-              style={{ display: 'block', width: '100%', textAlign: 'left', padding: '8px 14px', fontFamily: FONT, fontSize: '13px', color: f.sector === '' ? RED : '#555', fontWeight: f.sector === '' ? 600 : 400, background: 'transparent', border: 'none', cursor: 'pointer' }}
+              onClick={handleClear}
+              style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontFamily: FONT, fontSize: '13px', color: '#999', padding: '0 8px' }}
             >
-              Todos los sectores
+              Limpiar
             </button>
-            {filteredSectores.map(s => (
-              <button key={s} type="button"
-                onClick={() => { update('sector', s); setSectorQuery(''); setOpen(null); }}
-                style={{ display: 'block', width: '100%', textAlign: 'left', padding: '8px 14px', fontFamily: FONT, fontSize: '13px', color: f.sector === s ? RED : '#555', fontWeight: f.sector === s ? 600 : 400, background: f.sector === s ? '#fff5f5' : 'transparent', border: 'none', cursor: 'pointer' }}
-                onMouseEnter={e => { if (f.sector !== s) e.currentTarget.style.background = '#fafafa'; }}
-                onMouseLeave={e => { if (f.sector !== s) e.currentTarget.style.background = 'transparent'; }}
-              >
-                {s}
-              </button>
-            ))}
+
+            <button
+              type="button"
+              onClick={handleApply}
+              style={{
+                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
+                background: RED, color: '#fff',
+                fontFamily: FONT, fontSize: '14px', fontWeight: 600,
+                border: 'none', cursor: 'pointer',
+                padding: '0 28px',
+                height: '100%',
+                transition: 'background 0.2s ease',
+              }}
+              onMouseEnter={e => (e.currentTarget.style.background = RED_HOVER)}
+              onMouseLeave={e => (e.currentTarget.style.background = RED)}
+            >
+              <img src="/icons/icon-search-white.gif" alt="" width={16} height={16} />
+              Buscar inmueble
+            </button>
           </div>
-        </Segment>
 
-        {SEP}
-
-        {/* ── Precio ── */}
-        <Segment
-          icon="icon-dollar-red.gif"
-          label="Precio"
-          valueLabel={precioLabel}
-          isOpen={open === 'precio'}
-          onClick={() => toggle('precio')}
-          minWidth={140}
-        >
-          <div style={{ padding: '16px 18px 20px' }}>
-            <PriceSlider
-              min={precioMin} max={precioMax} step={precioStep}
-              value={[f.precioMin, f.precioMax]}
-              onChange={([lo, hi]) => setF(prev => ({ ...prev, precioMin: lo, precioMax: hi }))}
-            />
-          </div>
-        </Segment>
-
-        {SEP}
-
-        {/* ── Habitaciones ── */}
-        <Segment
-          icon="icon-bed-red.gif"
-          label="Habitaciones"
-          valueLabel={habLabel}
-          isOpen={open === 'hab'}
-          onClick={() => toggle('hab')}
-          minWidth={140}
-        >
-          <CounterDropdown value={f.habitaciones} onChange={v => update('habitaciones', v)} max={5} />
-        </Segment>
-
-        {SEP}
-
-        {/* ── Baños ── */}
-        <Segment
-          icon="icon-bathroom-red.gif"
-          label="Baños"
-          valueLabel={banosLabel}
-          isOpen={open === 'banos'}
-          onClick={() => toggle('banos')}
-          minWidth={110}
-        >
-          <CounterDropdown value={f.banos} onChange={v => update('banos', v)} max={4} />
-        </Segment>
-
-        {SEP}
-
-        {/* ── Parqueadero ── */}
-        <Segment
-          icon="icon-area-red.gif"
-          label="Parqueadero"
-          valueLabel={parqLabel}
-          isOpen={open === 'parq'}
-          onClick={() => toggle('parq')}
-          minWidth={140}
-        >
-          <div style={{ padding: '12px 14px', display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
-            <Chip label="Cualquiera"       active={f.parqueadero === null}  onClick={() => update('parqueadero', null)} />
-            <Chip label="Con parqueadero"  active={f.parqueadero === 'con'} onClick={() => update('parqueadero', 'con')} />
-            <Chip label="Sin parqueadero"  active={f.parqueadero === 'sin'} onClick={() => update('parqueadero', 'sin')} />
-          </div>
-        </Segment>
-
-        {SEP}
-
-        {/* ── Más filtros ── */}
-        <Segment
-          icon="icon-sliders-red.gif"
-          label="Más filtros"
-          valueLabel={masLabel}
-          isOpen={open === 'mas'}
-          onClick={() => toggle('mas')}
-          minWidth={130}
-        >
-          <div style={{ padding: '16px 18px', width: '340px' }}>
-            <p style={{ fontFamily: FONT, fontSize: '11px', fontWeight: 600, color: '#888', letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: '8px' }}>Área (m²)</p>
-            <div style={{ display: 'flex', gap: '8px', marginBottom: '18px' }}>
-              <input type="number" placeholder="Desde" value={f.areaMin} onChange={e => update('areaMin', e.target.value)}
-                style={{ flex: 1, fontFamily: FONT, fontSize: '13px', padding: '7px 10px', border: '1px solid #e5e7eb', borderRadius: '4px', outline: 'none', color: '#333' }} />
-              <input type="number" placeholder="Hasta" value={f.areaMax} onChange={e => update('areaMax', e.target.value)}
-                style={{ flex: 1, fontFamily: FONT, fontSize: '13px', padding: '7px 10px', border: '1px solid #e5e7eb', borderRadius: '4px', outline: 'none', color: '#333' }} />
-            </div>
-            <p style={{ fontFamily: FONT, fontSize: '11px', fontWeight: 600, color: '#888', letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: '8px' }}>Estrato</p>
-            <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginBottom: '18px' }}>
-              {ESTRATOS.map(e => (
-                <Chip key={e} label={e} active={f.estrato.includes(e)} onClick={() => toggleEstrato(e)} />
-              ))}
-            </div>
-            <p style={{ fontFamily: FONT, fontSize: '11px', fontWeight: 600, color: '#888', letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: '8px' }}>Otras comodidades</p>
-            <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
-              {COMODIDADES.map(c => (
-                <Chip key={c} label={c} active={f.comodidades.includes(c)} onClick={() => toggleComodidad(c)} />
-              ))}
-            </div>
-          </div>
-        </Segment>
-
-        {/* Espaciador */}
-        <div style={{ flex: 1 }} />
-
-        {/* ── Limpiar ── */}
-        <button
-          type="button"
-          onClick={clear}
-          style={{
-            fontFamily: FONT, fontSize: '12px', fontWeight: 400, color: '#aaa',
-            background: 'transparent', border: 'none', cursor: 'pointer',
-            padding: '0 14px', height: `${CELL_H}px`, whiteSpace: 'nowrap',
-            transition: 'color 0.15s',
-          }}
-          onMouseEnter={e => (e.currentTarget.style.color = '#555')}
-          onMouseLeave={e => (e.currentTarget.style.color = '#aaa')}
-        >
-          Limpiar
-        </button>
-
-        {/* ── Filtrar ── */}
-        <button
-          type="button"
-          onClick={apply}
-          style={{
-            display: 'flex', alignItems: 'center', gap: '8px',
-            fontFamily: FONT, fontSize: '13px', fontWeight: 600, color: '#fff',
-            background: RED, border: 'none', cursor: 'pointer',
-            padding: `0 22px`, height: `${CELL_H}px`, whiteSpace: 'nowrap',
-            flexShrink: 0, transition: 'background 0.2s ease',
-          }}
-          onMouseEnter={e => (e.currentTarget.style.background = RED_HOVER)}
-          onMouseLeave={e => (e.currentTarget.style.background = RED)}
-        >
-          <img src="/icons/icon-search-white.gif" alt="" width={16} height={16} />
-          Filtrar
-        </button>
+        </div>
 
       </div>
     </div>

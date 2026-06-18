@@ -18,7 +18,7 @@ export default function FeaturedSection({ onNavigate }: FeaturedSectionProps) {
   const { ref: titleRef } = useSplitTextAnimation('.featured-title-split', 0, false);
 
   return (
-    <section style={{ background: '#fff' }} className="w-full overflow-hidden">
+    <section style={{ background: '#fff' }} className="w-full">
 
       {/* Header: título + botón — sin línea gris */}
       <div
