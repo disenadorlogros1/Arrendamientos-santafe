@@ -9,8 +9,9 @@ import { Button } from '@/components/ui/button';
 import { useSplitTextAnimation } from '@/hooks/useSplitTextAnimation';
 import PropiedadesSearchBar, { type PropSearchFilters } from './PropiedadesSearchBar';
 
-const FONT_HEADING = "'Avenir Next Ultra Light', 'Avenir LT Pro 65 Medium', 'Avenir', 'Outfit', system-ui, sans-serif";
-const FONT_BODY    = "'Avenir LT Pro 65 Medium', 'Avenir LT Pro', 'Avenir', 'Outfit', system-ui, sans-serif";
+const FONT_HEADING = "'Avenir LT Std', 'Outfit', system-ui, sans-serif";
+const FONT_BODY    = "'Avenir LT Std', 'Outfit', system-ui, sans-serif";
+const RED          = '#f32735';
 
 function parsePrice(s: string): number {
   return parseInt(s.replace(/[^0-9]/g, '')) || 0;
@@ -89,6 +90,7 @@ export default function PropiedadesPage({ initialFilter = 'Todos' }: { initialFi
   const { ref: titleRef, titleAnimating } = useSplitTextAnimation('.propiedades-title-split', 0, false);
 
   const initialTipo: 'Arrendar' | 'Comprar' = initialFilter === 'Comprar' ? 'Comprar' : 'Arrendar';
+  const [showMap, setShowMap] = useState(false);
   const [appliedFilters, setAppliedFilters] = useState<PropSearchFilters>({
     tipo: initialTipo,
     sector: '',
@@ -159,29 +161,115 @@ export default function PropiedadesPage({ initialFilter = 'Todos' }: { initialFi
       </div>
 
       {/* Content */}
-      <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '32px clamp(16px, 3vw, 48px)' }}>
-        {/* Results count */}
-        <p style={{ fontFamily: FONT_BODY, fontSize: '13px', color: '#999', marginBottom: '20px' }}>
-          {filtered.length} {filtered.length === 1 ? 'propiedad encontrada' : 'propiedades encontradas'}
-        </p>
+      <div style={{ maxWidth: showMap ? '100%' : '1400px', margin: '0 auto', padding: showMap ? '0' : '32px clamp(16px, 3vw, 48px)', transition: 'all 0.4s ease' }}>
+
+        {/* Toolbar: contador + toggle mapa */}
+        <div
+          className="flex items-center justify-between"
+          style={{ padding: showMap ? '20px clamp(16px, 2vw, 36px)' : '0 0 20px 0' }}
+        >
+          <p style={{ fontFamily: FONT_BODY, fontSize: '13px', color: '#999', margin: 0 }}>
+            {filtered.length} {filtered.length === 1 ? 'propiedad encontrada' : 'propiedades encontradas'}
+          </p>
+
+          {/* Botón toggle mapa — solo desktop */}
+          <button
+            type="button"
+            onClick={() => setShowMap(v => !v)}
+            className="hidden lg:flex items-center gap-2"
+            style={{
+              fontFamily: FONT_BODY, fontSize: '13px', fontWeight: 500,
+              color: showMap ? '#fff' : '#444',
+              background: showMap ? RED : '#fff',
+              border: `1px solid ${showMap ? RED : '#ddd'}`,
+              borderRadius: '6px',
+              padding: '8px 16px',
+              cursor: 'pointer',
+              transition: 'all 0.2s ease',
+              flexShrink: 0,
+            }}
+          >
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/>
+              <line x1="9" y1="3" x2="9" y2="18"/>
+              <line x1="15" y1="6" x2="15" y2="21"/>
+            </svg>
+            {showMap ? 'Ocultar mapa' : 'Ver mapa'}
+          </button>
+        </div>
 
         {/* Mobile Carousel */}
-        <div className="lg:hidden mb-8">
+        <div className="lg:hidden mb-8" style={{ padding: '0 clamp(16px, 3vw, 48px)' }}>
           <InfiniteCarousel properties={filtered} />
         </div>
 
-        {/* Desktop Grid */}
-        <div className="hidden lg:grid grid-cols-3 xl:grid-cols-4 gap-5">
-          {filtered.map((property) => (
-            <motion.div
-              key={property.id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3 }}
+        {/* Desktop: layout normal o con mapa */}
+        <div className={`hidden lg:flex ${showMap ? 'flex-row items-start' : 'flex-col'}`}>
+
+          {/* Lista de propiedades */}
+          <div
+            style={{
+              flex: showMap ? '0 0 55%' : '1',
+              maxHeight: showMap ? 'calc(100vh - 180px)' : 'none',
+              overflowY: showMap ? 'auto' : 'visible',
+              padding: showMap ? '0 clamp(16px, 2vw, 36px) 32px' : '0',
+              scrollbarWidth: 'thin',
+              scrollbarColor: '#ddd transparent',
+            }}
+          >
+            <div className={showMap ? 'grid grid-cols-2 gap-4' : 'grid grid-cols-3 xl:grid-cols-4 gap-5'}>
+              {filtered.map((property, i) => (
+                <motion.div
+                  key={property.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, delay: i * 0.03 }}
+                >
+                  <PropertyCard property={property} />
+                </motion.div>
+              ))}
+            </div>
+          </div>
+
+          {/* Mapa fijo */}
+          {showMap && (
+            <div
+              style={{
+                flex: '0 0 45%',
+                position: 'sticky',
+                top: '180px',
+                height: 'calc(100vh - 180px)',
+                borderLeft: '1px solid #e8e8e8',
+                overflow: 'hidden',
+              }}
             >
-              <PropertyCard property={property} />
-            </motion.div>
-          ))}
+              <iframe
+                title="Mapa de propiedades"
+                src="https://www.openstreetmap.org/export/embed.html?bbox=-75.6700%2C6.1500%2C-75.4800%2C6.3400&layer=mapnik"
+                style={{ width: '100%', height: '100%', border: 'none', display: 'block' }}
+                loading="lazy"
+              />
+              <div
+                style={{
+                  position: 'absolute',
+                  bottom: '16px',
+                  left: '50%',
+                  transform: 'translateX(-50%)',
+                  background: 'rgba(255,255,255,0.92)',
+                  backdropFilter: 'blur(6px)',
+                  borderRadius: '20px',
+                  padding: '6px 14px',
+                  fontSize: '11px',
+                  fontFamily: FONT_BODY,
+                  color: '#666',
+                  whiteSpace: 'nowrap',
+                  boxShadow: '0 2px 12px rgba(0,0,0,0.12)',
+                }}
+              >
+                Medellín y Área Metropolitana
+              </div>
+            </div>
+          )}
         </div>
 
         {filtered.length === 0 && (
