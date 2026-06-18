@@ -2,190 +2,167 @@
 
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Search, SlidersHorizontal } from 'lucide-react';
 import PropertyCard from './PropertyCard';
 import InfiniteCarousel from './InfiniteCarousel';
 import { properties } from '@/data/properties';
 import { Button } from '@/components/ui/button';
 import { useSplitTextAnimation } from '@/hooks/useSplitTextAnimation';
+import PropiedadesSearchBar, { type PropSearchFilters } from './PropiedadesSearchBar';
 
-const locations = ['Todas', 'Poblado', 'Envigado', 'Laureles', 'Buenos Aires', 'Sabaneta', 'Bello', 'Itagüí', 'Copacabana', 'La Strada'];
-const types = ['Todos', 'Apartamento', 'Casa'];
-const priceRanges = ['Todos', 'Hasta $800,000', '$800,000 - $1.500,000', '$1.500,000 - $2.500,000', 'Más de $2.500,000'];
+const FONT_HEADING = "'Avenir Next Ultra Light', 'Avenir LT Pro 65 Medium', 'Avenir', 'Outfit', system-ui, sans-serif";
+const FONT_BODY    = "'Avenir LT Pro 65 Medium', 'Avenir LT Pro', 'Avenir', 'Outfit', system-ui, sans-serif";
+
+function parsePrice(s: string): number {
+  return parseInt(s.replace(/[^0-9]/g, '')) || 0;
+}
+
+function parseArea(s: string): number {
+  return parseInt(s) || 0;
+}
+
+function applyFilters(filters: PropSearchFilters) {
+  return properties.filter((p) => {
+    // Tipo de negocio
+    if (p.businessType && p.businessType !== filters.tipo) return false;
+
+    // Sector
+    if (filters.sector && p.location.toLowerCase() !== filters.sector.toLowerCase()) return false;
+
+    // Precio
+    const price = parsePrice(p.price);
+    if (price > 0 && (price < filters.precioMin || price > filters.precioMax)) return false;
+
+    // Habitaciones
+    if (filters.habitaciones !== null) {
+      if (filters.habitaciones >= 5) {
+        if (p.bedrooms < 5) return false;
+      } else {
+        if (p.bedrooms !== filters.habitaciones) return false;
+      }
+    }
+
+    // Baños
+    if (filters.banos !== null) {
+      if (filters.banos >= 4) {
+        if (p.bathrooms < 4) return false;
+      } else {
+        if (p.bathrooms !== filters.banos) return false;
+      }
+    }
+
+    // Parqueadero
+    if (filters.parqueadero === 'con') {
+      if (!p.parking && !p.garage) return false;
+    } else if (filters.parqueadero === 'sin') {
+      if (p.parking || p.garage) return false;
+    }
+
+    // Área
+    const area = parseArea(p.size);
+    if (filters.areaMin && area < parseInt(filters.areaMin)) return false;
+    if (filters.areaMax && area > parseInt(filters.areaMax)) return false;
+
+    // Estrato
+    if (filters.estrato.length > 0) {
+      if (!p.stratum || !filters.estrato.includes(String(p.stratum))) return false;
+    }
+
+    // Comodidades
+    if (filters.comodidades.length > 0) {
+      for (const c of filters.comodidades) {
+        if (c === 'Amoblado' && !p.furnished) return false;
+        if (c === 'Piscina' && !p.pool) return false;
+        if (['Balcón', 'Unidad Cerrada', 'Cuarto útil', 'Juegos infantiles', 'Ascensor'].includes(c)) {
+          const found = p.characteristics?.some(ch =>
+            ch.toLowerCase().includes(c.toLowerCase())
+          );
+          if (!found) return false;
+        }
+      }
+    }
+
+    return true;
+  });
+}
 
 export default function PropiedadesPage({ initialFilter = 'Todos' }: { initialFilter?: 'Todos' | 'Arrendar' | 'Comprar' }) {
   const { ref: titleRef, titleAnimating } = useSplitTextAnimation('.propiedades-title-split', 0, false);
-  const [selectedBusinessType, setSelectedBusinessType] = useState<'Todos' | 'Arrendar' | 'Comprar'>(initialFilter);
 
-  useEffect(() => { setSelectedBusinessType(initialFilter); }, [initialFilter]);
-  const [selectedLocation, setSelectedLocation] = useState('Todas');
-  const [selectedType, setSelectedType] = useState('Todos');
-  const [selectedPrice, setSelectedPrice] = useState('Todos');
-  const [showFilters, setShowFilters] = useState(false);
-
-  const filtered = properties.filter((p) => {
-    if (selectedBusinessType !== 'Todos' && p.businessType !== selectedBusinessType) return false;
-    if (selectedLocation !== 'Todas' && p.location !== selectedLocation) return false;
-    if (selectedType !== 'Todos' && p.type !== selectedType) return false;
-    return true;
+  const initialTipo: 'Arrendar' | 'Comprar' = initialFilter === 'Comprar' ? 'Comprar' : 'Arrendar';
+  const [appliedFilters, setAppliedFilters] = useState<PropSearchFilters>({
+    tipo: initialTipo,
+    sector: '',
+    precioMin: 0,
+    precioMax: 15_000_000,
+    habitaciones: null,
+    banos: null,
+    parqueadero: null,
+    areaMin: '',
+    areaMax: '',
+    estrato: [],
+    comodidades: [],
   });
 
+  useEffect(() => {
+    setAppliedFilters(prev => ({
+      ...prev,
+      tipo: initialFilter === 'Comprar' ? 'Comprar' : 'Arrendar',
+    }));
+  }, [initialFilter]);
+
+  const filtered = applyFilters(appliedFilters);
+
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen" style={{ background: '#f7f6f4' }}>
       {/* Page Header */}
-      <div className="bg-brand-dark py-12 md:py-16 pb-8 md:pb-12">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8" ref={titleRef}>
+      <div style={{ background: '#0d0d0d', padding: 'clamp(32px, 5vw, 56px) clamp(20px, 5vw, 80px) clamp(24px, 3vw, 40px)' }}>
+        <div ref={titleRef}>
           <h1
-            className="propiedades-title-split text-3xl sm:text-4xl lg:text-5xl leading-tight text-white"
+            className="propiedades-title-split"
             style={{
-              fontFamily: "'Avenir Next Ultra Light', 'Avenir LT Pro 65 Medium', 'Avenir', 'Outfit', system-ui, sans-serif",
+              fontFamily: FONT_HEADING,
               fontWeight: 300,
-              lineHeight: '1.2',
+              fontSize: 'clamp(26px, 3.4vw, 48px)',
+              color: '#fff',
+              lineHeight: 1.18,
+              margin: '0 0 14px 0',
             }}
           >
             Ver{' '}
-            <span
-              className="text-brand-red inline-block"
-              style={{
-                fontWeight: 700,
-              }}
-            >
-              propiedades
-            </span>
+            <span style={{ fontWeight: 700, color: '#f32735' }}>propiedades</span>
           </h1>
           <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={titleAnimating ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 16 }}
+            animate={titleAnimating ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
             transition={{ duration: 0.4, ease: 'easeOut' }}
-            className="mt-5 text-base sm:text-lg text-white/80 max-w-2xl leading-relaxed"
             style={{
-              fontFamily: "'Avenir LT Pro 65 Medium', 'Avenir LT Pro', 'Avenir', 'Outfit', system-ui, sans-serif",
+              fontFamily: FONT_BODY,
               fontWeight: 300,
-              lineHeight: '1.45',
+              fontSize: 'clamp(13px, 1.1vw, 16px)',
+              color: 'rgba(255,255,255,0.55)',
+              lineHeight: 1.55,
+              margin: 0,
+              maxWidth: '560px',
             }}
           >
-            Encuentra tu próximo hogar en Medellín y área metropolitana. Explora nuestro inventario de propiedades disponibles.
+            Encuentra tu próximo hogar en Medellín y área metropolitana.
           </motion.p>
         </div>
       </div>
 
-      <div className="mx-auto max-w-7xl px-1 sm:px-6 lg:px-8 py-8">
-        {/* Business Type Filter — Igual al del Hero */}
-        <div className="flex h-[44px] bg-white border border-gray-200 overflow-hidden mb-6 shadow-lg">
-          {(['Todos', 'Arrendar', 'Comprar'] as const).map((type, i) => (
-            <button
-              key={type}
-              onClick={() => setSelectedBusinessType(type)}
-              className={`flex-1 flex items-center justify-center text-sm font-medium transition-all ${
-                i < 2 ? 'border-r border-gray-200' : ''
-              } ${
-                selectedBusinessType === type
-                  ? 'bg-brand-red text-white'
-                  : 'bg-gray-50 text-brand-gray hover:bg-gray-100'
-              }`}
-              style={{
-                fontFamily: "'Avenir LT Pro', 'Outfit', system-ui, sans-serif",
-                fontSize: '14px',
-              }}
-            >
-              {type}
-            </button>
-          ))}
-        </div>
+      {/* Search Bar — sticky bajo el header */}
+      <div style={{ position: 'sticky', top: '43px', zIndex: 40 }}>
+        <PropiedadesSearchBar
+          initialTipo={initialTipo}
+          onApply={setAppliedFilters}
+        />
+      </div>
 
-        {/* Search + Filter Toggle */}
-        <div className="flex flex-col sm:flex-row gap-3 mb-6">
-          <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-brand-gray" />
-            <input
-              type="text"
-              placeholder="Buscar por referencia, ubicación..."
-              className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-red/30 focus:border-brand-red"
-            />
-          </div>
-          <Button
-            onClick={() => setShowFilters(!showFilters)}
-            variant="outline"
-            className="flex items-center gap-2 rounded-xl"
-          >
-            <SlidersHorizontal className="h-4 w-4" />
-            Filtros
-          </Button>
-        </div>
-
-        {/* Filters */}
-        {showFilters && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            className="mb-6 p-5 bg-gray-50 rounded-xl border border-gray-100 space-y-4"
-          >
-            <div>
-              <label className="block text-xs font-medium text-brand-gray uppercase tracking-wider mb-2">
-                Ubicación
-              </label>
-              <div className="flex flex-wrap gap-2">
-                {locations.map((loc) => (
-                  <button
-                    key={loc}
-                    onClick={() => setSelectedLocation(loc)}
-                    className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
-                      selectedLocation === loc
-                        ? 'bg-brand-red text-white'
-                        : 'bg-white text-brand-gray border border-gray-200 hover:border-brand-red'
-                    }`}
-                  >
-                    {loc}
-                  </button>
-                ))}
-              </div>
-            </div>
-            <div>
-              <label className="block text-xs font-medium text-brand-gray uppercase tracking-wider mb-2">
-                Tipo de propiedad
-              </label>
-              <div className="flex flex-wrap gap-2">
-                {types.map((t) => (
-                  <button
-                    key={t}
-                    onClick={() => setSelectedType(t)}
-                    className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
-                      selectedType === t
-                        ? 'bg-brand-red text-white'
-                        : 'bg-white text-brand-gray border border-gray-200 hover:border-brand-red'
-                    }`}
-                  >
-                    {t}
-                  </button>
-                ))}
-              </div>
-            </div>
-            <div>
-              <label className="block text-xs font-medium text-brand-gray uppercase tracking-wider mb-2">
-                Rango de precio
-              </label>
-              <div className="flex flex-wrap gap-2">
-                {priceRanges.map((pr) => (
-                  <button
-                    key={pr}
-                    onClick={() => setSelectedPrice(pr)}
-                    className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
-                      selectedPrice === pr
-                        ? 'bg-brand-red text-white'
-                        : 'bg-white text-brand-gray border border-gray-200 hover:border-brand-red'
-                    }`}
-                  >
-                    {pr}
-                  </button>
-                ))}
-              </div>
-            </div>
-          </motion.div>
-        )}
-
+      {/* Content */}
+      <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '32px clamp(16px, 3vw, 48px)' }}>
         {/* Results count */}
-        <p className="text-sm text-brand-gray mb-5">
-          {filtered.length} propiedades encontradas
+        <p style={{ fontFamily: FONT_BODY, fontSize: '13px', color: '#999', marginBottom: '20px' }}>
+          {filtered.length} {filtered.length === 1 ? 'propiedad encontrada' : 'propiedades encontradas'}
         </p>
 
         {/* Mobile Carousel */}
@@ -208,40 +185,33 @@ export default function PropiedadesPage({ initialFilter = 'Todos' }: { initialFi
         </div>
 
         {filtered.length === 0 && (
-          <div className="text-center py-16 lg:hidden">
-            <p className="text-brand-gray text-lg">
+          <div className="text-center py-16">
+            <p style={{ fontFamily: FONT_BODY, fontSize: '16px', color: '#999', marginBottom: '16px' }}>
               No se encontraron propiedades con los filtros seleccionados.
             </p>
-            <Button
-              onClick={() => {
-                setSelectedBusinessType('Todos');
-                setSelectedLocation('Todas');
-                setSelectedType('Todos');
-                setSelectedPrice('Todos');
+            <button
+              type="button"
+              onClick={() => setAppliedFilters(prev => ({
+                tipo: prev.tipo,
+                sector: '',
+                precioMin: 0,
+                precioMax: prev.tipo === 'Comprar' ? 500_000_000 : 15_000_000,
+                habitaciones: null,
+                banos: null,
+                parqueadero: null,
+                areaMin: '',
+                areaMax: '',
+                estrato: [],
+                comodidades: [],
+              }))}
+              style={{
+                fontFamily: FONT_BODY, fontSize: '13px', fontWeight: 600,
+                color: '#fff', background: '#f32735', border: 'none',
+                cursor: 'pointer', padding: '11px 24px', borderRadius: '2px',
               }}
-              className="mt-4 bg-brand-red hover:bg-brand-red-hover text-white rounded-full"
             >
               Limpiar filtros
-            </Button>
-          </div>
-        )}
-
-        {filtered.length === 0 && (
-          <div className="hidden lg:block text-center py-16">
-            <p className="text-brand-gray text-lg">
-              No se encontraron propiedades con los filtros seleccionados.
-            </p>
-            <Button
-              onClick={() => {
-                setSelectedBusinessType('Todos');
-                setSelectedLocation('Todas');
-                setSelectedType('Todos');
-                setSelectedPrice('Todos');
-              }}
-              className="mt-4 bg-brand-red hover:bg-brand-red-hover text-white rounded-full"
-            >
-              Limpiar filtros
-            </Button>
+            </button>
           </div>
         )}
 
@@ -251,11 +221,18 @@ export default function PropiedadesPage({ initialFilter = 'Todos' }: { initialFi
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="bg-gradient-to-br from-brand-red/5 to-transparent border border-brand-red/20 rounded-xl p-8"
+            style={{
+              background: 'rgba(243,39,53,0.04)',
+              border: '1px solid rgba(243,39,53,0.15)',
+              borderRadius: '8px',
+              padding: '32px',
+            }}
           >
-            <h3 className="text-2xl font-bold text-brand-dark mb-3">¿Tienes un inmueble para arrendar o vender?</h3>
-            <p className="text-gray-600 mb-6">
-              Consigna tu propiedad con nosotros y accede a nuestra red de miles de clientes potenciales.
+            <h3 style={{ fontFamily: FONT_HEADING, fontWeight: 700, fontSize: '20px', color: '#1a1a1a', marginBottom: '10px' }}>
+              ¿Tienes un inmueble para arrendar o vender?
+            </h3>
+            <p style={{ fontFamily: FONT_BODY, fontSize: '14px', color: '#666', marginBottom: '20px', lineHeight: 1.55 }}>
+              Consigna tu propiedad con nosotros y accede a nuestra red de clientes.
             </p>
             <Button
               onClick={() => window.location.href = '/consignacion'}
@@ -269,11 +246,18 @@ export default function PropiedadesPage({ initialFilter = 'Todos' }: { initialFi
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
-            className="bg-gradient-to-br from-blue-50 to-transparent border border-blue-200 rounded-xl p-8"
+            style={{
+              background: 'rgb(239,246,255)',
+              border: '1px solid rgb(191,219,254)',
+              borderRadius: '8px',
+              padding: '32px',
+            }}
           >
-            <h3 className="text-2xl font-bold text-brand-dark mb-3">¿Buscas oportunidades de inversión?</h3>
-            <p className="text-gray-600 mb-6">
-              Descubre nuestras propiedades con mayor potencial de retorno e inversión en Antioquia.
+            <h3 style={{ fontFamily: FONT_HEADING, fontWeight: 700, fontSize: '20px', color: '#1a1a1a', marginBottom: '10px' }}>
+              ¿Buscas oportunidades de inversión?
+            </h3>
+            <p style={{ fontFamily: FONT_BODY, fontSize: '14px', color: '#666', marginBottom: '20px', lineHeight: 1.55 }}>
+              Descubre nuestras propiedades con mayor potencial de retorno en Antioquia.
             </p>
             <Button
               onClick={() => window.location.href = '/inversionistas'}
