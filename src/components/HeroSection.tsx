@@ -79,7 +79,7 @@ export default function HeroSection({ onNavigate, searchFormSlot }: HeroSectionP
           >
             <div style={{ maxWidth: '700px', width: '100%', textAlign: 'center' }}>
               <h1
-                className="hero-title-split text-[clamp(24px,7vw,32px)] sm:text-[clamp(28px,3vw,52px)] sm:leading-[1.2]"
+                className="hero-title-split text-[clamp(32px,9vw,48px)] sm:text-[clamp(28px,3vw,52px)] sm:leading-[1.2]"
                 style={{
                   fontFamily: FONT_HEADING,
                   fontWeight: 300,
@@ -89,15 +89,14 @@ export default function HeroSection({ onNavigate, searchFormSlot }: HeroSectionP
                   color: '#fff',
                 }}
               >
-                60 años
-                <br className="hidden sm:block" />
-                <span className="hero-bold-span block sm:inline-block" style={{ fontWeight: 700, position: 'relative' }}>
-                  <span ref={boldTextRef} style={{ position: 'relative', zIndex: 2 }}>
+                60 años{' '}
+                <span style={{ fontWeight: 700, display: 'inline', position: 'relative' }}>
+                  <span ref={boldTextRef} style={{ position: 'relative', zIndex: 2, display: 'inline' }}>
                     conectando personas
                   </span>
                   <span
                     aria-hidden="true"
-                    className="hidden sm:block"
+                    className="hidden sm:inline-block"
                     style={{
                       position: 'absolute',
                       top: '72%',
