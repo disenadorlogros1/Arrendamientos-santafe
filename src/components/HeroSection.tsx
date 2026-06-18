@@ -79,11 +79,11 @@ export default function HeroSection({ onNavigate, searchFormSlot }: HeroSectionP
           >
             <div style={{ maxWidth: '700px', width: '100%', textAlign: 'center' }}>
               <h1
-                className="hero-title-split text-[clamp(36px,10vw,54px)] sm:text-[clamp(28px,3vw,52px)] sm:leading-[1.2]"
+                className="hero-title-split text-[clamp(24px,7vw,32px)] sm:text-[clamp(28px,3vw,52px)] sm:leading-[1.2]"
                 style={{
                   fontFamily: FONT_HEADING,
                   fontWeight: 300,
-                  lineHeight: 0.82,
+                  lineHeight: 1.0,
                   margin: 0,
                   textAlign: 'center',
                   color: '#fff',
