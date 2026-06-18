@@ -716,6 +716,10 @@ input[type="range"]::-moz-range-track {
   opacity: 0;
 }
 
+.hero-title-split span {
+  line-height: inherit !important;
+}
+
 @media (max-width: 1023px) {
   .hero-title-split,
   .featured-title-split,

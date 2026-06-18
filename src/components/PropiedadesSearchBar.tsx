@@ -665,7 +665,7 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', onApply }:
                   <img src="/icons/icon-sliders-red.gif" alt="" width={24} height={24} style={{ flexShrink: 0, marginTop: '2px' }} />
                   <div style={{ minWidth: 0, flex: 1 }}>
                     <p style={labelStyle}>Parqueadero</p>
-                    <div style={{ display: 'flex', gap: '5px', marginTop: '6px', flexWrap: 'wrap' }}>
+                    <div style={{ display: 'flex', gap: '5px', marginTop: '6px', flexWrap: 'nowrap' }}>
                       <Chip label="Con parqueadero" active={parqueadero === 'con'} onClick={() => setParqueadero(parqueadero === 'con' ? null : 'con')} />
                       <Chip label="Sin parqueadero" active={parqueadero === 'sin'} onClick={() => setParqueadero(parqueadero === 'sin' ? null : 'sin')} />
                     </div>
@@ -693,7 +693,7 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', onApply }:
                   <img src="/icons/icon-code-red.gif" alt="" width={24} height={24} style={{ flexShrink: 0, marginTop: '2px' }} />
                   <div style={{ minWidth: 0, flex: 1 }}>
                     <p style={labelStyle}>Estrato</p>
-                    <div style={{ display: 'flex', gap: '5px', marginTop: '6px', flexWrap: 'wrap' }}>
+                    <div style={{ display: 'flex', gap: '4px', marginTop: '6px', flexWrap: 'nowrap' }}>
                       {ESTRATOS.map(e => (
                         <Chip key={e} label={e} active={estrato.includes(e)} onClick={() => toggleEstrato(e)} />
                       ))}
