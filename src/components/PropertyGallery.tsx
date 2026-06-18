@@ -124,6 +124,7 @@ function PreviewCell({ img, alt, rowSpan, onClick, overlay }: {
       style={{
         gridRow: rowSpan ? '1 / 3' : undefined,
         position: 'relative', overflow: 'hidden', cursor: 'pointer',
+        background: '#f0efed',
       }}
       onClick={onClick}
       onMouseEnter={() => setHov(true)}
@@ -132,8 +133,10 @@ function PreviewCell({ img, alt, rowSpan, onClick, overlay }: {
       <img
         src={img} alt={alt} draggable={false}
         style={{
-          width: '100%', height: '100%', objectFit: 'cover', display: 'block',
-          transform: hov ? 'scale(1.04)' : 'scale(1)',
+          width: '100%', height: '100%',
+          objectFit: 'contain',   /* sin recorte — la imagen se ve completa */
+          display: 'block',
+          transform: hov ? 'scale(1.03)' : 'scale(1)',
           transition: 'transform 0.45s ease',
           pointerEvents: 'none',
         }}

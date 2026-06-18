@@ -20,11 +20,14 @@ export default function PropertyDetailPage() {
   const property = properties.find((p) => p.id === propertyId);
 
   const handleNavigate = (page: PageType) => {
-    if (page === 'home') {
-      window.location.href = '/';
-    } else {
-      setCurrentPage(page);
-    }
+    const routes: Partial<Record<PageType, string>> = {
+      home:          '/',
+      propiedades:   '/propiedades',
+      consignacion:  '/consignacion',
+      inversionistas:'/inversionistas',
+      blog:          '/blog',
+    };
+    window.location.href = routes[page] ?? '/';
   };
 
   useEffect(() => {
