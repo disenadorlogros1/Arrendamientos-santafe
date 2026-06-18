@@ -569,11 +569,13 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', onApply }:
           })}
         </div>
 
-        {/* ── Fila 2: Celdas de filtros — mismo look que hero ───────── */}
-        <div style={{ display: 'flex', borderBottom: DIVIDER }}>
+        {/* ── Grid único: filtros principales + avanzados alineados ─── */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)' }}>
 
-          {/* Código inmueble */}
-          <div style={{ flex: 1, borderRight: DIVIDER }}>
+          {/* ── Fila principal ──────────────────────────────────────── */}
+
+          {/* Col 1: Código inmueble */}
+          <div style={{ borderRight: DIVIDER, borderBottom: DIVIDER }}>
             <div style={contentStyle}>
               <img src="/icons/icon-code-red.gif" alt="" width={24} height={24} style={{ flexShrink: 0 }} />
               <div style={{ minWidth: 0, flex: 1 }}>
@@ -590,8 +592,8 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', onApply }:
             </div>
           </div>
 
-          {/* Ubicación */}
-          <div style={{ flex: 1, borderRight: DIVIDER }}>
+          {/* Col 2: Ubicación */}
+          <div style={{ borderRight: DIVIDER, borderBottom: DIVIDER }}>
             <div style={contentStyle}>
               <img src="/icons/icon-location-red.gif" alt="" width={24} height={24} style={{ flexShrink: 0 }} />
               <div style={{ minWidth: 0, flex: 1 }}>
@@ -601,8 +603,8 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', onApply }:
             </div>
           </div>
 
-          {/* Tipo de propiedad */}
-          <div style={{ flex: 1, borderRight: DIVIDER }}>
+          {/* Col 3: Tipo de propiedad */}
+          <div style={{ borderRight: DIVIDER, borderBottom: DIVIDER }}>
             <div style={contentStyle}>
               <img src="/icons/icon-home-red.gif" alt="" width={24} height={24} style={{ flexShrink: 0 }} />
               <div style={{ minWidth: 0, flex: 1 }}>
@@ -612,8 +614,8 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', onApply }:
             </div>
           </div>
 
-          {/* Precio */}
-          <div style={{ flex: 1 }}>
+          {/* Col 4: Precio */}
+          <div style={{ borderBottom: DIVIDER }}>
             <div style={contentStyle}>
               <img src="/icons/icon-dollar-red.gif" alt="" width={24} height={24} style={{ flexShrink: 0, alignSelf: 'flex-start', marginTop: '2px' }} />
               <div style={{ minWidth: 0, flex: 1 }}>
@@ -623,101 +625,97 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', onApply }:
             </div>
           </div>
 
-        </div>
+          {/* ── Filtros avanzados (mismas columnas del grid) ─────────── */}
+          {showAdvanced && <>
 
-        {/* ── Panel búsqueda avanzada — un solo grid de 4 cols ────────── */}
-        {showAdvanced && (
-          <div style={{ borderBottom: DIVIDER }}>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)' }}>
-
-              {/* Fila 1 — Col 1: Habitaciones */}
-              <div style={{ borderRight: DIVIDER, borderBottom: DIVIDER }}>
-                <div style={advContentStyle}>
-                  <img src="/icons/icon-bed-red.gif" alt="" width={24} height={24} style={{ flexShrink: 0, marginTop: '2px' }} />
-                  <div style={{ minWidth: 0, flex: 1 }}>
-                    <p style={labelStyle}>Habitaciones</p>
-                    <div style={{ display: 'flex', gap: '5px', marginTop: '6px', flexWrap: 'wrap' }}>
-                      {[1, 2, 3, 4, 5].map(n => (
-                        <Chip key={n} label={n === 5 ? '5+' : String(n)} active={habitaciones === n} onClick={() => setHabitaciones(habitaciones === n ? null : n)} />
-                      ))}
-                    </div>
+            {/* Fila adv-1 — Col 1: Habitaciones */}
+            <div style={{ borderRight: DIVIDER, borderBottom: DIVIDER }}>
+              <div style={advContentStyle}>
+                <img src="/icons/icon-bed-red.gif" alt="" width={24} height={24} style={{ flexShrink: 0, marginTop: '2px' }} />
+                <div style={{ minWidth: 0, flex: 1 }}>
+                  <p style={labelStyle}>Habitaciones</p>
+                  <div style={{ display: 'flex', gap: '5px', marginTop: '6px', flexWrap: 'wrap' }}>
+                    {[1, 2, 3, 4, 5].map(n => (
+                      <Chip key={n} label={n === 5 ? '5+' : String(n)} active={habitaciones === n} onClick={() => setHabitaciones(habitaciones === n ? null : n)} />
+                    ))}
                   </div>
                 </div>
               </div>
-
-              {/* Fila 1 — Col 2: Baños */}
-              <div style={{ borderRight: DIVIDER, borderBottom: DIVIDER }}>
-                <div style={advContentStyle}>
-                  <img src="/icons/icon-bathroom-red.gif" alt="" width={24} height={24} style={{ flexShrink: 0, marginTop: '2px' }} />
-                  <div style={{ minWidth: 0, flex: 1 }}>
-                    <p style={labelStyle}>Baños</p>
-                    <div style={{ display: 'flex', gap: '5px', marginTop: '6px', flexWrap: 'wrap' }}>
-                      {[1, 2, 3, 4].map(n => (
-                        <Chip key={n} label={n === 4 ? '4+' : String(n)} active={banos === n} onClick={() => setBanos(banos === n ? null : n)} />
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Fila 1 — Col 3: Parqueadero */}
-              <div style={{ borderRight: DIVIDER, borderBottom: DIVIDER }}>
-                <div style={advContentStyle}>
-                  <img src="/icons/icon-sliders-red.gif" alt="" width={24} height={24} style={{ flexShrink: 0, marginTop: '2px' }} />
-                  <div style={{ minWidth: 0, flex: 1 }}>
-                    <p style={labelStyle}>Parqueadero</p>
-                    <div style={{ display: 'flex', gap: '5px', marginTop: '6px', flexWrap: 'nowrap' }}>
-                      <Chip label="Con parqueadero" active={parqueadero === 'con'} onClick={() => setParqueadero(parqueadero === 'con' ? null : 'con')} />
-                      <Chip label="Sin parqueadero" active={parqueadero === 'sin'} onClick={() => setParqueadero(parqueadero === 'sin' ? null : 'sin')} />
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Fila 1 — Col 4: Área */}
-              <div style={{ borderBottom: DIVIDER }}>
-                <div style={advContentStyle}>
-                  <img src="/icons/icon-area-red.gif" alt="" width={24} height={24} style={{ flexShrink: 0, marginTop: '2px' }} />
-                  <div style={{ minWidth: 0, flex: 1 }}>
-                    <p style={labelStyle}>Área (m²)</p>
-                    <AreaSelect areaMin={areaMin} areaMax={areaMax} onChangeMin={setAreaMin} onChangeMax={setAreaMax} />
-                  </div>
-                </div>
-              </div>
-
-              {/* Fila 2 — Col 1: Estrato */}
-              <div style={{ borderRight: DIVIDER }}>
-                <div style={advContentStyle}>
-                  <img src="/icons/icon-code-red.gif" alt="" width={24} height={24} style={{ flexShrink: 0, marginTop: '2px' }} />
-                  <div style={{ minWidth: 0, flex: 1 }}>
-                    <p style={labelStyle}>Estrato</p>
-                    <div style={{ display: 'flex', gap: '4px', marginTop: '6px', flexWrap: 'nowrap' }}>
-                      {ESTRATOS.map(e => (
-                        <Chip key={e} label={e} active={estrato.includes(e)} onClick={() => toggleEstrato(e)} />
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Fila 2 — Col 2-4: Comodidades */}
-              <div style={{ gridColumn: 'span 3' }}>
-                <div style={advContentStyle}>
-                  <img src="/icons/icon-favorite-red.gif" alt="" width={24} height={24} style={{ flexShrink: 0, marginTop: '2px' }} />
-                  <div style={{ minWidth: 0, flex: 1 }}>
-                    <p style={labelStyle}>Comodidades</p>
-                    <div style={{ display: 'flex', gap: '5px', marginTop: '6px', flexWrap: 'wrap' }}>
-                      {COMODIDADES.map(c => (
-                        <Chip key={c} label={c} active={comodidades.includes(c)} onClick={() => toggleComodidad(c)} />
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </div>
-
             </div>
-          </div>
-        )}
+
+            {/* Fila adv-1 — Col 2: Baños */}
+            <div style={{ borderRight: DIVIDER, borderBottom: DIVIDER }}>
+              <div style={advContentStyle}>
+                <img src="/icons/icon-bathroom-red.gif" alt="" width={24} height={24} style={{ flexShrink: 0, marginTop: '2px' }} />
+                <div style={{ minWidth: 0, flex: 1 }}>
+                  <p style={labelStyle}>Baños</p>
+                  <div style={{ display: 'flex', gap: '5px', marginTop: '6px', flexWrap: 'wrap' }}>
+                    {[1, 2, 3, 4].map(n => (
+                      <Chip key={n} label={n === 4 ? '4+' : String(n)} active={banos === n} onClick={() => setBanos(banos === n ? null : n)} />
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Fila adv-1 — Col 3: Parqueadero */}
+            <div style={{ borderRight: DIVIDER, borderBottom: DIVIDER }}>
+              <div style={advContentStyle}>
+                <img src="/icons/icon-sliders-red.gif" alt="" width={24} height={24} style={{ flexShrink: 0, marginTop: '2px' }} />
+                <div style={{ minWidth: 0, flex: 1 }}>
+                  <p style={labelStyle}>Parqueadero</p>
+                  <div style={{ display: 'flex', gap: '5px', marginTop: '6px', flexWrap: 'nowrap' }}>
+                    <Chip label="Con parqueadero" active={parqueadero === 'con'} onClick={() => setParqueadero(parqueadero === 'con' ? null : 'con')} />
+                    <Chip label="Sin parqueadero" active={parqueadero === 'sin'} onClick={() => setParqueadero(parqueadero === 'sin' ? null : 'sin')} />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Fila adv-1 — Col 4: Área */}
+            <div style={{ borderBottom: DIVIDER }}>
+              <div style={advContentStyle}>
+                <img src="/icons/icon-area-red.gif" alt="" width={24} height={24} style={{ flexShrink: 0, marginTop: '2px' }} />
+                <div style={{ minWidth: 0, flex: 1 }}>
+                  <p style={labelStyle}>Área (m²)</p>
+                  <AreaSelect areaMin={areaMin} areaMax={areaMax} onChangeMin={setAreaMin} onChangeMax={setAreaMax} />
+                </div>
+              </div>
+            </div>
+
+            {/* Fila adv-2 — Col 1: Estrato */}
+            <div style={{ borderRight: DIVIDER }}>
+              <div style={advContentStyle}>
+                <img src="/icons/icon-code-red.gif" alt="" width={24} height={24} style={{ flexShrink: 0, marginTop: '2px' }} />
+                <div style={{ minWidth: 0, flex: 1 }}>
+                  <p style={labelStyle}>Estrato</p>
+                  <div style={{ display: 'flex', gap: '4px', marginTop: '6px', flexWrap: 'nowrap' }}>
+                    {ESTRATOS.map(e => (
+                      <Chip key={e} label={e} active={estrato.includes(e)} onClick={() => toggleEstrato(e)} />
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Fila adv-2 — Col 2-4: Comodidades */}
+            <div style={{ gridColumn: 'span 3' }}>
+              <div style={advContentStyle}>
+                <img src="/icons/icon-favorite-red.gif" alt="" width={24} height={24} style={{ flexShrink: 0, marginTop: '2px' }} />
+                <div style={{ minWidth: 0, flex: 1 }}>
+                  <p style={labelStyle}>Comodidades</p>
+                  <div style={{ display: 'flex', gap: '5px', marginTop: '6px', flexWrap: 'wrap' }}>
+                    {COMODIDADES.map(c => (
+                      <Chip key={c} label={c} active={comodidades.includes(c)} onClick={() => toggleComodidad(c)} />
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </>}
+
+        </div>
 
         {/* ── Fila 3: Acciones — dos botones iguales ───────────────── */}
         <div style={{ display: 'flex', height: '48px' }}>
