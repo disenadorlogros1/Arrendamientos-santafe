@@ -24,7 +24,7 @@ export default function PropertyCard({ property }: PropertyCardProps) {
       className="flex flex-col h-full rounded-lg overflow-hidden"
       style={{
         boxShadow: isHovered
-          ? '0 0 28px rgba(0,0,0,0.26)'
+          ? '0 0 28px rgba(0,0,0,0.40)'
           : '0 1px 4px rgba(0,0,0,0.06)',
         transition: 'box-shadow 0.3s ease',
       }}
