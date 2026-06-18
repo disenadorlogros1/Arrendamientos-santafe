@@ -414,7 +414,7 @@ function Chip({ label, active, onClick }: { label: string; active: boolean; onCl
       type="button"
       onClick={onClick}
       style={{
-        padding: '5px 14px',
+        padding: '3px 12px',
         border: `1px solid ${active ? RED : 'rgba(0,0,0,0.12)'}`,
         background: active ? RED : 'transparent',
         color: active ? '#fff' : '#b8b8b8',
@@ -456,8 +456,10 @@ const advContentStyle: React.CSSProperties = {
   display: 'flex',
   alignItems: 'flex-start',
   gap: '12px',
-  padding: '14px 20px',
+  padding: '8px 20px',
+  height: `${CELL_H}px`,
   minWidth: 0,
+  overflow: 'hidden',
 };
 
 /* ── Componente principal ────────────────────────────────────────────── */
@@ -472,7 +474,7 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', onApply }:
   const [codigo,        setCodigo]        = useState('');
   const [sector,        setSector]        = useState('');
   const [tipoPropiedad, setTipoPropiedad] = useState('');
-  const [precioRange,   setPrecioRange]   = useState<[number, number]>([0, 15_000_000]);
+  const [precioRange,   setPrecioRange]   = useState<[number, number]>(initialTipo === 'Comprar' ? [30_000_000, 500_000_000] : [0, 15_000_000]);
   const [showAdvanced,  setShowAdvanced]  = useState(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
 
@@ -484,7 +486,10 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', onApply }:
   const [estrato,      setEstrato]      = useState<string[]>([]);
   const [comodidades,  setComodidades]  = useState<string[]>([]);
 
-  useEffect(() => { setTipo(initialTipo); }, [initialTipo]);
+  useEffect(() => {
+    setTipo(initialTipo);
+    setPrecioRange(initialTipo === 'Comprar' ? [30_000_000, 500_000_000] : [0, 15_000_000]);
+  }, [initialTipo]);
 
   // Cierra búsqueda avanzada al hacer clic fuera del componente
   useEffect(() => {
@@ -634,7 +639,7 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', onApply }:
                 <img src="/icons/icon-bed-red.gif" alt="" width={24} height={24} style={{ flexShrink: 0, marginTop: '2px' }} />
                 <div style={{ minWidth: 0, flex: 1 }}>
                   <p style={labelStyle}>Habitaciones</p>
-                  <div style={{ display: 'flex', gap: '5px', marginTop: '6px', flexWrap: 'wrap' }}>
+                  <div style={{ display: 'flex', gap: '5px', marginTop: '4px', flexWrap: 'wrap' }}>
                     {[1, 2, 3, 4, 5].map(n => (
                       <Chip key={n} label={n === 5 ? '5+' : String(n)} active={habitaciones === n} onClick={() => setHabitaciones(habitaciones === n ? null : n)} />
                     ))}
@@ -649,7 +654,7 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', onApply }:
                 <img src="/icons/icon-bathroom-red.gif" alt="" width={24} height={24} style={{ flexShrink: 0, marginTop: '2px' }} />
                 <div style={{ minWidth: 0, flex: 1 }}>
                   <p style={labelStyle}>Baños</p>
-                  <div style={{ display: 'flex', gap: '5px', marginTop: '6px', flexWrap: 'wrap' }}>
+                  <div style={{ display: 'flex', gap: '5px', marginTop: '4px', flexWrap: 'wrap' }}>
                     {[1, 2, 3, 4].map(n => (
                       <Chip key={n} label={n === 4 ? '4+' : String(n)} active={banos === n} onClick={() => setBanos(banos === n ? null : n)} />
                     ))}
@@ -664,7 +669,7 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', onApply }:
                 <img src="/icons/icon-sliders-red.gif" alt="" width={24} height={24} style={{ flexShrink: 0, marginTop: '2px' }} />
                 <div style={{ minWidth: 0, flex: 1 }}>
                   <p style={labelStyle}>Parqueadero</p>
-                  <div style={{ display: 'flex', gap: '5px', marginTop: '6px', flexWrap: 'nowrap' }}>
+                  <div style={{ display: 'flex', gap: '5px', marginTop: '4px', flexWrap: 'nowrap' }}>
                     <Chip label="Con parqueadero" active={parqueadero === 'con'} onClick={() => setParqueadero(parqueadero === 'con' ? null : 'con')} />
                     <Chip label="Sin parqueadero" active={parqueadero === 'sin'} onClick={() => setParqueadero(parqueadero === 'sin' ? null : 'sin')} />
                   </div>
@@ -689,7 +694,7 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', onApply }:
                 <img src="/icons/icon-code-red.gif" alt="" width={24} height={24} style={{ flexShrink: 0, marginTop: '2px' }} />
                 <div style={{ minWidth: 0, flex: 1 }}>
                   <p style={labelStyle}>Estrato</p>
-                  <div style={{ display: 'flex', gap: '4px', marginTop: '6px', flexWrap: 'nowrap' }}>
+                  <div style={{ display: 'flex', gap: '4px', marginTop: '4px', flexWrap: 'nowrap' }}>
                     {ESTRATOS.map(e => (
                       <Chip key={e} label={e} active={estrato.includes(e)} onClick={() => toggleEstrato(e)} />
                     ))}
@@ -704,7 +709,7 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', onApply }:
                 <img src="/icons/icon-favorite-red.gif" alt="" width={24} height={24} style={{ flexShrink: 0, marginTop: '2px' }} />
                 <div style={{ minWidth: 0, flex: 1 }}>
                   <p style={labelStyle}>Comodidades</p>
-                  <div style={{ display: 'flex', gap: '5px', marginTop: '6px', flexWrap: 'wrap' }}>
+                  <div style={{ display: 'flex', gap: '5px', marginTop: '4px', flexWrap: 'wrap' }}>
                     {COMODIDADES.map(c => (
                       <Chip key={c} label={c} active={comodidades.includes(c)} onClick={() => toggleComodidad(c)} />
                     ))}
