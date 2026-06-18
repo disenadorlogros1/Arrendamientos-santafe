@@ -625,14 +625,13 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', onApply }:
 
         </div>
 
-        {/* ── Panel búsqueda avanzada — 4 columnas con íconos ─────────── */}
+        {/* ── Panel búsqueda avanzada — un solo grid de 4 cols ────────── */}
         {showAdvanced && (
           <div style={{ borderBottom: DIVIDER }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)' }}>
 
-            {/* Fila 1: Habitaciones · Baños · Parqueadero · Área */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', borderBottom: DIVIDER }}>
-
-              <div style={{ borderRight: DIVIDER }}>
+              {/* Fila 1 — Col 1: Habitaciones */}
+              <div style={{ borderRight: DIVIDER, borderBottom: DIVIDER }}>
                 <div style={advContentStyle}>
                   <img src="/icons/icon-bed-red.gif" alt="" width={24} height={24} style={{ flexShrink: 0, marginTop: '2px' }} />
                   <div style={{ minWidth: 0, flex: 1 }}>
@@ -646,7 +645,8 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', onApply }:
                 </div>
               </div>
 
-              <div style={{ borderRight: DIVIDER }}>
+              {/* Fila 1 — Col 2: Baños */}
+              <div style={{ borderRight: DIVIDER, borderBottom: DIVIDER }}>
                 <div style={advContentStyle}>
                   <img src="/icons/icon-bathroom-red.gif" alt="" width={24} height={24} style={{ flexShrink: 0, marginTop: '2px' }} />
                   <div style={{ minWidth: 0, flex: 1 }}>
@@ -660,7 +660,8 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', onApply }:
                 </div>
               </div>
 
-              <div style={{ borderRight: DIVIDER }}>
+              {/* Fila 1 — Col 3: Parqueadero */}
+              <div style={{ borderRight: DIVIDER, borderBottom: DIVIDER }}>
                 <div style={advContentStyle}>
                   <img src="/icons/icon-sliders-red.gif" alt="" width={24} height={24} style={{ flexShrink: 0, marginTop: '2px' }} />
                   <div style={{ minWidth: 0, flex: 1 }}>
@@ -673,7 +674,8 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', onApply }:
                 </div>
               </div>
 
-              <div>
+              {/* Fila 1 — Col 4: Área */}
+              <div style={{ borderBottom: DIVIDER }}>
                 <div style={advContentStyle}>
                   <img src="/icons/icon-area-red.gif" alt="" width={24} height={24} style={{ flexShrink: 0, marginTop: '2px' }} />
                   <div style={{ minWidth: 0, flex: 1 }}>
@@ -683,11 +685,7 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', onApply }:
                 </div>
               </div>
 
-            </div>
-
-            {/* Fila 2: Estrato · Comodidades */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)' }}>
-
+              {/* Fila 2 — Col 1: Estrato */}
               <div style={{ borderRight: DIVIDER }}>
                 <div style={advContentStyle}>
                   <img src="/icons/icon-code-red.gif" alt="" width={24} height={24} style={{ flexShrink: 0, marginTop: '2px' }} />
@@ -702,6 +700,7 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', onApply }:
                 </div>
               </div>
 
+              {/* Fila 2 — Col 2-4: Comodidades */}
               <div style={{ gridColumn: 'span 3' }}>
                 <div style={advContentStyle}>
                   <img src="/icons/icon-favorite-red.gif" alt="" width={24} height={24} style={{ flexShrink: 0, marginTop: '2px' }} />
@@ -717,7 +716,6 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', onApply }:
               </div>
 
             </div>
-
           </div>
         )}
 
