@@ -720,6 +720,12 @@ input[type="range"]::-moz-range-track {
   line-height: inherit !important;
 }
 
+@media (min-width: 640px) {
+  .hero-title-split {
+    line-height: 1.2 !important;
+  }
+}
+
 @media (max-width: 1023px) {
   .hero-title-split,
   .featured-title-split,
