@@ -17,8 +17,17 @@ interface PropertyGalleryProps {
 function Lightbox({ images, startIndex, onClose }: {
   images: string[]; startIndex: number; onClose: () => void;
 }) {
-  const [idx, setIdx] = useState(startIndex);
+  const [idx,     setIdx]     = useState(startIndex);
+  const [entered, setEntered] = useState(false);
   const thumbsRef = useRef<HTMLDivElement>(null);
+
+  // Doble rAF: garantiza que React montó el DOM antes de arrancar la transición CSS
+  useEffect(() => {
+    const id = requestAnimationFrame(() =>
+      requestAnimationFrame(() => setEntered(true))
+    );
+    return () => cancelAnimationFrame(id);
+  }, []);
 
   const prev = useCallback(() => setIdx(i => (i - 1 + images.length) % images.length), [images.length]);
   const next = useCallback(() => setIdx(i => (i + 1) % images.length), [images.length]);
@@ -39,19 +48,28 @@ function Lightbox({ images, startIndex, onClose }: {
     active?.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
   }, [idx]);
 
+  // Easing Bento: aceleración exponencial similar a power3.out
+  const EASE = 'cubic-bezier(0.16, 1, 0.3, 1)';
+
   return createPortal(
+    /* ── Overlay — fade in ───────────────────────────────────── */
     <div
       style={{
         position: 'fixed', inset: 0, zIndex: 1000,
         background: 'rgba(0,0,0,0.97)',
         display: 'flex', flexDirection: 'column',
+        opacity: entered ? 1 : 0,
+        transition: `opacity 0.35s ease`,
       }}
       onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
     >
-      {/* Top bar */}
+      {/* ── Top bar — slide down ──────────────────────────────── */}
       <div style={{
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         padding: '14px 24px', flexShrink: 0,
+        opacity: entered ? 1 : 0,
+        transform: entered ? 'translateY(0)' : 'translateY(-16px)',
+        transition: `opacity 0.45s ${EASE} 0.06s, transform 0.45s ${EASE} 0.06s`,
       }}>
         <span style={{ fontFamily: FONT, fontSize: '13px', color: 'rgba(255,255,255,0.55)' }}>
           {idx + 1} / {images.length}
@@ -72,11 +90,14 @@ function Lightbox({ images, startIndex, onClose }: {
         </button>
       </div>
 
-      {/* Main image */}
+      {/* ── Main image — scale + fade (tarjeta Bento expandiéndose) */}
       <div style={{
         flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center',
         position: 'relative', overflow: 'hidden', padding: '0 72px',
         minHeight: 0,
+        opacity: entered ? 1 : 0,
+        transform: entered ? 'scale(1) translateY(0)' : 'scale(0.88) translateY(20px)',
+        transition: `opacity 0.55s ${EASE} 0.1s, transform 0.55s ${EASE} 0.1s`,
       }}>
         <button
           type="button"
@@ -100,7 +121,7 @@ function Lightbox({ images, startIndex, onClose }: {
           alt={`Foto ${idx + 1}`}
           style={{
             maxWidth: '100%', maxHeight: '100%',
-            objectFit: 'contain', borderRadius: '4px',
+            objectFit: 'contain', borderRadius: '10px',
           }}
         />
 
@@ -121,12 +142,15 @@ function Lightbox({ images, startIndex, onClose }: {
         </button>
       </div>
 
-      {/* Thumbnails strip */}
+      {/* ── Thumbnails — slide up ─────────────────────────────── */}
       <div
         ref={thumbsRef}
         style={{
           display: 'flex', gap: '6px', padding: '14px 24px', flexShrink: 0,
           overflowX: 'auto', scrollbarWidth: 'thin',
+          opacity: entered ? 1 : 0,
+          transform: entered ? 'translateY(0)' : 'translateY(24px)',
+          transition: `opacity 0.45s ${EASE} 0.18s, transform 0.45s ${EASE} 0.18s`,
         }}
       >
         {images.map((img, i) => (
@@ -138,7 +162,7 @@ function Lightbox({ images, startIndex, onClose }: {
             style={{
               flexShrink: 0, width: '80px', height: '56px',
               border: i === idx ? `2px solid ${RED}` : '2px solid transparent',
-              borderRadius: '4px', overflow: 'hidden', cursor: 'pointer',
+              borderRadius: '8px', overflow: 'hidden', cursor: 'pointer',
               opacity: i === idx ? 1 : 0.5,
               transition: 'opacity 0.2s, border-color 0.2s',
               background: 'none', padding: 0,
@@ -175,20 +199,15 @@ export default function PropertyGallery({ images, title }: PropertyGalleryProps)
       {/* ── Accordion strip ──────────────────────────────────── */}
       <div style={{
         display: 'flex',
-        gap: '5px',
+        gap: '6px',
         height: '460px',
-        borderRadius: '10px',
-        overflow: 'hidden',
         marginBottom: '8px',
       }}>
         {gridImages.map((img, i) => {
           const isHov    = hoveredIdx === i;
           const anyHov   = hoveredIdx !== null;
 
-          // Default proportions: first image slightly wider
           const defaultGrow = i === 0 ? 1.6 : 1;
-
-          // Hover proportions: active expands, rest compress
           const growVal = anyHov
             ? (isHov ? 4 : (i === 0 ? 1.1 : 0.75))
             : defaultGrow;
@@ -206,6 +225,7 @@ export default function PropertyGallery({ images, title }: PropertyGalleryProps)
                 position: 'relative',
                 overflow: 'hidden',
                 cursor: 'pointer',
+                borderRadius: '10px',
                 transition: 'flex-grow 0.65s cubic-bezier(0.25, 1, 0.5, 1)',
               }}
               onMouseEnter={() => setHoveredIdx(i)}
