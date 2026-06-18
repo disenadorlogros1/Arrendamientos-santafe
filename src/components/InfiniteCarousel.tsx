@@ -143,7 +143,7 @@ export default function InfiniteCarousel({ properties }: InfiniteCarouselProps) 
       onMouseLeave={() => { isPaused.current = false; }}
     >
       {/* Track con clip — padding extra para que las sombras no se corten */}
-      <div ref={containerRef} style={{ overflow: 'hidden', width: '100%', paddingBottom: '32px', marginBottom: '-32px' }}>
+      <div ref={containerRef} style={{ overflow: 'hidden', width: '100%', paddingTop: '32px', marginTop: '-32px', paddingBottom: '32px', marginBottom: '-32px' }}>
         {CARD_W > 0 && (
           <div
             ref={trackRef}

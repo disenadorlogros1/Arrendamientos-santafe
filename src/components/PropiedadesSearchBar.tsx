@@ -2,7 +2,6 @@
 
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { createPortal } from 'react-dom';
-import { ChevronDown, ChevronUp } from 'lucide-react';
 
 /* ── Datos ─────────────────────────────────────────────────────────── */
 
@@ -400,6 +399,7 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', onApply }:
   const [tipoPropiedad, setTipoPropiedad] = useState('');
   const [precioRange,   setPrecioRange]   = useState<[number, number]>([0, 15_000_000]);
   const [showAdvanced,  setShowAdvanced]  = useState(false);
+  const wrapperRef = useRef<HTMLDivElement>(null);
 
   const [habitaciones, setHabitaciones] = useState<number | null>(null);
   const [banos,        setBanos]        = useState<number | null>(null);
@@ -410,6 +410,18 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', onApply }:
   const [comodidades,  setComodidades]  = useState<string[]>([]);
 
   useEffect(() => { setTipo(initialTipo); }, [initialTipo]);
+
+  // Cierra búsqueda avanzada al hacer clic fuera del componente
+  useEffect(() => {
+    if (!showAdvanced) return;
+    const handler = (e: MouseEvent) => {
+      if (wrapperRef.current && !wrapperRef.current.contains(e.target as Node)) {
+        setShowAdvanced(false);
+      }
+    };
+    const id = setTimeout(() => document.addEventListener('mousedown', handler), 0);
+    return () => { clearTimeout(id); document.removeEventListener('mousedown', handler); };
+  }, [showAdvanced]);
 
   const searchType: 'arrendar' | 'comprar' | null =
     tipo === 'Comprar' ? 'comprar' : tipo === 'Arrendar' ? 'arrendar' : null;
@@ -424,18 +436,21 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', onApply }:
   };
 
   const handleClear = () => {
+    const defaultRange: [number, number] = tipo === 'Comprar'
+      ? [30_000_000, 500_000_000]
+      : [0, 15_000_000];
     setCodigo(''); setSector(''); setTipoPropiedad('');
-    setPrecioRange([0, 15_000_000]);
+    setPrecioRange(defaultRange);
     setHabitaciones(null); setBanos(null); setParqueadero(null);
     setAreaMin(''); setAreaMax(''); setEstrato([]); setComodidades([]);
-    onApply({ ...DEFAULT_FILTERS, tipo });
+    onApply({ ...DEFAULT_FILTERS, tipo, precioMin: defaultRange[0], precioMax: defaultRange[1] });
   };
 
   const toggleEstrato   = (e: string) => setEstrato(prev => prev.includes(e) ? prev.filter(x => x !== e) : [...prev, e]);
   const toggleComodidad = (c: string) => setComodidades(prev => prev.includes(c) ? prev.filter(x => x !== c) : [...prev, c]);
 
   return (
-    <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '10px clamp(16px, 3vw, 52px)' }}>
+    <div ref={wrapperRef} style={{ maxWidth: '1400px', margin: '0 auto', padding: '10px clamp(16px, 3vw, 52px)' }}>
       <div style={{
         background: '#fff',
         border: '1px solid #e8e8e8',
@@ -537,11 +552,13 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', onApply }:
         {/* ── Panel búsqueda avanzada ───────────────────────────────── */}
         {showAdvanced && (
           <div style={{ padding: '20px 24px', borderBottom: DIVIDER, background: '#fafafa' }}>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '20px 32px' }}>
+
+            {/* Fila 1: Habitaciones · Baños · Parqueadero · Área */}
+            <div style={{ display: 'flex', gap: '32px', flexWrap: 'wrap', marginBottom: '20px' }}>
 
               <div>
                 <p style={advLabelStyle}>Habitaciones</p>
-                <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+                <div style={{ display: 'flex', gap: '6px' }}>
                   {[1, 2, 3, 4, 5].map(n => (
                     <Chip key={n} label={n === 5 ? '5+' : String(n)} active={habitaciones === n} onClick={() => setHabitaciones(habitaciones === n ? null : n)} />
                   ))}
@@ -550,7 +567,7 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', onApply }:
 
               <div>
                 <p style={advLabelStyle}>Baños</p>
-                <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+                <div style={{ display: 'flex', gap: '6px' }}>
                   {[1, 2, 3, 4].map(n => (
                     <Chip key={n} label={n === 4 ? '4+' : String(n)} active={banos === n} onClick={() => setBanos(banos === n ? null : n)} />
                   ))}
@@ -580,16 +597,21 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', onApply }:
                 </div>
               </div>
 
-              <div>
+            </div>
+
+            {/* Fila 2: Estrato + Comodidades en la misma línea */}
+            <div style={{ display: 'flex', gap: '48px', flexWrap: 'wrap', alignItems: 'flex-start' }}>
+
+              <div style={{ flexShrink: 0 }}>
                 <p style={advLabelStyle}>Estrato</p>
-                <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+                <div style={{ display: 'flex', gap: '6px' }}>
                   {ESTRATOS.map(e => (
                     <Chip key={e} label={e} active={estrato.includes(e)} onClick={() => toggleEstrato(e)} />
                   ))}
                 </div>
               </div>
 
-              <div style={{ gridColumn: '1 / -1' }}>
+              <div style={{ flex: 1, minWidth: 0 }}>
                 <p style={advLabelStyle}>Comodidades</p>
                 <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
                   {COMODIDADES.map(c => (
@@ -599,6 +621,7 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', onApply }:
               </div>
 
             </div>
+
           </div>
         )}
 
@@ -609,13 +632,12 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', onApply }:
             type="button"
             onClick={() => setShowAdvanced(v => !v)}
             style={{
-              display: 'flex', alignItems: 'center', gap: '6px',
+              display: 'flex', alignItems: 'center',
               background: 'transparent', border: 'none', cursor: 'pointer',
               padding: '0 20px',
               fontFamily: FONT, fontSize: '13px', color: '#555', fontWeight: 400,
             }}
           >
-            {showAdvanced ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
             Búsqueda avanzada
           </button>
 
