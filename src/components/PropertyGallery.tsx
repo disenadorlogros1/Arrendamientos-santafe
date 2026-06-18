@@ -21,7 +21,6 @@ function Lightbox({ images, startIndex, onClose }: {
   const [entered, setEntered] = useState(false);
   const startRef = useRef<HTMLDivElement>(null);
 
-  // Animación de entrada
   useEffect(() => {
     const id = requestAnimationFrame(() =>
       requestAnimationFrame(() => setEntered(true))
@@ -29,24 +28,16 @@ function Lightbox({ images, startIndex, onClose }: {
     return () => cancelAnimationFrame(id);
   }, []);
 
-  // Scroll a la foto inicial una vez visible
   useEffect(() => {
     if (!entered || !startRef.current) return;
     setTimeout(() => startRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' }), 350);
   }, [entered]);
 
-  // ESC cierra
   useEffect(() => {
     const h = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
     window.addEventListener('keydown', h);
     return () => window.removeEventListener('keydown', h);
   }, [onClose]);
-
-  // Columnas: round-robin para distribuir fotos y respetar orientación
-  const numCols = images.length <= 4 ? 2 : 3;
-  const columns: { img: string; globalIdx: number }[][] =
-    Array.from({ length: numCols }, () => []);
-  images.forEach((img, i) => columns[i % numCols].push({ img, globalIdx: i }));
 
   return createPortal(
     <div style={{
@@ -83,39 +74,35 @@ function Lightbox({ images, startIndex, onClose }: {
         </button>
       </div>
 
-      {/* Grid bento scrollable — columnas flex manuales */}
+      {/* Grid bento scrollable */}
       <div style={{
-        flex: 1, overflowY: 'auto', minHeight: 0,
+        flex: 1, overflowY: 'scroll', minHeight: 0,
         padding: '0 16px 24px',
         scrollbarWidth: 'thin', scrollbarColor: 'rgba(255,255,255,0.12) transparent',
-        opacity: entered ? 1 : 0,
-        transform: entered ? 'translateY(0)' : 'translateY(20px)',
-        transition: `opacity 0.5s ${EASE} 0.1s, transform 0.5s ${EASE} 0.1s`,
       }}>
-        <div style={{ display: 'flex', gap: '8px', alignItems: 'flex-start' }}>
-          {columns.map((col, colIdx) => (
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(3, 1fr)',
+          gap: '6px',
+        }}>
+          {images.map((img, i) => (
             <div
-              key={colIdx}
-              style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '8px' }}
+              key={i}
+              ref={i === startIndex ? startRef : undefined}
+              style={{
+                aspectRatio: '4/3',
+                overflow: 'hidden',
+                background: '#111',
+                outline: i === startIndex ? `3px solid ${RED}` : 'none',
+                outlineOffset: '-3px',
+              }}
             >
-              {col.map(({ img, globalIdx }) => (
-                <div
-                  key={globalIdx}
-                  ref={globalIdx === startIndex ? startRef : undefined}
-                  style={{
-                    outline: globalIdx === startIndex ? `3px solid ${RED}` : 'none',
-                    outlineOffset: '-3px',
-                    overflow: 'hidden',
-                  }}
-                >
-                  <img
-                    src={img}
-                    alt={`Foto ${globalIdx + 1}`}
-                    style={{ width: '100%', height: 'auto', display: 'block' }}
-                    loading="lazy"
-                  />
-                </div>
-              ))}
+              <img
+                src={img}
+                alt={`Foto ${i + 1}`}
+                loading="lazy"
+                style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+              />
             </div>
           ))}
         </div>
