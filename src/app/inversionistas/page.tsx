@@ -27,7 +27,7 @@ export default function Page() {
   return (
     <div className="min-h-screen flex flex-col">
       <Header currentPage="inversionistas" onNavigate={navigate} />
-      <main className="flex-1 relative" style={{ paddingTop: '43px' }}>
+      <main className="flex-1 relative" style={{ paddingTop: '86px' }}>
         <InversionistasPage />
       </main>
       <Footer onNavigate={navigate} />
