@@ -1,31 +1,12 @@
 // Fotos genéricas de interior para todas las propiedades hasta tener fotos reales por propiedad
+// Fotos genéricas de interiores — solo se usan si la propiedad no tiene images[]
 export const DEFAULT_INTERIOR_GALLERY = [
-  '/Propiedades/A11636.PNG',
-  '/Propiedades/A12439.PNG',
-  '/Propiedades/A12594.PNG',
-  '/Propiedades/A13098.PNG',
-  '/Propiedades/A13231.PNG',
-  '/Propiedades/A14011.PNG',
-  '/Propiedades/A14428.PNG',
-  '/Propiedades/A14527.PNG',
-  '/Propiedades/A14711.PNG',
-  '/Propiedades/A14923.PNG',
-  '/Propiedades/A15243.PNG',
-  '/Propiedades/A1551.PNG',
   '/Propiedades/sala-de-estar.webp',
-  '/Propiedades/sala-de-estar-_2_.webp',
   '/Propiedades/Sala de tv.webp',
   '/Propiedades/Habitación-principal.webp',
-  '/Propiedades/Habitación-principal-_2_.webp',
-  '/Propiedades/Habitación-principal-_3_.webp',
   '/Propiedades/Cocina.webp',
-  '/Propiedades/Cocina (2).webp',
-  '/Propiedades/Cocina (3).webp',
   '/Propiedades/baño.webp',
-  '/Propiedades/baño (3).webp',
-  '/Propiedades/baño (4).webp',
   '/Propiedades/cuarto de lavado.webp',
-  '/Propiedades/cuarto de lavado (2).webp',
 ];
 
 export interface Property {
@@ -93,6 +74,12 @@ export const properties: Property[] = [
     businessType: "Comprar",
     latitude: 6.2480,
     longitude: -75.5700,
+    images: [
+      '/Propiedades/A11636.PNG',
+      '/Propiedades/Cocina.webp',
+      '/Propiedades/baño.webp',
+      '/Propiedades/sala-de-estar.webp',
+    ],
   },
   {
     id: 2,
@@ -117,6 +104,16 @@ export const properties: Property[] = [
     businessType: "Comprar",
     latitude: 6.2240,
     longitude: -75.5710,
+    images: [
+      '/Propiedades/A12439.PNG',
+      '/Propiedades/sala-de-estar.webp',
+      '/Propiedades/sala-de-estar-_2_.webp',
+      '/Propiedades/Habitación-principal.webp',
+      '/Propiedades/Habitación-principal-_2_.webp',
+      '/Propiedades/Cocina.webp',
+      '/Propiedades/baño.webp',
+      '/Propiedades/cuarto de lavado.webp',
+    ],
   },
   {
     id: 3,
@@ -141,6 +138,15 @@ export const properties: Property[] = [
     businessType: "Comprar",
     latitude: 6.2240,
     longitude: -75.5710,
+    images: [
+      '/Propiedades/A12594.PNG',
+      '/Propiedades/sala-de-estar.webp',
+      '/Propiedades/Sala de tv.webp',
+      '/Propiedades/Habitación-principal.webp',
+      '/Propiedades/Cocina (2).webp',
+      '/Propiedades/baño (3).webp',
+      '/Propiedades/cuarto de lavado.webp',
+    ],
   },
   {
     id: 4,
@@ -165,6 +171,18 @@ export const properties: Property[] = [
     businessType: "Comprar",
     latitude: 6.2480,
     longitude: -75.5890,
+    images: [
+      '/Propiedades/A13098.PNG',
+      '/Propiedades/sala-de-estar.webp',
+      '/Propiedades/sala-de-estar-_2_.webp',
+      '/Propiedades/Sala de tv.webp',
+      '/Propiedades/Habitación-principal.webp',
+      '/Propiedades/Habitación-principal-_3_.webp',
+      '/Propiedades/Cocina.webp',
+      '/Propiedades/baño.webp',
+      '/Propiedades/baño (4).webp',
+      '/Propiedades/cuarto de lavado (2).webp',
+    ],
   },
   {
     id: 5,
@@ -189,6 +207,11 @@ export const properties: Property[] = [
     businessType: "Arrendar",
     latitude: 6.5538,
     longitude: -75.8133,
+    images: [
+      '/Propiedades/A13231.PNG',
+      '/Propiedades/Cocina (3).webp',
+      '/Propiedades/baño (4).webp',
+    ],
   },
   {
     id: 6,
@@ -213,6 +236,14 @@ export const properties: Property[] = [
     businessType: "Arrendar",
     latitude: 6.2476,
     longitude: -75.5695,
+    images: [
+      '/Propiedades/A14011.PNG',
+      '/Propiedades/sala-de-estar.webp',
+      '/Propiedades/Habitación-principal-_2_.webp',
+      '/Propiedades/Cocina.webp',
+      '/Propiedades/baño.webp',
+      '/Propiedades/cuarto de lavado.webp',
+    ],
   },
   {
     id: 7,
@@ -237,6 +268,11 @@ export const properties: Property[] = [
     businessType: "Arrendar",
     latitude: 6.2690,
     longitude: -75.5520,
+    images: [
+      '/Propiedades/A14428.PNG',
+      '/Propiedades/Cocina (2).webp',
+      '/Propiedades/baño (3).webp',
+    ],
   },
   {
     id: 8,
@@ -261,6 +297,14 @@ export const properties: Property[] = [
     businessType: "Arrendar",
     latitude: 6.2530,
     longitude: -75.5440,
+    images: [
+      '/Propiedades/A15243.PNG',
+      '/Propiedades/Sala de tv.webp',
+      '/Propiedades/Habitación-principal.webp',
+      '/Propiedades/Cocina (3).webp',
+      '/Propiedades/baño.webp',
+      '/Propiedades/cuarto de lavado (2).webp',
+    ],
   },
   {
     id: 9,
@@ -285,6 +329,13 @@ export const properties: Property[] = [
     businessType: "Arrendar",
     latitude: 6.2290,
     longitude: -75.5670,
+    images: [
+      '/Propiedades/A14527.PNG',
+      '/Propiedades/sala-de-estar.webp',
+      '/Propiedades/Cocina.webp',
+      '/Propiedades/Habitación-principal-_2_.webp',
+      '/Propiedades/baño (3).webp',
+    ],
   },
   {
     id: 10,
@@ -309,6 +360,14 @@ export const properties: Property[] = [
     businessType: "Arrendar",
     latitude: 6.2292,
     longitude: -75.5672,
+    images: [
+      '/Propiedades/A14711.PNG',
+      '/Propiedades/sala-de-estar-_2_.webp',
+      '/Propiedades/Cocina (2).webp',
+      '/Propiedades/Habitación-principal.webp',
+      '/Propiedades/baño (4).webp',
+      '/Propiedades/cuarto de lavado.webp',
+    ],
   },
   {
     id: 11,
@@ -333,6 +392,19 @@ export const properties: Property[] = [
     businessType: "Arrendar",
     latitude: 6.2688,
     longitude: -75.5525,
+    images: [
+      '/Propiedades/A14923.PNG',
+      '/Propiedades/sala-de-estar.webp',
+      '/Propiedades/sala-de-estar-_2_.webp',
+      '/Propiedades/Sala de tv.webp',
+      '/Propiedades/Habitación-principal.webp',
+      '/Propiedades/Habitación-principal-_2_.webp',
+      '/Propiedades/Habitación-principal-_3_.webp',
+      '/Propiedades/Cocina.webp',
+      '/Propiedades/baño.webp',
+      '/Propiedades/baño (3).webp',
+      '/Propiedades/cuarto de lavado (2).webp',
+    ],
   },
   {
     id: 12,
@@ -357,6 +429,12 @@ export const properties: Property[] = [
     businessType: "Arrendar",
     latitude: 6.2690,
     longitude: -75.5530,
+    images: [
+      '/Propiedades/A1551.PNG',
+      '/Propiedades/Sala de tv.webp',
+      '/Propiedades/Cocina (3).webp',
+      '/Propiedades/baño.webp',
+    ],
   },
 ];
 
