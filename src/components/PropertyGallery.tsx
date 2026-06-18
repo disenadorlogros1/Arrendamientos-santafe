@@ -108,29 +108,32 @@ function Lightbox({ images, startIndex, onClose }: {
             </button>
           </div>
 
-          {/* Masonry bento grid */}
+          {/* Masonry bento grid — scroll wrapper separado del columnCount */}
           <div
             ref={gridRef}
             style={{
-              flex: 1, overflowY: 'auto', padding: '0 16px 20px',
-              columnCount: cols, columnGap: '8px',
+              flex: 1, overflowY: 'auto', minHeight: 0,
+              scrollbarWidth: 'thin', scrollbarColor: 'rgba(255,255,255,0.15) transparent',
               opacity: entered ? 1 : 0,
               transform: entered ? 'translateY(0)' : 'translateY(22px)',
               transition: `opacity 0.5s ${EASE} 0.1s, transform 0.5s ${EASE} 0.1s`,
-              // Scrollbar discreta
-              scrollbarWidth: 'thin', scrollbarColor: 'rgba(255,255,255,0.15) transparent',
             }}
           >
-            {images.map((img, i) => (
-              <GridCell
-                key={i}
-                img={img}
-                index={i}
-                isStart={i === startIndex}
-                cellRef={el => { cellRefs.current[i] = el; }}
-                onClick={() => openViewer(i)}
-              />
-            ))}
+            <div style={{
+              columnCount: cols, columnGap: '8px',
+              padding: '0 16px 20px',
+            }}>
+              {images.map((img, i) => (
+                <GridCell
+                  key={i}
+                  img={img}
+                  index={i}
+                  isStart={i === startIndex}
+                  cellRef={el => { cellRefs.current[i] = el; }}
+                  onClick={() => openViewer(i)}
+                />
+              ))}
+            </div>
           </div>
         </>
       )}
