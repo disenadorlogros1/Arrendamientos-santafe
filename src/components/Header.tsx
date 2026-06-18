@@ -3,6 +3,22 @@
 import { useState, useEffect } from 'react';
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from '@/components/ui/sheet';
 
+function applyInkFill(e: React.MouseEvent<HTMLElement>) {
+  const el = e.currentTarget;
+  const rect = el.getBoundingClientRect();
+  const x = e.clientX - rect.left;
+  const y = e.clientY - rect.top;
+  const size = Math.max(
+    Math.hypot(x, y),
+    Math.hypot(rect.width - x, y),
+    Math.hypot(x, rect.height - y),
+    Math.hypot(rect.width - x, rect.height - y),
+  ) * 2;
+  el.style.setProperty('--x', `${x}px`);
+  el.style.setProperty('--y', `${y}px`);
+  el.style.setProperty('--size', `${size}px`);
+}
+
 export type PageType = 'home' | 'propiedades' | 'consignacion' | 'hipotecas' | 'servicios' | 'nosotros' | 'blog' | 'historia-60' | 'blog-article' | 'inversionistas' | 'politicas' | 'terminos';
 
 interface HeaderProps { currentPage: PageType; onNavigate: (page: PageType, filter?: string) => void; isHeroPage?: boolean; }
@@ -138,7 +154,7 @@ export default function Header({ currentPage, onNavigate, isHeroPage = true }: H
       <div className="flex items-center h-[58px] gap-3">
         {/* Logo */}
         <button onClick={() => handleNav('home')} className="shrink-0">
-          <img src="/icons/icon-santa-fe-logo.png" alt="Arrendamientos Santa Fe" className="h-10 md:h-11 w-auto object-contain drop-shadow-lg" style={{ filter: isHeroPage ? 'brightness(1)' : 'brightness(0.2)' }} />
+          <img src="/icons/icon-santa-fe-logo.png" alt="Arrendamientos Santa Fe" className="h-10 md:h-11 w-auto object-contain drop-shadow-lg" style={{ filter: isHeroPage ? 'none' : 'brightness(0.48) sepia(1) saturate(500%) hue-rotate(315deg) brightness(0.95)' }} />
         </button>
 
         {/* Nav capsula — ocupa el espacio central */}
@@ -157,10 +173,12 @@ export default function Header({ currentPage, onNavigate, isHeroPage = true }: H
               <div key={item.label} className="relative group flex-1">
                 <button
                   onClick={() => { if (item.page) handleNav(item.page); }}
-                  className="w-full px-2 py-2 text-sm font-medium rounded-full transition-all duration-300 ease-out hover:bg-brand-red group-hover:bg-brand-red group-hover:text-white"
-                  style={{ fontFamily: "'Avenir LT Pro', 'Outfit', system-ui, sans-serif", fontWeight: 300, color: headerTextColor }}
+                  onMouseEnter={applyInkFill}
+                  onMouseLeave={applyInkFill}
+                  className="nav-ink-btn w-full px-2 py-2 rounded-full"
+                  style={{ fontFamily: "'Avenir LT Pro', 'Outfit', system-ui, sans-serif", fontWeight: 300, fontSize: '15px', color: headerTextColor }}
                 >
-                  {item.label}
+                  <span>{item.label}</span>
                 </button>
                 {/* Dropdown CSS — se muestra con group-hover */}
                 <div className="absolute top-full left-1/2 pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200"
@@ -203,10 +221,12 @@ export default function Header({ currentPage, onNavigate, isHeroPage = true }: H
               <button
                 key={item.label}
                 onClick={() => handleNav(item.page || 'home')}
-                className={`flex-1 px-2 py-2 text-sm font-medium rounded-full transition-all duration-300 ease-out hover:bg-brand-red`}
-                style={{ fontFamily: "'Avenir LT Pro 35 Thin', 'Avenir LT Pro', 'Outfit', system-ui, sans-serif", color: headerTextColor }}
+                onMouseEnter={applyInkFill}
+                onMouseLeave={applyInkFill}
+                className="nav-ink-btn flex-1 px-2 py-2 rounded-full"
+                style={{ fontFamily: "'Avenir LT Pro', 'Outfit', system-ui, sans-serif", fontWeight: 300, fontSize: '15px', color: headerTextColor }}
               >
-                {item.label}
+                <span>{item.label}</span>
               </button>
             )
           )}

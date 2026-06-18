@@ -286,6 +286,41 @@ html.lenis, html.lenis body { height: auto; }
   z-index: 1;
 }
 
+/* Nav buttons: directional ink fill (same animation, transparent start) */
+.nav-ink-btn {
+  position: relative;
+  overflow: hidden;
+}
+
+.nav-ink-btn::before {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  background: #f32735;
+  width: var(--size, 200px);
+  height: var(--size, 200px);
+  left: var(--x, 50%);
+  top: var(--y, 50%);
+  transform: translate(-50%, -50%) scale(0);
+  transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.nav-ink-btn:hover::before {
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.nav-ink-btn > span {
+  position: relative;
+  z-index: 1;
+  transition: none;
+}
+
+.nav-ink-btn:hover > span {
+  color: #ffffff !important;
+}
+
 /* Card arrow button: 45° sliding arrow animation */
 .card-arrow-btn {
   position: relative;

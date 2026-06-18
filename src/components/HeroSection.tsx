@@ -134,8 +134,8 @@ export default function HeroSection({ onNavigate, searchFormSlot }: HeroSectionP
                   onClick={() => onNavigate?.('propiedades')}
                   onMouseEnter={applyInkFill}
                   onMouseLeave={applyInkFill}
-                  className="hero-btn-fill w-full sm:w-auto inline-flex items-center justify-center h-[42px] px-6 rounded-full text-sm"
-                  style={{ fontFamily: FONT_BODY, fontWeight: 300 }}
+                  className="hero-btn-fill w-full sm:w-auto inline-flex items-center justify-center h-[42px] px-6 rounded-full"
+                  style={{ fontFamily: "'Avenir LT Pro', 'Outfit', system-ui, sans-serif", fontWeight: 300, fontSize: '15px' }}
                 >
                   <span>Ver propiedades disponibles</span>
                 </button>
@@ -146,8 +146,8 @@ export default function HeroSection({ onNavigate, searchFormSlot }: HeroSectionP
                   rel="noopener noreferrer"
                   onMouseEnter={applyInkFill}
                   onMouseLeave={applyInkFill}
-                  className="hero-btn-fill w-full sm:w-auto inline-flex items-center justify-center h-[42px] px-6 rounded-full text-sm"
-                  style={{ fontFamily: FONT_BODY, fontWeight: 300, textDecoration: 'none' }}
+                  className="hero-btn-fill w-full sm:w-auto inline-flex items-center justify-center h-[42px] px-6 rounded-full"
+                  style={{ fontFamily: "'Avenir LT Pro', 'Outfit', system-ui, sans-serif", fontWeight: 300, fontSize: '15px', textDecoration: 'none' }}
                 >
                   <span>Hablar con un asesor</span>
                 </a>
