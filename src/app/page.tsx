@@ -125,7 +125,7 @@ export default function Home() {
     <div className="min-h-screen flex flex-col">
       <Header currentPage={currentPage} onNavigate={handleNavigate} />
 
-      <main className="flex-1 relative" style={{ paddingTop: currentPage === 'home' ? 0 : '43px' }}>
+      <main className="flex-1 relative" style={{ paddingTop: currentPage === 'home' ? 0 : '86px' }}>
         {currentPage === 'home' && <HomePage onNavigate={handleNavigate} />}
         {currentPage === 'propiedades' && <PropiedadesPage initialFilter={propiedadesFilter} />}
         {currentPage === 'consignacion' && <ConsignacionPage />}
