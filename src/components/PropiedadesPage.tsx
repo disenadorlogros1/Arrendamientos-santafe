@@ -115,7 +115,7 @@ export default function PropiedadesPage({ initialFilter = 'Todos' }: { initialFi
   return (
     <div className="min-h-screen" style={{ background: '#f7f6f4' }}>
       {/* Page Header */}
-      <div style={{ background: '#0d0d0d', padding: 'clamp(32px, 5vw, 56px) clamp(20px, 5vw, 80px) clamp(24px, 3vw, 40px)' }}>
+      <div style={{ background: '#0d0d0d', marginTop: '-43px', padding: 'calc(43px + clamp(32px, 5vw, 56px)) clamp(20px, 5vw, 80px) clamp(24px, 3vw, 40px)' }}>
         <div ref={titleRef}>
           <h1
             className="propiedades-title-split"

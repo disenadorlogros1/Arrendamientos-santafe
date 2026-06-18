@@ -82,7 +82,7 @@ export default function BlogPage({
   return (
     <div className="min-h-screen bg-white">
       {/* Page Header */}
-      <div className="bg-brand-dark py-12 md:py-16">
+      <div className="bg-brand-dark pb-12 md:pb-16" style={{ marginTop: '-43px', paddingTop: 'calc(43px + 48px)' }}>
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}

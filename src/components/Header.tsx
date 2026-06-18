@@ -54,11 +54,11 @@ const navItems: NavItem[] = [
     { label: 'Venta', page: 'propiedades', filter: 'Comprar' },
     { label: 'Para inversionistas', page: 'inversionistas' },
   ]},
-  { label: 'Servicios', children: [
+  { label: 'Servicios', page: 'servicios' as const, children: [
     { label: 'Solicitud de arrendamiento', href: SOLICITUD_ARRENDAMIENTO_URL },
     { label: 'Reportar reparación', href: REPARACIONES_URL },
   ]},
-  { label: 'Nosotros', children: [
+  { label: 'Nosotros', page: 'nosotros' as const, children: [
     { label: 'Quiénes somos', page: 'nosotros' },
     { label: 'Blog', page: 'blog' },
   ]},
