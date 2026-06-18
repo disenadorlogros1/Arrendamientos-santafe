@@ -572,13 +572,16 @@ select option {
   animation: slideHighlightFromLeft 4.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.42s forwards;
 }
 
-/* ── MOBILE: interlineado ajustado (10% reducción) ── */
+/* ── MOBILE: interlineado ajustado ── */
 @media (max-width: 1023px) {
   .hero-title-text {
     line-height: 1.08;
   }
   .hero-line-seg {
     margin-bottom: 0;
+  }
+  .hero-title-split {
+    line-height: 1.0 !important;
   }
 }
 
