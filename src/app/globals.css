@@ -616,7 +616,10 @@ select option {
     margin-bottom: 0;
   }
   .hero-title-split {
-    line-height: 1.0 !important;
+    line-height: 0.95 !important;
+  }
+  .hero-bold-span {
+    vertical-align: top;
   }
 }
 
