@@ -48,8 +48,10 @@ export default function PropertyDetailPage() {
     );
   }
 
-  // Galería: foto principal + interiores genéricos
-  const galleryImages = [property.image, ...DEFAULT_INTERIOR_GALLERY];
+  // Si la propiedad tiene fotos propias las usa; si no, cae en las genéricas
+  const galleryImages = property.images?.length
+    ? property.images
+    : [property.image, ...DEFAULT_INTERIOR_GALLERY];
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">

@@ -36,6 +36,7 @@ export interface Property {
   latitude?: number;
   longitude?: number;
   investmentZone?: "el-poblado" | "laureles" | "envigado" | "sabaneta";
+  images?: string[];
 }
 
 // Location to investment zone mapping
