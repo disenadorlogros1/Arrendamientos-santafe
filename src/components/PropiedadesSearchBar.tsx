@@ -452,13 +452,12 @@ const labelStyle: React.CSSProperties = {
   whiteSpace: 'nowrap',
 };
 
-const advLabelStyle: React.CSSProperties = {
-  fontFamily: FONT,
-  fontSize: '11px',
-  color: '#555',
-  fontWeight: 500,
-  marginBottom: '10px',
-  lineHeight: 1,
+const advContentStyle: React.CSSProperties = {
+  display: 'flex',
+  alignItems: 'flex-start',
+  gap: '12px',
+  padding: '14px 20px',
+  minWidth: 0,
 };
 
 /* ── Componente principal ────────────────────────────────────────────── */
@@ -634,8 +633,8 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', onApply }:
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', borderBottom: DIVIDER }}>
 
               <div style={{ borderRight: DIVIDER }}>
-                <div style={contentStyle}>
-                  <img src="/icons/icon-bed-red.gif" alt="" width={24} height={24} style={{ flexShrink: 0, alignSelf: 'flex-start', marginTop: '2px' }} />
+                <div style={advContentStyle}>
+                  <img src="/icons/icon-bed-red.gif" alt="" width={24} height={24} style={{ flexShrink: 0, marginTop: '2px' }} />
                   <div style={{ minWidth: 0, flex: 1 }}>
                     <p style={labelStyle}>Habitaciones</p>
                     <div style={{ display: 'flex', gap: '5px', marginTop: '6px', flexWrap: 'wrap' }}>
@@ -648,8 +647,8 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', onApply }:
               </div>
 
               <div style={{ borderRight: DIVIDER }}>
-                <div style={contentStyle}>
-                  <img src="/icons/icon-bathroom-red.gif" alt="" width={24} height={24} style={{ flexShrink: 0, alignSelf: 'flex-start', marginTop: '2px' }} />
+                <div style={advContentStyle}>
+                  <img src="/icons/icon-bathroom-red.gif" alt="" width={24} height={24} style={{ flexShrink: 0, marginTop: '2px' }} />
                   <div style={{ minWidth: 0, flex: 1 }}>
                     <p style={labelStyle}>Baños</p>
                     <div style={{ display: 'flex', gap: '5px', marginTop: '6px', flexWrap: 'wrap' }}>
@@ -662,8 +661,8 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', onApply }:
               </div>
 
               <div style={{ borderRight: DIVIDER }}>
-                <div style={contentStyle}>
-                  <img src="/icons/icon-sliders-red.gif" alt="" width={24} height={24} style={{ flexShrink: 0, alignSelf: 'flex-start', marginTop: '2px' }} />
+                <div style={advContentStyle}>
+                  <img src="/icons/icon-sliders-red.gif" alt="" width={24} height={24} style={{ flexShrink: 0, marginTop: '2px' }} />
                   <div style={{ minWidth: 0, flex: 1 }}>
                     <p style={labelStyle}>Parqueadero</p>
                     <div style={{ display: 'flex', gap: '5px', marginTop: '6px', flexWrap: 'wrap' }}>
@@ -675,8 +674,8 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', onApply }:
               </div>
 
               <div>
-                <div style={contentStyle}>
-                  <img src="/icons/icon-area-red.gif" alt="" width={24} height={24} style={{ flexShrink: 0, alignSelf: 'flex-start', marginTop: '2px' }} />
+                <div style={advContentStyle}>
+                  <img src="/icons/icon-area-red.gif" alt="" width={24} height={24} style={{ flexShrink: 0, marginTop: '2px' }} />
                   <div style={{ minWidth: 0, flex: 1 }}>
                     <p style={labelStyle}>Área (m²)</p>
                     <AreaSelect areaMin={areaMin} areaMax={areaMax} onChangeMin={setAreaMin} onChangeMax={setAreaMax} />
@@ -690,8 +689,8 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', onApply }:
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)' }}>
 
               <div style={{ borderRight: DIVIDER }}>
-                <div style={contentStyle}>
-                  <img src="/icons/icon-code-red.gif" alt="" width={24} height={24} style={{ flexShrink: 0, alignSelf: 'flex-start', marginTop: '2px' }} />
+                <div style={advContentStyle}>
+                  <img src="/icons/icon-code-red.gif" alt="" width={24} height={24} style={{ flexShrink: 0, marginTop: '2px' }} />
                   <div style={{ minWidth: 0, flex: 1 }}>
                     <p style={labelStyle}>Estrato</p>
                     <div style={{ display: 'flex', gap: '5px', marginTop: '6px', flexWrap: 'wrap' }}>
@@ -704,8 +703,8 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', onApply }:
               </div>
 
               <div style={{ gridColumn: 'span 3' }}>
-                <div style={contentStyle}>
-                  <img src="/icons/icon-favorite-red.gif" alt="" width={24} height={24} style={{ flexShrink: 0, alignSelf: 'flex-start', marginTop: '2px' }} />
+                <div style={advContentStyle}>
+                  <img src="/icons/icon-favorite-red.gif" alt="" width={24} height={24} style={{ flexShrink: 0, marginTop: '2px' }} />
                   <div style={{ minWidth: 0, flex: 1 }}>
                     <p style={labelStyle}>Comodidades</p>
                     <div style={{ display: 'flex', gap: '5px', marginTop: '6px', flexWrap: 'wrap' }}>

@@ -48,10 +48,11 @@ export default function PropertyDetailPage() {
     );
   }
 
-  // Si la propiedad tiene fotos propias las usa; si no, cae en las genéricas
+  // Si la propiedad tiene fotos propias las usa; si no, usa todas las de la carpeta
+  // (filtrando la foto principal para que no aparezca duplicada)
   const galleryImages = property.images?.length
     ? property.images
-    : [property.image, ...DEFAULT_INTERIOR_GALLERY];
+    : [property.image, ...DEFAULT_INTERIOR_GALLERY.filter(img => img !== property.image)];
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
