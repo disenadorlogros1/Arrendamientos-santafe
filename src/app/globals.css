@@ -200,6 +200,14 @@ html.lenis, html.lenis body { height: auto; }
   }
 }
 
+/* Placeholder unificado para campos de búsqueda */
+.search-field-input::placeholder {
+  color: #b8b8b8 !important;
+  font-size: 14px !important;
+  font-weight: 400 !important;
+  font-family: 'Avenir LT Std', 'Outfit', system-ui, sans-serif !important;
+}
+
 /* Custom scrollbar */
 .custom-scrollbar::-webkit-scrollbar {
   width: 6px;

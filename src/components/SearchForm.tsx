@@ -314,6 +314,7 @@ function CustomSelect({
           <input
             ref={inputRef}
             type="text"
+            className="search-field-input"
             value={open ? query : value}
             onChange={e => { setQuery(e.target.value); if (!open) openDropdown(); }}
             onFocus={openDropdown}
@@ -559,7 +560,8 @@ export default function SearchForm({ onNavigate }: SearchFormProps) {
                 value={codigo}
                 onChange={e => setCodigo(e.target.value)}
                 placeholder="Ej: 12345"
-                style={{ fontFamily: FONT, fontSize: '13px', color: codigo ? COLOR_VALUE : '#b8b8b8', background: 'transparent', border: 'none', outline: 'none', width: '100%', lineHeight: 1 }}
+                className="search-field-input"
+                style={{ fontFamily: FONT, fontSize: '14px', fontWeight: 400, color: codigo ? COLOR_VALUE : '#b8b8b8', background: 'transparent', border: 'none', outline: 'none', width: '100%', lineHeight: 1 }}
               />
             </div>
           </div>
@@ -644,7 +646,8 @@ export default function SearchForm({ onNavigate }: SearchFormProps) {
                   value={codigo}
                   onChange={e => setCodigo(e.target.value)}
                   placeholder="Ej: 12345"
-                  style={{ fontFamily: FONT, fontSize: '14px', color: codigo ? COLOR_VALUE : '#b8b8b8',
+                  className="search-field-input"
+                  style={{ fontFamily: FONT, fontSize: '14px', fontWeight: 400, color: codigo ? COLOR_VALUE : '#b8b8b8',
                     background: 'transparent', border: 'none', outline: 'none', width: '100%', lineHeight: 1 }}
                 />
               </div>

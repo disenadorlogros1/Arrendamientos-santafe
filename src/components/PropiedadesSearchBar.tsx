@@ -306,6 +306,7 @@ function CustomSelect({
         <input
           ref={inputRef}
           type="text"
+          className="search-field-input"
           value={open ? query : value}
           onChange={e => { setQuery(e.target.value); if (!open) openDropdown(); }}
           onFocus={openDropdown}
@@ -508,7 +509,8 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', onApply }:
                   value={codigo}
                   onChange={e => setCodigo(e.target.value)}
                   placeholder="Ej: A11636"
-                  style={{ fontFamily: FONT, fontSize: '14px', color: codigo ? COLOR_VALUE : '#b8b8b8', background: 'transparent', border: 'none', outline: 'none', width: '100%', lineHeight: 1 }}
+                  className="search-field-input"
+                  style={{ fontFamily: FONT, fontSize: '14px', fontWeight: 400, color: codigo ? COLOR_VALUE : '#b8b8b8', background: 'transparent', border: 'none', outline: 'none', width: '100%', lineHeight: 1 }}
                 />
               </div>
             </div>
