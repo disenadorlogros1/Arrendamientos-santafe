@@ -1,35 +1,43 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import BlogPage from '@/components/BlogPage';
 import type { PageType } from '@/components/Header';
 
+function navigate(page: PageType, filter?: string) {
+  if (page === 'propiedades') {
+    const suffix = filter === 'Arrendar' ? '-arrendar' : filter === 'Comprar' ? '-comprar' : '';
+    window.location.href = `/propiedades${suffix ? `#${suffix}` : ''}`;
+  } else if (page === 'blog') {
+    window.location.href = '/blog';
+  } else if (page === 'inversionistas') {
+    window.location.href = '/inversionistas';
+  } else if (page === 'consignacion') {
+    window.location.href = '/consignacion';
+  } else {
+    window.location.href = `/#${page}`;
+  }
+}
+
 export default function Page() {
-  const [currentPage, setCurrentPage] = useState<PageType>('blog');
+  const router = useRouter();
 
-  const handleNavigate = (page: PageType) => {
-    if (page === 'home') {
-      window.location.href = '/';
-    } else if (page === 'propiedades') {
-      window.location.href = '/propiedades';
-    } else {
-      setCurrentPage(page);
-    }
+  useEffect(() => { window.scrollTo({ top: 0, behavior: 'smooth' }); }, []);
+
+  const handleOpenArticle = (id: number) => {
+    router.push(`/#blog-article-${id}`);
   };
-
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, []);
 
   return (
     <div className="min-h-screen flex flex-col">
-      <Header currentPage={currentPage} onNavigate={handleNavigate} isHeroPage={false} />
-      <main className="flex-1 relative pt-[120px]">
-        <BlogPage />
+      <Header currentPage="blog" onNavigate={navigate} />
+      <main className="flex-1 relative" style={{ paddingTop: '43px' }}>
+        <BlogPage onNavigate={navigate} onOpenArticle={handleOpenArticle} />
       </main>
-      <Footer onNavigate={handleNavigate} />
+      <Footer onNavigate={navigate} />
     </div>
   );
 }

@@ -71,7 +71,7 @@ export default function Historia60Page({ onNavigate }: Props) {
     <div style={{ background: BG, minHeight: '100vh' }}>
 
       {/* ── Article Hero ─────────────────────────────────────── */}
-      <div style={{ background: '#0d0d0d', position: 'relative', overflow: 'hidden', marginTop: '-43px' }}>
+      <div style={{ background: '#0d0d0d', position: 'relative', overflow: 'hidden', marginTop: '-86px' }}>
         <span
           aria-hidden="true"
           style={{
@@ -85,7 +85,7 @@ export default function Historia60Page({ onNavigate }: Props) {
           }}
         >60</span>
 
-        <div style={{ position: 'relative', zIndex: 1, maxWidth: '900px', padding: 'calc(43px + 20px) clamp(20px, 5vw, 80px) 20px' }}>
+        <div style={{ position: 'relative', zIndex: 1, maxWidth: '900px', padding: 'calc(86px + 20px) clamp(20px, 5vw, 80px) 20px' }}>
           <button
             type="button"
             onClick={() => onNavigate('blog')}

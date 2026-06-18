@@ -115,7 +115,7 @@ export default function PropiedadesPage({ initialFilter = 'Todos' }: { initialFi
   return (
     <div className="min-h-screen" style={{ background: '#f7f6f4' }}>
       {/* Page Header */}
-      <div style={{ background: '#0d0d0d', marginTop: '-43px', padding: 'calc(43px + clamp(32px, 5vw, 56px)) clamp(20px, 5vw, 80px) clamp(24px, 3vw, 40px)' }}>
+      <div style={{ background: '#0d0d0d', marginTop: '-86px', padding: 'calc(86px + clamp(32px, 5vw, 56px)) clamp(20px, 5vw, 80px) clamp(24px, 3vw, 40px)' }}>
         <div ref={titleRef}>
           <h1
             className="propiedades-title-split"
@@ -151,7 +151,7 @@ export default function PropiedadesPage({ initialFilter = 'Todos' }: { initialFi
       </div>
 
       {/* Search Bar — sticky bajo el header */}
-      <div style={{ position: 'sticky', top: '43px', zIndex: 40 }}>
+      <div style={{ position: 'sticky', top: '86px', zIndex: 40 }}>
         <PropiedadesSearchBar
           initialTipo={initialTipo}
           onApply={setAppliedFilters}
