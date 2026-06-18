@@ -85,7 +85,7 @@ export default function Historia60Page({ onNavigate }: Props) {
           }}
         >60</span>
 
-        <div style={{ position: 'relative', zIndex: 1, maxWidth: '900px', padding: '28px clamp(20px, 5vw, 80px) 20px' }}>
+        <div style={{ position: 'relative', zIndex: 1, maxWidth: '900px', padding: '20px clamp(20px, 5vw, 80px) 20px' }}>
           <button
             type="button"
             onClick={() => onNavigate('blog')}
