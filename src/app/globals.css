@@ -618,9 +618,6 @@ select option {
   .hero-title-split {
     line-height: 0.95 !important;
   }
-  .hero-bold-span {
-    vertical-align: top;
-  }
 }
 
 /* ── DESKTOP (lg+): interlineado ajustado (10% reducción) ── */
