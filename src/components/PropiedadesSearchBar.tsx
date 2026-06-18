@@ -626,53 +626,61 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', onApply }:
 
         </div>
 
-        {/* ── Panel búsqueda avanzada — 4 columnas alineadas con filtros ── */}
+        {/* ── Panel búsqueda avanzada — 4 columnas con íconos ─────────── */}
         {showAdvanced && (
           <div style={{ borderBottom: DIVIDER }}>
 
             {/* Fila 1: Habitaciones · Baños · Parqueadero · Área */}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', borderBottom: DIVIDER }}>
 
-              <div style={{ borderRight: DIVIDER, padding: '16px 20px' }}>
-                <p style={labelStyle}>Habitaciones</p>
-                <div style={{ display: 'flex', gap: '6px', marginTop: '8px', flexWrap: 'wrap' }}>
-                  {[1, 2, 3, 4, 5].map(n => (
-                    <Chip key={n} label={n === 5 ? '5+' : String(n)} active={habitaciones === n} onClick={() => setHabitaciones(habitaciones === n ? null : n)} />
-                  ))}
+              <div style={{ borderRight: DIVIDER }}>
+                <div style={contentStyle}>
+                  <img src="/icons/icon-bed-red.gif" alt="" width={24} height={24} style={{ flexShrink: 0, alignSelf: 'flex-start', marginTop: '2px' }} />
+                  <div style={{ minWidth: 0, flex: 1 }}>
+                    <p style={labelStyle}>Habitaciones</p>
+                    <div style={{ display: 'flex', gap: '5px', marginTop: '6px', flexWrap: 'wrap' }}>
+                      {[1, 2, 3, 4, 5].map(n => (
+                        <Chip key={n} label={n === 5 ? '5+' : String(n)} active={habitaciones === n} onClick={() => setHabitaciones(habitaciones === n ? null : n)} />
+                      ))}
+                    </div>
+                  </div>
                 </div>
               </div>
 
-              <div style={{ borderRight: DIVIDER, padding: '16px 20px' }}>
-                <p style={labelStyle}>Baños</p>
-                <div style={{ display: 'flex', gap: '6px', marginTop: '8px', flexWrap: 'wrap' }}>
-                  {[1, 2, 3, 4].map(n => (
-                    <Chip key={n} label={n === 4 ? '4+' : String(n)} active={banos === n} onClick={() => setBanos(banos === n ? null : n)} />
-                  ))}
+              <div style={{ borderRight: DIVIDER }}>
+                <div style={contentStyle}>
+                  <img src="/icons/icon-bathroom-red.gif" alt="" width={24} height={24} style={{ flexShrink: 0, alignSelf: 'flex-start', marginTop: '2px' }} />
+                  <div style={{ minWidth: 0, flex: 1 }}>
+                    <p style={labelStyle}>Baños</p>
+                    <div style={{ display: 'flex', gap: '5px', marginTop: '6px', flexWrap: 'wrap' }}>
+                      {[1, 2, 3, 4].map(n => (
+                        <Chip key={n} label={n === 4 ? '4+' : String(n)} active={banos === n} onClick={() => setBanos(banos === n ? null : n)} />
+                      ))}
+                    </div>
+                  </div>
                 </div>
               </div>
 
-              <div style={{ borderRight: DIVIDER, padding: '16px 20px' }}>
-                <p style={labelStyle}>Parqueadero</p>
-                <div style={{ display: 'flex', gap: '6px', marginTop: '8px', flexWrap: 'wrap' }}>
-                  <Chip label="Con parqueadero" active={parqueadero === 'con'} onClick={() => setParqueadero(parqueadero === 'con' ? null : 'con')} />
-                  <Chip label="Sin parqueadero" active={parqueadero === 'sin'} onClick={() => setParqueadero(parqueadero === 'sin' ? null : 'sin')} />
+              <div style={{ borderRight: DIVIDER }}>
+                <div style={contentStyle}>
+                  <img src="/icons/icon-sliders-red.gif" alt="" width={24} height={24} style={{ flexShrink: 0, alignSelf: 'flex-start', marginTop: '2px' }} />
+                  <div style={{ minWidth: 0, flex: 1 }}>
+                    <p style={labelStyle}>Parqueadero</p>
+                    <div style={{ display: 'flex', gap: '5px', marginTop: '6px', flexWrap: 'wrap' }}>
+                      <Chip label="Con parqueadero" active={parqueadero === 'con'} onClick={() => setParqueadero(parqueadero === 'con' ? null : 'con')} />
+                      <Chip label="Sin parqueadero" active={parqueadero === 'sin'} onClick={() => setParqueadero(parqueadero === 'sin' ? null : 'sin')} />
+                    </div>
+                  </div>
                 </div>
               </div>
 
-              <div style={{ padding: '16px 20px' }}>
-                <p style={labelStyle}>Área (m²)</p>
-                <div style={{ display: 'flex', gap: '8px', alignItems: 'center', marginTop: '8px' }}>
-                  <input
-                    type="number" value={areaMin} onChange={e => setAreaMin(e.target.value)} placeholder="Mín"
-                    className="search-field-input"
-                    style={{ fontFamily: FONT, fontSize: '14px', fontWeight: 400, color: COLOR_VALUE, background: 'transparent', border: 'none', outline: 'none', width: '72px', lineHeight: 1 }}
-                  />
-                  <span style={{ fontFamily: FONT, fontSize: '12px', color: '#aaa' }}>–</span>
-                  <input
-                    type="number" value={areaMax} onChange={e => setAreaMax(e.target.value)} placeholder="Máx"
-                    className="search-field-input"
-                    style={{ fontFamily: FONT, fontSize: '14px', fontWeight: 400, color: COLOR_VALUE, background: 'transparent', border: 'none', outline: 'none', width: '72px', lineHeight: 1 }}
-                  />
+              <div>
+                <div style={contentStyle}>
+                  <img src="/icons/icon-area-red.gif" alt="" width={24} height={24} style={{ flexShrink: 0, alignSelf: 'flex-start', marginTop: '2px' }} />
+                  <div style={{ minWidth: 0, flex: 1 }}>
+                    <p style={labelStyle}>Área (m²)</p>
+                    <AreaSelect areaMin={areaMin} areaMax={areaMax} onChangeMin={setAreaMin} onChangeMax={setAreaMax} />
+                  </div>
                 </div>
               </div>
 
@@ -681,21 +689,31 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', onApply }:
             {/* Fila 2: Estrato · Comodidades */}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)' }}>
 
-              <div style={{ borderRight: DIVIDER, padding: '16px 20px' }}>
-                <p style={labelStyle}>Estrato</p>
-                <div style={{ display: 'flex', gap: '6px', marginTop: '8px', flexWrap: 'wrap' }}>
-                  {ESTRATOS.map(e => (
-                    <Chip key={e} label={e} active={estrato.includes(e)} onClick={() => toggleEstrato(e)} />
-                  ))}
+              <div style={{ borderRight: DIVIDER }}>
+                <div style={contentStyle}>
+                  <img src="/icons/icon-code-red.gif" alt="" width={24} height={24} style={{ flexShrink: 0, alignSelf: 'flex-start', marginTop: '2px' }} />
+                  <div style={{ minWidth: 0, flex: 1 }}>
+                    <p style={labelStyle}>Estrato</p>
+                    <div style={{ display: 'flex', gap: '5px', marginTop: '6px', flexWrap: 'wrap' }}>
+                      {ESTRATOS.map(e => (
+                        <Chip key={e} label={e} active={estrato.includes(e)} onClick={() => toggleEstrato(e)} />
+                      ))}
+                    </div>
+                  </div>
                 </div>
               </div>
 
-              <div style={{ gridColumn: 'span 3', padding: '16px 20px' }}>
-                <p style={labelStyle}>Comodidades</p>
-                <div style={{ display: 'flex', gap: '6px', marginTop: '8px', flexWrap: 'wrap' }}>
-                  {COMODIDADES.map(c => (
-                    <Chip key={c} label={c} active={comodidades.includes(c)} onClick={() => toggleComodidad(c)} />
-                  ))}
+              <div style={{ gridColumn: 'span 3' }}>
+                <div style={contentStyle}>
+                  <img src="/icons/icon-favorite-red.gif" alt="" width={24} height={24} style={{ flexShrink: 0, alignSelf: 'flex-start', marginTop: '2px' }} />
+                  <div style={{ minWidth: 0, flex: 1 }}>
+                    <p style={labelStyle}>Comodidades</p>
+                    <div style={{ display: 'flex', gap: '5px', marginTop: '6px', flexWrap: 'wrap' }}>
+                      {COMODIDADES.map(c => (
+                        <Chip key={c} label={c} active={comodidades.includes(c)} onClick={() => toggleComodidad(c)} />
+                      ))}
+                    </div>
+                  </div>
                 </div>
               </div>
 
@@ -704,42 +722,43 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', onApply }:
           </div>
         )}
 
-        {/* ── Fila 3: Acciones ──────────────────────────────────────── */}
-        <div style={{ display: 'flex', alignItems: 'stretch', justifyContent: 'space-between', height: '48px', background: '#fafafa' }}>
+        {/* ── Fila 3: Acciones — dos botones iguales ───────────────── */}
+        <div style={{ display: 'flex', height: '48px' }}>
 
           <button
             type="button"
             onClick={() => setShowAdvanced(v => !v)}
             style={{
-              display: 'flex', alignItems: 'center',
-              background: 'transparent', border: 'none', cursor: 'pointer',
-              padding: '0 20px',
-              fontFamily: FONT, fontSize: '13px', color: '#555', fontWeight: 400,
+              flex: 1,
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              background: showAdvanced ? 'rgba(0,0,0,0.04)' : '#fafafa',
+              border: 'none', borderRight: DIVIDER, cursor: 'pointer',
+              fontFamily: FONT, fontSize: '13px', color: showAdvanced ? COLOR_VALUE : '#888', fontWeight: 400,
+              transition: 'background 0.15s ease, color 0.15s ease',
             }}
+            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(0,0,0,0.04)'; }}
+            onMouseLeave={e => { e.currentTarget.style.background = showAdvanced ? 'rgba(0,0,0,0.04)' : '#fafafa'; }}
           >
             Búsqueda avanzada
           </button>
 
-          <div style={{ display: 'flex', alignItems: 'center', paddingRight: '4px' }}>
-            <button
-              type="button"
-              onClick={handleApply}
-              style={{
-                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
-                background: RED, color: '#fff',
-                fontFamily: FONT, fontSize: '14px', fontWeight: 600,
-                border: 'none', cursor: 'pointer',
-                padding: '0 28px',
-                height: '100%',
-                transition: 'background 0.2s ease',
-              }}
-              onMouseEnter={e => (e.currentTarget.style.background = RED_HOVER)}
-              onMouseLeave={e => (e.currentTarget.style.background = RED)}
-            >
-              <img src="/icons/icon-search-white.gif" alt="" width={16} height={16} />
-              Buscar inmueble
-            </button>
-          </div>
+          <button
+            type="button"
+            onClick={handleApply}
+            style={{
+              flex: 1,
+              display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
+              background: RED, color: '#fff',
+              fontFamily: FONT, fontSize: '14px', fontWeight: 600,
+              border: 'none', cursor: 'pointer',
+              transition: 'background 0.2s ease',
+            }}
+            onMouseEnter={e => (e.currentTarget.style.background = RED_HOVER)}
+            onMouseLeave={e => (e.currentTarget.style.background = RED)}
+          >
+            <img src="/icons/icon-search-white.gif" alt="" width={16} height={16} />
+            Buscar inmueble
+          </button>
 
         </div>
 
