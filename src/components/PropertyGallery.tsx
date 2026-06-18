@@ -316,7 +316,7 @@ function PreviewCell({ img, alt, rowSpan, onClick, overlay }: {
       style={{
         gridRow: rowSpan ? '1 / 3' : undefined,
         position: 'relative', overflow: 'hidden',
-        cursor: 'pointer', borderRadius: '10px',
+        cursor: 'pointer',
       }}
       onClick={onClick}
       onMouseEnter={() => setHov(true)}
@@ -386,26 +386,6 @@ export default function PropertyGallery({ images, title }: PropertyGalleryProps)
         />
       </div>
 
-      {/* Botón "Ver todas" */}
-      <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '24px' }}>
-        <button
-          type="button"
-          onClick={() => open(0)}
-          style={{
-            display: 'inline-flex', alignItems: 'center', gap: '7px',
-            fontFamily: FONT, fontSize: '13px', fontWeight: 500,
-            color: '#333', background: '#fff',
-            border: '1px solid #ddd', borderRadius: '6px',
-            padding: '8px 16px', cursor: 'pointer',
-            transition: 'border-color 0.15s, color 0.15s',
-          }}
-          onMouseEnter={e => { e.currentTarget.style.borderColor = RED; e.currentTarget.style.color = RED; }}
-          onMouseLeave={e => { e.currentTarget.style.borderColor = '#ddd'; e.currentTarget.style.color = '#333'; }}
-        >
-          <Grid2x2 size={15} />
-          Ver todas las fotos ({images.length})
-        </button>
-      </div>
 
       {/* Lightbox */}
       {mounted && lightboxOpen && (
