@@ -551,71 +551,73 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', onApply }:
 
         </div>
 
-        {/* ── Panel búsqueda avanzada ───────────────────────────────── */}
+        {/* ── Panel búsqueda avanzada — 4 columnas alineadas con filtros ── */}
         {showAdvanced && (
-          <div style={{ padding: '20px 24px', borderBottom: DIVIDER, background: '#fafafa' }}>
+          <div style={{ borderBottom: DIVIDER }}>
 
             {/* Fila 1: Habitaciones · Baños · Parqueadero · Área */}
-            <div style={{ display: 'flex', gap: '32px', flexWrap: 'wrap', marginBottom: '20px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', borderBottom: DIVIDER }}>
 
-              <div>
-                <p style={advLabelStyle}>Habitaciones</p>
-                <div style={{ display: 'flex', gap: '6px' }}>
+              <div style={{ borderRight: DIVIDER, padding: '16px 20px' }}>
+                <p style={labelStyle}>Habitaciones</p>
+                <div style={{ display: 'flex', gap: '6px', marginTop: '8px', flexWrap: 'wrap' }}>
                   {[1, 2, 3, 4, 5].map(n => (
                     <Chip key={n} label={n === 5 ? '5+' : String(n)} active={habitaciones === n} onClick={() => setHabitaciones(habitaciones === n ? null : n)} />
                   ))}
                 </div>
               </div>
 
-              <div>
-                <p style={advLabelStyle}>Baños</p>
-                <div style={{ display: 'flex', gap: '6px' }}>
+              <div style={{ borderRight: DIVIDER, padding: '16px 20px' }}>
+                <p style={labelStyle}>Baños</p>
+                <div style={{ display: 'flex', gap: '6px', marginTop: '8px', flexWrap: 'wrap' }}>
                   {[1, 2, 3, 4].map(n => (
                     <Chip key={n} label={n === 4 ? '4+' : String(n)} active={banos === n} onClick={() => setBanos(banos === n ? null : n)} />
                   ))}
                 </div>
               </div>
 
-              <div>
-                <p style={advLabelStyle}>Parqueadero</p>
-                <div style={{ display: 'flex', gap: '6px' }}>
+              <div style={{ borderRight: DIVIDER, padding: '16px 20px' }}>
+                <p style={labelStyle}>Parqueadero</p>
+                <div style={{ display: 'flex', gap: '6px', marginTop: '8px', flexWrap: 'wrap' }}>
                   <Chip label="Con parqueadero" active={parqueadero === 'con'} onClick={() => setParqueadero(parqueadero === 'con' ? null : 'con')} />
                   <Chip label="Sin parqueadero" active={parqueadero === 'sin'} onClick={() => setParqueadero(parqueadero === 'sin' ? null : 'sin')} />
                 </div>
               </div>
 
-              <div>
-                <p style={advLabelStyle}>Área (m²)</p>
-                <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+              <div style={{ padding: '16px 20px' }}>
+                <p style={labelStyle}>Área (m²)</p>
+                <div style={{ display: 'flex', gap: '8px', alignItems: 'center', marginTop: '8px' }}>
                   <input
                     type="number" value={areaMin} onChange={e => setAreaMin(e.target.value)} placeholder="Mín"
-                    style={{ fontFamily: FONT, fontSize: '13px', color: COLOR_VALUE, background: '#fff', border: '1px solid rgba(0,0,0,0.15)', outline: 'none', padding: '6px 10px', width: '80px' }}
+                    className="search-field-input"
+                    style={{ fontFamily: FONT, fontSize: '14px', fontWeight: 400, color: COLOR_VALUE, background: 'transparent', border: 'none', outline: 'none', width: '72px', lineHeight: 1 }}
                   />
                   <span style={{ fontFamily: FONT, fontSize: '12px', color: '#aaa' }}>–</span>
                   <input
                     type="number" value={areaMax} onChange={e => setAreaMax(e.target.value)} placeholder="Máx"
-                    style={{ fontFamily: FONT, fontSize: '13px', color: COLOR_VALUE, background: '#fff', border: '1px solid rgba(0,0,0,0.15)', outline: 'none', padding: '6px 10px', width: '80px' }}
+                    className="search-field-input"
+                    style={{ fontFamily: FONT, fontSize: '14px', fontWeight: 400, color: COLOR_VALUE, background: 'transparent', border: 'none', outline: 'none', width: '72px', lineHeight: 1 }}
                   />
                 </div>
               </div>
 
             </div>
 
-            {/* Fila 2: Estrato + Comodidades en la misma línea */}
-            <div style={{ display: 'flex', gap: '48px', flexWrap: 'wrap', alignItems: 'flex-start' }}>
+            {/* Fila 2: Estrato · Comodidades */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)' }}>
 
-              <div style={{ flexShrink: 0 }}>
-                <p style={advLabelStyle}>Estrato</p>
-                <div style={{ display: 'flex', gap: '6px' }}>
+              <div style={{ borderRight: DIVIDER, padding: '16px 20px' }}>
+                <p style={labelStyle}>Estrato</p>
+                <div style={{ display: 'flex', gap: '6px', marginTop: '8px', flexWrap: 'wrap' }}>
                   {ESTRATOS.map(e => (
                     <Chip key={e} label={e} active={estrato.includes(e)} onClick={() => toggleEstrato(e)} />
                   ))}
                 </div>
               </div>
 
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <p style={advLabelStyle}>Comodidades</p>
-                <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+              <div style={{ gridColumn: 'span 3', padding: '16px 20px' }}>
+                <p style={labelStyle}>Comodidades</p>
+                <div style={{ display: 'flex', gap: '6px', marginTop: '8px', flexWrap: 'wrap' }}>
                   {COMODIDADES.map(c => (
                     <Chip key={c} label={c} active={comodidades.includes(c)} onClick={() => toggleComodidad(c)} />
                   ))}
@@ -643,15 +645,7 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', onApply }:
             Búsqueda avanzada
           </button>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '16px', paddingRight: '4px' }}>
-            <button
-              type="button"
-              onClick={handleClear}
-              style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontFamily: FONT, fontSize: '13px', color: '#999', padding: '0 8px' }}
-            >
-              Limpiar
-            </button>
-
+          <div style={{ display: 'flex', alignItems: 'center', paddingRight: '4px' }}>
             <button
               type="button"
               onClick={handleApply}
