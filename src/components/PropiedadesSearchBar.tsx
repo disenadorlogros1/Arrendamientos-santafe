@@ -331,6 +331,81 @@ function CustomSelect({
   );
 }
 
+/* ── AreaSelect — dropdown portal igual que PriceSelect ─────────────── */
+
+function AreaSelect({
+  areaMin, areaMax, onChangeMin, onChangeMax,
+}: { areaMin: string; areaMax: string; onChangeMin: (v: string) => void; onChangeMax: (v: string) => void }) {
+  const [open, setOpen]       = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const buttonRef             = useRef<HTMLButtonElement>(null);
+  const dropdownRef           = useRef<HTMLDivElement>(null);
+  const [pos, setPos]         = useState({ top: 0, left: 0, width: 0 });
+
+  useEffect(() => { setMounted(true); }, []);
+
+  const updatePos = useCallback(() => {
+    if (buttonRef.current) {
+      const r = buttonRef.current.getBoundingClientRect();
+      setPos({ top: r.bottom + 2, left: r.left, width: Math.max(r.width, 240) });
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!open || !mounted) return;
+    const handler = (e: MouseEvent) => {
+      const t = e.target as Node;
+      if (!dropdownRef.current?.contains(t) && !buttonRef.current?.contains(t)) setOpen(false);
+    };
+    const id = setTimeout(() => document.addEventListener('mousedown', handler), 0);
+    return () => { clearTimeout(id); document.removeEventListener('mousedown', handler); };
+  }, [open, mounted]);
+
+  useEffect(() => {
+    if (!open) return;
+    window.addEventListener('scroll', updatePos, { passive: true });
+    return () => window.removeEventListener('scroll', updatePos);
+  }, [open, updatePos]);
+
+  const pristine = !areaMin && !areaMax;
+  const display  = pristine ? null : `${areaMin || '0'} – ${areaMax || '∞'} m²`;
+
+  const dropdown = mounted && open ? (
+    <div ref={dropdownRef} style={{ position: 'fixed', top: pos.top, left: pos.left, width: pos.width, zIndex: 9999 }}>
+      <div className="bg-white shadow-2xl border border-gray-100" style={{ padding: '16px 20px 20px' }}>
+        <p style={{ ...labelStyle, marginBottom: '12px' }}>Área (m²)</p>
+        <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+          <input
+            type="number" value={areaMin} onChange={e => onChangeMin(e.target.value)} placeholder="Mín"
+            style={{ fontFamily: FONT, fontSize: '14px', fontWeight: 400, color: COLOR_VALUE, background: '#f7f7f7', border: '1px solid rgba(0,0,0,0.1)', outline: 'none', padding: '8px 12px', flex: 1, lineHeight: 1 }}
+          />
+          <span style={{ fontFamily: FONT, fontSize: '13px', color: '#aaa' }}>–</span>
+          <input
+            type="number" value={areaMax} onChange={e => onChangeMax(e.target.value)} placeholder="Máx"
+            style={{ fontFamily: FONT, fontSize: '14px', fontWeight: 400, color: COLOR_VALUE, background: '#f7f7f7', border: '1px solid rgba(0,0,0,0.1)', outline: 'none', padding: '8px 12px', flex: 1, lineHeight: 1 }}
+          />
+        </div>
+      </div>
+    </div>
+  ) : null;
+
+  return (
+    <div className="min-w-0 w-full">
+      <button
+        ref={buttonRef}
+        type="button"
+        onClick={() => { if (!open) { updatePos(); setOpen(true); } else setOpen(false); }}
+        className="w-full flex items-center bg-transparent border-none outline-none cursor-pointer text-left"
+      >
+        <span style={{ fontFamily: FONT, fontSize: '14px', fontWeight: 400, color: display ? COLOR_VALUE : '#b8b8b8', lineHeight: 1, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+          {display || 'Seleccionar'}
+        </span>
+      </button>
+      {dropdown && createPortal(dropdown, document.body)}
+    </div>
+  );
+}
+
 /* ── Chip ───────────────────────────────────────────────────────────── */
 
 function Chip({ label, active, onClick }: { label: string; active: boolean; onClick: () => void }) {
@@ -340,9 +415,9 @@ function Chip({ label, active, onClick }: { label: string; active: boolean; onCl
       onClick={onClick}
       style={{
         padding: '5px 14px',
-        border: `1px solid ${active ? RED : 'rgba(0,0,0,0.15)'}`,
+        border: `1px solid ${active ? RED : 'rgba(0,0,0,0.12)'}`,
         background: active ? RED : 'transparent',
-        color: active ? '#fff' : '#555',
+        color: active ? '#fff' : '#b8b8b8',
         fontFamily: FONT,
         fontSize: '13px',
         fontWeight: active ? 600 : 400,
