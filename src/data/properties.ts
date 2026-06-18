@@ -8,6 +8,7 @@ export const DEFAULT_INTERIOR_GALLERY = [
   '/Propiedades/baño (4).webp',
   '/Propiedades/Cocina (3).webp',
   '/Propiedades/cuarto de lavado (2).webp',
+  '/Propiedades/Sala de tv.webp',
 ];
 
 export interface Property {
