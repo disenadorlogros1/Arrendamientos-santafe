@@ -347,10 +347,12 @@ export default function PropiedadesSearchBar({
       ref={barRef}
       style={{
         background: '#fff',
-        borderBottom: '1px solid #ebebeb',
-        boxShadow: '0 2px 12px rgba(0,0,0,0.06)',
+        border: '1px solid #e8e8e8',
+        borderRadius: '10px',
+        boxShadow: '0 4px 24px rgba(0,0,0,0.10), 0 1px 4px rgba(0,0,0,0.06)',
         position: 'relative',
         zIndex: 40,
+        overflow: 'hidden',
       }}
     >
       {/* Contenedor centrado — igual que el resto de la página */}
