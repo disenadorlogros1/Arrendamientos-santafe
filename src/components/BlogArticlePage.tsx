@@ -25,7 +25,7 @@ export default function BlogArticlePage({ articleId, onNavigate }: Props) {
     <div style={{ background: BG, minHeight: '100vh' }}>
 
       {/* ── Hero ─────────────────────────────────────────────── */}
-      <div style={{ position: 'relative', height: 'clamp(300px, 45vw, 460px)', overflow: 'hidden' }}>
+      <div style={{ position: 'relative', height: 'clamp(300px, 45vw, 460px)', overflow: 'hidden', marginTop: '-43px' }}>
         <img
           src={article.image}
           alt={article.title}
