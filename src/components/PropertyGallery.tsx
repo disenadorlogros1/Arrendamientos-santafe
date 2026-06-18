@@ -179,7 +179,7 @@ function Lightbox({ images, startIndex, onClose }: {
               alt={`Foto ${viewerIdx + 1}`}
               style={{
                 maxWidth: '100%', maxHeight: '100%',
-                objectFit: 'contain', borderRadius: '10px',
+                objectFit: 'contain',
                 display: 'block',
               }}
             />
@@ -245,7 +245,6 @@ function GridCell({ img, index, isStart, cellRef, onClick }: {
       style={{
         breakInside: 'avoid',
         marginBottom: '8px',
-        borderRadius: '10px',
         overflow: 'hidden',
         cursor: 'pointer',
         position: 'relative',
