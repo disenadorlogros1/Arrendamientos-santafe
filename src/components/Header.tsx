@@ -129,8 +129,8 @@ export default function Header({ currentPage, onNavigate, isHeroPage = true }: H
   const headerBackground = 'shadow-md';
   const headerBgColor = isHeroPage ? 'rgba(45, 45, 45, 0.3)' : 'rgba(255, 255, 255, 1)';
   const headerTextColor = isHeroPage ? '#ffffff' : '#1a1a1a';
-  const navBgColor = isHeroPage ? 'rgba(255, 255, 255, 0.3)' : 'rgba(0, 0, 0, 0.3)';
-  const navBorderColor = isHeroPage ? 'rgba(255, 255, 255, 0.3)' : 'rgba(0, 0, 0, 0.2)';
+  const navBgColor = isHeroPage ? 'rgba(255, 255, 255, 0.3)' : 'rgba(0, 0, 0, 0.05)';
+  const navBorderColor = isHeroPage ? 'rgba(255, 255, 255, 0.3)' : 'rgba(0, 0, 0, 0.1)';
 
   return (
     <header className={`fixed top-0 left-0 right-0 pt-4 pb-3 px-4 sm:px-6 lg:px-8 transition-all duration-300 ${headerBackground}`}

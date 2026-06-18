@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { createPortal } from 'react-dom';
-import { X, ChevronLeft, ChevronRight, Grid2x2 } from 'lucide-react';
+import { X, ChevronLeft, ChevronRight, Maximize2, Grid2x2 } from 'lucide-react';
 
 const FONT = "'Avenir LT Pro 65 Medium', 'Avenir LT Pro', 'Avenir', system-ui, sans-serif";
 const RED  = '#f32735';
@@ -33,7 +33,6 @@ function Lightbox({ images, startIndex, onClose }: {
     return () => window.removeEventListener('keydown', handler);
   }, [prev, next, onClose]);
 
-  // Scroll active thumbnail into view
   useEffect(() => {
     if (!thumbsRef.current) return;
     const active = thumbsRef.current.querySelector('[data-active="true"]') as HTMLElement;
@@ -66,20 +65,19 @@ function Lightbox({ images, startIndex, onClose }: {
             background: 'rgba(255,255,255,0.1)', border: 'none', cursor: 'pointer',
             color: '#fff', transition: 'background 0.2s',
           }}
-          onMouseEnter={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.2)')}
+          onMouseEnter={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.22)')}
           onMouseLeave={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.1)')}
         >
           <X size={18} />
         </button>
       </div>
 
-      {/* Main image area */}
+      {/* Main image */}
       <div style={{
         flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center',
         position: 'relative', overflow: 'hidden', padding: '0 72px',
         minHeight: 0,
       }}>
-        {/* Prev arrow */}
         <button
           type="button"
           onClick={prev}
@@ -102,12 +100,10 @@ function Lightbox({ images, startIndex, onClose }: {
           alt={`Foto ${idx + 1}`}
           style={{
             maxWidth: '100%', maxHeight: '100%',
-            objectFit: 'contain',
-            borderRadius: '4px',
+            objectFit: 'contain', borderRadius: '4px',
           }}
         />
 
-        {/* Next arrow */}
         <button
           type="button"
           onClick={next}
@@ -159,9 +155,10 @@ function Lightbox({ images, startIndex, onClose }: {
   );
 }
 
-/* ── Grid ──────────────────────────────────────────────────────── */
+/* ── Gallery — Expanding Flex Cards (Accordion) ────────────────── */
 
 export default function PropertyGallery({ images, title }: PropertyGalleryProps) {
+  const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [startIdx,     setStartIdx]     = useState(0);
   const [mounted,      setMounted]      = useState(false);
@@ -170,34 +167,120 @@ export default function PropertyGallery({ images, title }: PropertyGalleryProps)
 
   const open = (i: number) => { setStartIdx(i); setLightboxOpen(true); };
 
-  const remaining = images.length - 5;
+  const gridImages = images.slice(0, 5);
+  const remaining  = images.length - 5;
 
   return (
     <>
-      {/* ── Grid Trulia-style ─────────────────────────────────── */}
+      {/* ── Accordion strip ──────────────────────────────────── */}
       <div style={{
-        display: 'grid',
-        gridTemplateColumns: '3fr 1fr 1fr',
-        gridTemplateRows: '1fr 1fr',
-        gap: '4px',
+        display: 'flex',
+        gap: '5px',
         height: '460px',
-        borderRadius: '8px',
+        borderRadius: '10px',
         overflow: 'hidden',
         marginBottom: '8px',
       }}>
-        {/* Main large image — spans 2 rows */}
-        <Cell img={images[0]} alt={title} rowSpan onClick={() => open(0)} />
+        {gridImages.map((img, i) => {
+          const isHov    = hoveredIdx === i;
+          const anyHov   = hoveredIdx !== null;
 
-        {/* 4 small images */}
-        {[1, 2, 3, 4].map((i) => (
-          <Cell
-            key={i}
-            img={images[i] ?? images[0]}
-            alt={`${title} ${i + 1}`}
-            onClick={() => open(i)}
-            overlay={i === 4 && remaining > 0 ? `+${remaining} fotos` : undefined}
-          />
-        ))}
+          // Default proportions: first image slightly wider
+          const defaultGrow = i === 0 ? 1.6 : 1;
+
+          // Hover proportions: active expands, rest compress
+          const growVal = anyHov
+            ? (isHov ? 4 : (i === 0 ? 1.1 : 0.75))
+            : defaultGrow;
+
+          const showCountOverlay = i === 4 && remaining > 0 && !isHov;
+
+          return (
+            <div
+              key={i}
+              style={{
+                flexGrow: growVal,
+                flexShrink: 1,
+                flexBasis: '0px',
+                minWidth: 0,
+                position: 'relative',
+                overflow: 'hidden',
+                cursor: 'pointer',
+                transition: 'flex-grow 0.65s cubic-bezier(0.25, 1, 0.5, 1)',
+              }}
+              onMouseEnter={() => setHoveredIdx(i)}
+              onMouseLeave={() => setHoveredIdx(null)}
+              onClick={() => open(i)}
+            >
+              {/* Image */}
+              <img
+                src={img}
+                alt={`${title} - foto ${i + 1}`}
+                draggable={false}
+                style={{
+                  width: '100%', height: '100%',
+                  objectFit: 'cover',
+                  transform: isHov ? 'scale(1.05)' : 'scale(1)',
+                  transition: 'transform 0.65s cubic-bezier(0.25, 1, 0.5, 1)',
+                  pointerEvents: 'none',
+                  userSelect: 'none',
+                  display: 'block',
+                }}
+              />
+
+              {/* Gradient scrim — reveals on hover */}
+              <div style={{
+                position: 'absolute', inset: 0,
+                background: 'linear-gradient(to top, rgba(0,0,0,0.70) 0%, rgba(0,0,0,0) 55%)',
+                opacity: isHov ? 1 : 0,
+                transition: 'opacity 0.4s ease',
+                pointerEvents: 'none',
+              }} />
+
+              {/* Content revealed on expand */}
+              <div style={{
+                position: 'absolute', bottom: '14px', left: '16px', right: '16px',
+                display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                opacity: isHov ? 1 : 0,
+                transform: isHov ? 'translateY(0px)' : 'translateY(10px)',
+                transition: 'opacity 0.35s ease 0.12s, transform 0.35s ease 0.12s',
+                pointerEvents: 'none',
+              }}>
+                <span style={{
+                  fontFamily: FONT, fontSize: '13px', fontWeight: 500,
+                  color: 'rgba(255,255,255,0.80)',
+                  whiteSpace: 'nowrap',
+                }}>
+                  {i + 1} / {images.length}
+                </span>
+                <div style={{
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  width: '30px', height: '30px', borderRadius: '50%',
+                  background: 'rgba(255,255,255,0.18)', flexShrink: 0,
+                }}>
+                  <Maximize2 size={13} color="#fff" />
+                </div>
+              </div>
+
+              {/* "+N fotos" overlay on last card when not hovered */}
+              {showCountOverlay && (
+                <div style={{
+                  position: 'absolute', inset: 0,
+                  background: 'rgba(0,0,0,0.48)',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  pointerEvents: 'none',
+                }}>
+                  <span style={{
+                    fontFamily: FONT, fontSize: '15px', fontWeight: 600, color: '#fff',
+                    whiteSpace: 'nowrap',
+                  }}>
+                    +{remaining} fotos
+                  </span>
+                </div>
+              )}
+            </div>
+          );
+        })}
       </div>
 
       {/* "Ver todas" button */}
@@ -226,47 +309,5 @@ export default function PropertyGallery({ images, title }: PropertyGalleryProps)
         <Lightbox images={images} startIndex={startIdx} onClose={() => setLightboxOpen(false)} />
       )}
     </>
-  );
-}
-
-/* ── Cell helper ─────────────────────────────────────────────────── */
-
-function Cell({ img, alt, rowSpan, onClick, overlay }: {
-  img: string; alt: string; rowSpan?: boolean;
-  onClick: () => void; overlay?: string;
-}) {
-  const [hovered, setHovered] = useState(false);
-
-  return (
-    <div
-      style={{
-        gridRow: rowSpan ? '1 / 3' : undefined,
-        position: 'relative', overflow: 'hidden', cursor: 'pointer',
-      }}
-      onClick={onClick}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-    >
-      <img
-        src={img}
-        alt={alt}
-        style={{
-          width: '100%', height: '100%', objectFit: 'cover',
-          transform: hovered ? 'scale(1.04)' : 'scale(1)',
-          transition: 'transform 0.4s ease',
-        }}
-      />
-      {overlay && (
-        <div style={{
-          position: 'absolute', inset: 0,
-          background: 'rgba(0,0,0,0.5)',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-        }}>
-          <span style={{ fontFamily: FONT, fontSize: '16px', fontWeight: 600, color: '#fff' }}>
-            {overlay}
-          </span>
-        </div>
-      )}
-    </div>
   );
 }
