@@ -67,7 +67,7 @@ const navItems: NavItem[] = [
   { label: 'Inicio', page: 'home' },
   { label: 'Propiedades', page: 'propiedades', children: [
     { label: 'Arriendo', page: 'propiedades', filter: 'Arrendar' },
-    { label: 'Venta', page: 'propiedades', filter: 'Comprar' },
+    { label: 'Comprar', page: 'propiedades', filter: 'Comprar' },
     { label: 'Para inversionistas', page: 'inversionistas' },
   ]},
   { label: 'Servicios', page: 'servicios' as const, children: [
