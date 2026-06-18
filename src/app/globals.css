@@ -615,9 +615,6 @@ select option {
   .hero-line-seg {
     margin-bottom: 0;
   }
-  .hero-title-split {
-    line-height: 0.95 !important;
-  }
 }
 
 /* ── DESKTOP (lg+): interlineado ajustado (10% reducción) ── */
