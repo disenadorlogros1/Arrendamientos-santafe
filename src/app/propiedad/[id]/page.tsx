@@ -1,13 +1,13 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { properties } from '@/data/properties';
+import { properties, DEFAULT_INTERIOR_GALLERY } from '@/data/properties';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
-import Image from 'next/image';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import MapComponent from '@/components/MapComponent';
+import PropertyGallery from '@/components/PropertyGallery';
 import { getInvestmentZoneForLocation } from '@/data/properties';
 import { getZoneBySlug } from '@/data/investment-zones';
 import type { PageType } from '@/components/Header';
@@ -48,10 +48,13 @@ export default function PropertyDetailPage() {
     );
   }
 
+  // Galería: foto principal + interiores genéricos
+  const galleryImages = [property.image, ...DEFAULT_INTERIOR_GALLERY];
+
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
       <Header currentPage={currentPage} onNavigate={handleNavigate} isHeroPage={false} />
-      <main className="flex-1 pt-[120px] relative">
+      <main className="flex-1 pt-[86px] relative">
       <div>
       {/* Breadcrumb */}
       <div className="bg-white border-b border-gray-200 py-4 px-6">
@@ -74,14 +77,8 @@ export default function PropertyDetailPage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Columna izquierda - Imágenes */}
           <div className="lg:col-span-2">
-            {/* Imagen principal */}
-            <div className="mb-6 rounded-lg overflow-hidden bg-white border border-gray-200">
-              <img
-                src={property.image}
-                alt={property.title}
-                className="w-full h-96 object-cover"
-              />
-            </div>
+            {/* Galería de fotos — estilo Trulia */}
+            <PropertyGallery images={galleryImages} title={property.title} />
 
             {/* Tipo, Referencia, Título */}
             <div className="bg-white rounded-lg p-6 mb-6 border border-gray-200">

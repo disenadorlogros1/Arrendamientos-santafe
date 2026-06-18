@@ -1,3 +1,15 @@
+// Fotos genéricas de interior para todas las propiedades hasta tener fotos reales por propiedad
+export const DEFAULT_INTERIOR_GALLERY = [
+  '/Propiedades/baño.webp',
+  '/Propiedades/Cocina.webp',
+  '/Propiedades/baño (3).webp',
+  '/Propiedades/Cocina (2).webp',
+  '/Propiedades/cuarto de lavado.webp',
+  '/Propiedades/baño (4).webp',
+  '/Propiedades/Cocina (3).webp',
+  '/Propiedades/cuarto de lavado (2).webp',
+];
+
 export interface Property {
   id: number;
   title: string;

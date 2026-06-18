@@ -300,6 +300,8 @@ export default function PropiedadesPage({ initialFilter = 'Todos' }: { initialFi
                 areaMax: '',
                 estrato: [],
                 comodidades: [],
+                codigo: '',
+                tipoPropiedad: '',
               }))}
               style={{
                 fontFamily: FONT_BODY, fontSize: '13px', fontWeight: 600,
