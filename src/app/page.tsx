@@ -121,11 +121,13 @@ export default function Home() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [currentPage]);
 
+  const isHeroPage = currentPage === 'home';
+
   return (
     <div className="min-h-screen flex flex-col">
-      <Header currentPage={currentPage} onNavigate={handleNavigate} />
+      <Header currentPage={currentPage} onNavigate={handleNavigate} isHeroPage={isHeroPage} />
 
-      <main className="flex-1 relative">
+      <main className="flex-1 relative" style={{ paddingTop: isHeroPage ? 0 : '86px' }}>
         {currentPage === 'home' && <HomePage onNavigate={handleNavigate} />}
         {currentPage === 'propiedades' && <PropiedadesPage initialFilter={propiedadesFilter} />}
         {currentPage === 'consignacion' && <ConsignacionPage />}
