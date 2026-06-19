@@ -106,13 +106,16 @@ export default function PropiedadesPage({ initialFilter = 'Todos' }: { initialFi
   const cardsGridRef = useRef<HTMLDivElement>(null);
 
   const [showMap, setShowMap] = useState(false);
+  const getDefaultPrecioMax = (tipo: string) =>
+    tipo === 'Comprar' ? 500_000_000 : tipo === 'Arrendar' ? 15_000_000 : 500_000_000;
+
   const [appliedFilters, setAppliedFilters] = useState<PropSearchFilters>({
     tipo: initialFilter || 'Todos',
     codigo: '',
     sector: '',
     tipoPropiedad: '',
     precioMin: 0,
-    precioMax: 15_000_000,
+    precioMax: getDefaultPrecioMax(initialFilter || 'Todos'),
     habitaciones: null,
     banos: null,
     parqueadero: null,
