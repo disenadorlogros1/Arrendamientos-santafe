@@ -143,13 +143,11 @@ export default function PropiedadesPage({ initialFilter = 'Todos' }: { initialFi
     const el = cardsGridRef.current;
     if (!el) return;
     const items = el.querySelectorAll('.propiedades-card-item');
-    gsap.from(items, {
-      opacity: 0,
-      y: 20,
-      duration: 0.3,
-      stagger: 0.03,
-      ease: 'power2.out',
-    });
+    gsap.killTweensOf(items);
+    gsap.fromTo(items,
+      { opacity: 0, y: 20 },
+      { opacity: 1, y: 0, duration: 0.3, stagger: 0.03, ease: 'power2.out' }
+    );
   }, [filtered.length, appliedFilters]);
 
   return (
