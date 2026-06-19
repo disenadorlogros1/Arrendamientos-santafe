@@ -35,46 +35,58 @@ interface PropertyGalleryProps {
 
 interface Rect { l: number; t: number; w: number; h: number }
 
+/* G = gap between cells in % */
+const G = 0.8;
+
 const BENTO: Record<number, Rect[]> = {
   1: [{ l:0, t:0, w:100, h:100 }],
+
+  /* 2: tall left + tall right, slight height difference */
   2: [
-    { l:0,  t:0, w:49,  h:100 },
-    { l:51, t:0, w:49,  h:100 },
+    { l:0,        t:0,    w:58-G/2,    h:100 },
+    { l:58+G/2,   t:0,    w:42-G/2,    h:100 },
   ],
+
+  /* 3: large left spanning full height, two stacked right */
   3: [
-    { l:0,  t:0,  w:60, h:100 },
-    { l:62, t:0,  w:38, h:49 },
-    { l:62, t:51, w:38, h:49 },
+    { l:0,        t:0,    w:58-G/2,    h:100 },
+    { l:58+G/2,   t:0,    w:42-G/2,    h:50-G/2 },
+    { l:58+G/2,   t:50+G/2, w:42-G/2, h:50-G/2 },
   ],
+
+  /* 4: one large top-left, two small top-right, one wide bottom */
   4: [
-    { l:0,  t:0,  w:49, h:49 },
-    { l:51, t:0,  w:49, h:49 },
-    { l:0,  t:51, w:49, h:49 },
-    { l:51, t:51, w:49, h:49 },
+    { l:0,        t:0,       w:58-G/2,    h:60-G/2 },
+    { l:58+G/2,   t:0,       w:22-G/2,   h:60-G/2 },
+    { l:81+G/2,   t:0,       w:19-G/2,   h:60-G/2 },
+    { l:0,        t:60+G/2,  w:100,       h:40-G/2 },
   ],
+
+  /* 5: large left (full height) + 4 cells right in 2×2 */
   5: [
-    { l:0,  t:0,  w:39, h:100 },
-    { l:41, t:0,  w:59, h:27 },
-    { l:41, t:29, w:28, h:69 },
-    { l:71, t:29, w:29, h:33 },
-    { l:71, t:63, w:29, h:36 },
+    { l:0,        t:0,       w:42-G/2,    h:100 },
+    { l:42+G/2,   t:0,       w:29-G/2,    h:48-G/2 },
+    { l:72+G/2,   t:0,       w:28-G/2,    h:48-G/2 },
+    { l:42+G/2,   t:48+G/2,  w:29-G/2,    h:52-G/2 },
+    { l:72+G/2,   t:48+G/2,  w:28-G/2,    h:52-G/2 },
   ],
+
+  /* 6: large left (top 58%) + 2 small right top + wide bottom-left + 2 small bottom-right */
   6: [
-    { l:0,  t:0,  w:39,  h:57 },
-    { l:41, t:0,  w:28,  h:27 },
-    { l:71, t:0,  w:29,  h:27 },
-    { l:41, t:29, w:28,  h:27 },
-    { l:71, t:29, w:29,  h:27 },
-    { l:0,  t:59, w:100, h:41 },
+    { l:0,        t:0,       w:42-G/2,    h:58-G/2 },
+    { l:42+G/2,   t:0,       w:29-G/2,    h:28-G/2 },
+    { l:72+G/2,   t:0,       w:28-G/2,    h:28-G/2 },
+    { l:42+G/2,   t:28+G/2,  w:29-G/2,    h:30-G/2 },
+    { l:72+G/2,   t:28+G/2,  w:28-G/2,    h:30-G/2 },
+    { l:0,        t:58+G/2,  w:100,       h:42-G/2 },
   ],
 };
 
 function getLayout(n: number): Rect[] {
   if (BENTO[n]) return BENTO[n];
-  // Dynamic grid for n > 6
-  const cols = Math.ceil(Math.sqrt(n * 1.2));
+  // Dynamic fallback for n > 6
+  const cols = Math.ceil(Math.sqrt(n * 1.3));
   const rows = Math.ceil(n / cols);
-  const G = 1.5;
   const colW = (100 - (cols - 1) * G) / cols;
   const rowH = (100 - (rows - 1) * G) / rows;
   return Array.from({ length: n }, (_, i) => ({
