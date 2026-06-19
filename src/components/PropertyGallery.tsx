@@ -173,13 +173,14 @@ function ElasticGallery({
 
   const n = images.length;
 
-  // Build rows of max 3 cards so cards stay tall/narrow on widescreen.
-  // For N photos distribute as evenly as possible without exceeding 3 per row.
-  //   1-3  → 1 row
-  //   4-6  → 2 rows
-  //   7-9  → 3 rows
-  //   10+  → ceil(N/3) rows, last row may have 1-3 cards
-  const rowCount = n <= 3 ? 1 : n <= 6 ? 2 : Math.ceil(n / 3);
+  // More cards per row = narrower cards = taller portrait ratio on widescreen.
+  // Target: cards should be clearly taller than wide (portrait initial state).
+  // Strategy: min 5 per row, keep 2 rows for portrait feel on standard 1080p.
+  //   1-5   → 1 row
+  //   6-10  → 2 rows of 5 (cards ~384px wide × ~520px tall on 1920px = 0.74:1 portrait)
+  //   11-14 → 2 rows of 7
+  //   15+   → 3 rows
+  const rowCount = n <= 5 ? 1 : n <= 14 ? 2 : 3;
   const perRow   = Math.ceil(n / rowCount);
   const rows: string[][] = [];
   for (let i = 0; i < n; i += perRow) rows.push(images.slice(i, i + perRow));
