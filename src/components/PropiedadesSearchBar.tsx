@@ -89,8 +89,8 @@ function fmtCOP(n: number): string {
 /* ── PriceRangeSlider — mismo estilo que el hero ────────────────────── */
 
 function PriceRangeSlider({
-  min, max, step, value, onChange,
-}: { min: number; max: number; step: number; value: [number, number]; onChange: (v: [number, number]) => void }) {
+  min, max, step, value, onChange, formatter = fmtCOP,
+}: { min: number; max: number; step: number; value: [number, number]; onChange: (v: [number, number]) => void; formatter?: (n: number) => string }) {
   const [low, high] = value;
   const trackRef  = useRef<HTMLDivElement>(null);
   const dragging  = useRef<'low' | 'high' | null>(null);
@@ -156,7 +156,7 @@ function PriceRangeSlider({
         <div style={{ position: 'absolute', left: `${pctHigh}%`, top: '50%', transform: 'translate(-50%,-50%)', width: '10px', height: '10px', background: RED, borderRadius: '50%', pointerEvents: 'none', zIndex: 2 }} />
       </div>
       <p style={{ fontFamily: FONT, fontSize: '12px', fontWeight: 500, color: COLOR_VALUE, textAlign: 'center', margin: '8px 0 0', lineHeight: 1 }}>
-        {fmtCOP(low)} – {fmtCOP(high)}
+        {formatter(low)} – {formatter(high)}
       </p>
     </div>
   );
@@ -332,7 +332,15 @@ function CustomSelect({
   );
 }
 
-/* ── AreaSelect — dropdown portal igual que PriceSelect ─────────────── */
+/* ── AreaSelect — slider igual que PriceSelect ───────────────────────── */
+
+const AREA_MIN = 0;
+const AREA_MAX = 500;
+const AREA_STEP = 5;
+
+function fmtArea(n: number): string {
+  return `${n} m²`;
+}
 
 function AreaSelect({
   areaMin, areaMax, onChangeMin, onChangeMax,
@@ -343,12 +351,16 @@ function AreaSelect({
   const dropdownRef           = useRef<HTMLDivElement>(null);
   const [pos, setPos]         = useState({ top: 0, left: 0, width: 0 });
 
+  const low  = areaMin ? parseInt(areaMin)  : AREA_MIN;
+  const high = areaMax ? parseInt(areaMax)  : AREA_MAX;
+  const sliderValue: [number, number] = [low, high];
+
   useEffect(() => { setMounted(true); }, []);
 
   const updatePos = useCallback(() => {
     if (buttonRef.current) {
       const r = buttonRef.current.getBoundingClientRect();
-      setPos({ top: r.bottom + 2, left: r.left, width: Math.max(r.width, 240) });
+      setPos({ top: r.bottom + 2, left: r.left, width: Math.max(r.width, 260) });
     }
   }, []);
 
@@ -368,24 +380,23 @@ function AreaSelect({
     return () => window.removeEventListener('scroll', updatePos);
   }, [open, updatePos]);
 
+  const handleSlider = ([newLow, newHigh]: [number, number]) => {
+    onChangeMin(newLow === AREA_MIN ? '' : String(newLow));
+    onChangeMax(newHigh === AREA_MAX ? '' : String(newHigh));
+  };
+
   const pristine = !areaMin && !areaMax;
-  const display  = pristine ? null : `${areaMin || '0'} – ${areaMax || '∞'} m²`;
+  const display  = pristine ? null : `${fmtArea(low)} – ${fmtArea(high)}`;
 
   const dropdown = mounted && open ? (
     <div ref={dropdownRef} style={{ position: 'fixed', top: pos.top, left: pos.left, width: pos.width, zIndex: 9999 }}>
-      <div className="bg-white shadow-2xl border border-gray-100" style={{ padding: '16px 20px 20px' }}>
-        <p style={{ ...labelStyle, marginBottom: '12px' }}>Área (m²)</p>
-        <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-          <input
-            type="number" value={areaMin} onChange={e => onChangeMin(e.target.value)} placeholder="Mín"
-            style={{ fontFamily: FONT, fontSize: '14px', fontWeight: 400, color: COLOR_VALUE, background: '#f7f7f7', border: '1px solid rgba(0,0,0,0.1)', outline: 'none', padding: '8px 12px', flex: 1, lineHeight: 1 }}
-          />
-          <span style={{ fontFamily: FONT, fontSize: '13px', color: '#aaa' }}>–</span>
-          <input
-            type="number" value={areaMax} onChange={e => onChangeMax(e.target.value)} placeholder="Máx"
-            style={{ fontFamily: FONT, fontSize: '14px', fontWeight: 400, color: COLOR_VALUE, background: '#f7f7f7', border: '1px solid rgba(0,0,0,0.1)', outline: 'none', padding: '8px 12px', flex: 1, lineHeight: 1 }}
-          />
-        </div>
+      <div className="bg-white shadow-2xl border border-gray-100" style={{ padding: '16px 20px 22px' }}>
+        <PriceRangeSlider
+          min={AREA_MIN} max={AREA_MAX} step={AREA_STEP}
+          value={sliderValue}
+          onChange={handleSlider}
+          formatter={fmtArea}
+        />
       </div>
     </div>
   ) : null;
