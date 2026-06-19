@@ -539,6 +539,8 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', onApply }:
     onApply({ ...DEFAULT_FILTERS, tipo, precioMin: defaultRange[0], precioMax: defaultRange[1] });
   };
 
+  const [hoveredTab, setHoveredTab] = useState<string | null>(null);
+
   const toggleEstrato   = (e: string) => setEstrato(prev => prev.includes(e) ? prev.filter(x => x !== e) : [...prev, e]);
   const toggleComodidad = (c: string) => setComodidades(prev => prev.includes(c) ? prev.filter(x => x !== c) : [...prev, c]);
 
@@ -575,7 +577,7 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', onApply }:
                   height: '100%',
                   background: active
                     ? (t === 'Todos' ? '#f0f0f0' : RED)
-                    : 'transparent',
+                    : hoveredTab === t ? 'rgba(0,0,0,0.03)' : 'transparent',
                   color: active
                     ? (t === 'Todos' ? '#444' : '#fff')
                     : '#666',
@@ -588,8 +590,8 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', onApply }:
                   letterSpacing: '0.01em',
                   transition: 'background 0.2s ease, color 0.2s ease',
                 }}
-                onMouseEnter={e => { if (!active) e.currentTarget.style.background = 'rgba(0,0,0,0.03)'; }}
-                onMouseLeave={e => { if (!active) e.currentTarget.style.background = 'transparent'; }}
+                onMouseEnter={() => setHoveredTab(t)}
+                onMouseLeave={() => setHoveredTab(null)}
               >
                 {t}
               </button>
