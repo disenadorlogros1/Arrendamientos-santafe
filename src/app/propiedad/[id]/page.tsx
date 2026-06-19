@@ -1,37 +1,118 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { properties, DEFAULT_INTERIOR_GALLERY } from '@/data/properties';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import MapComponent from '@/components/MapComponent';
 import PropertyGallery from '@/components/PropertyGallery';
+import ScrollReveal from '@/components/ScrollReveal';
 import { getInvestmentZoneForLocation } from '@/data/properties';
 import { getZoneBySlug } from '@/data/investment-zones';
 import type { PageType } from '@/components/Header';
 
+gsap.registerPlugin(ScrollTrigger);
+
 export default function PropertyDetailPage() {
-  const params = useParams();
-  const router = useRouter();
+  const params    = useParams();
+  const router    = useRouter();
   const [currentPage, setCurrentPage] = useState<PageType>('propiedades');
   const propertyId = parseInt(params.id as string);
-  const property = properties.find((p) => p.id === propertyId);
+  const property   = properties.find((p) => p.id === propertyId);
+
+  // Entrance animation refs
+  const breadcrumbRef  = useRef<HTMLDivElement>(null);
+  const galleryRef     = useRef<HTMLDivElement>(null);
+  const titleBlockRef  = useRef<HTMLDivElement>(null);
+  const formRef        = useRef<HTMLDivElement>(null);
+  const statsRef       = useRef<HTMLDivElement>(null);
+  const detailsRef     = useRef<HTMLDivElement>(null);
+  const charsRef       = useRef<HTMLDivElement>(null);
+  const whatsappBtnRef = useRef<HTMLAnchorElement>(null);
 
   const handleNavigate = (page: PageType) => {
     const routes: Partial<Record<PageType, string>> = {
-      home:          '/',
-      propiedades:   '/propiedades',
-      consignacion:  '/consignacion',
-      inversionistas:'/inversionistas',
-      blog:          '/blog',
+      home:           '/',
+      propiedades:    '/propiedades',
+      consignacion:   '/consignacion',
+      inversionistas: '/inversionistas',
+      blog:           '/blog',
     };
     window.location.href = routes[page] ?? '/';
   };
 
+  // Staged entrance
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    const ctx = gsap.context(() => {
+      const tl = gsap.timeline({ defaults: { ease: 'power2.out' } });
+
+      // Stage 1: breadcrumb (0ms)
+      tl.from(breadcrumbRef.current, { opacity: 0, y: -8, duration: 0.3 }, 0);
+
+      // Stage 2: gallery fade (50ms)
+      tl.from(galleryRef.current, { opacity: 0, duration: 0.4 }, 0.05);
+
+      // Stage 3: title + price block (120ms) — the key info
+      tl.from(titleBlockRef.current, { opacity: 0, y: 16, duration: 0.4 }, 0.12);
+
+      // Stage 4: sticky form panel (200ms)
+      tl.from(formRef.current, { opacity: 0, y: 20, duration: 0.45 }, 0.20);
+
+      // Stats grid stagger (scroll-triggered count-up feel)
+      if (statsRef.current) {
+        const statItems = statsRef.current.querySelectorAll('.stat-item');
+        gsap.from(statItems, {
+          opacity: 0,
+          y: 12,
+          scale: 0.95,
+          duration: 0.35,
+          stagger: 0.06,
+          ease: 'back.out(1.4)',
+          scrollTrigger: { trigger: statsRef.current, start: 'top 85%', once: true },
+        });
+      }
+
+      // Detail cards stagger
+      if (detailsRef.current) {
+        const cards = detailsRef.current.querySelectorAll('.detail-card');
+        gsap.from(cards, {
+          opacity: 0,
+          y: 10,
+          duration: 0.3,
+          stagger: 0.05,
+          ease: 'power2.out',
+          scrollTrigger: { trigger: detailsRef.current, start: 'top 88%', once: true },
+        });
+      }
+
+      // Characteristics pills cascade
+      if (charsRef.current) {
+        const pills = charsRef.current.querySelectorAll('.char-pill');
+        gsap.from(pills, {
+          opacity: 0,
+          scale: 0.85,
+          duration: 0.25,
+          stagger: 0.04,
+          ease: 'back.out(1.7)',
+          scrollTrigger: { trigger: charsRef.current, start: 'top 88%', once: true },
+        });
+      }
+
+      // WhatsApp button attention pulse — fires once after 800ms
+      if (whatsappBtnRef.current) {
+        gsap.timeline({ delay: 0.8 })
+          .to(whatsappBtnRef.current, { scale: 1.03, duration: 0.18, ease: 'power2.out' })
+          .to(whatsappBtnRef.current, { scale: 1,    duration: 0.22, ease: 'power2.inOut' });
+      }
+    });
+
+    return () => ctx.revert();
   }, []);
 
   if (!property) {
@@ -51,8 +132,6 @@ export default function PropertyDetailPage() {
     );
   }
 
-  // Si la propiedad tiene fotos propias las usa; si no, usa todas las de la carpeta
-  // (filtrando la foto principal para que no aparezca duplicada)
   const galleryImages = property.images?.length
     ? property.images
     : [property.image, ...DEFAULT_INTERIOR_GALLERY.filter(img => img !== property.image)];
@@ -61,308 +140,329 @@ export default function PropertyDetailPage() {
     <div className="min-h-screen flex flex-col bg-gray-50">
       <Header currentPage={currentPage} onNavigate={handleNavigate} isHeroPage={false} />
       <main className="flex-1 pt-[86px] relative">
-      <div>
-      {/* Breadcrumb */}
-      <div className="bg-white border-b border-gray-200 py-4 px-6">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex items-center gap-2 text-sm text-gray-600">
-            <button
-              onClick={() => router.push('/propiedades')}
-              className="text-brand-red hover:underline font-semibold"
-              title="Volver"
-            >
-              ← Atrás
-            </button>
-            <span>/</span>
-            <span className="text-gray-900">{property.title}</span>
-          </div>
-        </div>
-      </div>
-
-      <div className="max-w-7xl mx-auto px-6 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Columna izquierda - Imágenes */}
-          <div className="lg:col-span-2">
-            {/* Galería de fotos — estilo Trulia */}
-            <PropertyGallery
-              images={galleryImages}
-              title={property.title}
-              stats={{
-                bedrooms:  property.bedrooms,
-                bathrooms: property.bathrooms,
-                area:      property.size,
-                parking:   property.parking,
-                price:     property.price,
-              }}
-            />
-
-            {/* Tipo, Referencia, Título */}
-            <div className="bg-white rounded-lg p-6 mb-6 border border-gray-200">
-              <div className="flex items-center gap-2 mb-3">
-                <span className="text-red-600 text-sm font-bold">{property.businessType === 'Comprar' ? 'VENTA' : 'ARRIENDO'}</span>
-                <span className="text-gray-600 text-sm font-bold">{property.type.toUpperCase()}</span>
-                <span className="text-gray-600 text-sm font-bold">Ref. {property.reference.replace('Ref. ', '')}</span>
-              </div>
-
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">{property.title}</h1>
-              <p className="text-gray-600 text-sm flex items-center gap-1 mb-4">
-                <span>📍</span>
-                {property.address || property.location}
-              </p>
-
-              {/* Precio */}
-              <p className="text-4xl font-bold text-red-600 mb-6">{property.price}</p>
-
-              {/* Características principales */}
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-4 py-4 border-t border-b border-gray-200">
-                {property.bedrooms > 0 && (
-                  <div className="text-center">
-                    <div className="text-2xl font-bold text-gray-900">{property.bedrooms}</div>
-                    <div className="text-gray-600 text-sm uppercase">
-                      Habitación{property.bedrooms > 1 ? 'es' : ''}
-                    </div>
-                  </div>
-                )}
-                {property.bathrooms > 0 && (
-                  <div className="text-center">
-                    <div className="text-2xl font-bold text-gray-900">{property.bathrooms}</div>
-                    <div className="text-gray-600 text-sm uppercase">Baños</div>
-                  </div>
-                )}
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-gray-900">{property.size}</div>
-                  <div className="text-gray-600 text-sm uppercase">Área</div>
-                </div>
-                {property.stratum && (
-                  <div className="text-center">
-                    <div className="text-2xl font-bold text-gray-900">Est. {property.stratum}</div>
-                    <div className="text-gray-600 text-sm uppercase">Estrato</div>
-                  </div>
-                )}
-                {property.parking && (
-                  <div className="text-center">
-                    <div className="text-2xl font-bold text-gray-900">{property.parking}</div>
-                    <div className="text-gray-600 text-sm uppercase">Parqueaderos</div>
-                  </div>
-                )}
-                {property.garage && (
-                  <div className="text-center">
-                    <div className="text-2xl font-bold text-gray-900">{property.garage}</div>
-                    <div className="text-gray-600 text-sm uppercase">Garajes</div>
-                  </div>
-                )}
-              </div>
-
-              {/* Descripción */}
-              {property.description && (
-                <div className="mt-6">
-                  <h2 className="text-lg font-bold text-gray-900 mb-3">Descripción</h2>
-                  <p className="text-gray-700 leading-relaxed">{property.description}</p>
-                </div>
-              )}
-
-              {/* Detalles del inmueble */}
-              <div className="mt-6">
-                <h2 className="text-lg font-bold text-gray-900 mb-4">Detalles del inmueble</h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="flex items-center gap-3 p-3 bg-gray-50 rounded">
-                    <img src="/icons/icon-home-red.gif" alt="Tipo" width="24" height="24" />
-                    <div>
-                      <div className="text-xs text-gray-600">Tipo de inmueble</div>
-                      <div className="font-semibold text-gray-900">{property.type}</div>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-3 p-3 bg-gray-50 rounded">
-                    <img src="/icons/icon-area-gray.gif" alt="Área" width="24" height="24" />
-                    <div>
-                      <div className="text-xs text-gray-600">Área construida</div>
-                      <div className="font-semibold text-gray-900">{property.size}</div>
-                    </div>
-                  </div>
-                  {property.stratum && (
-                    <div className="flex items-center gap-3 p-3 bg-gray-50 rounded">
-                      <img src="/icons/icon-home-red.gif" alt="Estrato" width="24" height="24" />
-                      <div>
-                        <div className="text-xs text-gray-600">Estrato</div>
-                        <div className="font-semibold text-gray-900">Est. {property.stratum}</div>
-                      </div>
-                    </div>
-                  )}
-                  {property.bedrooms > 0 && (
-                    <div className="flex items-center gap-3 p-3 bg-gray-50 rounded">
-                      <img src="/icons/icon-bed-gray.gif" alt="Habitaciones" width="24" height="24" />
-                      <div>
-                        <div className="text-xs text-gray-600">Habitaciones</div>
-                        <div className="font-semibold text-gray-900">{property.bedrooms}</div>
-                      </div>
-                    </div>
-                  )}
-                  {property.bathrooms > 0 && (
-                    <div className="flex items-center gap-3 p-3 bg-gray-50 rounded">
-                      <img src="/icons/icon-bathroom-gray.gif" alt="Baños" width="24" height="24" />
-                      <div>
-                        <div className="text-xs text-gray-600">Baños</div>
-                        <div className="font-semibold text-gray-900">{property.bathrooms}</div>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              {/* Mapa Leaflet con Carto */}
-              {property.latitude && property.longitude && (
-                <div className="mt-6">
-                  <h2 className="text-lg font-bold text-gray-900 mb-4">Ubicación</h2>
-                  <MapComponent
-                    latitude={property.latitude}
-                    longitude={property.longitude}
-                    title={property.title}
-                    businessType={property.businessType || 'Arrendar'}
-                  />
-                  <p className="text-xs text-gray-500 mt-2">© OpenStreetMap contributors © CARTO</p>
-                </div>
-              )}
-
-              {/* Características */}
-              {property.characteristics && property.characteristics.length > 0 && (
-                <div className="mt-6">
-                  <h2 className="text-lg font-bold text-gray-900 mb-4">Características incluidas</h2>
-                  <div className="flex flex-wrap gap-3">
-                    {property.characteristics.map((char, idx) => (
-                      <div key={idx} className="flex items-center gap-2 px-3 py-2 bg-red-50 rounded-full border border-red-200">
-                        <span className="text-red-600">✓</span>
-                        <span className="text-red-600 font-medium text-sm">{char}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Investment Zone Section */}
-              {(() => {
-                const investmentZoneSlug = getInvestmentZoneForLocation(property.location);
-                const investmentZone = investmentZoneSlug ? getZoneBySlug(investmentZoneSlug) : null;
-
-                return investmentZone && property.businessType === 'Comprar' ? (
-                  <div className="mt-6 bg-gradient-to-br from-brand-red/5 to-transparent rounded-xl p-6 border-l-4 border-brand-red">
-                    <h2 className="text-lg font-bold text-gray-900 mb-3">Zona de inversión</h2>
-                    <p className="text-gray-600 mb-4">
-                      Esta propiedad se encuentra en <span className="font-semibold text-brand-red">{investmentZone.name}</span>, una zona con alta demanda y potencial de rentabilidad.
-                    </p>
-                    <div className="grid grid-cols-3 gap-4 mb-6">
-                      <div className="text-center">
-                        <p className="text-xs text-gray-600 mb-1">Rentabilidad</p>
-                        <p className="font-bold text-brand-red text-lg">{investmentZone.rentability}</p>
-                      </div>
-                      <div className="text-center">
-                        <p className="text-xs text-gray-600 mb-1">Precio m²</p>
-                        <p className="font-bold text-gray-900 text-sm">{investmentZone.pricePerM2}</p>
-                      </div>
-                      <div className="text-center">
-                        <p className="text-xs text-gray-600 mb-1">Estratos</p>
-                        <p className="font-bold text-gray-900">{investmentZone.strata}</p>
-                      </div>
-                    </div>
-                    <Link
-                      href={`/inversionistas/${investmentZone.slug}`}
-                      className="inline-flex items-center gap-2 h-10 px-6 bg-brand-red hover:bg-brand-red-hover text-white font-semibold rounded-lg transition-all duration-300"
-                    >
-                      ¿Por qué invertir en esta zona?
-                    </Link>
-                  </div>
-                ) : null;
-              })()}
-            </div>
-          </div>
-
-          {/* Columna derecha - Formulario */}
-          <div className="lg:col-span-1">
-            <div className="bg-white rounded-lg p-6 border border-gray-200 sticky top-6">
-              <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-                <img src="/icons/icon-location-red.gif" alt="Ubicación" width="20" height="20" />
-                ¿Te interesa esta propiedad?
-              </h3>
-              <p className="text-gray-600 text-sm mb-6">Te responderemos de inmediato.</p>
-
-              {/* Botón WhatsApp */}
-              <a
-                href={`https://wa.me/573006557529?text=${encodeURIComponent(
-                  `Hola, quisiera consultar disponibilidad del inmueble ${property.reference} (${property.title}).`
-                )}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-4 rounded-lg flex items-center justify-center gap-2 mb-4 transition"
-              >
-                <img src="/icons/icon-consult-white.gif" alt="WhatsApp" width="20" height="20" />
-                Escribir por WhatsApp
-              </a>
-
-              <p className="text-center text-gray-600 text-xs mb-4">o envía un mensaje</p>
-
-              {/* Formulario */}
-              <form className="space-y-3">
-                <div>
-                  <label className="block text-gray-700 font-semibold text-sm mb-2 flex items-center gap-2">
-                    <img src="/icons/icon-location-red.gif" alt="Nombre" width="16" height="16" />
-                    Tu nombre
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="Nombre completo"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-red-600"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-gray-700 font-semibold text-sm mb-2 flex items-center gap-2">
-                    <img src="/icons/icon-location-red.gif" alt="Teléfono" width="16" height="16" />
-                    Teléfono
-                  </label>
-                  <input
-                    type="tel"
-                    placeholder="300 000 0000"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-red-600"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-gray-700 font-semibold text-sm mb-2 flex items-center gap-2">
-                    <img src="/icons/icon-consult-white.gif" alt="Mensaje" width="16" height="16" />
-                    Mensaje (opcional)
-                  </label>
-                  <textarea
-                    placeholder="¿Está disponible para visitar esta semana?"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-red-600 h-24 resize-none"
-                  />
-                </div>
-
+        <div>
+          {/* Breadcrumb */}
+          <div ref={breadcrumbRef} className="bg-white border-b border-gray-200 py-4 px-6">
+            <div className="max-w-7xl mx-auto">
+              <div className="flex items-center gap-2 text-sm text-gray-600">
                 <button
-                  type="submit"
-                  className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-4 rounded-lg transition"
+                  onClick={() => router.push('/propiedades')}
+                  className="text-brand-red hover:underline font-semibold"
+                  title="Volver"
                 >
-                  Enviar consulta
+                  ← Atrás
                 </button>
-              </form>
-
-              {/* Compartir */}
-              <div className="mt-6 pt-6 border-t border-gray-200">
-                <h4 className="text-sm font-bold text-gray-900 mb-3">COMPARTIR PROPIEDAD</h4>
-                <div className="flex gap-3">
-                  <button className="flex-1 bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-3 rounded-lg transition text-sm flex items-center justify-center gap-2">
-                    <img src="/icons/icon-consult-white.gif" alt="Compartir" width="16" height="16" />
-                    WhatsApp
-                  </button>
-                  <button className="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-900 font-bold py-2 px-3 rounded-lg transition text-sm flex items-center justify-center gap-2">
-                    <img src="/icons/icon-location-red.gif" alt="Link" width="16" height="16" />
-                    Copiar
-                  </button>
-                </div>
+                <span>/</span>
+                <span className="text-gray-900">{property.title}</span>
               </div>
             </div>
           </div>
+
+          <div className="max-w-7xl mx-auto px-6 py-8">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+              {/* Columna izquierda */}
+              <div className="lg:col-span-2">
+
+                {/* Galería */}
+                <div ref={galleryRef}>
+                  <PropertyGallery
+                    images={galleryImages}
+                    title={property.title}
+                    stats={{
+                      bedrooms:  property.bedrooms,
+                      bathrooms: property.bathrooms,
+                      area:      property.size,
+                      parking:   property.parking,
+                      price:     property.price,
+                    }}
+                  />
+                </div>
+
+                {/* Título, precio, stats */}
+                <div ref={titleBlockRef} className="bg-white rounded-lg p-6 mb-6 border border-gray-200">
+                  <div className="flex items-center gap-2 mb-3">
+                    <span className="text-red-600 text-sm font-bold">
+                      {property.businessType === 'Comprar' ? 'VENTA' : 'ARRIENDO'}
+                    </span>
+                    <span className="text-gray-600 text-sm font-bold">{property.type.toUpperCase()}</span>
+                    <span className="text-gray-600 text-sm font-bold">
+                      Ref. {property.reference.replace('Ref. ', '')}
+                    </span>
+                  </div>
+
+                  <h1 className="text-3xl font-bold text-gray-900 mb-2">{property.title}</h1>
+                  <p className="text-gray-600 text-sm flex items-center gap-1 mb-4">
+                    <span>📍</span>
+                    {property.address || property.location}
+                  </p>
+
+                  <p className="text-4xl font-bold text-red-600 mb-6">{property.price}</p>
+
+                  {/* Stats grid */}
+                  <div
+                    ref={statsRef}
+                    className="grid grid-cols-2 md:grid-cols-3 gap-4 py-4 border-t border-b border-gray-200"
+                  >
+                    {property.bedrooms > 0 && (
+                      <div className="stat-item text-center">
+                        <div className="text-2xl font-bold text-gray-900">{property.bedrooms}</div>
+                        <div className="text-gray-600 text-sm uppercase">
+                          Habitación{property.bedrooms > 1 ? 'es' : ''}
+                        </div>
+                      </div>
+                    )}
+                    {property.bathrooms > 0 && (
+                      <div className="stat-item text-center">
+                        <div className="text-2xl font-bold text-gray-900">{property.bathrooms}</div>
+                        <div className="text-gray-600 text-sm uppercase">Baños</div>
+                      </div>
+                    )}
+                    <div className="stat-item text-center">
+                      <div className="text-2xl font-bold text-gray-900">{property.size}</div>
+                      <div className="text-gray-600 text-sm uppercase">Área</div>
+                    </div>
+                    {property.stratum && (
+                      <div className="stat-item text-center">
+                        <div className="text-2xl font-bold text-gray-900">Est. {property.stratum}</div>
+                        <div className="text-gray-600 text-sm uppercase">Estrato</div>
+                      </div>
+                    )}
+                    {property.parking && (
+                      <div className="stat-item text-center">
+                        <div className="text-2xl font-bold text-gray-900">{property.parking}</div>
+                        <div className="text-gray-600 text-sm uppercase">Parqueaderos</div>
+                      </div>
+                    )}
+                    {property.garage && (
+                      <div className="stat-item text-center">
+                        <div className="text-2xl font-bold text-gray-900">{property.garage}</div>
+                        <div className="text-gray-600 text-sm uppercase">Garajes</div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Descripción */}
+                  {property.description && (
+                    <ScrollReveal y={12} delay={0}>
+                      <div className="mt-6">
+                        <h2 className="text-lg font-bold text-gray-900 mb-3">Descripción</h2>
+                        <p className="text-gray-700 leading-relaxed">{property.description}</p>
+                      </div>
+                    </ScrollReveal>
+                  )}
+
+                  {/* Detalles del inmueble */}
+                  <div className="mt-6">
+                    <ScrollReveal y={10}>
+                      <h2 className="text-lg font-bold text-gray-900 mb-4">Detalles del inmueble</h2>
+                    </ScrollReveal>
+                    <div ref={detailsRef} className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="detail-card flex items-center gap-3 p-3 bg-gray-50 rounded">
+                        <img src="/icons/icon-home-red.gif" alt="Tipo" width="24" height="24" />
+                        <div>
+                          <div className="text-xs text-gray-600">Tipo de inmueble</div>
+                          <div className="font-semibold text-gray-900">{property.type}</div>
+                        </div>
+                      </div>
+                      <div className="detail-card flex items-center gap-3 p-3 bg-gray-50 rounded">
+                        <img src="/icons/icon-area-gray.gif" alt="Área" width="24" height="24" />
+                        <div>
+                          <div className="text-xs text-gray-600">Área construida</div>
+                          <div className="font-semibold text-gray-900">{property.size}</div>
+                        </div>
+                      </div>
+                      {property.stratum && (
+                        <div className="detail-card flex items-center gap-3 p-3 bg-gray-50 rounded">
+                          <img src="/icons/icon-home-red.gif" alt="Estrato" width="24" height="24" />
+                          <div>
+                            <div className="text-xs text-gray-600">Estrato</div>
+                            <div className="font-semibold text-gray-900">Est. {property.stratum}</div>
+                          </div>
+                        </div>
+                      )}
+                      {property.bedrooms > 0 && (
+                        <div className="detail-card flex items-center gap-3 p-3 bg-gray-50 rounded">
+                          <img src="/icons/icon-bed-gray.gif" alt="Habitaciones" width="24" height="24" />
+                          <div>
+                            <div className="text-xs text-gray-600">Habitaciones</div>
+                            <div className="font-semibold text-gray-900">{property.bedrooms}</div>
+                          </div>
+                        </div>
+                      )}
+                      {property.bathrooms > 0 && (
+                        <div className="detail-card flex items-center gap-3 p-3 bg-gray-50 rounded">
+                          <img src="/icons/icon-bathroom-gray.gif" alt="Baños" width="24" height="24" />
+                          <div>
+                            <div className="text-xs text-gray-600">Baños</div>
+                            <div className="font-semibold text-gray-900">{property.bathrooms}</div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Mapa */}
+                  {property.latitude && property.longitude && (
+                    <ScrollReveal y={16} className="mt-6">
+                      <h2 className="text-lg font-bold text-gray-900 mb-4">Ubicación</h2>
+                      <MapComponent
+                        latitude={property.latitude}
+                        longitude={property.longitude}
+                        title={property.title}
+                        businessType={property.businessType || 'Arrendar'}
+                      />
+                      <p className="text-xs text-gray-500 mt-2">© OpenStreetMap contributors © CARTO</p>
+                    </ScrollReveal>
+                  )}
+
+                  {/* Características — pill cascade */}
+                  {property.characteristics && property.characteristics.length > 0 && (
+                    <div className="mt-6">
+                      <ScrollReveal y={10}>
+                        <h2 className="text-lg font-bold text-gray-900 mb-4">Características incluidas</h2>
+                      </ScrollReveal>
+                      <div ref={charsRef} className="flex flex-wrap gap-3">
+                        {property.characteristics.map((char, idx) => (
+                          <div
+                            key={idx}
+                            className="char-pill flex items-center gap-2 px-3 py-2 bg-red-50 rounded-full border border-red-200"
+                          >
+                            <span className="text-red-600">✓</span>
+                            <span className="text-red-600 font-medium text-sm">{char}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Investment Zone */}
+                  {(() => {
+                    const investmentZoneSlug = getInvestmentZoneForLocation(property.location);
+                    const investmentZone = investmentZoneSlug ? getZoneBySlug(investmentZoneSlug) : null;
+                    return investmentZone && property.businessType === 'Comprar' ? (
+                      <ScrollReveal y={16} className="mt-6">
+                        <div className="bg-gradient-to-br from-brand-red/5 to-transparent rounded-xl p-6 border-l-4 border-brand-red">
+                          <h2 className="text-lg font-bold text-gray-900 mb-3">Zona de inversión</h2>
+                          <p className="text-gray-600 mb-4">
+                            Esta propiedad se encuentra en{' '}
+                            <span className="font-semibold text-brand-red">{investmentZone.name}</span>, una zona
+                            con alta demanda y potencial de rentabilidad.
+                          </p>
+                          <div className="grid grid-cols-3 gap-4 mb-6">
+                            <div className="text-center">
+                              <p className="text-xs text-gray-600 mb-1">Rentabilidad</p>
+                              <p className="font-bold text-brand-red text-lg">{investmentZone.rentability}</p>
+                            </div>
+                            <div className="text-center">
+                              <p className="text-xs text-gray-600 mb-1">Precio m²</p>
+                              <p className="font-bold text-gray-900 text-sm">{investmentZone.pricePerM2}</p>
+                            </div>
+                            <div className="text-center">
+                              <p className="text-xs text-gray-600 mb-1">Estratos</p>
+                              <p className="font-bold text-gray-900">{investmentZone.strata}</p>
+                            </div>
+                          </div>
+                          <Link
+                            href={`/inversionistas/${investmentZone.slug}`}
+                            className="inline-flex items-center gap-2 h-10 px-6 bg-brand-red hover:bg-brand-red-hover text-white font-semibold rounded-lg transition-all duration-300"
+                          >
+                            ¿Por qué invertir en esta zona?
+                          </Link>
+                        </div>
+                      </ScrollReveal>
+                    ) : null;
+                  })()}
+                </div>
+              </div>
+
+              {/* Columna derecha — Formulario sticky */}
+              <div className="lg:col-span-1">
+                <div ref={formRef} className="bg-white rounded-lg p-6 border border-gray-200 sticky top-6">
+                  <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                    <img src="/icons/icon-location-red.gif" alt="Ubicación" width="20" height="20" />
+                    ¿Te interesa esta propiedad?
+                  </h3>
+                  <p className="text-gray-600 text-sm mb-6">Te responderemos de inmediato.</p>
+
+                  {/* WhatsApp CTA — attention pulse on mount */}
+                  <a
+                    ref={whatsappBtnRef}
+                    href={`https://wa.me/573006557529?text=${encodeURIComponent(
+                      `Hola, quisiera consultar disponibilidad del inmueble ${property.reference} (${property.title}).`
+                    )}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-4 rounded-lg flex items-center justify-center gap-2 mb-4 transition-colors"
+                    style={{ display: 'flex', transformOrigin: 'center' }}
+                  >
+                    <img src="/icons/icon-consult-white.gif" alt="WhatsApp" width="20" height="20" />
+                    Escribir por WhatsApp
+                  </a>
+
+                  <p className="text-center text-gray-600 text-xs mb-4">o envía un mensaje</p>
+
+                  <form className="space-y-3">
+                    <div>
+                      <label className="block text-gray-700 font-semibold text-sm mb-2 flex items-center gap-2">
+                        <img src="/icons/icon-location-red.gif" alt="Nombre" width="16" height="16" />
+                        Tu nombre
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="Nombre completo"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-red-600 transition-colors"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-gray-700 font-semibold text-sm mb-2 flex items-center gap-2">
+                        <img src="/icons/icon-location-red.gif" alt="Teléfono" width="16" height="16" />
+                        Teléfono
+                      </label>
+                      <input
+                        type="tel"
+                        placeholder="300 000 0000"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-red-600 transition-colors"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-gray-700 font-semibold text-sm mb-2 flex items-center gap-2">
+                        <img src="/icons/icon-consult-white.gif" alt="Mensaje" width="16" height="16" />
+                        Mensaje (opcional)
+                      </label>
+                      <textarea
+                        placeholder="¿Está disponible para visitar esta semana?"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-red-600 h-24 resize-none transition-colors"
+                      />
+                    </div>
+                    <button
+                      type="submit"
+                      className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-4 rounded-lg transition-colors"
+                    >
+                      Enviar consulta
+                    </button>
+                  </form>
+
+                  {/* Compartir */}
+                  <div className="mt-6 pt-6 border-t border-gray-200">
+                    <h4 className="text-sm font-bold text-gray-900 mb-3">COMPARTIR PROPIEDAD</h4>
+                    <div className="flex gap-3">
+                      <button className="flex-1 bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-3 rounded-lg transition-colors text-sm flex items-center justify-center gap-2">
+                        <img src="/icons/icon-consult-white.gif" alt="Compartir" width="16" height="16" />
+                        WhatsApp
+                      </button>
+                      <button className="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-900 font-bold py-2 px-3 rounded-lg transition-colors text-sm flex items-center justify-center gap-2">
+                        <img src="/icons/icon-location-red.gif" alt="Link" width="16" height="16" />
+                        Copiar
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
         </div>
-      </div>
-      </div>
       </main>
       <Footer onNavigate={handleNavigate} />
     </div>

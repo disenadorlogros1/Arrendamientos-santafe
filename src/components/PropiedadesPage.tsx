@@ -5,7 +5,6 @@ import gsap from 'gsap';
 import PropertyCard from './PropertyCard';
 import InfiniteCarousel from './InfiniteCarousel';
 import { properties } from '@/data/properties';
-import { Button } from '@/components/ui/button';
 import { useSplitTextAnimation } from '@/hooks/useSplitTextAnimation';
 import PropiedadesSearchBar, { type PropSearchFilters } from './PropiedadesSearchBar';
 import ScrollReveal from '@/components/ScrollReveal';
@@ -13,6 +12,21 @@ import ScrollReveal from '@/components/ScrollReveal';
 const FONT_HEADING = "'Avenir LT Std', 'Outfit', system-ui, sans-serif";
 const FONT_BODY    = "'Avenir LT Std', 'Outfit', system-ui, sans-serif";
 const RED          = '#f32735';
+
+function hasSecondaryFilters(filters: PropSearchFilters): boolean {
+  return (
+    !!filters.codigo ||
+    !!filters.sector ||
+    !!filters.tipoPropiedad ||
+    filters.habitaciones !== null ||
+    filters.banos !== null ||
+    filters.parqueadero !== null ||
+    !!filters.areaMin ||
+    !!filters.areaMax ||
+    filters.estrato.length > 0 ||
+    filters.comodidades.length > 0
+  );
+}
 
 function parsePrice(s: string): number {
   return parseInt(s.replace(/[^0-9]/g, '')) || 0;
@@ -290,33 +304,37 @@ export default function PropiedadesPage({ initialFilter = 'Todos' }: { initialFi
         {filtered.length === 0 && (
           <div className="text-center py-16">
             <p style={{ fontFamily: FONT_BODY, fontSize: '16px', color: '#999', marginBottom: '16px' }}>
-              No se encontraron propiedades con los filtros seleccionados.
+              {hasSecondaryFilters(appliedFilters)
+                ? 'No se encontraron propiedades con los filtros seleccionados.'
+                : `No hay propiedades disponibles para ${appliedFilters.tipo === 'Todos' ? 'mostrar' : appliedFilters.tipo.toLowerCase()} en este momento.`}
             </p>
-            <button
-              type="button"
-              onClick={() => setAppliedFilters(prev => ({
-                tipo: prev.tipo,
-                sector: '',
-                precioMin: 0,
-                precioMax: prev.tipo === 'Comprar' ? 500_000_000 : 15_000_000,
-                habitaciones: null,
-                banos: null,
-                parqueadero: null,
-                areaMin: '',
-                areaMax: '',
-                estrato: [],
-                comodidades: [],
-                codigo: '',
-                tipoPropiedad: '',
-              }))}
-              style={{
-                fontFamily: FONT_BODY, fontSize: '13px', fontWeight: 600,
-                color: '#fff', background: '#f32735', border: 'none',
-                cursor: 'pointer', padding: '11px 24px', borderRadius: '2px',
-              }}
-            >
-              Limpiar filtros
-            </button>
+            {hasSecondaryFilters(appliedFilters) && (
+              <button
+                type="button"
+                onClick={() => setAppliedFilters(prev => ({
+                  tipo: prev.tipo,
+                  sector: '',
+                  precioMin: 0,
+                  precioMax: prev.tipo === 'Comprar' ? 500_000_000 : 15_000_000,
+                  habitaciones: null,
+                  banos: null,
+                  parqueadero: null,
+                  areaMin: '',
+                  areaMax: '',
+                  estrato: [],
+                  comodidades: [],
+                  codigo: '',
+                  tipoPropiedad: '',
+                }))}
+                style={{
+                  fontFamily: FONT_BODY, fontSize: '13px', fontWeight: 600,
+                  color: '#fff', background: '#f32735', border: 'none',
+                  cursor: 'pointer', padding: '11px 24px', borderRadius: '2px',
+                }}
+              >
+                Limpiar filtros
+              </button>
+            )}
           </div>
         )}
 
@@ -325,8 +343,9 @@ export default function PropiedadesPage({ initialFilter = 'Todos' }: { initialFi
           <ScrollReveal y={20}>
             <div
               style={{
-                background: 'rgba(243,39,53,0.04)',
-                border: '1px solid rgba(243,39,53,0.15)',
+                background: '#fff',
+                border: '1px solid #e8e8e8',
+                borderLeft: '4px solid #f32735',
                 borderRadius: '8px',
                 padding: '32px',
               }}
@@ -337,36 +356,52 @@ export default function PropiedadesPage({ initialFilter = 'Todos' }: { initialFi
               <p style={{ fontFamily: FONT_BODY, fontSize: '14px', color: '#666', marginBottom: '20px', lineHeight: 1.55 }}>
                 Consigna tu propiedad con nosotros y accede a nuestra red de clientes.
               </p>
-              <Button
+              <button
+                type="button"
                 onClick={() => window.location.href = '/consignacion'}
-                className="bg-brand-red hover:bg-brand-red-hover text-white rounded-full"
+                style={{
+                  fontFamily: FONT_BODY, fontSize: '13px', fontWeight: 600,
+                  color: '#fff', background: RED, border: 'none',
+                  cursor: 'pointer', padding: '11px 24px', borderRadius: '2px',
+                  transition: 'background 0.2s ease',
+                }}
+                onMouseEnter={e => (e.currentTarget.style.background = '#aa182c')}
+                onMouseLeave={e => (e.currentTarget.style.background = RED)}
               >
                 Consigna tu propiedad
-              </Button>
+              </button>
             </div>
           </ScrollReveal>
 
           <ScrollReveal y={20} delay={0.1}>
             <div
               style={{
-                background: 'rgb(239,246,255)',
-                border: '1px solid rgb(191,219,254)',
+                background: '#1a1a1a',
+                border: '1px solid #2a2a2a',
                 borderRadius: '8px',
                 padding: '32px',
               }}
             >
-              <h3 style={{ fontFamily: FONT_HEADING, fontWeight: 700, fontSize: '20px', color: '#1a1a1a', marginBottom: '10px' }}>
+              <h3 style={{ fontFamily: FONT_HEADING, fontWeight: 700, fontSize: '20px', color: '#fff', marginBottom: '10px' }}>
                 ¿Buscas oportunidades de inversión?
               </h3>
-              <p style={{ fontFamily: FONT_BODY, fontSize: '14px', color: '#666', marginBottom: '20px', lineHeight: 1.55 }}>
+              <p style={{ fontFamily: FONT_BODY, fontSize: '14px', color: 'rgba(255,255,255,0.55)', marginBottom: '20px', lineHeight: 1.55 }}>
                 Descubre nuestras propiedades con mayor potencial de retorno en Antioquia.
               </p>
-              <Button
+              <button
+                type="button"
                 onClick={() => window.location.href = '/inversionistas'}
-                className="bg-blue-600 hover:bg-blue-700 text-white rounded-full"
+                style={{
+                  fontFamily: FONT_BODY, fontSize: '13px', fontWeight: 600,
+                  color: '#fff', background: RED, border: 'none',
+                  cursor: 'pointer', padding: '11px 24px', borderRadius: '2px',
+                  transition: 'background 0.2s ease',
+                }}
+                onMouseEnter={e => (e.currentTarget.style.background = '#aa182c')}
+                onMouseLeave={e => (e.currentTarget.style.background = RED)}
               >
                 Ver oportunidades de inversión
-              </Button>
+              </button>
             </div>
           </ScrollReveal>
         </div>
