@@ -46,13 +46,36 @@ function ElasticCard({
   onLeave: () => void;
 }) {
   const imgRef = useRef<HTMLImageElement>(null);
+  // Track natural ratio to compute correct expansion flex
+  const [naturalRatio, setNaturalRatio] = useState<number | null>(null);
+
+  const syncRatio = () => {
+    const el = imgRef.current;
+    if (el && el.naturalWidth > 0) {
+      setNaturalRatio(el.naturalWidth / el.naturalHeight);
+    }
+  };
+
+  useEffect(() => {
+    if (imgRef.current?.complete) syncRatio();
+  }, []);
+
+  // Expanded flex scales with the image's natural aspect ratio:
+  // 16:9 landscape (1.78) → flex ≈ 6.2  (needs lots of width)
+  // 4:3  landscape (1.33) → flex ≈ 4.7
+  // 1:1  square    (1.00) → flex ≈ 3.5
+  // 3:4  portrait  (0.75) → flex ≈ 2.6  (already tall — less width needed)
+  // 9:16 portrait  (0.56) → flex ≈ 2.0
+  const expandedFlex = naturalRatio
+    ? Math.max(1.8, Math.min(8, naturalRatio * 3.5))
+    : 4.5;
 
   return (
     <div
       onMouseEnter={onEnter}
       onMouseLeave={onLeave}
       style={{
-        flex: isHovered ? 4.5 : anyHovered ? 0.45 : 1,
+        flex: isHovered ? expandedFlex : anyHovered ? 0.35 : 1,
         transition: `flex 0.48s ${isHovered ? ELASTIC : EASE_OUT}`,
         position: 'relative',
         overflow: 'hidden',
@@ -68,13 +91,14 @@ function ElasticCard({
         src={img}
         alt={`Foto ${globalIndex + 1}`}
         draggable={false}
+        onLoad={syncRatio}
         style={{
           width: '100%',
           height: '100%',
           objectFit: 'cover',
           objectPosition: 'center',
           display: 'block',
-          transform: isHovered ? 'scale(1.03)' : 'scale(1)',
+          transform: isHovered ? 'scale(1.02)' : 'scale(1)',
           transition: `transform 0.55s ${EASE_OUT}`,
           userSelect: 'none',
         }}
@@ -149,9 +173,14 @@ function ElasticGallery({
 
   const n = images.length;
 
-  // Split into rows: ≤6 photos = 1 row, 7+ = 2 rows
-  const rowCount   = n > 6 ? 2 : 1;
-  const perRow     = Math.ceil(n / rowCount);
+  // Build rows of max 3 cards so cards stay tall/narrow on widescreen.
+  // For N photos distribute as evenly as possible without exceeding 3 per row.
+  //   1-3  → 1 row
+  //   4-6  → 2 rows
+  //   7-9  → 3 rows
+  //   10+  → ceil(N/3) rows, last row may have 1-3 cards
+  const rowCount = n <= 3 ? 1 : n <= 6 ? 2 : Math.ceil(n / 3);
+  const perRow   = Math.ceil(n / rowCount);
   const rows: string[][] = [];
   for (let i = 0; i < n; i += perRow) rows.push(images.slice(i, i + perRow));
 
