@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>PropertyCard — Diagnóstico y Fix</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background: #f7f6f4;
+    padding: 40px 32px;
+  }
+
+  h1 {
+    font-size: 22px; font-weight: 700; color: #1a1a1a; margin-bottom: 6px;
+  }
+  .subtitle { font-size: 14px; color: #888; margin-bottom: 40px; }
+
+  .section-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.1em;
+    text-transform: uppercase; margin-bottom: 16px;
+  }
+  .label-red  { color: #f32735; }
+  .label-green { color: #16a34a; }
+
+  .badge {
+    display: inline-block; font-size: 10px; font-weight: 600;
+    padding: 3px 10px; border-radius: 2px; margin-bottom: 16px;
+  }
+  .badge-broken { background: #fee2e2; color: #dc2626; }
+  .badge-fixed  { background: #dcfce7; color: #16a34a; }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    margin-bottom: 48px;
+  }
+
+  /* ─── BROKEN card (situación actual) ─────────────────────────── */
+  .card-broken {
+    display: flex;
+    flex-direction: column;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    background: #fff;
+  }
+  .card-broken .img-wrap {
+    flex: 1;            /* ← PROBLEMA: sin min-height ni aspect-ratio */
+    overflow: hidden;
+    cursor: pointer;
+    position: relative;
+    min-height: 0;      /* colapsa a ~0 porque el padre no tiene altura definida */
+  }
+  .card-broken .img-wrap img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    object-position: center center; /* muestra cielo/partes claras */
+    display: block;
+  }
+
+  /* ─── FIXED card ──────────────────────────────────────────────── */
+  .card-fixed {
+    display: flex;
+    flex-direction: column;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    background: #fff;
+    transition: box-shadow 0.3s ease;
+  }
+  .card-fixed:hover {
+    box-shadow: 0 0 28px rgba(0,0,0,0.28);
+  }
+  .card-fixed .img-wrap {
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    aspect-ratio: 4 / 3; /* ✅ FIX: proporción fija */
+    flex-shrink: 0;
+  }
+  .card-fixed .img-wrap img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    object-position: center 70%; /* ✅ FIX: muestra el inmueble, no el cielo */
+    display: block;
+    transition: transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+  .card-fixed:hover .img-wrap img {
+    transform: scale(1.06);
+  }
+  /* ✅ FIX: gradiente oscuro en la parte inferior para dar base al texto */
+  .card-fixed .img-wrap::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to bottom,
+      transparent 50%,
+      rgba(0,0,0,0.18) 100%
+    );
+    pointer-events: none;
+  }
+
+  /* ─── Info section (igual en ambos) ──────────────────────────── */
+  .card-info {
+    padding: 11px 13px 13px;
+    background: #fff;
+    flex-shrink: 0;
+  }
+  .card-price {
+    font-weight: 900; font-size: 20px; color: #232222;
+    margin: 0 0 4px 0; letter-spacing: -0.3px; line-height: 1.15;
+  }
+  .card-meta {
+    display: flex; justify-content: space-between;
+    font-size: 12px; color: #808080; font-weight: 500;
+  }
+  .card-divider {
+    height: 2px; background: #f32735; margin: 5px 0;
+  }
+  .card-ref {
+    font-size: 12px; color: #909090;
+  }
+
+  /* ─── Arrow button ─────────────────────────────────────────────── */
+  .arrow-btn {
+    position: absolute; top: 12px; right: 12px;
+    width: 36px; height: 36px; border-radius: 50%;
+    background: #f32735; border: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    color: #fff;
+    transition: background 0.25s ease;
+    z-index: 1;
+  }
+  .arrow-btn:hover { background: #aa182c; }
+
+  /* ─── Diagnosis panel ─────────────────────────────────────────── */
+  .diagnosis {
+    background: #fff; border: 1px solid #e8e8e8;
+    border-left: 4px solid #f32735;
+    border-radius: 8px; padding: 24px 28px; margin-bottom: 40px;
+  }
+  .diagnosis h2 { font-size: 15px; font-weight: 700; color: #1a1a1a; margin-bottom: 16px; }
+  .diag-row { display: flex; gap: 16px; align-items: flex-start; margin-bottom: 12px; }
+  .diag-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+  .diag-text { font-size: 13px; color: #444; line-height: 1.55; }
+  .diag-text code {
+    background: #f5f5f5; padding: 1px 6px; border-radius: 3px;
+    font-family: monospace; font-size: 12px; color: #e03131;
+  }
+  .diag-text .ok { color: #16a34a; font-weight: 600; }
+
+  .divider { height: 1px; background: #e8e8e8; margin: 32px 0; }
+
+  /* ─── Note box ─────────────────────────────────────────────────── */
+  .note {
+    background: #1a1a1a; color: rgba(255,255,255,0.75);
+    border-radius: 8px; padding: 20px 24px;
+    font-size: 13px; line-height: 1.65;
+  }
+  .note strong { color: #fff; }
+</style>
+</head>
+<body>
+
+<h1>PropertyCard — Diagnóstico de imagen blanqueada</h1>
+<p class="subtitle">Arrendamientos Santafé · Página /propiedades</p>
+
+<!-- DIAGNOSIS -->
+<div class="diagnosis">
+  <h2>Causa raíz (3 problemas combinados)</h2>
+
+  <div class="diag-row">
+    <span class="diag-icon">❌</span>
+    <span class="diag-text">
+      <strong>Sin altura definida en el contenedor de imagen.</strong> La tarjeta usa <code>flex-1</code> para que la imagen ocupe el espacio disponible, pero el grid padre no tiene altura explícita. El navegador colapsa <code>flex-1</code> a 0 — la imagen se "esprima" y muestra solo una franja del centro.
+    </span>
+  </div>
+
+  <div class="diag-row">
+    <span class="diag-icon">❌</span>
+    <span class="diag-text">
+      <strong><code>object-position: center center</code> (default).</strong> Las fotos inmobiliarias son verticales (portrait). El recorte al centro muestra el cielo y las partes más brillantes del inmueble — no la fachada completa.
+    </span>
+  </div>
+
+  <div class="diag-row">
+    <span class="diag-icon">❌</span>
+    <span class="diag-text">
+      <strong>Sin gradiente de anclaje.</strong> Sin transición visual entre la imagen y el área blanca de información, el contraste genera una apariencia "lavada" cuando las fotos son claras o de cielo abierto.
+    </span>
+  </div>
+
+  <div class="diag-row" style="margin-top:16px; padding-top:16px; border-top: 1px solid #f0f0f0;">
+    <span class="diag-icon">✅</span>
+    <span class="diag-text">
+      <span class="ok">Fix:</span> Reemplazar <code>flex-1</code> por <code>aspect-ratio: 4/3</code> en el contenedor · <code>object-position: center 70%</code> en el <code>&lt;img&gt;</code> · Añadir gradiente sutil <code>::after</code> en la parte inferior de la imagen.
+    </span>
+  </div>
+</div>
+
+<!-- BROKEN CARDS -->
+<p class="section-label label-red">Estado actual — imagen colapsada</p>
+<span class="badge badge-broken">PROBLEMA</span>
+
+<div class="grid">
+  <!-- Card 1 -->
+  <div class="card-broken">
+    <div class="img-wrap" style="min-height: 40px;">
+      <img src="https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=400&h=300&fit=crop&crop=top" alt="Casa" />
+      <button class="arrow-btn">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <path d="M2.5 11.5L11.5 2.5M11.5 2.5H5M11.5 2.5V9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+    <div class="card-info">
+      <p class="card-price">$1'800.000</p>
+      <div class="card-meta"><span>Belén</span><span>Apartamento</span></div>
+      <div class="card-divider"></div>
+      <p class="card-ref">Ref: A13231</p>
+    </div>
+  </div>
+
+  <!-- Card 2 -->
+  <div class="card-broken">
+    <div class="img-wrap" style="min-height: 40px;">
+      <img src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=400&h=300&fit=crop&crop=top" alt="Casa" />
+      <button class="arrow-btn">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <path d="M2.5 11.5L11.5 2.5M11.5 2.5H5M11.5 2.5V9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+    <div class="card-info">
+      <p class="card-price">$2'200.000</p>
+      <div class="card-meta"><span>Envigado</span><span>Casa</span></div>
+      <div class="card-divider"></div>
+      <p class="card-ref">Ref: A14428</p>
+    </div>
+  </div>
+
+  <!-- Card 3 -->
+  <div class="card-broken">
+    <div class="img-wrap" style="min-height: 40px;">
+      <img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=400&h=300&fit=crop&crop=top" alt="Casa" />
+      <button class="arrow-btn">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <path d="M2.5 11.5L11.5 2.5M11.5 2.5H5M11.5 2.5V9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+    <div class="card-info">
+      <p class="card-price">$3'500.000</p>
+      <div class="card-meta"><span>Poblado</span><span>Finca</span></div>
+      <div class="card-divider"></div>
+      <p class="card-ref">Ref: A14711</p>
+    </div>
+  </div>
+
+  <!-- Card 4 -->
+  <div class="card-broken">
+    <div class="img-wrap" style="min-height: 40px;">
+      <img src="https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=400&h=300&fit=crop&crop=top" alt="Casa" />
+      <button class="arrow-btn">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <path d="M2.5 11.5L11.5 2.5M11.5 2.5H5M11.5 2.5V9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+    <div class="card-info">
+      <p class="card-price">$1'600.000</p>
+      <div class="card-meta"><span>Sabaneta</span><span>Apartamento</span></div>
+      <div class="card-divider"></div>
+      <p class="card-ref">Ref: A14923</p>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- FIXED CARDS -->
+<p class="section-label label-green">Estado corregido — aspect-ratio + object-position + gradiente</p>
+<span class="badge badge-fixed">FIX APLICADO</span>
+
+<div class="grid">
+  <!-- Card 1 -->
+  <div class="card-fixed">
+    <div class="img-wrap">
+      <img src="https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=400&h=300&fit=crop&crop=bottom" alt="Casa" />
+      <button class="arrow-btn">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <path d="M2.5 11.5L11.5 2.5M11.5 2.5H5M11.5 2.5V9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+    <div class="card-info">
+      <p class="card-price">$1'800.000</p>
+      <div class="card-meta"><span>Belén</span><span>Apartamento</span></div>
+      <div class="card-divider"></div>
+      <p class="card-ref">Ref: A13231</p>
+    </div>
+  </div>
+
+  <!-- Card 2 -->
+  <div class="card-fixed">
+    <div class="img-wrap">
+      <img src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=400&h=300&fit=crop&crop=bottom" alt="Casa" />
+      <button class="arrow-btn">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <path d="M2.5 11.5L11.5 2.5M11.5 2.5H5M11.5 2.5V9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+    <div class="card-info">
+      <p class="card-price">$2'200.000</p>
+      <div class="card-meta"><span>Envigado</span><span>Casa</span></div>
+      <div class="card-divider"></div>
+      <p class="card-ref">Ref: A14428</p>
+    </div>
+  </div>
+
+  <!-- Card 3 -->
+  <div class="card-fixed">
+    <div class="img-wrap">
+      <img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=400&h=300&fit=crop&crop=bottom" alt="Casa" />
+      <button class="arrow-btn">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <path d="M2.5 11.5L11.5 2.5M11.5 2.5H5M11.5 2.5V9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+    <div class="card-info">
+      <p class="card-price">$3'500.000</p>
+      <div class="card-meta"><span>Poblado</span><span>Finca</span></div>
+      <div class="card-divider"></div>
+      <p class="card-ref">Ref: A14711</p>
+    </div>
+  </div>
+
+  <!-- Card 4 -->
+  <div class="card-fixed">
+    <div class="img-wrap">
+      <img src="https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=400&h=300&fit=crop&crop=bottom" alt="Casa" />
+      <button class="arrow-btn">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <path d="M2.5 11.5L11.5 2.5M11.5 2.5H5M11.5 2.5V9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+    <div class="card-info">
+      <p class="card-price">$1'600.000</p>
+      <div class="card-meta"><span>Sabaneta</span><span>Apartamento</span></div>
+      <div class="card-divider"></div>
+      <p class="card-ref">Ref: A14923</p>
+    </div>
+  </div>
+</div>
+
+<div class="note">
+  <strong>Cambios aplicados en PropertyCard.tsx:</strong><br><br>
+  1. <code style="background:rgba(255,255,255,0.1); padding: 1px 6px; border-radius:3px;">flex-1 overflow-hidden</code> → <code style="background:rgba(255,255,255,0.1); padding: 1px 6px; border-radius:3px;">relative overflow-hidden flex-shrink-0 [aspect-ratio:4/3]</code><br>
+  2. En el <code style="background:rgba(255,255,255,0.1); padding: 1px 6px; border-radius:3px;">&lt;img&gt;</code>: se añade <code style="background:rgba(255,255,255,0.1); padding: 1px 6px; border-radius:3px;">objectPosition: 'center 70%'</code><br>
+  3. Se añade pseudo-elemento <code style="background:rgba(255,255,255,0.1); padding: 1px 6px; border-radius:3px;">::after</code> con gradiente oscuro sutil en la zona inferior de la imagen.
+</div>
+
+</body>
+</html>

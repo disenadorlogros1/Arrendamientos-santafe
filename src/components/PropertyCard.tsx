@@ -21,7 +21,7 @@ export default function PropertyCard({ property }: PropertyCardProps) {
 
   return (
     <div
-      className="flex flex-col h-full rounded-lg overflow-hidden"
+      className="flex flex-col rounded-lg overflow-hidden"
       style={{
         boxShadow: isHovered
           ? '0 0 28px rgba(0,0,0,0.40)'
@@ -31,9 +31,10 @@ export default function PropertyCard({ property }: PropertyCardProps) {
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      {/* Imagen: ocupa todo el espacio disponible */}
+      {/* Imagen: aspect-ratio fijo para evitar colapso en grid sin altura definida */}
       <div
-        className="relative flex-1 overflow-hidden cursor-pointer"
+        className="relative overflow-hidden cursor-pointer flex-shrink-0"
+        style={{ aspectRatio: '4 / 3' }}
         onClick={handleViewMore}
       >
         <img
@@ -41,10 +42,18 @@ export default function PropertyCard({ property }: PropertyCardProps) {
           alt={property.title}
           className="w-full h-full object-cover"
           style={{
+            objectPosition: 'center 70%',
             transition: 'transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
             transform: isHovered ? 'scale(1.06)' : 'scale(1)',
           }}
           loading="lazy"
+        />
+        {/* Gradiente sutil para anclar visualmente la imagen con el área blanca */}
+        <div
+          style={{
+            position: 'absolute', inset: 0, pointerEvents: 'none',
+            background: 'linear-gradient(to bottom, transparent 55%, rgba(0,0,0,0.22) 100%)',
+          }}
         />
 
         {/* Botón único — flecha 45° animada superior derecha */}
