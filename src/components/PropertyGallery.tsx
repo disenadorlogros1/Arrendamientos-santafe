@@ -393,11 +393,6 @@ function BentoGallery({
     return () => window.removeEventListener('keydown', h);
   }, [viewerIndex, onClose]);
 
-  // Open viewer at startIndex if > 0
-  useEffect(() => {
-    if (entered && startIndex > 0) setViewerIndex(startIndex);
-  }, [entered, startIndex]);
-
   const needsScroll = n > 9;
 
   return createPortal(
