@@ -2,207 +2,238 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
+import gsap from 'gsap';
 import { X } from 'lucide-react';
 
-const FONT = "'Avenir LT Pro 65 Medium', 'Avenir LT Pro', 'Avenir', system-ui, sans-serif";
+const FONT     = "'Avenir LT Pro 65 Medium', 'Avenir LT Pro', 'Avenir', system-ui, sans-serif";
 const ELASTIC  = 'cubic-bezier(0.34, 1.56, 0.64, 1)';
 const EASE_OUT = 'cubic-bezier(0.22, 1.0, 0.36, 1.0)';
 
 export interface PropertyStats {
-  bedrooms?: number;
-  bathrooms?: number;
-  area?: string;
-  price?: string;
-  parking?: number;
+  bedrooms?: number; bathrooms?: number;
+  area?: string; price?: string; parking?: number;
 }
 
 interface PropertyGalleryProps {
-  images: string[];
-  title: string;
-  stats?: PropertyStats;
+  images: string[]; title: string; stats?: PropertyStats;
 }
 
 /* ─────────────────────────────────────────────────────────────────
-   ElasticCard
-   Flex axis is decided by the PARENT (ElasticGallery) based on
-   the hovered image's natural ratio. This component just renders.
+   Natural-ratio floating card
+   Appears via portal at the image's real aspect ratio.
+   Portrait  → card is tall (9:16)
+   Landscape → card is wide (16:9)
+   Only the hovered image is affected — row layout never changes.
 ───────────────────────────────────────────────────────────────── */
 
-function ElasticCard({
-  img,
-  total,
-  globalIndex,
-  cardFlex,
-  transition,
-  isHovered,
-  anyHovered,
-  onEnter,
-  onLeave,
-  onRatioReady,
-}: {
-  img: string;
-  total: number;
-  globalIndex: number;
-  cardFlex: number;
-  transition: string;
-  isHovered: boolean;
-  anyHovered: boolean;
-  onEnter: () => void;
-  onLeave: () => void;
-  onRatioReady: (idx: number, ratio: number) => void;
+interface FloatRect { left: number; top: number; width: number; height: number }
+
+function computeFloatRect(anchor: DOMRect, nw: number, nh: number): FloatRect {
+  const PAD   = 12;
+  const maxW  = window.innerWidth  - PAD * 2;
+  const maxH  = window.innerHeight - PAD * 2;
+  const ratio = nw / nh;
+
+  let w = Math.min(nw, maxW);
+  let h = w / ratio;
+  if (h > maxH) { h = maxH; w = h * ratio; }
+
+  const cx = anchor.left + anchor.width  / 2;
+  const cy = anchor.top  + anchor.height / 2;
+
+  let left = cx - w / 2;
+  let top  = cy - h / 2;
+  left = Math.max(PAD, Math.min(left, window.innerWidth  - w - PAD));
+  top  = Math.max(PAD, Math.min(top,  window.innerHeight - h - PAD));
+
+  return { left, top, width: w, height: h };
+}
+
+function FloatingCard({ img, rect, onRef }: {
+  img: string; rect: FloatRect; onRef: (el: HTMLDivElement | null) => void;
 }) {
-  const imgRef = useRef<HTMLImageElement>(null);
-
-  const syncRatio = () => {
-    const el = imgRef.current;
-    if (el && el.naturalWidth > 0) {
-      onRatioReady(globalIndex, el.naturalWidth / el.naturalHeight);
-    }
-  };
-
-  useEffect(() => { if (imgRef.current?.complete) syncRatio(); }, []);
-
-  return (
+  return createPortal(
     <div
-      onMouseEnter={onEnter}
-      onMouseLeave={onLeave}
+      ref={onRef}
       style={{
-        flex: cardFlex,
-        transition,
-        position: 'relative',
+        position: 'fixed',
+        left: rect.left, top: rect.top,
+        width: rect.width, height: rect.height,
+        zIndex: 1100,
+        borderRadius: '8px',
         overflow: 'hidden',
-        cursor: 'zoom-in',
-        borderRadius: '6px',
-        background: '#111',
-        minWidth: 0,
+        background: '#0c0c0c',
+        boxShadow: '0 28px 72px rgba(0,0,0,0.82), 0 4px 16px rgba(0,0,0,0.5)',
+        pointerEvents: 'none',
+        willChange: 'transform, opacity',
       }}
     >
       <img
-        ref={imgRef}
         src={img}
-        alt={`Foto ${globalIndex + 1}`}
+        alt=""
         draggable={false}
-        onLoad={syncRatio}
-        style={{
-          width: '100%', height: '100%',
-          objectFit: 'cover', objectPosition: 'center',
-          display: 'block',
-          transform: isHovered ? 'scale(1.02)' : 'scale(1)',
-          transition: `transform 0.55s ${EASE_OUT}`,
-          userSelect: 'none',
-        }}
+        style={{ width: '100%', height: '100%', objectFit: 'contain', display: 'block' }}
       />
-
-      {/* Gradient overlay — stronger when other card is hovered */}
-      <div style={{
-        position: 'absolute', inset: 0,
-        background: 'linear-gradient(to top, rgba(0,0,0,0.65) 0%, transparent 50%)',
-        opacity: anyHovered && !isHovered ? 0.88 : 0.32,
-        transition: 'opacity 0.3s ease',
-        pointerEvents: 'none',
-      }} />
-
-      {/* Vertical number — shown on compressed sibling cards */}
-      <div style={{
-        position: 'absolute', top: '50%', left: '50%',
-        transform: 'translate(-50%, -50%)',
-        writingMode: 'vertical-rl',
-        fontFamily: FONT, fontSize: '11px', letterSpacing: '0.12em',
-        color: 'rgba(255,255,255,0.55)',
-        opacity: anyHovered && !isHovered ? 1 : 0,
-        transition: `opacity 0.2s ease ${anyHovered && !isHovered ? '0.15s' : '0s'}`,
-        pointerEvents: 'none', userSelect: 'none',
-      }}>
-        {globalIndex + 1}
-      </div>
-
-      {/* Counter — revealed on expand */}
-      <div style={{
-        position: 'absolute', bottom: 0, left: 0, right: 0,
-        padding: '20px 18px',
-        opacity: isHovered ? 1 : 0,
-        transform: isHovered ? 'translateY(0)' : 'translateY(12px)',
-        transition: `opacity 0.22s ease ${isHovered ? '0.2s' : '0s'}, transform 0.22s ease ${isHovered ? '0.2s' : '0s'}`,
-        pointerEvents: 'none',
-      }}>
-        <span style={{ fontFamily: FONT, fontSize: '12px', color: 'rgba(255,255,255,0.45)', letterSpacing: '0.06em' }}>
-          <span style={{ color: '#fff', fontWeight: 600 }}>{globalIndex + 1}</span>{' / '}{total}
-        </span>
-      </div>
-    </div>
+    </div>,
+    document.body,
   );
 }
 
 /* ─────────────────────────────────────────────────────────────────
-   ElasticGallery — two-axis expansion controller
+   ElasticCard
+   • Flex axis: HORIZONTAL ONLY (never changes row height)
+   • Landscape hover → card widens via flex (elastic effect)
+   • Portrait  hover → card gets a small width bump + floating card appears
+   • Siblings always compress to 0.35 when any card in row is hovered
+───────────────────────────────────────────────────────────────── */
 
-   LANDSCAPE (ratio > 1):  expands CARD FLEX  (horizontal = wider)
-   PORTRAIT  (ratio < 1):  expands ROW  FLEX  (vertical  = taller)
-                           + shrinks card flex (narrower = portrait shape)
+function ElasticCard({
+  img, total, globalIndex,
+  isHovered, anyHovered,
+  onEnter, onLeave,
+}: {
+  img: string; total: number; globalIndex: number;
+  isHovered: boolean; anyHovered: boolean;
+  onEnter: () => void; onLeave: () => void;
+}) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const floatRef     = useRef<HTMLDivElement | null>(null);
+  const imgRef       = useRef<HTMLImageElement>(null);
+  const dims         = useRef({ w: 0, h: 0 });
+  const [floatRect,  setFloatRect]  = useState<FloatRect | null>(null);
+  const [showFloat,  setShowFloat]  = useState(false);
+  const isPortrait   = dims.current.h > dims.current.w;
+
+  const syncDims = () => {
+    const el = imgRef.current;
+    if (el?.naturalWidth) dims.current = { w: el.naturalWidth, h: el.naturalHeight };
+  };
+
+  useEffect(() => { if (imgRef.current?.complete) syncDims(); }, []);
+
+  /* ── Expanded flex for the card itself ─────────────────────── */
+  const ratio = dims.current.w / (dims.current.h || 1);
+
+  // Landscape: flex grows proportionally to aspect ratio (wide images expand more)
+  // Portrait:  small expansion (siblings still compress → visual feedback)
+  //            actual shape is shown via floating card
+  const expandedFlex = ratio >= 1
+    ? Math.max(2.5, Math.min(9, ratio * 3.5))   // landscape → wide
+    : 1.2;                                         // portrait  → slight bump only
+
+  /* ── Mouse events ───────────────────────────────────────────── */
+  const handleEnter = () => {
+    onEnter();
+    if (!containerRef.current || !dims.current.w) return;
+
+    const anchor = containerRef.current.getBoundingClientRect();
+    const rect   = computeFloatRect(anchor, dims.current.w, dims.current.h);
+    setFloatRect(rect);
+    setShowFloat(true);
+  };
+
+  const handleLeave = () => {
+    onLeave();
+    if (!floatRef.current) { setShowFloat(false); setFloatRect(null); return; }
+    gsap.to(floatRef.current, {
+      opacity: 0, scale: 0.94, duration: 0.15, ease: 'power2.in',
+      onComplete: () => { setShowFloat(false); setFloatRect(null); },
+    });
+  };
+
+  /* ── Animate floating card in ────────────────────────────────── */
+  useEffect(() => {
+    if (!showFloat || !floatRef.current) return;
+    gsap.fromTo(floatRef.current,
+      { opacity: 0, scale: 0.88 },
+      { opacity: 1, scale: 1, duration: 0.24, ease: 'power2.out' },
+    );
+  }, [showFloat]);
+
+  const currentFlex = isHovered ? expandedFlex : anyHovered ? 0.35 : 1;
+
+  return (
+    <>
+      <div
+        ref={containerRef}
+        onMouseEnter={handleEnter}
+        onMouseLeave={handleLeave}
+        style={{
+          flex: currentFlex,
+          transition: `flex 0.48s ${isHovered ? ELASTIC : EASE_OUT}`,
+          position: 'relative',
+          overflow: 'hidden',
+          cursor: 'zoom-in',
+          borderRadius: '6px',
+          background: '#111',
+          minWidth: 0,
+        }}
+      >
+        <img
+          ref={imgRef}
+          src={img}
+          alt={`Foto ${globalIndex + 1}`}
+          draggable={false}
+          onLoad={syncDims}
+          style={{
+            width: '100%', height: '100%',
+            objectFit: 'cover', objectPosition: 'center',
+            display: 'block',
+            transform: isHovered ? 'scale(1.02)' : 'scale(1)',
+            transition: `transform 0.55s ${EASE_OUT}`,
+            userSelect: 'none',
+          }}
+        />
+
+        {/* Darkening on non-hovered siblings */}
+        <div style={{
+          position: 'absolute', inset: 0,
+          background: 'rgba(0,0,0,0.55)',
+          opacity: anyHovered && !isHovered ? 1 : 0,
+          transition: 'opacity 0.28s ease',
+          pointerEvents: 'none',
+        }} />
+
+        {/* Vertical number on compressed siblings */}
+        <div style={{
+          position: 'absolute', top: '50%', left: '50%',
+          transform: 'translate(-50%, -50%)',
+          writingMode: 'vertical-rl',
+          fontFamily: FONT, fontSize: '11px', letterSpacing: '0.12em',
+          color: 'rgba(255,255,255,0.6)',
+          opacity: anyHovered && !isHovered ? 1 : 0,
+          transition: `opacity 0.2s ease ${anyHovered && !isHovered ? '0.15s' : '0s'}`,
+          pointerEvents: 'none', userSelect: 'none',
+        }}>
+          {globalIndex + 1}
+        </div>
+      </div>
+
+      {/* Floating natural-ratio card — appears for ALL images on hover */}
+      {showFloat && floatRect && (
+        <FloatingCard
+          img={img}
+          rect={floatRect}
+          onRef={el => { floatRef.current = el; }}
+        />
+      )}
+    </>
+  );
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   ElasticGallery
 ───────────────────────────────────────────────────────────────── */
 
 function ElasticGallery({ images, onClose }: { images: string[]; onClose: () => void }) {
-  const [hoveredIdx, setHoveredIdx]       = useState<number | null>(null);
-  const [entered, setEntered]             = useState(false);
-  const naturalRatios = useRef<Record<number, number>>({});
+  const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
+  const [entered,    setEntered]    = useState(false);
 
-  const n = images.length;
-
-  // 5 per row → portrait cards look portrait on standard 1080p
-  // (narrower cards when compressed = more portrait initial shape)
+  const n        = images.length;
   const rowCount = n <= 5 ? 1 : n <= 14 ? 2 : 3;
   const perRow   = Math.ceil(n / rowCount);
   const rows: string[][] = [];
   for (let i = 0; i < n; i += perRow) rows.push(images.slice(i, i + perRow));
-
-  // Derive expansion mode from hovered image's natural ratio
-  const ratio      = hoveredIdx !== null ? (naturalRatios.current[hoveredIdx] ?? null) : null;
-  const isLandscape = ratio !== null && ratio >= 1;
-  const isPortrait  = ratio !== null && ratio <  1;
-
-  // Which row is being hovered?
-  const hoveredRow = hoveredIdx !== null ? Math.floor(hoveredIdx / perRow) : null;
-
-  /* ── Row flex (column axis) ───────────────────────────────────
-     Portrait hover:  hovered row  → expands tall (flex 3.5)
-                      other rows   → compress    (flex 0.5)
-     Landscape hover: all rows stay at flex 1
-  ─────────────────────────────────────────────────────────────── */
-  function getRowFlex(rowIdx: number): number {
-    if (!isPortrait || hoveredRow === null) return 1;
-    return rowIdx === hoveredRow ? 3.5 : 0.5;
-  }
-
-  /* ── Card flex (row axis) ─────────────────────────────────────
-     Landscape hover: hovered card expands wide  (ratio × 3.5)
-                      siblings compress          (0.35)
-     Portrait hover:  hovered card stays NARROW  (ratio × 1.0)
-                      siblings compress          (0.35)
-                      (row height increase handles the portrait look)
-  ─────────────────────────────────────────────────────────────── */
-  function getCardFlex(globalIdx: number, rowIdx: number): number {
-    const anyHoveredInRow = hoveredIdx !== null && Math.floor(hoveredIdx / perRow) === rowIdx;
-    if (hoveredIdx === globalIdx) {
-      if (isLandscape) return Math.max(2, Math.min(9, ratio! * 3.5));
-      if (isPortrait)  return Math.max(0.4, ratio! * 1.0); // narrow card + tall row = portrait shape
-      return 4.5; // fallback (ratio not loaded yet)
-    }
-    return anyHoveredInRow ? 0.35 : 1;
-  }
-
-  function getCardTransition(globalIdx: number): string {
-    const isHov = hoveredIdx === globalIdx;
-    return `flex 0.48s ${isHov ? ELASTIC : EASE_OUT}`;
-  }
-
-  function getRowTransition(rowIdx: number): string {
-    const active = isPortrait && hoveredRow === rowIdx;
-    return `flex 0.48s ${active ? ELASTIC : EASE_OUT}`;
-  }
-
-  const handleRatioReady = (idx: number, r: number) => {
-    naturalRatios.current[idx] = r;
-  };
 
   useEffect(() => {
     const id = requestAnimationFrame(() => requestAnimationFrame(() => setEntered(true)));
@@ -269,25 +300,19 @@ function ElasticGallery({ images, onClose }: { images: string[]; onClose: () => 
         </div>
       )}
 
-      {/* Two-axis elastic grid */}
+      {/* Elastic rows — row flex NEVER changes (only card flex changes) */}
       <div style={{
         flex: 1, minHeight: 0,
         display: 'flex', flexDirection: 'column',
         gap: '4px', padding: '0 16px 16px',
       }}>
         {rows.map((rowImages, rowIdx) => {
-          const rowStart = rowIdx * perRow;
-          const anyHoveredInRow = hoveredIdx !== null && Math.floor(hoveredIdx / perRow) === rowIdx;
+          const rowStart       = rowIdx * perRow;
+          const anyHoveredInRow = hoveredIdx !== null
+            && Math.floor(hoveredIdx / perRow) === rowIdx;
 
           return (
-            <div
-              key={rowIdx}
-              style={{
-                flex: getRowFlex(rowIdx),
-                transition: getRowTransition(rowIdx),
-                display: 'flex', gap: '4px', minHeight: 0,
-              }}
-            >
+            <div key={rowIdx} style={{ flex: 1, display: 'flex', gap: '4px', minHeight: 0 }}>
               {rowImages.map((img, colIdx) => {
                 const globalIdx = rowStart + colIdx;
                 return (
@@ -296,13 +321,10 @@ function ElasticGallery({ images, onClose }: { images: string[]; onClose: () => 
                     img={img}
                     total={n}
                     globalIndex={globalIdx}
-                    cardFlex={getCardFlex(globalIdx, rowIdx)}
-                    transition={getCardTransition(globalIdx)}
                     isHovered={hoveredIdx === globalIdx}
                     anyHovered={anyHoveredInRow}
                     onEnter={() => setHoveredIdx(globalIdx)}
                     onLeave={() => setHoveredIdx(null)}
-                    onRatioReady={handleRatioReady}
                   />
                 );
               })}
@@ -316,7 +338,7 @@ function ElasticGallery({ images, onClose }: { images: string[]; onClose: () => 
 }
 
 /* ─────────────────────────────────────────────────────────────────
-   Preview — entry point in the property page
+   Preview grid — entry point on property page
 ───────────────────────────────────────────────────────────────── */
 
 function PreviewCell({ img, alt, rowSpan, onClick, overlay }: {
@@ -333,7 +355,7 @@ function PreviewCell({ img, alt, rowSpan, onClick, overlay }: {
       <img src={img} alt={alt} draggable={false} style={{
         width: '100%', height: '100%', objectFit: 'cover', display: 'block',
         transform: hov ? 'scale(1.04)' : 'scale(1)',
-        transition: 'transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+        transition: 'transform 0.5s cubic-bezier(0.25,0.46,0.45,0.94)',
         pointerEvents: 'none',
       }} />
       {overlay && (
@@ -357,7 +379,6 @@ function PreviewCell({ img, alt, rowSpan, onClick, overlay }: {
 export default function PropertyGallery({ images, title, stats: _stats }: PropertyGalleryProps) {
   const [open,    setOpen]    = useState(false);
   const [mounted, setMounted] = useState(false);
-
   useEffect(() => { setMounted(true); }, []);
 
   const remaining = images.length - 3;
@@ -365,9 +386,7 @@ export default function PropertyGallery({ images, title, stats: _stats }: Proper
   return (
     <>
       <div style={{
-        display: 'grid',
-        gridTemplateColumns: '2fr 1fr',
-        gridTemplateRows: '1fr 1fr',
+        display: 'grid', gridTemplateColumns: '2fr 1fr', gridTemplateRows: '1fr 1fr',
         gap: '4px', height: '420px', marginBottom: '24px',
         borderRadius: '8px', overflow: 'hidden',
       }}>
@@ -380,9 +399,7 @@ export default function PropertyGallery({ images, title, stats: _stats }: Proper
         />
       </div>
 
-      {mounted && open && (
-        <ElasticGallery images={images} onClose={() => setOpen(false)} />
-      )}
+      {mounted && open && <ElasticGallery images={images} onClose={() => setOpen(false)} />}
     </>
   );
 }
