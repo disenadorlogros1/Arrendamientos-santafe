@@ -316,7 +316,7 @@ export default function PropiedadesPage({ initialFilter = 'Todos' }: { initialFi
                   tipo: prev.tipo,
                   sector: '',
                   precioMin: 0,
-                  precioMax: prev.tipo === 'Comprar' ? 500_000_000 : 15_000_000,
+                  precioMax: getDefaultPrecioMax(prev.tipo),
                   habitaciones: null,
                   banos: null,
                   parqueadero: null,
