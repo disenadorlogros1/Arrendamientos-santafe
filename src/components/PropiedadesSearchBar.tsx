@@ -174,9 +174,10 @@ function PriceSelect({
   const [pos, setPos]         = useState({ top: 0, left: 0, width: 0 });
 
   const isComprar = searchType === 'comprar';
+  const isArrendar = searchType === 'arrendar';
   const min  = isComprar ? 30_000_000  : 0;
-  const max  = isComprar ? 500_000_000 : 15_000_000;
-  const step = isComprar ? 5_000_000   : 250_000;
+  const max  = isArrendar ? 15_000_000 : 500_000_000;
+  const step = isArrendar ? 250_000    : 5_000_000;
 
   useEffect(() => { setMounted(true); }, []);
 
@@ -491,7 +492,7 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', onApply }:
 
   useEffect(() => {
     setTipo(initialTipo);
-    setPrecioRange(initialTipo === 'Comprar' ? [30_000_000, 500_000_000] : [0, 15_000_000]);
+    setPrecioRange(defaultPrecioRange(initialTipo));
   }, [initialTipo]);
 
   // Cierra búsqueda avanzada al hacer clic fuera del componente
@@ -519,9 +520,7 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', onApply }:
   };
 
   const handleClear = () => {
-    const defaultRange: [number, number] = tipo === 'Comprar'
-      ? [30_000_000, 500_000_000]
-      : [0, 15_000_000];
+    const defaultRange = defaultPrecioRange(tipo);
     setCodigo(''); setSector(''); setTipoPropiedad('');
     setPrecioRange(defaultRange);
     setHabitaciones(null); setBanos(null); setParqueadero(null);
@@ -551,14 +550,17 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', onApply }:
                 type="button"
                 onClick={() => {
                   setTipo(t);
-                  if (t === 'Comprar') setPrecioRange([30_000_000, 500_000_000]);
-                  else setPrecioRange([0, 15_000_000]);
+                  setPrecioRange(defaultPrecioRange(t));
                 }}
                 style={{
                   flex: 1,
                   height: '100%',
-                  background: active ? RED : 'transparent',
-                  color: active ? '#fff' : '#666',
+                  background: active
+                    ? (t === 'Todos' ? '#f0f0f0' : RED)
+                    : 'transparent',
+                  color: active
+                    ? (t === 'Todos' ? '#444' : '#fff')
+                    : '#666',
                   fontFamily: FONT,
                   fontSize: '14px',
                   fontWeight: active ? 600 : 400,
