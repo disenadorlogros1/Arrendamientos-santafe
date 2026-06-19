@@ -84,7 +84,17 @@ export default function PropertyDetailPage() {
           {/* Columna izquierda - Imágenes */}
           <div className="lg:col-span-2">
             {/* Galería de fotos — estilo Trulia */}
-            <PropertyGallery images={galleryImages} title={property.title} />
+            <PropertyGallery
+              images={galleryImages}
+              title={property.title}
+              stats={{
+                bedrooms:  property.bedrooms,
+                bathrooms: property.bathrooms,
+                area:      property.size,
+                parking:   property.parking,
+                price:     property.price,
+              }}
+            />
 
             {/* Tipo, Referencia, Título */}
             <div className="bg-white rounded-lg p-6 mb-6 border border-gray-200">
