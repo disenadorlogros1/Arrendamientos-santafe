@@ -21,7 +21,7 @@ export default function PropertyCard({ property }: PropertyCardProps) {
 
   return (
     <div
-      className="flex flex-col rounded-lg overflow-hidden"
+      className="flex flex-col h-full rounded-lg overflow-hidden"
       style={{
         boxShadow: isHovered
           ? '0 0 28px rgba(0,0,0,0.40)'
@@ -31,10 +31,9 @@ export default function PropertyCard({ property }: PropertyCardProps) {
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      {/* Imagen: aspect-ratio fijo para evitar colapso en grid sin altura definida */}
+      {/* Imagen */}
       <div
-        className="relative overflow-hidden cursor-pointer flex-shrink-0"
-        style={{ aspectRatio: '4 / 3' }}
+        className="relative flex-1 overflow-hidden cursor-pointer"
         onClick={handleViewMore}
       >
         <img
