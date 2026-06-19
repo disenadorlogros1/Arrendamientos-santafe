@@ -1,36 +1,23 @@
-'use client';
+import type { Metadata } from 'next';
+import InversionistasShell from '@/components/shells/InversionistasShell';
 
-import { useEffect } from 'react';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
-import InversionistasPage from '@/components/InversionistasPage';
-import type { PageType } from '@/components/Header';
-
-function navigate(page: PageType, filter?: string) {
-  if (page === 'propiedades') {
-    const suffix = filter === 'Arrendar' ? '-arrendar' : filter === 'Comprar' ? '-comprar' : '';
-    window.location.href = `/propiedades${suffix ? `#${suffix}` : ''}`;
-  } else if (page === 'blog') {
-    window.location.href = '/blog';
-  } else if (page === 'inversionistas') {
-    window.location.href = '/inversionistas';
-  } else if (page === 'consignacion') {
-    window.location.href = '/consignacion';
-  } else {
-    window.location.href = `/#${page}`;
-  }
-}
+export const metadata: Metadata = {
+  title: 'Inversión inmobiliaria en Medellín | Arrendamientos Santa Fe',
+  description: 'Descubre las mejores zonas para invertir en finca raíz en Medellín y el Valle de Aburrá. Análisis de rentabilidad, precios y oportunidades inmobiliarias en Antioquia.',
+  keywords: ['inversión inmobiliaria Medellín', 'finca raíz Antioquia', 'rentabilidad inmuebles Medellín', 'invertir en propiedad Colombia'],
+  openGraph: {
+    title: 'Inversión inmobiliaria en Medellín | Arrendamientos Santa Fe',
+    description: 'Las mejores zonas para invertir en finca raíz en Medellín y Antioquia. Análisis y asesoría con 60 años de experiencia.',
+    url: 'https://arrendamientossantafe.com/inversionistas',
+    siteName: 'Arrendamientos Santa Fe',
+    locale: 'es_CO',
+    type: 'website',
+  },
+  alternates: {
+    canonical: 'https://arrendamientossantafe.com/inversionistas',
+  },
+};
 
 export default function Page() {
-  useEffect(() => { window.scrollTo({ top: 0, behavior: 'smooth' }); }, []);
-
-  return (
-    <div className="min-h-screen flex flex-col">
-      <Header currentPage="inversionistas" onNavigate={navigate} />
-      <main className="flex-1 relative" style={{ paddingTop: '86px' }}>
-        <InversionistasPage />
-      </main>
-      <Footer onNavigate={navigate} />
-    </div>
-  );
+  return <InversionistasShell />;
 }

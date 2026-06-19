@@ -1,10 +1,13 @@
 'use client';
 
-import { useRef } from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { useRef, useEffect } from 'react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useSplitTextAnimation } from '@/hooks/useSplitTextAnimation';
 import { useCountAnimation } from '@/hooks/useCountAnimation';
 import type { PageType } from '@/components/Header';
+
+gsap.registerPlugin(ScrollTrigger);
 
 interface PropietariosBlockProps {
   onNavigate: (page: PageType) => void;
@@ -17,8 +20,6 @@ const FONT_BODY    = "'Avenir LT Pro 65 Medium', 'Avenir LT Pro', 'Avenir', 'Out
 const FONT_HEADING = "'Avenir Next Ultra Light', 'Avenir LT Pro 65 Medium', 'Avenir', 'Outfit', system-ui, sans-serif";
 const FONT_HEAVY   = "'Avenir LT Pro 85 Heavy', 'Avenir LT Pro', 'Avenir', 'Outfit', system-ui, sans-serif";
 const RED          = '#f32735';
-
-/* ── Texto de cifra con animación de conteo ──────────────────────── */
 
 function StatOverlay({
   endValue,
@@ -70,35 +71,104 @@ function StatOverlay({
   );
 }
 
-/* ── Componente principal ────────────────────────────────────────── */
-
 export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps) {
   const { ref: titleRef, titleAnimating } = useSplitTextAnimation('.propietarios-title-split', 0, true);
   const sectionRef = useRef<HTMLDivElement>(null);
 
-  /* Scroll: progress 0 cuando el borde superior entra al 80% del viewport (20% desde abajo),
-     progress 1 cuando el borde superior llega al 20% del viewport (80% desde abajo).
-     Ambos puntos anclan al START (top) para que el orden sea correcto al scrollear hacia abajo. */
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ['start 0.8', 'start 0.2'],
-  });
+  // Refs for titleAnimating-driven elements
+  const subtitleRef = useRef<HTMLParagraphElement>(null);
+  const buttonsRef  = useRef<HTMLDivElement>(null);
+  const lastPRef    = useRef<HTMLParagraphElement>(null);
 
-  /* Tres pares con stagger leve — usan todo el rango 0→1 del offset */
-  const progressA = useTransform(scrollYProgress, [0,    0.88], [0, 1]);
-  const clipA     = useTransform(progressA, (p) => `inset(0 0 0 ${(1 - p) * 100}%)`);
-  const bgOpA     = useTransform(progressA, [0, 1], [1, 0]);
-  const gradOpA   = useTransform(progressA, [0.3, 1], [0, 1]);
+  // Refs for scroll-driven clip-path panels
+  const panelARef = useRef<HTMLDivElement>(null);
+  const clipARef  = useRef<HTMLDivElement>(null);
+  const bgARef    = useRef<HTMLDivElement>(null);
+  const gradARef  = useRef<HTMLDivElement>(null);
 
-  const progressB = useTransform(scrollYProgress, [0.06, 0.94], [0, 1]);
-  const clipB     = useTransform(progressB, (p) => `inset(0 0 ${(1 - p) * 100}% 0)`);
-  const bgOpB     = useTransform(progressB, [0, 1], [1, 0]);
-  const gradOpB   = useTransform(progressB, [0.3, 1], [0, 1]);
+  const panelBRef = useRef<HTMLDivElement>(null);
+  const clipBRef  = useRef<HTMLDivElement>(null);
+  const bgBRef    = useRef<HTMLDivElement>(null);
+  const gradBRef  = useRef<HTMLDivElement>(null);
 
-  const progressC = useTransform(scrollYProgress, [0.12, 1],    [0, 1]);
-  const clipC     = useTransform(progressC, (p) => `inset(0 ${(1 - p) * 100}% 0 0)`);
-  const bgOpC     = useTransform(progressC, [0, 1], [1, 0]);
-  const gradOpC   = useTransform(progressC, [0.3, 1], [0, 1]);
+  const panelCRef = useRef<HTMLDivElement>(null);
+  const clipCRef  = useRef<HTMLDivElement>(null);
+  const bgCRef    = useRef<HTMLDivElement>(null);
+  const gradCRef  = useRef<HTMLDivElement>(null);
+
+  // titleAnimating-driven animations
+  useEffect(() => {
+    if (!titleAnimating) return;
+    const targets = [
+      { el: subtitleRef.current,  delay: 0 },
+      { el: buttonsRef.current,   delay: 0.1 },
+      { el: lastPRef.current,     delay: 0.2 },
+    ];
+    targets.forEach(({ el, delay }) => {
+      if (!el) return;
+      gsap.fromTo(el,
+        { opacity: 0, y: 20 },
+        { opacity: 1, y: 0, duration: 0.4, delay, ease: 'power2.out' }
+      );
+    });
+  }, [titleAnimating]);
+
+  // Scroll-driven clip-path reveal
+  useEffect(() => {
+    // Initial states
+    gsap.set(clipARef.current, { clipPath: 'inset(0 0 0 100%)' });
+    gsap.set(clipBRef.current, { clipPath: 'inset(0 0 100% 0)' });
+    gsap.set(clipCRef.current, { clipPath: 'inset(0 100% 0 0)' });
+    gsap.set([gradARef.current, gradBRef.current, gradCRef.current], { opacity: 0 });
+
+    const ctx = gsap.context(() => {
+      // Scrubbed timeline — total duration 1.0 maps to scroll range
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: 'top 80%',
+          end: 'top 20%',
+          scrub: true,
+        },
+      });
+
+      const D = 0.88;
+
+      // Panel A: scroll [0, 0.88] — left reveal
+      tl.to(clipARef.current, { clipPath: 'inset(0 0 0 0%)', ease: 'none', duration: D }, 0);
+      tl.to(bgARef.current,   { opacity: 0,                  ease: 'none', duration: D }, 0);
+      tl.to(gradARef.current, { opacity: 1,                  ease: 'none', duration: D * 0.7 }, D * 0.3);
+
+      // Panel B: scroll [0.06, 0.94] — bottom reveal
+      tl.to(clipBRef.current, { clipPath: 'inset(0 0 0% 0)', ease: 'none', duration: D }, 0.06);
+      tl.to(bgBRef.current,   { opacity: 0,                  ease: 'none', duration: D }, 0.06);
+      tl.to(gradBRef.current, { opacity: 1,                  ease: 'none', duration: D * 0.7 }, 0.06 + D * 0.3);
+
+      // Panel C: scroll [0.12, 1.0] — right reveal
+      tl.to(clipCRef.current, { clipPath: 'inset(0 0% 0 0)', ease: 'none', duration: D }, 0.12);
+      tl.to(bgCRef.current,   { opacity: 0,                  ease: 'none', duration: D }, 0.12);
+      tl.to(gradCRef.current, { opacity: 1,                  ease: 'none', duration: D * 0.7 }, 0.12 + D * 0.3);
+
+      // Panel entry animations
+      [
+        { ref: panelARef, delay: 0 },
+        { ref: panelBRef, delay: 0.09 },
+        { ref: panelCRef, delay: 0.18 },
+      ].forEach(({ ref, delay }) => {
+        if (!ref.current) return;
+        gsap.from(ref.current, {
+          opacity: 0,
+          scale: 0.92,
+          duration: 0.55,
+          delay,
+          ease: 'power2.out',
+          scrollTrigger: { trigger: ref.current, start: 'top 88%', once: true },
+        });
+      });
+    });
+
+    return () => ctx.revert();
+  }, []);
 
   return (
     <section ref={sectionRef} className="bg-black w-full overflow-hidden" style={{ maxWidth: '1920px', margin: '0 auto' }}>
@@ -128,22 +198,15 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
             </span>
           </h2>
 
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={titleAnimating ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-            transition={{ duration: 0.4, ease: 'easeOut' }}
-            style={{ fontFamily: FONT_BODY, fontSize: 'clamp(13px, 1.1vw, 17px)', fontWeight: 300, color: 'rgba(255,255,255,0.75)', margin: 0, lineHeight: 1.08 }}
+          <p
+            ref={subtitleRef}
+            style={{ fontFamily: FONT_BODY, fontSize: 'clamp(13px, 1.1vw, 17px)', fontWeight: 300, color: 'rgba(255,255,255,0.75)', margin: 0, lineHeight: 1.08, opacity: 0 }}
           >
             Más de 60 años gestionando propiedades en Antioquia. Tu inmueble en
             manos de quienes conocen el mercado inmobiliario regional.
-          </motion.p>
+          </p>
 
-          <motion.div
-            className="flex gap-2.5"
-            initial={{ opacity: 0, y: 20 }}
-            animate={titleAnimating ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-            transition={{ duration: 0.4, delay: 0.1, ease: 'easeOut' }}
-          >
+          <div ref={buttonsRef} className="flex gap-2.5" style={{ opacity: 0 }}>
             <button
               onClick={() => onNavigate('consignacion')}
               className="flex-1 transition-colors duration-200"
@@ -162,17 +225,15 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
             >
               Hablar con un asesor
             </button>
-          </motion.div>
+          </div>
 
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={titleAnimating ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-            transition={{ duration: 0.4, delay: 0.2, ease: 'easeOut' }}
-            style={{ fontFamily: FONT_BODY, fontSize: 'clamp(13px, 1.1vw, 17px)', fontWeight: 300, color: 'rgba(255,255,255,0.55)', margin: 0, lineHeight: 1.45 }}
+          <p
+            ref={lastPRef}
+            style={{ fontFamily: FONT_BODY, fontSize: 'clamp(13px, 1.1vw, 17px)', fontWeight: 300, color: 'rgba(255,255,255,0.55)', margin: 0, lineHeight: 1.45, opacity: 0 }}
           >
             Te avisamos cuando haya un arrendatario interesado.{' '}
             <strong style={{ fontWeight: 700, color: '#fff' }}>Sin demoras, sin contratiempos.</strong>
-          </motion.p>
+          </p>
         </div>
 
         {/* ── GRID DERECHO — 3 pares ────────────────────────────── */}
@@ -181,107 +242,77 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
           style={{ gap: '3px' }}
         >
 
-          {/* ── PAR A — cols 1-2, fila 1
-               Foto (celda 2) invade el stat (celda 1) hacia la izquierda */}
-          <motion.div
+          {/* ── PAR A — cols 1-2, fila 1 (left reveal) */}
+          <div
+            ref={panelARef}
             className="group"
-            initial={{ opacity: 0, scale: 0.92 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true, amount: 0.15 }}
-            transition={{ duration: 0.55, delay: 0, ease: [0.25, 0.46, 0.45, 0.94] }}
             style={{ gridColumn: '1 / 3', gridRow: '1', position: 'relative', overflow: 'hidden' }}
           >
-            {/* Fondo oscuro del stat — se desvanece al invadir */}
-            <motion.div style={{
+            <div ref={bgARef} style={{
               position: 'absolute', left: 0, top: 0, width: '50%', height: '100%',
-              background: '#2d2d2d', opacity: bgOpA, zIndex: 1,
+              background: '#2d2d2d', zIndex: 1,
             }} />
-
-            {/* Foto con clip-path animado + hover zoom en inner div */}
-            <motion.div style={{ position: 'absolute', inset: 0, clipPath: clipA, zIndex: 0, overflow: 'hidden' }}>
+            <div ref={clipARef} style={{ position: 'absolute', inset: 0, zIndex: 0, overflow: 'hidden' }}>
               <div
                 className="absolute inset-0 transition-transform duration-[650ms] ease-out group-hover:scale-[1.06]"
                 style={{ backgroundImage: 'url(/images/banner_propietarios_1.png)', backgroundSize: 'cover', backgroundPosition: 'center top' }}
               />
-            </motion.div>
-
-            {/* Gradiente de legibilidad sobre la zona del stat */}
-            <motion.div style={{
+            </div>
+            <div ref={gradARef} style={{
               position: 'absolute', left: 0, top: 0, width: '58%', height: '100%',
               background: 'linear-gradient(to right, rgba(0,0,0,0.78) 50%, transparent)',
-              opacity: gradOpA, zIndex: 2, pointerEvents: 'none',
+              zIndex: 2, pointerEvents: 'none',
             }} />
-
             <StatOverlay endValue={1000} prefix="+" label="inmuebles" sublabel="en gestión activa" duration={2000} position="left" />
-          </motion.div>
+          </div>
 
-          {/* ── PAR B — col 3, filas 1-2
-               Foto (celda 3) invade el stat (celda 6) hacia abajo */}
-          <motion.div
+          {/* ── PAR B — col 3, filas 1-2 (bottom reveal) */}
+          <div
+            ref={panelBRef}
             className="group"
-            initial={{ opacity: 0, scale: 0.92 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true, amount: 0.15 }}
-            transition={{ duration: 0.55, delay: 0.09, ease: [0.25, 0.46, 0.45, 0.94] }}
             style={{ gridColumn: '3', gridRow: '1 / 3', position: 'relative', overflow: 'hidden' }}
           >
-            {/* Fondo oscuro del stat */}
-            <motion.div style={{
+            <div ref={bgBRef} style={{
               position: 'absolute', bottom: 0, left: 0, width: '100%', height: '50%',
-              background: '#2d2d2d', opacity: bgOpB, zIndex: 1,
+              background: '#2d2d2d', zIndex: 1,
             }} />
-
-            {/* Foto */}
-            <motion.div style={{ position: 'absolute', inset: 0, clipPath: clipB, zIndex: 0, overflow: 'hidden' }}>
+            <div ref={clipBRef} style={{ position: 'absolute', inset: 0, zIndex: 0, overflow: 'hidden' }}>
               <div
                 className="absolute inset-0 transition-transform duration-[650ms] ease-out group-hover:scale-[1.06]"
                 style={{ backgroundImage: 'url(/images/banner_propietarios_3.png)', backgroundSize: 'cover', backgroundPosition: 'center top' }}
               />
-            </motion.div>
-
-            {/* Gradiente */}
-            <motion.div style={{
+            </div>
+            <div ref={gradBRef} style={{
               position: 'absolute', bottom: 0, left: 0, width: '100%', height: '58%',
               background: 'linear-gradient(to top, rgba(0,0,0,0.78) 50%, transparent)',
-              opacity: gradOpB, zIndex: 2, pointerEvents: 'none',
+              zIndex: 2, pointerEvents: 'none',
             }} />
-
             <StatOverlay endValue={3} prefix="" label="sedes" sublabel="en Antioquia" duration={800} position="bottom" />
-          </motion.div>
+          </div>
 
-          {/* ── PAR C — cols 1-2, fila 2
-               Foto (celda 4) invade el stat (celda 5) hacia la derecha */}
-          <motion.div
+          {/* ── PAR C — cols 1-2, fila 2 (right reveal) */}
+          <div
+            ref={panelCRef}
             className="group"
-            initial={{ opacity: 0, scale: 0.92 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true, amount: 0.15 }}
-            transition={{ duration: 0.55, delay: 0.18, ease: [0.25, 0.46, 0.45, 0.94] }}
             style={{ gridColumn: '1 / 3', gridRow: '2', position: 'relative', overflow: 'hidden' }}
           >
-            {/* Fondo oscuro del stat */}
-            <motion.div style={{
+            <div ref={bgCRef} style={{
               position: 'absolute', right: 0, top: 0, width: '50%', height: '100%',
-              background: '#2d2d2d', opacity: bgOpC, zIndex: 1,
+              background: '#2d2d2d', zIndex: 1,
             }} />
-
-            {/* Foto */}
-            <motion.div style={{ position: 'absolute', inset: 0, clipPath: clipC, zIndex: 0, overflow: 'hidden' }}>
+            <div ref={clipCRef} style={{ position: 'absolute', inset: 0, zIndex: 0, overflow: 'hidden' }}>
               <div
                 className="absolute inset-0 transition-transform duration-[650ms] ease-out group-hover:scale-[1.06]"
                 style={{ backgroundImage: 'url(/images/banner_propietarios_2.png)', backgroundSize: 'cover', backgroundPosition: 'center' }}
               />
-            </motion.div>
-
-            {/* Gradiente */}
-            <motion.div style={{
+            </div>
+            <div ref={gradCRef} style={{
               position: 'absolute', right: 0, top: 0, width: '58%', height: '100%',
               background: 'linear-gradient(to left, rgba(0,0,0,0.78) 50%, transparent)',
-              opacity: gradOpC, zIndex: 2, pointerEvents: 'none',
+              zIndex: 2, pointerEvents: 'none',
             }} />
-
             <StatOverlay endValue={60} prefix="" label="años" sublabel="de experiencia" duration={1600} position="right" />
-          </motion.div>
+          </div>
 
         </div>
       </div>

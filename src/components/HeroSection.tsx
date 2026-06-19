@@ -2,7 +2,6 @@
 
 import { useRef, useEffect } from 'react';
 import gsap from 'gsap';
-import { motion } from 'framer-motion';
 import { useSplitTextAnimation } from '@/hooks/useSplitTextAnimation';
 
 interface HeroSectionProps {
@@ -36,6 +35,7 @@ const RED          = '#f32735';
 export default function HeroSection({ onNavigate, searchFormSlot }: HeroSectionProps) {
   const { ref: titleRef, titleAnimating } = useSplitTextAnimation('.hero-title-split', 0, false, true);
   const boldTextRef = useRef<HTMLSpanElement>(null);
+  const subtitleRef = useRef<HTMLParagraphElement>(null);
 
   useEffect(() => {
     if (!boldTextRef.current) return;
@@ -44,6 +44,14 @@ export default function HeroSection({ onNavigate, searchFormSlot }: HeroSectionP
     gsap.set(underlineEl, { scaleX: 0, transformOrigin: 'left center' });
     gsap.to(underlineEl, { scaleX: 1, duration: 0.9, delay: 1.6, ease: 'power3.out' });
   }, []);
+
+  useEffect(() => {
+    if (!titleAnimating || !subtitleRef.current) return;
+    gsap.fromTo(subtitleRef.current,
+      { opacity: 0, y: 20 },
+      { opacity: 1, y: 0, duration: 0.4, ease: 'power2.out' }
+    );
+  }, [titleAnimating]);
 
   return (
     <section style={{ background: '#000' }} className="w-full overflow-hidden">
@@ -112,10 +120,8 @@ export default function HeroSection({ onNavigate, searchFormSlot }: HeroSectionP
                 </span>
               </h1>
 
-              <motion.p
-                initial={{ opacity: 0, y: 20 }}
-                animate={titleAnimating ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-                transition={{ duration: 0.4, ease: 'easeOut' }}
+              <p
+                ref={subtitleRef}
                 style={{
                   fontFamily: FONT_BODY,
                   fontWeight: 300,
@@ -124,10 +130,11 @@ export default function HeroSection({ onNavigate, searchFormSlot }: HeroSectionP
                   marginTop: '20px',
                   lineHeight: 1.45,
                   textAlign: 'center',
+                  opacity: 0,
                 }}
               >
                 con el lugar donde vivir, trabajar y crecer.
-              </motion.p>
+              </p>
 
               <div className="flex flex-col sm:flex-row items-center justify-center gap-2 mt-7 w-full sm:w-auto">
                 <button

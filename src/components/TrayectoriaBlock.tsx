@@ -1,6 +1,7 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { useRef, useEffect } from 'react';
+import gsap from 'gsap';
 import { useSplitTextAnimation } from '@/hooks/useSplitTextAnimation';
 import { ArrowRight } from 'lucide-react';
 import type { PageType } from '@/components/Header';
@@ -24,6 +25,15 @@ const HITOS = [
 
 export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) {
   const { ref: titleRef, titleAnimating } = useSplitTextAnimation('.trayectoria-title-split', 0, true);
+  const subtitleRef = useRef<HTMLParagraphElement>(null);
+
+  useEffect(() => {
+    if (!titleAnimating || !subtitleRef.current) return;
+    gsap.fromTo(subtitleRef.current,
+      { opacity: 0, y: 20 },
+      { opacity: 1, y: 0, duration: 0.4, ease: 'power2.out' }
+    );
+  }, [titleAnimating]);
 
   return (
     <section style={{ background: '#fff' }} className="w-full overflow-hidden">
@@ -57,10 +67,8 @@ export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) 
             en Antioquia
           </h2>
 
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={titleAnimating ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-            transition={{ duration: 0.4, ease: 'easeOut' }}
+          <p
+            ref={subtitleRef}
             style={{
               fontFamily: FONT_BODY,
               fontWeight: 400,
@@ -68,12 +76,13 @@ export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) 
               color: '#666',
               lineHeight: 1.55,
               margin: 0,
+              opacity: 0,
             }}
           >
             Desde 1966 acompañamos a personas, familias y propietarios en
             decisiones de arrendamiento, venta, administración e inversión
             inmobiliaria.
-          </motion.p>
+          </p>
 
           <button
             type="button"

@@ -1,9 +1,12 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { useRef, useEffect } from 'react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Calendar, ArrowRight } from 'lucide-react';
 import type { PageType } from '@/components/Header';
 
+gsap.registerPlugin(ScrollTrigger);
 
 interface BlogPost {
   id: number;
@@ -79,23 +82,45 @@ export default function BlogPage({
   onNavigate?: (page: PageType) => void;
   onOpenArticle?: (id: number) => void;
 }) {
+  const headerRef = useRef<HTMLDivElement>(null);
+  const gridRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (headerRef.current) {
+      gsap.from(headerRef.current, { opacity: 0, y: 20, duration: 0.5, ease: 'power2.out' });
+    }
+  }, []);
+
+  useEffect(() => {
+    const el = gridRef.current;
+    if (!el) return;
+    const items = el.querySelectorAll('.blog-article-item');
+    const ctx = gsap.context(() => {
+      gsap.from(items, {
+        opacity: 0,
+        y: 20,
+        duration: 0.4,
+        stagger: 0.06,
+        ease: 'power2.out',
+        scrollTrigger: { trigger: el, start: 'top 88%', once: true },
+      });
+    }, el);
+    return () => ctx.revert();
+  }, []);
+
   return (
     <div className="min-h-screen bg-white">
       {/* Page Header */}
       <div className="bg-brand-dark pb-12 md:pb-16" style={{ marginTop: '-86px', paddingTop: 'calc(86px + 48px)' }}>
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
+          <div ref={headerRef}>
             <h1 className="text-4xl sm:text-5xl font-bold text-white mb-4">
               Blog
             </h1>
             <p className="text-white/70 text-lg max-w-2xl">
               Artículos, consejos y tendencias del mercado inmobiliario en Antioquia
             </p>
-          </motion.div>
+          </div>
         </div>
       </div>
 
@@ -118,18 +143,14 @@ export default function BlogPage({
         </div>
 
         {/* Blog Posts Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+        <div ref={gridRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
 
-          {/* ── Ficha 60 años — misma estructura que las otras fichas ── */}
-          <motion.article
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3 }}
+          {/* ── Ficha 60 años ── */}
+          <article
+            className="blog-article-item group bg-white rounded-lg overflow-hidden border border-gray-200 hover:shadow-lg transition-all duration-300 cursor-pointer flex flex-col"
             onClick={() => onNavigate?.('historia-60')}
-            className="group bg-white rounded-lg overflow-hidden border border-gray-200 hover:shadow-lg transition-all duration-300 cursor-pointer flex flex-col"
           >
             <div className="relative h-48 overflow-hidden bg-gray-900">
-              {/* Collage: 6 tiras verticales en B&N */}
               <div className="absolute inset-0 flex gap-[2px]">
                 {[
                   { src: '/images/1966_Donde_todo_comenz%C3%B3.jpeg', pos: '60% 20%' },
@@ -149,7 +170,6 @@ export default function BlogPage({
                   </div>
                 ))}
               </div>
-              {/* Overlay sutil para legibilidad del badge */}
               <div className="absolute inset-0 bg-black/10" />
               <div className="absolute top-3 right-3">
                 <span className="inline-block px-3 py-1 bg-brand-red text-white text-xs font-semibold rounded-full">
@@ -176,18 +196,14 @@ export default function BlogPage({
                 <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
               </button>
             </div>
-          </motion.article>
+          </article>
 
-          {blogPosts.map((post, idx) => (
-            <motion.article
+          {blogPosts.map((post) => (
+            <article
               key={post.id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3, delay: idx * 0.05 }}
+              className="blog-article-item group bg-white rounded-lg overflow-hidden border border-gray-200 hover:shadow-lg transition-all duration-300 cursor-pointer flex flex-col"
               onClick={() => onOpenArticle?.(post.id)}
-              className="group bg-white rounded-lg overflow-hidden border border-gray-200 hover:shadow-lg transition-all duration-300 cursor-pointer flex flex-col"
             >
-              {/* Image */}
               <div className="relative h-48 overflow-hidden bg-gray-200">
                 <img
                   src={post.image}
@@ -201,7 +217,6 @@ export default function BlogPage({
                 </div>
               </div>
 
-              {/* Content */}
               <div className="p-5 flex flex-col flex-grow">
                 <h3 className="text-lg font-bold text-gray-900 mb-2 line-clamp-2 group-hover:text-brand-red transition-colors">
                   {post.title}
@@ -210,7 +225,6 @@ export default function BlogPage({
                   {post.excerpt}
                 </p>
 
-                {/* Meta */}
                 <div className="flex items-center justify-between pt-4 border-t border-gray-100 text-xs text-gray-500">
                   <div className="flex items-center gap-1">
                     <Calendar className="w-4 h-4" />
@@ -219,13 +233,12 @@ export default function BlogPage({
                   <span>{post.readTime} de lectura</span>
                 </div>
 
-                {/* Read More */}
                 <button className="mt-4 inline-flex items-center gap-2 text-brand-red font-semibold text-sm group/btn">
                   Leer más
                   <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
                 </button>
               </div>
-            </motion.article>
+            </article>
           ))}
         </div>
 

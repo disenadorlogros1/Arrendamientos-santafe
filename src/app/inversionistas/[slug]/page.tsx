@@ -1,13 +1,14 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useRef, useEffect } from 'react';
 import { useParams } from 'next/navigation';
-import { motion } from 'framer-motion';
-import { ArrowLeft, MapPin, DollarSign, TrendingUp, Home } from 'lucide-react';
+import gsap from 'gsap';
+import { ArrowLeft, DollarSign, TrendingUp, Home } from 'lucide-react';
 import Link from 'next/link';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import PropertyCard from '@/components/PropertyCard';
+import ScrollReveal from '@/components/ScrollReveal';
 import { investmentZones, getZoneBySlug } from '@/data/investment-zones';
 import { properties } from '@/data/properties';
 import type { PageType } from '@/components/Header';
@@ -18,6 +19,7 @@ export default function InversionZonePage() {
   const params = useParams();
   const slug = params.slug as string;
   const [currentPage, setCurrentPage] = useState<PageType>('inversionistas');
+  const heroRef = useRef<HTMLDivElement>(null);
 
   const zone = getZoneBySlug(slug);
 
@@ -27,6 +29,12 @@ export default function InversionZonePage() {
       (p) => p.location.toLowerCase().includes(zone.name.toLowerCase()) && p.businessType === 'Comprar'
     );
   }, [zone]);
+
+  useEffect(() => {
+    if (heroRef.current) {
+      gsap.from(heroRef.current, { opacity: 0, y: 20, duration: 0.6, ease: 'power2.out' });
+    }
+  }, []);
 
   const handleNavigate = (page: PageType) => {
     if (page === 'home') {
@@ -61,11 +69,7 @@ export default function InversionZonePage() {
         {/* Hero Section */}
         <section className="bg-gradient-to-br from-brand-dark to-gray-900 py-12 md:py-16">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-            >
+            <div ref={heroRef}>
               <Link
                 href="/inversionistas"
                 className="inline-flex items-center gap-2 text-white/70 hover:text-white mb-6 transition-colors"
@@ -76,7 +80,7 @@ export default function InversionZonePage() {
 
               <h1 className="text-4xl sm:text-5xl font-bold text-white mb-4">{zone.h1Title}</h1>
               <p className="text-lg text-gray-300 max-w-3xl">{zone.description}</p>
-            </motion.div>
+            </div>
           </div>
         </section>
 
@@ -89,51 +93,36 @@ export default function InversionZonePage() {
                 { icon: DollarSign, label: 'Precio por m²', value: zone.pricePerM2 },
                 { icon: Home, label: 'Estratos predominantes', value: zone.strata },
               ].map((stat, i) => (
-                <motion.div
-                  key={stat.label}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: i * 0.1 }}
-                  className="bg-white rounded-xl p-6 shadow-sm"
-                >
-                  <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 bg-brand-red/10 rounded-lg flex items-center justify-center">
-                      <stat.icon className="w-6 h-6 text-brand-red" />
-                    </div>
-                    <div>
-                      <p className="text-sm text-gray-600 mb-1">{stat.label}</p>
-                      <p className="text-2xl font-bold text-gray-900">{stat.value}</p>
+                <ScrollReveal key={stat.label} delay={i * 0.1} y={20}>
+                  <div className="bg-white rounded-xl p-6 shadow-sm">
+                    <div className="flex items-start gap-4">
+                      <div className="w-12 h-12 bg-brand-red/10 rounded-lg flex items-center justify-center">
+                        <stat.icon className="w-6 h-6 text-brand-red" />
+                      </div>
+                      <div>
+                        <p className="text-sm text-gray-600 mb-1">{stat.label}</p>
+                        <p className="text-2xl font-bold text-gray-900">{stat.value}</p>
+                      </div>
                     </div>
                   </div>
-                </motion.div>
+                </ScrollReveal>
               ))}
             </div>
 
             {/* Advantages */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-            >
+            <ScrollReveal y={20}>
               <h2 className="text-3xl font-bold text-gray-900 mb-8">Ventajas de invertir en {zone.name}</h2>
+            </ScrollReveal>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {zone.advantages.map((advantage, i) => (
-                  <motion.div
-                    key={i}
-                    initial={{ opacity: 0, x: -20 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.5, delay: i * 0.1 }}
-                    className="bg-white rounded-xl p-6 border-l-4 border-brand-red"
-                  >
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {zone.advantages.map((advantage, i) => (
+                <ScrollReveal key={i} delay={i * 0.1} y={20}>
+                  <div className="bg-white rounded-xl p-6 border-l-4 border-brand-red">
                     <p className="text-gray-700 leading-relaxed">{advantage}</p>
-                  </motion.div>
-                ))}
-              </div>
-            </motion.div>
+                  </div>
+                </ScrollReveal>
+              ))}
+            </div>
           </div>
         </section>
 
@@ -141,44 +130,28 @@ export default function InversionZonePage() {
         {relatedProperties.length > 0 && (
           <section className="py-12 md:py-16 bg-white">
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-              <motion.h2
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6 }}
-                className="text-3xl font-bold text-gray-900 mb-12"
-              >
-                Propiedades disponibles para inversión en {zone.name}
-              </motion.h2>
+              <ScrollReveal y={20}>
+                <h2 className="text-3xl font-bold text-gray-900 mb-12">
+                  Propiedades disponibles para inversión en {zone.name}
+                </h2>
+              </ScrollReveal>
 
               <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
                 {relatedProperties.map((property, i) => (
-                  <motion.div
-                    key={property.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.5, delay: i * 0.1 }}
-                  >
+                  <ScrollReveal key={property.id} delay={i * 0.1} y={20}>
                     <PropertyCard property={property} />
-                  </motion.div>
+                  </ScrollReveal>
                 ))}
               </div>
 
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6 }}
-                className="text-center mt-12"
-              >
+              <ScrollReveal y={20} className="text-center mt-12">
                 <Link
                   href={`/propiedades?location=${zone.name}&businessType=Comprar`}
                   className="inline-flex items-center gap-2 h-12 px-8 bg-brand-red hover:bg-brand-red-hover text-white font-semibold rounded-full transition-all duration-300"
                 >
                   Ver todas las propiedades en {zone.name}
                 </Link>
-              </motion.div>
+              </ScrollReveal>
             </div>
           </section>
         )}
@@ -186,45 +159,38 @@ export default function InversionZonePage() {
         {/* Other Zones */}
         <section className="py-12 md:py-16 bg-gray-50">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <motion.h2
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="text-3xl font-bold text-gray-900 mb-12 text-center"
-            >
-              Explorar otras zonas de inversión
-            </motion.h2>
+            <ScrollReveal y={20} className="text-center mb-12">
+              <h2 className="text-3xl font-bold text-gray-900">
+                Explorar otras zonas de inversión
+              </h2>
+            </ScrollReveal>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {investmentZones
                 .filter((z) => z.id !== zone.id)
                 .map((otherZone, i) => (
-                  <motion.Link
-                    key={otherZone.id}
-                    href={`/inversionistas/${otherZone.slug}`}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.5, delay: i * 0.1 }}
-                    className="bg-white rounded-xl p-6 hover:shadow-lg transition-all group cursor-pointer"
-                  >
-                    <div className="flex items-start justify-between mb-4">
-                      <h3 className="text-xl font-bold text-gray-900 group-hover:text-brand-red transition-colors">
-                        {otherZone.name}
-                      </h3>
-                      <ArrowLeft className="w-5 h-5 text-brand-red rotate-180 group-hover:translate-x-1 transition-transform" />
-                    </div>
+                  <ScrollReveal key={otherZone.id} delay={i * 0.1} y={20}>
+                    <Link
+                      href={`/inversionistas/${otherZone.slug}`}
+                      className="block bg-white rounded-xl p-6 hover:shadow-lg transition-all group cursor-pointer"
+                    >
+                      <div className="flex items-start justify-between mb-4">
+                        <h3 className="text-xl font-bold text-gray-900 group-hover:text-brand-red transition-colors">
+                          {otherZone.name}
+                        </h3>
+                        <ArrowLeft className="w-5 h-5 text-brand-red rotate-180 group-hover:translate-x-1 transition-transform" />
+                      </div>
 
-                    <div className="space-y-2">
-                      <p className="text-sm text-gray-600">
-                        <span className="font-semibold text-brand-red">{otherZone.rentability}</span> rentabilidad
-                      </p>
-                      <p className="text-sm text-gray-600">
-                        <span className="font-semibold">{otherZone.pricePerM2}</span> precio m²
-                      </p>
-                    </div>
-                  </motion.Link>
+                      <div className="space-y-2">
+                        <p className="text-sm text-gray-600">
+                          <span className="font-semibold text-brand-red">{otherZone.rentability}</span> rentabilidad
+                        </p>
+                        <p className="text-sm text-gray-600">
+                          <span className="font-semibold">{otherZone.pricePerM2}</span> precio m²
+                        </p>
+                      </div>
+                    </Link>
+                  </ScrollReveal>
                 ))}
             </div>
           </div>
@@ -233,12 +199,7 @@ export default function InversionZonePage() {
         {/* CTA Section */}
         <section className="py-16 md:py-20 bg-brand-red">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-            >
+            <ScrollReveal y={20}>
               <h2 className="text-3xl md:text-4xl font-bold text-white mb-8">
                 ¿Listo para invertir en {zone.name}?
               </h2>
@@ -252,7 +213,7 @@ export default function InversionZonePage() {
                 <span>Solicitar asesoría</span>
                 <img src="/icons/icon-whatsapp-red.gif" alt="WhatsApp" className="w-5 h-5" />
               </a>
-            </motion.div>
+            </ScrollReveal>
           </div>
         </section>
       </main>

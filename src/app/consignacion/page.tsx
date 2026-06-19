@@ -1,36 +1,23 @@
-'use client';
+import type { Metadata } from 'next';
+import ConsignacionShell from '@/components/shells/ConsignacionShell';
 
-import { useEffect } from 'react';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
-import ConsignacionPage from '@/components/ConsignacionPage';
-import type { PageType } from '@/components/Header';
-
-function navigate(page: PageType, filter?: string) {
-  if (page === 'propiedades') {
-    const suffix = filter === 'Arrendar' ? '-arrendar' : filter === 'Comprar' ? '-comprar' : '';
-    window.location.href = `/propiedades${suffix ? `#${suffix}` : ''}`;
-  } else if (page === 'blog') {
-    window.location.href = '/blog';
-  } else if (page === 'inversionistas') {
-    window.location.href = '/inversionistas';
-  } else if (page === 'consignacion') {
-    window.location.href = '/consignacion';
-  } else {
-    window.location.href = `/#${page}`;
-  }
-}
+export const metadata: Metadata = {
+  title: 'Consigna tu propiedad en Medellín | Arrendamientos Santa Fe',
+  description: 'Consigna tu apartamento, casa o local con Arrendamientos Santa Fe. Gestión profesional de arrendamiento y venta en Medellín y Antioquia. Más de 60 años de experiencia.',
+  keywords: ['consignar propiedad Medellín', 'arrendar inmueble Antioquia', 'administración de propiedades Medellín', 'consignación inmobiliaria'],
+  openGraph: {
+    title: 'Consigna tu propiedad | Arrendamientos Santa Fe',
+    description: 'Confía tu inmueble a los especialistas. 60 años gestionando propiedades en Medellín y Antioquia.',
+    url: 'https://arrendamientossantafe.com/consignacion',
+    siteName: 'Arrendamientos Santa Fe',
+    locale: 'es_CO',
+    type: 'website',
+  },
+  alternates: {
+    canonical: 'https://arrendamientossantafe.com/consignacion',
+  },
+};
 
 export default function Page() {
-  useEffect(() => { window.scrollTo({ top: 0, behavior: 'smooth' }); }, []);
-
-  return (
-    <div className="min-h-screen flex flex-col">
-      <Header currentPage="consignacion" onNavigate={navigate} />
-      <main className="flex-1 relative" style={{ paddingTop: '86px' }}>
-        <ConsignacionPage />
-      </main>
-      <Footer onNavigate={navigate} />
-    </div>
-  );
+  return <ConsignacionShell />;
 }

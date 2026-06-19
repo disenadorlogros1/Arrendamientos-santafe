@@ -1,13 +1,14 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { useState, useEffect, useRef } from 'react';
+import gsap from 'gsap';
 import PropertyCard from './PropertyCard';
 import InfiniteCarousel from './InfiniteCarousel';
 import { properties } from '@/data/properties';
 import { Button } from '@/components/ui/button';
 import { useSplitTextAnimation } from '@/hooks/useSplitTextAnimation';
 import PropiedadesSearchBar, { type PropSearchFilters } from './PropiedadesSearchBar';
+import ScrollReveal from '@/components/ScrollReveal';
 
 const FONT_HEADING = "'Avenir LT Std', 'Outfit', system-ui, sans-serif";
 const FONT_BODY    = "'Avenir LT Std', 'Outfit', system-ui, sans-serif";
@@ -23,10 +24,8 @@ function parseArea(s: string): number {
 
 function applyFilters(filters: PropSearchFilters) {
   return properties.filter((p) => {
-    // Tipo de negocio ('Todos' muestra todos)
     if (filters.tipo !== 'Todos' && p.businessType && p.businessType !== filters.tipo) return false;
 
-    // Código inmueble (busca en referencia o id)
     if (filters.codigo) {
       const q = filters.codigo.toLowerCase();
       const matchRef = p.reference?.toLowerCase().includes(q);
@@ -34,17 +33,12 @@ function applyFilters(filters: PropSearchFilters) {
       if (!matchRef && !matchId) return false;
     }
 
-    // Tipo de propiedad
     if (filters.tipoPropiedad && p.type.toLowerCase() !== filters.tipoPropiedad.toLowerCase()) return false;
-
-    // Sector
     if (filters.sector && p.location.toLowerCase() !== filters.sector.toLowerCase()) return false;
 
-    // Precio
     const price = parsePrice(p.price);
     if (price > 0 && (price < filters.precioMin || price > filters.precioMax)) return false;
 
-    // Habitaciones
     if (filters.habitaciones !== null) {
       if (filters.habitaciones >= 5) {
         if (p.bedrooms < 5) return false;
@@ -53,7 +47,6 @@ function applyFilters(filters: PropSearchFilters) {
       }
     }
 
-    // Baños
     if (filters.banos !== null) {
       if (filters.banos >= 4) {
         if (p.bathrooms < 4) return false;
@@ -62,24 +55,20 @@ function applyFilters(filters: PropSearchFilters) {
       }
     }
 
-    // Parqueadero
     if (filters.parqueadero === 'con') {
       if (!p.parking && !p.garage) return false;
     } else if (filters.parqueadero === 'sin') {
       if (p.parking || p.garage) return false;
     }
 
-    // Área
     const area = parseArea(p.size);
     if (filters.areaMin && area < parseInt(filters.areaMin)) return false;
     if (filters.areaMax && area > parseInt(filters.areaMax)) return false;
 
-    // Estrato
     if (filters.estrato.length > 0) {
       if (!p.stratum || !filters.estrato.includes(String(p.stratum))) return false;
     }
 
-    // Comodidades
     if (filters.comodidades.length > 0) {
       for (const c of filters.comodidades) {
         if (c === 'Amoblado' && !p.furnished) return false;
@@ -99,6 +88,8 @@ function applyFilters(filters: PropSearchFilters) {
 
 export default function PropiedadesPage({ initialFilter = 'Todos' }: { initialFilter?: 'Todos' | 'Arrendar' | 'Comprar' }) {
   const { ref: titleRef, titleAnimating } = useSplitTextAnimation('.propiedades-title-split', 0, false);
+  const subtitleRef = useRef<HTMLParagraphElement>(null);
+  const cardsGridRef = useRef<HTMLDivElement>(null);
 
   const [showMap, setShowMap] = useState(false);
   const [appliedFilters, setAppliedFilters] = useState<PropSearchFilters>({
@@ -121,7 +112,28 @@ export default function PropiedadesPage({ initialFilter = 'Todos' }: { initialFi
     setAppliedFilters(prev => ({ ...prev, tipo: initialFilter || 'Todos' }));
   }, [initialFilter]);
 
+  useEffect(() => {
+    if (!titleAnimating || !subtitleRef.current) return;
+    gsap.fromTo(subtitleRef.current,
+      { opacity: 0, y: 16 },
+      { opacity: 1, y: 0, duration: 0.4, ease: 'power2.out' }
+    );
+  }, [titleAnimating]);
+
   const filtered = applyFilters(appliedFilters);
+
+  useEffect(() => {
+    const el = cardsGridRef.current;
+    if (!el) return;
+    const items = el.querySelectorAll('.propiedades-card-item');
+    gsap.from(items, {
+      opacity: 0,
+      y: 20,
+      duration: 0.3,
+      stagger: 0.03,
+      ease: 'power2.out',
+    });
+  }, [filtered.length, appliedFilters]);
 
   return (
     <div className="min-h-screen" style={{ background: '#f7f6f4' }}>
@@ -142,10 +154,8 @@ export default function PropiedadesPage({ initialFilter = 'Todos' }: { initialFi
             Ver{' '}
             <span style={{ fontWeight: 700, color: '#f32735' }}>propiedades</span>
           </h1>
-          <motion.p
-            initial={{ opacity: 0, y: 16 }}
-            animate={titleAnimating ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
-            transition={{ duration: 0.4, ease: 'easeOut' }}
+          <p
+            ref={subtitleRef}
             style={{
               fontFamily: FONT_BODY,
               fontWeight: 300,
@@ -154,14 +164,15 @@ export default function PropiedadesPage({ initialFilter = 'Todos' }: { initialFi
               lineHeight: 1.55,
               margin: 0,
               maxWidth: '560px',
+              opacity: 0,
             }}
           >
             Encuentra tu próximo hogar en Medellín y área metropolitana.
-          </motion.p>
+          </p>
         </div>
       </div>
 
-      {/* Search Bar — sticky flotante bajo el header */}
+      {/* Search Bar */}
       <div style={{ position: 'sticky', top: '86px', zIndex: 40, background: 'rgba(247,246,244,0.92)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)' }}>
         <PropiedadesSearchBar
           initialTipo={initialFilter || 'Todos'}
@@ -172,7 +183,7 @@ export default function PropiedadesPage({ initialFilter = 'Todos' }: { initialFi
       {/* Content */}
       <div style={{ maxWidth: showMap ? '100%' : '1400px', margin: '0 auto', padding: showMap ? '0' : '32px clamp(16px, 3vw, 48px)', transition: 'all 0.4s ease' }}>
 
-        {/* Toolbar: contador + toggle mapa */}
+        {/* Toolbar */}
         <div
           className="flex items-center justify-between"
           style={{ padding: showMap ? '20px clamp(16px, 2vw, 36px)' : '0 0 20px 0' }}
@@ -181,7 +192,6 @@ export default function PropiedadesPage({ initialFilter = 'Todos' }: { initialFi
             {filtered.length} {filtered.length === 1 ? 'propiedad encontrada' : 'propiedades encontradas'}
           </p>
 
-          {/* Botón toggle mapa — solo desktop */}
           <button
             type="button"
             onClick={() => setShowMap(v => !v)}
@@ -212,10 +222,9 @@ export default function PropiedadesPage({ initialFilter = 'Todos' }: { initialFi
           <InfiniteCarousel properties={filtered} />
         </div>
 
-        {/* Desktop: layout normal o con mapa */}
+        {/* Desktop layout */}
         <div className={`hidden lg:flex ${showMap ? 'flex-row items-start' : 'flex-col'}`}>
 
-          {/* Lista de propiedades */}
           <div
             style={{
               flex: showMap ? '0 0 55%' : '1',
@@ -226,21 +235,18 @@ export default function PropiedadesPage({ initialFilter = 'Todos' }: { initialFi
               scrollbarColor: '#ddd transparent',
             }}
           >
-            <div className={showMap ? 'grid grid-cols-2 gap-4' : 'grid grid-cols-3 xl:grid-cols-4 gap-5'}>
-              {filtered.map((property, i) => (
-                <motion.div
-                  key={property.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3, delay: i * 0.03 }}
-                >
+            <div
+              ref={cardsGridRef}
+              className={showMap ? 'grid grid-cols-2 gap-4' : 'grid grid-cols-3 xl:grid-cols-4 gap-5'}
+            >
+              {filtered.map((property) => (
+                <div key={property.id} className="propiedades-card-item">
                   <PropertyCard property={property} />
-                </motion.div>
+                </div>
               ))}
             </div>
           </div>
 
-          {/* Mapa fijo */}
           {showMap && (
             <div
               style={{
@@ -316,55 +322,53 @@ export default function PropiedadesPage({ initialFilter = 'Todos' }: { initialFi
 
         {/* Cross-linking CTAs */}
         <div className="mt-16 grid md:grid-cols-2 gap-6">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            style={{
-              background: 'rgba(243,39,53,0.04)',
-              border: '1px solid rgba(243,39,53,0.15)',
-              borderRadius: '8px',
-              padding: '32px',
-            }}
-          >
-            <h3 style={{ fontFamily: FONT_HEADING, fontWeight: 700, fontSize: '20px', color: '#1a1a1a', marginBottom: '10px' }}>
-              ¿Tienes un inmueble para arrendar o vender?
-            </h3>
-            <p style={{ fontFamily: FONT_BODY, fontSize: '14px', color: '#666', marginBottom: '20px', lineHeight: 1.55 }}>
-              Consigna tu propiedad con nosotros y accede a nuestra red de clientes.
-            </p>
-            <Button
-              onClick={() => window.location.href = '/consignacion'}
-              className="bg-brand-red hover:bg-brand-red-hover text-white rounded-full"
+          <ScrollReveal y={20}>
+            <div
+              style={{
+                background: 'rgba(243,39,53,0.04)',
+                border: '1px solid rgba(243,39,53,0.15)',
+                borderRadius: '8px',
+                padding: '32px',
+              }}
             >
-              Consigna tu propiedad
-            </Button>
-          </motion.div>
+              <h3 style={{ fontFamily: FONT_HEADING, fontWeight: 700, fontSize: '20px', color: '#1a1a1a', marginBottom: '10px' }}>
+                ¿Tienes un inmueble para arrendar o vender?
+              </h3>
+              <p style={{ fontFamily: FONT_BODY, fontSize: '14px', color: '#666', marginBottom: '20px', lineHeight: 1.55 }}>
+                Consigna tu propiedad con nosotros y accede a nuestra red de clientes.
+              </p>
+              <Button
+                onClick={() => window.location.href = '/consignacion'}
+                className="bg-brand-red hover:bg-brand-red-hover text-white rounded-full"
+              >
+                Consigna tu propiedad
+              </Button>
+            </div>
+          </ScrollReveal>
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            style={{
-              background: 'rgb(239,246,255)',
-              border: '1px solid rgb(191,219,254)',
-              borderRadius: '8px',
-              padding: '32px',
-            }}
-          >
-            <h3 style={{ fontFamily: FONT_HEADING, fontWeight: 700, fontSize: '20px', color: '#1a1a1a', marginBottom: '10px' }}>
-              ¿Buscas oportunidades de inversión?
-            </h3>
-            <p style={{ fontFamily: FONT_BODY, fontSize: '14px', color: '#666', marginBottom: '20px', lineHeight: 1.55 }}>
-              Descubre nuestras propiedades con mayor potencial de retorno en Antioquia.
-            </p>
-            <Button
-              onClick={() => window.location.href = '/inversionistas'}
-              className="bg-blue-600 hover:bg-blue-700 text-white rounded-full"
+          <ScrollReveal y={20} delay={0.1}>
+            <div
+              style={{
+                background: 'rgb(239,246,255)',
+                border: '1px solid rgb(191,219,254)',
+                borderRadius: '8px',
+                padding: '32px',
+              }}
             >
-              Ver oportunidades de inversión
-            </Button>
-          </motion.div>
+              <h3 style={{ fontFamily: FONT_HEADING, fontWeight: 700, fontSize: '20px', color: '#1a1a1a', marginBottom: '10px' }}>
+                ¿Buscas oportunidades de inversión?
+              </h3>
+              <p style={{ fontFamily: FONT_BODY, fontSize: '14px', color: '#666', marginBottom: '20px', lineHeight: 1.55 }}>
+                Descubre nuestras propiedades con mayor potencial de retorno en Antioquia.
+              </p>
+              <Button
+                onClick={() => window.location.href = '/inversionistas'}
+                className="bg-blue-600 hover:bg-blue-700 text-white rounded-full"
+              >
+                Ver oportunidades de inversión
+              </Button>
+            </div>
+          </ScrollReveal>
         </div>
       </div>
     </div>

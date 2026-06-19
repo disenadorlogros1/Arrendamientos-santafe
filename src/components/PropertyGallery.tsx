@@ -2,14 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
-import {
-  motion,
-  useMotionValue,
-  useTransform,
-  useMotionValueEvent,
-  animate,
-  type MotionValue,
-} from 'framer-motion';
+import gsap from 'gsap';
 import { X } from 'lucide-react';
 
 const FONT = "'Avenir LT Pro 65 Medium', 'Avenir LT Pro', 'Avenir', system-ui, sans-serif";
@@ -29,40 +22,27 @@ interface PropertyGalleryProps {
   stats?: PropertyStats;
 }
 
-/* ── Bento resting-position layouts ────────────────────────────
-   Each rect { l, t, w, h } in % of the photo container.
-   These are the clip-path masks when the photo is "resting".  */
-
 interface Rect { l: number; t: number; w: number; h: number }
 
-/* G = gap between cells in % */
 const G = 0.8;
 
 const BENTO: Record<number, Rect[]> = {
   1: [{ l:0, t:0, w:100, h:100 }],
-
-  /* 2: tall left + tall right, slight height difference */
   2: [
     { l:0,        t:0,    w:58-G/2,    h:100 },
     { l:58+G/2,   t:0,    w:42-G/2,    h:100 },
   ],
-
-  /* 3: large left spanning full height, two stacked right */
   3: [
     { l:0,        t:0,    w:58-G/2,    h:100 },
     { l:58+G/2,   t:0,    w:42-G/2,    h:50-G/2 },
     { l:58+G/2,   t:50+G/2, w:42-G/2, h:50-G/2 },
   ],
-
-  /* 4: one large top-left, two small top-right, one wide bottom */
   4: [
     { l:0,        t:0,       w:58-G/2,    h:60-G/2 },
     { l:58+G/2,   t:0,       w:22-G/2,   h:60-G/2 },
     { l:81+G/2,   t:0,       w:19-G/2,   h:60-G/2 },
     { l:0,        t:60+G/2,  w:100,       h:40-G/2 },
   ],
-
-  /* 5: large left (full height) + 4 cells right in 2×2 */
   5: [
     { l:0,        t:0,       w:42-G/2,    h:100 },
     { l:42+G/2,   t:0,       w:29-G/2,    h:48-G/2 },
@@ -70,8 +50,6 @@ const BENTO: Record<number, Rect[]> = {
     { l:42+G/2,   t:48+G/2,  w:29-G/2,    h:52-G/2 },
     { l:72+G/2,   t:48+G/2,  w:28-G/2,    h:52-G/2 },
   ],
-
-  /* 6: large left (top 58%) + 2 small right top + wide bottom-left + 2 small bottom-right */
   6: [
     { l:0,        t:0,       w:42-G/2,    h:58-G/2 },
     { l:42+G/2,   t:0,       w:29-G/2,    h:28-G/2 },
@@ -84,7 +62,6 @@ const BENTO: Record<number, Rect[]> = {
 
 function getLayout(n: number): Rect[] {
   if (BENTO[n]) return BENTO[n];
-  // Dynamic fallback for n > 6
   const cols = Math.ceil(Math.sqrt(n * 1.3));
   const rows = Math.ceil(n / cols);
   const colW = (100 - (cols - 1) * G) / cols;
@@ -97,10 +74,11 @@ function getLayout(n: number): Rect[] {
   }));
 }
 
-/* ── Animation helpers ─────────────────────────────────────── */
+const SCROLL_PER_PHOTO = 900;
+const PHASE_START = 0.08;
 
-const SCROLL_PER_PHOTO = 900; // px of scroll per photo featured
-const PHASE_START = 0.08;     // first 8% = mosaic overview
+const R_REST = 14;
+const R_FEAT = 20;
 
 function intensity(p: number, i: number, n: number): number {
   if (p < PHASE_START) return 0;
@@ -116,71 +94,36 @@ function maxIntensity(p: number, n: number): number {
   return m;
 }
 
-/* ── PhotoCard ─────────────────────────────────────────────── */
-
-const R_REST = 14; // border-radius when resting
-const R_FEAT = 20; // border-radius when fully featured
+/* ── PhotoCard — plain DOM, animated by parent ticker ── */
 
 function PhotoCard({
   img,
-  idx,
-  n,
   rect,
-  progress,
+  cardRef,
+  imgRef,
 }: {
   img: string;
-  idx: number;
-  n: number;
   rect: Rect;
-  progress: MotionValue<number>;
+  cardRef: (el: HTMLDivElement | null) => void;
+  imgRef: (el: HTMLImageElement | null) => void;
 }) {
-  // Clip values at rest (% inset from each edge)
-  const CT = rect.t;
-  const CR = 100 - rect.l - rect.w;
-  const CB = 100 - rect.t - rect.h;
-  const CL = rect.l;
-
-  // intensity for THIS card (0 = resting, 1 = fully featured)
-  const myInt = useTransform(progress, (p) => intensity(p, idx, n));
-
-  // Clip-path edges interpolate from resting → 0 (full reveal)
-  const cT   = useTransform(myInt, [0, 1], [CT, 0]);
-  const cR   = useTransform(myInt, [0, 1], [CR, 0]);
-  const cB   = useTransform(myInt, [0, 1], [CB, 0]);
-  const cL   = useTransform(myInt, [0, 1], [CL, 0]);
-  const cRad = useTransform(myInt, [0, 1], [R_REST, R_FEAT]);
-
-  const clipPath = useTransform(
-    [cT, cR, cB, cL, cRad] as MotionValue<number>[],
-    ([t, r, b, l, rad]) => `inset(${t}% ${r}% ${b}% ${l}% round ${rad}px)`
-  );
-
-  // Dim non-featured cards when any card is expanding
-  const opacity = useTransform(progress, (p) => {
-    const mine = intensity(p, idx, n);
-    if (mine > 0.12) return 1;
-    const max  = maxIntensity(p, n);
-    return Math.max(0.06, 1 - max * 0.92);
-  });
-
-  const zIndex = useTransform(myInt, v => v > 0.05 ? 10 : 1);
-
-  // Ken Burns: image inside zooms as card expands
-  const imgScale = useTransform(myInt, [0, 1], [1.0, 1.1]);
+  const clipRest = `inset(${rect.t}% ${100 - rect.l - rect.w}% ${100 - rect.t - rect.h}% ${rect.l}% round ${R_REST}px)`;
 
   return (
-    <motion.div
+    <div
+      ref={cardRef}
       style={{
         position: 'absolute',
         inset: 0,
-        clipPath,
-        opacity,
-        zIndex,
+        clipPath: clipRest,
+        opacity: 1,
+        zIndex: 1,
         overflow: 'hidden',
         willChange: 'clip-path, opacity',
       }}
     >
-      <motion.img
+      <img
+        ref={imgRef}
         src={img}
         alt=""
         draggable={false}
@@ -189,16 +132,15 @@ function PhotoCard({
           height: '100%',
           objectFit: 'cover',
           display: 'block',
-          scale: imgScale,
           transformOrigin: 'center center',
           willChange: 'transform',
         }}
       />
-    </motion.div>
+    </div>
   );
 }
 
-/* ── BentoGallery (lightbox) ──────────────────────────────── */
+/* ── BentoGallery (lightbox) ── */
 
 function BentoGallery({
   images,
@@ -213,56 +155,107 @@ function BentoGallery({
   const MAX = n * SCROLL_PER_PHOTO;
   const layout = getLayout(n);
 
-  // MotionValue driving all animations (replaces a scroll container)
-  const scrollY  = useMotionValue(0);
-  const progress = useTransform(scrollY, [0, MAX], [0, 1]);
-
+  const scrollObj  = useRef({ y: 0 });
+  const activeIdxRef = useRef(-1);
   const [activeIdx, setActiveIdx] = useState<number>(-1);
   const [entered,   setEntered]   = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+  const hintRef      = useRef<HTMLDivElement>(null);
 
-  // Update active thumbnail
-  useMotionValueEvent(progress, 'change', (p) => {
-    if (p < PHASE_START) { setActiveIdx(-1); return; }
-    let bestI = 0, bestV = -1;
-    for (let i = 0; i < n; i++) {
-      const v = intensity(p, i, n);
-      if (v > bestV) { bestV = v; bestI = i; }
-    }
-    setActiveIdx(bestI);
-  });
+  // Refs to each card's outer div and inner img
+  const cardRefs = useRef<Array<HTMLDivElement | null>>(Array(n).fill(null));
+  const imgRefs  = useRef<Array<HTMLImageElement | null>>(Array(n).fill(null));
 
-  // Fade-in entrance + body scroll lock
+  // GSAP ticker — drives all photo DOM updates
+  useEffect(() => {
+    const tick = () => {
+      const p   = scrollObj.current.y / MAX;
+      const max = maxIntensity(p, n);
+
+      for (let i = 0; i < n; i++) {
+        const card = cardRefs.current[i];
+        const img  = imgRefs.current[i];
+        if (!card) continue;
+
+        const mine = intensity(p, i, n);
+        const rect = layout[i];
+        const CT = rect.t;
+        const CR = 100 - rect.l - rect.w;
+        const CB = 100 - rect.t - rect.h;
+        const CL = rect.l;
+
+        const t   = CT   * (1 - mine);
+        const r   = CR   * (1 - mine);
+        const b   = CB   * (1 - mine);
+        const l   = CL   * (1 - mine);
+        const rad = R_REST + (R_FEAT - R_REST) * mine;
+
+        card.style.clipPath = `inset(${t}% ${r}% ${b}% ${l}% round ${rad}px)`;
+        card.style.opacity  = String(mine > 0.12 ? 1 : Math.max(0.06, 1 - max * 0.92));
+        card.style.zIndex   = mine > 0.05 ? '10' : '1';
+
+        if (img) {
+          img.style.transform = `scale(${1.0 + 0.1 * mine})`;
+        }
+      }
+
+      // Update active index — only triggers re-render when it changes
+      let newActive = -1;
+      if (p >= PHASE_START) {
+        let bestI = 0, bestV = -1;
+        for (let i = 0; i < n; i++) {
+          const v = intensity(p, i, n);
+          if (v > bestV) { bestV = v; bestI = i; }
+        }
+        newActive = bestI;
+      }
+      if (newActive !== activeIdxRef.current) {
+        activeIdxRef.current = newActive;
+        setActiveIdx(newActive);
+      }
+    };
+
+    gsap.ticker.add(tick);
+    return () => gsap.ticker.remove(tick);
+  }, [n, MAX, layout]);
+
+  // Fade-in + body scroll lock
   useEffect(() => {
     const id = requestAnimationFrame(() => requestAnimationFrame(() => setEntered(true)));
     document.body.style.overflow = 'hidden';
     return () => { cancelAnimationFrame(id); document.body.style.overflow = ''; };
   }, []);
 
-  // Keyboard: Esc close, arrow keys navigate
+  // Scroll hint animation
+  useEffect(() => {
+    if (!entered || !hintRef.current) return;
+    gsap.fromTo(hintRef.current, { opacity: 0, y: 6 }, { opacity: 1, y: 0, delay: 0.7, duration: 0.5 });
+  }, [entered]);
+
+  // Keyboard navigation
   useEffect(() => {
     const h = (e: KeyboardEvent) => {
       if (e.key === 'Escape') { onClose(); return; }
-      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') scrollToPhoto(Math.min(n - 1, activeIdx + 1));
-      if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   scrollToPhoto(Math.max(0, activeIdx - 1));
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') scrollToPhoto(Math.min(n - 1, activeIdxRef.current + 1));
+      if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   scrollToPhoto(Math.max(0, activeIdxRef.current - 1));
     };
     window.addEventListener('keydown', h);
     return () => window.removeEventListener('keydown', h);
   });
 
-  // Wheel scroll: drives scrollY directly (scroll IS the lever)
+  // Wheel scroll
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
     const onWheel = (e: WheelEvent) => {
       e.preventDefault();
-      scrollY.set(Math.max(0, Math.min(MAX, scrollY.get() + e.deltaY * 1.1)));
+      scrollObj.current.y = Math.max(0, Math.min(MAX, scrollObj.current.y + e.deltaY * 1.1));
     };
     el.addEventListener('wheel', onWheel, { passive: false });
     return () => el.removeEventListener('wheel', onWheel);
-  }, [scrollY, MAX]);
+  }, [MAX]);
 
-  // Touch scroll (mobile)
+  // Touch scroll
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
@@ -272,26 +265,25 @@ function BentoGallery({
       e.preventDefault();
       const dy = lastY - e.touches[0].clientY;
       lastY = e.touches[0].clientY;
-      scrollY.set(Math.max(0, Math.min(MAX, scrollY.get() + dy * 2.2)));
+      scrollObj.current.y = Math.max(0, Math.min(MAX, scrollObj.current.y + dy * 2.2));
     };
     el.addEventListener('touchstart', onStart, { passive: true });
     el.addEventListener('touchmove',  onMove,  { passive: false });
     return () => { el.removeEventListener('touchstart', onStart); el.removeEventListener('touchmove', onMove); };
-  }, [scrollY, MAX]);
+  }, [MAX]);
 
   // Jump to startIndex on open
   useEffect(() => {
-    if (!entered) return;
-    if (startIndex === 0) return;
+    if (!entered || startIndex === 0) return;
     const w = (1 - PHASE_START) / n;
     const targetP = PHASE_START + (startIndex + 0.5) * w;
-    scrollY.set(MAX * targetP);
-  }, [entered, startIndex, n, MAX, scrollY]);
+    scrollObj.current.y = MAX * targetP;
+  }, [entered, startIndex, n, MAX]);
 
   const scrollToPhoto = (i: number) => {
     const w = (1 - PHASE_START) / n;
     const targetP = PHASE_START + (i + 0.5) * w;
-    animate(scrollY, MAX * targetP, { type: 'spring', stiffness: 90, damping: 22 });
+    gsap.to(scrollObj.current, { y: MAX * targetP, ease: 'power3.out', duration: 0.7 });
   };
 
   return createPortal(
@@ -304,7 +296,7 @@ function BentoGallery({
         transition: 'opacity 0.3s ease',
       }}
     >
-      {/* ── Top bar ── */}
+      {/* Top bar */}
       <div style={{
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         padding: '14px 20px', flexShrink: 0, zIndex: 20, position: 'relative',
@@ -334,31 +326,27 @@ function BentoGallery({
         </button>
       </div>
 
-      {/* ── Bento display area (scroll events here) ── */}
+      {/* Bento display area */}
       <div
         ref={containerRef}
         style={{ flex: 1, position: 'relative', minHeight: 0, padding: '0 16px 12px' }}
       >
-        {/* Inner container: all photos stack here with clip-path */}
         <div style={{ position: 'relative', width: '100%', height: '100%' }}>
           {images.map((img, i) => (
             <PhotoCard
               key={i}
               img={img}
-              idx={i}
-              n={n}
               rect={layout[i]}
-              progress={progress}
+              cardRef={el => { cardRefs.current[i] = el; }}
+              imgRef={el  => { imgRefs.current[i]  = el; }}
             />
           ))}
         </div>
 
-        {/* Scroll hint on first open */}
+        {/* Scroll hint */}
         {entered && activeIdx < 0 && (
-          <motion.div
-            initial={{ opacity: 0, y: 6 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.7, duration: 0.5 }}
+          <div
+            ref={hintRef}
             style={{
               position: 'absolute',
               bottom: '24px',
@@ -372,17 +360,18 @@ function BentoGallery({
               display: 'flex',
               alignItems: 'center',
               gap: '6px',
+              opacity: 0,
             }}
           >
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
               <path d="M7 2v10M4 9l3 3 3-3" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
             Desplázate para explorar
-          </motion.div>
+          </div>
         )}
       </div>
 
-      {/* ── Thumbnail strip ── */}
+      {/* Thumbnail strip */}
       <div style={{
         height: '76px',
         overflowX: 'auto',
@@ -431,7 +420,7 @@ function BentoGallery({
   );
 }
 
-/* ── Preview (3 fotos) ─────────────────────────────────────── */
+/* ── Preview (3 fotos) ── */
 
 function PreviewCell({ img, alt, rowSpan, onClick, overlay }: {
   img: string; alt: string; rowSpan?: boolean; onClick: () => void; overlay?: string;
@@ -469,7 +458,7 @@ function PreviewCell({ img, alt, rowSpan, onClick, overlay }: {
   );
 }
 
-/* ── Export ─────────────────────────────────────────────────── */
+/* ── Export ── */
 
 export default function PropertyGallery({ images, title, stats: _stats }: PropertyGalleryProps) {
   const [open,     setOpen]     = useState(false);

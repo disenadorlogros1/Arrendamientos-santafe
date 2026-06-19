@@ -1,6 +1,7 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { useRef, useEffect } from 'react';
+import gsap from 'gsap';
 import {
   Home,
   TrendingUp,
@@ -11,6 +12,7 @@ import {
   MessageCircle,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import ScrollReveal from '@/components/ScrollReveal';
 
 const services = [
   {
@@ -49,16 +51,20 @@ const services = [
 ];
 
 export default function ServiciosPage() {
+  const headerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (headerRef.current) {
+      gsap.from(headerRef.current, { opacity: 0, y: 20, duration: 0.5, ease: 'power2.out' });
+    }
+  }, []);
+
   return (
     <div className="min-h-screen bg-white">
       {/* Page Header */}
       <div className="bg-brand-dark pb-12 md:pb-16" style={{ marginTop: '-86px', paddingTop: 'calc(86px + 48px)' }}>
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
+          <div ref={headerRef}>
             <h1 className="text-3xl sm:text-4xl font-bold text-white">
               Nuestros servicios
             </h1>
@@ -66,7 +72,7 @@ export default function ServiciosPage() {
               Una oferta integral para acompañar tus decisiones inmobiliarias en
               Antioquia con respaldo, experiencia y procesos claros.
             </p>
-          </motion.div>
+          </div>
         </div>
       </div>
 
@@ -75,24 +81,19 @@ export default function ServiciosPage() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {services.map((service, i) => (
-              <motion.div
-                key={service.title}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.4, delay: i * 0.1 }}
-                className="group p-6 rounded-xl border border-gray-100 hover:border-brand-red/20 hover:shadow-lg transition-all duration-300"
-              >
-                <div className="w-14 h-14 bg-brand-red/10 rounded-2xl flex items-center justify-center mb-4 group-hover:bg-brand-red group-hover:scale-110 transition-all duration-300">
-                  <service.icon className="h-7 w-7 text-brand-red group-hover:text-white transition-colors" />
+              <ScrollReveal key={service.title} delay={i * 0.1} y={30}>
+                <div className="group p-6 rounded-xl border border-gray-100 hover:border-brand-red/20 hover:shadow-lg transition-all duration-300">
+                  <div className="w-14 h-14 bg-brand-red/10 rounded-2xl flex items-center justify-center mb-4 group-hover:bg-brand-red group-hover:scale-110 transition-all duration-300">
+                    <service.icon className="h-7 w-7 text-brand-red group-hover:text-white transition-colors" />
+                  </div>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                    {service.title}
+                  </h3>
+                  <p className="text-sm text-brand-gray leading-relaxed">
+                    {service.description}
+                  </p>
                 </div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                  {service.title}
-                </h3>
-                <p className="text-sm text-brand-gray leading-relaxed">
-                  {service.description}
-                </p>
-              </motion.div>
+              </ScrollReveal>
             ))}
           </div>
         </div>
@@ -102,12 +103,7 @@ export default function ServiciosPage() {
       <section className="py-12 md:py-16 bg-brand-light">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5 }}
-            >
+            <ScrollReveal y={20}>
               <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">
                 Acompañamiento <span className="text-brand-red">en cada etapa</span>
               </h2>
@@ -134,23 +130,19 @@ export default function ServiciosPage() {
                   <p className="text-sm text-brand-gray">Inmuebles en gestión activa</p>
                 </div>
               </div>
-            </motion.div>
+            </ScrollReveal>
 
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5 }}
-              className="relative"
-            >
-              <div
-                className="aspect-[4/3] rounded-2xl bg-cover bg-center"
-                style={{
-                  backgroundImage: 'url(https://picsum.photos/seed/office-med/800/600)',
-                }}
-              />
-              <div className="absolute inset-0 rounded-2xl bg-gradient-to-t from-black/30 to-transparent" />
-            </motion.div>
+            <ScrollReveal y={20} delay={0.1}>
+              <div className="relative">
+                <div
+                  className="aspect-[4/3] rounded-2xl bg-cover bg-center"
+                  style={{
+                    backgroundImage: 'url(https://picsum.photos/seed/office-med/800/600)',
+                  }}
+                />
+                <div className="absolute inset-0 rounded-2xl bg-gradient-to-t from-black/30 to-transparent" />
+              </div>
+            </ScrollReveal>
           </div>
         </div>
       </section>
@@ -158,12 +150,7 @@ export default function ServiciosPage() {
       {/* CTA */}
       <section className="py-12 md:py-16 bg-brand-dark">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-          >
+          <ScrollReveal y={20}>
             <h2 className="text-2xl sm:text-3xl font-bold text-white">
               ¿Necesitas alguno de nuestros servicios?
             </h2>
@@ -184,7 +171,7 @@ export default function ServiciosPage() {
                 Escribir por WhatsApp
               </a>
             </Button>
-          </motion.div>
+          </ScrollReveal>
         </div>
       </section>
     </div>

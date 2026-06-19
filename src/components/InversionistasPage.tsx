@@ -1,11 +1,11 @@
 'use client';
 
-import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useRef, useEffect } from 'react';
+import gsap from 'gsap';
 import { TrendingUp, BarChart3, DollarSign, MapPin, ChevronDown } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import { investmentZones } from '@/data/investment-zones';
 import { useSplitTextAnimation } from '@/hooks/useSplitTextAnimation';
+import ScrollReveal from '@/components/ScrollReveal';
 
 const beneficios = [
   { icon: TrendingUp, title: 'Rentabilidad comprobada', description: '60 años de experiencia generando retornos consistentes para nuestros inversionistas' },
@@ -19,12 +19,29 @@ const WHATSAPP_URL = 'https://wa.me/573006557529?text=Hola%2C%20quisiera%20consu
 export default function InversionistasPage() {
   const { ref: titleRef, titleAnimating } = useSplitTextAnimation('.inversionistas-title-split', 0, false);
   const [expandedZone, setExpandedZone] = useState<string | null>(null);
+  const subtitleRef = useRef<HTMLParagraphElement>(null);
+  const ctaBtnRef   = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!titleAnimating) return;
+    if (subtitleRef.current) {
+      gsap.fromTo(subtitleRef.current,
+        { opacity: 0, y: 20 },
+        { opacity: 1, y: 0, duration: 0.4, ease: 'power2.out' }
+      );
+    }
+    if (ctaBtnRef.current) {
+      gsap.fromTo(ctaBtnRef.current,
+        { opacity: 0, y: 20 },
+        { opacity: 1, y: 0, duration: 0.4, delay: 0.1, ease: 'power2.out' }
+      );
+    }
+  }, [titleAnimating]);
 
   return (
     <div className="min-h-screen bg-white">
       {/* Hero Section */}
       <section className="relative h-[550px] md:h-[720px] flex items-center justify-center overflow-hidden bg-gradient-to-br from-gray-900 to-gray-800" style={{ marginTop: '-86px' }}>
-        {/* Background Image */}
         <div
           className="absolute inset-0"
           style={{
@@ -34,7 +51,6 @@ export default function InversionistasPage() {
           }}
         />
 
-        {/* Content */}
         <div className="relative z-10 text-center px-4 sm:px-6 lg:px-8 max-w-4xl" ref={titleRef}>
           <h1
             className="inversionistas-title-split text-3xl sm:text-4xl lg:text-5xl leading-tight text-white text-center"
@@ -45,118 +61,95 @@ export default function InversionistasPage() {
             }}
           >
             Inversión inmobiliaria en Medellín y el Valle de{' '}
-            <span
-              className="text-brand-red inline-block"
-              style={{
-                fontWeight: 700,
-              }}
-            >
+            <span className="text-brand-red inline-block" style={{ fontWeight: 700 }}>
               Aburrá
             </span>
           </h1>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={titleAnimating ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-            transition={{ duration: 0.4, ease: 'easeOut' }}
+
+          <p
+            ref={subtitleRef}
             className="mt-5 text-base sm:text-lg text-white/80 max-w-2xl mx-auto leading-relaxed text-center"
             style={{
               fontFamily: "'Avenir LT Pro 65 Medium', 'Avenir LT Pro', 'Avenir', 'Outfit', system-ui, sans-serif",
               fontWeight: 300,
               lineHeight: '1.45',
+              opacity: 0,
             }}
           >
             Conoce las zonas con mayor potencial de valorización y rentabilidad inmobiliaria en Antioquia.
-          </motion.p>
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={titleAnimating ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-            transition={{ duration: 0.4, ease: 'easeOut', delay: 0.1 }}
-            className="mt-8 text-center"
-          >
+          </p>
+
+          <div ref={ctaBtnRef} className="mt-8 text-center" style={{ opacity: 0 }}>
             <a
               href="#zonas"
               className="inline-flex items-center gap-2 h-12 px-8 bg-brand-red hover:bg-white hover:text-brand-red text-white font-semibold rounded-full transition-all duration-300 transform hover:scale-105"
             >
               Ver zonas estratégicas
             </a>
-          </motion.div>
+          </div>
         </div>
       </section>
 
       {/* Investment Zones Section */}
       <section id="zonas" className="py-16 md:py-24 bg-gray-50">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-16"
-          >
+          <ScrollReveal y={20} className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
               Zonas estratégicas para invertir
             </h2>
             <p className="text-gray-600 text-lg max-w-2xl mx-auto">
               Selecciona una zona para conocer rentabilidad, precios y ventajas de inversión
             </p>
-          </motion.div>
+          </ScrollReveal>
 
           {/* Zone Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {investmentZones.map((zone, index) => (
-              <motion.div
-                key={zone.id}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm hover:shadow-md transition-all"
-              >
-                {/* Basic Info - Always Visible */}
-                <button
-                  onClick={() => setExpandedZone(expandedZone === zone.id ? null : zone.id)}
-                  className="w-full p-6 text-left hover:bg-gray-50 transition-colors"
-                >
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-2xl font-bold text-gray-900">{zone.name}</h3>
-                    <ChevronDown
-                      className={`w-6 h-6 text-brand-red transition-transform duration-300 ${
-                        expandedZone === zone.id ? 'rotate-180' : ''
-                      }`}
-                    />
-                  </div>
+              <ScrollReveal key={zone.id} delay={index * 0.1} y={20}>
+                <div className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm hover:shadow-md transition-all">
+                  <button
+                    onClick={() => setExpandedZone(expandedZone === zone.id ? null : zone.id)}
+                    className="w-full p-6 text-left hover:bg-gray-50 transition-colors"
+                  >
+                    <div className="flex items-center justify-between mb-4">
+                      <h3 className="text-2xl font-bold text-gray-900">{zone.name}</h3>
+                      <ChevronDown
+                        className={`w-6 h-6 text-brand-red transition-transform duration-300 ${
+                          expandedZone === zone.id ? 'rotate-180' : ''
+                        }`}
+                      />
+                    </div>
 
-                  <div className="grid grid-cols-3 gap-4 mb-4">
-                    <div className="bg-gradient-to-br from-brand-red/5 to-transparent p-3 rounded-lg">
-                      <p className="text-xs text-gray-600 mb-1">Rentabilidad</p>
-                      <p className="text-lg font-bold text-brand-red">{zone.rentability}</p>
+                    <div className="grid grid-cols-3 gap-4 mb-4">
+                      <div className="bg-gradient-to-br from-brand-red/5 to-transparent p-3 rounded-lg">
+                        <p className="text-xs text-gray-600 mb-1">Rentabilidad</p>
+                        <p className="text-lg font-bold text-brand-red">{zone.rentability}</p>
+                      </div>
+                      <div className="bg-gradient-to-br from-blue-50 to-transparent p-3 rounded-lg">
+                        <p className="text-xs text-gray-600 mb-1">Precio m²</p>
+                        <p className="text-sm font-bold text-gray-900">{zone.pricePerM2}</p>
+                      </div>
+                      <div className="bg-gradient-to-br from-green-50 to-transparent p-3 rounded-lg">
+                        <p className="text-xs text-gray-600 mb-1">Estratos</p>
+                        <p className="text-lg font-bold text-gray-900">{zone.strata}</p>
+                      </div>
                     </div>
-                    <div className="bg-gradient-to-br from-blue-50 to-transparent p-3 rounded-lg">
-                      <p className="text-xs text-gray-600 mb-1">Precio m²</p>
-                      <p className="text-sm font-bold text-gray-900">{zone.pricePerM2}</p>
-                    </div>
-                    <div className="bg-gradient-to-br from-green-50 to-transparent p-3 rounded-lg">
-                      <p className="text-xs text-gray-600 mb-1">Estratos</p>
-                      <p className="text-lg font-bold text-gray-900">{zone.strata}</p>
-                    </div>
-                  </div>
-                </button>
+                  </button>
 
-                {/* Expanded Content */}
-                <AnimatePresence>
-                  {expandedZone === zone.id && (
-                    <motion.div
-                      initial={{ opacity: 0, height: 0 }}
-                      animate={{ opacity: 1, height: 'auto' }}
-                      exit={{ opacity: 0, height: 0 }}
-                      transition={{ duration: 0.3 }}
-                      className="border-t border-gray-200"
-                    >
+                  {/* Accordion — CSS grid-template-rows transition */}
+                  <div
+                    style={{
+                      display: 'grid',
+                      gridTemplateRows: expandedZone === zone.id ? '1fr' : '0fr',
+                      opacity: expandedZone === zone.id ? 1 : 0,
+                      transition: 'grid-template-rows 0.3s ease, opacity 0.3s ease',
+                    }}
+                    className="border-t border-gray-200"
+                  >
+                    <div style={{ overflow: 'hidden' }}>
                       <div className="p-6 space-y-4">
-                        {/* Description */}
                         <p className="text-gray-600 leading-relaxed">{zone.description}</p>
 
-                        {/* Advantages */}
                         <div>
                           <h4 className="font-bold text-gray-900 mb-3">Ventajas de inversión:</h4>
                           <ul className="space-y-2">
@@ -169,7 +162,6 @@ export default function InversionistasPage() {
                           </ul>
                         </div>
 
-                        {/* CTAs */}
                         <div className="grid grid-cols-2 gap-3 pt-4">
                           <a
                             href={`/propiedades?location=${zone.name}`}
@@ -185,10 +177,10 @@ export default function InversionistasPage() {
                           </a>
                         </div>
                       </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </motion.div>
+                    </div>
+                  </div>
+                </div>
+              </ScrollReveal>
             ))}
           </div>
         </div>
@@ -197,34 +189,23 @@ export default function InversionistasPage() {
       {/* Benefits Section */}
       <section className="py-16 md:py-24 bg-white">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-16"
-          >
+          <ScrollReveal y={20} className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
               ¿Por qué invertir con nosotros?
             </h2>
-          </motion.div>
+          </ScrollReveal>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {beneficios.map((beneficio, i) => (
-              <motion.div
-                key={beneficio.title}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: i * 0.1 }}
-                className="bg-gray-50 rounded-xl p-6"
-              >
-                <div className="w-12 h-12 bg-brand-red/10 rounded-lg flex items-center justify-center mb-4">
-                  <beneficio.icon className="w-6 h-6 text-brand-red" />
+              <ScrollReveal key={beneficio.title} delay={i * 0.1} y={20}>
+                <div className="bg-gray-50 rounded-xl p-6">
+                  <div className="w-12 h-12 bg-brand-red/10 rounded-lg flex items-center justify-center mb-4">
+                    <beneficio.icon className="w-6 h-6 text-brand-red" />
+                  </div>
+                  <h3 className="text-lg font-bold text-gray-900 mb-2">{beneficio.title}</h3>
+                  <p className="text-gray-600 text-sm leading-relaxed">{beneficio.description}</p>
                 </div>
-                <h3 className="text-lg font-bold text-gray-900 mb-2">{beneficio.title}</h3>
-                <p className="text-gray-600 text-sm leading-relaxed">{beneficio.description}</p>
-              </motion.div>
+              </ScrollReveal>
             ))}
           </div>
         </div>
@@ -233,29 +214,21 @@ export default function InversionistasPage() {
       {/* CTA Section */}
       <section className="py-16 md:py-20 bg-brand-red">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-            className="text-3xl md:text-4xl font-bold text-white mb-8"
-          >
-            ¿Listo para comenzar tu inversión?
-          </motion.h2>
+          <ScrollReveal y={20}>
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-8">
+              ¿Listo para comenzar tu inversión?
+            </h2>
 
-          <motion.a
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            href={WHATSAPP_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 h-12 px-8 bg-white text-brand-red font-semibold rounded-full hover:bg-gray-100 transition-all duration-300 transform hover:scale-105"
-          >
-            <span>Solicitar asesoría</span>
-            <img src="/icons/icon-whatsapp-red.gif" alt="WhatsApp" className="w-5 h-5" />
-          </motion.a>
+            <a
+              href={WHATSAPP_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 h-12 px-8 bg-white text-brand-red font-semibold rounded-full hover:bg-gray-100 transition-all duration-300 transform hover:scale-105"
+            >
+              <span>Solicitar asesoría</span>
+              <img src="/icons/icon-whatsapp-red.gif" alt="WhatsApp" className="w-5 h-5" />
+            </a>
+          </ScrollReveal>
         </div>
       </section>
     </div>

@@ -1,14 +1,23 @@
 'use client';
 
-import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { useState, useRef, useEffect } from 'react';
+import gsap from 'gsap';
 import { Calculator, Percent, FileText, Handshake, MessageCircle, Info } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import ScrollReveal from '@/components/ScrollReveal';
 
 export default function HipotecasPage() {
   const [loanAmount, setLoanAmount] = useState(150000000);
   const [term, setTerm] = useState(20);
   const [rate, setRate] = useState(12.5);
+
+  const headerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (headerRef.current) {
+      gsap.from(headerRef.current, { opacity: 0, y: 20, duration: 0.5, ease: 'power2.out' });
+    }
+  }, []);
 
   const monthlyRate = rate / 100 / 12;
   const totalPayments = term * 12;
@@ -51,11 +60,7 @@ export default function HipotecasPage() {
       {/* Page Header */}
       <div className="bg-brand-dark pb-12 md:pb-16" style={{ marginTop: '-86px', paddingTop: 'calc(86px + 48px)' }}>
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
+          <div ref={headerRef}>
             <h1 className="text-3xl sm:text-4xl font-bold text-white">
               Asesoría hipotecaria
             </h1>
@@ -63,19 +68,14 @@ export default function HipotecasPage() {
               Te orientamos en alternativas de préstamo sobre propiedad raíz con
               información clara y acompañamiento durante el proceso.
             </p>
-          </motion.div>
+          </div>
         </div>
       </div>
 
       {/* Calculator */}
       <section className="py-12 md:py-16 bg-brand-light">
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-          >
+          <ScrollReveal y={20}>
             <div className="flex items-center gap-2 mb-6">
               <Calculator className="h-6 w-6 text-brand-red" />
               <h2 className="text-2xl font-bold text-gray-900">Calculadora hipotecaria</h2>
@@ -177,41 +177,30 @@ export default function HipotecasPage() {
                 </div>
               </div>
             </div>
-          </motion.div>
+          </ScrollReveal>
         </div>
       </section>
 
       {/* Features */}
       <section className="py-12 md:py-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-            className="text-center mb-12"
-          >
+          <ScrollReveal y={20} className="text-center mb-12">
             <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">
               ¿Por qué elegir <span className="text-brand-red">nuestra asesoría</span>?
             </h2>
-          </motion.div>
+          </ScrollReveal>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {features.map((feature, i) => (
-              <motion.div
-                key={feature.title}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.4, delay: i * 0.1 }}
-                className="text-center p-6 rounded-xl hover:shadow-md transition-shadow border border-gray-100"
-              >
-                <div className="w-14 h-14 bg-brand-red/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                  <feature.icon className="h-7 w-7 text-brand-red" />
+              <ScrollReveal key={feature.title} delay={i * 0.1} y={30}>
+                <div className="text-center p-6 rounded-xl hover:shadow-md transition-shadow border border-gray-100">
+                  <div className="w-14 h-14 bg-brand-red/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                    <feature.icon className="h-7 w-7 text-brand-red" />
+                  </div>
+                  <h3 className="font-semibold text-gray-900 mb-2">{feature.title}</h3>
+                  <p className="text-sm text-brand-gray leading-relaxed">{feature.description}</p>
                 </div>
-                <h3 className="font-semibold text-gray-900 mb-2">{feature.title}</h3>
-                <p className="text-sm text-brand-gray leading-relaxed">{feature.description}</p>
-              </motion.div>
+              </ScrollReveal>
             ))}
           </div>
         </div>
@@ -220,12 +209,7 @@ export default function HipotecasPage() {
       {/* CTA */}
       <section className="py-12 md:py-16 bg-brand-dark">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-          >
+          <ScrollReveal y={20}>
             <h2 className="text-2xl sm:text-3xl font-bold text-white">
               ¿Necesitas asesoría hipotecaria?
             </h2>
@@ -246,7 +230,7 @@ export default function HipotecasPage() {
                 Asesoría por WhatsApp
               </a>
             </Button>
-          </motion.div>
+          </ScrollReveal>
         </div>
       </section>
     </div>

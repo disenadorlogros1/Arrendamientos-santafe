@@ -6,7 +6,8 @@ export const useSplitTextAnimation = (
   scrollBased: boolean = false,
   disableOnMobile: boolean = false
 ) => {
-  const ref = useRef<HTMLElement>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const ref = useRef<any>(null);
   const hasAnimated = useRef(false);
   const splitRef = useRef<any>(null);
   const gsapRef = useRef<any>(null);

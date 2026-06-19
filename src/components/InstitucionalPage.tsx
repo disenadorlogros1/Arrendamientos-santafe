@@ -1,6 +1,7 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { useRef, useEffect } from 'react';
+import gsap from 'gsap';
 import {
   MapPin,
   Phone,
@@ -13,6 +14,7 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import TrayectoriaBlock from '@/components/TrayectoriaBlock';
+import ScrollReveal from '@/components/ScrollReveal';
 import type { PageType } from '@/components/Header';
 
 const team = [
@@ -61,16 +63,20 @@ interface InstitucionalPageProps {
 }
 
 export default function InstitucionalPage({ onNavigate }: InstitucionalPageProps = {}) {
+  const headerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (headerRef.current) {
+      gsap.from(headerRef.current, { opacity: 0, y: 20, duration: 0.5, ease: 'power2.out' });
+    }
+  }, []);
+
   return (
     <div className="min-h-screen bg-white">
       {/* Page Header */}
       <div className="bg-brand-dark pb-12 md:pb-16" style={{ marginTop: '-86px', paddingTop: 'calc(86px + 48px)' }}>
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
+          <div ref={headerRef}>
             <h1 className="text-3xl sm:text-4xl font-bold text-white">
               Sobre nosotros · 60 años
             </h1>
@@ -78,7 +84,7 @@ export default function InstitucionalPage({ onNavigate }: InstitucionalPageProps
               Desde 1966 acompañamos a personas, familias y propietarios en
               decisiones inmobiliarias clave en Antioquia.
             </p>
-          </motion.div>
+          </div>
         </div>
       </div>
 
@@ -86,12 +92,7 @@ export default function InstitucionalPage({ onNavigate }: InstitucionalPageProps
       <section className="py-12 md:py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5 }}
-            >
+            <ScrollReveal y={20}>
               <div className="flex items-center gap-2 mb-4">
                 <img src="/logo-rojo.png" alt="Arrendamientos Santa Fe" className="h-6 w-auto object-contain" />
                 <h2 className="text-sm font-medium text-brand-red uppercase tracking-wider">
@@ -116,28 +117,24 @@ export default function InstitucionalPage({ onNavigate }: InstitucionalPageProps
                 desde donde acompañamos a nuestros clientes con respaldo,
                 procesos claros y criterio inmobiliario.
               </p>
-            </motion.div>
+            </ScrollReveal>
 
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5 }}
-              className="relative"
-            >
-              <div
-                className="aspect-[4/3] rounded-2xl bg-cover bg-center"
-                style={{
-                  backgroundImage:
-                    'url(https://picsum.photos/seed/medellin-city/800/600)',
-                }}
-              />
-              <div className="absolute inset-0 rounded-2xl bg-gradient-to-t from-black/20 to-transparent" />
-              <div className="absolute bottom-6 left-6 bg-white rounded-xl p-4 shadow-lg">
-                <p className="text-2xl font-bold text-brand-red">60</p>
-                <p className="text-xs text-brand-gray">Años desde 1966</p>
+            <ScrollReveal y={20} delay={0.1}>
+              <div className="relative">
+                <div
+                  className="aspect-[4/3] rounded-2xl bg-cover bg-center"
+                  style={{
+                    backgroundImage:
+                      'url(https://picsum.photos/seed/medellin-city/800/600)',
+                  }}
+                />
+                <div className="absolute inset-0 rounded-2xl bg-gradient-to-t from-black/20 to-transparent" />
+                <div className="absolute bottom-6 left-6 bg-white rounded-xl p-4 shadow-lg">
+                  <p className="text-2xl font-bold text-brand-red">60</p>
+                  <p className="text-xs text-brand-gray">Años desde 1966</p>
+                </div>
               </div>
-            </motion.div>
+            </ScrollReveal>
           </div>
         </div>
       </section>
@@ -145,34 +142,23 @@ export default function InstitucionalPage({ onNavigate }: InstitucionalPageProps
       {/* Values */}
       <section className="py-12 md:py-16 bg-brand-light">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-            className="text-center mb-12"
-          >
+          <ScrollReveal y={20} className="text-center mb-12">
             <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">
               Nuestros <span className="text-brand-red">valores</span>
             </h2>
-          </motion.div>
+          </ScrollReveal>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {values.map((value, i) => (
-              <motion.div
-                key={value.title}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.4, delay: i * 0.1 }}
-                className="text-center bg-white p-8 rounded-xl shadow-sm"
-              >
-                <div className="w-14 h-14 bg-brand-red/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                  <value.icon className="h-7 w-7 text-brand-red" />
+              <ScrollReveal key={value.title} delay={i * 0.1} y={30}>
+                <div className="text-center bg-white p-8 rounded-xl shadow-sm">
+                  <div className="w-14 h-14 bg-brand-red/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                    <value.icon className="h-7 w-7 text-brand-red" />
+                  </div>
+                  <h3 className="font-semibold text-gray-900 mb-2">{value.title}</h3>
+                  <p className="text-sm text-brand-gray leading-relaxed">{value.description}</p>
                 </div>
-                <h3 className="font-semibold text-gray-900 mb-2">{value.title}</h3>
-                <p className="text-sm text-brand-gray leading-relaxed">{value.description}</p>
-              </motion.div>
+              </ScrollReveal>
             ))}
           </div>
         </div>
@@ -181,13 +167,7 @@ export default function InstitucionalPage({ onNavigate }: InstitucionalPageProps
       {/* Team */}
       <section className="py-12 md:py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-            className="text-center mb-12"
-          >
+          <ScrollReveal y={20} className="text-center mb-12">
             <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">
               Nuestro <span className="text-brand-red">equipo</span>
             </h2>
@@ -195,25 +175,20 @@ export default function InstitucionalPage({ onNavigate }: InstitucionalPageProps
               Un equipo con conocimiento del mercado inmobiliario en Antioquia,
               listo para acompañarte con criterio y claridad.
             </p>
-          </motion.div>
+          </ScrollReveal>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {team.map((member, i) => (
-              <motion.div
-                key={member.name}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.4, delay: i * 0.1 }}
-                className="text-center"
-              >
-                <div
-                  className="aspect-square rounded-2xl bg-cover bg-center mb-3 mx-auto w-full max-w-[200px]"
-                  style={{ backgroundImage: `url(${member.image})` }}
-                />
-                <h4 className="font-semibold text-gray-900 text-sm sm:text-base">{member.name}</h4>
-                <p className="text-xs sm:text-sm text-brand-gray">{member.role}</p>
-              </motion.div>
+              <ScrollReveal key={member.name} delay={i * 0.1} y={30}>
+                <div className="text-center">
+                  <div
+                    className="aspect-square rounded-2xl bg-cover bg-center mb-3 mx-auto w-full max-w-[200px]"
+                    style={{ backgroundImage: `url(${member.image})` }}
+                  />
+                  <h4 className="font-semibold text-gray-900 text-sm sm:text-base">{member.name}</h4>
+                  <p className="text-xs sm:text-sm text-brand-gray">{member.role}</p>
+                </div>
+              </ScrollReveal>
             ))}
           </div>
         </div>
@@ -225,20 +200,14 @@ export default function InstitucionalPage({ onNavigate }: InstitucionalPageProps
       {/* Contact */}
       <section className="py-12 md:py-16 bg-brand-dark">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-            className="text-center mb-10"
-          >
+          <ScrollReveal y={20} className="text-center mb-10">
             <h2 className="text-2xl sm:text-3xl font-bold text-white">
               Contáctanos
             </h2>
             <p className="mt-3 text-white/60 max-w-xl mx-auto">
               Estamos disponibles para atenderte y resolver todas tus dudas.
             </p>
-          </motion.div>
+          </ScrollReveal>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <div className="bg-white/5 rounded-xl p-5 text-center border border-white/10">

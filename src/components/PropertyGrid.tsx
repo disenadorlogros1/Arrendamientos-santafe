@@ -1,42 +1,44 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { useRef, useEffect } from 'react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import PropertyCard from './PropertyCard';
 import type { Property } from '@/data/properties';
+
+gsap.registerPlugin(ScrollTrigger);
 
 interface PropertyGridProps {
   properties: Property[];
 }
 
-const container = {
-  hidden: { opacity: 0 },
-  show: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.1,
-    },
-  },
-};
-
-const item = {
-  hidden: { opacity: 0, y: 20 },
-  show: { opacity: 1, y: 0 },
-};
-
 export default function PropertyGrid({ properties }: PropertyGridProps) {
+  const gridRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = gridRef.current;
+    if (!el) return;
+    const items = el.querySelectorAll('.property-grid-item');
+    const ctx = gsap.context(() => {
+      gsap.from(items, {
+        opacity: 0,
+        y: 20,
+        duration: 0.5,
+        stagger: 0.08,
+        ease: 'power2.out',
+        scrollTrigger: { trigger: el, start: 'top 88%', once: true },
+      });
+    }, el);
+    return () => ctx.revert();
+  }, [properties]);
+
   return (
-    <motion.div
-      variants={container}
-      initial="hidden"
-      whileInView="show"
-      viewport={{ once: true, margin: '-50px' }}
-      className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3"
-    >
+    <div ref={gridRef} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
       {properties.map((property) => (
-        <motion.div key={property.id} variants={item}>
+        <div key={property.id} className="property-grid-item">
           <PropertyCard property={property} />
-        </motion.div>
+        </div>
       ))}
-    </motion.div>
+    </div>
   );
 }

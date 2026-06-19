@@ -1,43 +1,23 @@
-'use client';
+import type { Metadata } from 'next';
+import BlogShell from '@/components/shells/BlogShell';
 
-import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
-import BlogPage from '@/components/BlogPage';
-import type { PageType } from '@/components/Header';
-
-function navigate(page: PageType, filter?: string) {
-  if (page === 'propiedades') {
-    const suffix = filter === 'Arrendar' ? '-arrendar' : filter === 'Comprar' ? '-comprar' : '';
-    window.location.href = `/propiedades${suffix ? `#${suffix}` : ''}`;
-  } else if (page === 'blog') {
-    window.location.href = '/blog';
-  } else if (page === 'inversionistas') {
-    window.location.href = '/inversionistas';
-  } else if (page === 'consignacion') {
-    window.location.href = '/consignacion';
-  } else {
-    window.location.href = `/#${page}`;
-  }
-}
+export const metadata: Metadata = {
+  title: 'Blog inmobiliario | Arrendamientos Santa Fe',
+  description: 'Artículos, guías y noticias sobre el mercado inmobiliario en Medellín y Antioquia. Consejos para propietarios, arrendatarios e inversionistas.',
+  keywords: ['blog inmobiliario Medellín', 'mercado inmobiliario Antioquia', 'consejos arrendamiento', 'inversión inmobiliaria Colombia'],
+  openGraph: {
+    title: 'Blog inmobiliario | Arrendamientos Santa Fe',
+    description: 'Noticias y consejos sobre el mercado inmobiliario en Medellín y Antioquia.',
+    url: 'https://arrendamientossantafe.com/blog',
+    siteName: 'Arrendamientos Santa Fe',
+    locale: 'es_CO',
+    type: 'website',
+  },
+  alternates: {
+    canonical: 'https://arrendamientossantafe.com/blog',
+  },
+};
 
 export default function Page() {
-  const router = useRouter();
-
-  useEffect(() => { window.scrollTo({ top: 0, behavior: 'smooth' }); }, []);
-
-  const handleOpenArticle = (id: number) => {
-    router.push(`/#blog-article-${id}`);
-  };
-
-  return (
-    <div className="min-h-screen flex flex-col">
-      <Header currentPage="blog" onNavigate={navigate} />
-      <main className="flex-1 relative" style={{ paddingTop: '86px' }}>
-        <BlogPage onNavigate={navigate} onOpenArticle={handleOpenArticle} />
-      </main>
-      <Footer onNavigate={navigate} />
-    </div>
-  );
+  return <BlogShell />;
 }
