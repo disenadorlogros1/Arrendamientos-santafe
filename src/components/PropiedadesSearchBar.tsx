@@ -474,7 +474,10 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', onApply }:
   const [codigo,        setCodigo]        = useState('');
   const [sector,        setSector]        = useState('');
   const [tipoPropiedad, setTipoPropiedad] = useState('');
-  const [precioRange,   setPrecioRange]   = useState<[number, number]>(initialTipo === 'Comprar' ? [30_000_000, 500_000_000] : [0, 15_000_000]);
+  const defaultPrecioRange = (t: string): [number, number] =>
+    t === 'Comprar' ? [30_000_000, 500_000_000] : t === 'Arrendar' ? [0, 15_000_000] : [0, 500_000_000];
+
+  const [precioRange, setPrecioRange] = useState<[number, number]>(defaultPrecioRange(initialTipo));
   const [showAdvanced,  setShowAdvanced]  = useState(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
 
