@@ -560,8 +560,15 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', onApply }:
                 key={t}
                 type="button"
                 onClick={() => {
+                  const newRange = defaultPrecioRange(t);
                   setTipo(t);
-                  setPrecioRange(defaultPrecioRange(t));
+                  setPrecioRange(newRange);
+                  onApply({
+                    tipo: t, codigo, sector, tipoPropiedad,
+                    precioMin: newRange[0], precioMax: newRange[1],
+                    habitaciones, banos, parqueadero,
+                    areaMin, areaMax, estrato, comodidades,
+                  });
                 }}
                 style={{
                   flex: 1,
