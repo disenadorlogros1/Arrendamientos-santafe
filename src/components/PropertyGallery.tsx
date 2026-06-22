@@ -131,22 +131,16 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
         </div>
 
         {/* ── Accordion grid ─────────────────────────────────────── */}
-        {/*
-          Hover sobre una celda:
-          → su columna se expande a 3fr, las demás a 0.7fr
-          → su fila se expande a 2.5fr, las demás a 0.7fr
-          → las imágenes actúan como máscaras (overflow:hidden + object-fit:cover)
-          → transición simultánea en columns y rows con cubic-bezier premium
-        */}
+        {/* Wrapper flex item con alto definitivo — necesario para que 1fr en gridTemplateRows funcione */}
+        <div style={{ flex: 1, minHeight: 0, overflow: 'hidden', padding: '0 16px 8px' }}>
         <div
           style={{
-            flex: 1, minHeight: 0,
             display: 'grid',
+            height: '100%',          /* alto explícito → 1fr tiene referencia definitiva */
             gridTemplateColumns: gridCols,
             gridTemplateRows:    gridRows,
             transition: GRID_TRANSITION,
             gap: 4,
-            padding: '0 16px 8px',
           }}
         >
           {images.map((img, idx) => {
@@ -188,6 +182,7 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
             );
           })}
         </div>
+        </div>{/* end wrapper */}
 
         {/* ── Carousel ───────────────────────────────────────────── */}
         <div style={{ height: '10vh', minHeight: 60, maxHeight: 90, flexShrink: 0, display: 'flex', justifyContent: 'center', overflow: 'hidden' }}>
