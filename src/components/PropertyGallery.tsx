@@ -61,15 +61,16 @@ function rowActive(activeRow: number, rows: number): string {
 
 /* ─── BentoGallery ────────────────────────────────────────────── */
 function BentoGallery({ images, onClose }: { images: string[]; onClose: () => void }) {
-  const [entered,     setEntered]     = useState(false);
-  const [hoveredIdx,  setHoveredIdx]  = useState<number | null>(null);
-  const [selectedIdx, setSelectedIdx] = useState<number | null>(null);
-  const [currentPage, setCurrentPage] = useState(0);
-  const [isMobile,    setIsMobile]    = useState(false);
+  const [entered,      setEntered]      = useState(false);
+  const [hoveredIdx,   setHoveredIdx]   = useState<number | null>(null);
+  const [selectedIdx,  setSelectedIdx]  = useState<number | null>(null);
+  const [currentPage,  setCurrentPage]  = useState(0);
+  const [isMobile,     setIsMobile]     = useState(false);
+  const [orientations, setOrientations] = useState<boolean[]>([]); // true = landscape
 
   const cellRefs    = useRef<(HTMLDivElement | null)[]>([]);
   const carouselRef = useRef<HTMLDivElement>(null);
-  const animKey     = useRef(0); // increments to re-trigger stagger on page change
+  const animKey     = useRef(0);
 
   /* Pagination */
   const needsPagination = images.length > 40;
@@ -83,6 +84,51 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
   const n    = pageImages.length;
   const COLS = calcCols(n);
   const ROWS = Math.ceil(n / COLS);
+
+  /* Detect image orientations for current page */
+  useEffect(() => {
+    setOrientations([]);
+    Promise.all(
+      pageImages.map(src => new Promise<boolean>(resolve => {
+        const img = new window.Image();
+        img.onload  = () => resolve(img.naturalWidth > img.naturalHeight);
+        img.onerror = () => resolve(false);
+        img.src = src;
+      }))
+    ).then(setOrientations);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentPage, pageImages.length]);
+
+  /* Reorder images: landscape → wide positions (col 0 and middle col) */
+  const displayOrder = useMemo<number[]>(() => {
+    if (orientations.length < n) return Array.from({ length: n }, (_, i) => i);
+
+    const widePos:   number[] = [];
+    const narrowPos: number[] = [];
+    for (let i = 0; i < n; i++) {
+      const col = i % COLS;
+      (col === 0 || col === Math.floor(COLS / 2)) ? widePos.push(i) : narrowPos.push(i);
+    }
+
+    const landscapes = orientations.flatMap((v, i) => v ? [i] : []);
+    const portraits  = orientations.flatMap((v, i) => v ? [] : [i]);
+
+    const result = new Array<number>(n);
+    let lIdx = 0, pIdx = 0;
+    for (const pos of widePos)   result[pos] = lIdx < landscapes.length ? landscapes[lIdx++] : portraits[pIdx++];
+    for (const pos of narrowPos) result[pos] = pIdx < portraits.length  ? portraits[pIdx++]  : landscapes[lIdx++];
+    return result;
+  }, [orientations, n, COLS]);
+
+  /* Reverse map: original index → display position (for carousel sync) */
+  const origToDisplay = useMemo<number[]>(() => {
+    const map = new Array<number>(displayOrder.length);
+    displayOrder.forEach((orig, disp) => { map[orig] = disp; });
+    return map;
+  }, [displayOrder]);
+
+  /* Selected image in original order (for carousel highlight) */
+  const selectedOrigIdx = selectedIdx !== null ? (displayOrder[selectedIdx] ?? selectedIdx) : null;
 
   /* Active index: hover overrides selection */
   const activeIdx = hoveredIdx ?? selectedIdx;
@@ -128,19 +174,19 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
 
   /* ── Carousel auto-scroll to selected thumbnail ──────────────── */
   useEffect(() => {
-    if (selectedIdx === null || !carouselRef.current) return;
-    const globalIdx = currentPage * IMAGES_PER_PAGE + selectedIdx;
+    if (selectedOrigIdx === null || !carouselRef.current) return;
+    const globalIdx = currentPage * IMAGES_PER_PAGE + selectedOrigIdx;
     const thumb = carouselRef.current.children[globalIdx] as HTMLElement | undefined;
     thumb?.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-  }, [selectedIdx, currentPage]);
+  }, [selectedOrigIdx, currentPage]);
 
   /* ── Handlers ───────────────────────────────────────────────── */
   const handlePageChange = useCallback((page: number) => {
     setCurrentPage(page);
     setSelectedIdx(null);
     setHoveredIdx(null);
+    setOrientations([]);
     animKey.current += 1;
-    // re-trigger entrance for new page
     requestAnimationFrame(() => {
       const cells = cellRefs.current.filter(Boolean) as HTMLElement[];
       if (!cells.length) return;
@@ -151,16 +197,17 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
     });
   }, []);
 
-  const handleCarouselClick = useCallback((globalIdx: number) => {
+  const handleCarouselClick = useCallback((globalOrigIdx: number) => {
+    const localOrigIdx = needsPagination ? globalOrigIdx % IMAGES_PER_PAGE : globalOrigIdx;
+    const displayIdx = origToDisplay[localOrigIdx] ?? localOrigIdx;
     if (needsPagination) {
-      const page = Math.floor(globalIdx / IMAGES_PER_PAGE);
-      const idxInPage = globalIdx % IMAGES_PER_PAGE;
+      const page = Math.floor(globalOrigIdx / IMAGES_PER_PAGE);
       if (page !== currentPage) handlePageChange(page);
-      setTimeout(() => setSelectedIdx(idxInPage), page !== currentPage ? 80 : 0);
+      setTimeout(() => setSelectedIdx(displayIdx), page !== currentPage ? 80 : 0);
     } else {
-      setSelectedIdx(prev => prev === globalIdx ? null : globalIdx);
+      setSelectedIdx(prev => prev === displayIdx ? null : displayIdx);
     }
-  }, [needsPagination, currentPage, handlePageChange]);
+  }, [needsPagination, currentPage, handlePageChange, origToDisplay]);
 
   const handleCellClick = useCallback((idx: number) => {
     setSelectedIdx(prev => prev === idx ? null : idx);
