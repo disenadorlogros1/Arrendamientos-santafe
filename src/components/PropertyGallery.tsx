@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
-import gsap from 'gsap';
 import { X } from 'lucide-react';
 
 const FONT    = "'Avenir LT Pro 65 Medium','Avenir LT Pro','Avenir',system-ui,sans-serif";
@@ -16,42 +15,14 @@ export interface PropertyStats {
 interface PropertyGalleryProps { images: string[]; title: string; stats?: PropertyStats; }
 
 /* ─────────────────────────────────────────────────────────────────
-   Floating card — shows image at its exact natural aspect ratio
-   (portrait 9:16 → tall card, landscape 16:9 → wide card)
-───────────────────────────────────────────────────────────────── */
-interface FloatRect { left: number; top: number; width: number; height: number }
-
-function calcFloatRect(anchor: DOMRect, nw: number, nh: number): FloatRect {
-  const PAD  = 16;
-  const maxW = window.innerWidth  - PAD * 2;
-  const maxH = window.innerHeight - PAD * 2;
-  const r    = nw / nh;
-  let w = Math.min(nw, maxW);
-  let h = w / r;
-  if (h > maxH) { h = maxH; w = h * r; }
-  let left = anchor.left + anchor.width  / 2 - w / 2;
-  let top  = anchor.top  + anchor.height / 2 - h / 2;
-  left = Math.max(PAD, Math.min(left, window.innerWidth  - w - PAD));
-  top  = Math.max(PAD, Math.min(top,  window.innerHeight - h - PAD));
-  return { left, top, width: w, height: h };
-}
-
-/* ─────────────────────────────────────────────────────────────────
-   BentoGallery
-   ─ CSS Grid animates grid-template-columns + grid-template-rows
-     simultaneously → bento reflow where hovered cell expands in
-     BOTH axes while neighbors compress based on proximity.
-   ─ Floating card appears at natural image dimensions on top.
+   BentoGallery — CSS Grid animates both axes simultaneously.
+   Hovered cell expands its column + row; others compress but stay
+   roughly square (balanced COL_SMALL / ROW_SMALL values).
 ───────────────────────────────────────────────────────────────── */
 
 function BentoGallery({ images, onClose }: { images: string[]; onClose: () => void }) {
   const [entered,    setEntered]    = useState(false);
   const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
-  const floatRef    = useRef<HTMLDivElement | null>(null);
-  const cellRefs    = useRef<(HTMLDivElement | null)[]>([]);
-  const naturalDims = useRef<Record<number, { w: number; h: number }>>({});
-  const [floatRect, setFloatRect] = useState<FloatRect | null>(null);
-  const [showFloat, setShowFloat] = useState(false);
 
   const n    = images.length;
   const COLS = n <= 4 ? n : n <= 9 ? Math.ceil(n / 2) : 5;
@@ -63,10 +34,13 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
      Cells sharing the col get wider (but shorter if not the row).
      Cells in neither compress in both dimensions.
   ─────────────────────────────────────────────────────────────── */
-  const COL_BIG  = 4.5;
-  const COL_SMALL = 0.38;
-  const ROW_BIG  = 3.8;
-  const ROW_SMALL = 0.42;
+  // Balanced values so non-hovered cells compress uniformly (both axes)
+  // and stay roughly square/thumbnail-shaped, not thin strips.
+  // Math: for 5×2 grid at ~1920×700, these give compressed cells ≈ 200×190px (1.05:1)
+  const COL_BIG   = 3.5;
+  const COL_SMALL = 0.55;
+  const ROW_BIG   = 1.8;
+  const ROW_SMALL = 0.75;
 
   function colTemplate(): string {
     if (hoveredIdx === null) return `repeat(${COLS}, 1fr)`;
@@ -84,32 +58,6 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
     ).join(' ');
   }
 
-  /* ── Floating card management ──────────────────────────────── */
-  const openFloat = (idx: number) => {
-    const cell = cellRefs.current[idx];
-    const d    = naturalDims.current[idx];
-    if (!cell || !d?.w) return;
-    const rect = calcFloatRect(cell.getBoundingClientRect(), d.w, d.h);
-    setFloatRect(rect);
-    setShowFloat(true);
-  };
-
-  const closeFloat = () => {
-    if (!floatRef.current) { setShowFloat(false); setFloatRect(null); return; }
-    gsap.to(floatRef.current, {
-      opacity: 0, scale: 0.94, duration: 0.15, ease: 'power2.in',
-      onComplete: () => { setShowFloat(false); setFloatRect(null); },
-    });
-  };
-
-  useEffect(() => {
-    if (!showFloat || !floatRef.current) return;
-    gsap.fromTo(floatRef.current,
-      { opacity: 0, scale: 0.86 },
-      { opacity: 1, scale: 1, duration: 0.26, ease: 'power2.out' },
-    );
-  }, [showFloat]);
-
   /* ── Lifecycle ─────────────────────────────────────────────── */
   useEffect(() => {
     const id = requestAnimationFrame(() => requestAnimationFrame(() => setEntered(true)));
@@ -122,8 +70,6 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
     window.addEventListener('keydown', h);
     return () => window.removeEventListener('keydown', h);
   }, [onClose]);
-
-  const currentImg = hoveredIdx !== null ? images[hoveredIdx] : null;
 
   return createPortal(
     <div style={{
@@ -201,9 +147,8 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
           return (
             <div
               key={idx}
-              ref={el => { cellRefs.current[idx] = el; }}
-              onMouseEnter={() => { setHoveredIdx(idx); openFloat(idx); }}
-              onMouseLeave={() => { setHoveredIdx(null); closeFloat(); }}
+              onMouseEnter={() => setHoveredIdx(idx)}
+              onMouseLeave={() => setHoveredIdx(null)}
               style={{
                 position: 'relative', overflow: 'hidden',
                 borderRadius: 6, background: '#111', cursor: 'zoom-in',
@@ -213,10 +158,7 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
                 src={img}
                 alt={`Foto ${idx + 1}`}
                 draggable={false}
-                onLoad={e => {
-                  const el = e.currentTarget;
-                  if (el.naturalWidth) naturalDims.current[idx] = { w: el.naturalWidth, h: el.naturalHeight };
-                }}
+                draggable={false}
                 style={{
                   width: '100%', height: '100%', display: 'block',
                   objectFit: 'cover', objectPosition: 'center',
@@ -264,26 +206,6 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
         })}
       </div>
 
-      {/* Floating natural-ratio card */}
-      {showFloat && floatRect && currentImg && createPortal(
-        <div
-          ref={el => { floatRef.current = el; }}
-          style={{
-            position: 'fixed',
-            left: floatRect.left, top: floatRect.top,
-            width: floatRect.width, height: floatRect.height,
-            zIndex: 1200, borderRadius: 8, overflow: 'hidden',
-            background: '#0c0c0c',
-            boxShadow: '0 32px 80px rgba(0,0,0,0.85), 0 4px 20px rgba(0,0,0,0.6)',
-            pointerEvents: 'none', willChange: 'transform,opacity',
-          }}
-        >
-          <img src={currentImg} alt="" draggable={false}
-            style={{ width: '100%', height: '100%', objectFit: 'contain', display: 'block' }}
-          />
-        </div>,
-        document.body,
-      )}
     </div>,
     document.body,
   );
