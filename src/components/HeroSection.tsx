@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useRef, useEffect } from 'react';
 import gsap from 'gsap';
@@ -143,7 +143,7 @@ export default function HeroSection({ onNavigate, searchFormSlot }: HeroSectionP
                   onMouseEnter={applyInkFill}
                   onMouseLeave={applyInkFill}
                   className="hero-btn-fill w-full sm:w-auto inline-flex items-center justify-center h-[42px] px-6 rounded-full"
-                  style={{ fontFamily: "'Avenir LT Pro', 'Outfit', system-ui, sans-serif", fontWeight: 300, fontSize: '15px' }}
+                  style={{ fontFamily: "'Avenir LT Std', 'Outfit', system-ui, sans-serif", fontWeight: 300, fontSize: '15px' }}
                 >
                   <span>Ver propiedades disponibles</span>
                 </button>
@@ -155,7 +155,7 @@ export default function HeroSection({ onNavigate, searchFormSlot }: HeroSectionP
                   onMouseEnter={applyInkFill}
                   onMouseLeave={applyInkFill}
                   className="hero-btn-fill w-full sm:w-auto inline-flex items-center justify-center h-[42px] px-6 rounded-full"
-                  style={{ fontFamily: "'Avenir LT Pro', 'Outfit', system-ui, sans-serif", fontWeight: 300, fontSize: '15px', textDecoration: 'none' }}
+                  style={{ fontFamily: "'Avenir LT Std', 'Outfit', system-ui, sans-serif", fontWeight: 300, fontSize: '15px', textDecoration: 'none' }}
                 >
                   <span>Hablar con un asesor</span>
                 </a>

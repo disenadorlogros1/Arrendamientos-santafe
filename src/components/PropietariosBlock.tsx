@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useRef, useEffect } from 'react';
 import gsap from 'gsap';
@@ -16,9 +16,9 @@ interface PropietariosBlockProps {
 const WHATSAPP_URL =
   'https://wa.me/573006557529?text=Hola%2C%20quisiera%20consignar%20una%20propiedad%20con%20Arrendamientos%20Santa%20Fe.';
 
-const FONT_BODY    = "'Avenir LT Pro 65 Medium', 'Avenir LT Pro', 'Avenir', 'Outfit', system-ui, sans-serif";
-const FONT_HEADING = "'Avenir Next Ultra Light', 'Avenir LT Pro 65 Medium', 'Avenir', 'Outfit', system-ui, sans-serif";
-const FONT_HEAVY   = "'Avenir LT Pro 85 Heavy', 'Avenir LT Pro', 'Avenir', 'Outfit', system-ui, sans-serif";
+const FONT_BODY    = "'Avenir LT Std', 'Outfit', system-ui, sans-serif";
+const FONT_HEADING = "'Avenir LT Std', 'Outfit', system-ui, sans-serif";
+const FONT_HEAVY   = "'Avenir LT Std', 'Outfit', system-ui, sans-serif";
 const RED          = '#f32735';
 
 function StatOverlay({

@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import type { PageType } from '@/components/Header';
 
@@ -6,8 +6,8 @@ interface ServiciosBlockProps {
   onNavigate: (page: PageType) => void;
 }
 
-const FONT_BODY    = "'Avenir LT Pro 65 Medium', 'Avenir LT Pro', 'Avenir', 'Outfit', system-ui, sans-serif";
-const FONT_HEADING = "'Avenir Next Ultra Light', 'Avenir LT Pro 65 Medium', 'Avenir', 'Outfit', system-ui, sans-serif";
+const FONT_BODY    = "'Avenir LT Std', 'Outfit', system-ui, sans-serif";
+const FONT_HEADING = "'Avenir LT Std', 'Outfit', system-ui, sans-serif";
 const RED          = '#f32735';
 const PHONE        = '573006557529';
 

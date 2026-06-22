@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState, useRef, useEffect } from 'react';
 import gsap from 'gsap';
@@ -55,7 +55,7 @@ export default function InversionistasPage() {
           <h1
             className="inversionistas-title-split text-3xl sm:text-4xl lg:text-5xl leading-tight text-white text-center"
             style={{
-              fontFamily: "'Avenir Next Ultra Light', 'Avenir LT Pro 65 Medium', 'Avenir', 'Outfit', system-ui, sans-serif",
+              fontFamily: "'Avenir LT Std', 'Outfit', system-ui, sans-serif",
               fontWeight: 300,
               lineHeight: '1.2',
             }}
@@ -70,7 +70,7 @@ export default function InversionistasPage() {
             ref={subtitleRef}
             className="mt-5 text-base sm:text-lg text-white/80 max-w-2xl mx-auto leading-relaxed text-center"
             style={{
-              fontFamily: "'Avenir LT Pro 65 Medium', 'Avenir LT Pro', 'Avenir', 'Outfit', system-ui, sans-serif",
+              fontFamily: "'Avenir LT Std', 'Outfit', system-ui, sans-serif",
               fontWeight: 300,
               lineHeight: '1.45',
               opacity: 0,

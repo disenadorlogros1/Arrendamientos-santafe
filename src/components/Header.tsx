@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState, useEffect } from 'react';
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from '@/components/ui/sheet';
@@ -176,7 +176,7 @@ export default function Header({ currentPage, onNavigate, isHeroPage = true }: H
                   onMouseEnter={applyInkFill}
                   onMouseLeave={applyInkFill}
                   className="nav-ink-btn w-full px-2 py-2 rounded-full"
-                  style={{ fontFamily: currentPage === item.page ? "'Avenir LT Pro', 'Outfit', system-ui, sans-serif" : "'Avenir LT Pro 65 Medium', 'Avenir LT Pro', 'Outfit', system-ui, sans-serif", fontWeight: currentPage === item.page ? 700 : 500, fontSize: '15px', color: headerTextColor, transition: 'font-weight 0.2s' }}
+                  style={{ fontFamily: currentPage === item.page ? "'Avenir LT Std', 'Outfit', system-ui, sans-serif" : "'Avenir LT Pro 65 Medium', 'Avenir LT Std', 'Outfit', system-ui, sans-serif", fontWeight: currentPage === item.page ? 700 : 500, fontSize: '15px', color: headerTextColor, transition: 'font-weight 0.2s' }}
                 >
                   <span>{item.label}</span>
                 </button>
@@ -192,7 +192,7 @@ export default function Header({ currentPage, onNavigate, isHeroPage = true }: H
                           target="_blank"
                           rel="noopener noreferrer"
                           className="block w-full text-left px-5 py-2.5 text-[15px] text-gray-700 hover:text-white hover:bg-brand-red transition-colors duration-150 first:rounded-t-2xl last:rounded-b-2xl"
-                          style={{ fontFamily: "'Avenir LT Pro', 'Outfit', system-ui, sans-serif", fontWeight: 300 }}
+                          style={{ fontFamily: "'Avenir LT Std', 'Outfit', system-ui, sans-serif", fontWeight: 300 }}
                           onMouseEnter={(e) => e.target.style.color = 'white'}
                           onMouseLeave={(e) => e.target.style.color = '#374151'}
                         >
@@ -205,7 +205,7 @@ export default function Header({ currentPage, onNavigate, isHeroPage = true }: H
                             if (sub.page) handleNav(sub.page, sub.filter);
                           }}
                           className="block w-full text-left px-5 py-2.5 text-[15px] text-gray-700 hover:text-white hover:bg-brand-red transition-colors duration-150 first:rounded-t-2xl last:rounded-b-2xl"
-                          style={{ fontFamily: "'Avenir LT Pro', 'Outfit', system-ui, sans-serif", fontWeight: 300, color: '#666' }}
+                          style={{ fontFamily: "'Avenir LT Std', 'Outfit', system-ui, sans-serif", fontWeight: 300, color: '#666' }}
                           onMouseEnter={(e) => e.currentTarget.style.color = 'white'}
                           onMouseLeave={(e) => e.currentTarget.style.color = '#666'}
                         >
@@ -224,7 +224,7 @@ export default function Header({ currentPage, onNavigate, isHeroPage = true }: H
                 onMouseEnter={applyInkFill}
                 onMouseLeave={applyInkFill}
                 className="nav-ink-btn flex-1 px-2 py-2 rounded-full"
-                style={{ fontFamily: currentPage === item.page ? "'Avenir LT Pro', 'Outfit', system-ui, sans-serif" : "'Avenir LT Pro 65 Medium', 'Avenir LT Pro', 'Outfit', system-ui, sans-serif", fontWeight: currentPage === item.page ? 700 : 500, fontSize: '15px', color: headerTextColor, transition: 'font-weight 0.2s' }}
+                style={{ fontFamily: currentPage === item.page ? "'Avenir LT Std', 'Outfit', system-ui, sans-serif" : "'Avenir LT Pro 65 Medium', 'Avenir LT Std', 'Outfit', system-ui, sans-serif", fontWeight: currentPage === item.page ? 700 : 500, fontSize: '15px', color: headerTextColor, transition: 'font-weight 0.2s' }}
               >
                 <span>{item.label}</span>
               </button>
@@ -269,7 +269,7 @@ export default function Header({ currentPage, onNavigate, isHeroPage = true }: H
                       <button
                         onClick={() => { if (item.children) setExpandedMobile(expandedMobile === item.label ? null : item.label); else if (item.page) handleNav(item.page); }}
                         className={`w-full text-left px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 ${currentPage === item.page ? 'bg-brand-red text-white' : 'text-white/70 hover:bg-white/10 hover:text-white'}`}
-                        style={{ fontFamily: "'Avenir LT Pro', 'Outfit', system-ui, sans-serif", fontWeight: currentPage === item.page ? 700 : 300 }}>
+                        style={{ fontFamily: "'Avenir LT Std', 'Outfit', system-ui, sans-serif", fontWeight: currentPage === item.page ? 700 : 300 }}>
                         {item.label}
                       </button>
                       {item.children && expandedMobile === item.label && (
@@ -282,14 +282,14 @@ export default function Header({ currentPage, onNavigate, isHeroPage = true }: H
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="block w-full text-left px-4 py-1.5 rounded-lg text-sm text-white/50 hover:text-white hover:bg-white/5 transition-all duration-200"
-                                style={{ fontFamily: "'Avenir LT Pro', 'Outfit', system-ui, sans-serif", fontWeight: 300 }}
+                                style={{ fontFamily: "'Avenir LT Std', 'Outfit', system-ui, sans-serif", fontWeight: 300 }}
                               >
                                 {sub.label}
                               </a>
                             ) : (
                               <button key={sub.label} onClick={() => { if (sub.page) handleNav(sub.page, sub.filter); }}
                                 className="w-full text-left px-4 py-1.5 rounded-lg text-sm text-white/50 hover:text-white hover:bg-white/5 transition-all duration-200"
-                                style={{ fontFamily: "'Avenir LT Pro', 'Outfit', system-ui, sans-serif", fontWeight: 300 }}>
+                                style={{ fontFamily: "'Avenir LT Std', 'Outfit', system-ui, sans-serif", fontWeight: 300 }}>
                                 {sub.label}
                               </button>
                             )

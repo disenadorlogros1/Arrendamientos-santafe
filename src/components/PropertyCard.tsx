@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
@@ -8,7 +8,7 @@ interface PropertyCardProps {
   property: Property;
 }
 
-const FONT = "'Avenir LT Pro 65 Medium', 'Avenir LT Pro', 'Avenir', 'Outfit', system-ui, sans-serif";
+const FONT = "'Avenir LT Std', 'Outfit', system-ui, sans-serif";
 const RED  = '#f32735';
 
 export default function PropertyCard({ property }: PropertyCardProps) {

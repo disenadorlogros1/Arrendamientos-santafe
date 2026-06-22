@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useRef, useEffect } from 'react';
 import gsap from 'gsap';
@@ -47,7 +47,7 @@ export default function ConsignacionPage() {
           <h1
             className="consignacion-title-split text-3xl sm:text-4xl lg:text-5xl leading-tight text-white"
             style={{
-              fontFamily: "'Avenir Next Ultra Light', 'Avenir LT Pro 65 Medium', 'Avenir', 'Outfit', system-ui, sans-serif",
+              fontFamily: "'Avenir LT Std', 'Outfit', system-ui, sans-serif",
               fontWeight: 300,
               lineHeight: '1.2',
             }}
@@ -65,7 +65,7 @@ export default function ConsignacionPage() {
             ref={subtitleRef}
             className="mt-5 text-base sm:text-lg text-white/80 max-w-2xl mx-auto leading-relaxed"
             style={{
-              fontFamily: "'Avenir LT Pro 65 Medium', 'Avenir LT Pro', 'Avenir', 'Outfit', system-ui, sans-serif",
+              fontFamily: "'Avenir LT Std', 'Outfit', system-ui, sans-serif",
               fontWeight: 300,
               lineHeight: '1.45',
               opacity: 0,

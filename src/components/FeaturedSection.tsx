@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useSplitTextAnimation } from '@/hooks/useSplitTextAnimation';
 import InfiniteCarousel from '@/components/InfiniteCarousel';
@@ -9,8 +9,8 @@ interface FeaturedSectionProps {
   onNavigate: (page: PageType) => void;
 }
 
-const FONT_BODY    = "'Avenir LT Pro 65 Medium', 'Avenir LT Pro', 'Avenir', 'Outfit', system-ui, sans-serif";
-const FONT_HEADING = "'Avenir Next Ultra Light', 'Avenir LT Pro 65 Medium', 'Avenir', 'Outfit', system-ui, sans-serif";
+const FONT_BODY    = "'Avenir LT Std', 'Outfit', system-ui, sans-serif";
+const FONT_HEADING = "'Avenir LT Std', 'Outfit', system-ui, sans-serif";
 const RED          = '#f32735';
 
 export default function FeaturedSection({ onNavigate }: FeaturedSectionProps) {

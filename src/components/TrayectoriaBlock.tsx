@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useRef, useEffect } from 'react';
 import gsap from 'gsap';
@@ -10,8 +10,8 @@ interface TrayectoriaBlockProps {
   onNavigate: (page: PageType) => void;
 }
 
-const FONT_BODY    = "'Avenir LT Pro 65 Medium', 'Avenir LT Pro', 'Avenir', 'Outfit', system-ui, sans-serif";
-const FONT_HEADING = "'Avenir Next Ultra Light', 'Avenir LT Pro 65 Medium', 'Avenir', 'Outfit', system-ui, sans-serif";
+const FONT_BODY    = "'Avenir LT Std', 'Outfit', system-ui, sans-serif";
+const FONT_HEADING = "'Avenir LT Std', 'Outfit', system-ui, sans-serif";
 const RED          = '#f32735';
 
 const HITOS = [
@@ -181,7 +181,7 @@ export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) 
                         textAlign: 'center',
                       }}>
                         <span style={{
-                          fontFamily: "'Avenir LT Pro 85 Heavy', system-ui, sans-serif",
+                          fontFamily: "'Avenir LT Std', system-ui, sans-serif",
                           fontSize: 'clamp(14px, 1.3vw, 18px)',
                           fontWeight: 900,
                           color: '#fff',

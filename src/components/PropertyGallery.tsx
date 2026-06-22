@@ -117,10 +117,9 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
   const gridCols = buildColsOriented(hoveredCol, hoveredIsLandscape, cols);
   const gridRows = buildRowsOriented(hoveredRow, hoveredIsLandscape, rows);
 
-  /* Last row: if incomplete, last image spans remaining cols */
-  const remainder   = images.length % cols;
-  const lastSpan    = remainder > 0 ? cols - remainder + 1 : 1;
-  const lastIdx     = images.length - 1;
+  /* Sin spanning — cada celda ocupa exactamente 1 columna.
+   * El spanning rompía el hover portrait: una celda con span 2 acumula
+   * 0.6fr + 1fr = 1.6fr y queda más ancha que alta aunque sea portrait. */
 
   /* ── Lock scroll ────────────────────────────────────────────── */
   useEffect(() => {
@@ -211,8 +210,6 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
             const isHovered  = hoveredIdx === idx;
             const anyHovered = hoveredIdx !== null;
             const isSelected = selectedIdx === idx;
-            /* Última imagen rellena las celdas vacías de la fila incompleta */
-            const span = idx === lastIdx && remainder !== 0 ? lastSpan : 1;
 
             return (
               <div
@@ -226,7 +223,6 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
                   borderRadius: 8,
                   cursor: 'pointer',
                   background: '#111',
-                  gridColumn: span > 1 ? `span ${span}` : undefined,
                   outline: isSelected ? '2px solid rgba(255,255,255,0.65)' : '2px solid transparent',
                   outlineOffset: -2,
                   /* Celdas no activas: se apagan para dar foco a la activa */
