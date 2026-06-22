@@ -2,14 +2,22 @@ TIPOGRAFÍA — HOME
 =================
 
 
-FUENTES USADAS
---------------
+FAMILIA TIPOGRÁFICA
+-------------------
 
-FONT_HEADING   Avenir Next Ultra Light / Avenir LT Pro 65 Medium  →  Outfit → system-ui
-FONT_BODY      Avenir LT Pro 65 Medium / Avenir LT Pro            →  Outfit → system-ui
-FONT_HEAVY     Avenir LT Pro 85 Heavy                             →  system-ui
-FONT           Avenir LT Std  (SearchForm)                        →  Outfit → system-ui
-Header/Footer  Avenir LT Pro                                      →  Outfit → system-ui
+Toda la web usa una única familia: Avenir LT Std
+Archivos instalados:
+
+  AvenirLTStd-Light.otf        →  font-weight: 300
+  AvenirLTStd-Book.otf         →  font-weight: 400
+  AvenirLTStd-Oblique.otf      →  font-weight: 400  font-style: oblique
+  AvenirLTStd-Medium.otf       →  font-weight: 500
+  AvenirLTStd-Heavy.otf        →  font-weight: 700
+  AvenirLTStd-Black.otf        →  font-weight: 900
+  AvenirLTStd-BlackOblique.otf →  font-weight: 900  font-style: oblique
+
+Declarados en: src/app/globals.css  →  @font-face { font-family: 'Avenir LT Std'; }
+Fallback stack: 'Avenir LT Std', 'Outfit', system-ui, sans-serif
 
 
 ─────────────────────────────────────────────────────────────────────
@@ -18,14 +26,14 @@ Header/Footer  Avenir LT Pro                                      →  Outfit �
 HEADER
 ──────
 
-Avenir LT Pro   Peso 300   15px
-  "Propiedades"  /  "Consignación"  /  "Hipotecas"  /  "Nosotros"  /  "Blog"
+Avenir LT Std   Peso 500 (Medium)   15px
+  "Inicio"  /  "Propiedades"  /  "Servicios"  /  "Nosotros"
   (nav inactivo)
 
-Avenir LT Pro   Peso 700   15px
+Avenir LT Std   Peso 700 (Heavy)    15px
   Mismo texto del nav cuando el ítem está activo (página actual)
 
-Avenir LT Pro   Peso 300   —
+Avenir LT Std   Peso 300 (Light)    —
   Ítems de submenú desplegable
 
 
@@ -35,16 +43,16 @@ Avenir LT Pro   Peso 300   —
 HERO SECTION
 ────────────
 
-FONT_HEADING   Peso 300   clamp(31px → 53px)
+Avenir LT Std   Peso 300 (Light)   clamp(31px → 53px)
   "60 años"
 
-FONT_HEADING   Peso 700   clamp(31px → 53px)
+Avenir LT Std   Peso 700 (Heavy)   clamp(31px → 53px)
   "conectando personas"
 
-FONT_BODY      Peso 300   clamp(13px → 17px)
+Avenir LT Std   Peso 300 (Light)   clamp(13px → 17px)
   "con el lugar donde vivir, trabajar y crecer."
 
-Avenir LT Pro  Peso 300   15px
+Avenir LT Std   Peso 300 (Light)   15px
   "Ver propiedades disponibles"
   "Hablar con un asesor"
 
@@ -55,34 +63,34 @@ Avenir LT Pro  Peso 300   15px
 BUSCADOR (SearchForm)
 ─────────────────────
 
-FONT   Peso 500   12px
+Avenir LT Std   Peso 500 (Medium)   12px
   "Código inmueble"  /  "Ubicación"  /  "Tipo de propiedad"  /  "Precio"
   (labels de cada campo)
 
-FONT   Peso 400   14px
+Avenir LT Std   Peso 400 (Book)     14px
   "Ej: A11636"  /  "Seleccionar"
   (placeholder o valor seleccionado en campo)
 
-FONT   Peso 600   15px
+Avenir LT Std   Peso 700 (Heavy)    15px
   "Arrendar"  /  "Comprar"
   (tab activo)
 
-FONT   Peso 400   15px
+Avenir LT Std   Peso 400 (Book)     15px
   "Arrendar"  /  "Comprar"
   (tab inactivo)
 
-FONT   Peso 600   15px
+Avenir LT Std   Peso 700 (Heavy)    15px
   "Buscar inmueble"
   (botón principal)
 
-FONT   Peso —     13px
+Avenir LT Std   Peso 400 (Book)     13px
   Resultados del dropdown de ubicación / tipo
 
-FONT   Peso 300   11px
+Avenir LT Std   Peso 300 (Light)    11px
   "Precio desde"  /  "Precio hasta"
   (labels del slider de precio)
 
-FONT   Peso 500   15px
+Avenir LT Std   Peso 500 (Medium)   15px
   "Búsqueda avanzada"
   (botón filtros)
 
@@ -93,17 +101,17 @@ FONT   Peso 500   15px
 PROPIEDADES DESTACADAS (FeaturedSection)
 ────────────────────────────────────────
 
-FONT_HEADING   Peso 300   clamp(26px → 46px)
+Avenir LT Std   Peso 300 (Light)   clamp(26px → 46px)
   "Propiedades"
 
-FONT_HEADING   Peso 700   clamp(26px → 46px)
+Avenir LT Std   Peso 700 (Heavy)   clamp(26px → 46px)
   "destacadas"
 
-FONT_BODY      Peso 600   clamp(15px → 18px)
+Avenir LT Std   Peso 700 (Heavy)   clamp(15px → 18px)
   "Ver más"
   (botón esquina superior derecha)
 
-  Nota: el precio, nombre y datos de cada card del carrusel
+  Nota: precio, nombre y datos de cada card del carrusel
   heredan la tipografía de PropertyCard.
 
 
@@ -113,37 +121,37 @@ FONT_BODY      Peso 600   clamp(15px → 18px)
 BLOQUE PROPIETARIOS (PropietariosBlock)
 ────────────────────────────────────────
 
-FONT_HEAVY     Peso 800   clamp(28px → 56px)
+Avenir LT Std   Peso 900 (Black)   clamp(28px → 56px)
   "+1000"  /  "3"  /  "60"
   (números grandes sobre las imágenes)
 
-FONT_BODY      Peso 300   clamp(12px → 16px)
+Avenir LT Std   Peso 300 (Light)   clamp(12px → 16px)
   "inmuebles"  /  "sedes"  /  "años"
   (label bajo el número)
 
-FONT_BODY      Peso 300   clamp(10px → 12px)
+Avenir LT Std   Peso 300 (Light)   clamp(10px → 12px)
   "en gestión activa"  /  "en Antioquia"  /  "de experiencia"
   (sublabel bajo el label)
 
-FONT_HEADING   Peso 300   clamp(26px → 46px)
+Avenir LT Std   Peso 300 (Light)   clamp(26px → 46px)
   "¿Tienes un inmueble para"
 
-FONT_HEADING   Peso 700   clamp(26px → 46px)
+Avenir LT Std   Peso 700 (Heavy)   clamp(26px → 46px)
   "arrendar o vender?"
 
-FONT_BODY      Peso 300   clamp(13px → 17px)
+Avenir LT Std   Peso 300 (Light)   clamp(13px → 17px)
   "Más de 60 años gestionando propiedades en Antioquia.
    Tu inmueble en manos de quienes conocen el mercado inmobiliario regional."
 
-FONT_BODY      Peso 500   clamp(13px → 14px)
+Avenir LT Std   Peso 500 (Medium)   clamp(13px → 14px)
   "Consignar mi propiedad"
   "Hablar con un asesor"
   (botones CTA rojos)
 
-FONT_BODY      Peso 300   clamp(13px → 17px)
+Avenir LT Std   Peso 300 (Light)   clamp(13px → 17px)
   "Te avisamos cuando haya un arrendatario interesado."
 
-FONT_BODY      Peso 700   clamp(13px → 17px)
+Avenir LT Std   Peso 700 (Heavy)   clamp(13px → 17px)
   "Sin demoras, sin contratiempos."
   (strong dentro del párrafo anterior)
 
@@ -154,13 +162,13 @@ FONT_BODY      Peso 700   clamp(13px → 17px)
 SERVICIOS (ServiciosBlock)
 ──────────────────────────
 
-FONT_HEADING   Peso 300   clamp(26px → 46px)
+Avenir LT Std   Peso 300 (Light)   clamp(26px → 46px)
   "Nuestros"
 
-FONT_HEADING   Peso 700   clamp(26px → 46px)
+Avenir LT Std   Peso 700 (Heavy)   clamp(26px → 46px)
   "servicios"
 
-FONT_HEADING   Peso 700   clamp(16px → 20px)
+Avenir LT Std   Peso 700 (Heavy)   clamp(16px → 20px)
   "Arrendamientos"
   "Ventas"
   "Consignación"
@@ -168,7 +176,7 @@ FONT_HEADING   Peso 700   clamp(16px → 20px)
   "Hipotecas"
   (título de cada tarjeta de servicio)
 
-FONT_BODY      Peso —     clamp(12.5px → 14px)
+Avenir LT Std   Peso 400 (Book)    clamp(12.5px → 14px)
   "Sabemos que encontrar el inmueble indicado no es solo buscar, es encontrar
    el lugar donde vas a vivir o trabajar. Estamos aquí para que ese proceso
    sea fácil, seguro y a tu medida."
@@ -188,7 +196,7 @@ FONT_BODY      Peso —     clamp(12.5px → 14px)
   "¿Necesitas dinero? Préstamos en hipoteca al 1.5% de interés, pagos
    anticipados sin penalización y abonos a capital desde $1.000.000"
 
-FONT_BODY      Peso 300   clamp(13px → 15px)
+Avenir LT Std   Peso 300 (Light)   clamp(13px → 15px)
   "Hablar con un asesor"
   (botón de cada tarjeta de servicio)
 
@@ -199,25 +207,25 @@ FONT_BODY      Peso 300   clamp(13px → 15px)
 TRAYECTORIA (TrayectoriaBlock)
 ──────────────────────────────
 
-FONT_HEADING   Peso 300   clamp(24px → 42px)
+Avenir LT Std   Peso 300 (Light)   clamp(24px → 42px)
   "Inmobiliaria con"  /  "en Antioquia"
 
-FONT_HEADING   Peso 700   clamp(24px → 42px)
+Avenir LT Std   Peso 700 (Heavy)   clamp(24px → 42px)
   "60 años de experiencia"
 
-FONT_BODY      Peso 400   clamp(13px → 15px)
+Avenir LT Std   Peso 400 (Book)    clamp(13px → 15px)
   "Desde 1966 acompañamos a personas, familias y propietarios en decisiones
    de arrendamiento, venta, administración e inversión inmobiliaria."
 
-FONT_BODY      Peso 500   clamp(13px → 14px)
+Avenir LT Std   Peso 500 (Medium)   clamp(13px → 14px)
   "Conocer nuestra historia"
   (botón CTA rojo)
 
-FONT_BODY      Peso 600   11px
+Avenir LT Std   Peso 700 (Heavy)    11px
   "Línea de tiempo"
   (etiqueta sobre el timeline)
 
-FONT_BODY      Peso 400   clamp(10px → 11px)
+Avenir LT Std   Peso 400 (Book)     clamp(10px → 11px)
   "Nacemos en Medellín con una promesa: acompañar cada decisión con
    confianza y cercanía."
 
@@ -237,7 +245,7 @@ FONT_BODY      Peso 400   clamp(10px → 11px)
    sede en Rionegro."
   (descripciones de cada hito del timeline)
 
-Avenir LT Pro 85 Heavy   Peso 900   clamp(14px → 18px)
+Avenir LT Std   Peso 900 (Black)    clamp(14px → 18px)
   "1966"  /  "1974"  /  "2006"  /  "2017"  /  "2018"  /  "2026"
   (año superpuesto sobre cada imagen del timeline)
 
@@ -248,24 +256,22 @@ Avenir LT Pro 85 Heavy   Peso 900   clamp(14px → 18px)
 FOOTER
 ──────
 
-Tailwind font-semibold   Peso 600   14px
+Avenir LT Std   Peso 700 (Heavy)   14px
   "PROPIEDADES"  /  "SERVICIOS"  /  "EMPRESA"
-  (títulos de columna)
+  (títulos de columna — vía Tailwind font-semibold)
 
-Tailwind (hereda)   Peso —   —
+Avenir LT Std   Peso 400 (Book)    —
   Links y textos del footer
 
 
 ─────────────────────────────────────────────────────────────────────
 
 
-RESUMEN DE PESOS
-────────────────
+RESUMEN DE CORTES DISPONIBLES Y USO
+────────────────────────────────────
 
-Peso 300   Light        Títulos principales, párrafos, subtítulos, botones hero
-Peso 400   Regular      Descripciones de timeline, valores en campos de búsqueda
-Peso 500   Medium       Botones CTA secundarios, labels de campo, botón "Conocer historia"
-Peso 600   SemiBold     Precios en cards, tabs activos, etiqueta "Línea de tiempo"
-Peso 700   Bold         Palabras destacadas en títulos (contraste con Light)
-Peso 800   ExtraBold    Números grandes en PropietariosBlock (+1000 / 3 / 60)
-Peso 900   Black        Años en el timeline de TrayectoriaBlock
+Peso 300   AvenirLTStd-Light.otf     Títulos principales, párrafos, subtítulos, botones hero
+Peso 400   AvenirLTStd-Book.otf      Descripciones, valores de campo, textos de cuerpo
+Peso 500   AvenirLTStd-Medium.otf    Botones CTA secundarios, labels de campo
+Peso 700   AvenirLTStd-Heavy.otf     Palabras destacadas en títulos, botones primarios, nav activo
+Peso 900   AvenirLTStd-Black.otf     Números grandes (stats) y años del timeline
