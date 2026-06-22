@@ -2,15 +2,16 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { createPortal } from 'react-dom';
-import gsap from 'gsap';
 import { X } from 'lucide-react';
 
 /* ─── Constants ────────────────────────────────────────────────── */
-const FONT   = "'Avenir LT Pro 65 Medium','Avenir LT Pro','Avenir',system-ui,sans-serif";
-const SPRING = 'cubic-bezier(0.34,1.56,0.64,1)';
-const EASE   = 'cubic-bezier(0.22,1.0,0.36,1.0)';
+const FONT  = "'Avenir LT Pro 65 Medium','Avenir LT Pro','Avenir',system-ui,sans-serif";
+const EASE  = 'cubic-bezier(0.22,1.0,0.36,1.0)';
+const GRID_TRANSITION = 'grid-template-columns 0.55s cubic-bezier(0.25,0.46,0.45,0.94), grid-template-rows 0.55s cubic-bezier(0.25,0.46,0.45,0.94)';
 
-const IMAGES_PER_PAGE = 20;
+const COLS      = 3;
+const FR_ACTIVE = 3;
+const FR_REST   = 0.7;
 
 /* ─── Types ───────────────────────────────────────────────────── */
 export interface PropertyStats {
@@ -19,50 +20,43 @@ export interface PropertyStats {
 }
 interface PropertyGalleryProps { images: string[]; title: string; stats?: PropertyStats; }
 
-/* ─── Orientation detection ───────────────────────────────────── */
-function detectOrientations(srcs: string[]): Promise<boolean[]> {
-  return Promise.all(
-    srcs.map(src => new Promise<boolean>(resolve => {
-      const img = new window.Image();
-      const done = () => resolve(img.naturalWidth >= img.naturalHeight);
-      img.onload  = done;
-      img.onerror = () => resolve(false);
-      img.src = src;
-      if (img.complete && img.naturalWidth > 0) done();
-    }))
-  );
+/* ─── Grid helpers ────────────────────────────────────────────── */
+function buildCols(hoveredCol: number | null, cols: number): string {
+  if (hoveredCol === null) return `repeat(${cols}, 1fr)`;
+  return Array.from({ length: cols }, (_, i) =>
+    i === hoveredCol ? `${FR_ACTIVE}fr` : `${FR_REST}fr`
+  ).join(' ');
+}
+
+function buildRows(hoveredRow: number | null, rows: number): string {
+  if (hoveredRow === null) return `repeat(${rows}, 1fr)`;
+  return Array.from({ length: rows }, (_, i) =>
+    i === hoveredRow ? `${FR_ACTIVE - 0.5}fr` : `${FR_REST}fr`
+  ).join(' ');
 }
 
 /* ─── BentoGallery ────────────────────────────────────────────── */
 function BentoGallery({ images, onClose }: { images: string[]; onClose: () => void }) {
-  const [hoveredIdx,   setHoveredIdx]   = useState<number | null>(null);
-  const [selectedIdx,  setSelectedIdx]  = useState<number | null>(null);
-  const [currentPage,  setCurrentPage]  = useState(0);
-  const [isMobile,     setIsMobile]     = useState(false);
-  const [orientations, setOrientations] = useState<boolean[]>([]);
-  const [gridReady,    setGridReady]    = useState(false);
+  const [hoveredIdx,  setHoveredIdx]  = useState<number | null>(null);
+  const [selectedIdx, setSelectedIdx] = useState<number | null>(null);
+  const [isMobile,    setIsMobile]    = useState(false);
 
-  const cellRefs    = useRef<(HTMLDivElement | null)[]>([]);
   const carouselRef = useRef<HTMLDivElement>(null);
 
-  /* Pagination */
-  const needsPagination = images.length > IMAGES_PER_PAGE;
-  const totalPages  = needsPagination ? Math.ceil(images.length / IMAGES_PER_PAGE) : 1;
-  const pageStart   = currentPage * IMAGES_PER_PAGE;
-  const pageImages  = needsPagination ? images.slice(pageStart, pageStart + IMAGES_PER_PAGE) : images;
+  const rows = Math.ceil(images.length / COLS);
 
-  /* ── Detect orientations → build grid ───────────────────────── */
-  useEffect(() => {
-    setGridReady(false);
-    setOrientations([]);
-    cellRefs.current = [];
+  /* Derived: which col/row is hovered */
+  const hoveredCol = hoveredIdx !== null ? hoveredIdx % COLS : null;
+  const hoveredRow = hoveredIdx !== null ? Math.floor(hoveredIdx / COLS) : null;
 
-    detectOrientations(pageImages).then(result => {
-      setOrientations(result);
-      setGridReady(true);
-    });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentPage]);
+  /* Accordion grid strings */
+  const gridCols = buildCols(hoveredCol, COLS);
+  const gridRows = buildRows(hoveredRow, rows);
+
+  /* Last row: if incomplete, last image spans remaining cols */
+  const remainder   = images.length % COLS;
+  const lastSpan    = remainder > 0 ? COLS - remainder + 1 : 1;
+  const lastIdx     = images.length - 1;
 
   /* ── Lock scroll ────────────────────────────────────────────── */
   useEffect(() => {
@@ -77,18 +71,6 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
     return () => window.removeEventListener('keydown', h);
   }, [onClose]);
 
-  /* ── GSAP entrance ───────────────────────────────────────────── */
-  useEffect(() => {
-    if (!gridReady) return;
-    const cells = cellRefs.current.filter(Boolean) as HTMLElement[];
-    if (!cells.length) return;
-    gsap.killTweensOf(cells);
-    gsap.fromTo(cells,
-      { opacity: 0, scale: 0.88 },
-      { opacity: 1, scale: 1, duration: 0.4, ease: 'back.out(1.4)', stagger: 0.035, clearProps: 'all' }
-    );
-  }, [gridReady, currentPage]);
-
   /* ── Responsive ─────────────────────────────────────────────── */
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 768);
@@ -97,33 +79,18 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
     return () => window.removeEventListener('resize', check);
   }, []);
 
-  /* ── Carousel: scroll to selected ───────────────────────────── */
+  /* ── Carousel scroll to selected ────────────────────────────── */
   useEffect(() => {
     if (selectedIdx === null || !carouselRef.current) return;
-    const globalIdx = currentPage * IMAGES_PER_PAGE + selectedIdx;
-    const thumb = carouselRef.current.children[globalIdx] as HTMLElement | undefined;
+    const thumb = carouselRef.current.children[selectedIdx] as HTMLElement | undefined;
     thumb?.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-  }, [selectedIdx, currentPage]);
+  }, [selectedIdx]);
 
-  /* ── Handlers ───────────────────────────────────────────────── */
-  const handlePageChange = useCallback((page: number) => {
-    setCurrentPage(page);
-    setSelectedIdx(null);
-    setHoveredIdx(null);
+  const handleCellClick = useCallback((idx: number) => {
+    setSelectedIdx(prev => prev === idx ? null : idx);
   }, []);
 
-  const handleCarouselClick = useCallback((globalIdx: number) => {
-    if (needsPagination) {
-      const page      = Math.floor(globalIdx / IMAGES_PER_PAGE);
-      const idxInPage = globalIdx % IMAGES_PER_PAGE;
-      if (page !== currentPage) handlePageChange(page);
-      setTimeout(() => setSelectedIdx(idxInPage), page !== currentPage ? 80 : 0);
-    } else {
-      setSelectedIdx(prev => prev === globalIdx ? null : globalIdx);
-    }
-  }, [needsPagination, currentPage, handlePageChange]);
-
-  /* ── Mobile layout ───────────────────────────────────────────── */
+  /* ── Mobile ──────────────────────────────────────────────────── */
   if (isMobile) {
     return createPortal(
       <div style={{ position: 'fixed', inset: 0, zIndex: 1000, background: '#0c0c0c', overflowY: 'auto', display: 'flex', flexDirection: 'column' }}>
@@ -132,9 +99,9 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
             <X size={22} strokeWidth={1.5} />
           </button>
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gridAutoFlow: 'dense', gridAutoRows: 'clamp(100px, 40vw, 180px)', gap: 3, padding: '0 3px 3px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 3, padding: '0 3px 3px' }}>
           {images.map((img, idx) => (
-            <div key={idx} style={{ borderRadius: 6, overflow: 'hidden', background: '#1a1a1a' }}>
+            <div key={idx} style={{ aspectRatio: '1', borderRadius: 6, overflow: 'hidden', background: '#1a1a1a' }}>
               <img src={img} alt={`Foto ${idx + 1}`} draggable={false} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
             </div>
           ))}
@@ -144,38 +111,15 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
     );
   }
 
-  /* ── Desktop layout ──────────────────────────────────────────── */
-  /*
-    Layout rules (4-column grid, dense auto-flow):
-    - Landscape/square → gridColumn: span 2, gridRow: span 1  (wide, short)
-    - Portrait         → gridColumn: span 1, gridRow: span 2  (narrow, tall)
-    - grid-auto-flow: dense fills gaps automatically — no black holes
-
-    Hover rules:
-    - Hovered image: shows as large overlay (position: fixed, natural proportions)
-    - All grid cells: scale down to 0.72, opacity 0.4
-    - Overlay has pointer-events: none so grid keeps receiving mouse events
-  */
-  const anyHovered = hoveredIdx !== null;
-  const hoveredIsLandscape = hoveredIdx !== null ? (orientations[hoveredIdx] ?? false) : false;
-
+  /* ── Desktop ─────────────────────────────────────────────────── */
   return createPortal(
     <>
       <style>{`.bento-carousel::-webkit-scrollbar { display: none; }`}</style>
 
-      <div style={{ position: 'fixed', inset: 0, zIndex: 1000, background: '#0c0c0c', display: 'flex', flexDirection: 'column', opacity: gridReady ? 1 : 0, transition: 'opacity 0.2s ease' }}>
+      <div style={{ position: 'fixed', inset: 0, zIndex: 1000, background: '#0c0c0c', display: 'flex', flexDirection: 'column' }}>
 
-        {/* ── Header ─────────────────────────────────────────── */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: needsPagination ? 'space-between' : 'flex-end', padding: '12px 20px', flexShrink: 0, gap: 12 }}>
-          {needsPagination && (
-            <div style={{ display: 'flex', gap: 6 }}>
-              {Array.from({ length: totalPages }, (_, i) => (
-                <button key={i} onClick={() => handlePageChange(i)} style={{ padding: '5px 16px', borderRadius: 20, background: i === currentPage ? '#fff' : 'rgba(255,255,255,0.1)', color: i === currentPage ? '#000' : 'rgba(255,255,255,0.7)', border: 'none', cursor: 'pointer', fontFamily: FONT, fontSize: 12, fontWeight: 600, transition: `background 0.2s ${EASE}, color 0.2s ${EASE}` }}>
-                  Página {i + 1}
-                </button>
-              ))}
-            </div>
-          )}
+        {/* Header */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', padding: '12px 20px', flexShrink: 0 }}>
           <button
             onClick={onClose}
             onMouseEnter={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.18)')}
@@ -186,111 +130,81 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
           </button>
         </div>
 
-        {/* ── Bento grid ─────────────────────────────────────── */}
-        <div style={{ flex: 1, minHeight: 0, overflowY: 'auto', position: 'relative', padding: '0 16px 8px', display: 'flex', flexDirection: 'column' }}>
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(4, 1fr)',
-              gridAutoFlow: 'dense',
-              /* minmax: filas llenan el espacio disponible pero nunca bajan de 90px.
-                 Con pocas imágenes la galería llena la pantalla;
-                 con muchas aparece scroll. */
-              gridAutoRows: 'minmax(90px, 1fr)',
-              flex: 1,
-              gap: 4,
-            }}
-          >
-            {pageImages.map((img, idx) => {
-              const landscape  = orientations[idx] ?? false;
-              const isSelected = selectedIdx === idx;
+        {/* ── Accordion grid ─────────────────────────────────────── */}
+        {/*
+          Hover sobre una celda:
+          → su columna se expande a 3fr, las demás a 0.7fr
+          → su fila se expande a 2.5fr, las demás a 0.7fr
+          → las imágenes actúan como máscaras (overflow:hidden + object-fit:cover)
+          → transición simultánea en columns y rows con cubic-bezier premium
+        */}
+        <div
+          style={{
+            flex: 1, minHeight: 0,
+            display: 'grid',
+            gridTemplateColumns: gridCols,
+            gridTemplateRows:    gridRows,
+            transition: GRID_TRANSITION,
+            gap: 4,
+            padding: '0 16px 8px',
+          }}
+        >
+          {images.map((img, idx) => {
+            const isSelected = selectedIdx === idx;
+            /* Last image fills remaining empty slots in incomplete row */
+            const span = idx === lastIdx && remainder !== 0 ? lastSpan : 1;
 
-              return (
-                <div
-                  key={`p${currentPage}-${idx}`}
-                  ref={el => { cellRefs.current[idx] = el; }}
-                  onMouseEnter={() => setHoveredIdx(idx)}
-                  onMouseLeave={() => setHoveredIdx(null)}
-                  onClick={() => setSelectedIdx(prev => prev === idx ? null : idx)}
-                  style={{
-                    position: 'relative', overflow: 'hidden',
-                    borderRadius: 8, background: '#1a1a1a',
-                    cursor: 'pointer',
-                    /* Landscape: wide+short | Portrait: narrow+tall */
-                    gridColumn: landscape ? 'span 2' : 'span 1',
-                    gridRow:    landscape ? 'span 1' : 'span 2',
-                    outline: isSelected ? '2px solid rgba(255,255,255,0.65)' : '2px solid transparent',
-                    outlineOffset: -2,
-                    /* All cells shrink when any is hovered */
-                    transform: anyHovered ? 'scale(0.72)' : 'scale(1)',
-                    opacity:   anyHovered ? 0.35 : 1,
-                    transition: `transform 0.38s ${SPRING}, opacity 0.28s ${EASE}, outline-color 0.2s ${EASE}`,
-                    zIndex: 1,
-                  }}
-                >
-                  <img
-                    src={img}
-                    alt={`Foto ${idx + 1}`}
-                    draggable={false}
-                    style={{ width: '100%', height: '100%', display: 'block', objectFit: 'cover', objectPosition: 'center', userSelect: 'none', pointerEvents: 'none' }}
-                  />
-                </div>
-              );
-            })}
-          </div>
-
-          {/* ── Hover overlay: imagen a proporciones originales ── */}
-          {anyHovered && hoveredIdx !== null && (
-            <div
-              style={{
-                position: 'fixed',
-                inset: 0,
-                zIndex: 20,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                pointerEvents: 'none',
-              }}
-            >
+            return (
               <div
+                key={idx}
+                onMouseEnter={() => setHoveredIdx(idx)}
+                onMouseLeave={() => setHoveredIdx(null)}
+                onClick={() => handleCellClick(idx)}
                 style={{
-                  width:       hoveredIsLandscape ? 'clamp(400px, 58vw, 820px)' : 'clamp(220px, 28vw, 420px)',
-                  aspectRatio: hoveredIsLandscape ? '16/9' : '3/4',
-                  borderRadius: 12,
+                  position: 'relative',
                   overflow: 'hidden',
-                  boxShadow: '0 24px 72px rgba(0,0,0,0.85)',
-                  transition: `width 0.35s ${SPRING}, aspect-ratio 0.35s ${SPRING}`,
+                  borderRadius: 8,
+                  cursor: 'pointer',
+                  gridColumn: span > 1 ? `span ${span}` : undefined,
+                  outline: isSelected ? '2px solid rgba(255,255,255,0.65)' : '2px solid transparent',
+                  outlineOffset: -2,
+                  transition: `outline-color 0.2s ${EASE}`,
                 }}
               >
                 <img
-                  src={pageImages[hoveredIdx]}
-                  alt=""
+                  src={img}
+                  alt={`Foto ${idx + 1}`}
                   draggable={false}
-                  style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                  style={{
+                    width: '100%', height: '100%', display: 'block',
+                    objectFit: 'cover', objectPosition: 'center',
+                    userSelect: 'none', pointerEvents: 'none',
+                    /* Subtle zoom on the active image while grid animates */
+                    transform: hoveredIdx === idx ? 'scale(1.04)' : 'scale(1)',
+                    transition: `transform 0.55s cubic-bezier(0.25,0.46,0.45,0.94)`,
+                  }}
                 />
               </div>
-            </div>
-          )}
+            );
+          })}
         </div>
 
-        {/* ── Carousel ───────────────────────────────────────── */}
+        {/* ── Carousel ───────────────────────────────────────────── */}
         <div style={{ height: '10vh', minHeight: 60, maxHeight: 90, flexShrink: 0, display: 'flex', justifyContent: 'center', overflow: 'hidden' }}>
           <div
             ref={carouselRef}
             className="bento-carousel"
             style={{ height: '100%', overflowX: 'auto', overflowY: 'hidden', display: 'flex', alignItems: 'center', gap: 4, padding: '4px 16px 8px', scrollbarWidth: 'none', msOverflowStyle: 'none' as React.CSSProperties['msOverflowStyle'] }}
           >
-            {images.map((img, globalIdx) => {
-              const isActive = needsPagination
-                ? currentPage === Math.floor(globalIdx / IMAGES_PER_PAGE) && selectedIdx === globalIdx % IMAGES_PER_PAGE
-                : selectedIdx === globalIdx;
+            {images.map((img, idx) => {
+              const isActive = selectedIdx === idx;
               return (
                 <div
-                  key={globalIdx}
-                  onClick={() => handleCarouselClick(globalIdx)}
+                  key={idx}
+                  onClick={() => handleCellClick(idx)}
                   style={{ flexShrink: 0, height: '100%', aspectRatio: '4/3', borderRadius: 5, overflow: 'hidden', cursor: 'pointer', outline: isActive ? '2px solid #fff' : '2px solid transparent', outlineOffset: -2, opacity: isActive ? 1 : 0.55, transform: isActive ? 'scale(1.06)' : 'scale(1)', transition: `opacity 0.2s ${EASE}, transform 0.2s ${EASE}, outline-color 0.2s ${EASE}` }}
                 >
-                  <img src={img} alt={`Miniatura ${globalIdx + 1}`} draggable={false} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+                  <img src={img} alt={`Miniatura ${idx + 1}`} draggable={false} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
                 </div>
               );
             })}
