@@ -5,7 +5,7 @@ import { createPortal } from 'react-dom';
 import { X } from 'lucide-react';
 
 /* ─── Constants ────────────────────────────────────────────────── */
-const FONT  = "'Avenir LT Pro 65 Medium','Avenir LT Pro','Avenir',system-ui,sans-serif";
+const FONT  = "'Avenir LT Std', 'Outfit', system-ui, sans-serif";
 const EASE  = 'cubic-bezier(0.22,1.0,0.36,1.0)';
 const GRID_TRANSITION = 'grid-template-columns 0.55s cubic-bezier(0.25,0.46,0.45,0.94), grid-template-rows 0.55s cubic-bezier(0.25,0.46,0.45,0.94)';
 
