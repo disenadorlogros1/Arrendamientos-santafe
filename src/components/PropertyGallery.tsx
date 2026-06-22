@@ -9,8 +9,6 @@ const FONT  = "'Avenir LT Pro 65 Medium','Avenir LT Pro','Avenir',system-ui,sans
 const EASE  = 'cubic-bezier(0.22,1.0,0.36,1.0)';
 const GRID_TRANSITION = 'grid-template-columns 0.55s cubic-bezier(0.25,0.46,0.45,0.94), grid-template-rows 0.55s cubic-bezier(0.25,0.46,0.45,0.94)';
 
-const FR_ACTIVE = 3;
-const FR_REST   = 0.7;
 
 /* ─── Types ───────────────────────────────────────────────────── */
 export interface PropertyStats {
@@ -28,40 +26,79 @@ function computeCols(n: number): number {
   return Math.max(3, Math.min(6, Math.round(Math.sqrt(n * 1.5))));
 }
 
-/* ─── Grid helpers ────────────────────────────────────────────── */
-function buildCols(hoveredCol: number | null, cols: number): string {
-  if (hoveredCol === null) return `repeat(${cols}, 1fr)`;
+/* ─── Grid helpers orientados ─────────────────────────────────── */
+/*
+ * Portrait hover: solo el ROW se expande → celda alta y vertical.
+ *   Columnas permanecen iguales (1fr). El row activo toma ~85% de la altura.
+ * Landscape hover: solo la COLUMN se expande → celda ancha y horizontal.
+ *   Filas permanecen iguales (1fr). La columna activa toma ~82% del ancho.
+ */
+function buildColsOriented(
+  hoveredCol: number | null,
+  isLandscape: boolean,
+  cols: number
+): string {
+  if (hoveredCol === null || !isLandscape) return `repeat(${cols}, 1fr)`;
+  const active = (cols * 1.2).toFixed(2);
   return Array.from({ length: cols }, (_, i) =>
-    i === hoveredCol ? `${FR_ACTIVE}fr` : `${FR_REST}fr`
+    i === hoveredCol ? `${active}fr` : '0.35fr'
   ).join(' ');
 }
 
-function buildRows(hoveredRow: number | null, rows: number): string {
-  if (hoveredRow === null) return `repeat(${rows}, 1fr)`;
+function buildRowsOriented(
+  hoveredRow: number | null,
+  isLandscape: boolean,
+  rows: number
+): string {
+  if (hoveredRow === null || isLandscape) return `repeat(${rows}, 1fr)`;
+  const active = (rows * 1.5).toFixed(2);
   return Array.from({ length: rows }, (_, i) =>
-    i === hoveredRow ? `${FR_ACTIVE - 0.5}fr` : `${FR_REST}fr`
+    i === hoveredRow ? `${active}fr` : '0.3fr'
   ).join(' ');
 }
 
 /* ─── BentoGallery ────────────────────────────────────────────── */
 function BentoGallery({ images, onClose }: { images: string[]; onClose: () => void }) {
-  const [hoveredIdx,  setHoveredIdx]  = useState<number | null>(null);
-  const [selectedIdx, setSelectedIdx] = useState<number | null>(null);
-  const [isMobile,    setIsMobile]    = useState(false);
+  const [hoveredIdx,   setHoveredIdx]   = useState<number | null>(null);
+  const [selectedIdx,  setSelectedIdx]  = useState<number | null>(null);
+  const [isMobile,     setIsMobile]     = useState(false);
+  /* true = landscape, false = portrait/square */
+  const [orientations, setOrientations] = useState<boolean[]>([]);
 
   const carouselRef = useRef<HTMLDivElement>(null);
+
+  /* ── Detectar orientación de cada imagen ──────────────────────── */
+  useEffect(() => {
+    let cancelled = false;
+    Promise.all(
+      images.map(src =>
+        new Promise<boolean>(resolve => {
+          const img = new window.Image();
+          const done = () => resolve(img.naturalWidth > img.naturalHeight);
+          img.onload  = done;
+          img.onerror = () => resolve(false);
+          img.src = src;
+          if (img.complete && img.naturalWidth > 0) done();
+        })
+      )
+    ).then(r => { if (!cancelled) setOrientations(r); });
+    return () => { cancelled = true; };
+  }, [images]);
 
   /* Columnas y filas dinámicas según cantidad de imágenes */
   const cols = computeCols(images.length);
   const rows = Math.ceil(images.length / cols);
 
+  /* ¿Es landscape la imagen bajo el cursor? */
+  const hoveredIsLandscape = hoveredIdx !== null ? (orientations[hoveredIdx] ?? false) : false;
+
   /* Derived: which col/row is hovered */
   const hoveredCol = hoveredIdx !== null ? hoveredIdx % cols : null;
   const hoveredRow = hoveredIdx !== null ? Math.floor(hoveredIdx / cols) : null;
 
-  /* Accordion grid strings */
-  const gridCols = buildCols(hoveredCol, cols);
-  const gridRows = buildRows(hoveredRow, rows);
+  /* Grid strings orientados */
+  const gridCols = buildColsOriented(hoveredCol, hoveredIsLandscape, cols);
+  const gridRows = buildRowsOriented(hoveredRow, hoveredIsLandscape, rows);
 
   /* Last row: if incomplete, last image spans remaining cols */
   const remainder   = images.length % cols;
@@ -154,8 +191,9 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
           }}
         >
           {images.map((img, idx) => {
+            const isHovered  = hoveredIdx === idx;
+            const anyHovered = hoveredIdx !== null;
             const isSelected = selectedIdx === idx;
-            /* Last image fills remaining empty slots in incomplete row */
             /* Última imagen rellena las celdas vacías de la fila incompleta */
             const span = idx === lastIdx && remainder !== 0 ? lastSpan : 1;
 
@@ -170,10 +208,13 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
                   overflow: 'hidden',
                   borderRadius: 8,
                   cursor: 'pointer',
+                  background: '#111',
                   gridColumn: span > 1 ? `span ${span}` : undefined,
                   outline: isSelected ? '2px solid rgba(255,255,255,0.65)' : '2px solid transparent',
                   outlineOffset: -2,
-                  transition: `outline-color 0.2s ${EASE}`,
+                  /* Celdas no activas: se apagan para dar foco a la activa */
+                  opacity: anyHovered && !isHovered ? 0.22 : 1,
+                  transition: `opacity 0.4s ${EASE}, outline-color 0.2s ${EASE}`,
                 }}
               >
                 <img
@@ -182,11 +223,14 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
                   draggable={false}
                   style={{
                     width: '100%', height: '100%', display: 'block',
-                    objectFit: 'cover', objectPosition: 'center',
+                    /*
+                     * Activa:  contain → imagen completa, sin recorte, dentro
+                     *          de la celda ya orientada (portrait o landscape).
+                     * Resto:   cover → rellena la celda sin barras negras.
+                     */
+                    objectFit: isHovered ? 'contain' : 'cover',
+                    objectPosition: 'center',
                     userSelect: 'none', pointerEvents: 'none',
-                    /* Subtle zoom on the active image while grid animates */
-                    transform: hoveredIdx === idx ? 'scale(1.04)' : 'scale(1)',
-                    transition: `transform 0.55s cubic-bezier(0.25,0.46,0.45,0.94)`,
                   }}
                 />
               </div>
