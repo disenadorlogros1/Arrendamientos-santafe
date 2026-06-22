@@ -28,10 +28,13 @@ function computeCols(n: number): number {
 
 /* ─── Grid helpers orientados ─────────────────────────────────── */
 /*
- * Portrait hover: solo el ROW se expande → celda alta y vertical.
- *   Columnas permanecen iguales (1fr). El row activo toma ~85% de la altura.
- * Landscape hover: solo la COLUMN se expande → celda ancha y horizontal.
- *   Filas permanecen iguales (1fr). La columna activa toma ~82% del ancho.
+ * Portrait hover → solo el ROW se expande (~87% de la altura).
+ *   Columnas permanecen 1fr. La celda queda alta y estrecha (portrait).
+ *
+ * Landscape hover → COL + ROW se expanden juntos para acercar el ratio
+ *   de la celda al ratio natural 2:1 de las imágenes landscape.
+ *   Col activa: 67% del ancho. Row activo: 60% del alto.
+ *   object-fit:cover llena la celda sin barras negras.
  */
 function buildColsOriented(
   hoveredCol: number | null,
@@ -39,9 +42,9 @@ function buildColsOriented(
   cols: number
 ): string {
   if (hoveredCol === null || !isLandscape) return `repeat(${cols}, 1fr)`;
-  const active = (cols * 1.2).toFixed(2);
+  /* 3fr activo + 0.5fr resto → col toma ~67% del ancho */
   return Array.from({ length: cols }, (_, i) =>
-    i === hoveredCol ? `${active}fr` : '0.35fr'
+    i === hoveredCol ? '3fr' : '0.5fr'
   ).join(' ');
 }
 
@@ -50,7 +53,14 @@ function buildRowsOriented(
   isLandscape: boolean,
   rows: number
 ): string {
-  if (hoveredRow === null || isLandscape) return `repeat(${rows}, 1fr)`;
+  if (hoveredRow === null) return `repeat(${rows}, 1fr)`;
+  if (isLandscape) {
+    /* 1.5fr activo + 0.5fr resto → row toma ~60% del alto */
+    return Array.from({ length: rows }, (_, i) =>
+      i === hoveredRow ? '1.5fr' : '0.5fr'
+    ).join(' ');
+  }
+  /* Portrait: row toma ~87% del alto */
   const active = (rows * 1.5).toFixed(2);
   return Array.from({ length: rows }, (_, i) =>
     i === hoveredRow ? `${active}fr` : '0.3fr'
@@ -223,12 +233,9 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
                   draggable={false}
                   style={{
                     width: '100%', height: '100%', display: 'block',
-                    /*
-                     * Activa:  contain → imagen completa, sin recorte, dentro
-                     *          de la celda ya orientada (portrait o landscape).
-                     * Resto:   cover → rellena la celda sin barras negras.
-                     */
-                    objectFit: isHovered ? 'contain' : 'cover',
+                    /* cover siempre: la celda ya tiene la orientación correcta,
+                     * la imagen la rellena sin barras negras. */
+                    objectFit: 'cover',
                     objectPosition: 'center',
                     userSelect: 'none', pointerEvents: 'none',
                   }}

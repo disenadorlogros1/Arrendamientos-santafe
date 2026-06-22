@@ -176,7 +176,7 @@ export default function Header({ currentPage, onNavigate, isHeroPage = true }: H
                   onMouseEnter={applyInkFill}
                   onMouseLeave={applyInkFill}
                   className="nav-ink-btn w-full px-2 py-2 rounded-full"
-                  style={{ fontFamily: "'Avenir LT Pro', 'Outfit', system-ui, sans-serif", fontWeight: currentPage === item.page ? 700 : 300, fontSize: '15px', color: headerTextColor, transition: 'font-weight 0.2s' }}
+                  style={{ fontFamily: currentPage === item.page ? "'Avenir LT Pro', 'Outfit', system-ui, sans-serif" : "'Avenir LT Pro 65 Medium', 'Avenir LT Pro', 'Outfit', system-ui, sans-serif", fontWeight: currentPage === item.page ? 700 : 500, fontSize: '15px', color: headerTextColor, transition: 'font-weight 0.2s' }}
                 >
                   <span>{item.label}</span>
                 </button>
@@ -224,7 +224,7 @@ export default function Header({ currentPage, onNavigate, isHeroPage = true }: H
                 onMouseEnter={applyInkFill}
                 onMouseLeave={applyInkFill}
                 className="nav-ink-btn flex-1 px-2 py-2 rounded-full"
-                style={{ fontFamily: "'Avenir LT Pro', 'Outfit', system-ui, sans-serif", fontWeight: currentPage === item.page ? 700 : 300, fontSize: '15px', color: headerTextColor, transition: 'font-weight 0.2s' }}
+                style={{ fontFamily: currentPage === item.page ? "'Avenir LT Pro', 'Outfit', system-ui, sans-serif" : "'Avenir LT Pro 65 Medium', 'Avenir LT Pro', 'Outfit', system-ui, sans-serif", fontWeight: currentPage === item.page ? 700 : 500, fontSize: '15px', color: headerTextColor, transition: 'font-weight 0.2s' }}
               >
                 <span>{item.label}</span>
               </button>

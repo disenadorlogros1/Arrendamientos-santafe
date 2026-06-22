@@ -8,7 +8,7 @@ FUENTES USADAS
 FONT_HEADING   Avenir Next Ultra Light / Avenir LT Pro 65 Medium  →  Outfit → system-ui
 FONT_BODY      Avenir LT Pro 65 Medium / Avenir LT Pro            →  Outfit → system-ui
 FONT_HEAVY     Avenir LT Pro 85 Heavy                             →  system-ui
-FONT           Avenir LT Std (SearchForm)                         →  Outfit → system-ui
+FONT           Avenir LT Std  (SearchForm)                        →  Outfit → system-ui
 Header/Footer  Avenir LT Pro                                      →  Outfit → system-ui
 
 
@@ -16,116 +16,256 @@ Header/Footer  Avenir LT Pro                                      →  Outfit �
 
 
 HEADER
-------
+──────
 
-Links de navegación (inactivos)     Avenir LT Pro     Peso 300     15px
-Links de navegación (activos)       Avenir LT Pro     Peso 700     15px
-Items submenú desplegable           Avenir LT Pro     Peso 300     —
+Avenir LT Pro   Peso 300   15px
+  "Propiedades"  /  "Consignación"  /  "Hipotecas"  /  "Nosotros"  /  "Blog"
+  (nav inactivo)
+
+Avenir LT Pro   Peso 700   15px
+  Mismo texto del nav cuando el ítem está activo (página actual)
+
+Avenir LT Pro   Peso 300   —
+  Ítems de submenú desplegable
 
 
 ─────────────────────────────────────────────────────────────────────
 
 
 HERO SECTION
-------------
+────────────
 
-H1 "60 años"                        FONT_HEADING      Peso 300     clamp(31px → 53px)
-H1 "conectando personas" (bold)     FONT_HEADING      Peso 700     clamp(31px → 53px)
-Subtítulo / bajada                  FONT_BODY         Peso 300     clamp(13px → 17px)
-Botones CTA "Arrendar / Comprar"    Avenir LT Pro     Peso 300     15px
+FONT_HEADING   Peso 300   clamp(31px → 53px)
+  "60 años"
+
+FONT_HEADING   Peso 700   clamp(31px → 53px)
+  "conectando personas"
+
+FONT_BODY      Peso 300   clamp(13px → 17px)
+  "con el lugar donde vivir, trabajar y crecer."
+
+Avenir LT Pro  Peso 300   15px
+  "Ver propiedades disponibles"
+  "Hablar con un asesor"
 
 
 ─────────────────────────────────────────────────────────────────────
 
 
 BUSCADOR (SearchForm)
----------------------
+─────────────────────
 
-Label de campo (ej. "Ubicación")    FONT              Peso 500     12px
-Valor seleccionado en campo         FONT              Peso 400     14px
-Tab activo (Arrendar / Comprar)     FONT              Peso 600     15px
-Tab inactivo                        FONT              Peso 400     15px
-Botón "Buscar"                      FONT              Peso 600     15px
-Resultados dropdown                 FONT              Peso —       13px
-Label "Precio desde / hasta"        FONT              Peso 300     11px
-Botón "Filtros avanzados"           FONT              Peso 500     15px
+FONT   Peso 500   12px
+  "Código inmueble"  /  "Ubicación"  /  "Tipo de propiedad"  /  "Precio"
+  (labels de cada campo)
+
+FONT   Peso 400   14px
+  "Ej: A11636"  /  "Seleccionar"
+  (placeholder o valor seleccionado en campo)
+
+FONT   Peso 600   15px
+  "Arrendar"  /  "Comprar"
+  (tab activo)
+
+FONT   Peso 400   15px
+  "Arrendar"  /  "Comprar"
+  (tab inactivo)
+
+FONT   Peso 600   15px
+  "Buscar inmueble"
+  (botón principal)
+
+FONT   Peso —     13px
+  Resultados del dropdown de ubicación / tipo
+
+FONT   Peso 300   11px
+  "Precio desde"  /  "Precio hasta"
+  (labels del slider de precio)
+
+FONT   Peso 500   15px
+  "Búsqueda avanzada"
+  (botón filtros)
 
 
 ─────────────────────────────────────────────────────────────────────
 
 
 PROPIEDADES DESTACADAS (FeaturedSection)
-----------------------------------------
+────────────────────────────────────────
 
-H2 "Propiedades"                    FONT_HEADING      Peso 300     clamp(26px → 46px)
-H2 "destacadas" (bold)              FONT_HEADING      Peso 700     clamp(26px → 46px)
-Precio de la card                   FONT_BODY         Peso 600     clamp(15px → 18px)
+FONT_HEADING   Peso 300   clamp(26px → 46px)
+  "Propiedades"
+
+FONT_HEADING   Peso 700   clamp(26px → 46px)
+  "destacadas"
+
+FONT_BODY      Peso 600   clamp(15px → 18px)
+  "Ver más"
+  (botón esquina superior derecha)
+
+  Nota: el precio, nombre y datos de cada card del carrusel
+  heredan la tipografía de PropertyCard.
 
 
 ─────────────────────────────────────────────────────────────────────
 
 
 BLOQUE PROPIETARIOS (PropietariosBlock)
----------------------------------------
+────────────────────────────────────────
 
-Número grande (ej. "60")            FONT_HEAVY        Peso 800     clamp(28px → 56px)
-Texto bajo número (ej. "años")      FONT_BODY         Peso 300     clamp(12px → 16px)
-Texto secundario (ej. "experiencia")FONT_BODY         Peso 300     clamp(10px → 12px)
-H2 título sección                   FONT_HEADING      Peso 300     clamp(26px → 46px)
-Span bold del título                FONT_HEADING      Peso 700     clamp(26px → 46px)
-Párrafo descripción                 FONT_BODY         Peso 300     clamp(13px → 17px)
-Botones CTA                         FONT_BODY         Peso 500     clamp(13px → 14px)
-"Sin demoras…" (strong)             FONT_BODY         Peso 700     clamp(13px → 17px)
+FONT_HEAVY     Peso 800   clamp(28px → 56px)
+  "+1000"  /  "3"  /  "60"
+  (números grandes sobre las imágenes)
+
+FONT_BODY      Peso 300   clamp(12px → 16px)
+  "inmuebles"  /  "sedes"  /  "años"
+  (label bajo el número)
+
+FONT_BODY      Peso 300   clamp(10px → 12px)
+  "en gestión activa"  /  "en Antioquia"  /  "de experiencia"
+  (sublabel bajo el label)
+
+FONT_HEADING   Peso 300   clamp(26px → 46px)
+  "¿Tienes un inmueble para"
+
+FONT_HEADING   Peso 700   clamp(26px → 46px)
+  "arrendar o vender?"
+
+FONT_BODY      Peso 300   clamp(13px → 17px)
+  "Más de 60 años gestionando propiedades en Antioquia.
+   Tu inmueble en manos de quienes conocen el mercado inmobiliario regional."
+
+FONT_BODY      Peso 500   clamp(13px → 14px)
+  "Consignar mi propiedad"
+  "Hablar con un asesor"
+  (botones CTA rojos)
+
+FONT_BODY      Peso 300   clamp(13px → 17px)
+  "Te avisamos cuando haya un arrendatario interesado."
+
+FONT_BODY      Peso 700   clamp(13px → 17px)
+  "Sin demoras, sin contratiempos."
+  (strong dentro del párrafo anterior)
 
 
 ─────────────────────────────────────────────────────────────────────
 
 
 SERVICIOS (ServiciosBlock)
---------------------------
+──────────────────────────
 
-H2 "Nuestros servicios"             FONT_HEADING      Peso 300     clamp(26px → 46px)
-Span bold del título                FONT_HEADING      Peso 700     clamp(26px → 46px)
-Título de cada servicio             FONT_HEADING      Peso 700     clamp(16px → 20px)
-Descripción del servicio            FONT_BODY         Peso —       clamp(12.5px → 14px)
-Link "Saber más"                    FONT_BODY         Peso 300     clamp(13px → 15px)
+FONT_HEADING   Peso 300   clamp(26px → 46px)
+  "Nuestros"
+
+FONT_HEADING   Peso 700   clamp(26px → 46px)
+  "servicios"
+
+FONT_HEADING   Peso 700   clamp(16px → 20px)
+  "Arrendamientos"
+  "Ventas"
+  "Consignación"
+  "Avalúos"
+  "Hipotecas"
+  (título de cada tarjeta de servicio)
+
+FONT_BODY      Peso —     clamp(12.5px → 14px)
+  "Sabemos que encontrar el inmueble indicado no es solo buscar, es encontrar
+   el lugar donde vas a vivir o trabajar. Estamos aquí para que ese proceso
+   sea fácil, seguro y a tu medida."
+
+  "Comprar un inmueble es una de las decisiones más importantes de tu vida.
+   Te acompañamos con el conocimiento del mercado y la experiencia para que
+   elijas con seguridad."
+
+  "Tu propiedad merece estar en buenas manos. Nos encargamos de encontrar el
+   cliente adecuado con la seriedad y el respaldo de 60 años en el mercado
+   inmobiliario antioqueño."
+
+  "Conocer el valor real de tu inmueble es el primer paso para tomar buenas
+   decisiones. Te damos una valoración técnica, honesta y ajustada al mercado
+   actual."
+
+  "¿Necesitas dinero? Préstamos en hipoteca al 1.5% de interés, pagos
+   anticipados sin penalización y abonos a capital desde $1.000.000"
+
+FONT_BODY      Peso 300   clamp(13px → 15px)
+  "Hablar con un asesor"
+  (botón de cada tarjeta de servicio)
 
 
 ─────────────────────────────────────────────────────────────────────
 
 
 TRAYECTORIA (TrayectoriaBlock)
-------------------------------
+──────────────────────────────
 
-H2 título                           FONT_HEADING      Peso 300     clamp(24px → 42px)
-Span bold del título                FONT_HEADING      Peso 700     clamp(24px → 42px)
-Párrafo descripción                 FONT_BODY         Peso 400     clamp(13px → 15px)
-Botón CTA                           FONT_BODY         Peso 500     clamp(13px → 14px)
-Label estadísticas (ej. "props.")   FONT_BODY         Peso 600     11px
-Número estadísticas pequeño         FONT_BODY         Peso 400     clamp(10px → 11px)
-Número estadísticas grande          Avenir LT 85 Hvy  Peso 900     clamp(14px → 18px)
+FONT_HEADING   Peso 300   clamp(24px → 42px)
+  "Inmobiliaria con"  /  "en Antioquia"
+
+FONT_HEADING   Peso 700   clamp(24px → 42px)
+  "60 años de experiencia"
+
+FONT_BODY      Peso 400   clamp(13px → 15px)
+  "Desde 1966 acompañamos a personas, familias y propietarios en decisiones
+   de arrendamiento, venta, administración e inversión inmobiliaria."
+
+FONT_BODY      Peso 500   clamp(13px → 14px)
+  "Conocer nuestra historia"
+  (botón CTA rojo)
+
+FONT_BODY      Peso 600   11px
+  "Línea de tiempo"
+  (etiqueta sobre el timeline)
+
+FONT_BODY      Peso 400   clamp(10px → 11px)
+  "Nacemos en Medellín con una promesa: acompañar cada decisión con
+   confianza y cercanía."
+
+  "Consolidamos nuestra operación y ganamos la confianza de propietarios
+   y clientes en Antioquia."
+
+  "Cuatro décadas de trayectoria avalan nuestro respaldo y seriedad en el
+   sector inmobiliario."
+
+  "Abrimos sede en Envigado y ampliamos nuestra presencia en el sur del
+   Valle de Aburrá."
+
+  "Renovamos nuestra imagen para proyectar lo que siempre hemos sido:
+   cercanos, serios y vigentes."
+
+  "60 años creciendo con Antioquia. Celebramos con la apertura de nuestra
+   sede en Rionegro."
+  (descripciones de cada hito del timeline)
+
+Avenir LT Pro 85 Heavy   Peso 900   clamp(14px → 18px)
+  "1966"  /  "1974"  /  "2006"  /  "2017"  /  "2018"  /  "2026"
+  (año superpuesto sobre cada imagen del timeline)
 
 
 ─────────────────────────────────────────────────────────────────────
 
 
 FOOTER
-------
+──────
 
-Títulos de columna                  Tailwind font-semibold     Peso 600     14px
-Links                               Tailwind (hereda)          Peso —       —
+Tailwind font-semibold   Peso 600   14px
+  "PROPIEDADES"  /  "SERVICIOS"  /  "EMPRESA"
+  (títulos de columna)
+
+Tailwind (hereda)   Peso —   —
+  Links y textos del footer
 
 
 ─────────────────────────────────────────────────────────────────────
 
 
 RESUMEN DE PESOS
-----------------
+────────────────
 
-Peso 300   Light        Títulos principales, párrafos, subtítulos
-Peso 400   Regular      Valores en campos, descripciones
-Peso 500   Medium       Botones secundarios, labels de campo
-Peso 600   SemiBold     Precios, tabs activos, botones primarios
+Peso 300   Light        Títulos principales, párrafos, subtítulos, botones hero
+Peso 400   Regular      Descripciones de timeline, valores en campos de búsqueda
+Peso 500   Medium       Botones CTA secundarios, labels de campo, botón "Conocer historia"
+Peso 600   SemiBold     Precios en cards, tabs activos, etiqueta "Línea de tiempo"
 Peso 700   Bold         Palabras destacadas en títulos (contraste con Light)
-Peso 800   ExtraBold    Números grandes en PropietariosBlock
-Peso 900   Black        Estadísticas grandes en TrayectoriaBlock
+Peso 800   ExtraBold    Números grandes en PropietariosBlock (+1000 / 3 / 60)
+Peso 900   Black        Años en el timeline de TrayectoriaBlock
