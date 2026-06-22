@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { X } from 'lucide-react';
 
@@ -23,7 +23,6 @@ interface PropertyGalleryProps { images: string[]; title: string; stats?: Proper
 function BentoGallery({ images, onClose }: { images: string[]; onClose: () => void }) {
   const [entered,    setEntered]    = useState(false);
   const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
-  const naturalRatios = useRef<Record<number, number>>({});
 
   const n    = images.length;
   const COLS = n <= 4 ? n : n <= 9 ? Math.ceil(n / 2) : 5;
@@ -159,15 +158,9 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
                 src={img}
                 alt={`Foto ${idx + 1}`}
                 draggable={false}
-                onLoad={e => {
-                  const el = e.currentTarget;
-                  if (el.naturalWidth) naturalRatios.current[idx] = el.naturalWidth / el.naturalHeight;
-                }}
                 style={{
                   width: '100%', height: '100%', display: 'block',
-                  // Portrait images hovered → contain (full image visible, no crop)
-                  // All others → cover (fills cell edge-to-edge)
-                  objectFit: isHov && (naturalRatios.current[idx] ?? 1) < 1 ? 'contain' : 'cover',
+                  objectFit: 'cover',
                   objectPosition: 'center',
                   transform: isHov ? 'scale(1.03)' : 'scale(1)',
                   transition: `transform 0.55s ${EASE}`,
