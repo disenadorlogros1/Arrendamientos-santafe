@@ -90,7 +90,8 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
   const activeRow = activeIdx !== null ? Math.floor(activeIdx / COLS) : null;
 
   const gridCols = activeCol !== null ? colActive(activeCol, COLS) : colDefault(COLS);
-  const gridRows = activeRow !== null ? rowActive(activeRow, ROWS) : rowDefault(ROWS);
+  // Rows stay uniform — column-only animation avoids adjacent cells expanding
+  const gridRows = rowDefault(ROWS);
 
   /* ── Responsive ─────────────────────────────────────────────── */
   useEffect(() => {
@@ -264,16 +265,23 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
           display: 'grid',
           gridTemplateColumns: gridCols,
           gridTemplateRows:    gridRows,
-          transition: [
-            `grid-template-columns 0.50s ${SPRING}`,
-            `grid-template-rows    0.50s ${SPRING}`,
-          ].join(', '),
+          transition: `grid-template-columns 0.50s ${SPRING}`,
           gap: 4,
           padding: '0 16px 8px',
         }}>
           {pageImages.map((img, idx) => {
+            const isHov      = hoveredIdx === idx;
             const isSelected = selectedIdx === idx;
-            const isActive   = hoveredIdx === idx || isSelected;
+            const isActive   = isHov || isSelected;
+
+            // Same column as hovered but not the hovered cell → scale back slightly
+            const sameColNotHov = activeCol !== null && idx % COLS === activeCol && !isActive;
+
+            // Last cell spans remaining columns if last row is incomplete
+            const remainder = n % COLS;
+            const isLastCell = idx === n - 1 && remainder !== 0;
+            const spanCols   = isLastCell ? (COLS - remainder + 1) : 1;
+
             return (
               <div
                 key={`p${currentPage}-${idx}`}
@@ -285,9 +293,13 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
                   position: 'relative', overflow: 'hidden',
                   borderRadius: 8, background: '#1a1a1a',
                   cursor: 'pointer',
+                  gridColumn: spanCols > 1 ? `span ${spanCols}` : undefined,
                   outline: isSelected ? '2px solid rgba(255,255,255,0.65)' : '2px solid transparent',
                   outlineOffset: -2,
-                  transition: `outline-color 0.2s ${EASE}`,
+                  // Scale back non-hovered cells in same column so hovered stands out
+                  transform: isActive ? 'scale(1.0)' : sameColNotHov ? 'scale(0.93)' : 'scale(1.0)',
+                  transition: `transform 0.45s ${SPRING}, outline-color 0.2s ${EASE}`,
+                  zIndex: isActive ? 2 : 1,
                 }}
               >
                 <img
@@ -297,7 +309,7 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
                   style={{
                     width: '100%', height: '100%', display: 'block',
                     objectFit: 'cover', objectPosition: 'center',
-                    transform: isActive ? 'scale(1.04)' : 'scale(1)',
+                    transform: isActive ? 'scale(1.05)' : 'scale(1)',
                     transition: `transform 0.55s ${EASE}`,
                     userSelect: 'none', pointerEvents: 'none',
                   }}
@@ -308,11 +320,12 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
         </div>
 
         {/* ── Carousel ───────────────────────────────────────── */}
+        <div style={{ height: '10vh', minHeight: 60, maxHeight: 90, flexShrink: 0, display: 'flex', justifyContent: 'center', overflow: 'hidden' }}>
         <div
           ref={carouselRef}
           className="bento-carousel"
           style={{
-            height: '10vh', minHeight: 60, maxHeight: 90, flexShrink: 0,
+            height: '100%',
             overflowX: 'auto', overflowY: 'hidden',
             display: 'flex', alignItems: 'center',
             gap: 4, padding: '4px 16px 8px',
@@ -351,6 +364,7 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
             );
           })}
         </div>
+        </div>{/* end carousel wrapper */}
 
       </div>
     </>,
