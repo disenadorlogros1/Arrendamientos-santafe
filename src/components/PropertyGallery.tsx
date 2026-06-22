@@ -28,33 +28,14 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
   const COLS = n <= 4 ? n : n <= 9 ? Math.ceil(n / 2) : 5;
   const ROWS = Math.ceil(n / COLS);
 
-  /* ── Bento track templates ──────────────────────────────────────
-     Hovered cell dominates in BOTH col and row.
-     Cells sharing the row get taller (but narrower if not the col).
-     Cells sharing the col get wider (but shorter if not the row).
-     Cells in neither compress in both dimensions.
-  ─────────────────────────────────────────────────────────────── */
-  // Balanced values so non-hovered cells compress uniformly (both axes)
-  // and stay roughly square/thumbnail-shaped, not thin strips.
-  // Math: for 5×2 grid at ~1920×700, these give compressed cells ≈ 200×190px (1.05:1)
-  const COL_BIG   = 3.5;
-  const COL_SMALL = 0.55;
-  const ROW_BIG   = 1.8;
-  const ROW_SMALL = 0.75;
+  const COL_BIG   = 3.8;
+  const COL_SMALL = 0.48;
 
   function colTemplate(): string {
     if (hoveredIdx === null) return `repeat(${COLS}, 1fr)`;
     const hc = hoveredIdx % COLS;
     return Array.from({ length: COLS }, (_, i) =>
       i === hc ? `${COL_BIG}fr` : `${COL_SMALL}fr`,
-    ).join(' ');
-  }
-
-  function rowTemplate(): string {
-    if (hoveredIdx === null) return `repeat(${ROWS}, 1fr)`;
-    const hr = Math.floor(hoveredIdx / COLS);
-    return Array.from({ length: ROWS }, (_, i) =>
-      i === hr ? `${ROW_BIG}fr` : `${ROW_SMALL}fr`,
     ).join(' ');
   }
 
@@ -123,26 +104,19 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
         flex: 1, minHeight: 0,
         display: 'grid',
         gridTemplateColumns: colTemplate(),
-        gridTemplateRows:    rowTemplate(),
-        transition: [
-          `grid-template-columns 0.52s ${SPRING}`,
-          `grid-template-rows    0.52s ${SPRING}`,
-        ].join(', '),
+        gridTemplateRows: `repeat(${ROWS}, 1fr)`,
+        transition: `grid-template-columns 0.52s ${SPRING}`,
         gap: 4,
         padding: '0 16px 16px',
       }}>
         {images.map((img, idx) => {
           const isHov = hoveredIdx === idx;
           const hc    = hoveredIdx !== null ? hoveredIdx % COLS : -1;
-          const hr    = hoveredIdx !== null ? Math.floor(hoveredIdx / COLS) : -1;
           const sameCol = idx % COLS === hc;
-          const sameRow = Math.floor(idx / COLS) === hr;
           const isActive = hoveredIdx !== null && !isHov;
 
-          // Cells sharing col/row with hovered get medium dim; others get heavy dim
-          const dimOpacity = isActive
-            ? (sameCol || sameRow ? 0.45 : 0.72)
-            : 0;
+          // Same column → medium dim; other columns → heavy dim
+          const dimOpacity = isActive ? (sameCol ? 0.45 : 0.72) : 0;
 
           return (
             <div
