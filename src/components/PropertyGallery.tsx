@@ -1,74 +1,109 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { createPortal } from 'react-dom';
+import gsap from 'gsap';
 import { X } from 'lucide-react';
 
-const FONT    = "'Avenir LT Pro 65 Medium','Avenir LT Pro','Avenir',system-ui,sans-serif";
-const SPRING  = 'cubic-bezier(0.34,1.56,0.64,1)';
-const EASE    = 'cubic-bezier(0.22,1.0,0.36,1.0)';
+/* ─── Constants ────────────────────────────────────────────────── */
+const FONT   = "'Avenir LT Pro 65 Medium','Avenir LT Pro','Avenir',system-ui,sans-serif";
+const SPRING = 'cubic-bezier(0.34,1.56,0.64,1)'; // overshoot spring
+const EASE   = 'cubic-bezier(0.22,1.0,0.36,1.0)';
 
+const IMAGES_PER_PAGE = 20;
+const COL_BIG   = 4.0;
+const COL_SMALL = 0.45;
+const ROW_BIG   = 1.55;
+const ROW_SMALL = 0.65;
+
+/* ─── Exports ─────────────────────────────────────────────────── */
 export interface PropertyStats {
   bedrooms?: number; bathrooms?: number;
   area?: string; price?: string; parking?: number;
 }
 interface PropertyGalleryProps { images: string[]; title: string; stats?: PropertyStats; }
 
-/* ─────────────────────────────────────────────────────────────────
-   BentoGallery — CSS Grid animates both axes simultaneously.
-   Hovered cell expands its column + row; others compress but stay
-   roughly square (balanced COL_SMALL / ROW_SMALL values).
-───────────────────────────────────────────────────────────────── */
+/* ─── Grid math ───────────────────────────────────────────────── */
+function calcCols(n: number): number {
+  if (n <= 4) return n;
+  // Find best col count so last row is ≥ 50% full
+  const max = Math.min(Math.ceil(n / 2), 6);
+  for (let c = max; c >= 3; c--) {
+    const lastRow = n % c || c;
+    if (lastRow / c >= 0.5) return c;
+  }
+  return 3;
+}
 
+function colDefault(cols: number): string {
+  return Array.from({ length: cols }, (_, i) => {
+    if (i === 0) return '1.8fr';
+    if (i === Math.floor(cols / 2)) return '1.35fr';
+    return '1fr';
+  }).join(' ');
+}
+
+function rowDefault(rows: number): string {
+  return Array.from({ length: rows }, (_, i) => i === 0 ? '1.35fr' : '1fr').join(' ');
+}
+
+function colActive(activeCol: number, cols: number): string {
+  return Array.from({ length: cols }, (_, i) =>
+    i === activeCol ? `${COL_BIG}fr` : `${COL_SMALL}fr`
+  ).join(' ');
+}
+
+function rowActive(activeRow: number, rows: number): string {
+  return Array.from({ length: rows }, (_, i) =>
+    i === activeRow ? `${ROW_BIG}fr` : `${ROW_SMALL}fr`
+  ).join(' ');
+}
+
+/* ─── BentoGallery ────────────────────────────────────────────── */
 function BentoGallery({ images, onClose }: { images: string[]; onClose: () => void }) {
-  const [entered,    setEntered]    = useState(false);
-  const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
+  const [entered,     setEntered]     = useState(false);
+  const [hoveredIdx,  setHoveredIdx]  = useState<number | null>(null);
+  const [selectedIdx, setSelectedIdx] = useState<number | null>(null);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [isMobile,    setIsMobile]    = useState(false);
 
-  const n    = images.length;
-  const COLS = n <= 4 ? n : n <= 12 ? Math.ceil(n / 2) : 6;
+  const cellRefs    = useRef<(HTMLDivElement | null)[]>([]);
+  const carouselRef = useRef<HTMLDivElement>(null);
+  const animKey     = useRef(0); // increments to re-trigger stagger on page change
+
+  /* Pagination */
+  const needsPagination = images.length > 40;
+  const totalPages  = needsPagination ? Math.ceil(images.length / IMAGES_PER_PAGE) : 1;
+  const pageStart   = currentPage * IMAGES_PER_PAGE;
+  const pageImages  = needsPagination
+    ? images.slice(pageStart, pageStart + IMAGES_PER_PAGE)
+    : images;
+
+  /* Grid dimensions */
+  const n    = pageImages.length;
+  const COLS = calcCols(n);
   const ROWS = Math.ceil(n / COLS);
 
-  // Hover state: hovered cell dominates, others compress
-  const COL_BIG   = 3.8;
-  const COL_SMALL = 0.48;
-  const ROW_BIG   = 1.5;
-  const ROW_SMALL = 0.65;
+  /* Active index: hover overrides selection */
+  const activeIdx = hoveredIdx ?? selectedIdx;
+  const activeCol = activeIdx !== null ? activeIdx % COLS : null;
+  const activeRow = activeIdx !== null ? Math.floor(activeIdx / COLS) : null;
 
-  // Default bento: first column and first row are slightly larger (editorial feel)
-  function colDefault(): string {
-    return Array.from({ length: COLS }, (_, i) => {
-      if (i === 0) return '1.7fr';
-      if (i === Math.floor(COLS / 2)) return '1.3fr';
-      return '1fr';
-    }).join(' ');
-  }
+  const gridCols = activeCol !== null ? colActive(activeCol, COLS) : colDefault(COLS);
+  const gridRows = activeRow !== null ? rowActive(activeRow, ROWS) : rowDefault(ROWS);
 
-  function rowDefault(): string {
-    return Array.from({ length: ROWS }, (_, i) =>
-      i === 0 ? '1.4fr' : '1fr',
-    ).join(' ');
-  }
-
-  function colTemplate(): string {
-    if (hoveredIdx === null) return colDefault();
-    const hc = hoveredIdx % COLS;
-    return Array.from({ length: COLS }, (_, i) =>
-      i === hc ? `${COL_BIG}fr` : `${COL_SMALL}fr`,
-    ).join(' ');
-  }
-
-  function rowTemplate(): string {
-    if (hoveredIdx === null) return rowDefault();
-    const hr = Math.floor(hoveredIdx / COLS);
-    return Array.from({ length: ROWS }, (_, i) =>
-      i === hr ? `${ROW_BIG}fr` : `${ROW_SMALL}fr`,
-    ).join(' ');
-  }
-
-  /* ── Lifecycle ─────────────────────────────────────────────── */
+  /* ── Responsive ─────────────────────────────────────────────── */
   useEffect(() => {
-    const id = requestAnimationFrame(() => requestAnimationFrame(() => setEntered(true)));
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
+  }, []);
+
+  /* ── Lifecycle ──────────────────────────────────────────────── */
+  useEffect(() => {
     document.body.style.overflow = 'hidden';
+    const id = requestAnimationFrame(() => requestAnimationFrame(() => setEntered(true)));
     return () => { cancelAnimationFrame(id); document.body.style.overflow = ''; };
   }, []);
 
@@ -78,137 +113,280 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
     return () => window.removeEventListener('keydown', h);
   }, [onClose]);
 
-  return createPortal(
-    <div style={{
-      position: 'fixed', inset: 0, zIndex: 1000,
-      background: '#0c0c0c',
-      display: 'flex', flexDirection: 'column',
-      opacity: entered ? 1 : 0,
-      transition: 'opacity 0.28s ease',
-    }}>
-      {/* Header */}
-      <div style={{
-        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        padding: '14px 20px', flexShrink: 0,
-        opacity: entered ? 1 : 0,
-        transform: entered ? 'none' : 'translateY(-8px)',
-        transition: 'opacity 0.3s ease 0.06s, transform 0.3s ease 0.06s',
-      }}>
-        <span style={{ fontFamily: FONT, fontSize: '13px', color: 'rgba(255,255,255,0.35)' }}>
-          <span style={{ color: '#fff', fontWeight: 600 }}>{n}</span> fotos
-        </span>
-        <button onClick={onClose} style={{
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          width: 34, height: 34, borderRadius: '50%',
-          background: 'rgba(255,255,255,0.08)', border: 'none',
-          cursor: 'pointer', color: '#fff', transition: 'background 0.2s',
-        }}
-          onMouseEnter={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.18)')}
-          onMouseLeave={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.08)')}
-        ><X size={16} /></button>
-      </div>
+  /* ── GSAP staggered entrance ─────────────────────────────────── */
+  useEffect(() => {
+    if (!entered) return;
+    const cells = cellRefs.current.filter(Boolean) as HTMLElement[];
+    if (!cells.length) return;
+    gsap.fromTo(cells,
+      { opacity: 0, scale: 0.86 },
+      { opacity: 1, scale: 1, duration: 0.42, ease: 'back.out(1.5)', stagger: 0.038, clearProps: 'transform' }
+    );
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [entered, animKey.current]);
 
-      {/* Hint */}
-      {hoveredIdx === null && (
+  /* ── Carousel auto-scroll to selected thumbnail ──────────────── */
+  useEffect(() => {
+    if (selectedIdx === null || !carouselRef.current) return;
+    const globalIdx = currentPage * IMAGES_PER_PAGE + selectedIdx;
+    const thumb = carouselRef.current.children[globalIdx] as HTMLElement | undefined;
+    thumb?.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+  }, [selectedIdx, currentPage]);
+
+  /* ── Handlers ───────────────────────────────────────────────── */
+  const handlePageChange = useCallback((page: number) => {
+    setCurrentPage(page);
+    setSelectedIdx(null);
+    setHoveredIdx(null);
+    animKey.current += 1;
+    // re-trigger entrance for new page
+    requestAnimationFrame(() => {
+      const cells = cellRefs.current.filter(Boolean) as HTMLElement[];
+      if (!cells.length) return;
+      gsap.fromTo(cells,
+        { opacity: 0, scale: 0.86 },
+        { opacity: 1, scale: 1, duration: 0.38, ease: 'back.out(1.4)', stagger: 0.032, clearProps: 'transform' }
+      );
+    });
+  }, []);
+
+  const handleCarouselClick = useCallback((globalIdx: number) => {
+    if (needsPagination) {
+      const page = Math.floor(globalIdx / IMAGES_PER_PAGE);
+      const idxInPage = globalIdx % IMAGES_PER_PAGE;
+      if (page !== currentPage) handlePageChange(page);
+      setTimeout(() => setSelectedIdx(idxInPage), page !== currentPage ? 80 : 0);
+    } else {
+      setSelectedIdx(prev => prev === globalIdx ? null : globalIdx);
+    }
+  }, [needsPagination, currentPage, handlePageChange]);
+
+  const handleCellClick = useCallback((idx: number) => {
+    setSelectedIdx(prev => prev === idx ? null : idx);
+  }, []);
+
+  /* ── Mobile layout ───────────────────────────────────────────── */
+  if (isMobile) {
+    return createPortal(
+      <div style={{
+        position: 'fixed', inset: 0, zIndex: 1000,
+        background: '#0c0c0c', overflowY: 'auto',
+        display: 'flex', flexDirection: 'column',
+      }}>
         <div style={{
-          position: 'absolute', bottom: 24, left: '50%', transform: 'translateX(-50%)',
-          fontFamily: FONT, fontSize: '11px', letterSpacing: '0.1em',
-          color: 'rgba(255,255,255,0.28)',
-          display: 'flex', alignItems: 'center', gap: 8,
-          opacity: entered ? 1 : 0, transition: 'opacity 0.4s ease 0.5s',
-          pointerEvents: 'none',
+          position: 'sticky', top: 0, zIndex: 10,
+          display: 'flex', justifyContent: 'flex-end',
+          padding: '12px 16px', background: 'linear-gradient(#0c0c0c 70%, transparent)',
         }}>
-          <svg width="14" height="10" viewBox="0 0 14 10" fill="none">
-            <path d="M1 5h12M8 1l4 4-4 4" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
-          Pasa el cursor por las fotos
+          <button onClick={onClose} style={{
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            width: 44, height: 44, borderRadius: '50%',
+            background: 'rgba(255,255,255,0.12)', border: 'none',
+            cursor: 'pointer', color: '#fff',
+          }}>
+            <X size={22} strokeWidth={1.5} />
+          </button>
         </div>
-      )}
-
-      {/* ── Bento grid ─────────────────────────────────────────── */}
-      <div style={{
-        flex: 1, minHeight: 0,
-        display: 'grid',
-        gridTemplateColumns: colTemplate(),
-        gridTemplateRows:    rowTemplate(),
-        transition: `grid-template-columns 0.52s ${SPRING}, grid-template-rows 0.52s ${SPRING}`,
-        gap: 4,
-        padding: '0 16px 16px',
-      }}>
-        {images.map((img, idx) => {
-          const isHov = hoveredIdx === idx;
-
-          return (
-            <div
-              key={idx}
-              onMouseEnter={() => setHoveredIdx(idx)}
-              onMouseLeave={() => setHoveredIdx(null)}
-              style={{
-                position: 'relative', overflow: 'hidden',
-                borderRadius: 6, background: '#111', cursor: 'zoom-in',
-              }}
-            >
-              <img
-                src={img}
-                alt={`Foto ${idx + 1}`}
-                draggable={false}
-                style={{
-                  width: '100%', height: '100%', display: 'block',
-                  objectFit: 'cover',
-                  objectPosition: 'center',
-                  transform: isHov ? 'scale(1.03)' : 'scale(1)',
-                  transition: `transform 0.55s ${EASE}`,
-                  userSelect: 'none',
-                }}
+        <div style={{
+          display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)',
+          gap: 3, padding: '0 3px 3px',
+        }}>
+          {images.map((img, idx) => (
+            <div key={idx} style={{ aspectRatio: '1', borderRadius: 6, overflow: 'hidden', background: '#1a1a1a' }}>
+              <img src={img} alt={`Foto ${idx + 1}`} draggable={false}
+                style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
               />
-
-              {/* Counter on hovered cell */}
-              {isHov && (
-                <div style={{
-                  position: 'absolute', bottom: 0, left: 0, right: 0,
-                  padding: '16px', pointerEvents: 'none',
-                }}>
-                  <span style={{ fontFamily: FONT, fontSize: '12px', color: 'rgba(255,255,255,0.5)', letterSpacing: '0.06em' }}>
-                    <span style={{ color: '#fff', fontWeight: 600 }}>{idx + 1}</span>{' / '}{n}
-                  </span>
-                </div>
-              )}
             </div>
-          );
-        })}
-      </div>
+          ))}
+        </div>
+      </div>,
+      document.body
+    );
+  }
 
-    </div>,
-    document.body,
+  /* ── Desktop layout ──────────────────────────────────────────── */
+  return createPortal(
+    <>
+      <style>{`.bento-carousel::-webkit-scrollbar { display: none; }`}</style>
+      <div style={{
+        position: 'fixed', inset: 0, zIndex: 1000,
+        background: '#0c0c0c',
+        display: 'flex', flexDirection: 'column',
+        opacity: entered ? 1 : 0,
+        transition: 'opacity 0.25s ease',
+      }}>
+
+        {/* ── Header ─────────────────────────────────────────── */}
+        <div style={{
+          display: 'flex', alignItems: 'center',
+          justifyContent: needsPagination ? 'space-between' : 'flex-end',
+          padding: '12px 20px', flexShrink: 0, gap: 12,
+        }}>
+          {needsPagination && (
+            <div style={{ display: 'flex', gap: 6 }}>
+              {Array.from({ length: totalPages }, (_, i) => (
+                <button
+                  key={i}
+                  onClick={() => handlePageChange(i)}
+                  style={{
+                    padding: '5px 16px', borderRadius: 20,
+                    background: i === currentPage ? '#fff' : 'rgba(255,255,255,0.1)',
+                    color: i === currentPage ? '#000' : 'rgba(255,255,255,0.7)',
+                    border: 'none', cursor: 'pointer',
+                    fontFamily: FONT, fontSize: 12, fontWeight: 600,
+                    transition: `background 0.2s ${EASE}, color 0.2s ${EASE}`,
+                  }}
+                >
+                  Página {i + 1}
+                </button>
+              ))}
+            </div>
+          )}
+          <button
+            onClick={onClose}
+            onMouseEnter={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.18)')}
+            onMouseLeave={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.1)')}
+            style={{
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              width: 44, height: 44, borderRadius: '50%',
+              background: 'rgba(255,255,255,0.1)', border: 'none',
+              cursor: 'pointer', color: '#fff',
+              transition: `background 0.2s ${EASE}`,
+            }}
+          >
+            <X size={22} strokeWidth={1.5} />
+          </button>
+        </div>
+
+        {/* ── Bento grid ─────────────────────────────────────── */}
+        <div style={{
+          flex: 1, minHeight: 0,
+          display: 'grid',
+          gridTemplateColumns: gridCols,
+          gridTemplateRows:    gridRows,
+          transition: [
+            `grid-template-columns 0.50s ${SPRING}`,
+            `grid-template-rows    0.50s ${SPRING}`,
+          ].join(', '),
+          gap: 4,
+          padding: '0 16px 8px',
+        }}>
+          {pageImages.map((img, idx) => {
+            const isSelected = selectedIdx === idx;
+            const isActive   = hoveredIdx === idx || isSelected;
+            return (
+              <div
+                key={`p${currentPage}-${idx}`}
+                ref={el => { cellRefs.current[idx] = el; }}
+                onMouseEnter={() => setHoveredIdx(idx)}
+                onMouseLeave={() => setHoveredIdx(null)}
+                onClick={() => handleCellClick(idx)}
+                style={{
+                  position: 'relative', overflow: 'hidden',
+                  borderRadius: 8, background: '#1a1a1a',
+                  cursor: 'pointer',
+                  outline: isSelected ? '2px solid rgba(255,255,255,0.65)' : '2px solid transparent',
+                  outlineOffset: -2,
+                  transition: `outline-color 0.2s ${EASE}`,
+                }}
+              >
+                <img
+                  src={img}
+                  alt={`Foto ${idx + 1}`}
+                  draggable={false}
+                  style={{
+                    width: '100%', height: '100%', display: 'block',
+                    objectFit: 'cover', objectPosition: 'center',
+                    transform: isActive ? 'scale(1.04)' : 'scale(1)',
+                    transition: `transform 0.55s ${EASE}`,
+                    userSelect: 'none', pointerEvents: 'none',
+                  }}
+                />
+              </div>
+            );
+          })}
+        </div>
+
+        {/* ── Carousel ───────────────────────────────────────── */}
+        <div
+          ref={carouselRef}
+          className="bento-carousel"
+          style={{
+            height: '10vh', minHeight: 60, maxHeight: 90, flexShrink: 0,
+            overflowX: 'auto', overflowY: 'hidden',
+            display: 'flex', alignItems: 'center',
+            gap: 4, padding: '4px 16px 8px',
+            scrollbarWidth: 'none', msOverflowStyle: 'none' as React.CSSProperties['msOverflowStyle'],
+          }}
+        >
+          {images.map((img, globalIdx) => {
+            const isActive = needsPagination
+              ? currentPage === Math.floor(globalIdx / IMAGES_PER_PAGE) &&
+                selectedIdx === globalIdx % IMAGES_PER_PAGE
+              : selectedIdx === globalIdx;
+            return (
+              <div
+                key={globalIdx}
+                onClick={() => handleCarouselClick(globalIdx)}
+                style={{
+                  flexShrink: 0,
+                  height: '100%',
+                  aspectRatio: '4/3',
+                  borderRadius: 5, overflow: 'hidden',
+                  cursor: 'pointer',
+                  outline: isActive ? '2px solid #fff' : '2px solid transparent',
+                  outlineOffset: -2,
+                  opacity: isActive ? 1 : 0.55,
+                  transform: isActive ? 'scale(1.06)' : 'scale(1)',
+                  transition: `opacity 0.2s ${EASE}, transform 0.2s ${EASE}, outline-color 0.2s ${EASE}`,
+                }}
+              >
+                <img
+                  src={img}
+                  alt={`Miniatura ${globalIdx + 1}`}
+                  draggable={false}
+                  style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                />
+              </div>
+            );
+          })}
+        </div>
+
+      </div>
+    </>,
+    document.body
   );
 }
 
-/* ─────────────────────────────────────────────────────────────────
-   Preview grid — property page entry point
-───────────────────────────────────────────────────────────────── */
-
+/* ─── Preview grid (ficha de propiedad) ───────────────────────── */
 function PreviewCell({ img, alt, rowSpan, onClick, overlay }: {
   img: string; alt: string; rowSpan?: boolean; onClick: () => void; overlay?: string;
 }) {
   const [hov, setHov] = useState(false);
   return (
     <div
-      style={{ gridRow: rowSpan ? '1/3' : undefined, position: 'relative', overflow: 'hidden', cursor: 'pointer', background: '#f0efed' }}
+      style={{
+        gridRow: rowSpan ? '1/3' : undefined,
+        position: 'relative', overflow: 'hidden',
+        cursor: 'pointer', background: '#f0efed',
+      }}
       onClick={onClick}
-      onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
+      onMouseEnter={() => setHov(true)}
+      onMouseLeave={() => setHov(false)}
     >
       <img src={img} alt={alt} draggable={false} style={{
         width: '100%', height: '100%', objectFit: 'cover', display: 'block',
         transform: hov ? 'scale(1.04)' : 'scale(1)',
-        transition: 'transform 0.5s cubic-bezier(0.25,0.46,0.45,0.94)',
+        transition: `transform 0.5s ${EASE}`,
         pointerEvents: 'none',
       }} />
       {overlay && (
         <div style={{
           position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.52)',
-          display: 'flex', alignItems: 'center', justifyContent: 'center', pointerEvents: 'none',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          pointerEvents: 'none',
         }}>
-          <span style={{ fontFamily: FONT, fontSize: '15px', fontWeight: 600, color: '#fff', letterSpacing: '0.02em' }}>
+          <span style={{ fontFamily: FONT, fontSize: 15, fontWeight: 600, color: '#fff', letterSpacing: '0.02em' }}>
             {overlay}
           </span>
         </div>
@@ -217,12 +395,9 @@ function PreviewCell({ img, alt, rowSpan, onClick, overlay }: {
   );
 }
 
-/* ─────────────────────────────────────────────────────────────────
-   Export
-───────────────────────────────────────────────────────────────── */
-
+/* ─── Export ──────────────────────────────────────────────────── */
 export default function PropertyGallery({ images, title, stats: _stats }: PropertyGalleryProps) {
-  const [open, setOpen]       = useState(false);
+  const [open,    setOpen]    = useState(false);
   const [mounted, setMounted] = useState(false);
   useEffect(() => { setMounted(true); }, []);
 
@@ -235,7 +410,8 @@ export default function PropertyGallery({ images, title, stats: _stats }: Proper
         <PreviewCell img={images[0]} alt={title} rowSpan onClick={() => setOpen(true)} />
         <PreviewCell img={images[1] ?? images[0]} alt={`${title} 2`} onClick={() => setOpen(true)} />
         <PreviewCell
-          img={images[2] ?? images[0]} alt={`${title} 3`} onClick={() => setOpen(true)}
+          img={images[2] ?? images[0]} alt={`${title} 3`}
+          onClick={() => setOpen(true)}
           overlay={images.length > 3 ? `+${images.length - 3} fotos` : undefined}
         />
       </div>
