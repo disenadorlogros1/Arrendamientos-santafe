@@ -340,71 +340,60 @@ export default function PropiedadesPage({ initialFilter = 'Todos' }: { initialFi
         )}
 
         {/* Cross-linking CTAs */}
-        <div className="mt-16 grid md:grid-cols-2 gap-6">
-          <ScrollReveal y={20}>
-            <div
-              style={{
-                background: '#fff',
-                border: '1px solid #e8e8e8',
-                borderLeft: '4px solid #f32735',
-                borderRadius: '8px',
-                padding: '32px',
-              }}
-            >
-              <h3 style={{ fontFamily: FONT_HEADING, fontWeight: 700, fontSize: '20px', color: '#1a1a1a', marginBottom: '10px' }}>
-                ¿Tienes un inmueble para arrendar o vender?
-              </h3>
-              <p style={{ fontFamily: FONT_BODY, fontSize: '14px', color: '#666', marginBottom: '20px', lineHeight: 1.55 }}>
-                Consigna tu propiedad con nosotros y accede a nuestra red de clientes.
-              </p>
-              <button
-                type="button"
-                onClick={() => window.location.href = '/consignacion'}
-                style={{
-                  fontFamily: FONT_BODY, fontSize: '13px', fontWeight: 600,
-                  color: '#fff', background: RED, border: 'none',
-                  cursor: 'pointer', padding: '11px 24px', borderRadius: '2px',
-                  transition: 'background 0.2s ease',
-                }}
-                onMouseEnter={e => (e.currentTarget.style.background = '#aa182c')}
-                onMouseLeave={e => (e.currentTarget.style.background = RED)}
-              >
-                Consigna tu propiedad
-              </button>
-            </div>
-          </ScrollReveal>
+        <div className={`mt-16 grid gap-6 ${appliedFilters.tipo === 'Todos' ? 'md:grid-cols-2' : 'md:grid-cols-1 max-w-2xl mx-auto'}`}>
+          {(appliedFilters.tipo === 'Todos' || appliedFilters.tipo === 'Arrendar') && (
+            <ScrollReveal y={20}>
+              <div style={{ background: '#1a1a1a', borderRadius: 0, padding: '24px 28px' }}>
+                <h3 style={{ fontFamily: FONT_HEADING, fontWeight: 700, fontSize: '20px', color: '#fff', marginBottom: '6px', lineHeight: 1.2 }}>
+                  ¿Tienes un inmueble para arrendar o vender?
+                </h3>
+                <p style={{ fontFamily: FONT_BODY, fontSize: '14px', color: 'rgba(255,255,255,0.55)', marginBottom: '16px', lineHeight: 1.4 }}>
+                  Consigna tu propiedad con nosotros y accede a nuestra red de clientes.
+                </p>
+                <button
+                  type="button"
+                  onClick={() => window.location.href = '/consignacion'}
+                  style={{
+                    fontFamily: FONT_BODY, fontSize: '13px', fontWeight: 600,
+                    color: '#fff', background: RED, border: 'none',
+                    cursor: 'pointer', padding: '11px 28px', borderRadius: 0,
+                    transition: 'background 0.2s ease',
+                  }}
+                  onMouseEnter={e => (e.currentTarget.style.background = '#aa182c')}
+                  onMouseLeave={e => (e.currentTarget.style.background = RED)}
+                >
+                  Consigna tu propiedad
+                </button>
+              </div>
+            </ScrollReveal>
+          )}
 
-          <ScrollReveal y={20} delay={0.1}>
-            <div
-              style={{
-                background: '#1a1a1a',
-                border: '1px solid #2a2a2a',
-                borderRadius: '8px',
-                padding: '32px',
-              }}
-            >
-              <h3 style={{ fontFamily: FONT_HEADING, fontWeight: 700, fontSize: '20px', color: '#fff', marginBottom: '10px' }}>
-                ¿Buscas oportunidades de inversión?
-              </h3>
-              <p style={{ fontFamily: FONT_BODY, fontSize: '14px', color: 'rgba(255,255,255,0.55)', marginBottom: '20px', lineHeight: 1.55 }}>
-                Descubre nuestras propiedades con mayor potencial de retorno en Antioquia.
-              </p>
-              <button
-                type="button"
-                onClick={() => window.location.href = '/inversionistas'}
-                style={{
-                  fontFamily: FONT_BODY, fontSize: '13px', fontWeight: 600,
-                  color: '#fff', background: RED, border: 'none',
-                  cursor: 'pointer', padding: '11px 24px', borderRadius: '2px',
-                  transition: 'background 0.2s ease',
-                }}
-                onMouseEnter={e => (e.currentTarget.style.background = '#aa182c')}
-                onMouseLeave={e => (e.currentTarget.style.background = RED)}
-              >
-                Ver oportunidades de inversión
-              </button>
-            </div>
-          </ScrollReveal>
+          {(appliedFilters.tipo === 'Todos' || appliedFilters.tipo === 'Comprar') && (
+            <ScrollReveal y={20} delay={appliedFilters.tipo === 'Todos' ? 0.1 : 0}>
+              <div style={{ background: '#1a1a1a', borderRadius: 0, padding: '24px 28px' }}>
+                <h3 style={{ fontFamily: FONT_HEADING, fontWeight: 700, fontSize: '20px', color: '#fff', marginBottom: '6px', lineHeight: 1.2 }}>
+                  ¿Buscas oportunidades de inversión?
+                </h3>
+                <p style={{ fontFamily: FONT_BODY, fontSize: '14px', color: 'rgba(255,255,255,0.55)', marginBottom: '16px', lineHeight: 1.4 }}>
+                  Descubre nuestras propiedades con mayor potencial de retorno en Antioquia.
+                </p>
+                <button
+                  type="button"
+                  onClick={() => window.location.href = '/inversionistas'}
+                  style={{
+                    fontFamily: FONT_BODY, fontSize: '13px', fontWeight: 600,
+                    color: '#fff', background: RED, border: 'none',
+                    cursor: 'pointer', padding: '11px 28px', borderRadius: 0,
+                    transition: 'background 0.2s ease',
+                  }}
+                  onMouseEnter={e => (e.currentTarget.style.background = '#aa182c')}
+                  onMouseLeave={e => (e.currentTarget.style.background = RED)}
+                >
+                  Ver oportunidades de inversión
+                </button>
+              </div>
+            </ScrollReveal>
+          )}
         </div>
       </div>
     </div>
