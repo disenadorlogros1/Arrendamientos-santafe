@@ -28,13 +28,29 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
   const COLS = n <= 4 ? n : n <= 12 ? Math.ceil(n / 2) : 6;
   const ROWS = Math.ceil(n / COLS);
 
+  // Hover state: hovered cell dominates, others compress
   const COL_BIG   = 3.8;
   const COL_SMALL = 0.48;
   const ROW_BIG   = 1.5;
   const ROW_SMALL = 0.65;
 
+  // Default bento: first column and first row are slightly larger (editorial feel)
+  function colDefault(): string {
+    return Array.from({ length: COLS }, (_, i) => {
+      if (i === 0) return '1.7fr';
+      if (i === Math.floor(COLS / 2)) return '1.3fr';
+      return '1fr';
+    }).join(' ');
+  }
+
+  function rowDefault(): string {
+    return Array.from({ length: ROWS }, (_, i) =>
+      i === 0 ? '1.4fr' : '1fr',
+    ).join(' ');
+  }
+
   function colTemplate(): string {
-    if (hoveredIdx === null) return `repeat(${COLS}, 1fr)`;
+    if (hoveredIdx === null) return colDefault();
     const hc = hoveredIdx % COLS;
     return Array.from({ length: COLS }, (_, i) =>
       i === hc ? `${COL_BIG}fr` : `${COL_SMALL}fr`,
@@ -42,7 +58,7 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
   }
 
   function rowTemplate(): string {
-    if (hoveredIdx === null) return `repeat(${ROWS}, 1fr)`;
+    if (hoveredIdx === null) return rowDefault();
     const hr = Math.floor(hoveredIdx / COLS);
     return Array.from({ length: ROWS }, (_, i) =>
       i === hr ? `${ROW_BIG}fr` : `${ROW_SMALL}fr`,
@@ -121,12 +137,6 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
       }}>
         {images.map((img, idx) => {
           const isHov = hoveredIdx === idx;
-          const hc    = hoveredIdx !== null ? hoveredIdx % COLS : -1;
-          const sameCol = idx % COLS === hc;
-          const isActive = hoveredIdx !== null && !isHov;
-
-          // Same column → medium dim; other columns → heavy dim
-          const dimOpacity = isActive ? (sameCol ? 0.45 : 0.72) : 0;
 
           return (
             <div
@@ -151,28 +161,6 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
                   userSelect: 'none',
                 }}
               />
-
-              {/* Darkening for non-hovered cells */}
-              <div style={{
-                position: 'absolute', inset: 0,
-                background: '#000',
-                opacity: dimOpacity,
-                transition: 'opacity 0.3s ease',
-                pointerEvents: 'none',
-              }} />
-
-              {/* Number label on strongly-dimmed cells */}
-              {isActive && !sameCol && (
-                <div style={{
-                  position: 'absolute', top: '50%', left: '50%',
-                  transform: 'translate(-50%,-50%)',
-                  fontFamily: FONT, fontSize: '11px', letterSpacing: '0.1em',
-                  color: 'rgba(255,255,255,0.4)',
-                  pointerEvents: 'none', userSelect: 'none',
-                }}>
-                  {idx + 1}
-                </div>
-              )}
 
               {/* Counter on hovered cell */}
               {isHov && (
