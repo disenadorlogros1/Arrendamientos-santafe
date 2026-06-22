@@ -25,7 +25,7 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
   const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
 
   const n    = images.length;
-  const COLS = n <= 4 ? n : n <= 9 ? Math.ceil(n / 2) : 5;
+  const COLS = n <= 4 ? n : n <= 12 ? Math.ceil(n / 2) : 6;
   const ROWS = Math.ceil(n / COLS);
 
   const COL_BIG   = 3.8;
