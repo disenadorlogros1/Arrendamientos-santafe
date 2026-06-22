@@ -101,7 +101,7 @@ export default function QuickAccessGrid({ onNavigate }: QuickAccessGridProps) {
             className="text-3xl sm:text-4xl text-brand-dark"
             style={{
               fontFamily:
-                "'Avenir LT Pro 65 Medium', 'Avenir', 'Outfit', system-ui, sans-serif",
+                "'Avenir LT Std', 'Outfit', system-ui, sans-serif",
               fontWeight: 300,
             }}
           >
@@ -111,7 +111,7 @@ export default function QuickAccessGrid({ onNavigate }: QuickAccessGridProps) {
             className="mt-3 text-base text-gray-500 max-w-2xl mx-auto"
             style={{
               fontFamily:
-                "'Avenir LT Pro 65 Medium', 'Avenir', 'Outfit', system-ui, sans-serif",
+                "'Avenir LT Std', 'Outfit', system-ui, sans-serif",
               fontWeight: 300,
             }}
           >
