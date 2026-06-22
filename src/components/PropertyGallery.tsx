@@ -152,7 +152,7 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
               }} />
 
               {/* Number label on strongly-dimmed cells */}
-              {isActive && !sameCol && !sameRow && (
+              {isActive && !sameCol && (
                 <div style={{
                   position: 'absolute', top: '50%', left: '50%',
                   transform: 'translate(-50%,-50%)',
