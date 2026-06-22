@@ -5,91 +5,96 @@ import { createPortal } from 'react-dom';
 import gsap from 'gsap';
 import { X } from 'lucide-react';
 
-const FONT     = "'Avenir LT Pro 65 Medium', 'Avenir LT Pro', 'Avenir', system-ui, sans-serif";
-const ELASTIC  = 'cubic-bezier(0.34, 1.56, 0.64, 1)';
-const EASE_OUT = 'cubic-bezier(0.22, 1.0, 0.36, 1.0)';
+const FONT    = "'Avenir LT Pro 65 Medium','Avenir LT Pro','Avenir',system-ui,sans-serif";
+const SPRING  = 'cubic-bezier(0.34,1.56,0.64,1)';
+const EASE    = 'cubic-bezier(0.22,1.0,0.36,1.0)';
 
 export interface PropertyStats {
   bedrooms?: number; bathrooms?: number;
   area?: string; price?: string; parking?: number;
 }
-
-interface PropertyGalleryProps {
-  images: string[]; title: string; stats?: PropertyStats;
-}
+interface PropertyGalleryProps { images: string[]; title: string; stats?: PropertyStats; }
 
 /* ─────────────────────────────────────────────────────────────────
-   Natural-ratio floating card — portal, position fixed
-   Portrait (9:16) → tall card
-   Landscape (16:9) → wide card
-   No effect on grid layout — siblings compress via elastic flex.
+   Floating card — shows image at its exact natural aspect ratio
+   (portrait 9:16 → tall card, landscape 16:9 → wide card)
 ───────────────────────────────────────────────────────────────── */
-
 interface FloatRect { left: number; top: number; width: number; height: number }
 
-function computeFloatRect(anchor: DOMRect, nw: number, nh: number): FloatRect {
-  const PAD  = 12;
+function calcFloatRect(anchor: DOMRect, nw: number, nh: number): FloatRect {
+  const PAD  = 16;
   const maxW = window.innerWidth  - PAD * 2;
   const maxH = window.innerHeight - PAD * 2;
   const r    = nw / nh;
   let w = Math.min(nw, maxW);
   let h = w / r;
   if (h > maxH) { h = maxH; w = h * r; }
-  const cx   = anchor.left + anchor.width  / 2;
-  const cy   = anchor.top  + anchor.height / 2;
-  let left   = cx - w / 2;
-  let top    = cy - h / 2;
+  let left = anchor.left + anchor.width  / 2 - w / 2;
+  let top  = anchor.top  + anchor.height / 2 - h / 2;
   left = Math.max(PAD, Math.min(left, window.innerWidth  - w - PAD));
   top  = Math.max(PAD, Math.min(top,  window.innerHeight - h - PAD));
   return { left, top, width: w, height: h };
 }
 
 /* ─────────────────────────────────────────────────────────────────
-   ElasticCard
+   BentoGallery
+   ─ CSS Grid animates grid-template-columns + grid-template-rows
+     simultaneously → bento reflow where hovered cell expands in
+     BOTH axes while neighbors compress based on proximity.
+   ─ Floating card appears at natural image dimensions on top.
 ───────────────────────────────────────────────────────────────── */
 
-function ElasticCard({
-  img, total, globalIndex,
-  isHovered, anyHovered,
-  onEnter, onLeave,
-}: {
-  img: string; total: number; globalIndex: number;
-  isHovered: boolean; anyHovered: boolean;
-  onEnter: () => void; onLeave: () => void;
-}) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const floatRef     = useRef<HTMLDivElement | null>(null);
-  const imgRef       = useRef<HTMLImageElement>(null);
-  const dims         = useRef({ w: 0, h: 0 });
+function BentoGallery({ images, onClose }: { images: string[]; onClose: () => void }) {
+  const [entered,    setEntered]    = useState(false);
+  const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
+  const floatRef    = useRef<HTMLDivElement | null>(null);
+  const cellRefs    = useRef<(HTMLDivElement | null)[]>([]);
+  const naturalDims = useRef<Record<number, { w: number; h: number }>>({});
   const [floatRect, setFloatRect] = useState<FloatRect | null>(null);
   const [showFloat, setShowFloat] = useState(false);
 
-  const syncDims = () => {
-    const el = imgRef.current;
-    if (el?.naturalWidth) dims.current = { w: el.naturalWidth, h: el.naturalHeight };
-  };
+  const n    = images.length;
+  const COLS = n <= 4 ? n : n <= 9 ? Math.ceil(n / 2) : 5;
+  const ROWS = Math.ceil(n / COLS);
 
-  useEffect(() => { if (imgRef.current?.complete) syncDims(); }, []);
+  /* ── Bento track templates ──────────────────────────────────────
+     Hovered cell dominates in BOTH col and row.
+     Cells sharing the row get taller (but narrower if not the col).
+     Cells sharing the col get wider (but shorter if not the row).
+     Cells in neither compress in both dimensions.
+  ─────────────────────────────────────────────────────────────── */
+  const COL_BIG  = 4.5;
+  const COL_SMALL = 0.38;
+  const ROW_BIG  = 3.8;
+  const ROW_SMALL = 0.42;
 
-  const ratio = dims.current.w / (dims.current.h || 1);
-  const expandedFlex = ratio >= 1
-    ? Math.max(2.5, Math.min(9, ratio * 3.5))
-    : 1.2;
+  function colTemplate(): string {
+    if (hoveredIdx === null) return `repeat(${COLS}, 1fr)`;
+    const hc = hoveredIdx % COLS;
+    return Array.from({ length: COLS }, (_, i) =>
+      i === hc ? `${COL_BIG}fr` : `${COL_SMALL}fr`,
+    ).join(' ');
+  }
 
-  const handleEnter = () => {
-    onEnter();
-    if (!containerRef.current || !dims.current.w) return;
-    const rect = computeFloatRect(
-      containerRef.current.getBoundingClientRect(),
-      dims.current.w,
-      dims.current.h,
-    );
+  function rowTemplate(): string {
+    if (hoveredIdx === null) return `repeat(${ROWS}, 1fr)`;
+    const hr = Math.floor(hoveredIdx / COLS);
+    return Array.from({ length: ROWS }, (_, i) =>
+      i === hr ? `${ROW_BIG}fr` : `${ROW_SMALL}fr`,
+    ).join(' ');
+  }
+
+  /* ── Floating card management ──────────────────────────────── */
+  const openFloat = (idx: number) => {
+    const cell = cellRefs.current[idx];
+    const d    = naturalDims.current[idx];
+    if (!cell || !d?.w) return;
+    const rect = calcFloatRect(cell.getBoundingClientRect(), d.w, d.h);
     setFloatRect(rect);
     setShowFloat(true);
   };
 
-  const handleLeave = () => {
-    onLeave();
+  const closeFloat = () => {
     if (!floatRef.current) { setShowFloat(false); setFloatRect(null); return; }
     gsap.to(floatRef.current, {
       opacity: 0, scale: 0.94, duration: 0.15, ease: 'power2.in',
@@ -100,113 +105,12 @@ function ElasticCard({
   useEffect(() => {
     if (!showFloat || !floatRef.current) return;
     gsap.fromTo(floatRef.current,
-      { opacity: 0, scale: 0.88 },
-      { opacity: 1, scale: 1, duration: 0.24, ease: 'power2.out' },
+      { opacity: 0, scale: 0.86 },
+      { opacity: 1, scale: 1, duration: 0.26, ease: 'power2.out' },
     );
   }, [showFloat]);
 
-  const currentFlex = isHovered ? expandedFlex : anyHovered ? 0.35 : 1;
-
-  return (
-    <>
-      <div
-        ref={containerRef}
-        onMouseEnter={handleEnter}
-        onMouseLeave={handleLeave}
-        style={{
-          flex: currentFlex,
-          transition: `flex 0.48s ${isHovered ? ELASTIC : EASE_OUT}`,
-          position: 'relative', overflow: 'hidden',
-          cursor: 'zoom-in', borderRadius: '6px',
-          background: '#111', minWidth: 0,
-        }}
-      >
-        <img
-          ref={imgRef}
-          src={img}
-          alt={`Foto ${globalIndex + 1}`}
-          draggable={false}
-          onLoad={syncDims}
-          style={{
-            width: '100%', height: '100%',
-            objectFit: 'cover', objectPosition: 'center',
-            display: 'block',
-            transform: isHovered ? 'scale(1.02)' : 'scale(1)',
-            transition: `transform 0.55s ${EASE_OUT}`,
-            userSelect: 'none',
-          }}
-        />
-
-        <div style={{
-          position: 'absolute', inset: 0,
-          background: 'rgba(0,0,0,0.55)',
-          opacity: anyHovered && !isHovered ? 1 : 0,
-          transition: 'opacity 0.28s ease',
-          pointerEvents: 'none',
-        }} />
-
-        <div style={{
-          position: 'absolute', top: '50%', left: '50%',
-          transform: 'translate(-50%,-50%)',
-          writingMode: 'vertical-rl',
-          fontFamily: FONT, fontSize: '11px', letterSpacing: '0.12em',
-          color: 'rgba(255,255,255,0.6)',
-          opacity: anyHovered && !isHovered ? 1 : 0,
-          transition: `opacity 0.2s ease ${anyHovered && !isHovered ? '0.15s' : '0s'}`,
-          pointerEvents: 'none', userSelect: 'none',
-        }}>
-          {globalIndex + 1}
-        </div>
-
-        {isHovered && (
-          <div style={{
-            position: 'absolute', bottom: 0, left: 0, right: 0,
-            padding: '20px 18px', pointerEvents: 'none',
-          }}>
-            <span style={{ fontFamily: FONT, fontSize: '12px', color: 'rgba(255,255,255,0.45)', letterSpacing: '0.06em' }}>
-              <span style={{ color: '#fff', fontWeight: 600 }}>{globalIndex + 1}</span>{' / '}{total}
-            </span>
-          </div>
-        )}
-      </div>
-
-      {showFloat && floatRect && createPortal(
-        <div
-          ref={el => { floatRef.current = el; }}
-          style={{
-            position: 'fixed',
-            left: floatRect.left, top: floatRect.top,
-            width: floatRect.width, height: floatRect.height,
-            zIndex: 1100, borderRadius: '8px', overflow: 'hidden',
-            background: '#0c0c0c',
-            boxShadow: '0 28px 72px rgba(0,0,0,0.82), 0 4px 16px rgba(0,0,0,0.5)',
-            pointerEvents: 'none', willChange: 'transform,opacity',
-          }}
-        >
-          <img src={img} alt="" draggable={false}
-            style={{ width: '100%', height: '100%', objectFit: 'contain', display: 'block' }}
-          />
-        </div>,
-        document.body,
-      )}
-    </>
-  );
-}
-
-/* ─────────────────────────────────────────────────────────────────
-   ElasticGallery
-───────────────────────────────────────────────────────────────── */
-
-function ElasticGallery({ images, onClose }: { images: string[]; onClose: () => void }) {
-  const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
-  const [entered,    setEntered]    = useState(false);
-
-  const n        = images.length;
-  const rowCount = n <= 5 ? 1 : n <= 14 ? 2 : 3;
-  const perRow   = Math.ceil(n / rowCount);
-  const rows: string[][] = [];
-  for (let i = 0; i < n; i += perRow) rows.push(images.slice(i, i + perRow));
-
+  /* ── Lifecycle ─────────────────────────────────────────────── */
   useEffect(() => {
     const id = requestAnimationFrame(() => requestAnimationFrame(() => setEntered(true)));
     document.body.style.overflow = 'hidden';
@@ -219,6 +123,8 @@ function ElasticGallery({ images, onClose }: { images: string[]; onClose: () => 
     return () => window.removeEventListener('keydown', h);
   }, [onClose]);
 
+  const currentImg = hoveredIdx !== null ? images[hoveredIdx] : null;
+
   return createPortal(
     <div style={{
       position: 'fixed', inset: 0, zIndex: 1000,
@@ -227,6 +133,7 @@ function ElasticGallery({ images, onClose }: { images: string[]; onClose: () => 
       opacity: entered ? 1 : 0,
       transition: 'opacity 0.28s ease',
     }}>
+      {/* Header */}
       <div style={{
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         padding: '14px 20px', flexShrink: 0,
@@ -248,6 +155,7 @@ function ElasticGallery({ images, onClose }: { images: string[]; onClose: () => 
         ><X size={16} /></button>
       </div>
 
+      {/* Hint */}
       {hoveredIdx === null && (
         <div style={{
           position: 'absolute', bottom: 24, left: '50%', transform: 'translateX(-50%)',
@@ -264,42 +172,125 @@ function ElasticGallery({ images, onClose }: { images: string[]; onClose: () => 
         </div>
       )}
 
+      {/* ── Bento grid ─────────────────────────────────────────── */}
       <div style={{
         flex: 1, minHeight: 0,
-        display: 'flex', flexDirection: 'column',
-        gap: 4, padding: '0 16px 16px',
+        display: 'grid',
+        gridTemplateColumns: colTemplate(),
+        gridTemplateRows:    rowTemplate(),
+        transition: [
+          `grid-template-columns 0.52s ${SPRING}`,
+          `grid-template-rows    0.52s ${SPRING}`,
+        ].join(', '),
+        gap: 4,
+        padding: '0 16px 16px',
       }}>
-        {rows.map((rowImages, rowIdx) => {
-          const rowStart        = rowIdx * perRow;
-          const anyHoveredInRow = hoveredIdx !== null
-            && Math.floor(hoveredIdx / perRow) === rowIdx;
+        {images.map((img, idx) => {
+          const isHov = hoveredIdx === idx;
+          const hc    = hoveredIdx !== null ? hoveredIdx % COLS : -1;
+          const hr    = hoveredIdx !== null ? Math.floor(hoveredIdx / COLS) : -1;
+          const sameCol = idx % COLS === hc;
+          const sameRow = Math.floor(idx / COLS) === hr;
+          const isActive = hoveredIdx !== null && !isHov;
+
+          // Cells sharing col/row with hovered get medium dim; others get heavy dim
+          const dimOpacity = isActive
+            ? (sameCol || sameRow ? 0.45 : 0.72)
+            : 0;
 
           return (
-            <div key={rowIdx} style={{ flex: 1, display: 'flex', gap: 4, minHeight: 0 }}>
-              {rowImages.map((img, colIdx) => {
-                const globalIdx = rowStart + colIdx;
-                return (
-                  <ElasticCard
-                    key={globalIdx}
-                    img={img} total={n} globalIndex={globalIdx}
-                    isHovered={hoveredIdx === globalIdx}
-                    anyHovered={anyHoveredInRow}
-                    onEnter={() => setHoveredIdx(globalIdx)}
-                    onLeave={() => setHoveredIdx(null)}
-                  />
-                );
-              })}
+            <div
+              key={idx}
+              ref={el => { cellRefs.current[idx] = el; }}
+              onMouseEnter={() => { setHoveredIdx(idx); openFloat(idx); }}
+              onMouseLeave={() => { setHoveredIdx(null); closeFloat(); }}
+              style={{
+                position: 'relative', overflow: 'hidden',
+                borderRadius: 6, background: '#111', cursor: 'zoom-in',
+              }}
+            >
+              <img
+                src={img}
+                alt={`Foto ${idx + 1}`}
+                draggable={false}
+                onLoad={e => {
+                  const el = e.currentTarget;
+                  if (el.naturalWidth) naturalDims.current[idx] = { w: el.naturalWidth, h: el.naturalHeight };
+                }}
+                style={{
+                  width: '100%', height: '100%', display: 'block',
+                  objectFit: 'cover', objectPosition: 'center',
+                  transform: isHov ? 'scale(1.03)' : 'scale(1)',
+                  transition: `transform 0.55s ${EASE}`,
+                  userSelect: 'none',
+                }}
+              />
+
+              {/* Darkening for non-hovered cells */}
+              <div style={{
+                position: 'absolute', inset: 0,
+                background: '#000',
+                opacity: dimOpacity,
+                transition: 'opacity 0.3s ease',
+                pointerEvents: 'none',
+              }} />
+
+              {/* Number label on strongly-dimmed cells */}
+              {isActive && !sameCol && !sameRow && (
+                <div style={{
+                  position: 'absolute', top: '50%', left: '50%',
+                  transform: 'translate(-50%,-50%)',
+                  fontFamily: FONT, fontSize: '11px', letterSpacing: '0.1em',
+                  color: 'rgba(255,255,255,0.4)',
+                  pointerEvents: 'none', userSelect: 'none',
+                }}>
+                  {idx + 1}
+                </div>
+              )}
+
+              {/* Counter on hovered cell */}
+              {isHov && (
+                <div style={{
+                  position: 'absolute', bottom: 0, left: 0, right: 0,
+                  padding: '16px', pointerEvents: 'none',
+                }}>
+                  <span style={{ fontFamily: FONT, fontSize: '12px', color: 'rgba(255,255,255,0.5)', letterSpacing: '0.06em' }}>
+                    <span style={{ color: '#fff', fontWeight: 600 }}>{idx + 1}</span>{' / '}{n}
+                  </span>
+                </div>
+              )}
             </div>
           );
         })}
       </div>
+
+      {/* Floating natural-ratio card */}
+      {showFloat && floatRect && currentImg && createPortal(
+        <div
+          ref={el => { floatRef.current = el; }}
+          style={{
+            position: 'fixed',
+            left: floatRect.left, top: floatRect.top,
+            width: floatRect.width, height: floatRect.height,
+            zIndex: 1200, borderRadius: 8, overflow: 'hidden',
+            background: '#0c0c0c',
+            boxShadow: '0 32px 80px rgba(0,0,0,0.85), 0 4px 20px rgba(0,0,0,0.6)',
+            pointerEvents: 'none', willChange: 'transform,opacity',
+          }}
+        >
+          <img src={currentImg} alt="" draggable={false}
+            style={{ width: '100%', height: '100%', objectFit: 'contain', display: 'block' }}
+          />
+        </div>,
+        document.body,
+      )}
     </div>,
     document.body,
   );
 }
 
 /* ─────────────────────────────────────────────────────────────────
-   Preview grid
+   Preview grid — property page entry point
 ───────────────────────────────────────────────────────────────── */
 
 function PreviewCell({ img, alt, rowSpan, onClick, overlay }: {
@@ -354,7 +345,7 @@ export default function PropertyGallery({ images, title, stats: _stats }: Proper
           overlay={images.length > 3 ? `+${images.length - 3} fotos` : undefined}
         />
       </div>
-      {mounted && open && <ElasticGallery images={images} onClose={() => setOpen(false)} />}
+      {mounted && open && <BentoGallery images={images} onClose={() => setOpen(false)} />}
     </>
   );
 }
