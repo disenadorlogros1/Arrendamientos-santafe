@@ -26,7 +26,7 @@ Fallback stack: 'Avenir LT Std', 'Outfit', system-ui, sans-serif
 HEADER
 ──────
 
-Avenir LT Std   Peso 500 (Medium)   15px
+Avenir LT Std   Peso 300 (Light)    15px
   "Inicio"  /  "Propiedades"  /  "Servicios"  /  "Nosotros"
   (nav inactivo)
 
