@@ -199,53 +199,72 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
         <div
           style={{
             display: 'grid',
-            height: '100%',          /* alto explícito → 1fr tiene referencia definitiva */
+            height: '100%',
             gridTemplateColumns: gridCols,
             gridTemplateRows:    gridRows,
             transition: GRID_TRANSITION,
             gap: 4,
           }}
         >
-          {images.map((img, idx) => {
-            const isHovered  = hoveredIdx === idx;
-            const anyHovered = hoveredIdx !== null;
-            const isSelected = selectedIdx === idx;
+          {(() => {
+            const remainder    = images.length % cols;
+            const completeCount = remainder === 0 ? images.length : images.length - remainder;
+            const anyHovered   = hoveredIdx !== null;
+
+            const renderCell = (img: string, idx: number, flexChild = false) => {
+              const isHovered  = hoveredIdx === idx;
+              const isSelected = selectedIdx === idx;
+              return (
+                <div
+                  key={idx}
+                  onMouseEnter={() => setHoveredIdx(idx)}
+                  onMouseLeave={() => setHoveredIdx(null)}
+                  onClick={() => handleCellClick(idx)}
+                  style={{
+                    ...(flexChild ? { flex: 1 } : {}),
+                    position: 'relative',
+                    overflow: 'hidden',
+                    borderRadius: 8,
+                    cursor: 'pointer',
+                    background: '#111',
+                    outline: isSelected ? '2px solid rgba(255,255,255,0.65)' : '2px solid transparent',
+                    outlineOffset: -2,
+                    opacity: anyHovered && !isHovered ? 0.22 : 1,
+                    transition: `opacity 0.4s ${EASE}, outline-color 0.2s ${EASE}`,
+                  }}
+                >
+                  <img
+                    src={img}
+                    alt={`Foto ${idx + 1}`}
+                    draggable={false}
+                    style={{
+                      width: '100%', height: '100%', display: 'block',
+                      objectFit: 'cover', objectPosition: 'center',
+                      userSelect: 'none', pointerEvents: 'none',
+                    }}
+                  />
+                </div>
+              );
+            };
 
             return (
-              <div
-                key={idx}
-                onMouseEnter={() => setHoveredIdx(idx)}
-                onMouseLeave={() => setHoveredIdx(null)}
-                onClick={() => handleCellClick(idx)}
-                style={{
-                  position: 'relative',
-                  overflow: 'hidden',
-                  borderRadius: 8,
-                  cursor: 'pointer',
-                  background: '#111',
-                  outline: isSelected ? '2px solid rgba(255,255,255,0.65)' : '2px solid transparent',
-                  outlineOffset: -2,
-                  /* Celdas no activas: se apagan para dar foco a la activa */
-                  opacity: anyHovered && !isHovered ? 0.22 : 1,
-                  transition: `opacity 0.4s ${EASE}, outline-color 0.2s ${EASE}`,
-                }}
-              >
-                <img
-                  src={img}
-                  alt={`Foto ${idx + 1}`}
-                  draggable={false}
-                  style={{
-                    width: '100%', height: '100%', display: 'block',
-                    /* cover siempre: la celda ya tiene la orientación correcta,
-                     * la imagen la rellena sin barras negras. */
-                    objectFit: 'cover',
-                    objectPosition: 'center',
-                    userSelect: 'none', pointerEvents: 'none',
-                  }}
-                />
-              </div>
+              <>
+                {/* Filas completas: accordion portrait/landscape funciona perfectamente */}
+                {images.slice(0, completeCount).map((img, idx) => renderCell(img, idx))}
+
+                {/* Última fila incompleta: flex de ancho completo, sin celdas vacías.
+                 *  El accordion de fila (row) sigue funcionando; el de columna
+                 *  no aplica a los hijos flex (trade-off aceptable). */}
+                {remainder > 0 && (
+                  <div style={{ gridColumn: `1 / ${cols + 1}`, display: 'flex', gap: 4 }}>
+                    {images.slice(completeCount).map((img, i) =>
+                      renderCell(img, completeCount + i, true)
+                    )}
+                  </div>
+                )}
+              </>
             );
-          })}
+          })()}
         </div>
         </div>{/* end wrapper */}
 

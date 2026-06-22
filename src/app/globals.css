@@ -320,6 +320,7 @@ html.lenis, html.lenis body { height: auto; }
 
 .nav-ink-btn:hover > span {
   color: #ffffff !important;
+  font-weight: 700;
 }
 
 /* Card arrow button: 45° sliding arrow animation */
