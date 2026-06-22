@@ -10,11 +10,17 @@ export default function PropiedadesShell() {
   const [initialFilter, setInitialFilter] = useState<'Todos' | 'Arrendar' | 'Comprar'>('Todos');
 
   useEffect(() => {
-    const hash = window.location.hash.toLowerCase();
-    if (hash === '#arrendar') setInitialFilter('Arrendar');
-    else if (hash === '#comprar') setInitialFilter('Comprar');
-    else setInitialFilter('Todos');
+    const readHash = () => {
+      const hash = window.location.hash.toLowerCase();
+      if (hash === '#arrendar') setInitialFilter('Arrendar');
+      else if (hash === '#comprar') setInitialFilter('Comprar');
+      else setInitialFilter('Todos');
+    };
+
+    readHash();
     window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.addEventListener('hashchange', readHash);
+    return () => window.removeEventListener('hashchange', readHash);
   }, []);
 
   return (
