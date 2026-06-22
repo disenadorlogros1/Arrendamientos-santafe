@@ -91,7 +91,7 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
     Promise.all(
       pageImages.map(src => new Promise<boolean>(resolve => {
         const img = new window.Image();
-        img.onload  = () => resolve(img.naturalWidth > img.naturalHeight);
+        img.onload  = () => resolve(img.naturalWidth >= img.naturalHeight); // landscape OR square → wide
         img.onerror = () => resolve(false);
         img.src = src;
       }))
@@ -130,14 +130,17 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
   /* Selected image in original order (for carousel highlight) */
   const selectedOrigIdx = selectedIdx !== null ? (displayOrder[selectedIdx] ?? selectedIdx) : null;
 
-  /* Active index: hover overrides selection */
-  const activeIdx = hoveredIdx ?? selectedIdx;
-  const activeCol = activeIdx !== null ? activeIdx % COLS : null;
-  const activeRow = activeIdx !== null ? Math.floor(activeIdx / COLS) : null;
-
-  const gridCols = activeCol !== null ? colActive(activeCol, COLS) : colDefault(COLS);
-  // Rows stay uniform — column-only animation avoids adjacent cells expanding
+  /* Grid always static — cells animate independently via transform */
+  const gridCols = colDefault(COLS);
   const gridRows = rowDefault(ROWS);
+
+  /* Per-cell transform: landscape expands wide, portrait expands tall */
+  const getCellTransform = (dispIdx: number, isActive: boolean): string => {
+    if (!isActive) return 'scale(1)';
+    const origIdx     = displayOrder[dispIdx] ?? dispIdx;
+    const isLandscape = orientations.length > origIdx ? orientations[origIdx] : false;
+    return isLandscape ? 'scaleX(1.18) scaleY(1.06)' : 'scaleX(1.06) scaleY(1.18)';
+  };
 
   /* ── Responsive ─────────────────────────────────────────────── */
   useEffect(() => {
@@ -312,7 +315,6 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
           display: 'grid',
           gridTemplateColumns: gridCols,
           gridTemplateRows:    gridRows,
-          transition: `grid-template-columns 0.50s ${SPRING}`,
           gap: 4,
           padding: '0 16px 8px',
         }}>
@@ -322,8 +324,6 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
             const isHov      = hoveredIdx === dispIdx;
             const isSelected = selectedIdx === dispIdx;
             const isActive   = isHov || isSelected;
-
-            const sameColNotHov = activeCol !== null && dispIdx % COLS === activeCol && !isActive;
 
             const remainder  = n % COLS;
             const isLastCell = dispIdx === n - 1 && remainder !== 0;
@@ -343,9 +343,9 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
                   gridColumn: spanCols > 1 ? `span ${spanCols}` : undefined,
                   outline: isSelected ? '2px solid rgba(255,255,255,0.65)' : '2px solid transparent',
                   outlineOffset: -2,
-                  transform: isActive ? 'scale(1.0)' : sameColNotHov ? 'scale(0.93)' : 'scale(1.0)',
-                  transition: `transform 0.45s ${SPRING}, outline-color 0.2s ${EASE}`,
-                  zIndex: isActive ? 2 : 1,
+                  transform: getCellTransform(dispIdx, isActive),
+                  transition: `transform 0.42s ${SPRING}, outline-color 0.2s ${EASE}`,
+                  zIndex: isActive ? 4 : 1,
                 }}
               >
                 <img
@@ -355,8 +355,7 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
                   style={{
                     width: '100%', height: '100%', display: 'block',
                     objectFit: 'cover', objectPosition: 'center',
-                    transform: isActive ? 'scale(1.05)' : 'scale(1)',
-                    transition: `transform 0.55s ${EASE}`,
+                    transform: 'scale(1)',
                     userSelect: 'none', pointerEvents: 'none',
                   }}
                 />
