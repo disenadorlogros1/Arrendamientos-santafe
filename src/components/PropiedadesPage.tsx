@@ -188,7 +188,7 @@ export default function PropiedadesPage({ initialFilter = 'Todos' }: { initialFi
       </div>
 
       {/* Search Bar */}
-      <div style={{ position: 'sticky', top: '86px', zIndex: 40, background: 'rgba(247,246,244,0.92)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)' }}>
+      <div style={{ position: 'sticky', top: '86px', zIndex: 40 }}>
         <PropiedadesSearchBar
           initialTipo={initialFilter || 'Todos'}
           onApply={setAppliedFilters}
