@@ -576,11 +576,9 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', onApply }:
                   flex: 1,
                   height: '100%',
                   backgroundColor: active
-                    ? (t === 'Todos' ? '#f0f0f0' : '#f32735')
+                    ? '#f0f0f0'
                     : hoveredTab === t ? 'rgba(0,0,0,0.03)' : 'transparent',
-                  color: active
-                    ? (t === 'Todos' ? '#444' : '#ffffff')
-                    : '#666',
+                  color: active ? '#1a1a1a' : '#666',
                   fontFamily: FONT,
                   fontSize: '14px',
                   fontWeight: active ? 600 : 400,
