@@ -30,12 +30,22 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
 
   const COL_BIG   = 3.8;
   const COL_SMALL = 0.48;
+  const ROW_BIG   = 1.5;
+  const ROW_SMALL = 0.65;
 
   function colTemplate(): string {
     if (hoveredIdx === null) return `repeat(${COLS}, 1fr)`;
     const hc = hoveredIdx % COLS;
     return Array.from({ length: COLS }, (_, i) =>
       i === hc ? `${COL_BIG}fr` : `${COL_SMALL}fr`,
+    ).join(' ');
+  }
+
+  function rowTemplate(): string {
+    if (hoveredIdx === null) return `repeat(${ROWS}, 1fr)`;
+    const hr = Math.floor(hoveredIdx / COLS);
+    return Array.from({ length: ROWS }, (_, i) =>
+      i === hr ? `${ROW_BIG}fr` : `${ROW_SMALL}fr`,
     ).join(' ');
   }
 
@@ -104,8 +114,8 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
         flex: 1, minHeight: 0,
         display: 'grid',
         gridTemplateColumns: colTemplate(),
-        gridTemplateRows: `repeat(${ROWS}, 1fr)`,
-        transition: `grid-template-columns 0.52s ${SPRING}`,
+        gridTemplateRows:    rowTemplate(),
+        transition: `grid-template-columns 0.52s ${SPRING}, grid-template-rows 0.52s ${SPRING}`,
         gap: 4,
         padding: '0 16px 16px',
       }}>
