@@ -41,10 +41,17 @@ function buildColsOriented(
   isLandscape: boolean,
   cols: number
 ): string {
-  if (hoveredCol === null || !isLandscape) return `repeat(${cols}, 1fr)`;
-  /* 3fr activo + 0.5fr resto → col toma ~67% del ancho */
+  if (hoveredCol === null) return `repeat(${cols}, 1fr)`;
+  if (isLandscape) {
+    /* Landscape: columna activa se ensancha (~67% del ancho) */
+    return Array.from({ length: cols }, (_, i) =>
+      i === hoveredCol ? '3fr' : '0.5fr'
+    ).join(' ');
+  }
+  /* Portrait: columna activa se estrecha (0.6fr), las demás se ensanchan (1fr).
+   * Esto garantiza proporciones verticales ~9:16 sin importar el ancho de pantalla. */
   return Array.from({ length: cols }, (_, i) =>
-    i === hoveredCol ? '3fr' : '0.5fr'
+    i === hoveredCol ? '0.6fr' : '1fr'
   ).join(' ');
 }
 
