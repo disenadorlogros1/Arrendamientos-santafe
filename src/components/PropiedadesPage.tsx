@@ -340,7 +340,7 @@ export default function PropiedadesPage({ initialFilter = 'Todos' }: { initialFi
         )}
 
         {/* Cross-linking CTAs */}
-        <div className={`mt-16 grid gap-6 ${appliedFilters.tipo === 'Todos' ? 'md:grid-cols-2' : 'md:grid-cols-1 max-w-2xl mx-auto'}`}>
+        <div className={`mt-16 grid gap-6 ${appliedFilters.tipo === 'Todos' ? 'md:grid-cols-2' : 'md:grid-cols-1'}`}>
           {(appliedFilters.tipo === 'Todos' || appliedFilters.tipo === 'Arrendar') && (
             <ScrollReveal y={20}>
               <div style={{ background: '#1a1a1a', borderRadius: 0, padding: '24px 28px' }}>
