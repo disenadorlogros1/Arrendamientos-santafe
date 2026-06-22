@@ -196,7 +196,7 @@ export default function PropiedadesPage({ initialFilter = 'Todos' }: { initialFi
       </div>
 
       {/* Content */}
-      <div style={{ maxWidth: showMap ? '100%' : '1400px', margin: '0 auto', padding: showMap ? '0' : '32px clamp(16px, 3vw, 48px)', transition: 'all 0.4s ease' }}>
+      <div style={{ maxWidth: showMap ? '100%' : '1400px', margin: '0 auto', padding: showMap ? '0' : '32px clamp(16px, 3vw, 52px)', transition: 'all 0.4s ease' }}>
 
         {/* Toolbar */}
         <div
