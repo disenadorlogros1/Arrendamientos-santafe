@@ -125,6 +125,7 @@ export default function Header({ currentPage, onNavigate, isHeroPage = true }: H
   const [mobileOpen, setMobileOpen] = useState(false);
   const [expandedMobile, setExpandedMobile] = useState<string | null>(null);
   const [scrolled, setScrolled] = useState(false);
+  const [hoveredNav, setHoveredNav] = useState<string | null>(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
@@ -173,12 +174,12 @@ export default function Header({ currentPage, onNavigate, isHeroPage = true }: H
               <div key={item.label} className="relative group flex-1">
                 <button
                   onClick={() => { if (item.page) handleNav(item.page); }}
-                  onMouseEnter={applyInkFill}
-                  onMouseLeave={applyInkFill}
+                  onMouseEnter={e => { setHoveredNav(item.label); applyInkFill(e); }}
+                  onMouseLeave={e => { setHoveredNav(null); applyInkFill(e); }}
                   className="nav-ink-btn w-full px-2 py-2 rounded-full"
-                  style={{ fontFamily: "'Avenir LT Std', 'Outfit', system-ui, sans-serif", fontWeight: currentPage === item.page ? 700 : 300, fontSize: '15px', color: headerTextColor, transition: 'font-weight 0.2s' }}
+                  style={{ fontFamily: "'Avenir LT Std', 'Outfit', system-ui, sans-serif", fontWeight: (currentPage === item.page || hoveredNav === item.label) ? 700 : 300, fontSize: '15px', color: headerTextColor }}
                 >
-                  <span>{item.label}</span>
+                  <span style={{ fontWeight: 'inherit' }}>{item.label}</span>
                 </button>
                 {/* Dropdown CSS — se muestra con group-hover */}
                 <div className="absolute top-full left-1/2 pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200"
@@ -221,12 +222,12 @@ export default function Header({ currentPage, onNavigate, isHeroPage = true }: H
               <button
                 key={item.label}
                 onClick={() => handleNav(item.page || 'home')}
-                onMouseEnter={applyInkFill}
-                onMouseLeave={applyInkFill}
+                onMouseEnter={e => { setHoveredNav(item.label); applyInkFill(e); }}
+                onMouseLeave={e => { setHoveredNav(null); applyInkFill(e); }}
                 className="nav-ink-btn flex-1 px-2 py-2 rounded-full"
-                style={{ fontFamily: "'Avenir LT Std', 'Outfit', system-ui, sans-serif", fontWeight: currentPage === item.page ? 700 : 300, fontSize: '15px', color: headerTextColor, transition: 'font-weight 0.2s' }}
+                style={{ fontFamily: "'Avenir LT Std', 'Outfit', system-ui, sans-serif", fontWeight: (currentPage === item.page || hoveredNav === item.label) ? 700 : 300, fontSize: '15px', color: headerTextColor }}
               >
-                <span>{item.label}</span>
+                <span style={{ fontWeight: 'inherit' }}>{item.label}</span>
               </button>
             )
           )}
