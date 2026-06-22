@@ -9,7 +9,6 @@ const FONT  = "'Avenir LT Pro 65 Medium','Avenir LT Pro','Avenir',system-ui,sans
 const EASE  = 'cubic-bezier(0.22,1.0,0.36,1.0)';
 const GRID_TRANSITION = 'grid-template-columns 0.55s cubic-bezier(0.25,0.46,0.45,0.94), grid-template-rows 0.55s cubic-bezier(0.25,0.46,0.45,0.94)';
 
-const COLS      = 3;
 const FR_ACTIVE = 3;
 const FR_REST   = 0.7;
 
@@ -19,6 +18,15 @@ export interface PropertyStats {
   area?: string; price?: string; parking?: number;
 }
 interface PropertyGalleryProps { images: string[]; title: string; stats?: PropertyStats; }
+
+/*
+ * Calcula columnas óptimas para que todas las imágenes quepan en pantalla.
+ * Para fotos portrait (9:16) en pantalla 16:9, la celda ideal está ~1.5:1.
+ * Fórmula: round(sqrt(n × 1.5)), clampado entre 3 y 6.
+ */
+function computeCols(n: number): number {
+  return Math.max(3, Math.min(6, Math.round(Math.sqrt(n * 1.5))));
+}
 
 /* ─── Grid helpers ────────────────────────────────────────────── */
 function buildCols(hoveredCol: number | null, cols: number): string {
@@ -43,19 +51,21 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
 
   const carouselRef = useRef<HTMLDivElement>(null);
 
-  const rows = Math.ceil(images.length / COLS);
+  /* Columnas y filas dinámicas según cantidad de imágenes */
+  const cols = computeCols(images.length);
+  const rows = Math.ceil(images.length / cols);
 
   /* Derived: which col/row is hovered */
-  const hoveredCol = hoveredIdx !== null ? hoveredIdx % COLS : null;
-  const hoveredRow = hoveredIdx !== null ? Math.floor(hoveredIdx / COLS) : null;
+  const hoveredCol = hoveredIdx !== null ? hoveredIdx % cols : null;
+  const hoveredRow = hoveredIdx !== null ? Math.floor(hoveredIdx / cols) : null;
 
   /* Accordion grid strings */
-  const gridCols = buildCols(hoveredCol, COLS);
+  const gridCols = buildCols(hoveredCol, cols);
   const gridRows = buildRows(hoveredRow, rows);
 
   /* Last row: if incomplete, last image spans remaining cols */
-  const remainder   = images.length % COLS;
-  const lastSpan    = remainder > 0 ? COLS - remainder + 1 : 1;
+  const remainder   = images.length % cols;
+  const lastSpan    = remainder > 0 ? cols - remainder + 1 : 1;
   const lastIdx     = images.length - 1;
 
   /* ── Lock scroll ────────────────────────────────────────────── */
@@ -146,6 +156,7 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
           {images.map((img, idx) => {
             const isSelected = selectedIdx === idx;
             /* Last image fills remaining empty slots in incomplete row */
+            /* Última imagen rellena las celdas vacías de la fila incompleta */
             const span = idx === lastIdx && remainder !== 0 ? lastSpan : 1;
 
             return (

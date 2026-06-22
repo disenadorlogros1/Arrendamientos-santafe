@@ -378,14 +378,28 @@ export default function PropertyDetailPage() {
 
               {/* Columna derecha — Formulario sticky */}
               <div className="lg:col-span-1">
-                <div ref={formRef} className="bg-white rounded-lg p-6 border border-gray-200 sticky top-6">
-                  <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-                    <img src="/icons/icon-location-red.gif" alt="Ubicación" width="20" height="20" />
-                    ¿Te interesa esta propiedad?
-                  </h3>
-                  <p className="text-gray-600 text-sm mb-6">Te responderemos de inmediato.</p>
+                <div ref={formRef} style={{
+                  background: '#fff',
+                  border: '1px solid #e0e0e0',
+                  borderRadius: 0,
+                  padding: '24px 20px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '14px',
+                  position: 'sticky',
+                  top: '102px',
+                  transformOrigin: 'center',
+                }}>
+                  <div>
+                    <h3 style={{ fontSize: '17px', fontWeight: 700, color: '#1a1a1a', textAlign: 'center', margin: 0 }}>
+                      ¿Te interesa esta propiedad?
+                    </h3>
+                    <p style={{ fontSize: '13px', color: '#555', textAlign: 'center', margin: '4px 0 0' }}>
+                      Te responderemos de inmediato.
+                    </p>
+                  </div>
 
-                  {/* WhatsApp CTA — attention pulse on mount */}
+                  {/* WhatsApp CTA */}
                   <a
                     ref={whatsappBtnRef}
                     href={`https://wa.me/573006557529?text=${encodeURIComponent(
@@ -393,66 +407,119 @@ export default function PropertyDetailPage() {
                     )}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-4 rounded-lg flex items-center justify-center gap-2 mb-4 transition-colors"
-                    style={{ display: 'flex', transformOrigin: 'center' }}
+                    style={{
+                      display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
+                      backgroundColor: '#e53935', color: '#fff', fontWeight: 600, fontSize: '15px',
+                      padding: '13px 16px', borderRadius: 0, textDecoration: 'none',
+                      transition: 'background-color 0.2s',
+                    }}
+                    onMouseEnter={e => (e.currentTarget.style.backgroundColor = '#c62828')}
+                    onMouseLeave={e => (e.currentTarget.style.backgroundColor = '#e53935')}
                   >
-                    <img src="/icons/icon-consult-white.gif" alt="WhatsApp" width="20" height="20" />
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="white">
+                      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+                      <path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.118 1.528 5.845L.057 23.982l6.305-1.654A11.954 11.954 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-5.003-1.371l-.36-.214-3.733.979 1.001-3.646-.235-.374A9.818 9.818 0 1112 21.818z"/>
+                    </svg>
                     Escribir por WhatsApp
                   </a>
 
-                  <p className="text-center text-gray-600 text-xs mb-4">o envía un mensaje</p>
+                  <span style={{ textAlign: 'center', fontSize: '12px', color: '#888', display: 'block' }}>
+                    o envía un mensaje
+                  </span>
 
-                  <form className="space-y-3">
-                    <div>
-                      <label className="block text-gray-700 font-semibold text-sm mb-2 flex items-center gap-2">
-                        <img src="/icons/icon-location-red.gif" alt="Nombre" width="16" height="16" />
-                        Tu nombre
-                      </label>
-                      <input
-                        type="text"
-                        placeholder="Nombre completo"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-red-600 transition-colors"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-gray-700 font-semibold text-sm mb-2 flex items-center gap-2">
-                        <img src="/icons/icon-location-red.gif" alt="Teléfono" width="16" height="16" />
-                        Teléfono
-                      </label>
-                      <input
-                        type="tel"
-                        placeholder="300 000 0000"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-red-600 transition-colors"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-gray-700 font-semibold text-sm mb-2 flex items-center gap-2">
-                        <img src="/icons/icon-consult-white.gif" alt="Mensaje" width="16" height="16" />
-                        Mensaje (opcional)
+                  <form style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}
+                    onSubmit={e => e.preventDefault()}
+                  >
+                    {[
+                      { label: 'Tu nombre', type: 'text', placeholder: 'Nombre completo' },
+                      { label: 'Teléfono', type: 'tel', placeholder: '300 000 0000' },
+                    ].map(({ label, type, placeholder }) => (
+                      <div key={label} style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
+                        <label style={{ fontSize: '13px', fontWeight: 600, color: '#333' }}>{label}</label>
+                        <input
+                          type={type}
+                          placeholder={placeholder}
+                          style={{
+                            border: '1px solid #ccc', borderRadius: 0, padding: '10px 12px',
+                            fontSize: '14px', color: '#333', outline: 'none',
+                            transition: 'border-color 0.2s', fontFamily: 'inherit', background: '#fff',
+                          }}
+                          onFocus={e => (e.currentTarget.style.borderColor = '#e53935')}
+                          onBlur={e => (e.currentTarget.style.borderColor = '#ccc')}
+                        />
+                      </div>
+                    ))}
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
+                      <label style={{ fontSize: '13px', fontWeight: 600, color: '#333' }}>
+                        Mensaje <span style={{ fontWeight: 400, color: '#888' }}>(opcional)</span>
                       </label>
                       <textarea
                         placeholder="¿Está disponible para visitar esta semana?"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-red-600 h-24 resize-none transition-colors"
+                        style={{
+                          border: '1px solid #ccc', borderRadius: 0, padding: '10px 12px',
+                          fontSize: '14px', color: '#333', outline: 'none',
+                          transition: 'border-color 0.2s', fontFamily: 'inherit', background: '#fff',
+                          minHeight: '80px', resize: 'vertical',
+                        }}
+                        onFocus={e => (e.currentTarget.style.borderColor = '#e53935')}
+                        onBlur={e => (e.currentTarget.style.borderColor = '#ccc')}
                       />
                     </div>
                     <button
                       type="submit"
-                      className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-4 rounded-lg transition-colors"
+                      style={{
+                        backgroundColor: '#e53935', color: '#fff', fontWeight: 700, fontSize: '15px',
+                        padding: '13px', border: 'none', borderRadius: 0, cursor: 'pointer',
+                        width: '100%', transition: 'background-color 0.2s',
+                      }}
+                      onMouseEnter={e => (e.currentTarget.style.backgroundColor = '#c62828')}
+                      onMouseLeave={e => (e.currentTarget.style.backgroundColor = '#e53935')}
                     >
                       Enviar consulta
                     </button>
                   </form>
 
                   {/* Compartir */}
-                  <div className="mt-6 pt-6 border-t border-gray-200">
-                    <h4 className="text-sm font-bold text-gray-900 mb-3">COMPARTIR PROPIEDAD</h4>
-                    <div className="flex gap-3">
-                      <button className="flex-1 bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-3 rounded-lg transition-colors text-sm flex items-center justify-center gap-2">
-                        <img src="/icons/icon-consult-white.gif" alt="Compartir" width="16" height="16" />
+                  <div style={{ borderTop: '1px solid #eee', paddingTop: '14px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                    <span style={{ fontSize: '11px', fontWeight: 700, color: '#888', letterSpacing: '0.05em' }}>
+                      COMPARTIR PROPIEDAD
+                    </span>
+                    <div style={{ display: 'flex', gap: '8px' }}>
+                      <a
+                        href={`https://wa.me/?text=${encodeURIComponent(`${property.title} - ${window?.location?.href ?? ''}`)}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{
+                          display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px',
+                          backgroundColor: '#e53935', color: '#fff', fontSize: '13px', fontWeight: 600,
+                          padding: '9px 14px', borderRadius: 0, textDecoration: 'none', flex: 1,
+                          transition: 'background-color 0.2s',
+                        }}
+                        onMouseEnter={e => (e.currentTarget.style.backgroundColor = '#c62828')}
+                        onMouseLeave={e => (e.currentTarget.style.backgroundColor = '#e53935')}
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="white">
+                          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+                          <path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.118 1.528 5.845L.057 23.982l6.305-1.654A11.954 11.954 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-5.003-1.371l-.36-.214-3.733.979 1.001-3.646-.235-.374A9.818 9.818 0 1112 21.818z"/>
+                        </svg>
                         WhatsApp
-                      </button>
-                      <button className="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-900 font-bold py-2 px-3 rounded-lg transition-colors text-sm flex items-center justify-center gap-2">
-                        <img src="/icons/icon-location-red.gif" alt="Link" width="16" height="16" />
+                      </a>
+                      <button
+                        type="button"
+                        onClick={() => navigator.clipboard.writeText(window.location.href)}
+                        style={{
+                          display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px',
+                          backgroundColor: '#f0f0f0', color: '#333', fontSize: '13px', fontWeight: 600,
+                          padding: '9px 14px', borderRadius: 0, border: '1px solid #ddd', cursor: 'pointer',
+                          flex: 1, transition: 'background-color 0.2s',
+                        }}
+                        onMouseEnter={e => (e.currentTarget.style.backgroundColor = '#e0e0e0')}
+                        onMouseLeave={e => (e.currentTarget.style.backgroundColor = '#f0f0f0')}
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+                          <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+                        </svg>
                         Copiar
                       </button>
                     </div>
