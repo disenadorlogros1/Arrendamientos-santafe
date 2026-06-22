@@ -40,7 +40,7 @@ export default function UserLocation({ mobileExpanded }: UserLocationProps) {
         <span
           className={`user-location-text text-sm ${mobileExpanded ? 'on-light' : ''}`}
           style={{
-            fontFamily: "'Avenir LT Pro 65 Medium', 'Avenir', 'Outfit', system-ui, sans-serif",
+            fontFamily: "'Avenir LT Std', 'Outfit', system-ui, sans-serif",
             fontWeight: 300,
           }}
         >
