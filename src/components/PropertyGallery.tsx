@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { createPortal } from 'react-dom';
 import gsap from 'gsap';
 import { X } from 'lucide-react';
@@ -316,26 +316,26 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
           gap: 4,
           padding: '0 16px 8px',
         }}>
-          {pageImages.map((img, idx) => {
-            const isHov      = hoveredIdx === idx;
-            const isSelected = selectedIdx === idx;
+          {Array.from({ length: n }, (_, dispIdx) => {
+            const origIdx    = displayOrder[dispIdx] ?? dispIdx;
+            const img        = pageImages[origIdx];
+            const isHov      = hoveredIdx === dispIdx;
+            const isSelected = selectedIdx === dispIdx;
             const isActive   = isHov || isSelected;
 
-            // Same column as hovered but not the hovered cell → scale back slightly
-            const sameColNotHov = activeCol !== null && idx % COLS === activeCol && !isActive;
+            const sameColNotHov = activeCol !== null && dispIdx % COLS === activeCol && !isActive;
 
-            // Last cell spans remaining columns if last row is incomplete
-            const remainder = n % COLS;
-            const isLastCell = idx === n - 1 && remainder !== 0;
+            const remainder  = n % COLS;
+            const isLastCell = dispIdx === n - 1 && remainder !== 0;
             const spanCols   = isLastCell ? (COLS - remainder + 1) : 1;
 
             return (
               <div
-                key={`p${currentPage}-${idx}`}
-                ref={el => { cellRefs.current[idx] = el; }}
-                onMouseEnter={() => setHoveredIdx(idx)}
+                key={`p${currentPage}-${dispIdx}`}
+                ref={el => { cellRefs.current[dispIdx] = el; }}
+                onMouseEnter={() => setHoveredIdx(dispIdx)}
                 onMouseLeave={() => setHoveredIdx(null)}
-                onClick={() => handleCellClick(idx)}
+                onClick={() => handleCellClick(dispIdx)}
                 style={{
                   position: 'relative', overflow: 'hidden',
                   borderRadius: 8, background: '#1a1a1a',
@@ -343,7 +343,6 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
                   gridColumn: spanCols > 1 ? `span ${spanCols}` : undefined,
                   outline: isSelected ? '2px solid rgba(255,255,255,0.65)' : '2px solid transparent',
                   outlineOffset: -2,
-                  // Scale back non-hovered cells in same column so hovered stands out
                   transform: isActive ? 'scale(1.0)' : sameColNotHov ? 'scale(0.93)' : 'scale(1.0)',
                   transition: `transform 0.45s ${SPRING}, outline-color 0.2s ${EASE}`,
                   zIndex: isActive ? 2 : 1,
@@ -351,7 +350,7 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
               >
                 <img
                   src={img}
-                  alt={`Foto ${idx + 1}`}
+                  alt={`Foto ${origIdx + 1}`}
                   draggable={false}
                   style={{
                     width: '100%', height: '100%', display: 'block',
@@ -382,8 +381,8 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
           {images.map((img, globalIdx) => {
             const isActive = needsPagination
               ? currentPage === Math.floor(globalIdx / IMAGES_PER_PAGE) &&
-                selectedIdx === globalIdx % IMAGES_PER_PAGE
-              : selectedIdx === globalIdx;
+                selectedOrigIdx === globalIdx % IMAGES_PER_PAGE
+              : selectedOrigIdx === globalIdx;
             return (
               <div
                 key={globalIdx}

@@ -545,11 +545,11 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', onApply }:
   const toggleComodidad = (c: string) => setComodidades(prev => prev.includes(c) ? prev.filter(x => x !== c) : [...prev, c]);
 
   return (
-    <div ref={wrapperRef} style={{ maxWidth: '1400px', margin: '0 auto', padding: '10px clamp(16px, 3vw, 52px)' }}>
+    <div ref={wrapperRef} style={{ maxWidth: '1400px', margin: '0 auto', padding: '0 clamp(16px, 3vw, 52px) 20px' }}>
       <div style={{
         background: '#fff',
-        border: '1px solid #e8e8e8',
-        boxShadow: '0 4px 24px rgba(0,0,0,0.10), 0 1px 4px rgba(0,0,0,0.06)',
+        borderRadius: 16,
+        boxShadow: '0 8px 40px rgba(0,0,0,0.18), 0 2px 8px rgba(0,0,0,0.08)',
         overflow: 'hidden',
       }}>
 
