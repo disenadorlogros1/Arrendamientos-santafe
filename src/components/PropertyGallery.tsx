@@ -187,16 +187,18 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
         </div>
 
         {/* ── Bento grid ─────────────────────────────────────── */}
-        <div style={{ flex: 1, minHeight: 0, overflowY: 'auto', position: 'relative', padding: '0 16px 8px' }}>
+        <div style={{ flex: 1, minHeight: 0, overflowY: 'auto', position: 'relative', padding: '0 16px 8px', display: 'flex', flexDirection: 'column' }}>
           <div
             style={{
               display: 'grid',
               gridTemplateColumns: 'repeat(4, 1fr)',
               gridAutoFlow: 'dense',
-              gridAutoRows: 'clamp(90px, 12vw, 160px)',
-              alignContent: 'start',
+              /* minmax: filas llenan el espacio disponible pero nunca bajan de 90px.
+                 Con pocas imágenes la galería llena la pantalla;
+                 con muchas aparece scroll. */
+              gridAutoRows: 'minmax(90px, 1fr)',
+              flex: 1,
               gap: 4,
-              height: '100%',
             }}
           >
             {pageImages.map((img, idx) => {
