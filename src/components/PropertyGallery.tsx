@@ -85,12 +85,11 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
   /* ¿Es landscape la imagen bajo el cursor? */
   const hoveredIsLandscape = hoveredIdx !== null ? (orientations[hoveredIdx] ?? false) : false;
 
-  const hoveredCol  = hoveredIdx !== null ? hoveredIdx % cols : null;
-  const hoveredRow  = hoveredIdx !== null ? Math.floor(hoveredIdx / cols) : null;
-  const isHovering  = hoveredIdx !== null;
+  const hoveredCol = hoveredIdx !== null ? hoveredIdx % cols : null;
+  const isHovering = hoveredIdx !== null;
 
-  const gridCols = buildColsOriented(hoveredCol, hoveredIsLandscape, cols);
-  const gridRows = buildRowsOriented(hoveredRow, hoveredIsLandscape, rows);
+  const gridCols = buildCols(hoveredCol, hoveredIsLandscape, cols);
+  const gridRows = `repeat(${rows}, 1fr)`;
 
   /* ── Lock scroll ────────────────────────────────────────────── */
   useEffect(() => {
@@ -201,16 +200,22 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
           {images.map((img, idx) => {
             const isHovered  = hoveredIdx === idx;
             const isSelected = selectedIdx === idx;
-            /* Mismo row que el hovered → imagen "a los lados", más opacidad */
-            const sameRow = isHovering && hoveredRow !== null
-              && Math.floor(idx / cols) === hoveredRow;
-            const opacity = !isHovering ? 1 : isHovered ? 1 : sameRow ? 0.65 : 0.2;
+            const cellCol    = idx % cols;
+            const cellRow    = Math.floor(idx / cols);
+            /* Misma columna que el hovered pero no es la celda activa → ocultar */
+            const sameCol    = isHovering && hoveredCol !== null && cellCol === hoveredCol;
+            const hideCell   = sameCol && !isHovered;
+            const opacity    = hideCell ? 0 : (!isHovering ? 1 : isHovered ? 1 : 0.5);
             return (
               <div
                 key={idx}
                 data-idx={idx}
                 onClick={() => handleCellClick(idx)}
                 style={{
+                  /* Posición explícita — la celda hover hace span de todas las filas */
+                  gridColumn: cellCol + 1,
+                  gridRow: isHovering && isHovered ? '1 / -1' : cellRow + 1,
+                  zIndex: isHovering && isHovered ? 1 : 0,
                   position: 'relative',
                   overflow: 'hidden',
                   borderRadius: 8,
@@ -219,7 +224,8 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
                   outline: isSelected ? '2px solid rgba(255,255,255,0.65)' : '2px solid transparent',
                   outlineOffset: -2,
                   opacity,
-                  transition: `opacity 0.4s ${EASE}, outline-color 0.2s ${EASE}`,
+                  pointerEvents: hideCell ? 'none' : undefined,
+                  transition: `opacity 0.35s ${EASE}, outline-color 0.2s ${EASE}`,
                 }}
               >
                 <img
