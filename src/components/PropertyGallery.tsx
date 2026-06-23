@@ -436,6 +436,20 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
                   src={img}
                   alt={`Foto ${idx + 1}`}
                   draggable={false}
+                  onLoad={e => {
+                    /* Corrección EXIF: naturalWidth/Height del img real refleja
+                     * la rotación aplicada por el browser; el preload inicial puede
+                     * leer las dimensiones crudas antes del EXIF y equivocarse. */
+                    const el = e.currentTarget;
+                    const landscape = el.naturalWidth > el.naturalHeight;
+                    const globalIdx = albumStartIdx + idx;
+                    setAllOrientations(prev => {
+                      if (prev[globalIdx] === landscape) return prev;
+                      const next = [...prev];
+                      next[globalIdx] = landscape;
+                      return next;
+                    });
+                  }}
                   style={{
                     width: '100%', height: '100%', display: 'block',
                     objectFit: 'cover', objectPosition: 'center',
