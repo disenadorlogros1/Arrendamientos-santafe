@@ -72,6 +72,121 @@ function buildCols(hoveredCol: number | null, isLandscape: boolean, cols: number
   ).join(' ');
 }
 
+/* ─── AlbumStack ──────────────────────────────────────────────── */
+function AlbumStack({ album, albumIndex, isActive, onClick }: {
+  album: string[];
+  albumIndex: number;
+  isActive: boolean;
+  onClick: () => void;
+}) {
+  const [hov, setHov] = useState(false);
+  const count  = Math.min(3, album.length);
+  const photos = album.slice(0, count);
+
+  /* Fan config: each photo slightly more to the right and more rotated */
+  const PHOTO_W = 46;
+  const PHOTO_H = 62;
+  const X_STEP  = 16; // horizontal offset between photos
+  const FAN_ANGLES = [-9, -1, 7];
+  const configs = Array.from({ length: count }, (_, i) => ({
+    angle:   FAN_ANGLES[FAN_ANGLES.length - count + i],
+    xOffset: i * X_STEP,
+    zIndex:  i + 1,
+  }));
+
+  /* Total width = first photo + each step + some room for rotation overhang */
+  const containerW = PHOTO_W + (count - 1) * X_STEP + 18;
+
+  return (
+    <button
+      onClick={onClick}
+      onMouseEnter={() => setHov(true)}
+      onMouseLeave={() => setHov(false)}
+      style={{
+        position: 'relative',
+        width: containerW,
+        height: PHOTO_H + 22,
+        background: 'none',
+        border: 'none',
+        cursor: 'pointer',
+        padding: 0,
+        flexShrink: 0,
+        transform: isActive || hov ? 'translateY(-6px)' : 'none',
+        transition: `transform 0.28s ${EASE}`,
+      }}
+    >
+      {/* Foto stack */}
+      {photos.map((img, i) => (
+        <div
+          key={i}
+          style={{
+            position: 'absolute',
+            width: PHOTO_W,
+            height: PHOTO_H,
+            top: 0,
+            left: configs[i].xOffset,
+            borderRadius: 5,
+            overflow: 'hidden',
+            transform: `rotate(${configs[i].angle}deg)`,
+            transformOrigin: 'bottom center',
+            zIndex: configs[i].zIndex,
+            border: isActive && i === count - 1
+              ? '2px solid rgba(255,255,255,0.9)'
+              : '1.5px solid rgba(255,255,255,0.18)',
+            boxShadow: '0 4px 16px rgba(0,0,0,0.65)',
+            opacity: isActive ? 1 : hov ? 0.85 : 0.6,
+            transition: `opacity 0.22s ${EASE}, border-color 0.22s ${EASE}`,
+          }}
+        >
+          <img
+            src={img}
+            alt=""
+            draggable={false}
+            style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', pointerEvents: 'none' }}
+          />
+        </div>
+      ))}
+
+      {/* Contador badge */}
+      <div style={{
+        position: 'absolute',
+        top: PHOTO_H - 18,
+        right: 0,
+        background: isActive ? '#fff' : 'rgba(14,14,14,0.85)',
+        color: isActive ? '#111' : '#fff',
+        fontFamily: FONT,
+        fontSize: 10,
+        fontWeight: 700,
+        padding: '2px 7px',
+        borderRadius: 10,
+        zIndex: 10,
+        border: isActive ? 'none' : '1px solid rgba(255,255,255,0.15)',
+        letterSpacing: '0.03em',
+        lineHeight: '1.4',
+      }}>
+        {album.length} →
+      </div>
+
+      {/* Etiqueta álbum */}
+      <div style={{
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        textAlign: 'center',
+        fontFamily: FONT,
+        fontSize: 10,
+        fontWeight: isActive ? 700 : 400,
+        color: isActive ? '#fff' : 'rgba(255,255,255,0.38)',
+        letterSpacing: '0.04em',
+        lineHeight: 1,
+      }}>
+        Álbum {albumIndex + 1}
+      </div>
+    </button>
+  );
+}
+
 /* ─── BentoGallery ────────────────────────────────────────────── */
 function BentoGallery({ images, onClose }: { images: string[]; onClose: () => void }) {
   const [hoveredIdx,     setHoveredIdx]     = useState<number | null>(null);
