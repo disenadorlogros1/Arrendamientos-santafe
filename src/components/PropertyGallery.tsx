@@ -86,7 +86,8 @@ function AlbumSlot({ album, albumIndex, isExpanded, onToggle, onThumbHover }: {
   const SLOT_H     = PHOTO_H + 22;
   const count      = Math.min(3, album.length);
   const collapsedW = PHOTO_W + (count - 1) * X_STEP + 18;
-  const EXPANDED_W = 460;
+  const THUMB_W    = Math.floor(64 * 4 / 3); // ≈85px — 4:3 a h=64
+  const EXPANDED_W = 78 + 5 + album.length * THUMB_W + (album.length - 1) * 5 + 16;
 
   return (
     <div
@@ -655,6 +656,7 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
               padding: '10px 24px 18px',
               background: 'rgba(255,255,255,0.04)',
               borderTop: '1px solid rgba(255,255,255,0.07)',
+              overflowX: 'auto',
             }}
           >
             {albums.map((alb, i) => (
