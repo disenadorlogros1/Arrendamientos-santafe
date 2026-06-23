@@ -283,7 +283,11 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
   /* true = landscape, false = portrait/square — indexed over ALL images */
   const [allOrientations, setAllOrientations] = useState<boolean[]>([]);
 
+  /* Columna visual real del mouse — usada para posicionar celdas filler-span en hover */
+  const [hoveredMouseCol, setHoveredMouseCol] = useState(0);
+
   const carouselRef  = useRef<HTMLDivElement>(null);
+  const gridRef      = useRef<HTMLDivElement>(null);
   const clearTimer   = useRef<ReturnType<typeof setTimeout> | null>(null);
   /* Caché de orientación por URL — persiste entre renders sin causar re-renders.
    * Se llena en el primer hover real (img ya renderizado en DOM, EXIF aplicado).
