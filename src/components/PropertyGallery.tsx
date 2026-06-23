@@ -422,7 +422,7 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
                   zIndex: isHovering && isHovered ? 1 : 0,
                   position: 'relative',
                   overflow: 'hidden',
-                  borderRadius: 8,
+                  borderRadius: 12,
                   cursor: 'pointer',
                   background: '#111',
                   outline: isSelected ? '2px solid rgba(255,255,255,0.65)' : '2px solid transparent',
@@ -464,7 +464,7 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
           </div>
         ) : (
           /* Carrusel original para galerías de ≤ 12 fotos */
-          <div onClick={e => e.stopPropagation()} style={{ height: '7vh', minHeight: 48, maxHeight: 68, flexShrink: 0, display: 'flex', justifyContent: 'center', overflow: 'hidden' }}>
+          <div onClick={e => e.stopPropagation()} style={{ height: '7vh', minHeight: 48, maxHeight: 68, flexShrink: 0, display: 'flex', justifyContent: 'center', overflow: 'hidden', marginBottom: 10 }}>
             <div
               ref={carouselRef}
               className="bento-carousel"
