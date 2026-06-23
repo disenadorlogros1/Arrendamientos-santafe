@@ -404,8 +404,10 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
             const posInRow   = isLastRow ? idx - lastRowStart : idx % cols;
 
             /* ── Columna explícita, ajustada para el span de la última fila ── */
+            /* Cuando la celda está hovered, se ignora el filler span para que
+             * la expansión portrait (columna estrecha) funcione correctamente. */
             let gridColValue: string | number;
-            if (isLastRow) {
+            if (isLastRow && !(isHovering && isHovered)) {
               if (idx === spanIdx) {
                 gridColValue = `${posInRow + 1} / ${posInRow + 1 + fillerCount + 1}`;
               } else if (spanIdx !== -1 && idx > spanIdx) {
@@ -460,19 +462,39 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
         </div>
         </div>{/* end wrapper */}
 
-        {/* ── Zona inferior: panel + pilas ───────────────────────── */}
+        {/* ── Barra inferior con pilas + thumbnails expandibles ───── */}
         {albums.length > 1 ? (
           <div
             onClick={e => e.stopPropagation()}
-            style={{ flexShrink: 0, display: 'flex', flexDirection: 'column' }}
+            style={{
+              flexShrink: 0,
+              display: 'flex',
+              flexDirection: 'column',
+              background: 'rgba(255,255,255,0.04)',
+              borderTop: '1px solid rgba(255,255,255,0.07)',
+            }}
           >
-            {/* Panel expandible de miniaturas — encima de las pilas */}
+            {/* Pilas de álbum — siempre visibles */}
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-end', gap: 24, padding: '10px 20px 12px' }}>
+              {albums.map((alb, i) => (
+                <AlbumStack
+                  key={i}
+                  album={alb}
+                  albumIndex={i}
+                  isActive={activeAlbum === i && panelOpen}
+                  onClick={() => handleAlbumChange(i)}
+                />
+              ))}
+            </div>
+
+            {/* Thumbnails del álbum activo — se despliegan debajo de las pilas */}
             <div
               style={{
                 overflow: 'hidden',
-                maxHeight: panelOpen ? '110px' : '0px',
+                maxHeight: panelOpen ? '106px' : '0px',
                 opacity: panelOpen ? 1 : 0,
                 transition: `max-height 0.38s ${EASE}, opacity 0.28s ${EASE}`,
+                borderTop: panelOpen ? '1px solid rgba(255,255,255,0.07)' : 'none',
               }}
             >
               <div
@@ -480,7 +502,7 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
                 style={{
                   display: 'flex',
                   gap: 5,
-                  padding: '8px 20px 4px',
+                  padding: '8px 20px 10px',
                   overflowX: 'auto',
                   overflowY: 'hidden',
                   height: 96,
@@ -494,7 +516,7 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
                     key={i}
                     style={{
                       flexShrink: 0,
-                      height: 80,
+                      height: 78,
                       aspectRatio: '4/3',
                       borderRadius: 6,
                       overflow: 'hidden',
@@ -514,19 +536,6 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
                   </div>
                 ))}
               </div>
-            </div>
-
-            {/* Pilas de álbum */}
-            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-end', gap: 24, padding: '4px 20px 18px' }}>
-              {albums.map((alb, i) => (
-                <AlbumStack
-                  key={i}
-                  album={alb}
-                  albumIndex={i}
-                  isActive={activeAlbum === i && panelOpen}
-                  onClick={() => handleAlbumChange(i)}
-                />
-              ))}
             </div>
           </div>
         ) : (
