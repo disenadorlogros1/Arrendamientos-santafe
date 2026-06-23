@@ -241,11 +241,36 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
               </div>
             );
           })}
-          {/* Placeholders invisibles para última fila incompleta */}
+          {/* Filler cells para última fila incompleta — usan imágenes del mismo set para evitar espacio negro */}
           {images.length % cols !== 0 &&
-            Array.from({ length: cols - (images.length % cols) }, (_, i) => (
-              <div key={`ph-${i}`} style={{ opacity: 0, pointerEvents: 'none' }} />
-            ))
+            Array.from({ length: cols - (images.length % cols) }, (_, i) => {
+              const fillerCol = (images.length % cols) + i;
+              const fillerRow = rows - 1;
+              const src = images[i % images.length];
+              return (
+                <div
+                  key={`ph-${i}`}
+                  style={{
+                    gridColumn: fillerCol + 1,
+                    gridRow: fillerRow + 1,
+                    position: 'relative',
+                    overflow: 'hidden',
+                    borderRadius: 8,
+                    background: '#111',
+                    opacity: isHovering ? 0.15 : 0.55,
+                    pointerEvents: 'none',
+                    transition: `opacity 0.35s ${EASE}`,
+                  }}
+                >
+                  <img
+                    src={src}
+                    alt=""
+                    draggable={false}
+                    style={{ width: '100%', height: '100%', display: 'block', objectFit: 'cover', objectPosition: 'center', userSelect: 'none', pointerEvents: 'none' }}
+                  />
+                </div>
+              );
+            })
           }
         </div>
         </div>{/* end wrapper */}
