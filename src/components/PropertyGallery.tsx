@@ -192,6 +192,7 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
   const [hoveredIdx,     setHoveredIdx]     = useState<number | null>(null);
   const [selectedIdx,    setSelectedIdx]    = useState<number | null>(null);
   const [activeAlbum,    setActiveAlbum]    = useState(0);
+  const [panelOpen,      setPanelOpen]      = useState(false);
   const [isMobile,       setIsMobile]       = useState(false);
   /* true = landscape, false = portrait/square — indexed over ALL images */
   const [allOrientations, setAllOrientations] = useState<boolean[]>([]);
@@ -237,12 +238,17 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
     return () => { cancelled = true; };
   }, [images]);
 
-  /* ── Cambio de álbum ──────────────────────────────────────────── */
+  /* ── Cambio / toggle de álbum ────────────────────────────────── */
   const handleAlbumChange = useCallback((idx: number) => {
-    setActiveAlbum(idx);
-    setSelectedIdx(null);
-    setHoveredIdx(null);
-  }, []);
+    if (idx === activeAlbum) {
+      setPanelOpen(prev => !prev); // mismo álbum → toggle panel
+    } else {
+      setActiveAlbum(idx);
+      setPanelOpen(true);          // álbum nuevo → abrir panel
+      setSelectedIdx(null);
+      setHoveredIdx(null);
+    }
+  }, [activeAlbum]);
 
   /* Columnas y filas dinámicas según cantidad de imágenes del álbum activo */
   const cols = computeCols(albumImages.length);
