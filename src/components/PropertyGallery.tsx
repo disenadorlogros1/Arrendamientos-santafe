@@ -50,34 +50,25 @@ function buildColsOriented(
 ): string {
   if (hoveredCol === null) return `repeat(${cols}, 1fr)`;
   if (isLandscape) {
-    /* Landscape: columna activa se ensancha (~67% del ancho) */
+    /* Landscape: columna activa llena casi todo el ancho (~98%) */
     return Array.from({ length: cols }, (_, i) =>
-      i === hoveredCol ? '3fr' : '0.5fr'
+      i === hoveredCol ? '50fr' : '0.5fr'
     ).join(' ');
   }
-  /* Portrait: columna activa se estrecha (0.6fr), las demás se ensanchan (1fr).
-   * Esto garantiza proporciones verticales ~9:16 sin importar el ancho de pantalla. */
-  return Array.from({ length: cols }, (_, i) =>
-    i === hoveredCol ? '0.6fr' : '1fr'
-  ).join(' ');
+  /* Portrait: columnas iguales. Con la fila expandida al 100% la celda
+   * queda con proporciones naturalmente portrait (1/cols × ancho < alto). */
+  return `repeat(${cols}, 1fr)`;
 }
 
 function buildRowsOriented(
   hoveredRow: number | null,
-  isLandscape: boolean,
+  _isLandscape: boolean,
   rows: number
 ): string {
   if (hoveredRow === null) return `repeat(${rows}, 1fr)`;
-  if (isLandscape) {
-    /* 1.5fr activo + 0.5fr resto → row toma ~60% del alto */
-    return Array.from({ length: rows }, (_, i) =>
-      i === hoveredRow ? '1.5fr' : '0.5fr'
-    ).join(' ');
-  }
-  /* Portrait: row toma ~87% del alto */
-  const active = (rows * 1.5).toFixed(2);
+  /* Portrait y landscape: fila activa llena casi toda la altura (~98%) */
   return Array.from({ length: rows }, (_, i) =>
-    i === hoveredRow ? `${active}fr` : '0.3fr'
+    i === hoveredRow ? '50fr' : '0.5fr'
   ).join(' ');
 }
 
