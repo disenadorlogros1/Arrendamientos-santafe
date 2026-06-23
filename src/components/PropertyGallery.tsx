@@ -241,12 +241,12 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
     <>
       <style>{`.bento-carousel::-webkit-scrollbar { display: none; }`}</style>
 
-      <div style={{ position: 'fixed', inset: 0, zIndex: 1000, background: '#0c0c0c', display: 'flex', flexDirection: 'column' }}>
+      <div onClick={onClose} style={{ position: 'fixed', inset: 0, zIndex: 1000, background: '#0c0c0c', display: 'flex', flexDirection: 'column', cursor: 'default' }}>
 
-        {/* Header */}
+        {/* Header — clic en área negra cierra (burbujea al contenedor) */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', padding: '12px 20px', flexShrink: 0 }}>
           <button
-            onClick={onClose}
+            onClick={e => { e.stopPropagation(); onClose(); }}
             onMouseEnter={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.18)')}
             onMouseLeave={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.1)')}
             style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 44, height: 44, borderRadius: '50%', background: 'rgba(255,255,255,0.1)', border: 'none', cursor: 'pointer', color: '#fff', transition: `background 0.2s ${EASE}` }}
@@ -256,8 +256,7 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
         </div>
 
         {/* ── Accordion grid ─────────────────────────────────────── */}
-        {/* Wrapper flex item con alto definitivo — necesario para que 1fr en gridTemplateRows funcione */}
-        <div style={{ flex: 1, minHeight: 0, overflow: 'hidden', padding: '0 16px 8px' }}>
+        <div onClick={e => e.stopPropagation()} style={{ flex: 1, minHeight: 0, overflow: 'hidden', padding: '0 16px 8px' }}>
         <div
           onMouseMove={handleGridMouseMove}
           onMouseLeave={handleGridMouseLeave}
@@ -337,7 +336,7 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
         {/* ── Barra inferior: álbumes o carrusel ─────────────────── */}
         {albums.length > 1 ? (
           /* Botones de álbum */
-          <div style={{ flexShrink: 0, display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 8, padding: '8px 20px 14px' }}>
+          <div onClick={e => e.stopPropagation()} style={{ flexShrink: 0, display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 8, padding: '8px 20px 14px' }}>
             {albums.map((alb, i) => {
               const isActive = activeAlbum === i;
               return (
@@ -371,7 +370,7 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
           </div>
         ) : (
           /* Carrusel original para galerías de ≤ 12 fotos */
-          <div style={{ height: '7vh', minHeight: 48, maxHeight: 68, flexShrink: 0, display: 'flex', justifyContent: 'center', overflow: 'hidden' }}>
+          <div onClick={e => e.stopPropagation()} style={{ height: '7vh', minHeight: 48, maxHeight: 68, flexShrink: 0, display: 'flex', justifyContent: 'center', overflow: 'hidden' }}>
             <div
               ref={carouselRef}
               className="bento-carousel"
