@@ -474,6 +474,60 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
         </div>
         </div>{/* end wrapper */}
 
+        {/* ── Panel expandible de miniaturas ─────────────────────── */}
+        {albums.length > 1 && (
+          <div
+            onClick={e => e.stopPropagation()}
+            style={{
+              flexShrink: 0,
+              overflow: 'hidden',
+              maxHeight: panelOpen ? '120px' : '0px',
+              opacity: panelOpen ? 1 : 0,
+              transition: `max-height 0.38s ${EASE}, opacity 0.28s ${EASE}`,
+            }}
+          >
+            <div
+              className="bento-carousel"
+              style={{
+                display: 'flex',
+                gap: 5,
+                padding: '10px 20px 6px',
+                overflowX: 'auto',
+                overflowY: 'hidden',
+                height: 100,
+                alignItems: 'center',
+                scrollbarWidth: 'none',
+                msOverflowStyle: 'none' as React.CSSProperties['msOverflowStyle'],
+              }}
+            >
+              {(albums[activeAlbum] ?? []).map((img, i) => (
+                <div
+                  key={i}
+                  style={{
+                    flexShrink: 0,
+                    height: 82,
+                    aspectRatio: '4/3',
+                    borderRadius: 6,
+                    overflow: 'hidden',
+                    border: '1.5px solid rgba(255,255,255,0.15)',
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.5)',
+                    transition: `transform 0.22s ${EASE}`,
+                  }}
+                  onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.transform = 'scale(1.06)'; }}
+                  onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.transform = 'scale(1)'; }}
+                >
+                  <img
+                    src={img}
+                    alt={`Miniatura ${i + 1}`}
+                    draggable={false}
+                    style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', pointerEvents: 'none' }}
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* ── Barra inferior: álbumes o carrusel ─────────────────── */}
         {albums.length > 1 ? (
           /* Pilas de álbum */
@@ -483,7 +537,7 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
                 key={i}
                 album={alb}
                 albumIndex={i}
-                isActive={activeAlbum === i}
+                isActive={activeAlbum === i && panelOpen}
                 onClick={() => handleAlbumChange(i)}
               />
             ))}
