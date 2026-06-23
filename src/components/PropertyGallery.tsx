@@ -80,7 +80,8 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
   /* true = landscape, false = portrait/square */
   const [orientations, setOrientations] = useState<boolean[]>([]);
 
-  const carouselRef = useRef<HTMLDivElement>(null);
+  const carouselRef  = useRef<HTMLDivElement>(null);
+  const clearTimer   = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   /* ── Detectar orientación de cada imagen ──────────────────────── */
   useEffect(() => {
@@ -156,6 +157,25 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
     return () => window.removeEventListener('resize', check);
   }, []);
 
+  /* ── Grid hover via event delegation (evita flicker por reorganización del grid) ── */
+  const handleGridMouseMove = useCallback((e: React.MouseEvent) => {
+    const cell = (e.target as HTMLElement).closest('[data-idx]') as HTMLElement | null;
+    const raw  = cell?.dataset?.idx;
+    const idx  = raw !== undefined ? parseInt(raw) : null;
+    if (clearTimer.current) { clearTimeout(clearTimer.current); clearTimer.current = null; }
+    if (idx !== null) {
+      setHoveredIdx(prev => prev === idx ? prev : idx);
+    } else {
+      /* Cursor en el gap entre celdas → esperar un poco antes de limpiar */
+      clearTimer.current = setTimeout(() => setHoveredIdx(null), 80);
+    }
+  }, []);
+
+  const handleGridMouseLeave = useCallback(() => {
+    if (clearTimer.current) clearTimeout(clearTimer.current);
+    setHoveredIdx(null);
+  }, []);
+
   /* ── Carousel scroll to selected ────────────────────────────── */
   useEffect(() => {
     if (selectedIdx === null || !carouselRef.current) return;
@@ -211,6 +231,8 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
         {/* Wrapper flex item con alto definitivo — necesario para que 1fr en gridTemplateRows funcione */}
         <div style={{ flex: 1, minHeight: 0, overflow: 'hidden', padding: '0 16px 8px' }}>
         <div
+          onMouseMove={handleGridMouseMove}
+          onMouseLeave={handleGridMouseLeave}
           style={{
             display: 'grid',
             height: '100%',
@@ -249,8 +271,7 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
             return (
               <div
                 key={idx}
-                onMouseEnter={() => setHoveredIdx(idx)}
-                onMouseLeave={() => setHoveredIdx(null)}
+                data-idx={idx}
                 onClick={() => handleCellClick(idx)}
                 style={{
                   ...placementStyle,
