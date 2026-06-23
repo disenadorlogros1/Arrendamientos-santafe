@@ -50,13 +50,13 @@ function buildColsOriented(
 ): string {
   if (hoveredCol === null) return `repeat(${cols}, 1fr)`;
   if (isLandscape) {
-    /* Landscape: columna activa llena casi todo el ancho (~98%) */
+    /* Landscape: columna activa llena casi todo el ancho.
+     * Las otras columnas quedan como franjas visibles a los lados (2fr). */
     return Array.from({ length: cols }, (_, i) =>
-      i === hoveredCol ? '50fr' : '0.5fr'
+      i === hoveredCol ? '50fr' : '2fr'
     ).join(' ');
   }
-  /* Portrait: columnas iguales. Con la fila expandida al 100% la celda
-   * queda con proporciones naturalmente portrait (1/cols × ancho < alto). */
+  /* Portrait: columnas iguales → proporciones portrait naturales con la fila expandida. */
   return `repeat(${cols}, 1fr)`;
 }
 
@@ -66,9 +66,9 @@ function buildRowsOriented(
   rows: number
 ): string {
   if (hoveredRow === null) return `repeat(${rows}, 1fr)`;
-  /* Portrait y landscape: fila activa llena casi toda la altura (~98%) */
+  /* Fila activa llena casi toda la altura; las otras quedan como franjas visibles. */
   return Array.from({ length: rows }, (_, i) =>
-    i === hoveredRow ? '50fr' : '0.5fr'
+    i === hoveredRow ? '50fr' : '1fr'
   ).join(' ');
 }
 
@@ -221,7 +221,7 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
                   background: '#111',
                   outline: isSelected ? '2px solid rgba(255,255,255,0.65)' : '2px solid transparent',
                   outlineOffset: -2,
-                  opacity: hoveredIdx !== null && !isHovered ? 0.22 : 1,
+                  opacity: hoveredIdx !== null && !isHovered ? 0.45 : 1,
                   transition: `opacity 0.4s ${EASE}, outline-color 0.2s ${EASE}`,
                 }}
               >
@@ -242,7 +242,7 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
               no border-radius, so they blend with the background and leave no dark hole */}
           {images.length % cols !== 0 &&
             Array.from({ length: cols - (images.length % cols) }, (_, i) => (
-              <div key={`ph-${i}`} style={{ background: '#0c0c0c', borderRadius: 0 }} />
+              <div key={`ph-${i}`} style={{ opacity: 0, pointerEvents: 'none' }} />
             ))
           }
         </div>
