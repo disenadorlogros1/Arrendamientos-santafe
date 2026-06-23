@@ -304,18 +304,67 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
 }
 
 /* ─── Preview grid (ficha de propiedad) ───────────────────────── */
-function PreviewCell({ img, alt, rowSpan, onClick, overlay }: {
-  img: string; alt: string; rowSpan?: boolean; onClick: () => void; overlay?: string;
-}) {
-  const [hov, setHov] = useState(false);
+
+/* Celda grande izquierda: crossfade bento cuando cambia la imagen */
+function MainPreviewCell({ img, alt, onClick }: { img: string; alt: string; onClick: () => void }) {
+  const [base,    setBase]    = useState(img);
+  const [incoming, setIncoming] = useState<{ src: string; id: number } | null>(null);
+  const [hov,     setHov]     = useState(false);
+  const counter = useRef(0);
+
+  useEffect(() => {
+    if (img === base) return;
+    setIncoming({ src: img, id: ++counter.current });
+  }, [img]); // eslint-disable-line react-hooks/exhaustive-deps
+
   return (
     <div
-      style={{ gridRow: rowSpan ? '1/3' : undefined, position: 'relative', overflow: 'hidden', cursor: 'pointer', background: '#f0efed' }}
+      style={{ gridRow: '1/3', position: 'relative', overflow: 'hidden', cursor: 'pointer', background: '#111' }}
       onClick={onClick}
       onMouseEnter={() => setHov(true)}
       onMouseLeave={() => setHov(false)}
     >
-      <img src={img} alt={alt} draggable={false} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', transform: hov ? 'scale(1.04)' : 'scale(1)', transition: `transform 0.5s ${EASE}`, pointerEvents: 'none' }} />
+      {/* Imagen base siempre visible debajo */}
+      <img
+        src={base} alt={alt} draggable={false}
+        style={{
+          position: 'absolute', inset: 0, width: '100%', height: '100%',
+          objectFit: 'cover', display: 'block', pointerEvents: 'none',
+          transform: hov ? 'scale(1.04)' : 'scale(1)',
+          transition: `transform 0.6s ${EASE}`,
+        }}
+      />
+      {/* Incoming: se anima encima y al terminar pasa a ser la base */}
+      {incoming && (
+        <img
+          key={incoming.id}
+          src={incoming.src} alt={alt} draggable={false}
+          onAnimationEnd={() => { setBase(incoming.src); setIncoming(null); }}
+          style={{
+            position: 'absolute', inset: 0, width: '100%', height: '100%',
+            objectFit: 'cover', display: 'block', pointerEvents: 'none',
+            animation: `bentoReveal 0.42s ${EASE} forwards`,
+          }}
+        />
+      )}
+    </div>
+  );
+}
+
+/* Celda pequeña derecha */
+function SmallPreviewCell({ img, alt, onClick, overlay, onHoverIn, onHoverOut }: {
+  img: string; alt: string; onClick: () => void; overlay?: string;
+  onHoverIn: () => void; onHoverOut: () => void;
+}) {
+  const [hov, setHov] = useState(false);
+  return (
+    <div
+      style={{ position: 'relative', overflow: 'hidden', cursor: 'pointer', background: '#111' }}
+      onClick={onClick}
+      onMouseEnter={() => { setHov(true);  onHoverIn();  }}
+      onMouseLeave={() => { setHov(false); onHoverOut(); }}
+    >
+      <img src={img} alt={alt} draggable={false} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', transform: hov ? 'scale(1.04)' : 'scale(1)', transition: `transform 0.55s ${EASE}`, pointerEvents: 'none' }} />
       {overlay && (
         <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.52)', display: 'flex', alignItems: 'center', justifyContent: 'center', pointerEvents: 'none' }}>
           <span style={{ fontFamily: FONT, fontSize: 15, fontWeight: 600, color: '#fff', letterSpacing: '0.02em' }}>{overlay}</span>
@@ -327,16 +376,41 @@ function PreviewCell({ img, alt, rowSpan, onClick, overlay }: {
 
 /* ─── Export ──────────────────────────────────────────────────── */
 export default function PropertyGallery({ images, title, stats: _stats }: PropertyGalleryProps) {
-  const [open,    setOpen]    = useState(false);
-  const [mounted, setMounted] = useState(false);
+  const [open,       setOpen]       = useState(false);
+  const [mounted,    setMounted]    = useState(false);
+  const [previewIdx, setPreviewIdx] = useState(0);
+
   useEffect(() => { setMounted(true); }, []);
 
   return (
     <>
+      <style>{`
+        @keyframes bentoReveal {
+          from { opacity: 0; transform: scale(1.05); }
+          to   { opacity: 1; transform: scale(1);    }
+        }
+      `}</style>
       <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gridTemplateRows: '1fr 1fr', gap: 4, height: 420, marginBottom: 24, borderRadius: 8, overflow: 'hidden' }}>
-        <PreviewCell img={images[0]} alt={title} rowSpan onClick={() => setOpen(true)} />
-        <PreviewCell img={images[1] ?? images[0]} alt={`${title} 2`} onClick={() => setOpen(true)} />
-        <PreviewCell img={images[2] ?? images[0]} alt={`${title} 3`} onClick={() => setOpen(true)} overlay={images.length > 3 ? `+${images.length - 3} fotos` : undefined} />
+        <MainPreviewCell
+          img={images[previewIdx] ?? images[0]}
+          alt={title}
+          onClick={() => setOpen(true)}
+        />
+        <SmallPreviewCell
+          img={images[1] ?? images[0]}
+          alt={`${title} 2`}
+          onClick={() => setOpen(true)}
+          onHoverIn={() => setPreviewIdx(1)}
+          onHoverOut={() => setPreviewIdx(0)}
+        />
+        <SmallPreviewCell
+          img={images[2] ?? images[0]}
+          alt={`${title} 3`}
+          onClick={() => setOpen(true)}
+          onHoverIn={() => setPreviewIdx(2)}
+          onHoverOut={() => setPreviewIdx(0)}
+          overlay={images.length > 3 ? `+${images.length - 3} fotos` : undefined}
+        />
       </div>
       {mounted && open && <BentoGallery images={images} onClose={() => setOpen(false)} />}
     </>
