@@ -121,7 +121,7 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
    * La imagen activa abarca todas las filas (full height).
    * Las n-1 miniaturas se apilan en la columna izquierda. */
   const thumbRows = Math.max(images.length - 1, 1);
-  const activeGridCols = hoveredIsLandscape ? '120px 1fr' : '100px 1fr';
+  const activeGridCols = '100px 1fr';
   const activeGridRows = `repeat(${thumbRows}, 1fr)`;
 
   /* Sin spanning — cada celda ocupa exactamente 1 columna.
@@ -224,6 +224,10 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
                 : { gridColumn: '1 / 2' }
               : {};
 
+            /* Portrait activa: flex centrado para que la celda mantenga proporciones
+             * verticales. El ancho se calcula en CSS puro basado en la altura disponible. */
+            const isActivePortrait = isHovering && isHovered && !hoveredIsLandscape;
+
             return (
               <div
                 key={idx}
@@ -233,10 +237,13 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
                 style={{
                   ...placementStyle,
                   position: 'relative',
+                  display: isActivePortrait ? 'flex' : undefined,
+                  justifyContent: isActivePortrait ? 'center' : undefined,
+                  alignItems: isActivePortrait ? 'stretch' : undefined,
                   overflow: 'hidden',
                   borderRadius: 8,
                   cursor: 'pointer',
-                  background: '#111',
+                  background: isActivePortrait ? '#0c0c0c' : '#111',
                   outline: isSelected ? '2px solid rgba(255,255,255,0.65)' : '2px solid transparent',
                   outlineOffset: -2,
                   opacity: isHovering && !isHovered ? 0.45 : 1,
@@ -248,7 +255,10 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
                   alt={`Foto ${idx + 1}`}
                   draggable={false}
                   style={{
-                    width: '100%', height: '100%', display: 'block',
+                    /* Portrait activa: ancho proporcional al alto de la grilla (9:16).
+                     * Las otras celdas y landscape llenan siempre el 100% de la celda. */
+                    width: isActivePortrait ? 'calc((100vh - 200px) * 9 / 16)' : '100%',
+                    height: '100%', display: 'block',
                     objectFit: 'cover', objectPosition: 'center',
                     userSelect: 'none', pointerEvents: 'none',
                   }}
