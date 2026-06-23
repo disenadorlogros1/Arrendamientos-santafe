@@ -939,7 +939,7 @@ function SmallPreviewCell({ img, alt, onClick, overlay, onHoverIn, onHoverOut }:
 }
 
 /* ─── Export ──────────────────────────────────────────────────── */
-export default function PropertyGallery({ images, title, stats: _stats }: PropertyGalleryProps) {
+export default function PropertyGallery({ images, title, stats }: PropertyGalleryProps) {
   const [open,       setOpen]       = useState(false);
   const [mounted,    setMounted]    = useState(false);
   const [previewIdx, setPreviewIdx] = useState(0);
