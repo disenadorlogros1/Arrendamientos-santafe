@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { createPortal } from 'react-dom';
 import { X } from 'lucide-react';
 
@@ -33,6 +33,29 @@ function computeCols(n: number): number {
   return ideal;
 }
 
+/*
+ * Divide las imágenes en álbumes de 12.
+ * Si el último álbum tiene menos de 6 fotos, se redistribuye con el penúltimo.
+ */
+function computeAlbums(images: string[]): string[][] {
+  if (images.length <= 12) return [images];
+  const ALBUM_SIZE = 12;
+  const MIN_LAST   = 6;
+  const albums: string[][] = [];
+  for (let i = 0; i < images.length; i += ALBUM_SIZE) {
+    albums.push(images.slice(i, i + ALBUM_SIZE));
+  }
+  const last = albums[albums.length - 1];
+  if (last.length < MIN_LAST && albums.length >= 2) {
+    const penultimate = albums[albums.length - 2];
+    const combined    = [...penultimate, ...last];
+    const half        = Math.ceil(combined.length / 2);
+    albums[albums.length - 2] = combined.slice(0, half);
+    albums[albums.length - 1] = combined.slice(half);
+  }
+  return albums;
+}
+
 /* ─── Grid helpers ────────────────────────────────────────────── */
 /*
  * En hover la celda activa usa gridRow:1/-1 (span total de filas) para
@@ -51,16 +74,33 @@ function buildCols(hoveredCol: number | null, isLandscape: boolean, cols: number
 
 /* ─── BentoGallery ────────────────────────────────────────────── */
 function BentoGallery({ images, onClose }: { images: string[]; onClose: () => void }) {
-  const [hoveredIdx,   setHoveredIdx]   = useState<number | null>(null);
-  const [selectedIdx,  setSelectedIdx]  = useState<number | null>(null);
-  const [isMobile,     setIsMobile]     = useState(false);
-  /* true = landscape, false = portrait/square */
-  const [orientations, setOrientations] = useState<boolean[]>([]);
+  const [hoveredIdx,     setHoveredIdx]     = useState<number | null>(null);
+  const [selectedIdx,    setSelectedIdx]    = useState<number | null>(null);
+  const [activeAlbum,    setActiveAlbum]    = useState(0);
+  const [isMobile,       setIsMobile]       = useState(false);
+  /* true = landscape, false = portrait/square — indexed over ALL images */
+  const [allOrientations, setAllOrientations] = useState<boolean[]>([]);
 
   const carouselRef  = useRef<HTMLDivElement>(null);
   const clearTimer   = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  /* ── Detectar orientación de cada imagen ──────────────────────── */
+  /* ── Álbumes calculados una sola vez ──────────────────────────── */
+  const albums = useMemo(() => computeAlbums(images), [images]);
+  const albumImages = albums[activeAlbum] ?? [];
+
+  /* Índice global donde empieza el álbum activo */
+  const albumStartIdx = useMemo(
+    () => albums.slice(0, activeAlbum).reduce((s, a) => s + a.length, 0),
+    [albums, activeAlbum]
+  );
+
+  /* Orientaciones del álbum activo (slice del array global) */
+  const orientations = useMemo(
+    () => allOrientations.slice(albumStartIdx, albumStartIdx + albumImages.length),
+    [allOrientations, albumStartIdx, albumImages.length]
+  );
+
+  /* ── Detectar orientación de TODAS las imágenes de una vez ──── */
   useEffect(() => {
     let cancelled = false;
     Promise.all(
@@ -74,13 +114,20 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
           if (img.complete && img.naturalWidth > 0) done();
         })
       )
-    ).then(r => { if (!cancelled) setOrientations(r); });
+    ).then(r => { if (!cancelled) setAllOrientations(r); });
     return () => { cancelled = true; };
   }, [images]);
 
-  /* Columnas y filas dinámicas según cantidad de imágenes */
-  const cols = computeCols(images.length);
-  const rows = Math.ceil(images.length / cols);
+  /* ── Cambio de álbum ──────────────────────────────────────────── */
+  const handleAlbumChange = useCallback((idx: number) => {
+    setActiveAlbum(idx);
+    setSelectedIdx(null);
+    setHoveredIdx(null);
+  }, []);
+
+  /* Columnas y filas dinámicas según cantidad de imágenes del álbum activo */
+  const cols = computeCols(albumImages.length);
+  const rows = Math.ceil(albumImages.length / cols);
 
   /* ¿Es landscape la imagen bajo el cursor? */
   const hoveredIsLandscape = hoveredIdx !== null ? (orientations[hoveredIdx] ?? false) : false;
@@ -92,15 +139,15 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
   const gridRows = `repeat(${rows}, 1fr)`;
 
   /* ── Última fila incompleta: qué imagen hace span extra ──────── */
-  const fillerCount  = images.length % cols !== 0 ? cols - (images.length % cols) : 0;
+  const fillerCount  = albumImages.length % cols !== 0 ? cols - (albumImages.length % cols) : 0;
   const lastRowStart = fillerCount > 0 ? (rows - 1) * cols : -1;
   /* Preferir imagen landscape del último row; si no, la última imagen */
   let spanIdx = -1;
   if (fillerCount > 0) {
-    for (let i = lastRowStart; i < images.length; i++) {
+    for (let i = lastRowStart; i < albumImages.length; i++) {
       if (orientations[i] === true) { spanIdx = i; break; }
     }
-    if (spanIdx === -1) spanIdx = images.length - 1;
+    if (spanIdx === -1) spanIdx = albumImages.length - 1;
   }
 
   /* ── Lock scroll ────────────────────────────────────────────── */
@@ -163,8 +210,22 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
             <X size={22} strokeWidth={1.5} />
           </button>
         </div>
+        {/* Álbumes en mobile */}
+        {albums.length > 1 && (
+          <div style={{ display: 'flex', gap: 8, padding: '0 16px 12px', flexWrap: 'wrap' }}>
+            {albums.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => handleAlbumChange(i)}
+                style={{ fontFamily: FONT, fontSize: 12, fontWeight: activeAlbum === i ? 700 : 400, color: activeAlbum === i ? '#fff' : 'rgba(255,255,255,0.5)', background: activeAlbum === i ? 'rgba(255,255,255,0.15)' : 'transparent', border: '1px solid', borderColor: activeAlbum === i ? 'rgba(255,255,255,0.4)' : 'rgba(255,255,255,0.15)', borderRadius: 4, padding: '5px 12px', cursor: 'pointer', transition: `all 0.2s ${EASE}` }}
+              >
+                Álbum {i + 1}
+              </button>
+            ))}
+          </div>
+        )}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 3, padding: '0 3px 3px' }}>
-          {images.map((img, idx) => (
+          {albumImages.map((img, idx) => (
             <div key={idx} style={{ aspectRatio: '1', borderRadius: 6, overflow: 'hidden', background: '#1a1a1a' }}>
               <img src={img} alt={`Foto ${idx + 1}`} draggable={false} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
             </div>
@@ -209,21 +270,19 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
             gap: 4,
           }}
         >
-          {images.map((img, idx) => {
+          {albumImages.map((img, idx) => {
             const isHovered  = hoveredIdx === idx;
             const isSelected = selectedIdx === idx;
             const cellRow    = Math.floor(idx / cols);
             const isLastRow  = fillerCount > 0 && cellRow === rows - 1;
-            const posInRow   = isLastRow ? idx - lastRowStart : idx % cols; // 0-indexed pos within row
+            const posInRow   = isLastRow ? idx - lastRowStart : idx % cols;
 
             /* ── Columna explícita, ajustada para el span de la última fila ── */
             let gridColValue: string | number;
             if (isLastRow) {
               if (idx === spanIdx) {
-                /* Esta imagen hace span para llenar el hueco */
                 gridColValue = `${posInRow + 1} / ${posInRow + 1 + fillerCount + 1}`;
               } else if (spanIdx !== -1 && idx > spanIdx) {
-                /* Imágenes después del span target se desplazan a la derecha */
                 gridColValue = posInRow + fillerCount + 1;
               } else {
                 gridColValue = posInRow + 1;
@@ -275,29 +334,66 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
         </div>
         </div>{/* end wrapper */}
 
-        {/* ── Carousel ───────────────────────────────────────────── */}
-        <div style={{ height: '7vh', minHeight: 48, maxHeight: 68, flexShrink: 0, display: 'flex', justifyContent: 'center', overflow: 'hidden' }}>
-          <div
-            ref={carouselRef}
-            className="bento-carousel"
-            style={{ height: '100%', overflowX: 'auto', overflowY: 'hidden', display: 'flex', alignItems: 'center', gap: 3, padding: '3px 16px 6px', scrollbarWidth: 'none', msOverflowStyle: 'none' as React.CSSProperties['msOverflowStyle'] }}
-          >
-            {images.map((img, idx) => {
-              const isActive = hoveredIdx === idx || selectedIdx === idx;
+        {/* ── Barra inferior: álbumes o carrusel ─────────────────── */}
+        {albums.length > 1 ? (
+          /* Botones de álbum */
+          <div style={{ flexShrink: 0, display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 8, padding: '8px 20px 14px' }}>
+            {albums.map((alb, i) => {
+              const isActive = activeAlbum === i;
               return (
-                <div
-                  key={idx}
-                  onClick={() => handleCellClick(idx)}
-                  onMouseEnter={() => setHoveredIdx(idx)}
-                  onMouseLeave={() => setHoveredIdx(null)}
-                  style={{ flexShrink: 0, height: '100%', aspectRatio: '4/3', borderRadius: 4, overflow: 'hidden', cursor: 'pointer', outline: isActive ? '2px solid rgba(255,255,255,0.8)' : '2px solid transparent', outlineOffset: -2, opacity: isActive ? 1 : 0.45, transform: isActive ? 'scale(1.08)' : 'scale(1)', transition: `opacity 0.2s ${EASE}, transform 0.25s ${EASE}, outline-color 0.15s ${EASE}` }}
+                <button
+                  key={i}
+                  onClick={() => handleAlbumChange(i)}
+                  onMouseEnter={e => { if (!isActive) e.currentTarget.style.borderColor = 'rgba(255,255,255,0.4)'; }}
+                  onMouseLeave={e => { if (!isActive) e.currentTarget.style.borderColor = 'rgba(255,255,255,0.18)'; }}
+                  style={{
+                    fontFamily: FONT,
+                    fontSize: 13,
+                    fontWeight: isActive ? 700 : 400,
+                    color: isActive ? '#fff' : 'rgba(255,255,255,0.5)',
+                    background: isActive ? 'rgba(255,255,255,0.14)' : 'transparent',
+                    border: '1px solid',
+                    borderColor: isActive ? 'rgba(255,255,255,0.45)' : 'rgba(255,255,255,0.18)',
+                    borderRadius: 4,
+                    padding: '6px 18px',
+                    cursor: 'pointer',
+                    letterSpacing: '0.02em',
+                    transition: `all 0.2s ${EASE}`,
+                  }}
                 >
-                  <img src={img} alt={`Miniatura ${idx + 1}`} draggable={false} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', pointerEvents: 'none' }} />
-                </div>
+                  Álbum {i + 1}
+                  <span style={{ marginLeft: 6, fontSize: 11, opacity: 0.55, fontWeight: 400 }}>
+                    {alb.length} fotos
+                  </span>
+                </button>
               );
             })}
           </div>
-        </div>
+        ) : (
+          /* Carrusel original para galerías de ≤ 12 fotos */
+          <div style={{ height: '7vh', minHeight: 48, maxHeight: 68, flexShrink: 0, display: 'flex', justifyContent: 'center', overflow: 'hidden' }}>
+            <div
+              ref={carouselRef}
+              className="bento-carousel"
+              style={{ height: '100%', overflowX: 'auto', overflowY: 'hidden', display: 'flex', alignItems: 'center', gap: 3, padding: '3px 16px 6px', scrollbarWidth: 'none', msOverflowStyle: 'none' as React.CSSProperties['msOverflowStyle'] }}
+            >
+              {albumImages.map((img, idx) => {
+                const isActive = hoveredIdx === idx || selectedIdx === idx;
+                return (
+                  <div
+                    key={idx}
+                    onClick={() => handleCellClick(idx)}
+                    onMouseEnter={() => setHoveredIdx(idx)}
+                    onMouseLeave={() => setHoveredIdx(null)}
+                    style={{ flexShrink: 0, height: '100%', aspectRatio: '4/3', borderRadius: 4, overflow: 'hidden', cursor: 'pointer', outline: isActive ? '2px solid rgba(255,255,255,0.8)' : '2px solid transparent', outlineOffset: -2, opacity: isActive ? 1 : 0.45, transform: isActive ? 'scale(1.08)' : 'scale(1)', transition: `opacity 0.2s ${EASE}, transform 0.25s ${EASE}, outline-color 0.15s ${EASE}` }}
+                  >
+                    <img src={img} alt={`Miniatura ${idx + 1}`} draggable={false} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', pointerEvents: 'none' }} />
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
 
       </div>
     </>,
