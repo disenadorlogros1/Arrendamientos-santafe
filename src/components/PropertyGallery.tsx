@@ -117,11 +117,18 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
   const gridCols = buildColsOriented(hoveredCol, hoveredIsLandscape, cols);
   const gridRows = buildRowsOriented(hoveredRow, hoveredIsLandscape, rows);
 
-  /* En hover: 2 columnas — franja de miniaturas (izq) + imagen activa (der).
-   * La imagen activa abarca todas las filas (full height).
-   * Las n-1 miniaturas se apilan en la columna izquierda. */
-  const thumbRows = Math.max(images.length - 1, 1);
-  const activeGridCols = '100px 1fr';
+  /* En hover:
+   * · Landscape → 2 cols: thumbnails izq (100px) | imagen derecha (1fr, llena el ancho)
+   * · Portrait  → 3 cols: thumbnails izq (1fr) | imagen portrait centrada | thumbnails der (1fr)
+   *   Las 2 columnas de thumbnails llenan el espacio y eliminan el negro lateral. */
+  const n = images.length;
+  const totalThumbs = Math.max(n - 1, 1);
+  const thumbRows = hoveredIsLandscape
+    ? totalThumbs                      // todos los thumbs en 1 columna izq
+    : Math.ceil(totalThumbs / 2);      // mitad por lado
+  const activeGridCols = hoveredIsLandscape
+    ? '100px 1fr'
+    : `1fr calc((100vh - 200px) * 9 / 16) 1fr`;
   const activeGridRows = `repeat(${thumbRows}, 1fr)`;
 
   /* Sin spanning — cada celda ocupa exactamente 1 columna.
@@ -217,12 +224,23 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
             const isHovered  = hoveredIdx === idx;
             const isSelected = selectedIdx === idx;
 
-            /* En hover: imagen activa → col 2 full height; miniaturas → col 1 apiladas */
-            const placementStyle = isHovering
-              ? isHovered
-                ? { gridColumn: '2 / 3', gridRow: '1 / -1' }
-                : { gridColumn: '1 / 2' }
-              : {};
+            /* Placement en hover */
+            let placementStyle: React.CSSProperties = {};
+            if (isHovering) {
+              if (isHovered) {
+                /* Imagen activa: col central, toda la altura */
+                placementStyle = { gridColumn: '2 / 3', gridRow: '1 / -1' };
+              } else if (hoveredIsLandscape) {
+                /* Landscape: todos los thumbs en col 1 (izq) */
+                placementStyle = { gridColumn: '1 / 2' };
+              } else {
+                /* Portrait: thumbs repartidos entre col 1 (izq) y col 3 (der) */
+                let pos = 0;
+                for (let i = 0; i < idx; i++) { if (i !== hoveredIdx) pos++; }
+                const leftCount = Math.ceil(totalThumbs / 2);
+                placementStyle = { gridColumn: pos < leftCount ? '1 / 2' : '3 / 4' };
+              }
+            }
 
             /* Portrait activa: flex centrado para que la celda mantenga proporciones
              * verticales. El ancho se calcula en CSS puro basado en la altura disponible. */
