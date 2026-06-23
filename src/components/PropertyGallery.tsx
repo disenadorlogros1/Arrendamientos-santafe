@@ -76,6 +76,137 @@ function buildCols(hoveredCol: number | null, isLandscape: boolean, cols: number
   ).join(' ');
 }
 
+/* ─── InfoCard — ficha informativa en celda de filler ─────────── */
+const WA_NUM = '573006557529';
+
+function InfoCard({ type, stats, title }: {
+  type: 0 | 1 | 2;
+  stats?: PropertyStats;
+  title: string;
+}) {
+  const baseStyle: React.CSSProperties = {
+    width: '100%', height: '100%',
+    display: 'flex', flexDirection: 'column',
+    justifyContent: 'space-between',
+    padding: '18px 16px 16px',
+    textDecoration: 'none',
+    fontFamily: FONT,
+    color: '#fff',
+    background: 'linear-gradient(145deg, #1a1a1a 0%, #111 100%)',
+    border: '1px solid rgba(255,255,255,0.09)',
+    borderRadius: 12,
+    boxSizing: 'border-box',
+    cursor: 'pointer',
+    overflow: 'hidden',
+    transition: `background 0.25s ${EASE}`,
+  };
+
+  const labelStyle: React.CSSProperties = {
+    fontSize: 10, fontWeight: 600, letterSpacing: '0.1em',
+    textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)',
+    marginBottom: 6,
+  };
+
+  const titleStyle: React.CSSProperties = {
+    fontSize: 15, fontWeight: 700, lineHeight: 1.25,
+    color: '#fff', marginBottom: 6,
+  };
+
+  const bodyStyle: React.CSSProperties = {
+    fontSize: 12, color: 'rgba(255,255,255,0.55)', lineHeight: 1.45,
+    flexGrow: 1,
+  };
+
+  const ctaStyle: React.CSSProperties = {
+    marginTop: 12,
+    display: 'inline-flex', alignItems: 'center', gap: 6,
+    fontSize: 12, fontWeight: 700,
+    color: '#fff',
+    background: 'rgba(255,255,255,0.1)',
+    border: '1px solid rgba(255,255,255,0.18)',
+    borderRadius: 6,
+    padding: '6px 12px',
+    textDecoration: 'none',
+    letterSpacing: '0.02em',
+    flexShrink: 0,
+  };
+
+  const iconBox: React.CSSProperties = {
+    width: 32, height: 32, borderRadius: 8,
+    background: 'rgba(255,255,255,0.08)',
+    display: 'flex', alignItems: 'center', justifyContent: 'center',
+    marginBottom: 10, flexShrink: 0,
+  };
+
+  /* ── Card 0: Ubicación / Inversión ── */
+  if (type === 0) {
+    const slug     = stats?.zone ?? '';
+    const zoneName = slug ? slug.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase()) : 'esta zona';
+    const href     = slug ? `/inversionistas/${slug}` : '/inversionistas';
+    return (
+      <a href={href} style={baseStyle} onClick={e => e.stopPropagation()}>
+        <div style={iconBox}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/>
+          </svg>
+        </div>
+        <div>
+          <div style={labelStyle}>Zona de inversión</div>
+          <div style={titleStyle}>{zoneName}</div>
+          <div style={bodyStyle}>Descubre por qué invertir en esta zona es una oportunidad única en el mercado inmobiliario.</div>
+        </div>
+        <div style={ctaStyle}>Invertir en esta zona &rarr;</div>
+      </a>
+    );
+  }
+
+  /* ── Card 1: Precio y comodidades ── */
+  if (type === 1) {
+    const ref = stats?.reference ?? '';
+    const msg = encodeURIComponent(`Hola, me interesa la propiedad${ref ? ` ${ref}` : ''} (${title}). ¿Podrían darme más información?`);
+    const href = `https://wa.me/${WA_NUM}?text=${msg}`;
+    return (
+      <a href={href} target="_blank" rel="noopener noreferrer" style={baseStyle} onClick={e => e.stopPropagation()}>
+        <div style={iconBox}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+          </svg>
+        </div>
+        <div>
+          <div style={labelStyle}>Precio</div>
+          {stats?.price && <div style={titleStyle}>{stats.price}</div>}
+          <div style={bodyStyle}>
+            {[
+              stats?.bedrooms  ? `${stats.bedrooms} hab.`  : null,
+              stats?.bathrooms ? `${stats.bathrooms} baños` : null,
+              stats?.area      ? stats.area                 : null,
+              stats?.parking   ? `${stats.parking} parq.`  : null,
+            ].filter(Boolean).join('  ·  ')}
+          </div>
+        </div>
+        <div style={ctaStyle}>Hablar con un asesor &rarr;</div>
+      </a>
+    );
+  }
+
+  /* ── Card 2: Propiedades similares ── */
+  return (
+    <a href="/propiedades" style={baseStyle} onClick={e => e.stopPropagation()}>
+      <div style={iconBox}>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+        </svg>
+      </div>
+      <div>
+        <div style={labelStyle}>Explora más</div>
+        <div style={titleStyle}>Propiedades similares</div>
+        <div style={bodyStyle}>Encuentra otras propiedades con características parecidas en nuestra oferta.</div>
+      </div>
+      <div style={ctaStyle}>Ver propiedades &rarr;</div>
+    </a>
+  );
+}
+
 /* ─── AlbumSlot — stack colapsado ↔ thumbnails expandidos ───── */
 function AlbumSlot({ album, albumIndex, isExpanded, onToggle, onThumbHover }: {
   album: string[];
@@ -306,7 +437,12 @@ function AlbumStack({ album, albumIndex, isActive, onClick }: {
 }
 
 /* ─── BentoGallery ────────────────────────────────────────────── */
-function BentoGallery({ images, onClose }: { images: string[]; onClose: () => void }) {
+function BentoGallery({ images, onClose, stats, title }: {
+  images: string[];
+  onClose: () => void;
+  stats?: PropertyStats;
+  title: string;
+}) {
   const [hoveredIdx,     setHoveredIdx]     = useState<number | null>(null);
   const [selectedIdx,    setSelectedIdx]    = useState<number | null>(null);
   const [activeAlbum,    setActiveAlbum]    = useState(0);
@@ -314,6 +450,8 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
   const [isMobile,       setIsMobile]       = useState(false);
   /* true = landscape, false = portrait/square — indexed over ALL images */
   const [allOrientations, setAllOrientations] = useState<boolean[]>([]);
+  /* Tipo de ficha informativa: se elige aleatoriamente al montar */
+  const [infoCardType]   = useState<0 | 1 | 2>(() => Math.floor(Math.random() * 3) as 0 | 1 | 2);
 
   /* Columna visual real del mouse — usada para posicionar celdas filler-span en hover */
   const [hoveredMouseCol, setHoveredMouseCol] = useState(0);
@@ -393,14 +531,19 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
 
   const gridCols = buildCols(hoveredCol, hoveredIsLandscape, cols);
   const gridRows = `repeat(${rows}, 1fr)`;
-  /* Preferir imagen landscape del último row; si no, la última imagen */
-  let spanIdx = -1;
-  if (fillerCount > 0) {
-    for (let i = lastRowStart; i < albumImages.length; i++) {
-      if (orientations[i] === true) { spanIdx = i; break; }
-    }
-    if (spanIdx === -1) spanIdx = albumImages.length - 1;
-  }
+
+  /* Última fila: la imagen FINAL hace span de 2 cols (cuando fillerCount >= 2).
+   * La celda restante la ocupa la InfoCard. fillerCount === 1 → no hay span,
+   * la InfoCard va directamente en el slot vacío. */
+  const lastImgPosInRow = fillerCount > 0
+    ? (albumImages.length - 1) - lastRowStart   // 0-indexed
+    : 0;
+  /* gridColumn CSS de la InfoCard */
+  const infoCardCol = fillerCount > 0
+    ? fillerCount === 1
+      ? `${cols}`                                          // último col
+      : `${lastImgPosInRow + 3} / ${cols + 1}`            // después del span-2
+    : '';
 
   /* ── Lock scroll ────────────────────────────────────────────── */
   useEffect(() => {
@@ -451,6 +594,15 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
         mouseCol = Math.max(0, Math.min(localCols - 1,
           Math.floor((e.clientX - rect.left) / (rect.width / localCols))
         ));
+      }
+      /* Clamp: la última imagen del filler span sólo puede ocupar sus 2 cols naturales.
+       * Evita que el hover intente solaparse con la InfoCard adyacente. */
+      const localFiller = albumImages.length % localCols !== 0
+        ? localCols - (albumImages.length % localCols) : 0;
+      if (localFiller >= 2 && idx === albumImages.length - 1) {
+        const localLastRowStart = (Math.ceil(albumImages.length / localCols) - 1) * localCols;
+        const posInRowLocal = idx - localLastRowStart;
+        mouseCol = Math.min(mouseCol, posInRowLocal + 1);
       }
 
       /* React 18 batchea los tres setState → un solo render, sin parpadeo */
@@ -576,6 +728,21 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
             gap: 4,
           }}
         >
+          {/* ── Celda informativa en slot de filler ── */}
+          {fillerCount > 0 && (
+            <div
+              style={{
+                gridColumn: infoCardCol,
+                gridRow: rows,
+                zIndex: 0,
+                borderRadius: 12,
+                overflow: 'hidden',
+              }}
+            >
+              <InfoCard type={infoCardType} stats={stats} title={title} />
+            </div>
+          )}
+
           {albumImages.map((img, idx) => {
             const isHovered  = hoveredIdx === idx;
             const isSelected = selectedIdx === idx;
@@ -583,21 +750,15 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
             const isLastRow  = fillerCount > 0 && cellRow === rows - 1;
             const posInRow   = isLastRow ? idx - lastRowStart : idx % cols;
 
-            /* ── Columna explícita, ajustada para el span de la última fila ── */
+            /* ── Columna de la celda ───────────────────────────────── */
+            const isLastImg = isLastRow && idx === albumImages.length - 1;
             let gridColValue: string | number;
-            if (isLastRow && !(isHovering && isHovered)) {
-              /* Sin hover: filler span normal */
-              if (idx === spanIdx) {
-                gridColValue = `${posInRow + 1} / ${posInRow + 1 + fillerCount + 1}`;
-              } else if (spanIdx !== -1 && idx > spanIdx) {
-                gridColValue = posInRow + fillerCount + 1;
-              } else {
-                gridColValue = posInRow + 1;
-              }
-            } else if (isHovering && isHovered && isLastRow && fillerCount > 0) {
-              /* Hover en filler-span: colocar en la columna donde está el mouse,
-               * no en la columna lógica del imagen (que podría estar lejos). */
+            if (isHovering && isHovered && isLastRow && fillerCount > 0) {
+              /* Hover: la imagen va a la columna donde está el mouse */
               gridColValue = hoveredMouseCol + 1;
+            } else if (isLastImg && fillerCount >= 2) {
+              /* Sin hover: la última imagen hace span de 2 cols */
+              gridColValue = `${posInRow + 1} / ${posInRow + 3}`;
             } else {
               gridColValue = posInRow + 1;
             }
@@ -815,7 +976,7 @@ export default function PropertyGallery({ images, title, stats: _stats }: Proper
           overlay={images.length > 3 ? `+${images.length - 3} fotos` : undefined}
         />
       </div>
-      {mounted && open && <BentoGallery images={images} onClose={() => setOpen(false)} />}
+      {mounted && open && <BentoGallery images={images} onClose={() => setOpen(false)} stats={stats} title={title} />}
     </>
   );
 }
