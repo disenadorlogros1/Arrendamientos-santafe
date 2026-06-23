@@ -450,38 +450,17 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
 
         {/* ── Barra inferior: álbumes o carrusel ─────────────────── */}
         {albums.length > 1 ? (
-          /* Botones de álbum */
-          <div onClick={e => e.stopPropagation()} style={{ flexShrink: 0, display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 8, padding: '8px 20px 14px' }}>
-            {albums.map((alb, i) => {
-              const isActive = activeAlbum === i;
-              return (
-                <button
-                  key={i}
-                  onClick={() => handleAlbumChange(i)}
-                  onMouseEnter={e => { if (!isActive) e.currentTarget.style.borderColor = 'rgba(255,255,255,0.4)'; }}
-                  onMouseLeave={e => { if (!isActive) e.currentTarget.style.borderColor = 'rgba(255,255,255,0.18)'; }}
-                  style={{
-                    fontFamily: FONT,
-                    fontSize: 13,
-                    fontWeight: isActive ? 700 : 400,
-                    color: isActive ? '#fff' : 'rgba(255,255,255,0.5)',
-                    background: isActive ? 'rgba(255,255,255,0.14)' : 'transparent',
-                    border: '1px solid',
-                    borderColor: isActive ? 'rgba(255,255,255,0.45)' : 'rgba(255,255,255,0.18)',
-                    borderRadius: 4,
-                    padding: '6px 18px',
-                    cursor: 'pointer',
-                    letterSpacing: '0.02em',
-                    transition: `all 0.2s ${EASE}`,
-                  }}
-                >
-                  Álbum {i + 1}
-                  <span style={{ marginLeft: 6, fontSize: 11, opacity: 0.55, fontWeight: 400 }}>
-                    {alb.length} fotos
-                  </span>
-                </button>
-              );
-            })}
+          /* Pilas de álbum */
+          <div onClick={e => e.stopPropagation()} style={{ flexShrink: 0, display: 'flex', justifyContent: 'center', alignItems: 'flex-end', gap: 24, padding: '4px 20px 18px' }}>
+            {albums.map((alb, i) => (
+              <AlbumStack
+                key={i}
+                album={alb}
+                albumIndex={i}
+                isActive={activeAlbum === i}
+                onClick={() => handleAlbumChange(i)}
+              />
+            ))}
           </div>
         ) : (
           /* Carrusel original para galerías de ≤ 12 fotos */
