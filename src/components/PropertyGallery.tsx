@@ -91,6 +91,18 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
   const gridCols = buildCols(hoveredCol, hoveredIsLandscape, cols);
   const gridRows = `repeat(${rows}, 1fr)`;
 
+  /* ── Última fila incompleta: qué imagen hace span extra ──────── */
+  const fillerCount  = images.length % cols !== 0 ? cols - (images.length % cols) : 0;
+  const lastRowStart = fillerCount > 0 ? (rows - 1) * cols : -1;
+  /* Preferir imagen landscape del último row; si no, la última imagen */
+  let spanIdx = -1;
+  if (fillerCount > 0) {
+    for (let i = lastRowStart; i < images.length; i++) {
+      if (orientations[i] === true) { spanIdx = i; break; }
+    }
+    if (spanIdx === -1) spanIdx = images.length - 1;
+  }
+
   /* ── Lock scroll ────────────────────────────────────────────── */
   useEffect(() => {
     document.body.style.overflow = 'hidden';
@@ -200,20 +212,39 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
           {images.map((img, idx) => {
             const isHovered  = hoveredIdx === idx;
             const isSelected = selectedIdx === idx;
-            const cellCol    = idx % cols;
             const cellRow    = Math.floor(idx / cols);
+            const isLastRow  = fillerCount > 0 && cellRow === rows - 1;
+            const posInRow   = isLastRow ? idx - lastRowStart : idx % cols; // 0-indexed pos within row
+
+            /* ── Columna explícita, ajustada para el span de la última fila ── */
+            let gridColValue: string | number;
+            if (isLastRow) {
+              if (idx === spanIdx) {
+                /* Esta imagen hace span para llenar el hueco */
+                gridColValue = `${posInRow + 1} / ${posInRow + 1 + fillerCount + 1}`;
+              } else if (spanIdx !== -1 && idx > spanIdx) {
+                /* Imágenes después del span target se desplazan a la derecha */
+                gridColValue = posInRow + fillerCount + 1;
+              } else {
+                gridColValue = posInRow + 1;
+              }
+            } else {
+              gridColValue = posInRow + 1;
+            }
+
             /* Misma columna que el hovered pero no es la celda activa → ocultar */
-            const sameCol    = isHovering && hoveredCol !== null && cellCol === hoveredCol;
-            const hideCell   = sameCol && !isHovered;
-            const opacity    = hideCell ? 0 : (!isHovering ? 1 : isHovered ? 1 : 0.5);
+            const cellCol = idx % cols;
+            const sameCol = isHovering && hoveredCol !== null && cellCol === hoveredCol;
+            const hideCell = sameCol && !isHovered;
+            const opacity  = hideCell ? 0 : (!isHovering ? 1 : isHovered ? 1 : 0.5);
+
             return (
               <div
                 key={idx}
                 data-idx={idx}
                 onClick={() => handleCellClick(idx)}
                 style={{
-                  /* Posición explícita — la celda hover hace span de todas las filas */
-                  gridColumn: cellCol + 1,
+                  gridColumn: gridColValue,
                   gridRow: isHovering && isHovered ? '1 / -1' : cellRow + 1,
                   zIndex: isHovering && isHovered ? 1 : 0,
                   position: 'relative',
@@ -241,37 +272,6 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
               </div>
             );
           })}
-          {/* Filler cells para última fila incompleta — usan imágenes del mismo set para evitar espacio negro */}
-          {images.length % cols !== 0 &&
-            Array.from({ length: cols - (images.length % cols) }, (_, i) => {
-              const fillerCol = (images.length % cols) + i;
-              const fillerRow = rows - 1;
-              const src = images[i % images.length];
-              return (
-                <div
-                  key={`ph-${i}`}
-                  style={{
-                    gridColumn: fillerCol + 1,
-                    gridRow: fillerRow + 1,
-                    position: 'relative',
-                    overflow: 'hidden',
-                    borderRadius: 8,
-                    background: '#111',
-                    opacity: isHovering ? 0.15 : 0.55,
-                    pointerEvents: 'none',
-                    transition: `opacity 0.35s ${EASE}`,
-                  }}
-                >
-                  <img
-                    src={src}
-                    alt=""
-                    draggable={false}
-                    style={{ width: '100%', height: '100%', display: 'block', objectFit: 'cover', objectPosition: 'center', userSelect: 'none', pointerEvents: 'none' }}
-                  />
-                </div>
-              );
-            })
-          }
         </div>
         </div>{/* end wrapper */}
 
