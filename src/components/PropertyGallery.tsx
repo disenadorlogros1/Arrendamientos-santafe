@@ -72,6 +72,92 @@ function buildCols(hoveredCol: number | null, isLandscape: boolean, cols: number
   ).join(' ');
 }
 
+/* ─── AlbumSlot — stack colapsado ↔ thumbnails expandidos ───── */
+function AlbumSlot({ album, albumIndex, isExpanded, onToggle }: {
+  album: string[];
+  albumIndex: number;
+  isExpanded: boolean;
+  onToggle: () => void;
+}) {
+  const PHOTO_W    = 46;
+  const PHOTO_H    = 62;
+  const X_STEP     = 16;
+  const SLOT_H     = PHOTO_H + 22;          // altura fija del slot = 84px
+  const count      = Math.min(3, album.length);
+  const collapsedW = PHOTO_W + (count - 1) * X_STEP + 18;
+  const EXPANDED_W = 460;
+
+  return (
+    <div
+      style={{
+        position: 'relative',
+        overflow: 'hidden',
+        height: SLOT_H,
+        width: isExpanded ? EXPANDED_W : collapsedW,
+        flexShrink: 0,
+        transition: `width 0.45s ${EASE}`,
+      }}
+    >
+      {/* ── Vista comprimida: pila de fotos ── */}
+      <div style={{
+        position: 'absolute', inset: 0,
+        opacity: isExpanded ? 0 : 1,
+        pointerEvents: isExpanded ? 'none' : 'auto',
+        transition: `opacity 0.18s ${EASE}`,
+      }}>
+        <AlbumStack
+          album={album}
+          albumIndex={albumIndex}
+          isActive={false}
+          onClick={onToggle}
+        />
+      </div>
+
+      {/* ── Vista expandida: thumbnails horizontales ── */}
+      <div style={{
+        position: 'absolute', inset: 0,
+        opacity: isExpanded ? 1 : 0,
+        pointerEvents: isExpanded ? 'auto' : 'none',
+        transition: `opacity 0.22s 0.18s ${EASE}`, // aparece tras el ancho
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        padding: '0 6px',
+      }}>
+        {/* Label + badge */}
+        <div style={{ display: 'flex', alignItems: 'baseline', gap: 6, marginBottom: 6, paddingLeft: 2 }}>
+          <span style={{ fontFamily: FONT, fontSize: 11, fontWeight: 700, color: '#fff', letterSpacing: '0.03em' }}>
+            Álbum {albumIndex + 1}
+          </span>
+          <span style={{ fontFamily: FONT, fontSize: 10, color: 'rgba(255,255,255,0.4)' }}>
+            {album.length} fotos
+          </span>
+        </div>
+        {/* Tira de thumbnails */}
+        <div
+          className="bento-carousel"
+          style={{
+            display: 'flex',
+            gap: 4,
+            overflowX: 'auto',
+            overflowY: 'hidden',
+            scrollbarWidth: 'none',
+            msOverflowStyle: 'none' as React.CSSProperties['msOverflowStyle'],
+            height: 52,
+            alignItems: 'center',
+          }}
+        >
+          {album.map((img, i) => (
+            <div key={i} style={{ flexShrink: 0, height: 48, aspectRatio: '4/3', borderRadius: 4, overflow: 'hidden', border: '1px solid rgba(255,255,255,0.18)' }}>
+              <img src={img} alt="" draggable={false} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', pointerEvents: 'none' }} />
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 /* ─── AlbumStack ──────────────────────────────────────────────── */
 function AlbumStack({ album, albumIndex, isActive, onClick }: {
   album: string[];
@@ -462,81 +548,31 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
         </div>
         </div>{/* end wrapper */}
 
-        {/* ── Barra inferior con pilas + thumbnails expandibles ───── */}
+        {/* ── Barra inferior: álbumes inline (expansión horizontal) ─ */}
         {albums.length > 1 ? (
           <div
             onClick={e => e.stopPropagation()}
             style={{
               flexShrink: 0,
               display: 'flex',
-              flexDirection: 'column',
+              flexDirection: 'row',
+              justifyContent: 'center',
+              alignItems: 'center',
+              gap: 16,
+              padding: '10px 24px 18px',
               background: 'rgba(255,255,255,0.04)',
               borderTop: '1px solid rgba(255,255,255,0.07)',
             }}
           >
-            {/* Pilas de álbum — siempre visibles */}
-            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-end', gap: 24, padding: '10px 20px 12px' }}>
-              {albums.map((alb, i) => (
-                <AlbumStack
-                  key={i}
-                  album={alb}
-                  albumIndex={i}
-                  isActive={activeAlbum === i && panelOpen}
-                  onClick={() => handleAlbumChange(i)}
-                />
-              ))}
-            </div>
-
-            {/* Thumbnails del álbum activo — se despliegan debajo de las pilas */}
-            <div
-              style={{
-                overflow: 'hidden',
-                maxHeight: panelOpen ? '106px' : '0px',
-                opacity: panelOpen ? 1 : 0,
-                transition: `max-height 0.38s ${EASE}, opacity 0.28s ${EASE}`,
-                borderTop: panelOpen ? '1px solid rgba(255,255,255,0.07)' : 'none',
-              }}
-            >
-              <div
-                className="bento-carousel"
-                style={{
-                  display: 'flex',
-                  gap: 5,
-                  padding: '8px 20px 10px',
-                  overflowX: 'auto',
-                  overflowY: 'hidden',
-                  height: 96,
-                  alignItems: 'center',
-                  scrollbarWidth: 'none',
-                  msOverflowStyle: 'none' as React.CSSProperties['msOverflowStyle'],
-                }}
-              >
-                {(albums[activeAlbum] ?? []).map((img, i) => (
-                  <div
-                    key={i}
-                    style={{
-                      flexShrink: 0,
-                      height: 78,
-                      aspectRatio: '4/3',
-                      borderRadius: 6,
-                      overflow: 'hidden',
-                      border: '1.5px solid rgba(255,255,255,0.15)',
-                      boxShadow: '0 2px 8px rgba(0,0,0,0.5)',
-                      transition: `transform 0.22s ${EASE}`,
-                    }}
-                    onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.transform = 'scale(1.06)'; }}
-                    onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.transform = 'scale(1)'; }}
-                  >
-                    <img
-                      src={img}
-                      alt={`Miniatura ${i + 1}`}
-                      draggable={false}
-                      style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', pointerEvents: 'none' }}
-                    />
-                  </div>
-                ))}
-              </div>
-            </div>
+            {albums.map((alb, i) => (
+              <AlbumSlot
+                key={i}
+                album={alb}
+                albumIndex={i}
+                isExpanded={activeAlbum === i && panelOpen}
+                onToggle={() => handleAlbumChange(i)}
+              />
+            ))}
           </div>
         ) : (
           /* Carrusel original para galerías de ≤ 12 fotos */
