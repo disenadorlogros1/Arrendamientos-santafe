@@ -34,15 +34,6 @@ function computeCols(n: number): number {
 }
 
 /* ─── Grid helpers orientados ─────────────────────────────────── */
-/*
- * Portrait hover → solo el ROW se expande (~87% de la altura).
- *   Columnas permanecen 1fr. La celda queda alta y estrecha (portrait).
- *
- * Landscape hover → COL + ROW se expanden juntos para acercar el ratio
- *   de la celda al ratio natural 2:1 de las imágenes landscape.
- *   Col activa: 67% del ancho. Row activo: 60% del alto.
- *   object-fit:cover llena la celda sin barras negras.
- */
 function buildColsOriented(
   hoveredCol: number | null,
   isLandscape: boolean,
@@ -50,25 +41,28 @@ function buildColsOriented(
 ): string {
   if (hoveredCol === null) return `repeat(${cols}, 1fr)`;
   if (isLandscape) {
-    /* Landscape: columna activa llena casi todo el ancho.
-     * Las otras columnas quedan como franjas visibles a los lados (2fr). */
+    /* Landscape: col activa toma ~75% del ancho, las otras se comprimen. */
     return Array.from({ length: cols }, (_, i) =>
-      i === hoveredCol ? '50fr' : '2fr'
+      i === hoveredCol ? '6fr' : '1fr'
     ).join(' ');
   }
-  /* Portrait: columnas iguales → proporciones portrait naturales con la fila expandida. */
+  /* Portrait: columnas iguales. Con la fila muy expandida la celda queda
+   * alta y estrecha (portrait). Las celdas del mismo row quedan a los lados. */
   return `repeat(${cols}, 1fr)`;
 }
 
 function buildRowsOriented(
   hoveredRow: number | null,
-  _isLandscape: boolean,
+  isLandscape: boolean,
   rows: number
 ): string {
   if (hoveredRow === null) return `repeat(${rows}, 1fr)`;
-  /* Fila activa llena casi toda la altura; las otras quedan como franjas visibles. */
+  /* Portrait: fila activa ~97% de la altura, otras son franjas de 0.5fr.
+   * Landscape: fila activa ~80%, otras 1fr (más visibles porque la col se expande). */
+  const active = isLandscape ? '4fr' : '20fr';
+  const rest   = isLandscape ? '1fr' : '0.5fr';
   return Array.from({ length: rows }, (_, i) =>
-    i === hoveredRow ? '50fr' : '1fr'
+    i === hoveredRow ? active : rest
   ).join(' ');
 }
 
@@ -105,36 +99,15 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
   const cols = computeCols(images.length);
   const rows = Math.ceil(images.length / cols);
 
-  const isHovering = hoveredIdx !== null;
-
   /* ¿Es landscape la imagen bajo el cursor? */
   const hoveredIsLandscape = hoveredIdx !== null ? (orientations[hoveredIdx] ?? false) : false;
 
-  /* Derived: which col/row is hovered (solo para estado normal sin hover) */
-  const hoveredCol = hoveredIdx !== null ? hoveredIdx % cols : null;
-  const hoveredRow = hoveredIdx !== null ? Math.floor(hoveredIdx / cols) : null;
+  const hoveredCol  = hoveredIdx !== null ? hoveredIdx % cols : null;
+  const hoveredRow  = hoveredIdx !== null ? Math.floor(hoveredIdx / cols) : null;
+  const isHovering  = hoveredIdx !== null;
 
-  /* Grid strings para estado normal */
   const gridCols = buildColsOriented(hoveredCol, hoveredIsLandscape, cols);
   const gridRows = buildRowsOriented(hoveredRow, hoveredIsLandscape, rows);
-
-  /* En hover:
-   * · Landscape → 2 cols: thumbnails izq (100px) | imagen derecha (1fr, llena el ancho)
-   * · Portrait  → 3 cols: thumbnails izq (1fr) | imagen portrait centrada | thumbnails der (1fr)
-   *   Las 2 columnas de thumbnails llenan el espacio y eliminan el negro lateral. */
-  const n = images.length;
-  const totalThumbs = Math.max(n - 1, 1);
-  const thumbRows = hoveredIsLandscape
-    ? totalThumbs                      // todos los thumbs en 1 columna izq
-    : Math.ceil(totalThumbs / 2);      // mitad por lado
-  const activeGridCols = hoveredIsLandscape
-    ? '100px 1fr'
-    : `1fr calc((100vh - 200px) * 9 / 16) 1fr`;
-  const activeGridRows = `repeat(${thumbRows}, 1fr)`;
-
-  /* Sin spanning — cada celda ocupa exactamente 1 columna.
-   * El spanning rompía el hover portrait: una celda con span 2 acumula
-   * 0.6fr + 1fr = 1.6fr y queda más ancha que alta aunque sea portrait. */
 
   /* ── Lock scroll ────────────────────────────────────────────── */
   useEffect(() => {
@@ -236,8 +209,8 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
           style={{
             display: 'grid',
             height: '100%',
-            gridTemplateColumns: isHovering ? activeGridCols : gridCols,
-            gridTemplateRows:    isHovering ? activeGridRows  : gridRows,
+            gridTemplateColumns: gridCols,
+            gridTemplateRows:    gridRows,
             transition: GRID_TRANSITION,
             gap: 4,
           }}
@@ -245,47 +218,24 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
           {images.map((img, idx) => {
             const isHovered  = hoveredIdx === idx;
             const isSelected = selectedIdx === idx;
-
-            /* Placement en hover */
-            let placementStyle: React.CSSProperties = {};
-            if (isHovering) {
-              if (isHovered) {
-                /* Imagen activa: col central, toda la altura */
-                placementStyle = { gridColumn: '2 / 3', gridRow: '1 / -1' };
-              } else if (hoveredIsLandscape) {
-                /* Landscape: todos los thumbs en col 1 (izq) */
-                placementStyle = { gridColumn: '1 / 2' };
-              } else {
-                /* Portrait: thumbs repartidos entre col 1 (izq) y col 3 (der) */
-                let pos = 0;
-                for (let i = 0; i < idx; i++) { if (i !== hoveredIdx) pos++; }
-                const leftCount = Math.ceil(totalThumbs / 2);
-                placementStyle = { gridColumn: pos < leftCount ? '1 / 2' : '3 / 4' };
-              }
-            }
-
-            /* Portrait activa: flex centrado para que la celda mantenga proporciones
-             * verticales. El ancho se calcula en CSS puro basado en la altura disponible. */
-            const isActivePortrait = isHovering && isHovered && !hoveredIsLandscape;
-
+            /* Mismo row que el hovered → imagen "a los lados", más opacidad */
+            const sameRow = isHovering && hoveredRow !== null
+              && Math.floor(idx / cols) === hoveredRow;
+            const opacity = !isHovering ? 1 : isHovered ? 1 : sameRow ? 0.65 : 0.2;
             return (
               <div
                 key={idx}
                 data-idx={idx}
                 onClick={() => handleCellClick(idx)}
                 style={{
-                  ...placementStyle,
                   position: 'relative',
-                  display: isActivePortrait ? 'flex' : undefined,
-                  justifyContent: isActivePortrait ? 'center' : undefined,
-                  alignItems: isActivePortrait ? 'stretch' : undefined,
                   overflow: 'hidden',
                   borderRadius: 8,
                   cursor: 'pointer',
-                  background: isActivePortrait ? '#0c0c0c' : '#111',
+                  background: '#111',
                   outline: isSelected ? '2px solid rgba(255,255,255,0.65)' : '2px solid transparent',
                   outlineOffset: -2,
-                  opacity: isHovering && !isHovered ? 0.45 : 1,
+                  opacity,
                   transition: `opacity 0.4s ${EASE}, outline-color 0.2s ${EASE}`,
                 }}
               >
@@ -294,10 +244,7 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
                   alt={`Foto ${idx + 1}`}
                   draggable={false}
                   style={{
-                    /* Portrait activa: ancho proporcional al alto de la grilla (9:16).
-                     * Las otras celdas y landscape llenan siempre el 100% de la celda. */
-                    width: isActivePortrait ? 'calc((100vh - 200px) * 9 / 16)' : '100%',
-                    height: '100%', display: 'block',
+                    width: '100%', height: '100%', display: 'block',
                     objectFit: 'cover', objectPosition: 'center',
                     userSelect: 'none', pointerEvents: 'none',
                   }}
@@ -305,8 +252,8 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
               </div>
             );
           })}
-          {/* Placeholders solo en estado normal (sin hover) */}
-          {!isHovering && images.length % cols !== 0 &&
+          {/* Placeholders invisibles para última fila incompleta */}
+          {images.length % cols !== 0 &&
             Array.from({ length: cols - (images.length % cols) }, (_, i) => (
               <div key={`ph-${i}`} style={{ opacity: 0, pointerEvents: 'none' }} />
             ))
