@@ -276,21 +276,23 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
         </div>{/* end wrapper */}
 
         {/* ── Carousel ───────────────────────────────────────────── */}
-        <div style={{ height: '10vh', minHeight: 60, maxHeight: 90, flexShrink: 0, display: 'flex', justifyContent: 'center', overflow: 'hidden' }}>
+        <div style={{ height: '7vh', minHeight: 48, maxHeight: 68, flexShrink: 0, display: 'flex', justifyContent: 'center', overflow: 'hidden' }}>
           <div
             ref={carouselRef}
             className="bento-carousel"
-            style={{ height: '100%', overflowX: 'auto', overflowY: 'hidden', display: 'flex', alignItems: 'center', gap: 4, padding: '4px 16px 8px', scrollbarWidth: 'none', msOverflowStyle: 'none' as React.CSSProperties['msOverflowStyle'] }}
+            style={{ height: '100%', overflowX: 'auto', overflowY: 'hidden', display: 'flex', alignItems: 'center', gap: 3, padding: '3px 16px 6px', scrollbarWidth: 'none', msOverflowStyle: 'none' as React.CSSProperties['msOverflowStyle'] }}
           >
             {images.map((img, idx) => {
-              const isActive = selectedIdx === idx;
+              const isActive = hoveredIdx === idx || selectedIdx === idx;
               return (
                 <div
                   key={idx}
                   onClick={() => handleCellClick(idx)}
-                  style={{ flexShrink: 0, height: '100%', aspectRatio: '4/3', borderRadius: 5, overflow: 'hidden', cursor: 'pointer', outline: isActive ? '2px solid #fff' : '2px solid transparent', outlineOffset: -2, opacity: isActive ? 1 : 0.55, transform: isActive ? 'scale(1.06)' : 'scale(1)', transition: `opacity 0.2s ${EASE}, transform 0.2s ${EASE}, outline-color 0.2s ${EASE}` }}
+                  onMouseEnter={() => setHoveredIdx(idx)}
+                  onMouseLeave={() => setHoveredIdx(null)}
+                  style={{ flexShrink: 0, height: '100%', aspectRatio: '4/3', borderRadius: 4, overflow: 'hidden', cursor: 'pointer', outline: isActive ? '2px solid rgba(255,255,255,0.8)' : '2px solid transparent', outlineOffset: -2, opacity: isActive ? 1 : 0.45, transform: isActive ? 'scale(1.08)' : 'scale(1)', transition: `opacity 0.2s ${EASE}, transform 0.25s ${EASE}, outline-color 0.15s ${EASE}` }}
                 >
-                  <img src={img} alt={`Miniatura ${idx + 1}`} draggable={false} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+                  <img src={img} alt={`Miniatura ${idx + 1}`} draggable={false} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', pointerEvents: 'none' }} />
                 </div>
               );
             })}
