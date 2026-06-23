@@ -14,6 +14,10 @@ const GRID_TRANSITION = 'grid-template-columns 0.55s cubic-bezier(0.25,0.46,0.45
 export interface PropertyStats {
   bedrooms?: number; bathrooms?: number;
   area?: string; price?: string; parking?: number;
+  /** Slug de la zona de inversión, p.ej. 'laureles', 'el-poblado', 'rionegro' */
+  zone?: string;
+  /** Código de referencia de la propiedad, p.ej. 'A12594' */
+  reference?: string;
 }
 interface PropertyGalleryProps { images: string[]; title: string; stats?: PropertyStats; }
 
