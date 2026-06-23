@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { createPortal } from 'react-dom';
-import { X } from 'lucide-react';
+import { X, ChevronLeft, ChevronRight } from 'lucide-react';
 
 /* ─── Constants ────────────────────────────────────────────────── */
 const FONT  = "'Avenir LT Std', 'Outfit', system-ui, sans-serif";
