@@ -198,6 +198,10 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
 
   const carouselRef  = useRef<HTMLDivElement>(null);
   const clearTimer   = useRef<ReturnType<typeof setTimeout> | null>(null);
+  /* Caché de orientación por URL — persiste entre renders sin causar re-renders.
+   * Se llena en el primer hover real (img ya renderizado en DOM, EXIF aplicado).
+   * Evita el bug de EXIF-en-preload y el de onLoad-no-dispara-en-caché. */
+  const orientMap    = useRef<Map<string, boolean>>(new Map());
 
   /* ── Álbumes calculados una sola vez ──────────────────────────── */
   const albums = useMemo(() => computeAlbums(images), [images]);
@@ -292,26 +296,29 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
     const raw  = cell?.dataset?.idx;
     const idx  = raw !== undefined ? parseInt(raw) : null;
     if (clearTimer.current) { clearTimeout(clearTimer.current); clearTimer.current = null; }
-    if (idx !== null) {
-      /* Leer orientación del <img> ya renderizado — garantiza que el browser
-       * aplicó la rotación EXIF antes de comparar dimensiones.
-       * En React 18 este setState + el de hoveredIdx se batchean en un solo render. */
-      const imgEl = cell?.querySelector('img') as HTMLImageElement | null;
-      if (imgEl && imgEl.naturalWidth > 0) {
-        const isLandscape = imgEl.naturalWidth > imgEl.naturalHeight;
-        const gIdx = albumStartIdx + idx;
-        setAllOrientations(prev => {
-          if (prev[gIdx] === isLandscape) return prev;
-          const copy = [...prev];
-          copy[gIdx] = isLandscape;
-          return copy;
-        });
+    if (idx !== null && cell) {
+      /* Orientación desde Map ref (evita EXIF-preload bug + onLoad-cache bug).
+       * Si la URL no está en el mapa, leer del img renderizado en DOM.
+       * naturalWidth/Height del img real siempre refleja la rotación EXIF aplicada. */
+      const src   = albumImages[idx] ?? '';
+      if (!orientMap.current.has(src)) {
+        const imgEl = cell.querySelector('img') as HTMLImageElement | null;
+        if (imgEl && imgEl.complete && imgEl.naturalWidth > 0) {
+          orientMap.current.set(src, imgEl.naturalWidth > imgEl.naturalHeight);
+        }
       }
+      const isLandscape = orientMap.current.get(src) ?? false;
+      const gIdx = albumStartIdx + idx;
+      /* React 18 batchea ambos setState → un solo render, sin parpadeo */
+      setAllOrientations(prev => {
+        if (prev[gIdx] === isLandscape) return prev;
+        const copy = [...prev]; copy[gIdx] = isLandscape; return copy;
+      });
       setHoveredIdx(prev => prev === idx ? prev : idx);
     } else {
       clearTimer.current = setTimeout(() => setHoveredIdx(null), 80);
     }
-  }, [albumStartIdx]);
+  }, [albumStartIdx, albumImages]);
 
   const handleGridMouseLeave = useCallback(() => {
     if (clearTimer.current) clearTimeout(clearTimer.current);
