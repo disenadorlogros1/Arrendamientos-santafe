@@ -23,7 +23,14 @@ interface PropertyGalleryProps { images: string[]; title: string; stats?: Proper
  * Fórmula: round(sqrt(n × 1.5)), clampado entre 3 y 6.
  */
 function computeCols(n: number): number {
-  return Math.max(3, Math.min(6, Math.round(Math.sqrt(n * 1.5))));
+  const ideal = Math.max(3, Math.min(6, Math.round(Math.sqrt(n * 1.5))));
+  // Prefer a value that divides n evenly → no empty cells in the last row
+  for (let d = 0; d <= 2; d++) {
+    for (const c of [ideal, ideal - d, ideal + d]) {
+      if (c >= 3 && c <= 6 && n % c === 0) return c;
+    }
+  }
+  return ideal;
 }
 
 /* ─── Grid helpers orientados ─────────────────────────────────── */
