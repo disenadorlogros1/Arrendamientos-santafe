@@ -330,18 +330,25 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
   const cols = computeCols(albumImages.length);
   const rows = Math.ceil(albumImages.length / cols);
 
+  /* ── Última fila incompleta ────────────────────────────────────── */
+  const fillerCount  = albumImages.length % cols !== 0 ? cols - (albumImages.length % cols) : 0;
+  const lastRowStart = fillerCount > 0 ? (rows - 1) * cols : -1;
+
   /* ¿Es landscape la imagen bajo el cursor? */
   const hoveredIsLandscape = hoveredIdx !== null ? (orientations[hoveredIdx] ?? false) : false;
 
-  const hoveredCol = hoveredIdx !== null ? hoveredIdx % cols : null;
+  /* Si la celda hovered es la del filler-span (última fila incompleta), usar la
+   * columna visual real del mouse en lugar de la columna lógica de la imagen.
+   * Así la imagen expandida aparece justo donde está el cursor. */
+  const isFillerSpanHovered = hoveredIdx !== null && fillerCount > 0 &&
+    Math.floor(hoveredIdx / cols) === rows - 1;
+  const hoveredCol = hoveredIdx !== null
+    ? (isFillerSpanHovered ? hoveredMouseCol : hoveredIdx % cols)
+    : null;
   const isHovering = hoveredIdx !== null;
 
   const gridCols = buildCols(hoveredCol, hoveredIsLandscape, cols);
   const gridRows = `repeat(${rows}, 1fr)`;
-
-  /* ── Última fila incompleta: qué imagen hace span extra ──────── */
-  const fillerCount  = albumImages.length % cols !== 0 ? cols - (albumImages.length % cols) : 0;
-  const lastRowStart = fillerCount > 0 ? (rows - 1) * cols : -1;
   /* Preferir imagen landscape del último row; si no, la última imagen */
   let spanIdx = -1;
   if (fillerCount > 0) {
@@ -391,7 +398,19 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
       }
       const isLandscape = orientMap.current.get(src) ?? false;
       const gIdx = albumStartIdx + idx;
-      /* React 18 batchea ambos setState → un solo render, sin parpadeo */
+
+      /* Columna visual real del cursor (para posicionar filler-span en hover) */
+      const localCols = computeCols(albumImages.length);
+      let mouseCol = idx % localCols;
+      if (gridRef.current) {
+        const rect = gridRef.current.getBoundingClientRect();
+        mouseCol = Math.max(0, Math.min(localCols - 1,
+          Math.floor((e.clientX - rect.left) / (rect.width / localCols))
+        ));
+      }
+
+      /* React 18 batchea los tres setState → un solo render, sin parpadeo */
+      setHoveredMouseCol(mouseCol);
       setAllOrientations(prev => {
         if (prev[gIdx] === isLandscape) return prev;
         const copy = [...prev]; copy[gIdx] = isLandscape; return copy;
@@ -475,6 +494,7 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
         {/* ── Accordion grid ─────────────────────────────────────── */}
         <div onClick={e => e.stopPropagation()} style={{ flex: 1, minHeight: 0, overflow: 'hidden', padding: '0 16px 8px' }}>
         <div
+          ref={gridRef}
           onMouseMove={handleGridMouseMove}
           onMouseLeave={handleGridMouseLeave}
           style={{
@@ -494,10 +514,9 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
             const posInRow   = isLastRow ? idx - lastRowStart : idx % cols;
 
             /* ── Columna explícita, ajustada para el span de la última fila ── */
-            /* Cuando la celda está hovered, se ignora el filler span para que
-             * la expansión portrait (columna estrecha) funcione correctamente. */
             let gridColValue: string | number;
             if (isLastRow && !(isHovering && isHovered)) {
+              /* Sin hover: filler span normal */
               if (idx === spanIdx) {
                 gridColValue = `${posInRow + 1} / ${posInRow + 1 + fillerCount + 1}`;
               } else if (spanIdx !== -1 && idx > spanIdx) {
@@ -505,6 +524,10 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
               } else {
                 gridColValue = posInRow + 1;
               }
+            } else if (isHovering && isHovered && isLastRow && fillerCount > 0) {
+              /* Hover en filler-span: colocar en la columna donde está el mouse,
+               * no en la columna lógica del imagen (que podría estar lejos). */
+              gridColValue = hoveredMouseCol + 1;
             } else {
               gridColValue = posInRow + 1;
             }
