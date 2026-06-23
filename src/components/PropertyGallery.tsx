@@ -73,16 +73,17 @@ function buildCols(hoveredCol: number | null, isLandscape: boolean, cols: number
 }
 
 /* ─── AlbumSlot — stack colapsado ↔ thumbnails expandidos ───── */
-function AlbumSlot({ album, albumIndex, isExpanded, onToggle }: {
+function AlbumSlot({ album, albumIndex, isExpanded, onToggle, onThumbHover }: {
   album: string[];
   albumIndex: number;
   isExpanded: boolean;
   onToggle: () => void;
+  onThumbHover: (idx: number | null) => void;
 }) {
   const PHOTO_W    = 46;
   const PHOTO_H    = 62;
   const X_STEP     = 16;
-  const SLOT_H     = PHOTO_H + 22;          // altura fija del slot = 84px
+  const SLOT_H     = PHOTO_H + 22;
   const count      = Math.min(3, album.length);
   const collapsedW = PHOTO_W + (count - 1) * X_STEP + 18;
   const EXPANDED_W = 460;
@@ -105,50 +106,76 @@ function AlbumSlot({ album, albumIndex, isExpanded, onToggle }: {
         pointerEvents: isExpanded ? 'none' : 'auto',
         transition: `opacity 0.18s ${EASE}`,
       }}>
-        <AlbumStack
-          album={album}
-          albumIndex={albumIndex}
-          isActive={false}
-          onClick={onToggle}
-        />
+        <AlbumStack album={album} albumIndex={albumIndex} isActive={false} onClick={onToggle} />
       </div>
 
-      {/* ── Vista expandida: thumbnails horizontales ── */}
+      {/* ── Vista expandida: primera tarjeta = label, resto = thumbnails ── */}
       <div style={{
         position: 'absolute', inset: 0,
         opacity: isExpanded ? 1 : 0,
         pointerEvents: isExpanded ? 'auto' : 'none',
-        transition: `opacity 0.22s 0.18s ${EASE}`, // aparece tras el ancho
+        transition: `opacity 0.22s 0.18s ${EASE}`,
         display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        padding: '0 6px',
+        alignItems: 'center',
+        padding: '0 4px',
       }}>
-        {/* Label + badge */}
-        <div style={{ display: 'flex', alignItems: 'baseline', gap: 6, marginBottom: 6, paddingLeft: 2 }}>
-          <span style={{ fontFamily: FONT, fontSize: 11, fontWeight: 700, color: '#fff', letterSpacing: '0.03em' }}>
-            Álbum {albumIndex + 1}
-          </span>
-          <span style={{ fontFamily: FONT, fontSize: 10, color: 'rgba(255,255,255,0.4)' }}>
-            {album.length} fotos
-          </span>
-        </div>
-        {/* Tira de thumbnails */}
         <div
           className="bento-carousel"
           style={{
             display: 'flex',
-            gap: 4,
+            gap: 5,
             overflowX: 'auto',
             overflowY: 'hidden',
             scrollbarWidth: 'none',
             msOverflowStyle: 'none' as React.CSSProperties['msOverflowStyle'],
-            height: 52,
+            height: 68,
             alignItems: 'center',
+            width: '100%',
           }}
         >
+          {/* Tarjeta de título (primera posición) */}
+          <div
+            onClick={onToggle}
+            style={{
+              flexShrink: 0,
+              height: 64,
+              width: 78,
+              borderRadius: 6,
+              background: 'rgba(255,255,255,0.08)',
+              border: '1px solid rgba(255,255,255,0.22)',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: 'pointer',
+              gap: 3,
+            }}
+          >
+            <span style={{ fontFamily: FONT, fontSize: 11, fontWeight: 700, color: '#fff', letterSpacing: '0.02em' }}>
+              Álbum {albumIndex + 1}
+            </span>
+            <span style={{ fontFamily: FONT, fontSize: 10, color: 'rgba(255,255,255,0.45)' }}>
+              {album.length} fotos
+            </span>
+          </div>
+
+          {/* Thumbnails de fotos */}
           {album.map((img, i) => (
-            <div key={i} style={{ flexShrink: 0, height: 48, aspectRatio: '4/3', borderRadius: 4, overflow: 'hidden', border: '1px solid rgba(255,255,255,0.18)' }}>
+            <div
+              key={i}
+              onMouseEnter={e => { onThumbHover(i); (e.currentTarget as HTMLDivElement).style.transform = 'scale(1.07)'; }}
+              onMouseLeave={e => { onThumbHover(null); (e.currentTarget as HTMLDivElement).style.transform = 'scale(1)'; }}
+              style={{
+                flexShrink: 0,
+                height: 64,
+                aspectRatio: '4/3',
+                borderRadius: 5,
+                overflow: 'hidden',
+                border: '1px solid rgba(255,255,255,0.18)',
+                cursor: 'pointer',
+                transition: `transform 0.2s ${EASE}`,
+              }}
+            >
               <img src={img} alt="" draggable={false} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', pointerEvents: 'none' }} />
             </div>
           ))}
@@ -317,14 +344,26 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
   /* ── Cambio / toggle de álbum ────────────────────────────────── */
   const handleAlbumChange = useCallback((idx: number) => {
     if (idx === activeAlbum) {
-      setPanelOpen(prev => !prev); // mismo álbum → toggle panel
+      setPanelOpen(prev => !prev);
     } else {
       setActiveAlbum(idx);
-      setPanelOpen(true);          // álbum nuevo → abrir panel
+      setPanelOpen(true);
       setSelectedIdx(null);
       setHoveredIdx(null);
     }
   }, [activeAlbum]);
+
+  const handlePrevAlbum = useCallback(() => {
+    setActiveAlbum(prev => (prev - 1 + albums.length) % albums.length);
+    setSelectedIdx(null);
+    setHoveredIdx(null);
+  }, [albums.length]);
+
+  const handleNextAlbum = useCallback(() => {
+    setActiveAlbum(prev => (prev + 1) % albums.length);
+    setSelectedIdx(null);
+    setHoveredIdx(null);
+  }, [albums.length]);
 
   /* Columnas y filas dinámicas según cantidad de imágenes del álbum activo */
   const cols = computeCols(albumImages.length);
@@ -491,8 +530,34 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
           </button>
         </div>
 
-        {/* ── Accordion grid ─────────────────────────────────────── */}
-        <div onClick={e => e.stopPropagation()} style={{ flex: 1, minHeight: 0, overflow: 'hidden', padding: '0 16px 8px' }}>
+        {/* ── Accordion grid + flechas de álbum ─────────────────── */}
+        <div onClick={e => e.stopPropagation()} style={{ flex: 1, minHeight: 0, position: 'relative' }}>
+
+        {/* Flecha izquierda */}
+        {albums.length > 1 && (
+          <button
+            onClick={e => { e.stopPropagation(); handlePrevAlbum(); }}
+            onMouseEnter={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.22)')}
+            onMouseLeave={e => (e.currentTarget.style.background = 'rgba(0,0,0,0.45)')}
+            style={{ position: 'absolute', left: 20, top: '50%', transform: 'translateY(-50%)', zIndex: 20, display: 'flex', alignItems: 'center', justifyContent: 'center', width: 44, height: 44, borderRadius: '50%', background: 'rgba(0,0,0,0.45)', border: '1px solid rgba(255,255,255,0.18)', cursor: 'pointer', color: '#fff', backdropFilter: 'blur(6px)', transition: `background 0.2s ${EASE}` }}
+          >
+            <ChevronLeft size={22} strokeWidth={1.8} />
+          </button>
+        )}
+
+        {/* Flecha derecha */}
+        {albums.length > 1 && (
+          <button
+            onClick={e => { e.stopPropagation(); handleNextAlbum(); }}
+            onMouseEnter={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.22)')}
+            onMouseLeave={e => (e.currentTarget.style.background = 'rgba(0,0,0,0.45)')}
+            style={{ position: 'absolute', right: 20, top: '50%', transform: 'translateY(-50%)', zIndex: 20, display: 'flex', alignItems: 'center', justifyContent: 'center', width: 44, height: 44, borderRadius: '50%', background: 'rgba(0,0,0,0.45)', border: '1px solid rgba(255,255,255,0.18)', cursor: 'pointer', color: '#fff', backdropFilter: 'blur(6px)', transition: `background 0.2s ${EASE}` }}
+          >
+            <ChevronRight size={22} strokeWidth={1.8} />
+          </button>
+        )}
+
+        <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', padding: '0 16px 8px' }}>
         <div
           ref={gridRef}
           onMouseMove={handleGridMouseMove}
@@ -573,6 +638,7 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
             );
           })}
         </div>
+        </div>{/* end grid */}
         </div>{/* end wrapper */}
 
         {/* ── Barra inferior: álbumes inline (expansión horizontal) ─ */}
@@ -598,6 +664,7 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
                 albumIndex={i}
                 isExpanded={activeAlbum === i && panelOpen}
                 onToggle={() => handleAlbumChange(i)}
+                onThumbHover={idx => setHoveredIdx(idx)}
               />
             ))}
           </div>
