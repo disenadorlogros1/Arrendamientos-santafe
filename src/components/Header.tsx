@@ -177,7 +177,7 @@ export default function Header({ currentPage, onNavigate, isHeroPage = true }: H
                   onMouseEnter={e => { setHoveredNav(item.label); applyInkFill(e); }}
                   onMouseLeave={e => { setHoveredNav(null); applyInkFill(e); }}
                   className="nav-ink-btn w-full px-2 py-2 rounded-full"
-                  style={{ fontFamily: "'Avenir LT Std', 'Outfit', system-ui, sans-serif", fontWeight: (currentPage === item.page || hoveredNav === item.label) ? 700 : 300, fontSize: '15px', color: headerTextColor }}
+                  style={{ fontFamily: "'Avenir LT Std', 'Outfit', system-ui, sans-serif", fontWeight: (currentPage === item.page || item.children?.some(c => c.page === currentPage) || hoveredNav === item.label) ? 700 : 300, fontSize: '15px', color: (currentPage === item.page || item.children?.some(c => c.page === currentPage)) ? '#f32735' : headerTextColor }}
                 >
                   <span style={{ fontWeight: 'inherit' }}>{item.label}</span>
                 </button>
@@ -225,7 +225,7 @@ export default function Header({ currentPage, onNavigate, isHeroPage = true }: H
                 onMouseEnter={e => { setHoveredNav(item.label); applyInkFill(e); }}
                 onMouseLeave={e => { setHoveredNav(null); applyInkFill(e); }}
                 className="nav-ink-btn flex-1 px-2 py-2 rounded-full"
-                style={{ fontFamily: "'Avenir LT Std', 'Outfit', system-ui, sans-serif", fontWeight: (currentPage === item.page || hoveredNav === item.label) ? 700 : 300, fontSize: '15px', color: headerTextColor }}
+                style={{ fontFamily: "'Avenir LT Std', 'Outfit', system-ui, sans-serif", fontWeight: (currentPage === item.page || hoveredNav === item.label) ? 700 : 300, fontSize: '15px', color: currentPage === item.page ? '#f32735' : headerTextColor }}
               >
                 <span style={{ fontWeight: 'inherit' }}>{item.label}</span>
               </button>

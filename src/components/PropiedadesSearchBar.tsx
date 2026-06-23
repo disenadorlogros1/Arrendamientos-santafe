@@ -597,12 +597,16 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', onApply }:
         </div>
 
         {/* ── Grid único: filtros principales + avanzados alineados ─── */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)' }}>
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: codigo ? '100% 0% 0% 0%' : '25% 25% 25% 25%',
+          transition: 'grid-template-columns 0.38s cubic-bezier(0.4,0,0.2,1)',
+        }}>
 
           {/* ── Fila principal ──────────────────────────────────────── */}
 
           {/* Col 1: Código inmueble */}
-          <div style={{ borderRight: DIVIDER, borderBottom: DIVIDER }}>
+          <div style={{ borderRight: DIVIDER, borderBottom: DIVIDER, overflow: 'hidden' }}>
             <div style={contentStyle}>
               <img src="/icons/icon-code-red.gif" alt="" width={24} height={24} style={{ flexShrink: 0 }} />
               <div style={{ minWidth: 0, flex: 1 }}>
@@ -610,7 +614,17 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', onApply }:
                 <input
                   type="text"
                   value={codigo}
-                  onChange={e => setCodigo(e.target.value)}
+                  onChange={e => {
+                    const v = e.target.value;
+                    setCodigo(v);
+                    if (v) setShowAdvanced(false);
+                    onApply({
+                      tipo, codigo: v, sector, tipoPropiedad,
+                      precioMin: precioRange[0], precioMax: precioRange[1],
+                      habitaciones, banos, parqueadero,
+                      areaMin, areaMax, estrato, comodidades,
+                    });
+                  }}
                   placeholder="Ej: A11636"
                   className="search-field-input"
                   style={{ fontFamily: FONT, fontSize: '14px', fontWeight: 400, color: codigo ? COLOR_VALUE : '#b8b8b8', background: 'transparent', border: 'none', outline: 'none', width: '100%', lineHeight: 1 }}
@@ -620,7 +634,7 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', onApply }:
           </div>
 
           {/* Col 2: Ubicación */}
-          <div style={{ borderRight: DIVIDER, borderBottom: DIVIDER }}>
+          <div style={{ borderRight: DIVIDER, borderBottom: DIVIDER, overflow: 'hidden', opacity: codigo ? 0 : 1, transition: 'opacity 0.15s ease' }}>
             <div style={contentStyle}>
               <img src="/icons/icon-location-red.gif" alt="" width={24} height={24} style={{ flexShrink: 0 }} />
               <div style={{ minWidth: 0, flex: 1 }}>
@@ -631,7 +645,7 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', onApply }:
           </div>
 
           {/* Col 3: Tipo de propiedad */}
-          <div style={{ borderRight: DIVIDER, borderBottom: DIVIDER }}>
+          <div style={{ borderRight: DIVIDER, borderBottom: DIVIDER, overflow: 'hidden', opacity: codigo ? 0 : 1, transition: 'opacity 0.15s ease' }}>
             <div style={contentStyle}>
               <img src="/icons/icon-home-red.gif" alt="" width={24} height={24} style={{ flexShrink: 0 }} />
               <div style={{ minWidth: 0, flex: 1 }}>
@@ -642,7 +656,7 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', onApply }:
           </div>
 
           {/* Col 4: Precio */}
-          <div style={{ borderBottom: DIVIDER }}>
+          <div style={{ borderBottom: DIVIDER, overflow: 'hidden', opacity: codigo ? 0 : 1, transition: 'opacity 0.15s ease' }}>
             <div style={contentStyle}>
               <img src="/icons/icon-dollar-red.gif" alt="" width={24} height={24} style={{ flexShrink: 0, alignSelf: 'flex-start', marginTop: '2px' }} />
               <div style={{ minWidth: 0, flex: 1 }}>

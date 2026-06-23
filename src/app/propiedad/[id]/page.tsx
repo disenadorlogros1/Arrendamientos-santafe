@@ -175,6 +175,8 @@ export default function PropertyDetailPage() {
                       area:      property.size,
                       parking:   property.parking,
                       price:     property.price,
+                      zone:      getInvestmentZoneForLocation(property.location),
+                      reference: property.reference.replace('Ref. ', ''),
                     }}
                   />
                 </div>

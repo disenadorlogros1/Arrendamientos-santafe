@@ -139,10 +139,12 @@ function InfoCard({ type, stats, title }: {
   };
 
   /* ── Card 0: Ubicación / Inversión ── */
-  if (type === 0) {
+  /* Si no hay zona configurada, caer a la card de similares para no enlazar a zona incorrecta */
+  const effectiveType = (type === 0 && !stats?.zone) ? 2 : type;
+  if (effectiveType === 0) {
     const slug     = stats?.zone ?? '';
-    const zoneName = slug ? slug.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase()) : 'esta zona';
-    const href     = slug ? `/inversionistas/${slug}` : '/inversionistas';
+    const zoneName = slug.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+    const href     = `/inversionistas/${slug}`;
     return (
       <a href={href} style={baseStyle} onClick={e => e.stopPropagation()}>
         <div style={iconBox}>
@@ -161,7 +163,7 @@ function InfoCard({ type, stats, title }: {
   }
 
   /* ── Card 1: Precio y comodidades ── */
-  if (type === 1) {
+  if (effectiveType === 1) {
     const ref = stats?.reference ?? '';
     const msg = encodeURIComponent(`Hola, me interesa la propiedad${ref ? ` ${ref}` : ''} (${title}). ¿Podrían darme más información?`);
     const href = `https://wa.me/${WA_NUM}?text=${msg}`;
