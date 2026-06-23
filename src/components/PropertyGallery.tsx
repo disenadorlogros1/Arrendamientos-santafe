@@ -33,36 +33,19 @@ function computeCols(n: number): number {
   return ideal;
 }
 
-/* ─── Grid helpers orientados ─────────────────────────────────── */
-function buildColsOriented(
-  hoveredCol: number | null,
-  isLandscape: boolean,
-  cols: number
-): string {
-  if (hoveredCol === null) return `repeat(${cols}, 1fr)`;
-  if (isLandscape) {
-    /* Landscape: col activa toma ~75% del ancho, las otras se comprimen. */
-    return Array.from({ length: cols }, (_, i) =>
-      i === hoveredCol ? '6fr' : '1fr'
-    ).join(' ');
-  }
-  /* Portrait: columnas iguales. Con la fila muy expandida la celda queda
-   * alta y estrecha (portrait). Las celdas del mismo row quedan a los lados. */
-  return `repeat(${cols}, 1fr)`;
-}
-
-function buildRowsOriented(
-  hoveredRow: number | null,
-  isLandscape: boolean,
-  rows: number
-): string {
-  if (hoveredRow === null) return `repeat(${rows}, 1fr)`;
-  /* Portrait: fila activa ~97% de la altura, otras son franjas de 0.5fr.
-   * Landscape: fila activa ~80%, otras 1fr (más visibles porque la col se expande). */
-  const active = isLandscape ? '4fr' : '20fr';
-  const rest   = isLandscape ? '1fr' : '0.5fr';
-  return Array.from({ length: rows }, (_, i) =>
-    i === hoveredRow ? active : rest
+/* ─── Grid helpers ────────────────────────────────────────────── */
+/*
+ * En hover la celda activa usa gridRow:1/-1 (span total de filas) para
+ * ocupar toda la altura SIN expandir la fila — así las demás celdas del
+ * mismo row conservan su altura normal y aparecen pequeñas a los lados.
+ *
+ * Solo para landscape se expande la columna activa para dar aspecto ancho.
+ * Para portrait las columnas son iguales: 1/cols × ancho < alto = portrait.
+ */
+function buildCols(hoveredCol: number | null, isLandscape: boolean, cols: number): string {
+  if (hoveredCol === null || !isLandscape) return `repeat(${cols}, 1fr)`;
+  return Array.from({ length: cols }, (_, i) =>
+    i === hoveredCol ? '10fr' : '1fr'
   ).join(' ');
 }
 
