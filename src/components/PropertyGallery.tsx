@@ -286,19 +286,32 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
     return () => window.removeEventListener('resize', check);
   }, []);
 
-  /* ── Grid hover via event delegation (evita flicker por reorganización del grid) ── */
+  /* ── Grid hover via event delegation ────────────────────────── */
   const handleGridMouseMove = useCallback((e: React.MouseEvent) => {
     const cell = (e.target as HTMLElement).closest('[data-idx]') as HTMLElement | null;
     const raw  = cell?.dataset?.idx;
     const idx  = raw !== undefined ? parseInt(raw) : null;
     if (clearTimer.current) { clearTimeout(clearTimer.current); clearTimer.current = null; }
     if (idx !== null) {
+      /* Leer orientación del <img> ya renderizado — garantiza que el browser
+       * aplicó la rotación EXIF antes de comparar dimensiones.
+       * En React 18 este setState + el de hoveredIdx se batchean en un solo render. */
+      const imgEl = cell?.querySelector('img') as HTMLImageElement | null;
+      if (imgEl && imgEl.naturalWidth > 0) {
+        const isLandscape = imgEl.naturalWidth > imgEl.naturalHeight;
+        const gIdx = albumStartIdx + idx;
+        setAllOrientations(prev => {
+          if (prev[gIdx] === isLandscape) return prev;
+          const copy = [...prev];
+          copy[gIdx] = isLandscape;
+          return copy;
+        });
+      }
       setHoveredIdx(prev => prev === idx ? prev : idx);
     } else {
-      /* Cursor en el gap entre celdas → esperar un poco antes de limpiar */
       clearTimer.current = setTimeout(() => setHoveredIdx(null), 80);
     }
-  }, []);
+  }, [albumStartIdx]);
 
   const handleGridMouseLeave = useCallback(() => {
     if (clearTimer.current) clearTimeout(clearTimer.current);
@@ -436,20 +449,6 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
                   src={img}
                   alt={`Foto ${idx + 1}`}
                   draggable={false}
-                  onLoad={e => {
-                    /* Corrección EXIF: naturalWidth/Height del img real refleja
-                     * la rotación aplicada por el browser; el preload inicial puede
-                     * leer las dimensiones crudas antes del EXIF y equivocarse. */
-                    const el = e.currentTarget;
-                    const landscape = el.naturalWidth > el.naturalHeight;
-                    const globalIdx = albumStartIdx + idx;
-                    setAllOrientations(prev => {
-                      if (prev[globalIdx] === landscape) return prev;
-                      const next = [...prev];
-                      next[globalIdx] = landscape;
-                      return next;
-                    });
-                  }}
                   style={{
                     width: '100%', height: '100%', display: 'block',
                     objectFit: 'cover', objectPosition: 'center',
