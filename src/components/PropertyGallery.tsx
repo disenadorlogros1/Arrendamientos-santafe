@@ -104,16 +104,25 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
   const cols = computeCols(images.length);
   const rows = Math.ceil(images.length / cols);
 
+  const isHovering = hoveredIdx !== null;
+
   /* ¿Es landscape la imagen bajo el cursor? */
   const hoveredIsLandscape = hoveredIdx !== null ? (orientations[hoveredIdx] ?? false) : false;
 
-  /* Derived: which col/row is hovered */
+  /* Derived: which col/row is hovered (solo para estado normal sin hover) */
   const hoveredCol = hoveredIdx !== null ? hoveredIdx % cols : null;
   const hoveredRow = hoveredIdx !== null ? Math.floor(hoveredIdx / cols) : null;
 
-  /* Grid strings orientados */
+  /* Grid strings para estado normal */
   const gridCols = buildColsOriented(hoveredCol, hoveredIsLandscape, cols);
   const gridRows = buildRowsOriented(hoveredRow, hoveredIsLandscape, rows);
+
+  /* En hover: 2 columnas — franja de miniaturas (izq) + imagen activa (der).
+   * La imagen activa abarca todas las filas (full height).
+   * Las n-1 miniaturas se apilan en la columna izquierda. */
+  const thumbRows = Math.max(images.length - 1, 1);
+  const activeGridCols = hoveredIsLandscape ? '120px 1fr' : '100px 1fr';
+  const activeGridRows = `repeat(${thumbRows}, 1fr)`;
 
   /* Sin spanning — cada celda ocupa exactamente 1 columna.
    * El spanning rompía el hover portrait: una celda con span 2 acumula
@@ -198,8 +207,8 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
           style={{
             display: 'grid',
             height: '100%',
-            gridTemplateColumns: gridCols,
-            gridTemplateRows:    gridRows,
+            gridTemplateColumns: isHovering ? activeGridCols : gridCols,
+            gridTemplateRows:    isHovering ? activeGridRows  : gridRows,
             transition: GRID_TRANSITION,
             gap: 4,
           }}
@@ -207,6 +216,14 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
           {images.map((img, idx) => {
             const isHovered  = hoveredIdx === idx;
             const isSelected = selectedIdx === idx;
+
+            /* En hover: imagen activa → col 2 full height; miniaturas → col 1 apiladas */
+            const placementStyle = isHovering
+              ? isHovered
+                ? { gridColumn: '2 / 3', gridRow: '1 / -1' }
+                : { gridColumn: '1 / 2' }
+              : {};
+
             return (
               <div
                 key={idx}
@@ -214,6 +231,7 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
                 onMouseLeave={() => setHoveredIdx(null)}
                 onClick={() => handleCellClick(idx)}
                 style={{
+                  ...placementStyle,
                   position: 'relative',
                   overflow: 'hidden',
                   borderRadius: 8,
@@ -221,7 +239,7 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
                   background: '#111',
                   outline: isSelected ? '2px solid rgba(255,255,255,0.65)' : '2px solid transparent',
                   outlineOffset: -2,
-                  opacity: hoveredIdx !== null && !isHovered ? 0.45 : 1,
+                  opacity: isHovering && !isHovered ? 0.45 : 1,
                   transition: `opacity 0.4s ${EASE}, outline-color 0.2s ${EASE}`,
                 }}
               >
@@ -238,9 +256,8 @@ function BentoGallery({ images, onClose }: { images: string[]; onClose: () => vo
               </div>
             );
           })}
-          {/* Invisible placeholders for incomplete last row — same color as container,
-              no border-radius, so they blend with the background and leave no dark hole */}
-          {images.length % cols !== 0 &&
+          {/* Placeholders solo en estado normal (sin hover) */}
+          {!isHovering && images.length % cols !== 0 &&
             Array.from({ length: cols - (images.length % cols) }, (_, i) => (
               <div key={`ph-${i}`} style={{ opacity: 0, pointerEvents: 'none' }} />
             ))
