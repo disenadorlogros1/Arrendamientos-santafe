@@ -192,6 +192,7 @@ export default function PropiedadesPage({ initialFilter = 'Todos' }: { initialFi
         <PropiedadesSearchBar
           initialTipo={initialFilter || 'Todos'}
           onApply={setAppliedFilters}
+          onShowMap={() => setShowMap(true)}
         />
       </div>
 

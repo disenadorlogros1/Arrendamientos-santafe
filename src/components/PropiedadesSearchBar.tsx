@@ -236,8 +236,8 @@ function PriceSelect({
 /* ── CustomSelect — dropdown buscable portal ─────────────────────────── */
 
 function CustomSelect({
-  value, onChange, options, placeholder, searchable = false,
-}: { value: string; onChange: (v: string) => void; options: string[]; placeholder?: string; searchable?: boolean }) {
+  value, onChange, options, placeholder, searchable = false, footer,
+}: { value: string; onChange: (v: string) => void; options: string[]; placeholder?: string; searchable?: boolean; footer?: React.ReactNode }) {
   const [open, setOpen]       = useState(false);
   const [mounted, setMounted] = useState(false);
   const [query, setQuery]     = useState('');
@@ -284,19 +284,28 @@ function CustomSelect({
 
   const dropdown = mounted && open ? (
     <div ref={dropdownRef} style={{ position: 'fixed', top: pos.top, left: pos.left, width: pos.width, zIndex: 9999 }}>
-      <div className="bg-white shadow-2xl border border-gray-100 max-h-[240px] overflow-y-auto custom-scrollbar">
-        {filtered.length === 0
-          ? <p style={{ fontFamily: FONT, fontSize: '13px', padding: '10px 16px', color: '#aaa' }}>Sin resultados</p>
-          : filtered.map(opt => (
-            <button key={opt} type="button"
-              onMouseDown={e => e.preventDefault()}
-              onClick={() => selectOption(opt)}
-              className={`block w-full text-left px-4 py-2.5 transition-colors duration-100 ${value === opt ? 'bg-brand-red text-white' : 'text-gray-700 hover:bg-brand-red hover:text-white'}`}
-              style={{ fontFamily: FONT, fontSize: '13px' }}>
-              {opt}
-            </button>
-          ))
-        }
+      <div className="bg-white shadow-2xl border border-gray-100" style={{ display: 'flex', flexDirection: 'column', maxHeight: '280px' }}>
+        {/* Lista scrollable */}
+        <div className="red-scrollbar" style={{ overflowY: 'auto', flex: 1 }}>
+          {filtered.length === 0
+            ? <p style={{ fontFamily: FONT, fontSize: '13px', padding: '10px 16px', color: '#aaa' }}>Sin resultados</p>
+            : filtered.map(opt => (
+              <button key={opt} type="button"
+                onMouseDown={e => e.preventDefault()}
+                onClick={() => selectOption(opt)}
+                className={`block w-full text-left px-4 py-2.5 transition-colors duration-100 ${value === opt ? 'bg-brand-red text-white' : 'text-gray-700 hover:bg-brand-red hover:text-white'}`}
+                style={{ fontFamily: FONT, fontSize: '13px' }}>
+                {opt}
+              </button>
+            ))
+          }
+        </div>
+        {/* Footer fijo */}
+        {footer && (
+          <div style={{ borderTop: '1px solid rgba(0,0,0,0.07)', flexShrink: 0 }}>
+            {footer}
+          </div>
+        )}
       </div>
     </div>
   ) : null;
@@ -479,9 +488,10 @@ const advContentStyle: React.CSSProperties = {
 interface Props {
   initialTipo?: 'Todos' | 'Arrendar' | 'Comprar';
   onApply: (f: PropSearchFilters) => void;
+  onShowMap?: () => void;
 }
 
-export default function PropiedadesSearchBar({ initialTipo = 'Todos', onApply }: Props) {
+export default function PropiedadesSearchBar({ initialTipo = 'Todos', onApply, onShowMap }: Props) {
   const [tipo,          setTipo]          = useState<'Todos' | 'Arrendar' | 'Comprar'>(initialTipo);
   const [codigo,        setCodigo]        = useState('');
   const [codigoActive,  setCodigoActive]  = useState(false);
@@ -650,7 +660,37 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', onApply }:
               <img src="/icons/icon-location-red.gif" alt="" width={24} height={24} style={{ flexShrink: 0 }} />
               <div style={{ minWidth: 0, flex: 1 }}>
                 <p style={labelStyle}>Ubicación</p>
-                <CustomSelect value={sector} onChange={setSector} options={SECTORES} placeholder="Seleccionar" searchable />
+                <CustomSelect
+                  value={sector}
+                  onChange={setSector}
+                  options={SECTORES}
+                  placeholder="Seleccionar"
+                  searchable
+                  footer={onShowMap ? (
+                    <button
+                      type="button"
+                      onMouseDown={e => e.preventDefault()}
+                      onClick={() => { onShowMap(); }}
+                      style={{
+                        display: 'flex', alignItems: 'center', gap: '8px',
+                        width: '100%', padding: '10px 16px',
+                        background: 'transparent', border: 'none', cursor: 'pointer',
+                        fontFamily: FONT, fontSize: '13px', fontWeight: 500,
+                        color: '#888',
+                        transition: 'color 0.15s ease, background 0.15s ease',
+                      }}
+                      onMouseEnter={e => { e.currentTarget.style.background = '#fafafa'; e.currentTarget.style.color = '#444'; }}
+                      onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#888'; }}
+                    >
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/>
+                        <line x1="9" y1="3" x2="9" y2="18"/>
+                        <line x1="15" y1="6" x2="15" y2="21"/>
+                      </svg>
+                      Ver mapa
+                    </button>
+                  ) : undefined}
+                />
               </div>
             </div>
           </div>

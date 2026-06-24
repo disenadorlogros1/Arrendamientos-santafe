@@ -224,6 +224,25 @@ html.lenis, html.lenis body { height: auto; }
   background: #a1a1a1;
 }
 
+/* Red scrollbar — dropdowns */
+.red-scrollbar::-webkit-scrollbar {
+  width: 5px;
+}
+.red-scrollbar::-webkit-scrollbar-track {
+  background: #f5f5f5;
+}
+.red-scrollbar::-webkit-scrollbar-thumb {
+  background: #f32735;
+  border-radius: 3px;
+}
+.red-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #aa182c;
+}
+.red-scrollbar {
+  scrollbar-color: #f32735 #f5f5f5;
+  scrollbar-width: thin;
+}
+
 /* WhatsApp bounce animation */
 @keyframes bounce-subtle {
   0%, 100% {
