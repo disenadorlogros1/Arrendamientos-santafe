@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { createPortal } from 'react-dom';
 import { X, ChevronLeft, ChevronRight } from 'lucide-react';
 
@@ -80,10 +80,11 @@ function buildCols(hoveredCol: number | null, isLandscape: boolean, cols: number
 const WA_NUM = '573006557529';
 
 function InfoCard({ type, stats, title }: {
-  type: 0 | 1 | 2;
+  type: 0 | 1 | 2 | 3 | 4;
   stats?: PropertyStats;
   title: string;
 }) {
+  const [copied, setCopied] = React.useState(false);
   const baseStyle: React.CSSProperties = {
     width: '100%', height: '100%',
     display: 'flex', flexDirection: 'column',
@@ -192,20 +193,110 @@ function InfoCard({ type, stats, title }: {
   }
 
   /* ── Card 2: Propiedades similares ── */
+  if (effectiveType === 2) {
+    return (
+      <a href="/propiedades" style={baseStyle} onClick={e => e.stopPropagation()}>
+        <div style={iconBox}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+          </svg>
+        </div>
+        <div>
+          <div style={labelStyle}>Explora más</div>
+          <div style={titleStyle}>Propiedades similares</div>
+          <div style={bodyStyle}>Encuentra otras propiedades con características parecidas en nuestra oferta.</div>
+        </div>
+        <div style={ctaStyle}>Ver propiedades &rarr;</div>
+      </a>
+    );
+  }
+
+  /* ── Card 3: Solicitar visita ── */
+  if (effectiveType === 3) {
+    const ref = stats?.reference ?? '';
+    const msg = encodeURIComponent(
+      `Hola, quisiera agendar una visita para la propiedad${ref ? ` ${ref}` : ''} (${title}). ¿Cuándo podría visitarla?`
+    );
+    const href = `https://wa.me/${WA_NUM}?text=${msg}`;
+    return (
+      <a href={href} target="_blank" rel="noopener noreferrer" style={baseStyle} onClick={e => e.stopPropagation()}>
+        <div style={iconBox}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+            <line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+          </svg>
+        </div>
+        <div>
+          <div style={labelStyle}>Agenda tu visita</div>
+          <div style={titleStyle}>¿Te gustaría conocerla en persona?</div>
+          <div style={bodyStyle}>Coordina una visita con nuestros asesores y descubre todos los detalles de esta propiedad.</div>
+        </div>
+        <div style={ctaStyle}>Agendar visita &rarr;</div>
+      </a>
+    );
+  }
+
+  /* ── Card 4: Compartir propiedad ── */
+  const shareUrl = typeof window !== 'undefined' ? window.location.href : '';
+  const waShareMsg = encodeURIComponent(`Mira esta propiedad: ${title}\n${shareUrl}`);
+  const waShareHref = `https://wa.me/?text=${waShareMsg}`;
+
+  const handleCopy = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
+    navigator.clipboard.writeText(shareUrl).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
+  };
+
   return (
-    <a href="/propiedades" style={baseStyle} onClick={e => e.stopPropagation()}>
+    <div style={baseStyle} onClick={e => e.stopPropagation()}>
       <div style={iconBox}>
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+          <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
+          <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
         </svg>
       </div>
       <div>
-        <div style={labelStyle}>Explora más</div>
-        <div style={titleStyle}>Propiedades similares</div>
-        <div style={bodyStyle}>Encuentra otras propiedades con características parecidas en nuestra oferta.</div>
+        <div style={labelStyle}>Compartir</div>
+        <div style={titleStyle}>Envía esta propiedad</div>
+        <div style={bodyStyle}>Comparte los detalles con quien quieras por WhatsApp o copia el enlace.</div>
       </div>
-      <div style={ctaStyle}>Ver propiedades &rarr;</div>
-    </a>
+      <div style={{ marginTop: 12, display: 'flex', flexDirection: 'column', gap: 6 }}>
+        <a
+          href={waShareHref} target="_blank" rel="noopener noreferrer"
+          style={{ ...ctaStyle, background: 'rgba(37,211,102,0.15)', borderColor: 'rgba(37,211,102,0.35)', color: '#4ade80' }}
+          onClick={e => e.stopPropagation()}
+        >
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+            <path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.553 4.116 1.522 5.847L.057 23.882a.5.5 0 0 0 .614.612l6.101-1.597A11.944 11.944 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.898 0-3.677-.524-5.198-1.435l-.373-.224-3.862 1.011 1.027-3.752-.243-.385A9.954 9.954 0 0 1 2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/>
+          </svg>
+          Enviar por WhatsApp
+        </a>
+        <button
+          style={{ ...ctaStyle, cursor: 'pointer', border: 'none', background: copied ? 'rgba(255,255,255,0.15)' : 'rgba(255,255,255,0.08)' }}
+          onClick={handleCopy}
+        >
+          {copied ? (
+            <>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+              ¡Enlace copiado!
+            </>
+          ) : (
+            <>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+              </svg>
+              Copiar enlace
+            </>
+          )}
+        </button>
+      </div>
+    </div>
   );
 }
 
@@ -453,7 +544,7 @@ function BentoGallery({ images, onClose, stats, title }: {
   /* true = landscape, false = portrait/square — indexed over ALL images */
   const [allOrientations, setAllOrientations] = useState<boolean[]>([]);
   /* Tipo de ficha informativa: se elige aleatoriamente al montar */
-  const [infoCardType]   = useState<0 | 1 | 2>(() => Math.floor(Math.random() * 3) as 0 | 1 | 2);
+  const [infoCardType]   = useState<0 | 1 | 2 | 3 | 4>(() => Math.floor(Math.random() * 5) as 0 | 1 | 2 | 3 | 4);
 
   /* Columna visual real del mouse — usada para posicionar celdas filler-span en hover */
   const [hoveredMouseCol, setHoveredMouseCol] = useState(0);

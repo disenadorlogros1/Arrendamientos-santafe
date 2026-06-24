@@ -4,6 +4,7 @@ import { Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 import SmoothScrollProvider from "@/components/SmoothScrollProvider";
+import ScrollTracker from "@/components/ScrollTracker";
 
 const outfit = Outfit({
   variable: "--font-outfit",
@@ -158,6 +159,7 @@ export default function RootLayout({
         className={`${outfit.variable} ${geistMono.variable} antialiased bg-background text-foreground`}
         style={{ fontFamily: "'Avenir LT Std', 'Outfit', var(--font-outfit), system-ui, -apple-system, sans-serif" }}
       >
+        <ScrollTracker />
         <SmoothScrollProvider>
           {children}
         </SmoothScrollProvider>

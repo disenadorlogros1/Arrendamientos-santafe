@@ -8,6 +8,7 @@ import { properties } from '@/data/properties';
 import { useSplitTextAnimation } from '@/hooks/useSplitTextAnimation';
 import PropiedadesSearchBar, { type PropSearchFilters } from './PropiedadesSearchBar';
 import ScrollReveal from '@/components/ScrollReveal';
+import PropiedadesLeafletMap from './PropiedadesLeafletMap';
 
 const FONT_HEADING = "'Avenir LT Std', 'Outfit', system-ui, sans-serif";
 const FONT_BODY    = "'Avenir LT Std', 'Outfit', system-ui, sans-serif";
@@ -196,8 +197,15 @@ export default function PropiedadesPage({ initialFilter = 'Todos' }: { initialFi
         />
       </div>
 
+      {/* Map panel — full width, same as search bar, only desktop */}
+      {showMap && (
+        <div className="hidden lg:block" style={{ borderBottom: '1px solid #e8e8e8' }}>
+          <PropiedadesLeafletMap properties={filtered} />
+        </div>
+      )}
+
       {/* Content */}
-      <div style={{ maxWidth: showMap ? '100%' : '1400px', margin: '0 auto', padding: showMap ? '0' : '32px clamp(16px, 3vw, 52px)', transition: 'all 0.4s ease' }}>
+      <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '32px clamp(16px, 3vw, 52px)' }}>
 
         {/* Toolbar */}
         <div
@@ -239,68 +247,14 @@ export default function PropiedadesPage({ initialFilter = 'Todos' }: { initialFi
         </div>
 
         {/* Desktop layout */}
-        <div className={`hidden lg:flex ${showMap ? 'flex-row items-start' : 'flex-col'}`}>
-
-          <div
-            style={{
-              flex: showMap ? '0 0 55%' : '1',
-              maxHeight: showMap ? 'calc(100vh - 180px)' : 'none',
-              overflowY: showMap ? 'auto' : 'visible',
-              padding: showMap ? '0 clamp(16px, 2vw, 36px) 32px' : '0',
-              scrollbarWidth: 'thin',
-              scrollbarColor: '#ddd transparent',
-            }}
-          >
-            <div
-              ref={cardsGridRef}
-              className={showMap ? 'grid grid-cols-2 gap-4' : 'grid grid-cols-3 xl:grid-cols-4 gap-5'}
-            >
-              {filtered.map((property) => (
-                <div key={property.id} className="propiedades-card-item">
-                  <PropertyCard property={property} />
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {showMap && (
-            <div
-              style={{
-                flex: '0 0 45%',
-                position: 'sticky',
-                top: '180px',
-                height: 'calc(100vh - 180px)',
-                borderLeft: '1px solid #e8e8e8',
-                overflow: 'hidden',
-              }}
-            >
-              <iframe
-                title="Mapa de propiedades"
-                src="https://www.openstreetmap.org/export/embed.html?bbox=-75.6700%2C6.1500%2C-75.4800%2C6.3400&layer=mapnik"
-                style={{ width: '100%', height: '100%', border: 'none', display: 'block' }}
-                loading="lazy"
-              />
-              <div
-                style={{
-                  position: 'absolute',
-                  bottom: '16px',
-                  left: '50%',
-                  transform: 'translateX(-50%)',
-                  background: 'rgba(255,255,255,0.92)',
-                  backdropFilter: 'blur(6px)',
-                  borderRadius: '20px',
-                  padding: '6px 14px',
-                  fontSize: '11px',
-                  fontFamily: FONT_BODY,
-                  color: '#666',
-                  whiteSpace: 'nowrap',
-                  boxShadow: '0 2px 12px rgba(0,0,0,0.12)',
-                }}
-              >
-                Medellín y Área Metropolitana
+        <div className="hidden lg:flex flex-col">
+          <div ref={cardsGridRef} className="grid grid-cols-3 xl:grid-cols-4 gap-5">
+            {filtered.map((property) => (
+              <div key={property.id} className="propiedades-card-item">
+                <PropertyCard property={property} />
               </div>
-            </div>
-          )}
+            ))}
+          </div>
         </div>
 
         {filtered.length === 0 && (

@@ -67,9 +67,9 @@ export default function InversionZonePage() {
     <div className="min-h-screen flex flex-col">
       <Header currentPage={currentPage} onNavigate={handleNavigate} isHeroPage={false} darkHeader />
 
-      <main className="flex-1 relative pt-[120px]">
+      <main className="flex-1 relative">
         {/* Hero Section */}
-        <section className="bg-gradient-to-br from-brand-dark to-gray-900 py-12 md:py-16">
+        <section className="bg-gradient-to-br from-brand-dark to-gray-900 pt-[120px] pb-12 md:pb-16">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div ref={heroRef}>
               <Link
