@@ -12,6 +12,7 @@ import ScrollReveal from '@/components/ScrollReveal';
 import { investmentZones, getZoneBySlug } from '@/data/investment-zones';
 import { properties, getNeighborhoodsForZone } from '@/data/properties';
 import type { PageType } from '@/components/Header';
+import { navigate } from '@/lib/navigate';
 
 const WHATSAPP_URL = 'https://wa.me/573006557529?text=Hola%2C%20quisiera%20consultar%20oportunidades%20de%20inversión%20inmobiliaria.';
 
@@ -38,12 +39,8 @@ export default function InversionZonePage() {
     }
   }, []);
 
-  const handleNavigate = (page: PageType) => {
-    if (page === 'home') {
-      window.location.href = '/';
-    } else {
-      setCurrentPage(page);
-    }
+  const handleNavigate = (page: PageType, filter?: string) => {
+    navigate(page, filter);
   };
 
   if (!zone) {

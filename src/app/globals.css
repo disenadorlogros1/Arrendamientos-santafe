@@ -208,15 +208,20 @@ html.lenis, html.lenis body { height: auto; }
   font-family: 'Avenir LT Std', 'Outfit', system-ui, sans-serif !important;
 }
 
-/* ── Scrollbars globales — sin flechas ──────────────────────── */
+/* ── Scrollbars: Chrome/Edge (webkit) — sin flechas ─────────── */
+/* IMPORTANTE: NO mezclar scrollbar-width con ::-webkit-scrollbar-*
+   en el mismo elemento — Chrome los trata como mutuamente excluyentes.
+   Si coexisten, Chrome ignora los pseudo-elementos webkit y usa el
+   scrollbar nativo del SO (que sí tiene flechas). */
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
 ::-webkit-scrollbar-button {
   display: none;
   height: 0;
   width: 0;
-}
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
 }
 ::-webkit-scrollbar-track {
   background: transparent;
@@ -226,24 +231,32 @@ html.lenis, html.lenis body { height: auto; }
   border-radius: 3px;
 }
 
-/* Scroll activo → rojo (JS añade .is-scrolling al <html>) */
+/* Scroll activo → rojo.
+   html.is-scrolling::-webkit-scrollbar-thumb  → scrollbar de <html> (página principal)
+   html.is-scrolling *::-webkit-scrollbar-thumb → scrollbar de cualquier hijo */
+html.is-scrolling::-webkit-scrollbar-thumb,
 html.is-scrolling *::-webkit-scrollbar-thumb {
   background: #f32735;
 }
-* {
-  scrollbar-width: thin;
-  scrollbar-color: #c8c8c8 transparent;
-}
-html.is-scrolling * {
-  scrollbar-color: #f32735 transparent;
+
+/* ── Firefox únicamente (no soporta ::-webkit-scrollbar) ────── */
+@supports not selector(::-webkit-scrollbar) {
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: #c8c8c8 transparent;
+  }
+  html.is-scrolling,
+  html.is-scrolling * {
+    scrollbar-color: #f32735 transparent;
+  }
 }
 
-/* Legacy: mantiene la clase pero usa los valores globales */
+/* Legacy — mismos valores que el global */
 .custom-scrollbar::-webkit-scrollbar { width: 6px; }
 .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
 .custom-scrollbar::-webkit-scrollbar-thumb { background: #c8c8c8; border-radius: 3px; }
 
-/* Dropdown — siempre rojo (prioridad sobre .is-scrolling) */
+/* Dropdown — siempre rojo, gana sobre .is-scrolling */
 .red-scrollbar::-webkit-scrollbar { width: 5px; }
 .red-scrollbar::-webkit-scrollbar-track { background: #f5f5f5; }
 .red-scrollbar::-webkit-scrollbar-thumb,
@@ -251,9 +264,8 @@ html.is-scrolling .red-scrollbar::-webkit-scrollbar-thumb {
   background: #f32735 !important;
   border-radius: 3px;
 }
-.red-scrollbar {
-  scrollbar-color: #f32735 #f5f5f5 !important;
-  scrollbar-width: thin;
+@supports not selector(::-webkit-scrollbar) {
+  .red-scrollbar { scrollbar-color: #f32735 #f5f5f5 !important; scrollbar-width: thin; }
 }
 
 /* WhatsApp bounce animation */

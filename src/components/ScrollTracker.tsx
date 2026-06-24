@@ -5,17 +5,23 @@ import { useEffect } from 'react';
 export default function ScrollTracker() {
   useEffect(() => {
     let timer: ReturnType<typeof setTimeout>;
-    const onScroll = () => {
+
+    const activate = () => {
       document.documentElement.classList.add('is-scrolling');
       clearTimeout(timer);
       timer = setTimeout(() => {
         document.documentElement.classList.remove('is-scrolling');
-      }, 180);
+      }, 200);
     };
-    // capture: true catches scroll from any element (not just window)
-    document.addEventListener('scroll', onScroll, { passive: true, capture: true });
+
+    // Captura scroll nativo en window (Lenis llama window.scrollTo internamente)
+    window.addEventListener('scroll', activate, { passive: true });
+    // Captura scroll en cualquier elemento scrollable interno (listas, dropdowns…)
+    document.addEventListener('scroll', activate, { passive: true, capture: true });
+
     return () => {
-      document.removeEventListener('scroll', onScroll, { capture: true });
+      window.removeEventListener('scroll', activate);
+      document.removeEventListener('scroll', activate, { capture: true });
       clearTimeout(timer);
     };
   }, []);
