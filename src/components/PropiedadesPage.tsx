@@ -390,44 +390,6 @@ export default function PropiedadesPage({ initialFilter = 'Todos' }: { initialFi
               </div>
             )}
 
-            {/* CTA cards — debajo del mapa y las propiedades */}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginTop: '12px', paddingBottom: '12px' }}>
-              <div style={{ background: '#1a1a1a', padding: '24px 28px' }}>
-                <h3 style={{ fontFamily: FONT_HEADING, fontWeight: 700, fontSize: '18px', color: '#fff', marginBottom: '6px', lineHeight: 1.2 }}>
-                  ¿Tienes un inmueble para arrendar o vender?
-                </h3>
-                <p style={{ fontFamily: FONT_BODY, fontSize: '13px', color: 'rgba(255,255,255,0.55)', marginBottom: '16px', lineHeight: 1.4 }}>
-                  Consigna tu propiedad con nosotros y accede a nuestra red de clientes.
-                </p>
-                <button
-                  type="button"
-                  onClick={() => window.location.href = '/consignacion'}
-                  style={{ fontFamily: FONT_BODY, fontSize: '13px', fontWeight: 600, color: '#fff', background: RED, border: 'none', cursor: 'pointer', padding: '10px 24px', transition: 'background 0.2s ease' }}
-                  onMouseEnter={e => (e.currentTarget.style.background = '#aa182c')}
-                  onMouseLeave={e => (e.currentTarget.style.background = RED)}
-                >
-                  Consigna tu propiedad
-                </button>
-              </div>
-              <div style={{ background: '#1a1a1a', padding: '24px 28px' }}>
-                <h3 style={{ fontFamily: FONT_HEADING, fontWeight: 700, fontSize: '18px', color: '#fff', marginBottom: '6px', lineHeight: 1.2 }}>
-                  ¿Buscas oportunidades de inversión?
-                </h3>
-                <p style={{ fontFamily: FONT_BODY, fontSize: '13px', color: 'rgba(255,255,255,0.55)', marginBottom: '16px', lineHeight: 1.4 }}>
-                  Descubre nuestras propiedades con mayor potencial de retorno en Antioquia.
-                </p>
-                <button
-                  type="button"
-                  onClick={() => window.location.href = '/inversionistas'}
-                  style={{ fontFamily: FONT_BODY, fontSize: '13px', fontWeight: 600, color: '#fff', background: RED, border: 'none', cursor: 'pointer', padding: '10px 24px', transition: 'background 0.2s ease' }}
-                  onMouseEnter={e => (e.currentTarget.style.background = '#aa182c')}
-                  onMouseLeave={e => (e.currentTarget.style.background = RED)}
-                >
-                  Ver oportunidades de inversión
-                </button>
-              </div>
-            </div>
-
           </div>
         </div>
       )}
