@@ -95,7 +95,7 @@ function InfoCard({ type, stats, title }: {
     color: '#fff',
     background: 'linear-gradient(145deg, #1a1a1a 0%, #111 100%)',
     border: '1px solid rgba(255,255,255,0.09)',
-    borderRadius: 12,
+    borderRadius: 0,
     boxSizing: 'border-box',
     cursor: 'pointer',
     overflow: 'hidden',
@@ -133,7 +133,7 @@ function InfoCard({ type, stats, title }: {
   };
 
   const iconBox: React.CSSProperties = {
-    width: 32, height: 32, borderRadius: 8,
+    width: 32, height: 32, borderRadius: 0,
     background: 'rgba(255,255,255,0.08)',
     display: 'flex', alignItems: 'center', justifyContent: 'center',
     marginBottom: 10, flexShrink: 0,
@@ -627,6 +627,9 @@ function BentoGallery({ images, onClose, stats, title }: {
   const hoveredCol = hoveredCellPos !== null ? hoveredCellPos % cols : null;
   const isHovering = hoveredIdx !== null;
 
+  const gridCols = buildCols(hoveredCol, hoveredIsLandscape, cols);
+  const gridRows = `repeat(${rows}, 1fr)`;
+
   /* ── Lock scroll ────────────────────────────────────────────── */
   useEffect(() => {
     document.body.style.overflow = 'hidden';
@@ -715,7 +718,7 @@ function BentoGallery({ images, onClose, stats, title }: {
         )}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 3, padding: '0 3px 3px' }}>
           {albumImages.map((img, idx) => (
-            <div key={idx} style={{ aspectRatio: '1', borderRadius: 6, overflow: 'hidden', background: '#1a1a1a' }}>
+            <div key={idx} style={{ aspectRatio: '1', borderRadius: 0, overflow: 'hidden', background: '#1a1a1a' }}>
               <img src={img} alt={`Foto ${idx + 1}`} draggable={false} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
             </div>
           ))}
@@ -773,7 +776,6 @@ function BentoGallery({ images, onClose, stats, title }: {
 
         <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', padding: '0 16px 8px' }}>
         <div
-          ref={gridRef}
           onMouseMove={handleGridMouseMove}
           onMouseLeave={handleGridMouseLeave}
           style={{
@@ -785,44 +787,16 @@ function BentoGallery({ images, onClose, stats, title }: {
             gap: 4,
           }}
         >
-          {/* ── Celda informativa en slot de filler ── */}
-          {fillerCount > 0 && (
-            <div
-              style={{
-                gridColumn: infoCardCol,
-                gridRow: rows,
-                zIndex: 0,
-                borderRadius: 12,
-                overflow: 'hidden',
-              }}
-            >
-              <InfoCard type={infoCardType} stats={stats} title={title} />
-            </div>
-          )}
-
+          {/* ── Imágenes: posición explícita offset por la InfoCard ── */}
           {albumImages.map((img, idx) => {
+            /* cellPos: posición real en el grid (desplazada +1 si InfoCard está antes) */
+            const cp        = idx < injectAt ? idx : idx + 1;
+            const normalCol = cp % cols;
+            const normalRow = Math.floor(cp / cols);
             const isHovered  = hoveredIdx === idx;
             const isSelected = selectedIdx === idx;
-            const cellRow    = Math.floor(idx / cols);
-            const isLastRow  = fillerCount > 0 && cellRow === rows - 1;
-            const posInRow   = isLastRow ? idx - lastRowStart : idx % cols;
 
-            /* ── Columna de la celda ───────────────────────────────── */
-            const isLastImg = isLastRow && idx === albumImages.length - 1;
-            let gridColValue: string | number;
-            if (isHovering && isHovered && isLastRow && fillerCount > 0) {
-              /* Hover: la imagen va a la columna donde está el mouse */
-              gridColValue = hoveredMouseCol + 1;
-            } else if (isLastImg && fillerCount >= 2) {
-              /* Sin hover: la última imagen hace span de 2 cols */
-              gridColValue = `${posInRow + 1} / ${posInRow + 3}`;
-            } else {
-              gridColValue = posInRow + 1;
-            }
-
-            /* Misma columna que el hovered pero no es la celda activa → ocultar */
-            const cellCol = idx % cols;
-            const sameCol = isHovering && hoveredCol !== null && cellCol === hoveredCol;
+            const sameCol  = isHovering && hoveredCol !== null && normalCol === hoveredCol;
             const hideCell = sameCol && !isHovered;
             const opacity  = hideCell ? 0 : (!isHovering ? 1 : isHovered ? 1 : 0.5);
 
@@ -832,12 +806,12 @@ function BentoGallery({ images, onClose, stats, title }: {
                 data-idx={idx}
                 onClick={() => handleCellClick(idx)}
                 style={{
-                  gridColumn: gridColValue,
-                  gridRow: isHovering && isHovered ? '1 / -1' : cellRow + 1,
+                  gridColumn: normalCol + 1,
+                  gridRow: isHovering && isHovered ? '1 / -1' : normalRow + 1,
                   zIndex: isHovering && isHovered ? 1 : 0,
                   position: 'relative',
                   overflow: 'hidden',
-                  borderRadius: 12,
+                  borderRadius: 0,
                   cursor: 'pointer',
                   background: '#111',
                   outline: isSelected ? '2px solid rgba(255,255,255,0.65)' : '2px solid transparent',
@@ -860,6 +834,28 @@ function BentoGallery({ images, onClose, stats, title }: {
               </div>
             );
           })}
+
+          {/* ── InfoCard en posición aleatoria ── */}
+          {(() => {
+            const cardCol = injectAt % cols;
+            const cardRow = Math.floor(injectAt / cols);
+            const cardOpacity = isHovering && hoveredCol !== null && cardCol === hoveredCol ? 0 : 1;
+            return (
+              <div
+                style={{
+                  gridColumn: cardCol + 1,
+                  gridRow: cardRow + 1,
+                  zIndex: 0,
+                  overflow: 'hidden',
+                  borderRadius: 0,
+                  opacity: cardOpacity,
+                  transition: `opacity 0.35s ${EASE}`,
+                }}
+              >
+                <InfoCard type={infoCardType} stats={stats} title={title} />
+              </div>
+            );
+          })()}
         </div>
         </div>{/* end grid */}
         </div>{/* end wrapper */}
