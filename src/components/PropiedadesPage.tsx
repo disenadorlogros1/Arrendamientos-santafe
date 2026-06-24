@@ -282,9 +282,7 @@ export default function PropiedadesPage({ initialFilter = 'Todos' }: { initialFi
                     pointerEvents: hoveredMapProperty ? 'none' : 'auto',
                   }}>
                     {(visibleInMap.length > 0 ? visibleInMap : filtered).slice(0, 2).map(property => (
-                      <div key={property.id} style={{ overflow: 'hidden' }}>
-                        <PropertyCard property={property} />
-                      </div>
+                      <PropertyCard key={property.id} property={property} />
                     ))}
                     {filtered.length === 0 && (
                       <div style={{
@@ -380,9 +378,7 @@ export default function PropiedadesPage({ initialFilter = 'Todos' }: { initialFi
                       paddingBottom: '8px',
                     }}>
                       {(visibleInMap.length > 0 ? visibleInMap : filtered).map(property => (
-                        <div key={property.id} style={{ flexShrink: 0, width: '220px', height: '280px', overflow: 'hidden' }}>
-                          <PropertyCard property={property} />
-                        </div>
+                        <PropertyCard key={property.id} property={property} />
                       ))}
                     </div>
                   </div>
