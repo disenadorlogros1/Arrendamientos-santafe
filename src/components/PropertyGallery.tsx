@@ -70,9 +70,9 @@ function computeAlbums(images: string[]): string[][] {
  * Para portrait las columnas son iguales: 1/cols × ancho < alto = portrait.
  */
 function buildCols(hoveredCol: number | null, isLandscape: boolean, cols: number): string {
-  if (hoveredCol === null || !isLandscape) return `repeat(${cols}, 1fr)`;
+  if (hoveredCol === null) return `repeat(${cols}, 1fr)`;
   return Array.from({ length: cols }, (_, i) =>
-    i === hoveredCol ? '10fr' : '1fr'
+    i === hoveredCol ? (isLandscape ? '10fr' : '0.5fr') : '1fr'
   ).join(' ');
 }
 
@@ -803,12 +803,13 @@ function BentoGallery({ images, onClose, stats, title }: {
             const isHovered  = hoveredIdx === idx;
             const isSelected = selectedIdx === idx;
 
-            /* Última imagen extiende para cubrir huecos SOLO cuando la InfoCard
-             * no es el último elemento del grid (si InfoCard está al final, ella se extiende). */
+            /* Última imagen extiende para cubrir huecos SOLO cuando la InfoCard no es el
+             * último elemento. En hover vuelve a 1 celda para la expansión bento normal. */
             const isLastImg = idx === lastImgIdx && trailingEmpty > 0 && !infoCardIsLast;
-            const gridColValue: number | string = isLastImg
-              ? `${normalCol + 1} / ${normalCol + trailingEmpty + 2}`
-              : normalCol + 1;
+            const gridColValue: number | string =
+              isLastImg && !(isHovering && isHovered)
+                ? `${normalCol + 1} / ${normalCol + trailingEmpty + 2}`
+                : normalCol + 1;
 
             const sameCol  = isHovering && hoveredCol !== null && normalCol === hoveredCol;
             const hideCell = sameCol && !isHovered;

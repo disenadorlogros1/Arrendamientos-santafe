@@ -252,7 +252,8 @@ export default function PropiedadesPage({ initialFilter = 'Todos' }: { initialFi
 
       {/* Map panel — solo desktop */}
       {showMap && (
-        <div className="hidden lg:block" style={{ background: '#f5f5f5', position: 'relative', zIndex: 0 }}>
+        <>
+        <div className="hidden lg:block" style={{ position: 'relative', zIndex: 0 }}>
           <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '0 clamp(16px, 3vw, 52px)' }}>
 
             {/* ── Modo normal: cards izquierda + mapa derecha ── */}
@@ -262,11 +263,9 @@ export default function PropiedadesPage({ initialFilter = 'Todos' }: { initialFi
                 boxShadow: '0 10px 48px rgba(0,0,0,0.22), 0 2px 8px rgba(0,0,0,0.10)',
                 overflow: 'hidden',
               }}>
-                {/* Izquierda: panel de cards — en hover muestra la propiedad amplificada */}
+                {/* Izquierda: cards flotando sin fondo */}
                 <div style={{
                   flex: 1,
-                  background: '#f5f5f5',
-                  borderRight: '1px solid #e0e0e0',
                   overflow: 'hidden',
                   position: 'relative',
                 }}>
@@ -274,8 +273,6 @@ export default function PropiedadesPage({ initialFilter = 'Todos' }: { initialFi
                   <div style={{
                     display: 'grid',
                     gridTemplateColumns: '1fr 1fr',
-                    gap: '12px',
-                    padding: '12px 12px 12px 0',
                     height: '100%',
                     opacity: hoveredMapProperty ? 0 : 1,
                     transition: 'opacity 0.18s ease',
@@ -388,6 +385,49 @@ export default function PropiedadesPage({ initialFilter = 'Todos' }: { initialFi
 
           </div>
         </div>
+
+        {/* CTAs — visibles directamente bajo el mapa, sin animación */}
+        <div className="hidden lg:grid" style={{
+          maxWidth: '1400px', margin: '0 auto',
+          padding: '0 clamp(16px, 3vw, 52px)',
+          gridTemplateColumns: appliedFilters.tipo === 'Todos' ? '1fr 1fr' : '1fr',
+          gap: '1px',
+          marginTop: '1px',
+        }}>
+          {(appliedFilters.tipo === 'Todos' || appliedFilters.tipo === 'Arrendar') && (
+            <div style={{ background: '#1a1a1a', padding: '24px 28px' }}>
+              <h3 style={{ fontFamily: FONT_HEADING, fontWeight: 700, fontSize: '20px', color: '#fff', marginBottom: '6px', lineHeight: 1.2 }}>
+                ¿Tienes un inmueble para arrendar o vender?
+              </h3>
+              <p style={{ fontFamily: FONT_BODY, fontSize: '14px', color: 'rgba(255,255,255,0.55)', marginBottom: '16px', lineHeight: 1.4 }}>
+                Consigna tu propiedad con nosotros y accede a nuestra red de clientes.
+              </p>
+              <button type="button" onClick={() => window.location.href = '/consignacion'}
+                style={{ fontFamily: FONT_BODY, fontSize: '13px', fontWeight: 600, color: '#fff', background: RED, border: 'none', cursor: 'pointer', padding: '11px 28px', transition: 'background 0.2s ease' }}
+                onMouseEnter={e => (e.currentTarget.style.background = '#aa182c')}
+                onMouseLeave={e => (e.currentTarget.style.background = RED)}>
+                Consigna tu propiedad
+              </button>
+            </div>
+          )}
+          {(appliedFilters.tipo === 'Todos' || appliedFilters.tipo === 'Comprar') && (
+            <div style={{ background: '#1a1a1a', padding: '24px 28px' }}>
+              <h3 style={{ fontFamily: FONT_HEADING, fontWeight: 700, fontSize: '20px', color: '#fff', marginBottom: '6px', lineHeight: 1.2 }}>
+                ¿Buscas oportunidades de inversión?
+              </h3>
+              <p style={{ fontFamily: FONT_BODY, fontSize: '14px', color: 'rgba(255,255,255,0.55)', marginBottom: '16px', lineHeight: 1.4 }}>
+                Descubre nuestras propiedades con mayor potencial de retorno en Antioquia.
+              </p>
+              <button type="button" onClick={() => window.location.href = '/inversionistas'}
+                style={{ fontFamily: FONT_BODY, fontSize: '13px', fontWeight: 600, color: '#fff', background: RED, border: 'none', cursor: 'pointer', padding: '11px 28px', transition: 'background 0.2s ease' }}
+                onMouseEnter={e => (e.currentTarget.style.background = '#aa182c')}
+                onMouseLeave={e => (e.currentTarget.style.background = RED)}>
+                Ver oportunidades de inversión
+              </button>
+            </div>
+          )}
+        </div>
+        </>
       )}
 
       {/* Content */}
@@ -464,8 +504,8 @@ export default function PropiedadesPage({ initialFilter = 'Todos' }: { initialFi
           </div>
         )}
 
-        {/* Cross-linking CTAs */}
-        <div className={`mt-16 grid gap-6 ${appliedFilters.tipo === 'Todos' ? 'md:grid-cols-2' : 'md:grid-cols-1'}`}>
+        {/* Cross-linking CTAs — ocultos en desktop cuando el mapa está abierto (aparecen arriba) */}
+        <div className={`mt-16 grid gap-6 ${showMap ? 'lg:hidden' : ''} ${appliedFilters.tipo === 'Todos' ? 'md:grid-cols-2' : 'md:grid-cols-1'}`}>
           {(appliedFilters.tipo === 'Todos' || appliedFilters.tipo === 'Arrendar') && (
             <ScrollReveal y={20}>
               <div style={{ background: '#1a1a1a', borderRadius: 0, padding: '24px 28px' }}>
