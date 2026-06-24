@@ -370,8 +370,8 @@ export default function PropiedadesPage({ initialFilter = 'Todos' }: { initialFi
           maxWidth: '1400px', margin: '0 auto',
           padding: '0 clamp(16px, 3vw, 52px)',
           gridTemplateColumns: appliedFilters.tipo === 'Todos' ? '1fr 1fr' : '1fr',
-          gap: '1px',
-          marginTop: '1px',
+          gap: '15px',
+          marginTop: '15px',
         }}>
           {(appliedFilters.tipo === 'Todos' || appliedFilters.tipo === 'Arrendar') && (
             <div style={{ background: '#1a1a1a', padding: '24px 28px' }}>
