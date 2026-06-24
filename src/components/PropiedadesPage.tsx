@@ -157,6 +157,8 @@ export default function PropiedadesPage({ initialFilter = 'Todos' }: { initialFi
   const cardsGridRef = useRef<HTMLDivElement>(null);
 
   const [showMap, setShowMap] = useState(false);
+  const [mapExpanded, setMapExpanded] = useState(false);
+  const [visibleInMap, setVisibleInMap] = useState<import('@/data/properties').Property[]>([]);
   const getDefaultPrecioMax = (tipo: string) =>
     tipo === 'Comprar' ? 500_000_000 : tipo === 'Arrendar' ? 15_000_000 : 500_000_000;
 
@@ -247,73 +249,144 @@ export default function PropiedadesPage({ initialFilter = 'Todos' }: { initialFi
         />
       </div>
 
-      {/* Map + Cards panel — mismo contenedor que el buscador, solo desktop */}
+      {/* Map panel — solo desktop */}
       {showMap && (
-        <div className="hidden lg:block" style={{ background: '#fff' }}>
+        <div className="hidden lg:block" style={{ background: '#f5f5f5' }}>
           <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '0 clamp(16px, 3vw, 52px)' }}>
-            <div style={{
-              display: 'flex',
-              height: '420px',
-              boxShadow: '0 10px 48px rgba(0,0,0,0.22), 0 2px 8px rgba(0,0,0,0.10)',
-              overflow: 'hidden',
-            }}>
 
-              {/* Izquierda: 2 PropertyCards verticales en grid de 2 columnas */}
+            {/* ── Modo normal: cards izquierda + mapa derecha ── */}
+            {!mapExpanded && (
               <div style={{
-                flex: 1,
-                display: 'grid',
-                gridTemplateColumns: '1fr 1fr',
-                gap: '1px',
-                background: '#e8e8e8',
-                borderRight: '1px solid #e8e8e8',
+                display: 'flex', height: '420px',
+                boxShadow: '0 10px 48px rgba(0,0,0,0.22), 0 2px 8px rgba(0,0,0,0.10)',
                 overflow: 'hidden',
               }}>
-                {filtered.slice(0, 2).map(property => (
-                  <div key={property.id} style={{ overflow: 'hidden', background: '#fff' }}>
-                    <PropertyCard property={property} />
+                {/* Izquierda: 2 cards verticales con gap — sync con lo visible en el mapa */}
+                <div style={{
+                  flex: 1,
+                  display: 'grid',
+                  gridTemplateColumns: '1fr 1fr',
+                  gap: '12px',
+                  padding: '12px 12px 12px 0',
+                  background: '#f5f5f5',
+                  borderRight: '1px solid #e0e0e0',
+                  overflow: 'hidden',
+                }}>
+                  {(visibleInMap.length > 0 ? visibleInMap : filtered).slice(0, 2).map(property => (
+                    <div key={property.id} style={{ overflow: 'hidden', borderRadius: '2px' }}>
+                      <PropertyCard property={property} />
+                    </div>
+                  ))}
+                  {filtered.length === 0 && (
+                    <div style={{
+                      gridColumn: '1 / -1', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      background: '#fafafa', fontFamily: FONT_BODY, fontSize: '13px', color: '#aaa',
+                    }}>
+                      Sin propiedades
+                    </div>
+                  )}
+                </div>
+
+                {/* Derecha: Mapa con botones flotantes */}
+                <div style={{ flex: 1, position: 'relative' }}>
+                  <PropiedadesLeafletMap
+                    properties={filtered}
+                    onBoundsChange={setVisibleInMap}
+                  />
+                  <div style={{ position: 'absolute', top: 12, right: 12, zIndex: 1000, display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <MapFloatButton label="Ampliar mapa" onClick={() => setMapExpanded(true)}>
+                      <span style={{ fontSize: '18px', lineHeight: 1, fontWeight: 300 }}>+</span>
+                    </MapFloatButton>
+                    <MapFloatButton label="Cerrar mapa" onClick={() => { setShowMap(false); setMapExpanded(false); }} accent>
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+                        <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                      </svg>
+                    </MapFloatButton>
                   </div>
-                ))}
-                {filtered.length === 0 && (
-                  <div style={{
-                    gridColumn: '1 / -1', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    background: '#fafafa', fontFamily: FONT_BODY, fontSize: '13px', color: '#aaa',
-                  }}>
-                    Sin propiedades
+                </div>
+              </div>
+            )}
+
+            {/* ── Modo expandido: mapa full width + carrusel inferior ── */}
+            {mapExpanded && (
+              <div style={{ boxShadow: '0 10px 48px rgba(0,0,0,0.22), 0 2px 8px rgba(0,0,0,0.10)', overflow: 'hidden' }}>
+                {/* Mapa ancho completo */}
+                <div style={{ position: 'relative', height: '520px' }}>
+                  <PropiedadesLeafletMap
+                    properties={filtered}
+                    onBoundsChange={setVisibleInMap}
+                  />
+                  <div style={{ position: 'absolute', top: 12, right: 12, zIndex: 1000, display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <MapFloatButton label="Reducir mapa" onClick={() => setMapExpanded(false)}>
+                      <span style={{ fontSize: '16px', lineHeight: 1, fontWeight: 300 }}>−</span>
+                    </MapFloatButton>
+                    <MapFloatButton label="Cerrar mapa" onClick={() => { setShowMap(false); setMapExpanded(false); }} accent>
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+                        <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                      </svg>
+                    </MapFloatButton>
+                  </div>
+                </div>
+
+                {/* Carrusel horizontal de propiedades visibles en el mapa */}
+                {(visibleInMap.length > 0 ? visibleInMap : filtered).length > 0 && (
+                  <div style={{ background: '#f5f5f5', padding: '16px' }}>
+                    <p style={{ fontFamily: FONT_BODY, fontSize: '12px', color: '#999', margin: '0 0 12px 0', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+                      {(visibleInMap.length > 0 ? visibleInMap : filtered).length} propiedad{(visibleInMap.length > 0 ? visibleInMap : filtered).length !== 1 ? 'es' : ''} en esta zona
+                    </p>
+                    <div className="red-scrollbar" style={{
+                      display: 'flex', gap: '12px', overflowX: 'auto',
+                      paddingBottom: '8px',
+                    }}>
+                      {(visibleInMap.length > 0 ? visibleInMap : filtered).map(property => (
+                        <div key={property.id} style={{ flexShrink: 0, width: '220px', height: '280px', overflow: 'hidden', borderRadius: '2px' }}>
+                          <PropertyCard property={property} />
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 )}
               </div>
+            )}
 
-              {/* Derecha: Mapa Leaflet con botones flotantes */}
-              <div style={{ flex: 1, position: 'relative' }}>
-                <PropiedadesLeafletMap properties={filtered} />
-
-                {/* Botones flotantes — esquina superior derecha */}
-                <div style={{
-                  position: 'absolute', top: 12, right: 12, zIndex: 1000,
-                  display: 'flex', alignItems: 'center', gap: '8px',
-                }}>
-                  {/* Botón ampliar */}
-                  <MapFloatButton
-                    label="Ampliar mapa"
-                    onClick={() => { /* futuro: fullscreen */ }}
-                  >
-                    <span style={{ fontSize: '18px', lineHeight: 1, fontWeight: 300 }}>+</span>
-                  </MapFloatButton>
-
-                  {/* Botón cerrar */}
-                  <MapFloatButton
-                    label="Cerrar mapa"
-                    onClick={() => setShowMap(false)}
-                    accent
-                  >
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
-                      <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
-                    </svg>
-                  </MapFloatButton>
-                </div>
+            {/* CTA cards — debajo del mapa y las propiedades */}
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginTop: '12px', paddingBottom: '12px' }}>
+              <div style={{ background: '#1a1a1a', padding: '24px 28px' }}>
+                <h3 style={{ fontFamily: FONT_HEADING, fontWeight: 700, fontSize: '18px', color: '#fff', marginBottom: '6px', lineHeight: 1.2 }}>
+                  ¿Tienes un inmueble para arrendar o vender?
+                </h3>
+                <p style={{ fontFamily: FONT_BODY, fontSize: '13px', color: 'rgba(255,255,255,0.55)', marginBottom: '16px', lineHeight: 1.4 }}>
+                  Consigna tu propiedad con nosotros y accede a nuestra red de clientes.
+                </p>
+                <button
+                  type="button"
+                  onClick={() => window.location.href = '/consignacion'}
+                  style={{ fontFamily: FONT_BODY, fontSize: '13px', fontWeight: 600, color: '#fff', background: RED, border: 'none', cursor: 'pointer', padding: '10px 24px', transition: 'background 0.2s ease' }}
+                  onMouseEnter={e => (e.currentTarget.style.background = '#aa182c')}
+                  onMouseLeave={e => (e.currentTarget.style.background = RED)}
+                >
+                  Consigna tu propiedad
+                </button>
               </div>
-
+              <div style={{ background: '#1a1a1a', padding: '24px 28px' }}>
+                <h3 style={{ fontFamily: FONT_HEADING, fontWeight: 700, fontSize: '18px', color: '#fff', marginBottom: '6px', lineHeight: 1.2 }}>
+                  ¿Buscas oportunidades de inversión?
+                </h3>
+                <p style={{ fontFamily: FONT_BODY, fontSize: '13px', color: 'rgba(255,255,255,0.55)', marginBottom: '16px', lineHeight: 1.4 }}>
+                  Descubre nuestras propiedades con mayor potencial de retorno en Antioquia.
+                </p>
+                <button
+                  type="button"
+                  onClick={() => window.location.href = '/inversionistas'}
+                  style={{ fontFamily: FONT_BODY, fontSize: '13px', fontWeight: 600, color: '#fff', background: RED, border: 'none', cursor: 'pointer', padding: '10px 24px', transition: 'background 0.2s ease' }}
+                  onMouseEnter={e => (e.currentTarget.style.background = '#aa182c')}
+                  onMouseLeave={e => (e.currentTarget.style.background = RED)}
+                >
+                  Ver oportunidades de inversión
+                </button>
+              </div>
             </div>
+
           </div>
         </div>
       )}

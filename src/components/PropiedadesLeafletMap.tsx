@@ -5,46 +5,41 @@ import type { Property } from '@/data/properties';
 
 const FONT = "'Avenir LT Std', 'Outfit', system-ui, sans-serif";
 
-/* HTML del marcador: pin rojo en forma de lágrima con el favicon blanco centrado.
-   Usamos divIcon en lugar de L.icon() para poder referenciar /icons/... directamente. */
 const MARKER_HTML = `
-  <div style="
-    position: relative;
-    width: 40px;
-    height: 50px;
-    filter: drop-shadow(0 3px 6px rgba(0,0,0,0.35));
-  ">
+  <div style="position:relative;width:40px;height:50px;filter:drop-shadow(0 3px 6px rgba(0,0,0,0.35))">
     <svg viewBox="0 0 40 50" width="40" height="50" xmlns="http://www.w3.org/2000/svg">
-      <!-- Cuerpo del pin: círculo superior + punta inferior -->
       <path d="M20 2 C10.6 2 3 9.6 3 19 C3 29.8 20 48 20 48 C20 48 37 29.8 37 19 C37 9.6 29.4 2 20 2Z"
             fill="#f32735" stroke="white" stroke-width="2.2"/>
     </svg>
-    <!-- Favicon blanco centrado en la parte circular (top ≈ 19px es el centro del círculo) -->
-    <img
-      src="/icons/icon-favicon-white.gif"
-      style="
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -62%);
-        width: 20px;
-        height: 20px;
-        object-fit: contain;
-        pointer-events: none;
-      "
-    />
+    <img src="/icons/icon-favicon-white.gif"
+      style="position:absolute;top:50%;left:50%;transform:translate(-50%,-62%);width:20px;height:20px;object-fit:contain;pointer-events:none"/>
   </div>
 `;
 
 interface Props {
   properties: Property[];
+  onBoundsChange?: (visible: Property[]) => void;
 }
 
-export default function PropiedadesLeafletMap({ properties }: Props) {
+export default function PropiedadesLeafletMap({ properties, onBoundsChange }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<any>(null);
   const layerRef = useRef<any>(null);
   const [ready, setReady] = useState(false);
+  // Refs para acceder a los valores más recientes dentro de listeners
+  const propsRef = useRef(properties);
+  const cbRef = useRef(onBoundsChange);
+  propsRef.current = properties;
+  cbRef.current = onBoundsChange;
+
+  const fireUpdate = (map: any) => {
+    if (!cbRef.current) return;
+    const bounds = map.getBounds();
+    const visible = propsRef.current.filter(
+      p => p.latitude && p.longitude && bounds.contains([p.latitude!, p.longitude!])
+    );
+    cbRef.current(visible);
+  };
 
   // Init Leaflet once
   useEffect(() => {
@@ -70,6 +65,10 @@ export default function PropiedadesLeafletMap({ properties }: Props) {
       }).addTo(mapRef.current);
 
       layerRef.current = L.layerGroup().addTo(mapRef.current);
+
+      // Disparar update cuando el usuario mueve o hace zoom
+      mapRef.current.on('moveend zoomend', () => fireUpdate(mapRef.current));
+
       setReady(true);
     };
 
@@ -97,7 +96,7 @@ export default function PropiedadesLeafletMap({ properties }: Props) {
     };
   }, []);
 
-  // Update markers when properties or ready state changes
+  // Actualizar marcadores y lanzar bounds update cuando cambian propiedades
   useEffect(() => {
     if (!ready || !layerRef.current || !(window as any).L) return;
     const L = (window as any).L;
@@ -125,12 +124,14 @@ export default function PropiedadesLeafletMap({ properties }: Props) {
             { maxWidth: 180 }
           );
       });
+
+    // Disparar bounds update inicial
+    if (mapRef.current) fireUpdate(mapRef.current);
   }, [ready, properties]);
 
   return (
     <div style={{ position: 'relative', width: '100%', height: '100%' }}>
       <div ref={containerRef} style={{ width: '100%', height: '100%' }} />
-      {/* Label flotante */}
       <div style={{
         position: 'absolute', bottom: 16, left: '50%', transform: 'translateX(-50%)',
         background: 'rgba(255,255,255,0.92)', backdropFilter: 'blur(6px)',
