@@ -630,6 +630,11 @@ function BentoGallery({ images, onClose, stats, title }: {
   const gridCols = buildCols(hoveredCol, hoveredIsLandscape, cols);
   const gridRows = `repeat(${rows}, 1fr)`;
 
+  /* Celdas vacías al final del grid (tras inyectar la InfoCard) */
+  const totalCells   = albumImages.length + 1;
+  const trailingEmpty = (cols - (totalCells % cols)) % cols;
+  const lastImgIdx   = albumImages.length - 1;
+
   /* ── Lock scroll ────────────────────────────────────────────── */
   useEffect(() => {
     document.body.style.overflow = 'hidden';
@@ -796,6 +801,18 @@ function BentoGallery({ images, onClose, stats, title }: {
             const isHovered  = hoveredIdx === idx;
             const isSelected = selectedIdx === idx;
 
+            /* Última imagen: expande para cubrir celdas negras al final del grid.
+             * Solo cuando no hay hover — al hovear vuelve a 1 celda para la animación. */
+            const isLastImg = idx === lastImgIdx && trailingEmpty > 0;
+            let gridColValue: number | string;
+            if (isHovering && isHovered) {
+              gridColValue = normalCol + 1;
+            } else if (!isHovering && isLastImg) {
+              gridColValue = `${normalCol + 1} / ${normalCol + trailingEmpty + 2}`;
+            } else {
+              gridColValue = normalCol + 1;
+            }
+
             const sameCol  = isHovering && hoveredCol !== null && normalCol === hoveredCol;
             const hideCell = sameCol && !isHovered;
             const opacity  = hideCell ? 0 : (!isHovering ? 1 : isHovered ? 1 : 0.5);
@@ -806,7 +823,7 @@ function BentoGallery({ images, onClose, stats, title }: {
                 data-idx={idx}
                 onClick={() => handleCellClick(idx)}
                 style={{
-                  gridColumn: normalCol + 1,
+                  gridColumn: gridColValue,
                   gridRow: isHovering && isHovered ? '1 / -1' : normalRow + 1,
                   zIndex: isHovering && isHovered ? 1 : 0,
                   position: 'relative',
