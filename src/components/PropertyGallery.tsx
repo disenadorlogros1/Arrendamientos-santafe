@@ -546,11 +546,9 @@ function BentoGallery({ images, onClose, stats, title }: {
   /* Tipo de ficha informativa: se elige aleatoriamente al montar */
   const [infoCardType]   = useState<0 | 1 | 2 | 3 | 4>(() => Math.floor(Math.random() * 5) as 0 | 1 | 2 | 3 | 4);
 
-  /* Columna visual real del mouse — usada para posicionar celdas filler-span en hover */
-  const [hoveredMouseCol, setHoveredMouseCol] = useState(0);
-
-  const carouselRef  = useRef<HTMLDivElement>(null);
-  const gridRef      = useRef<HTMLDivElement>(null);
+  const carouselRef      = useRef<HTMLDivElement>(null);
+  /* Posición de inyección de InfoCard por álbum: key = "albumIdx-length" */
+  const injectPositions  = useRef<Map<string, number>>(new Map());
   const clearTimer   = useRef<ReturnType<typeof setTimeout> | null>(null);
   /* Caché de orientación por URL — persiste entre renders sin causar re-renders.
    * Se llena en el primer hover real (img ya renderizado en DOM, EXIF aplicado).
@@ -601,42 +599,33 @@ function BentoGallery({ images, onClose, stats, title }: {
     setHoveredIdx(null);
   }, [albums.length]);
 
-  /* Columnas y filas dinámicas según cantidad de imágenes del álbum activo */
+  /* Columnas dinámicas según cantidad de imágenes del álbum activo */
   const cols = computeCols(albumImages.length);
-  const rows = Math.ceil(albumImages.length / cols);
 
-  /* ── Última fila incompleta ────────────────────────────────────── */
-  const fillerCount  = albumImages.length % cols !== 0 ? cols - (albumImages.length % cols) : 0;
-  const lastRowStart = fillerCount > 0 ? (rows - 1) * cols : -1;
+  /* ── Posición aleatoria de la InfoCard, estable por álbum ────── */
+  const injectAt = useMemo(() => {
+    const key = `${activeAlbum}-${albumImages.length}`;
+    if (!injectPositions.current.has(key)) {
+      const totalRows = Math.ceil(albumImages.length / cols);
+      /* Elige una fila aleatoria: 0 = primera, totalRows = después de la última */
+      const randomRow = Math.floor(Math.random() * (totalRows + 1));
+      injectPositions.current.set(key, randomRow * cols);
+    }
+    return injectPositions.current.get(key)!;
+  }, [activeAlbum, albumImages.length, cols]);
+
+  /* Filas = ceil de (imágenes + 1 InfoCard) */
+  const rows = Math.ceil((albumImages.length + 1) / cols);
 
   /* ¿Es landscape la imagen bajo el cursor? */
   const hoveredIsLandscape = hoveredIdx !== null ? (orientations[hoveredIdx] ?? false) : false;
 
-  /* Si la celda hovered es la del filler-span (última fila incompleta), usar la
-   * columna visual real del mouse en lugar de la columna lógica de la imagen.
-   * Así la imagen expandida aparece justo donde está el cursor. */
-  const isFillerSpanHovered = hoveredIdx !== null && fillerCount > 0 &&
-    Math.floor(hoveredIdx / cols) === rows - 1;
-  const hoveredCol = hoveredIdx !== null
-    ? (isFillerSpanHovered ? hoveredMouseCol : hoveredIdx % cols)
+  /* Posición real en el grid del imagen hovered (offset +1 si InfoCard está antes) */
+  const hoveredCellPos = hoveredIdx !== null
+    ? (hoveredIdx < injectAt ? hoveredIdx : hoveredIdx + 1)
     : null;
+  const hoveredCol = hoveredCellPos !== null ? hoveredCellPos % cols : null;
   const isHovering = hoveredIdx !== null;
-
-  const gridCols = buildCols(hoveredCol, hoveredIsLandscape, cols);
-  const gridRows = `repeat(${rows}, 1fr)`;
-
-  /* Última fila: la imagen FINAL hace span de 2 cols (cuando fillerCount >= 2).
-   * La celda restante la ocupa la InfoCard. fillerCount === 1 → no hay span,
-   * la InfoCard va directamente en el slot vacío. */
-  const lastImgPosInRow = fillerCount > 0
-    ? (albumImages.length - 1) - lastRowStart   // 0-indexed
-    : 0;
-  /* gridColumn CSS de la InfoCard */
-  const infoCardCol = fillerCount > 0
-    ? fillerCount === 1
-      ? `${cols}`                                          // último col
-      : `${lastImgPosInRow + 3} / ${cols + 1}`            // después del span-2
-    : '';
 
   /* ── Lock scroll ────────────────────────────────────────────── */
   useEffect(() => {
@@ -666,10 +655,7 @@ function BentoGallery({ images, onClose, stats, title }: {
     const idx  = raw !== undefined ? parseInt(raw) : null;
     if (clearTimer.current) { clearTimeout(clearTimer.current); clearTimer.current = null; }
     if (idx !== null && cell) {
-      /* Orientación desde Map ref (evita EXIF-preload bug + onLoad-cache bug).
-       * Si la URL no está en el mapa, leer del img renderizado en DOM.
-       * naturalWidth/Height del img real siempre refleja la rotación EXIF aplicada. */
-      const src   = albumImages[idx] ?? '';
+      const src = albumImages[idx] ?? '';
       if (!orientMap.current.has(src)) {
         const imgEl = cell.querySelector('img') as HTMLImageElement | null;
         if (imgEl && imgEl.complete && imgEl.naturalWidth > 0) {
@@ -678,28 +664,6 @@ function BentoGallery({ images, onClose, stats, title }: {
       }
       const isLandscape = orientMap.current.get(src) ?? false;
       const gIdx = albumStartIdx + idx;
-
-      /* Columna visual real del cursor (para posicionar filler-span en hover) */
-      const localCols = computeCols(albumImages.length);
-      let mouseCol = idx % localCols;
-      if (gridRef.current) {
-        const rect = gridRef.current.getBoundingClientRect();
-        mouseCol = Math.max(0, Math.min(localCols - 1,
-          Math.floor((e.clientX - rect.left) / (rect.width / localCols))
-        ));
-      }
-      /* Clamp: la última imagen del filler span sólo puede ocupar sus 2 cols naturales.
-       * Evita que el hover intente solaparse con la InfoCard adyacente. */
-      const localFiller = albumImages.length % localCols !== 0
-        ? localCols - (albumImages.length % localCols) : 0;
-      if (localFiller >= 2 && idx === albumImages.length - 1) {
-        const localLastRowStart = (Math.ceil(albumImages.length / localCols) - 1) * localCols;
-        const posInRowLocal = idx - localLastRowStart;
-        mouseCol = Math.min(mouseCol, posInRowLocal + 1);
-      }
-
-      /* React 18 batchea los tres setState → un solo render, sin parpadeo */
-      setHoveredMouseCol(mouseCol);
       setAllOrientations(prev => {
         if (prev[gIdx] === isLandscape) return prev;
         const copy = [...prev]; copy[gIdx] = isLandscape; return copy;
