@@ -801,17 +801,12 @@ function BentoGallery({ images, onClose, stats, title }: {
             const isHovered  = hoveredIdx === idx;
             const isSelected = selectedIdx === idx;
 
-            /* Última imagen: expande para cubrir celdas negras al final del grid.
-             * Solo cuando no hay hover — al hovear vuelve a 1 celda para la animación. */
+            /* Última imagen: siempre expande para cubrir celdas negras al final del grid.
+             * El hover solo agrega expansión vertical (gridRow 1/-1), no colapsa el span. */
             const isLastImg = idx === lastImgIdx && trailingEmpty > 0;
-            let gridColValue: number | string;
-            if (isHovering && isHovered) {
-              gridColValue = normalCol + 1;
-            } else if (!isHovering && isLastImg) {
-              gridColValue = `${normalCol + 1} / ${normalCol + trailingEmpty + 2}`;
-            } else {
-              gridColValue = normalCol + 1;
-            }
+            const gridColValue: number | string = isLastImg
+              ? `${normalCol + 1} / ${normalCol + trailingEmpty + 2}`
+              : normalCol + 1;
 
             const sameCol  = isHovering && hoveredCol !== null && normalCol === hoveredCol;
             const hideCell = sameCol && !isHovered;
