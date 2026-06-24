@@ -10,7 +10,7 @@ import Footer from '@/components/Footer';
 import PropertyCard from '@/components/PropertyCard';
 import ScrollReveal from '@/components/ScrollReveal';
 import { investmentZones, getZoneBySlug } from '@/data/investment-zones';
-import { properties } from '@/data/properties';
+import { properties, getNeighborhoodsForZone } from '@/data/properties';
 import type { PageType } from '@/components/Header';
 
 const WHATSAPP_URL = 'https://wa.me/573006557529?text=Hola%2C%20quisiera%20consultar%20oportunidades%20de%20inversión%20inmobiliaria.';
@@ -29,6 +29,8 @@ export default function InversionZonePage() {
       (p) => p.location.toLowerCase().includes(zone.name.toLowerCase()) && p.businessType === 'Comprar'
     );
   }, [zone]);
+
+  const neighborhoods = useMemo(() => (zone ? getNeighborhoodsForZone(zone.slug) : []), [zone]);
 
   useEffect(() => {
     if (heroRef.current) {
@@ -125,6 +127,32 @@ export default function InversionZonePage() {
             </div>
           </div>
         </section>
+
+        {/* Neighborhoods */}
+        {neighborhoods.length > 0 && (
+          <section className="py-12 md:py-16 bg-white">
+            <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+              <ScrollReveal y={20}>
+                <h2 className="text-3xl font-bold text-gray-900 mb-3">
+                  Sectores y barrios de {zone.name}
+                </h2>
+                <p className="text-gray-500 mb-8">
+                  Zonas geográficas incluidas en este sector de inversión
+                </p>
+              </ScrollReveal>
+
+              <div className="flex flex-wrap gap-2">
+                {neighborhoods.map((name, i) => (
+                  <ScrollReveal key={name} delay={i * 0.02} y={10}>
+                    <span className="inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium bg-gray-100 text-gray-700 border border-gray-200">
+                      {name}
+                    </span>
+                  </ScrollReveal>
+                ))}
+              </div>
+            </div>
+          </section>
+        )}
 
         {/* Related Properties */}
         {relatedProperties.length > 0 && (

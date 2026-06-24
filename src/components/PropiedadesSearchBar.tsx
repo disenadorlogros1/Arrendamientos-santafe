@@ -484,8 +484,11 @@ interface Props {
 export default function PropiedadesSearchBar({ initialTipo = 'Todos', onApply }: Props) {
   const [tipo,          setTipo]          = useState<'Todos' | 'Arrendar' | 'Comprar'>(initialTipo);
   const [codigo,        setCodigo]        = useState('');
+  const [codigoActive,  setCodigoActive]  = useState(false);
   const [sector,        setSector]        = useState('');
   const [tipoPropiedad, setTipoPropiedad] = useState('');
+
+  const codigoCollapsed = codigoActive || codigo.length > 0;
   const defaultPrecioRange = (t: string): [number, number] =>
     t === 'Comprar' ? [30_000_000, 500_000_000] : t === 'Arrendar' ? [0, 15_000_000] : [0, 500_000_000];
 
@@ -599,14 +602,17 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', onApply }:
         {/* ── Grid único: filtros principales + avanzados alineados ─── */}
         <div style={{
           display: 'grid',
-          gridTemplateColumns: codigo ? '100% 0% 0% 0%' : '25% 25% 25% 25%',
+          gridTemplateColumns: codigoCollapsed ? `calc(100% - 156px) 52px 52px 52px` : '25% 25% 25% 25%',
           transition: 'grid-template-columns 0.38s cubic-bezier(0.4,0,0.2,1)',
         }}>
 
           {/* ── Fila principal ──────────────────────────────────────── */}
 
           {/* Col 1: Código inmueble */}
-          <div style={{ borderRight: DIVIDER, borderBottom: DIVIDER, overflow: 'hidden' }}>
+          <div
+            style={{ borderRight: DIVIDER, borderBottom: DIVIDER, overflow: 'hidden', cursor: 'text' }}
+            onClick={() => { setCodigoActive(true); setShowAdvanced(false); }}
+          >
             <div style={contentStyle}>
               <img src="/icons/icon-code-red.gif" alt="" width={24} height={24} style={{ flexShrink: 0 }} />
               <div style={{ minWidth: 0, flex: 1 }}>
@@ -617,7 +623,6 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', onApply }:
                   onChange={e => {
                     const v = e.target.value;
                     setCodigo(v);
-                    if (v) setShowAdvanced(false);
                     onApply({
                       tipo, codigo: v, sector, tipoPropiedad,
                       precioMin: precioRange[0], precioMax: precioRange[1],
@@ -625,6 +630,8 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', onApply }:
                       areaMin, areaMax, estrato, comodidades,
                     });
                   }}
+                  onFocus={() => { setCodigoActive(true); setShowAdvanced(false); }}
+                  onBlur={() => { if (!codigo) setCodigoActive(false); }}
                   placeholder="Ej: A11636"
                   className="search-field-input"
                   style={{ fontFamily: FONT, fontSize: '14px', fontWeight: 400, color: codigo ? COLOR_VALUE : '#b8b8b8', background: 'transparent', border: 'none', outline: 'none', width: '100%', lineHeight: 1 }}
@@ -634,8 +641,12 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', onApply }:
           </div>
 
           {/* Col 2: Ubicación */}
-          <div style={{ borderRight: DIVIDER, borderBottom: DIVIDER, overflow: 'hidden', opacity: codigo ? 0 : 1, transition: 'opacity 0.15s ease' }}>
-            <div style={contentStyle}>
+          <div style={{ position: 'relative', borderRight: DIVIDER, borderBottom: DIVIDER, overflow: 'hidden' }}>
+            {/* Icon overlay — visible cuando está colapsado */}
+            <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: codigoCollapsed ? 1 : 0, transition: 'opacity 0.2s ease', pointerEvents: 'none' }}>
+              <img src="/icons/icon-location-red.gif" alt="" width={22} height={22} style={{ filter: 'grayscale(0.3) opacity(0.7)' }} />
+            </div>
+            <div style={{ ...contentStyle, opacity: codigoCollapsed ? 0 : 1, transition: 'opacity 0.15s ease' }}>
               <img src="/icons/icon-location-red.gif" alt="" width={24} height={24} style={{ flexShrink: 0 }} />
               <div style={{ minWidth: 0, flex: 1 }}>
                 <p style={labelStyle}>Ubicación</p>
@@ -645,8 +656,11 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', onApply }:
           </div>
 
           {/* Col 3: Tipo de propiedad */}
-          <div style={{ borderRight: DIVIDER, borderBottom: DIVIDER, overflow: 'hidden', opacity: codigo ? 0 : 1, transition: 'opacity 0.15s ease' }}>
-            <div style={contentStyle}>
+          <div style={{ position: 'relative', borderRight: DIVIDER, borderBottom: DIVIDER, overflow: 'hidden' }}>
+            <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: codigoCollapsed ? 1 : 0, transition: 'opacity 0.2s ease', pointerEvents: 'none' }}>
+              <img src="/icons/icon-home-red.gif" alt="" width={22} height={22} style={{ filter: 'grayscale(0.3) opacity(0.7)' }} />
+            </div>
+            <div style={{ ...contentStyle, opacity: codigoCollapsed ? 0 : 1, transition: 'opacity 0.15s ease' }}>
               <img src="/icons/icon-home-red.gif" alt="" width={24} height={24} style={{ flexShrink: 0 }} />
               <div style={{ minWidth: 0, flex: 1 }}>
                 <p style={labelStyle}>Tipo de propiedad</p>
@@ -656,8 +670,11 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', onApply }:
           </div>
 
           {/* Col 4: Precio */}
-          <div style={{ borderBottom: DIVIDER, overflow: 'hidden', opacity: codigo ? 0 : 1, transition: 'opacity 0.15s ease' }}>
-            <div style={contentStyle}>
+          <div style={{ position: 'relative', borderBottom: DIVIDER, overflow: 'hidden' }}>
+            <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: codigoCollapsed ? 1 : 0, transition: 'opacity 0.2s ease', pointerEvents: 'none' }}>
+              <img src="/icons/icon-dollar-red.gif" alt="" width={22} height={22} style={{ filter: 'grayscale(0.3) opacity(0.7)' }} />
+            </div>
+            <div style={{ ...contentStyle, opacity: codigoCollapsed ? 0 : 1, transition: 'opacity 0.15s ease' }}>
               <img src="/icons/icon-dollar-red.gif" alt="" width={24} height={24} style={{ flexShrink: 0, alignSelf: 'flex-start', marginTop: '2px' }} />
               <div style={{ minWidth: 0, flex: 1 }}>
                 <p style={labelStyle}>Precio</p>

@@ -172,15 +172,20 @@ export default function Header({ currentPage, onNavigate, isHeroPage = true }: H
             item.children ? (
               /* Item con dropdown — CSS puro, sin JS */
               <div key={item.label} className="relative group flex-1">
-                <button
-                  onClick={() => { if (item.page) handleNav(item.page); }}
-                  onMouseEnter={e => { setHoveredNav(item.label); applyInkFill(e); }}
-                  onMouseLeave={e => { setHoveredNav(null); applyInkFill(e); }}
-                  className="nav-ink-btn w-full px-2 py-2 rounded-full"
-                  style={{ fontFamily: "'Avenir LT Std', 'Outfit', system-ui, sans-serif", fontWeight: (currentPage === item.page || item.children?.some(c => c.page === currentPage) || hoveredNav === item.label) ? 700 : 300, fontSize: '15px', color: (currentPage === item.page || item.children?.some(c => c.page === currentPage)) ? '#f32735' : headerTextColor }}
-                >
-                  <span style={{ fontWeight: 'inherit' }}>{item.label}</span>
-                </button>
+                {(() => {
+                  const isActive = currentPage === item.page || item.children?.some(c => c.page === currentPage);
+                  return (
+                    <button
+                      onClick={() => { if (item.page) handleNav(item.page); }}
+                      onMouseEnter={e => { setHoveredNav(item.label); if (!isActive) applyInkFill(e); }}
+                      onMouseLeave={e => { setHoveredNav(null); if (!isActive) applyInkFill(e); }}
+                      className={isActive ? 'w-full px-2 py-2 rounded-full' : 'nav-ink-btn w-full px-2 py-2 rounded-full'}
+                      style={{ fontFamily: "'Avenir LT Std', 'Outfit', system-ui, sans-serif", fontWeight: (isActive || hoveredNav === item.label) ? 700 : 300, fontSize: '15px', color: isActive ? '#fff' : headerTextColor, background: isActive ? '#f32735' : 'transparent', transition: 'background 0.2s ease, color 0.2s ease' }}
+                    >
+                      <span style={{ fontWeight: 'inherit' }}>{item.label}</span>
+                    </button>
+                  );
+                })()}
                 {/* Dropdown CSS — se muestra con group-hover */}
                 <div className="absolute top-full left-1/2 pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200"
                   style={{ transform: 'translateX(-50%)', zIndex: 60 }}>
@@ -219,16 +224,21 @@ export default function Header({ currentPage, onNavigate, isHeroPage = true }: H
               </div>
             ) : (
               /* Item sin dropdown — click navega */
-              <button
-                key={item.label}
-                onClick={() => handleNav(item.page || 'home')}
-                onMouseEnter={e => { setHoveredNav(item.label); applyInkFill(e); }}
-                onMouseLeave={e => { setHoveredNav(null); applyInkFill(e); }}
-                className="nav-ink-btn flex-1 px-2 py-2 rounded-full"
-                style={{ fontFamily: "'Avenir LT Std', 'Outfit', system-ui, sans-serif", fontWeight: (currentPage === item.page || hoveredNav === item.label) ? 700 : 300, fontSize: '15px', color: currentPage === item.page ? '#f32735' : headerTextColor }}
-              >
-                <span style={{ fontWeight: 'inherit' }}>{item.label}</span>
-              </button>
+              (() => {
+                const isActive = currentPage === item.page;
+                return (
+                  <button
+                    key={item.label}
+                    onClick={() => handleNav(item.page || 'home')}
+                    onMouseEnter={e => { setHoveredNav(item.label); if (!isActive) applyInkFill(e); }}
+                    onMouseLeave={e => { setHoveredNav(null); if (!isActive) applyInkFill(e); }}
+                    className={isActive ? 'flex-1 px-2 py-2 rounded-full' : 'nav-ink-btn flex-1 px-2 py-2 rounded-full'}
+                    style={{ fontFamily: "'Avenir LT Std', 'Outfit', system-ui, sans-serif", fontWeight: (isActive || hoveredNav === item.label) ? 700 : 300, fontSize: '15px', color: isActive ? '#fff' : headerTextColor, background: isActive ? '#f32735' : 'transparent', transition: 'background 0.2s ease, color 0.2s ease' }}
+                  >
+                    <span style={{ fontWeight: 'inherit' }}>{item.label}</span>
+                  </button>
+                );
+              })()
             )
           )}
         </nav>

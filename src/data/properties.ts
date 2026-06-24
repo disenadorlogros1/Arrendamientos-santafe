@@ -71,10 +71,10 @@ export const locationToZoneMap: Record<string, string | undefined> = {
   "Retiro":          "rionegro",     // altiplano oriente
   "Santa Elena":     "rionegro",     // corregimiento oriental de Medellín
 
-  /* ── Municipios Occidente Antioqueño (sin slug propio) ─────────── */
-  "Sopetran":        undefined,      // occidente antioqueño, fuera del área metro
-  "San Jerónimo":    undefined,      // occidente antioqueño
-  "Santa Fe de Antioquia": undefined,// occidente, pueblo patrimonio
+  /* ── Municipios Occidente Antioqueño ───────────────────────────── */
+  "Sopetran":        "belen",        // occidente antioqueño → sector Occidente
+  "San Jerónimo":    "belen",        // occidente antioqueño → sector Occidente
+  "Santa Fe de Antioquia": "belen",  // occidente antioqueño → sector Occidente
 
   /* ── Barrios de Medellín — Norte / Nororiente ─────────────────── */
   "Aranjuez":        "bello",
@@ -159,6 +159,14 @@ export const locationToZoneMap: Record<string, string | undefined> = {
 
 export function getInvestmentZoneForLocation(location: string): string | undefined {
   return locationToZoneMap[location];
+}
+
+/** Devuelve todos los barrios/municipios que mapean a un slug de zona dado */
+export function getNeighborhoodsForZone(slug: string): string[] {
+  return Object.entries(locationToZoneMap)
+    .filter(([, zoneSlug]) => zoneSlug === slug)
+    .map(([location]) => location)
+    .sort((a, b) => a.localeCompare(b, 'es'));
 }
 
 export const properties: Property[] = [
