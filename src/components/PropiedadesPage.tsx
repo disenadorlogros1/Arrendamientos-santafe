@@ -14,64 +14,6 @@ const FONT_HEADING = "'Avenir LT Std', 'Outfit', system-ui, sans-serif";
 const FONT_BODY    = "'Avenir LT Std', 'Outfit', system-ui, sans-serif";
 const RED          = '#f32735';
 
-/* ── Tarjeta compacta horizontal para el panel lateral del mapa ────── */
-function MiniPropertyCard({ property }: { property: import('@/data/properties').Property }) {
-  const [hov, setHov] = useState(false);
-  return (
-    <div
-      onClick={() => window.location.href = `/propiedad/${property.id}`}
-      onMouseEnter={() => setHov(true)}
-      onMouseLeave={() => setHov(false)}
-      style={{
-        display: 'flex', height: '100%', cursor: 'pointer',
-        background: '#fff',
-        transition: 'background 0.15s ease',
-        ...(hov ? { background: '#fafafa' } : {}),
-      }}
-    >
-      {/* Imagen */}
-      <div style={{ width: '130px', flexShrink: 0, overflow: 'hidden', position: 'relative' }}>
-        <img
-          src={property.image}
-          alt={property.title}
-          style={{
-            width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 70%',
-            transition: 'transform 0.5s ease',
-            transform: hov ? 'scale(1.05)' : 'scale(1)',
-          }}
-        />
-        <div style={{
-          position: 'absolute', inset: 0,
-          background: 'linear-gradient(to right, transparent 60%, rgba(0,0,0,0.08) 100%)',
-          pointerEvents: 'none',
-        }} />
-      </div>
-      {/* Info */}
-      <div style={{ flex: 1, padding: '14px 16px', display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: '4px', minWidth: 0 }}>
-        <div style={{ height: '2px', width: '24px', background: '#f32735', marginBottom: '6px' }} />
-        <p style={{ fontFamily: FONT_BODY, fontSize: '18px', fontWeight: 900, color: '#1a1a1a', margin: 0, lineHeight: 1.1 }}>
-          {property.price}
-        </p>
-        <p style={{ fontFamily: FONT_BODY, fontSize: '12px', color: '#808080', margin: 0, fontWeight: 500, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-          {property.location}
-        </p>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '4px' }}>
-          <span style={{
-            fontFamily: FONT_BODY, fontSize: '10px', fontWeight: 600, color: '#f32735',
-            border: '1px solid rgba(243,39,53,0.3)', borderRadius: '2px', padding: '2px 6px',
-            textTransform: 'uppercase', letterSpacing: '0.04em',
-          }}>
-            {property.type}
-          </span>
-          <span style={{ fontFamily: FONT_BODY, fontSize: '11px', color: '#aaa' }}>
-            {property.reference}
-          </span>
-        </div>
-      </div>
-    </div>
-  );
-}
-
 /* ── Botón flotante del mapa (círculo → expande texto a la izquierda) ── */
 function MapFloatButton({
   children, label, onClick, accent = false,
@@ -311,29 +253,29 @@ export default function PropiedadesPage({ initialFilter = 'Todos' }: { initialFi
           <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '0 clamp(16px, 3vw, 52px)' }}>
             <div style={{
               display: 'flex',
-              height: '360px',
+              height: '420px',
               boxShadow: '0 10px 48px rgba(0,0,0,0.22), 0 2px 8px rgba(0,0,0,0.10)',
               overflow: 'hidden',
             }}>
 
-              {/* Izquierda: 2 tarjetas de propiedades */}
+              {/* Izquierda: 2 PropertyCards verticales en grid de 2 columnas */}
               <div style={{
                 flex: 1,
-                display: 'flex',
-                flexDirection: 'column',
+                display: 'grid',
+                gridTemplateColumns: '1fr 1fr',
                 gap: '1px',
-                background: '#eee',
+                background: '#e8e8e8',
                 borderRight: '1px solid #e8e8e8',
                 overflow: 'hidden',
               }}>
                 {filtered.slice(0, 2).map(property => (
-                  <div key={property.id} style={{ flex: 1, overflow: 'hidden', background: '#fff' }}>
-                    <MiniPropertyCard property={property} />
+                  <div key={property.id} style={{ overflow: 'hidden', background: '#fff' }}>
+                    <PropertyCard property={property} />
                   </div>
                 ))}
                 {filtered.length === 0 && (
                   <div style={{
-                    flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    gridColumn: '1 / -1', display: 'flex', alignItems: 'center', justifyContent: 'center',
                     background: '#fafafa', fontFamily: FONT_BODY, fontSize: '13px', color: '#aaa',
                   }}>
                     Sin propiedades
@@ -352,7 +294,7 @@ export default function PropiedadesPage({ initialFilter = 'Todos' }: { initialFi
                 }}>
                   {/* Botón ampliar */}
                   <MapFloatButton
-                    label="ampliar mapa"
+                    label="Ampliar mapa"
                     onClick={() => { /* futuro: fullscreen */ }}
                   >
                     <span style={{ fontSize: '18px', lineHeight: 1, fontWeight: 300 }}>+</span>
@@ -360,7 +302,7 @@ export default function PropiedadesPage({ initialFilter = 'Todos' }: { initialFi
 
                   {/* Botón cerrar */}
                   <MapFloatButton
-                    label="cerrar mapa"
+                    label="Cerrar mapa"
                     onClick={() => setShowMap(false)}
                     accent
                   >
@@ -391,16 +333,18 @@ export default function PropiedadesPage({ initialFilter = 'Todos' }: { initialFi
           <InfiniteCarousel properties={filtered} />
         </div>
 
-        {/* Desktop layout */}
-        <div className="hidden lg:flex flex-col">
-          <div ref={cardsGridRef} className="grid grid-cols-3 xl:grid-cols-4 gap-5">
-            {filtered.map((property) => (
-              <div key={property.id} className="propiedades-card-item">
-                <PropertyCard property={property} />
-              </div>
-            ))}
+        {/* Desktop layout — se oculta mientras el mapa está abierto */}
+        {!showMap && (
+          <div className="hidden lg:flex flex-col">
+            <div ref={cardsGridRef} className="grid grid-cols-3 xl:grid-cols-4 gap-5">
+              {filtered.map((property) => (
+                <div key={property.id} className="propiedades-card-item">
+                  <PropertyCard property={property} />
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
+        )}
 
         {filtered.length === 0 && (
           <div className="text-center py-16">
