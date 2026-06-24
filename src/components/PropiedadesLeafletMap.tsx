@@ -5,6 +5,7 @@ import type { Property } from '@/data/properties';
 
 const FONT = "'Avenir LT Std', 'Outfit', system-ui, sans-serif";
 
+// Icono 10% más pequeño: 18px en vez de 20px
 const MARKER_HTML = `
   <div style="position:relative;width:40px;height:50px;filter:drop-shadow(0 3px 6px rgba(0,0,0,0.35))">
     <svg viewBox="0 0 40 50" width="40" height="50" xmlns="http://www.w3.org/2000/svg">
@@ -12,25 +13,31 @@ const MARKER_HTML = `
             fill="#f32735" stroke="white" stroke-width="2.2"/>
     </svg>
     <img src="/icons/icon-favicon-white.gif"
-      style="position:absolute;top:50%;left:50%;transform:translate(-50%,-62%);width:20px;height:20px;object-fit:contain;pointer-events:none"/>
+      style="position:absolute;top:50%;left:50%;transform:translate(-50%,-62%);width:18px;height:18px;object-fit:contain;pointer-events:none"/>
   </div>
 `;
 
 interface Props {
   properties: Property[];
   onBoundsChange?: (visible: Property[]) => void;
+  onHoverProperty?: (prop: Property | null) => void;
+  onClickProperty?: (prop: Property) => void;
 }
 
-export default function PropiedadesLeafletMap({ properties, onBoundsChange }: Props) {
+export default function PropiedadesLeafletMap({ properties, onBoundsChange, onHoverProperty, onClickProperty }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<any>(null);
   const layerRef = useRef<any>(null);
   const [ready, setReady] = useState(false);
-  // Refs para acceder a los valores más recientes dentro de listeners
-  const propsRef = useRef(properties);
-  const cbRef = useRef(onBoundsChange);
+
+  const propsRef   = useRef(properties);
+  const cbRef      = useRef(onBoundsChange);
+  const hoverRef   = useRef(onHoverProperty);
+  const clickRef   = useRef(onClickProperty);
   propsRef.current = properties;
-  cbRef.current = onBoundsChange;
+  cbRef.current    = onBoundsChange;
+  hoverRef.current = onHoverProperty;
+  clickRef.current = onClickProperty;
 
   const fireUpdate = (map: any) => {
     if (!cbRef.current) return;
@@ -41,7 +48,6 @@ export default function PropiedadesLeafletMap({ properties, onBoundsChange }: Pr
     cbRef.current(visible);
   };
 
-  // Init Leaflet once
   useEffect(() => {
     if (!document.querySelector('link[href*="leaflet"]')) {
       const link = document.createElement('link');
@@ -65,10 +71,7 @@ export default function PropiedadesLeafletMap({ properties, onBoundsChange }: Pr
       }).addTo(mapRef.current);
 
       layerRef.current = L.layerGroup().addTo(mapRef.current);
-
-      // Disparar update cuando el usuario mueve o hace zoom
       mapRef.current.on('moveend zoomend', () => fireUpdate(mapRef.current));
-
       setReady(true);
     };
 
@@ -96,7 +99,6 @@ export default function PropiedadesLeafletMap({ properties, onBoundsChange }: Pr
     };
   }, []);
 
-  // Actualizar marcadores y lanzar bounds update cuando cambian propiedades
   useEffect(() => {
     if (!ready || !layerRef.current || !(window as any).L) return;
     const L = (window as any).L;
@@ -114,18 +116,27 @@ export default function PropiedadesLeafletMap({ properties, onBoundsChange }: Pr
     properties
       .filter(p => p.latitude && p.longitude)
       .forEach(p => {
-        L.marker([p.latitude!, p.longitude!], { icon })
-          .addTo(layerRef.current)
-          .bindPopup(
-            `<div style="font-family:${FONT};font-size:12px;line-height:1.4">
-              <strong style="font-size:13px;color:#111">${p.reference}</strong><br/>
-              <span style="color:#666">${p.location || ''}</span>
-            </div>`,
-            { maxWidth: 180 }
-          );
+        const marker = L.marker([p.latitude!, p.longitude!], { icon })
+          .addTo(layerRef.current);
+
+        // Hover: muestra la propiedad en el panel izquierdo
+        marker.on('mouseover', () => {
+          if (hoverRef.current) hoverRef.current(p);
+        });
+        marker.on('mouseout', () => {
+          if (hoverRef.current) hoverRef.current(null);
+        });
+
+        // Clic: abre la ficha de la propiedad
+        marker.on('click', () => {
+          if (clickRef.current) {
+            clickRef.current(p);
+          } else {
+            window.location.href = `/propiedad/${p.id}`;
+          }
+        });
       });
 
-    // Disparar bounds update inicial
     if (mapRef.current) fireUpdate(mapRef.current);
   }, [ready, properties]);
 

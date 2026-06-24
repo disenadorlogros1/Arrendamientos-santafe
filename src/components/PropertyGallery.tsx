@@ -631,9 +631,11 @@ function BentoGallery({ images, onClose, stats, title }: {
   const gridRows = `repeat(${rows}, 1fr)`;
 
   /* Celdas vacías al final del grid (tras inyectar la InfoCard) */
-  const totalCells   = albumImages.length + 1;
+  const totalCells    = albumImages.length + 1;
   const trailingEmpty = (cols - (totalCells % cols)) % cols;
-  const lastImgIdx   = albumImages.length - 1;
+  const lastImgIdx    = albumImages.length - 1;
+  /* ¿El último elemento del grid es la InfoCard? (injectAt >= n → InfoCard va al final) */
+  const infoCardIsLast = injectAt >= albumImages.length;
 
   /* ── Lock scroll ────────────────────────────────────────────── */
   useEffect(() => {
@@ -801,9 +803,9 @@ function BentoGallery({ images, onClose, stats, title }: {
             const isHovered  = hoveredIdx === idx;
             const isSelected = selectedIdx === idx;
 
-            /* Última imagen: siempre expande para cubrir celdas negras al final del grid.
-             * El hover solo agrega expansión vertical (gridRow 1/-1), no colapsa el span. */
-            const isLastImg = idx === lastImgIdx && trailingEmpty > 0;
+            /* Última imagen extiende para cubrir huecos SOLO cuando la InfoCard
+             * no es el último elemento del grid (si InfoCard está al final, ella se extiende). */
+            const isLastImg = idx === lastImgIdx && trailingEmpty > 0 && !infoCardIsLast;
             const gridColValue: number | string = isLastImg
               ? `${normalCol + 1} / ${normalCol + trailingEmpty + 2}`
               : normalCol + 1;
@@ -852,10 +854,14 @@ function BentoGallery({ images, onClose, stats, title }: {
             const cardCol = injectAt % cols;
             const cardRow = Math.floor(injectAt / cols);
             const cardOpacity = isHovering && hoveredCol !== null && cardCol === hoveredCol ? 0 : 1;
+            /* Si la InfoCard es el último elemento, extiende para cubrir celdas negras */
+            const cardColSpan: string | number = (infoCardIsLast && trailingEmpty > 0)
+              ? `${cardCol + 1} / ${cardCol + trailingEmpty + 2}`
+              : cardCol + 1;
             return (
               <div
                 style={{
-                  gridColumn: cardCol + 1,
+                  gridColumn: cardColSpan,
                   gridRow: cardRow + 1,
                   zIndex: 0,
                   overflow: 'hidden',

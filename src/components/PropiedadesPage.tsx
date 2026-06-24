@@ -159,6 +159,7 @@ export default function PropiedadesPage({ initialFilter = 'Todos' }: { initialFi
   const [showMap, setShowMap] = useState(false);
   const [mapExpanded, setMapExpanded] = useState(false);
   const [visibleInMap, setVisibleInMap] = useState<import('@/data/properties').Property[]>([]);
+  const [hoveredMapProperty, setHoveredMapProperty] = useState<import('@/data/properties').Property | null>(null);
   const getDefaultPrecioMax = (tipo: string) =>
     tipo === 'Comprar' ? 500_000_000 : tipo === 'Arrendar' ? 15_000_000 : 500_000_000;
 
@@ -251,7 +252,7 @@ export default function PropiedadesPage({ initialFilter = 'Todos' }: { initialFi
 
       {/* Map panel — solo desktop */}
       {showMap && (
-        <div className="hidden lg:block" style={{ background: '#f5f5f5' }}>
+        <div className="hidden lg:block" style={{ background: '#f5f5f5', position: 'relative', zIndex: 0 }}>
           <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '0 clamp(16px, 3vw, 52px)' }}>
 
             {/* ── Modo normal: cards izquierda + mapa derecha ── */}
@@ -261,28 +262,66 @@ export default function PropiedadesPage({ initialFilter = 'Todos' }: { initialFi
                 boxShadow: '0 10px 48px rgba(0,0,0,0.22), 0 2px 8px rgba(0,0,0,0.10)',
                 overflow: 'hidden',
               }}>
-                {/* Izquierda: 2 cards verticales con gap — sync con lo visible en el mapa */}
+                {/* Izquierda: panel de cards — en hover muestra la propiedad amplificada */}
                 <div style={{
                   flex: 1,
-                  display: 'grid',
-                  gridTemplateColumns: '1fr 1fr',
-                  gap: '12px',
-                  padding: '12px 12px 12px 0',
                   background: '#f5f5f5',
                   borderRight: '1px solid #e0e0e0',
                   overflow: 'hidden',
+                  position: 'relative',
                 }}>
-                  {(visibleInMap.length > 0 ? visibleInMap : filtered).slice(0, 2).map(property => (
-                    <div key={property.id} style={{ overflow: 'hidden', borderRadius: '2px' }}>
-                      <PropertyCard property={property} />
-                    </div>
-                  ))}
-                  {filtered.length === 0 && (
-                    <div style={{
-                      gridColumn: '1 / -1', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                      background: '#fafafa', fontFamily: FONT_BODY, fontSize: '13px', color: '#aaa',
-                    }}>
-                      Sin propiedades
+                  {/* Estado normal: 2 cards en grid */}
+                  <div style={{
+                    display: 'grid',
+                    gridTemplateColumns: '1fr 1fr',
+                    gap: '12px',
+                    padding: '12px 12px 12px 0',
+                    height: '100%',
+                    opacity: hoveredMapProperty ? 0 : 1,
+                    transition: 'opacity 0.18s ease',
+                    pointerEvents: hoveredMapProperty ? 'none' : 'auto',
+                  }}>
+                    {(visibleInMap.length > 0 ? visibleInMap : filtered).slice(0, 2).map(property => (
+                      <div key={property.id} style={{ overflow: 'hidden' }}>
+                        <PropertyCard property={property} />
+                      </div>
+                    ))}
+                    {filtered.length === 0 && (
+                      <div style={{
+                        gridColumn: '1 / -1', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        background: '#fafafa', fontFamily: FONT_BODY, fontSize: '13px', color: '#aaa',
+                      }}>
+                        Sin propiedades
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Estado hover: propiedad amplificada (clic → abre ficha) */}
+                  {hoveredMapProperty && (
+                    <div
+                      style={{
+                        position: 'absolute', inset: 0,
+                        opacity: 1,
+                        transition: 'opacity 0.18s ease',
+                        cursor: 'pointer',
+                      }}
+                      onClick={() => { window.location.href = `/propiedad/${hoveredMapProperty.id}`; }}
+                    >
+                      <PropertyCard property={hoveredMapProperty} />
+                      {/* Cinta "Ver ficha" */}
+                      <div style={{
+                        position: 'absolute', bottom: 0, left: 0, right: 0,
+                        background: 'rgba(243,39,53,0.88)', backdropFilter: 'blur(4px)',
+                        padding: '10px 16px', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        gap: '6px',
+                      }}>
+                        <span style={{ fontFamily: FONT_BODY, fontSize: '12px', fontWeight: 600, color: '#fff', letterSpacing: '0.04em' }}>
+                          Ver ficha de la propiedad
+                        </span>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M5 12h14M12 5l7 7-7 7"/>
+                        </svg>
+                      </div>
                     </div>
                   )}
                 </div>
@@ -292,6 +331,8 @@ export default function PropiedadesPage({ initialFilter = 'Todos' }: { initialFi
                   <PropiedadesLeafletMap
                     properties={filtered}
                     onBoundsChange={setVisibleInMap}
+                    onHoverProperty={setHoveredMapProperty}
+                    onClickProperty={p => { window.location.href = `/propiedad/${p.id}`; }}
                   />
                   <div style={{ position: 'absolute', top: 12, right: 12, zIndex: 1000, display: 'flex', alignItems: 'center', gap: '8px' }}>
                     <MapFloatButton label="Ampliar mapa" onClick={() => setMapExpanded(true)}>
@@ -339,7 +380,7 @@ export default function PropiedadesPage({ initialFilter = 'Todos' }: { initialFi
                       paddingBottom: '8px',
                     }}>
                       {(visibleInMap.length > 0 ? visibleInMap : filtered).map(property => (
-                        <div key={property.id} style={{ flexShrink: 0, width: '220px', height: '280px', overflow: 'hidden', borderRadius: '2px' }}>
+                        <div key={property.id} style={{ flexShrink: 0, width: '220px', height: '280px', overflow: 'hidden' }}>
                           <PropertyCard property={property} />
                         </div>
                       ))}
@@ -392,14 +433,23 @@ export default function PropiedadesPage({ initialFilter = 'Todos' }: { initialFi
       )}
 
       {/* Content */}
-      <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '32px clamp(16px, 3vw, 52px)' }}>
+      <div style={{ maxWidth: '1400px', margin: '0 auto', padding: showMap ? '0 clamp(16px, 3vw, 52px)' : '32px clamp(16px, 3vw, 52px)' }}>
 
-        {/* Toolbar */}
-        <div className="flex items-center" style={{ paddingBottom: '20px' }}>
-          <p style={{ fontFamily: FONT_BODY, fontSize: '13px', color: '#999', margin: 0 }}>
-            {filtered.length} {filtered.length === 1 ? 'propiedad encontrada' : 'propiedades encontradas'}
-          </p>
-        </div>
+        {/* Toolbar — oculto en desktop cuando el mapa está abierto */}
+        {!showMap && (
+          <div className="flex items-center" style={{ paddingBottom: '20px' }}>
+            <p style={{ fontFamily: FONT_BODY, fontSize: '13px', color: '#999', margin: 0 }}>
+              {filtered.length} {filtered.length === 1 ? 'propiedad encontrada' : 'propiedades encontradas'}
+            </p>
+          </div>
+        )}
+        {showMap && (
+          <div className="lg:hidden flex items-center" style={{ padding: '16px 0 8px' }}>
+            <p style={{ fontFamily: FONT_BODY, fontSize: '13px', color: '#999', margin: 0 }}>
+              {filtered.length} {filtered.length === 1 ? 'propiedad encontrada' : 'propiedades encontradas'}
+            </p>
+          </div>
+        )}
 
         {/* Mobile Carousel */}
         <div className="lg:hidden mb-8" style={{ padding: '0 clamp(16px, 3vw, 48px)' }}>
