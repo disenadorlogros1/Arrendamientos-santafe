@@ -546,7 +546,11 @@ function BentoGallery({ images, onClose, stats, title }: {
   /* Tipo de ficha informativa: se elige aleatoriamente al montar */
   const [infoCardType]   = useState<0 | 1 | 2 | 3 | 4>(() => Math.floor(Math.random() * 5) as 0 | 1 | 2 | 3 | 4);
 
+  /* Columna visual del cursor — solo para posicionar la imagen span en hover */
+  const [hoveredMouseCol, setHoveredMouseCol] = useState(0);
+
   const carouselRef      = useRef<HTMLDivElement>(null);
+  const gridRef          = useRef<HTMLDivElement>(null);
   /* Posición de inyección de InfoCard por álbum: key = "albumIdx-length" */
   const injectPositions  = useRef<Map<string, number>>(new Map());
   const clearTimer   = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -617,6 +621,13 @@ function BentoGallery({ images, onClose, stats, title }: {
   /* Filas = ceil de (imágenes + 1 InfoCard) */
   const rows = Math.ceil((albumImages.length + 1) / cols);
 
+  /* Celdas vacías al final del grid (tras inyectar la InfoCard) */
+  const totalCells    = albumImages.length + 1;
+  const trailingEmpty = (cols - (totalCells % cols)) % cols;
+  const lastImgIdx    = albumImages.length - 1;
+  /* ¿El último elemento del grid es la InfoCard? (injectAt >= n → InfoCard va al final) */
+  const infoCardIsLast = injectAt >= albumImages.length;
+
   /* ¿Es landscape la imagen bajo el cursor? */
   const hoveredIsLandscape = hoveredIdx !== null ? (orientations[hoveredIdx] ?? false) : false;
 
@@ -624,18 +635,18 @@ function BentoGallery({ images, onClose, stats, title }: {
   const hoveredCellPos = hoveredIdx !== null
     ? (hoveredIdx < injectAt ? hoveredIdx : hoveredIdx + 1)
     : null;
-  const hoveredCol = hoveredCellPos !== null ? hoveredCellPos % cols : null;
   const isHovering = hoveredIdx !== null;
+
+  /* ¿La imagen hovered es la que hace span para cubrir celdas vacías? */
+  const hoveredIsSpanning = isHovering && hoveredIdx === lastImgIdx && trailingEmpty > 0 && !infoCardIsLast;
+
+  /* Para la imagen spanning: usar columna del cursor; para las demás: columna de celda */
+  const hoveredCol = hoveredCellPos !== null
+    ? (hoveredIsSpanning ? hoveredMouseCol : hoveredCellPos % cols)
+    : null;
 
   const gridCols = buildCols(hoveredCol, hoveredIsLandscape, cols);
   const gridRows = `repeat(${rows}, 1fr)`;
-
-  /* Celdas vacías al final del grid (tras inyectar la InfoCard) */
-  const totalCells    = albumImages.length + 1;
-  const trailingEmpty = (cols - (totalCells % cols)) % cols;
-  const lastImgIdx    = albumImages.length - 1;
-  /* ¿El último elemento del grid es la InfoCard? (injectAt >= n → InfoCard va al final) */
-  const infoCardIsLast = injectAt >= albumImages.length;
 
   /* ── Lock scroll ────────────────────────────────────────────── */
   useEffect(() => {
@@ -674,6 +685,17 @@ function BentoGallery({ images, onClose, stats, title }: {
       }
       const isLandscape = orientMap.current.get(src) ?? false;
       const gIdx = albumStartIdx + idx;
+
+      /* Columna visual del cursor (para posicionar la imagen spanning en hover) */
+      if (gridRef.current) {
+        const rect = gridRef.current.getBoundingClientRect();
+        const localCols = computeCols(albumImages.length);
+        const mc = Math.max(0, Math.min(localCols - 1,
+          Math.floor((e.clientX - rect.left) / (rect.width / localCols))
+        ));
+        setHoveredMouseCol(mc);
+      }
+
       setAllOrientations(prev => {
         if (prev[gIdx] === isLandscape) return prev;
         const copy = [...prev]; copy[gIdx] = isLandscape; return copy;
@@ -783,6 +805,7 @@ function BentoGallery({ images, onClose, stats, title }: {
 
         <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', padding: '0 16px 8px' }}>
         <div
+          ref={gridRef}
           onMouseMove={handleGridMouseMove}
           onMouseLeave={handleGridMouseLeave}
           style={{
@@ -804,12 +827,14 @@ function BentoGallery({ images, onClose, stats, title }: {
             const isSelected = selectedIdx === idx;
 
             /* Última imagen extiende para cubrir huecos SOLO cuando la InfoCard no es el
-             * último elemento. En hover vuelve a 1 celda para la expansión bento normal. */
+             * último elemento. En hover: colapsa a la columna donde está el cursor. */
             const isLastImg = idx === lastImgIdx && trailingEmpty > 0 && !infoCardIsLast;
             const gridColValue: number | string =
-              isLastImg && !(isHovering && isHovered)
-                ? `${normalCol + 1} / ${normalCol + trailingEmpty + 2}`
-                : normalCol + 1;
+              isLastImg && isHovering && isHovered
+                ? hoveredMouseCol + 1                                       // hover: columna del cursor
+                : isLastImg
+                  ? `${normalCol + 1} / ${normalCol + trailingEmpty + 2}`  // sin hover: span completo
+                  : normalCol + 1;                                          // imagen normal
 
             const sameCol  = isHovering && hoveredCol !== null && normalCol === hoveredCol;
             const hideCell = sameCol && !isHovered;
