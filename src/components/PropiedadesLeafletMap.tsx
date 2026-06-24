@@ -4,7 +4,37 @@ import { useEffect, useRef, useState } from 'react';
 import type { Property } from '@/data/properties';
 
 const FONT = "'Avenir LT Std', 'Outfit', system-ui, sans-serif";
-const MARKER_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="40" height="40"><circle cx="20" cy="20" r="18" fill="#f32735" stroke="white" stroke-width="2"/><path d="M20 8 C 16 8, 13 11, 13 15 C 13 19, 20 28, 20 28 C 20 28, 27 19, 27 15 C 27 11, 24 8, 20 8 Z" fill="white"/><circle cx="20" cy="14" r="3" fill="#f32735"/></svg>`;
+
+/* HTML del marcador: pin rojo en forma de lágrima con el favicon blanco centrado.
+   Usamos divIcon en lugar de L.icon() para poder referenciar /icons/... directamente. */
+const MARKER_HTML = `
+  <div style="
+    position: relative;
+    width: 40px;
+    height: 50px;
+    filter: drop-shadow(0 3px 6px rgba(0,0,0,0.35));
+  ">
+    <svg viewBox="0 0 40 50" width="40" height="50" xmlns="http://www.w3.org/2000/svg">
+      <!-- Cuerpo del pin: círculo superior + punta inferior -->
+      <path d="M20 2 C10.6 2 3 9.6 3 19 C3 29.8 20 48 20 48 C20 48 37 29.8 37 19 C37 9.6 29.4 2 20 2Z"
+            fill="#f32735" stroke="white" stroke-width="2.2"/>
+    </svg>
+    <!-- Favicon blanco centrado en la parte circular (top ≈ 19px es el centro del círculo) -->
+    <img
+      src="/icons/icon-favicon-white.gif"
+      style="
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -62%);
+        width: 20px;
+        height: 20px;
+        object-fit: contain;
+        pointer-events: none;
+      "
+    />
+  </div>
+`;
 
 interface Props {
   properties: Property[];
@@ -74,11 +104,12 @@ export default function PropiedadesLeafletMap({ properties }: Props) {
 
     layerRef.current.clearLayers();
 
-    const icon = L.icon({
-      iconUrl: `data:image/svg+xml;base64,${btoa(MARKER_SVG)}`,
-      iconSize: [36, 36],
-      iconAnchor: [18, 36],
-      popupAnchor: [0, -36],
+    const icon = L.divIcon({
+      className: '',
+      html: MARKER_HTML,
+      iconSize: [40, 50],
+      iconAnchor: [20, 50],
+      popupAnchor: [0, -52],
     });
 
     properties
@@ -97,12 +128,9 @@ export default function PropiedadesLeafletMap({ properties }: Props) {
   }, [ready, properties]);
 
   return (
-    <div style={{ position: 'relative', width: '100%', height: '420px' }}>
-      <div
-        ref={containerRef}
-        style={{ width: '100%', height: '100%' }}
-      />
-      {/* Label flotante igual al de MapComponent */}
+    <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+      <div ref={containerRef} style={{ width: '100%', height: '100%' }} />
+      {/* Label flotante */}
       <div style={{
         position: 'absolute', bottom: 16, left: '50%', transform: 'translateX(-50%)',
         background: 'rgba(255,255,255,0.92)', backdropFilter: 'blur(6px)',

@@ -15,6 +15,7 @@ interface LeafletType {
   tileLayer: (url: string, options?: any) => any;
   marker: (latlng: [number, number], options?: any) => any;
   icon: (options?: any) => any;
+  divIcon: (options?: any) => any;
   circle: (latlng: [number, number], options?: any) => any;
 }
 
@@ -67,14 +68,23 @@ export default function MapComponent({
                 }
               ).addTo(mapRef.current);
 
-              // Crear marcador SVG personalizado
-              const markerSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="40" height="40"><circle cx="20" cy="20" r="18" fill="#f32735" stroke="white" stroke-width="2"/><path d="M20 8 C 16 8, 13 11, 13 15 C 13 19, 20 28, 20 28 C 20 28, 27 19, 27 15 C 27 11, 24 8, 20 8 Z" fill="white"/><circle cx="20" cy="14" r="3" fill="#f32735"/></svg>`;
+              // Marcador: pin rojo con favicon blanco centrado
+              const markerHtml = `
+                <div style="position:relative;width:40px;height:50px;filter:drop-shadow(0 3px 6px rgba(0,0,0,0.35))">
+                  <svg viewBox="0 0 40 50" width="40" height="50" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M20 2 C10.6 2 3 9.6 3 19 C3 29.8 20 48 20 48 C20 48 37 29.8 37 19 C37 9.6 29.4 2 20 2Z"
+                          fill="#f32735" stroke="white" stroke-width="2.2"/>
+                  </svg>
+                  <img src="/icons/icon-favicon-white.gif"
+                    style="position:absolute;top:50%;left:50%;transform:translate(-50%,-62%);width:20px;height:20px;object-fit:contain;pointer-events:none"/>
+                </div>`;
 
-              const markerIcon = L.icon({
-                iconUrl: `data:image/svg+xml;base64,${btoa(markerSvg)}`,
-                iconSize: [40, 40],
-                iconAnchor: [20, 40],
-                popupAnchor: [0, -40],
+              const markerIcon = L.divIcon({
+                className: '',
+                html: markerHtml,
+                iconSize: [40, 50],
+                iconAnchor: [20, 50],
+                popupAnchor: [0, -52],
               });
 
               const marker = L.marker([latitude, longitude], { icon: markerIcon }).addTo(
