@@ -49,7 +49,7 @@ export default function InversionZonePage() {
   if (!zone) {
     return (
       <div className="min-h-screen flex flex-col">
-        <Header currentPage={currentPage} onNavigate={handleNavigate} isHeroPage={false} />
+        <Header currentPage={currentPage} onNavigate={handleNavigate} isHeroPage={false} darkHeader />
         <main className="flex-1 flex items-center justify-center pt-[120px]">
           <div className="text-center">
             <h1 className="text-2xl font-bold mb-4 text-gray-900">Zona no encontrada</h1>
@@ -65,7 +65,7 @@ export default function InversionZonePage() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <Header currentPage={currentPage} onNavigate={handleNavigate} isHeroPage={false} />
+      <Header currentPage={currentPage} onNavigate={handleNavigate} isHeroPage={false} darkHeader />
 
       <main className="flex-1 relative pt-[120px]">
         {/* Hero Section */}

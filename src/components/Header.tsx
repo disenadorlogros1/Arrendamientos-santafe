@@ -21,7 +21,7 @@ function applyInkFill(e: React.MouseEvent<HTMLElement>) {
 
 export type PageType = 'home' | 'propiedades' | 'consignacion' | 'hipotecas' | 'servicios' | 'nosotros' | 'blog' | 'historia-60' | 'blog-article' | 'inversionistas' | 'politicas' | 'terminos';
 
-interface HeaderProps { currentPage: PageType; onNavigate: (page: PageType, filter?: string) => void; isHeroPage?: boolean; }
+interface HeaderProps { currentPage: PageType; onNavigate: (page: PageType, filter?: string) => void; isHeroPage?: boolean; darkHeader?: boolean; }
 interface SubItem { label: string; page?: PageType; href?: string; filter?: string; }
 interface NavItem { label: string; page?: PageType; children?: SubItem[]; }
 
@@ -121,7 +121,7 @@ function PSEButton() {
   );
 }
 
-export default function Header({ currentPage, onNavigate, isHeroPage = true }: HeaderProps) {
+export default function Header({ currentPage, onNavigate, isHeroPage = true, darkHeader = false }: HeaderProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [expandedMobile, setExpandedMobile] = useState<string | null>(null);
   const [scrolled, setScrolled] = useState(false);
@@ -140,14 +140,15 @@ export default function Header({ currentPage, onNavigate, isHeroPage = true }: H
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  // Header con opacidad según el tipo de página
-  // Home (isHeroPage=true): 30% opacidad sobre fondo oscuro
-  // Páginas internas (isHeroPage=false): 100% opacidad sobre fondo claro
+  // isHeroPage=true → oscuro translúcido (home hero)
+  // darkHeader=true → oscuro opaco (páginas con fondo negro como inversionistas)
+  // default (isHeroPage=false) → blanco opaco (páginas internas normales)
   const headerBackground = 'shadow-md';
-  const headerBgColor = isHeroPage ? 'rgba(45, 45, 45, 0.3)' : 'rgba(255, 255, 255, 1)';
-  const headerTextColor = isHeroPage ? '#ffffff' : '#1a1a1a';
-  const navBgColor = isHeroPage ? 'rgba(255, 255, 255, 0.3)' : 'rgba(0, 0, 0, 0.05)';
-  const navBorderColor = isHeroPage ? 'rgba(255, 255, 255, 0.3)' : 'rgba(0, 0, 0, 0.1)';
+  const isDark = isHeroPage || darkHeader;
+  const headerBgColor = isHeroPage ? 'rgba(45, 45, 45, 0.3)' : darkHeader ? 'rgba(18, 18, 18, 1)' : 'rgba(255, 255, 255, 1)';
+  const headerTextColor = isDark ? '#ffffff' : '#1a1a1a';
+  const navBgColor = isDark ? 'rgba(255, 255, 255, 0.3)' : 'rgba(0, 0, 0, 0.05)';
+  const navBorderColor = isDark ? 'rgba(255, 255, 255, 0.3)' : 'rgba(0, 0, 0, 0.1)';
 
   return (
     <header className={`fixed top-0 left-0 right-0 pt-4 pb-3 px-4 sm:px-6 lg:px-8 transition-all duration-300 ${headerBackground}`}
@@ -155,7 +156,7 @@ export default function Header({ currentPage, onNavigate, isHeroPage = true }: H
       <div className="flex items-center h-[58px] gap-3">
         {/* Logo */}
         <button onClick={() => handleNav('home')} className="shrink-0">
-          <img src="/icons/icon-santa-fe-logo.png" alt="Arrendamientos Santa Fe" className="h-10 md:h-11 w-auto object-contain drop-shadow-lg" style={{ filter: isHeroPage ? 'none' : 'brightness(0.48) sepia(1) saturate(500%) hue-rotate(315deg) brightness(0.95)' }} />
+          <img src="/icons/icon-santa-fe-logo.png" alt="Arrendamientos Santa Fe" className="h-10 md:h-11 w-auto object-contain drop-shadow-lg" style={{ filter: isDark ? 'none' : 'brightness(0.48) sepia(1) saturate(500%) hue-rotate(315deg) brightness(0.95)' }} />
         </button>
 
         {/* Nav capsula — ocupa el espacio central */}
@@ -262,7 +263,7 @@ export default function Header({ currentPage, onNavigate, isHeroPage = true }: H
           <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
             <SheetTrigger asChild>
               <button className="p-1.5 hover:bg-white/10 rounded-full transition-colors" style={{ color: headerTextColor }} aria-label="Abrir menú">
-                <img src={isHeroPage ? "/icons/icon-menu-white.gif" : "/icons/icon-menu-black.gif"} alt="Menú" className="h-5 w-5" />
+                <img src={isDark ? "/icons/icon-menu-white.gif" : "/icons/icon-menu-black.gif"} alt="Menú" className="h-5 w-5" />
               </button>
             </SheetTrigger>
             <SheetContent side="right" className="w-80 bg-brand-dark border-brand-dark-secondary p-0">
