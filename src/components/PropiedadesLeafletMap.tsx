@@ -10,10 +10,10 @@ const MARKER_HTML = `
   <div style="position:relative;width:40px;height:50px;filter:drop-shadow(0 3px 6px rgba(0,0,0,0.35))">
     <svg viewBox="0 0 40 50" width="40" height="50" xmlns="http://www.w3.org/2000/svg">
       <path d="M20 2 C10.6 2 3 9.6 3 19 C3 29.8 20 48 20 48 C20 48 37 29.8 37 19 C37 9.6 29.4 2 20 2Z"
-            fill="#f32735" stroke="white" stroke-width="2.2"/>
+            fill="#f32735"/>
     </svg>
     <img src="/icons/icon-favicon-white.gif"
-      style="position:absolute;top:50%;left:50%;transform:translate(-50%,-62%);width:18px;height:18px;object-fit:contain;pointer-events:none"/>
+      style="position:absolute;top:50%;left:50%;transform:translate(-50%,-62%);width:14px;height:14px;object-fit:contain;pointer-events:none"/>
   </div>
 `;
 

@@ -70,9 +70,9 @@ function computeAlbums(images: string[]): string[][] {
  * Para portrait las columnas son iguales: 1/cols × ancho < alto = portrait.
  */
 function buildCols(hoveredCol: number | null, isLandscape: boolean, cols: number): string {
-  if (hoveredCol === null) return `repeat(${cols}, 1fr)`;
+  if (hoveredCol === null || !isLandscape) return `repeat(${cols}, 1fr)`;
   return Array.from({ length: cols }, (_, i) =>
-    i === hoveredCol ? (isLandscape ? '10fr' : '0.5fr') : '1fr'
+    i === hoveredCol ? '10fr' : '1fr'
   ).join(' ');
 }
 

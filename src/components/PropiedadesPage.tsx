@@ -261,26 +261,34 @@ export default function PropiedadesPage({ initialFilter = 'Todos' }: { initialFi
               <div style={{
                 display: 'flex', height: '420px',
                 boxShadow: '0 10px 48px rgba(0,0,0,0.22), 0 2px 8px rgba(0,0,0,0.10)',
-                overflow: 'hidden',
               }}>
-                {/* Izquierda: cards flotando sin fondo */}
-                <div style={{
-                  flex: 1,
-                  overflow: 'hidden',
-                  position: 'relative',
-                }}>
-                  {/* Estado normal: 2 cards en grid */}
+                {/* Izquierda: cards que escalan 15% al hover del marcador */}
+                <div style={{ flex: 1, overflow: 'hidden', position: 'relative' }}>
                   <div style={{
                     display: 'grid',
                     gridTemplateColumns: '1fr 1fr',
                     height: '100%',
-                    opacity: hoveredMapProperty ? 0 : 1,
-                    transition: 'opacity 0.18s ease',
-                    pointerEvents: hoveredMapProperty ? 'none' : 'auto',
                   }}>
-                    {(visibleInMap.length > 0 ? visibleInMap : filtered).slice(0, 2).map(property => (
-                      <PropertyCard key={property.id} property={property} />
-                    ))}
+                    {(visibleInMap.length > 0 ? visibleInMap : filtered).slice(0, 2).map(property => {
+                      const isHovered = hoveredMapProperty?.id === property.id;
+                      return (
+                        <div
+                          key={property.id}
+                          onClick={() => { window.location.href = `/propiedad/${property.id}`; }}
+                          style={{
+                            cursor: 'pointer',
+                            transform: isHovered ? 'scale(1.15)' : 'scale(1)',
+                            transition: 'transform 0.22s cubic-bezier(0.34,1.56,0.64,1)',
+                            transformOrigin: 'center',
+                            position: 'relative',
+                            zIndex: isHovered ? 2 : 1,
+                            overflow: 'hidden',
+                          }}
+                        >
+                          <PropertyCard property={property} />
+                        </div>
+                      );
+                    })}
                     {filtered.length === 0 && (
                       <div style={{
                         gridColumn: '1 / -1', display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -290,39 +298,10 @@ export default function PropiedadesPage({ initialFilter = 'Todos' }: { initialFi
                       </div>
                     )}
                   </div>
-
-                  {/* Estado hover: propiedad amplificada (clic → abre ficha) */}
-                  {hoveredMapProperty && (
-                    <div
-                      style={{
-                        position: 'absolute', inset: 0,
-                        opacity: 1,
-                        transition: 'opacity 0.18s ease',
-                        cursor: 'pointer',
-                      }}
-                      onClick={() => { window.location.href = `/propiedad/${hoveredMapProperty.id}`; }}
-                    >
-                      <PropertyCard property={hoveredMapProperty} />
-                      {/* Cinta "Ver ficha" */}
-                      <div style={{
-                        position: 'absolute', bottom: 0, left: 0, right: 0,
-                        background: 'rgba(243,39,53,0.88)', backdropFilter: 'blur(4px)',
-                        padding: '10px 16px', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        gap: '6px',
-                      }}>
-                        <span style={{ fontFamily: FONT_BODY, fontSize: '12px', fontWeight: 600, color: '#fff', letterSpacing: '0.04em' }}>
-                          Ver ficha de la propiedad
-                        </span>
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                          <path d="M5 12h14M12 5l7 7-7 7"/>
-                        </svg>
-                      </div>
-                    </div>
-                  )}
                 </div>
 
                 {/* Derecha: Mapa con botones flotantes */}
-                <div style={{ flex: 1, position: 'relative' }}>
+                <div style={{ flex: 1, position: 'relative', overflow: 'hidden' }}>
                   <PropiedadesLeafletMap
                     properties={filtered}
                     onBoundsChange={setVisibleInMap}
@@ -431,7 +410,7 @@ export default function PropiedadesPage({ initialFilter = 'Todos' }: { initialFi
       )}
 
       {/* Content */}
-      <div style={{ maxWidth: '1400px', margin: '0 auto', padding: showMap ? '0 clamp(16px, 3vw, 52px)' : '32px clamp(16px, 3vw, 52px)' }}>
+      <div style={{ maxWidth: '1400px', margin: '0 auto', padding: showMap ? '0 clamp(16px, 3vw, 52px)' : '16px clamp(16px, 3vw, 52px)' }}>
 
         {/* Toolbar — oculto en desktop cuando el mapa está abierto */}
         {!showMap && (
@@ -505,7 +484,7 @@ export default function PropiedadesPage({ initialFilter = 'Todos' }: { initialFi
         )}
 
         {/* Cross-linking CTAs — ocultos en desktop cuando el mapa está abierto (aparecen arriba) */}
-        <div className={`mt-16 grid gap-6 ${showMap ? 'lg:hidden' : ''} ${appliedFilters.tipo === 'Todos' ? 'md:grid-cols-2' : 'md:grid-cols-1'}`}>
+        <div className={`mt-6 grid gap-6 ${showMap ? 'lg:hidden' : ''} ${appliedFilters.tipo === 'Todos' ? 'md:grid-cols-2' : 'md:grid-cols-1'}`}>
           {(appliedFilters.tipo === 'Todos' || appliedFilters.tipo === 'Arrendar') && (
             <ScrollReveal y={20}>
               <div style={{ background: '#1a1a1a', borderRadius: 0, padding: '24px 28px' }}>
