@@ -648,6 +648,27 @@ function BentoGallery({ images, onClose, stats, title }: {
   const gridCols = buildCols(hoveredCol, hoveredIsLandscape, cols);
   const gridRows = `repeat(${rows}, 1fr)`;
 
+  /* Cuando hay hover: redistribuye todas las celdas que NO están en la columna expandida.
+   * Las celdas se rellenan de arriba hacia abajo en las (cols-1) columnas restantes,
+   * de modo que ninguna imagen queda debajo de la imagen expandida. */
+  const cellRedistrMap = useMemo<Map<number, {gc: number; gr: number}>>(() => {
+    if (hoveredCol === null) return new Map();
+    const nonHovCols = Array.from({length: cols}, (_, i) => i).filter(c => c !== hoveredCol);
+    const numNH = nonHovCols.length;
+    const map = new Map<number, {gc: number; gr: number}>();
+    let rank = 0;
+    for (let cellPos = 0; cellPos < rows * cols; cellPos++) {
+      if (cellPos % cols !== hoveredCol) {
+        map.set(cellPos, {
+          gc: nonHovCols[rank % numNH] + 1,
+          gr: Math.floor(rank / numNH) + 1,
+        });
+        rank++;
+      }
+    }
+    return map;
+  }, [hoveredCol, cols, rows]);
+
   /* ── Lock scroll ────────────────────────────────────────────── */
   useEffect(() => {
     document.body.style.overflow = 'hidden';
@@ -826,19 +847,29 @@ function BentoGallery({ images, onClose, stats, title }: {
             const isHovered  = hoveredIdx === idx;
             const isSelected = selectedIdx === idx;
 
-            /* Última imagen extiende para cubrir huecos SOLO cuando la InfoCard no es el
-             * último elemento. En hover: colapsa a la columna donde está el cursor. */
             const isLastImg = idx === lastImgIdx && trailingEmpty > 0 && !infoCardIsLast;
-            const gridColValue: number | string =
-              isLastImg && isHovering && isHovered
-                ? hoveredMouseCol + 1                                       // hover: columna del cursor
-                : isLastImg
-                  ? `${normalCol + 1} / ${normalCol + trailingEmpty + 2}`  // sin hover: span completo
-                  : normalCol + 1;                                          // imagen normal
-
             const sameCol  = isHovering && hoveredCol !== null && normalCol === hoveredCol;
             const hideCell = sameCol && !isHovered;
             const opacity  = hideCell ? 0 : (!isHovering ? 1 : isHovered ? 1 : 0.5);
+
+            /* Posición final: hovered → expande; otras visibles en hover → redistribuyen;
+             * última imagen sin hover → span; resto → posición normal. */
+            let finalGc: string | number;
+            let finalGr: string | number;
+            if (isHovered) {
+              finalGc = isLastImg ? hoveredMouseCol + 1 : normalCol + 1;
+              finalGr = '1 / -1';
+            } else if (isHovering && !hideCell && hoveredCol !== null) {
+              const rp = cellRedistrMap.get(cp);
+              finalGc = rp?.gc ?? normalCol + 1;
+              finalGr = rp?.gr ?? normalRow + 1;
+            } else if (!isHovering && isLastImg) {
+              finalGc = `${normalCol + 1} / ${normalCol + trailingEmpty + 2}`;
+              finalGr = normalRow + 1;
+            } else {
+              finalGc = normalCol + 1;
+              finalGr = normalRow + 1;
+            }
 
             return (
               <div
@@ -846,8 +877,8 @@ function BentoGallery({ images, onClose, stats, title }: {
                 data-idx={idx}
                 onClick={() => handleCellClick(idx)}
                 style={{
-                  gridColumn: gridColValue,
-                  gridRow: isHovering && isHovered ? '1 / -1' : normalRow + 1,
+                  gridColumn: finalGc,
+                  gridRow: finalGr,
                   zIndex: isHovering && isHovered ? 1 : 0,
                   position: 'relative',
                   overflow: 'hidden',
@@ -879,16 +910,28 @@ function BentoGallery({ images, onClose, stats, title }: {
           {(() => {
             const cardCol = injectAt % cols;
             const cardRow = Math.floor(injectAt / cols);
-            const cardOpacity = isHovering && hoveredCol !== null && cardCol === hoveredCol ? 0 : 1;
-            /* Si la InfoCard es el último elemento, extiende para cubrir celdas negras */
-            const cardColSpan: string | number = (infoCardIsLast && trailingEmpty > 0)
-              ? `${cardCol + 1} / ${cardCol + trailingEmpty + 2}`
-              : cardCol + 1;
+            const cardInHovCol = isHovering && hoveredCol !== null && cardCol === hoveredCol;
+            const cardOpacity = cardInHovCol ? 0 : 1;
+
+            let cardFinalGc: string | number;
+            let cardFinalGr: number;
+            if (isHovering && !cardInHovCol && hoveredCol !== null) {
+              const rp = cellRedistrMap.get(injectAt);
+              cardFinalGc = rp?.gc ?? cardCol + 1;
+              cardFinalGr = rp?.gr ?? cardRow + 1;
+            } else if (!isHovering && infoCardIsLast && trailingEmpty > 0) {
+              cardFinalGc = `${cardCol + 1} / ${cardCol + trailingEmpty + 2}`;
+              cardFinalGr = cardRow + 1;
+            } else {
+              cardFinalGc = cardCol + 1;
+              cardFinalGr = cardRow + 1;
+            }
+
             return (
               <div
                 style={{
-                  gridColumn: cardColSpan,
-                  gridRow: cardRow + 1,
+                  gridColumn: cardFinalGc,
+                  gridRow: cardFinalGr,
                   zIndex: 0,
                   overflow: 'hidden',
                   borderRadius: 0,
