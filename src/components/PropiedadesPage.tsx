@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import gsap from 'gsap';
 import PropertyCard from './PropertyCard';
 import InfiniteCarousel from './InfiniteCarousel';
@@ -13,6 +13,114 @@ import PropiedadesLeafletMap from './PropiedadesLeafletMap';
 const FONT_HEADING = "'Avenir LT Std', 'Outfit', system-ui, sans-serif";
 const FONT_BODY    = "'Avenir LT Std', 'Outfit', system-ui, sans-serif";
 const RED          = '#f32735';
+
+/* ── Tarjeta compacta horizontal para el panel lateral del mapa ────── */
+function MiniPropertyCard({ property }: { property: import('@/data/properties').Property }) {
+  const [hov, setHov] = useState(false);
+  return (
+    <div
+      onClick={() => window.location.href = `/propiedad/${property.id}`}
+      onMouseEnter={() => setHov(true)}
+      onMouseLeave={() => setHov(false)}
+      style={{
+        display: 'flex', height: '100%', cursor: 'pointer',
+        background: '#fff',
+        transition: 'background 0.15s ease',
+        ...(hov ? { background: '#fafafa' } : {}),
+      }}
+    >
+      {/* Imagen */}
+      <div style={{ width: '130px', flexShrink: 0, overflow: 'hidden', position: 'relative' }}>
+        <img
+          src={property.image}
+          alt={property.title}
+          style={{
+            width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 70%',
+            transition: 'transform 0.5s ease',
+            transform: hov ? 'scale(1.05)' : 'scale(1)',
+          }}
+        />
+        <div style={{
+          position: 'absolute', inset: 0,
+          background: 'linear-gradient(to right, transparent 60%, rgba(0,0,0,0.08) 100%)',
+          pointerEvents: 'none',
+        }} />
+      </div>
+      {/* Info */}
+      <div style={{ flex: 1, padding: '14px 16px', display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: '4px', minWidth: 0 }}>
+        <div style={{ height: '2px', width: '24px', background: '#f32735', marginBottom: '6px' }} />
+        <p style={{ fontFamily: FONT_BODY, fontSize: '18px', fontWeight: 900, color: '#1a1a1a', margin: 0, lineHeight: 1.1 }}>
+          {property.price}
+        </p>
+        <p style={{ fontFamily: FONT_BODY, fontSize: '12px', color: '#808080', margin: 0, fontWeight: 500, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+          {property.location}
+        </p>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '4px' }}>
+          <span style={{
+            fontFamily: FONT_BODY, fontSize: '10px', fontWeight: 600, color: '#f32735',
+            border: '1px solid rgba(243,39,53,0.3)', borderRadius: '2px', padding: '2px 6px',
+            textTransform: 'uppercase', letterSpacing: '0.04em',
+          }}>
+            {property.type}
+          </span>
+          <span style={{ fontFamily: FONT_BODY, fontSize: '11px', color: '#aaa' }}>
+            {property.reference}
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ── Botón flotante del mapa (círculo → expande texto a la izquierda) ── */
+function MapFloatButton({
+  children, label, onClick, accent = false,
+}: { children: React.ReactNode; label: string; onClick: () => void; accent?: boolean }) {
+  const [hovered, setHovered] = useState(false);
+  const bg = accent ? 'rgba(243,39,53,0.85)' : 'rgba(0,0,0,0.45)';
+  const bgHov = accent ? '#f32735' : 'rgba(0,0,0,0.65)';
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{
+        display: 'flex', alignItems: 'center', flexDirection: 'row',
+        height: '36px',
+        padding: hovered ? '0 14px 0 12px' : '0',
+        width: hovered ? 'auto' : '36px',
+        borderRadius: '18px',
+        background: hovered ? bgHov : bg,
+        backdropFilter: 'blur(6px)',
+        border: '1px solid rgba(255,255,255,0.22)',
+        color: '#fff',
+        cursor: 'pointer',
+        overflow: 'hidden',
+        transition: 'width 0.25s cubic-bezier(0.4,0,0.2,1), padding 0.25s cubic-bezier(0.4,0,0.2,1), background 0.15s ease',
+        gap: hovered ? '6px' : '0',
+        boxShadow: '0 2px 8px rgba(0,0,0,0.25)',
+        whiteSpace: 'nowrap',
+        justifyContent: 'center',
+      }}
+    >
+      {/* Texto — aparece a la izquierda del icono */}
+      <span style={{
+        fontSize: '11px', fontFamily: FONT_BODY, fontWeight: 500, letterSpacing: '0.02em',
+        maxWidth: hovered ? '120px' : '0',
+        overflow: 'hidden',
+        transition: 'max-width 0.25s cubic-bezier(0.4,0,0.2,1)',
+        display: 'block',
+      }}>
+        {label}
+      </span>
+      {/* Icono — siempre visible */}
+      <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, width: '20px' }}>
+        {children}
+      </span>
+    </button>
+  );
+}
 
 function hasSecondaryFilters(filters: PropSearchFilters): boolean {
   return (
@@ -197,10 +305,74 @@ export default function PropiedadesPage({ initialFilter = 'Todos' }: { initialFi
         />
       </div>
 
-      {/* Map panel — full width, same as search bar, only desktop */}
+      {/* Map + Cards panel — mismo contenedor que el buscador, solo desktop */}
       {showMap && (
-        <div className="hidden lg:block" style={{ borderBottom: '1px solid #e8e8e8' }}>
-          <PropiedadesLeafletMap properties={filtered} />
+        <div className="hidden lg:block" style={{ background: '#fff' }}>
+          <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '0 clamp(16px, 3vw, 52px)' }}>
+            <div style={{
+              display: 'flex',
+              height: '360px',
+              boxShadow: '0 10px 48px rgba(0,0,0,0.22), 0 2px 8px rgba(0,0,0,0.10)',
+              overflow: 'hidden',
+            }}>
+
+              {/* Izquierda: 2 tarjetas de propiedades */}
+              <div style={{
+                flex: 1,
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '1px',
+                background: '#eee',
+                borderRight: '1px solid #e8e8e8',
+                overflow: 'hidden',
+              }}>
+                {filtered.slice(0, 2).map(property => (
+                  <div key={property.id} style={{ flex: 1, overflow: 'hidden', background: '#fff' }}>
+                    <MiniPropertyCard property={property} />
+                  </div>
+                ))}
+                {filtered.length === 0 && (
+                  <div style={{
+                    flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    background: '#fafafa', fontFamily: FONT_BODY, fontSize: '13px', color: '#aaa',
+                  }}>
+                    Sin propiedades
+                  </div>
+                )}
+              </div>
+
+              {/* Derecha: Mapa Leaflet con botones flotantes */}
+              <div style={{ flex: 1, position: 'relative' }}>
+                <PropiedadesLeafletMap properties={filtered} />
+
+                {/* Botones flotantes — esquina superior derecha */}
+                <div style={{
+                  position: 'absolute', top: 12, right: 12, zIndex: 1000,
+                  display: 'flex', alignItems: 'center', gap: '8px',
+                }}>
+                  {/* Botón ampliar */}
+                  <MapFloatButton
+                    label="ampliar mapa"
+                    onClick={() => { /* futuro: fullscreen */ }}
+                  >
+                    <span style={{ fontSize: '18px', lineHeight: 1, fontWeight: 300 }}>+</span>
+                  </MapFloatButton>
+
+                  {/* Botón cerrar */}
+                  <MapFloatButton
+                    label="cerrar mapa"
+                    onClick={() => setShowMap(false)}
+                    accent
+                  >
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+                      <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                  </MapFloatButton>
+                </div>
+              </div>
+
+            </div>
+          </div>
         </div>
       )}
 
@@ -208,37 +380,10 @@ export default function PropiedadesPage({ initialFilter = 'Todos' }: { initialFi
       <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '32px clamp(16px, 3vw, 52px)' }}>
 
         {/* Toolbar */}
-        <div
-          className="flex items-center justify-between"
-          style={{ padding: showMap ? '20px clamp(16px, 2vw, 36px)' : '0 0 20px 0' }}
-        >
+        <div className="flex items-center" style={{ paddingBottom: '20px' }}>
           <p style={{ fontFamily: FONT_BODY, fontSize: '13px', color: '#999', margin: 0 }}>
             {filtered.length} {filtered.length === 1 ? 'propiedad encontrada' : 'propiedades encontradas'}
           </p>
-
-          <button
-            type="button"
-            onClick={() => setShowMap(v => !v)}
-            className="hidden lg:flex items-center gap-2"
-            style={{
-              fontFamily: FONT_BODY, fontSize: '13px', fontWeight: 500,
-              color: showMap ? '#fff' : '#444',
-              background: showMap ? RED : '#fff',
-              border: `1px solid ${showMap ? RED : '#ddd'}`,
-              borderRadius: '6px',
-              padding: '8px 16px',
-              cursor: 'pointer',
-              transition: 'all 0.2s ease',
-              flexShrink: 0,
-            }}
-          >
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/>
-              <line x1="9" y1="3" x2="9" y2="18"/>
-              <line x1="15" y1="6" x2="15" y2="21"/>
-            </svg>
-            {showMap ? 'Ocultar mapa' : 'Ver mapa'}
-          </button>
         </div>
 
         {/* Mobile Carousel */}
