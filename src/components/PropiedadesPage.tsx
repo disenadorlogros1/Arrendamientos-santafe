@@ -257,19 +257,23 @@ export default function PropiedadesPage({ initialFilter = 'Todos' }: { initialFi
           <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '0 clamp(16px, 3vw, 52px)' }}>
 
             {/* ── Modo normal: cards izquierda + mapa derecha ── */}
-            {!mapExpanded && (
-              <div style={{
-                display: 'flex', height: '420px',
-                boxShadow: '0 10px 48px rgba(0,0,0,0.22), 0 2px 8px rgba(0,0,0,0.10)',
-              }}>
-                {/* Izquierda: cards que escalan 15% al hover del marcador */}
-                <div style={{ flex: 1, overflow: 'hidden', position: 'relative' }}>
+            {!mapExpanded && (() => {
+              const baseCards = (visibleInMap.length > 0 ? visibleInMap : filtered).slice(0, 2);
+              const hoveredInLeft = hoveredMapProperty ? baseCards.some(p => p.id === hoveredMapProperty.id) : false;
+              const cardsToShow = hoveredMapProperty && !hoveredInLeft
+                ? (baseCards.length >= 2 ? [baseCards[0], hoveredMapProperty] : [hoveredMapProperty, ...baseCards].slice(0, 2))
+                : baseCards;
+              return (
+              <div style={{ display: 'flex', height: '420px', gap: '15px' }}>
+                {/* Izquierda: cards flotando sobre el fondo */}
+                <div style={{ flex: 1, position: 'relative' }}>
                   <div style={{
                     display: 'grid',
                     gridTemplateColumns: '1fr 1fr',
+                    gap: '10px',
                     height: '100%',
                   }}>
-                    {(visibleInMap.length > 0 ? visibleInMap : filtered).slice(0, 2).map(property => {
+                    {cardsToShow.map(property => {
                       const isHovered = hoveredMapProperty?.id === property.id;
                       return (
                         <div
@@ -277,12 +281,13 @@ export default function PropiedadesPage({ initialFilter = 'Todos' }: { initialFi
                           onClick={() => { window.location.href = `/propiedad/${property.id}`; }}
                           style={{
                             cursor: 'pointer',
-                            transform: isHovered ? 'scale(1.15)' : 'scale(1)',
+                            transform: isHovered ? 'scale(1.2)' : 'scale(1)',
                             transition: 'transform 0.22s cubic-bezier(0.34,1.56,0.64,1)',
                             transformOrigin: 'center',
                             position: 'relative',
                             zIndex: isHovered ? 2 : 1,
                             overflow: 'hidden',
+                            borderRadius: '8px',
                           }}
                         >
                           <PropertyCard property={property} />
@@ -292,7 +297,7 @@ export default function PropiedadesPage({ initialFilter = 'Todos' }: { initialFi
                     {filtered.length === 0 && (
                       <div style={{
                         gridColumn: '1 / -1', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        background: '#fafafa', fontFamily: FONT_BODY, fontSize: '13px', color: '#aaa',
+                        fontFamily: FONT_BODY, fontSize: '13px', color: '#aaa',
                       }}>
                         Sin propiedades
                       </div>
@@ -301,7 +306,7 @@ export default function PropiedadesPage({ initialFilter = 'Todos' }: { initialFi
                 </div>
 
                 {/* Derecha: Mapa con botones flotantes */}
-                <div style={{ flex: 1, position: 'relative', overflow: 'hidden' }}>
+                <div style={{ flex: 1, position: 'relative', overflow: 'hidden', boxShadow: '0 10px 48px rgba(0,0,0,0.22), 0 2px 8px rgba(0,0,0,0.10)' }}>
                   <PropiedadesLeafletMap
                     properties={filtered}
                     onBoundsChange={setVisibleInMap}
@@ -320,7 +325,8 @@ export default function PropiedadesPage({ initialFilter = 'Todos' }: { initialFi
                   </div>
                 </div>
               </div>
-            )}
+              );
+            })()}
 
             {/* ── Modo expandido: mapa full width + carrusel inferior ── */}
             {mapExpanded && (
@@ -372,6 +378,7 @@ export default function PropiedadesPage({ initialFilter = 'Todos' }: { initialFi
           gridTemplateColumns: appliedFilters.tipo === 'Todos' ? '1fr 1fr' : '1fr',
           gap: '15px',
           marginTop: '15px',
+          paddingBottom: '20px',
         }}>
           {(appliedFilters.tipo === 'Todos' || appliedFilters.tipo === 'Arrendar') && (
             <div style={{ background: '#1a1a1a', padding: '24px 28px' }}>
