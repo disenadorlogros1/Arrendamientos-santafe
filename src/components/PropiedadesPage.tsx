@@ -253,7 +253,7 @@ export default function PropiedadesPage({ initialFilter = 'Todos' }: { initialFi
       {/* Map panel — solo desktop */}
       {showMap && (
         <>
-        <div className="hidden lg:block" style={{ position: 'relative', zIndex: 0 }}>
+        <div className="hidden lg:block" style={{ position: 'relative' }}>
           <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '0 clamp(16px, 3vw, 52px)' }}>
 
             {/* ── Modo normal: cards izquierda + mapa derecha ── */}
@@ -281,11 +281,11 @@ export default function PropiedadesPage({ initialFilter = 'Todos' }: { initialFi
                           onClick={() => { window.location.href = `/propiedad/${property.id}`; }}
                           style={{
                             cursor: 'pointer',
-                            transform: isHovered ? 'scale(1.2)' : 'scale(1)',
+                            transform: isHovered ? 'scale(1.08)' : 'scale(1)',
                             transition: 'transform 0.22s cubic-bezier(0.34,1.56,0.64,1)',
                             transformOrigin: 'center',
                             position: 'relative',
-                            zIndex: isHovered ? 2 : 1,
+                            zIndex: isHovered ? 50 : 1,
                             overflow: 'hidden',
                             borderRadius: '8px',
                           }}
@@ -305,8 +305,8 @@ export default function PropiedadesPage({ initialFilter = 'Todos' }: { initialFi
                   </div>
                 </div>
 
-                {/* Derecha: Mapa con botones flotantes */}
-                <div style={{ flex: 1, position: 'relative', overflow: 'hidden', boxShadow: '0 10px 48px rgba(0,0,0,0.22), 0 2px 8px rgba(0,0,0,0.10)' }}>
+                {/* Derecha: Mapa con botones flotantes — zIndex:0 contiene los z-indices internos de Leaflet */}
+                <div style={{ flex: 1, position: 'relative', overflow: 'hidden', zIndex: 0, boxShadow: '0 10px 48px rgba(0,0,0,0.22), 0 2px 8px rgba(0,0,0,0.10)' }}>
                   <PropiedadesLeafletMap
                     properties={filtered}
                     onBoundsChange={setVisibleInMap}
