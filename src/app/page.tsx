@@ -134,18 +134,20 @@ export default function Home() {
       <Header currentPage={currentPage} onNavigate={handleNavigate} isHeroPage={true} />
 
       <main className="flex-1 relative" style={{ paddingTop: currentPage === 'home' ? 0 : '86px' }}>
-        {currentPage === 'home' && <HomePage onNavigate={handleNavigate} />}
-        {currentPage === 'propiedades' && <PropiedadesPage initialFilter={propiedadesFilter} />}
-        {currentPage === 'consignacion' && <ConsignacionPage />}
-        {currentPage === 'hipotecas' && <HipotecasPage />}
-        {currentPage === 'servicios' && <ServiciosPage />}
-        {currentPage === 'nosotros' && <InstitucionalPage onNavigate={handleNavigate} />}
-        {currentPage === 'blog' && <BlogPage onNavigate={handleNavigate} onOpenArticle={handleOpenArticle} />}
-        {currentPage === 'blog-article' && <BlogArticlePage articleId={articleId} onNavigate={handleNavigate} />}
-        {currentPage === 'historia-60' && <Historia60Page onNavigate={handleNavigate} />}
-        {currentPage === 'inversionistas' && <InversionistasPage />}
-        {currentPage === 'politicas' && <PoliticasPage />}
-        {currentPage === 'terminos' && <TerminosPage />}
+        <div key={currentPage} className="page-fade-in">
+          {currentPage === 'home' && <HomePage onNavigate={handleNavigate} />}
+          {currentPage === 'propiedades' && <PropiedadesPage initialFilter={propiedadesFilter} />}
+          {currentPage === 'consignacion' && <ConsignacionPage />}
+          {currentPage === 'hipotecas' && <HipotecasPage />}
+          {currentPage === 'servicios' && <ServiciosPage />}
+          {currentPage === 'nosotros' && <InstitucionalPage onNavigate={handleNavigate} />}
+          {currentPage === 'blog' && <BlogPage onNavigate={handleNavigate} onOpenArticle={handleOpenArticle} />}
+          {currentPage === 'blog-article' && <BlogArticlePage articleId={articleId} onNavigate={handleNavigate} />}
+          {currentPage === 'historia-60' && <Historia60Page onNavigate={handleNavigate} />}
+          {currentPage === 'inversionistas' && <InversionistasPage />}
+          {currentPage === 'politicas' && <PoliticasPage />}
+          {currentPage === 'terminos' && <TerminosPage />}
+        </div>
       </main>
 
       <div style={{ marginTop: currentPage === 'home' ? '35px' : 0 }}>

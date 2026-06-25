@@ -54,6 +54,15 @@
 
 /* Lenis smooth scroll */
 html.lenis, html.lenis body { height: auto; }
+
+/* ── Transición de página ─────────────────────────────────────── */
+@keyframes pageFadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+.page-fade-in {
+  animation: pageFadeIn 0.22s ease forwards;
+}
 .lenis.lenis-smooth { scroll-behavior: auto !important; }
 .lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
 .lenis.lenis-stopped { overflow: hidden; }
