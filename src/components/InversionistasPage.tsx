@@ -1,11 +1,12 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useMemo } from 'react';
 import gsap from 'gsap';
 import { TrendingUp, BarChart3, DollarSign, MapPin, ChevronDown } from 'lucide-react';
 import { investmentZones, SECTORS, getZonesBySector, type Sector } from '@/data/investment-zones';
 import { useSplitTextAnimation } from '@/hooks/useSplitTextAnimation';
 import ScrollReveal from '@/components/ScrollReveal';
+import InversionistasLeafletMap, { type ZonePoint } from '@/components/InversionistasLeafletMap';
 
 const FONT = "'Avenir LT Std', 'Outfit', system-ui, sans-serif";
 
@@ -23,16 +24,36 @@ const SECTOR_COLORS: Record<Sector, { bg: string; border: string; text: string }
   Occidente: { bg: 'rgba(168,85,247,0.08)',   border: 'rgba(168,85,247,0.25)',   text: '#a855f7' },
 };
 
+const ZONE_COORDS: Record<string, [number, number]> = {
+  'bello':      [6.3375, -75.5543],
+  'copacabana': [6.3529, -75.5092],
+  'envigado':   [6.1729, -75.5938],
+  'sabaneta':   [6.1515, -75.6172],
+  'itagui':     [6.1847, -75.5993],
+  'el-poblado': [6.2088, -75.5631],
+  'rionegro':   [6.1543, -75.3760],
+  'laureles':   [6.2518, -75.6013],
+  'belen':      [6.2285, -75.6192],
+};
+
 const WHATSAPP_URL = 'https://wa.me/573006557529?text=Hola%2C%20quisiera%20consultar%20oportunidades%20de%20inversión%20inmobiliaria.';
 
 export default function InversionistasPage() {
   const { ref: titleRef, titleAnimating } = useSplitTextAnimation('.inversionistas-title-split', 0, false);
   const [activeSector, setActiveSector] = useState<Sector>('Norte');
-  const [expandedZone, setExpandedZone] = useState<string | null>(null);
+  const [hoveredSector, setHoveredSector] = useState<Sector | null>(null);
+  const [hoveredZone,   setHoveredZone]   = useState<string | null>(null);
+  const [expandedZone,  setExpandedZone]  = useState<string | null>(null);
   const subtitleRef = useRef<HTMLParagraphElement>(null);
   const ctaBtnRef   = useRef<HTMLDivElement>(null);
 
   const visibleZones = getZonesBySector(activeSector);
+
+  const allZonePoints = useMemo<ZonePoint[]>(() =>
+    investmentZones
+      .filter(z => ZONE_COORDS[z.id])
+      .map(z => ({ id: z.id, name: z.name, sector: z.sector, lat: ZONE_COORDS[z.id][0], lng: ZONE_COORDS[z.id][1] })),
+  []);
 
   /* Reset expanded zone when switching sector */
   const handleSectorChange = (sector: Sector) => {
