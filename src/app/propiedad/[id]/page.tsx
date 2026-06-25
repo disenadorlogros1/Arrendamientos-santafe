@@ -17,6 +17,8 @@ import type { PageType } from '@/components/Header';
 
 gsap.registerPlugin(ScrollTrigger);
 
+const FONT = "'Avenir LT Std', 'Outfit', system-ui, sans-serif";
+
 export default function PropertyDetailPage() {
   const params    = useParams();
   const router    = useRouter();
@@ -182,64 +184,64 @@ export default function PropertyDetailPage() {
                 </div>
 
                 {/* Título, precio, stats */}
-                <div ref={titleBlockRef} className="bg-white rounded-lg p-6 mb-6 border border-gray-200">
-                  <div className="flex items-center gap-2 mb-3">
-                    <span className="text-red-600 text-sm font-bold">
-                      {property.businessType === 'Comprar' ? 'VENTA' : 'ARRIENDO'}
+                <div ref={titleBlockRef} style={{ marginBottom: 24 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
+                    <span style={{ fontFamily: FONT, fontSize: 11, fontWeight: 700, color: '#f32735', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+                      {property.businessType === 'Comprar' ? 'Venta' : 'Arriendo'}
                     </span>
-                    <span className="text-gray-600 text-sm font-bold">{property.type.toUpperCase()}</span>
-                    <span className="text-gray-600 text-sm font-bold">
+                    <span style={{ fontFamily: FONT, fontSize: 11, fontWeight: 500, color: '#909090', letterSpacing: '0.06em', textTransform: 'uppercase' }}>{property.type}</span>
+                    <span style={{ fontFamily: FONT, fontSize: 11, fontWeight: 500, color: '#909090', letterSpacing: '0.06em' }}>
                       Ref. {property.reference.replace('Ref. ', '')}
                     </span>
                   </div>
 
-                  <h1 className="text-3xl font-bold text-gray-900 mb-2">{property.title}</h1>
-                  <p className="text-gray-600 text-sm flex items-center gap-1 mb-4">
-                    <span>📍</span>
+                  <h1 style={{ fontFamily: FONT, fontSize: 'clamp(22px, 3.5vw, 34px)', fontWeight: 900, color: '#1a1a1a', lineHeight: 1.15, letterSpacing: '-0.3px', margin: '0 0 8px 0' }}>{property.title}</h1>
+                  <p style={{ fontFamily: FONT, fontSize: 13, fontWeight: 500, color: '#808080', display: 'flex', alignItems: 'center', gap: 5, margin: '0 0 16px 0' }}>
+                    <img src="/icons/icon-location-red.gif" alt="" width="14" height="14" style={{ flexShrink: 0, objectFit: 'contain' }} />
                     {property.address || property.location}
                   </p>
 
-                  <p className="text-4xl font-bold text-red-600 mb-6">{property.price}</p>
+                  <p style={{ fontFamily: FONT, fontSize: 'clamp(22px, 3.2vw, 36px)', fontWeight: 900, color: '#f32735', lineHeight: 1.1, letterSpacing: '-0.5px', margin: '0 0 24px 0' }}>{property.price}</p>
 
                   {/* Stats grid */}
                   <div
                     ref={statsRef}
-                    className="grid grid-cols-2 md:grid-cols-3 gap-4 py-4 border-t border-b border-gray-200"
+                    style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16, padding: '16px 0', borderTop: '1px solid #e8e8e8', borderBottom: '1px solid #e8e8e8' }}
                   >
                     {property.bedrooms > 0 && (
-                      <div className="stat-item text-center">
-                        <div className="text-2xl font-bold text-gray-900">{property.bedrooms}</div>
-                        <div className="text-gray-600 text-sm uppercase">
+                      <div className="stat-item" style={{ textAlign: 'center' }}>
+                        <div style={{ fontFamily: FONT, fontSize: 28, fontWeight: 900, color: '#1a1a1a', lineHeight: 1.1 }}>{property.bedrooms}</div>
+                        <div style={{ fontFamily: FONT, fontSize: 11, fontWeight: 600, color: '#909090', letterSpacing: '0.07em', textTransform: 'uppercase', marginTop: 2 }}>
                           Habitación{property.bedrooms > 1 ? 'es' : ''}
                         </div>
                       </div>
                     )}
                     {property.bathrooms > 0 && (
-                      <div className="stat-item text-center">
-                        <div className="text-2xl font-bold text-gray-900">{property.bathrooms}</div>
-                        <div className="text-gray-600 text-sm uppercase">Baños</div>
+                      <div className="stat-item" style={{ textAlign: 'center' }}>
+                        <div style={{ fontFamily: FONT, fontSize: 28, fontWeight: 900, color: '#1a1a1a', lineHeight: 1.1 }}>{property.bathrooms}</div>
+                        <div style={{ fontFamily: FONT, fontSize: 11, fontWeight: 600, color: '#909090', letterSpacing: '0.07em', textTransform: 'uppercase', marginTop: 2 }}>Baños</div>
                       </div>
                     )}
-                    <div className="stat-item text-center">
-                      <div className="text-2xl font-bold text-gray-900">{property.size}</div>
-                      <div className="text-gray-600 text-sm uppercase">Área</div>
+                    <div className="stat-item" style={{ textAlign: 'center' }}>
+                      <div style={{ fontFamily: FONT, fontSize: 28, fontWeight: 900, color: '#1a1a1a', lineHeight: 1.1 }}>{property.size}</div>
+                      <div style={{ fontFamily: FONT, fontSize: 11, fontWeight: 600, color: '#909090', letterSpacing: '0.07em', textTransform: 'uppercase', marginTop: 2 }}>Área</div>
                     </div>
                     {property.stratum && (
-                      <div className="stat-item text-center">
-                        <div className="text-2xl font-bold text-gray-900">Est. {property.stratum}</div>
-                        <div className="text-gray-600 text-sm uppercase">Estrato</div>
+                      <div className="stat-item" style={{ textAlign: 'center' }}>
+                        <div style={{ fontFamily: FONT, fontSize: 28, fontWeight: 900, color: '#1a1a1a', lineHeight: 1.1 }}>Est. {property.stratum}</div>
+                        <div style={{ fontFamily: FONT, fontSize: 11, fontWeight: 600, color: '#909090', letterSpacing: '0.07em', textTransform: 'uppercase', marginTop: 2 }}>Estrato</div>
                       </div>
                     )}
                     {property.parking && (
-                      <div className="stat-item text-center">
-                        <div className="text-2xl font-bold text-gray-900">{property.parking}</div>
-                        <div className="text-gray-600 text-sm uppercase">Parqueaderos</div>
+                      <div className="stat-item" style={{ textAlign: 'center' }}>
+                        <div style={{ fontFamily: FONT, fontSize: 28, fontWeight: 900, color: '#1a1a1a', lineHeight: 1.1 }}>{property.parking}</div>
+                        <div style={{ fontFamily: FONT, fontSize: 11, fontWeight: 600, color: '#909090', letterSpacing: '0.07em', textTransform: 'uppercase', marginTop: 2 }}>Parqueaderos</div>
                       </div>
                     )}
                     {property.garage && (
-                      <div className="stat-item text-center">
-                        <div className="text-2xl font-bold text-gray-900">{property.garage}</div>
-                        <div className="text-gray-600 text-sm uppercase">Garajes</div>
+                      <div className="stat-item" style={{ textAlign: 'center' }}>
+                        <div style={{ fontFamily: FONT, fontSize: 28, fontWeight: 900, color: '#1a1a1a', lineHeight: 1.1 }}>{property.garage}</div>
+                        <div style={{ fontFamily: FONT, fontSize: 11, fontWeight: 600, color: '#909090', letterSpacing: '0.07em', textTransform: 'uppercase', marginTop: 2 }}>Garajes</div>
                       </div>
                     )}
                   </div>
@@ -247,17 +249,17 @@ export default function PropertyDetailPage() {
                   {/* Descripción */}
                   {property.description && (
                     <ScrollReveal y={12} delay={0}>
-                      <div className="mt-6">
-                        <h2 className="text-lg font-bold text-gray-900 mb-3">Descripción</h2>
-                        <p className="text-gray-700 leading-relaxed">{property.description}</p>
+                      <div style={{ marginTop: 24 }}>
+                        <h2 style={{ fontFamily: FONT, fontSize: 16, fontWeight: 700, color: '#1a1a1a', marginBottom: 10 }}>Descripción</h2>
+                        <p style={{ fontFamily: FONT, fontSize: 14, color: '#555', lineHeight: 1.7 }}>{property.description}</p>
                       </div>
                     </ScrollReveal>
                   )}
 
                   {/* Detalles del inmueble */}
-                  <div className="mt-6">
+                  <div style={{ marginTop: 24 }}>
                     <ScrollReveal y={10}>
-                      <h2 className="text-lg font-bold text-gray-900 mb-4">Detalles del inmueble</h2>
+                      <h2 style={{ fontFamily: FONT, fontSize: 16, fontWeight: 700, color: '#1a1a1a', marginBottom: 16 }}>Detalles del inmueble</h2>
                     </ScrollReveal>
                     <div ref={detailsRef} className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div className="detail-card flex items-center gap-3 p-3 bg-gray-50 rounded">
