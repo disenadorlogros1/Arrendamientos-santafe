@@ -37,16 +37,12 @@ export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) 
 
   return (
     <section style={{ background: '#fff' }} className="w-full overflow-hidden">
-      <div className="flex flex-col lg:flex-row">
+      <div className="flex flex-col lg:flex-row lg:h-[460px]">
 
-        {/* Celda título */}
+        {/* Columna texto */}
         <div
-          className="flex flex-col justify-center gap-6 px-8 py-12 sm:px-14 sm:py-14 lg:py-16 lg:px-16 lg:flex-shrink-0"
-          style={{
-            flexBasis: '460px',
-            borderRight: '1px solid #f0f0f0',
-            borderBottom: '1px solid #f0f0f0',
-          }}
+          className="flex flex-col justify-center gap-5 px-8 py-10 sm:px-14 sm:py-12 lg:py-0 lg:pl-16 lg:pr-14 lg:flex-shrink-0 lg:flex-grow-0"
+          style={{ flexBasis: '672px' }}
         >
           <h2
             ref={titleRef}
@@ -58,7 +54,6 @@ export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) 
               color: '#555',
               lineHeight: 1.2,
               margin: 0,
-              width: '100%',
             }}
           >
             Inmobiliaria con{' '}
@@ -111,53 +106,40 @@ export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) 
           </button>
         </div>
 
-        {/* Timeline — ocupa el espacio donde estaban las stats */}
-        <div style={{ flex: 1, overflow: 'hidden', borderBottom: '1px solid #f0f0f0' }}>
-
-          {/* Timeline horizontal */}
-          <div className="relative overflow-x-auto" style={{ padding: '32px 0' }}>
+        {/* Grid 6 columnas × 1 fila */}
+        <div
+          className="flex-1 grid h-[240px] sm:h-[320px] lg:h-full"
+          style={{ gridTemplateColumns: 'repeat(6, 1fr)', gap: '3px' }}
+        >
+          {HITOS.map((hito) => (
             <div
-              className="flex min-w-max lg:min-w-full px-8 sm:px-10 lg:px-12"
-              style={{ gap: '8px' }}
+              key={hito.year}
+              className="group relative overflow-hidden"
             >
-              {HITOS.map((hito) => (
-                <div
-                  key={hito.year}
-                  className="flex flex-col items-center flex-1"
-                  style={{ minWidth: '120px' }}
-                >
-                  {/* Franja de imagen con año superpuesto */}
-                  <div
-                    className="group relative z-10 overflow-hidden w-full"
-                    style={{ height: '150px' }}
-                  >
-                    <img
-                      src={hito.img}
-                      alt={hito.year}
-                      className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
-                      style={{ objectPosition: hito.objectPos }}
-                    />
-                    <div style={{
-                      position: 'absolute', bottom: 0, left: 0, right: 0,
-                      background: 'linear-gradient(to top, rgba(0,0,0,0.72) 0%, transparent 100%)',
-                      padding: '20px 0 6px',
-                      textAlign: 'center',
-                    }}>
-                      <span style={{
-                        fontFamily: "'Avenir LT Std', system-ui, sans-serif",
-                        fontSize: 'clamp(14px, 1.3vw, 18px)',
-                        fontWeight: 900,
-                        color: '#fff',
-                        lineHeight: 1,
-                      }}>
-                        {hito.year}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              ))}
+              <img
+                src={hito.img}
+                alt={hito.year}
+                className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
+                style={{ objectPosition: hito.objectPos }}
+              />
+              <div style={{
+                position: 'absolute', bottom: 0, left: 0, right: 0,
+                background: 'linear-gradient(to top, rgba(0,0,0,0.72) 0%, transparent 100%)',
+                padding: '24px 0 8px',
+                textAlign: 'center',
+              }}>
+                <span style={{
+                  fontFamily: "'Avenir LT Std', system-ui, sans-serif",
+                  fontSize: 'clamp(13px, 1.1vw, 17px)',
+                  fontWeight: 900,
+                  color: '#fff',
+                  lineHeight: 1,
+                }}>
+                  {hito.year}
+                </span>
+              </div>
             </div>
-          </div>
+          ))}
         </div>
 
       </div>
