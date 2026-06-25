@@ -23,7 +23,7 @@ export default function FeaturedSection({ onNavigate }: FeaturedSectionProps) {
       {/* Header: título + botón — sin línea gris */}
       <div
         className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-6 px-4 sm:px-10 lg:px-14"
-        style={{ paddingTop: '28px', paddingBottom: '20px' }}
+        style={{ paddingTop: '16px', paddingBottom: '12px' }}
       >
         <h2
           ref={titleRef}
@@ -69,7 +69,7 @@ export default function FeaturedSection({ onNavigate }: FeaturedSectionProps) {
       {/* Carrusel — mismo padding que el header, 10% arriba y abajo */}
       <div
         className="px-6 sm:px-10 lg:px-14"
-        style={{ paddingTop: '3%', paddingBottom: '3%' }}
+        style={{ paddingTop: '1.5%', paddingBottom: '1.5%' }}
       >
         <InfiniteCarousel properties={featured} />
       </div>
