@@ -101,7 +101,7 @@ export default function ServiciosBlock({ onNavigate: _onNavigate }: ServiciosBlo
       <div className="px-6 sm:px-10 lg:px-14" style={{ paddingBottom: '52px', overflow: 'visible' }}>
         <div
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5"
-          style={{ gap: '1px', background: '#e0e0e0', overflow: 'visible' }}
+          style={{ gap: '0', background: 'transparent', overflow: 'visible' }}
         >
           {servicios.map((s, idx) => {
             const url    = `https://wa.me/${PHONE}?text=${encodeURIComponent(s.waMsg)}`;
@@ -159,8 +159,9 @@ export default function ServiciosBlock({ onNavigate: _onNavigate }: ServiciosBlo
                 <p
                   style={{
                     fontFamily: FONT_BODY,
+                    fontWeight: 300,
                     fontSize: 'clamp(12.5px, 0.9vw, 14px)',
-                    color: isRed ? 'rgba(255,255,255,0.88)' : '#666',
+                    color: isRed ? 'rgba(255,255,255,0.75)' : 'rgba(0,0,0,0.55)',
                     margin: 0,
                     lineHeight: 1.15,
                     flexGrow: 1,
@@ -186,7 +187,8 @@ export default function ServiciosBlock({ onNavigate: _onNavigate }: ServiciosBlo
                     paddingLeft: '20px',
                     paddingRight: '20px',
                     alignSelf: 'flex-start',
-                    background: isRed ? 'rgba(255,255,255,0.18)' : '#232222',
+                    background: isRed ? RED : '#232222',
+                    border: isRed ? '1px solid rgba(255,255,255,0.7)' : 'none',
                   }}
                 >
                   <span>Hablar con un asesor</span>

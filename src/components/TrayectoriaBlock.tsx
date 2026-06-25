@@ -50,11 +50,12 @@ export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) 
 
   return (
     <section style={{ background: '#fff' }} className="w-full overflow-hidden">
+      <div className="px-6 sm:px-10 lg:px-14">
       <div className="flex flex-col lg:flex-row lg:h-[460px]">
 
         {/* Columna texto */}
         <div
-          className="flex flex-col justify-center gap-5 px-8 py-10 sm:px-14 sm:py-12 lg:py-0 lg:pl-16 lg:pr-14 lg:flex-shrink-0 lg:flex-grow-0"
+          className="flex flex-col justify-center gap-5 px-0 py-10 sm:py-12 lg:py-0 lg:pl-6 lg:pr-10 lg:flex-shrink-0 lg:flex-grow-0"
           style={{ flexBasis: '672px' }}
         >
           <h2
@@ -144,6 +145,7 @@ export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) 
           ))}
         </div>
 
+      </div>
       </div>
     </section>
   );

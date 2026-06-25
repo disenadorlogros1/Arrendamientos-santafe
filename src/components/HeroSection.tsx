@@ -84,7 +84,7 @@ export default function HeroSection({ onNavigate, searchFormSlot }: HeroSectionP
                 style={{
                   fontFamily: FONT_HEADING,
                   fontWeight: 700,
-                  lineHeight: 1.32,
+                  lineHeight: 1.6,
                   margin: 0,
                   textAlign: 'center',
                   color: '#fff',
