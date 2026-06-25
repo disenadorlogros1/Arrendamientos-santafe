@@ -244,7 +244,7 @@ export default function BlogPage({
 
         {/* Load More */}
         <div className="flex justify-center">
-          <button className="px-8 py-3 bg-brand-red hover:bg-brand-red-hover text-white font-semibold rounded-full transition-colors">
+          <button className="px-8 py-3 bg-brand-red hover:bg-brand-red-hover text-white font-semibold rounded-none transition-colors">
             Ver más artículos
           </button>
         </div>
