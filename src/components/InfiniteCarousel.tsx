@@ -38,6 +38,7 @@ const GAP_RATIO = 0.15;
 const NAV_W     = 40;  // px ancho botón flecha
 const NAV_OFF_BASE = 16; // px desde el borde de la card hasta la flecha
 const INFO_H    = 90;  // px altura aprox. del panel de info inferior
+const H_PAD     = 32;  // px padding horizontal para que la sombra no se corte
 
 export default function InfiniteCarousel({ properties }: InfiniteCarouselProps) {
   const [cards] = useState(() => buildCards(properties));
@@ -63,7 +64,7 @@ export default function InfiniteCarousel({ properties }: InfiniteCarouselProps) 
     const el = containerRef.current;
     if (!el) return;
     const measure = () => {
-      const w = el.getBoundingClientRect().width;
+      const w = el.getBoundingClientRect().width - H_PAD * 2;
       if (w > 0) setContainerWidth(w);
     };
     measure();
@@ -144,7 +145,7 @@ export default function InfiniteCarousel({ properties }: InfiniteCarouselProps) 
       onMouseLeave={() => { isPaused.current = false; }}
     >
       {/* Track con clip — padding extra para que las sombras no se corten */}
-      <div ref={containerRef} style={{ overflow: 'hidden', width: '100%', paddingTop: 'clamp(12px,3vw,32px)', marginTop: 'clamp(-32px,-3vw,-12px)', paddingBottom: 'clamp(12px,3vw,32px)', marginBottom: 'clamp(-32px,-3vw,-12px)' }}>
+      <div ref={containerRef} style={{ overflow: 'hidden', width: '100%', paddingTop: 'clamp(12px,3vw,32px)', marginTop: 'clamp(-32px,-3vw,-12px)', paddingBottom: 'clamp(12px,3vw,32px)', marginBottom: 'clamp(-32px,-3vw,-12px)', paddingLeft: `${H_PAD}px`, paddingRight: `${H_PAD}px`, marginLeft: `-${H_PAD}px`, marginRight: `-${H_PAD}px` }}>
         {CARD_W > 0 && (
           <div
             ref={trackRef}
