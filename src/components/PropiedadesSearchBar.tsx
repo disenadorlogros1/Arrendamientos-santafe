@@ -300,9 +300,12 @@ function CustomSelect({
             ))
           }
         </div>
-        {/* Footer fijo */}
+        {/* Footer fijo — cierra el dropdown al hacer clic */}
         {footer && (
-          <div style={{ borderTop: '1px solid rgba(0,0,0,0.07)', flexShrink: 0 }}>
+          <div
+            style={{ borderTop: '1px solid rgba(0,0,0,0.07)', flexShrink: 0 }}
+            onClick={() => { setOpen(false); setQuery(''); }}
+          >
             {footer}
           </div>
         )}
