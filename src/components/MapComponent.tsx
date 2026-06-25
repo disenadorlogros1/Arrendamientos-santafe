@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { MapPin, X, Navigation } from 'lucide-react';
+import { MapPin } from 'lucide-react';
 
 interface MapComponentProps {
   latitude: number;
@@ -27,7 +27,6 @@ export default function MapComponent({
 }: MapComponentProps) {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<any>(null);
-  const [isDirectionsModalOpen, setIsDirectionsModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -130,7 +129,7 @@ export default function MapComponent({
   return (
     <div className="w-full">
       {/* Mapa */}
-      <div className="relative w-full h-[300px] sm:h-[400px] rounded-xl overflow-hidden border border-gray-200">
+      <div className="relative w-full h-[300px] sm:h-[400px] overflow-hidden border border-gray-200">
         {isLoading && (
           <div className="absolute inset-0 flex items-center justify-center bg-gray-100 z-10">
             <div className="text-gray-600">Cargando mapa...</div>
@@ -139,99 +138,6 @@ export default function MapComponent({
         <div ref={mapContainerRef} style={{ height: '100%', width: '100%' }} />
       </div>
 
-      {/* Botón "Cómo llegar" */}
-      <button
-        onClick={() => setIsDirectionsModalOpen(true)}
-        className="mt-4 w-full sm:w-auto inline-flex items-center justify-center gap-2 h-12 px-6 bg-brand-red hover:bg-brand-red-hover text-white text-sm font-semibold rounded-lg transition-colors"
-      >
-        <Navigation className="w-4 h-4" />
-        Cómo llegar
-      </button>
-
-      {/* Modal de direcciones */}
-      {isDirectionsModalOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50 p-4">
-          <div className="bg-white rounded-xl shadow-lg w-full max-w-md p-6 relative">
-            {/* Botón cerrar */}
-            <button
-              onClick={() => setIsDirectionsModalOpen(false)}
-              className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 transition-colors"
-              aria-label="Cerrar"
-            >
-              <X className="w-6 h-6" />
-            </button>
-
-            <h3 className="text-xl font-bold text-brand-dark mb-2">Cómo llegar</h3>
-            <p className="text-sm text-gray-600 mb-6">{title}</p>
-
-            {/* Botones de dirección */}
-            <div className="space-y-3">
-              {/* Google Maps */}
-              <a
-                href={`https://maps.google.com/?q=${latitude},${longitude}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-between w-full h-14 px-4 bg-gray-50 hover:bg-gray-100 border border-gray-200 rounded-lg transition-colors group"
-              >
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center">
-                    <MapPin className="w-4 h-4 text-red-600" />
-                  </div>
-                  <span className="font-medium text-gray-900">Google Maps</span>
-                </div>
-                <svg
-                  className="w-5 h-5 text-gray-400 group-hover:text-gray-600 transition-colors"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M9 5l7 7-7 7"
-                  />
-                </svg>
-              </a>
-
-              {/* Waze */}
-              <a
-                href={`https://waze.com/ul?ll=${latitude},${longitude}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-between w-full h-14 px-4 bg-gray-50 hover:bg-gray-100 border border-gray-200 rounded-lg transition-colors group"
-              >
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
-                    <Navigation className="w-4 h-4 text-blue-600" />
-                  </div>
-                  <span className="font-medium text-gray-900">Waze</span>
-                </div>
-                <svg
-                  className="w-5 h-5 text-gray-400 group-hover:text-gray-600 transition-colors"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M9 5l7 7-7 7"
-                  />
-                </svg>
-              </a>
-            </div>
-
-            <button
-              onClick={() => setIsDirectionsModalOpen(false)}
-              className="mt-6 w-full h-12 bg-gray-100 hover:bg-gray-200 text-gray-900 font-semibold rounded-lg transition-colors"
-            >
-              Cerrar
-            </button>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

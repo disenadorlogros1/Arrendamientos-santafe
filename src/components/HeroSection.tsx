@@ -84,19 +84,22 @@ export default function HeroSection({ onNavigate, searchFormSlot }: HeroSectionP
                 style={{
                   fontFamily: FONT_HEADING,
                   fontWeight: 700,
-                  lineHeight: 1.6,
+                  lineHeight: 1.15,
                   margin: 0,
                   textAlign: 'center',
                   color: '#fff',
                   cursor: 'default',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  gap: 'clamp(6px, 1.2vw, 14px)',
                 }}
                 onMouseEnter={() => setTitleHovered(true)}
                 onMouseLeave={() => setTitleHovered(false)}
               >
-                60 años
-                <br className="hidden sm:inline" />
-                <span className="block sm:inline-block" style={{ fontWeight: 300, position: 'relative', lineHeight: 'inherit', overflow: 'hidden' }}>
-                  <span style={{ position: 'relative', zIndex: 2, lineHeight: 'inherit' }}>
+                <span>60 años</span>
+                <span style={{ fontWeight: 300, position: 'relative', overflow: 'hidden' }}>
+                  <span style={{ position: 'relative', zIndex: 2 }}>
                     conectando personas
                   </span>
                   {/* Slash diagonal — aparece en hover, detrás del texto */}

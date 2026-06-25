@@ -8,6 +8,7 @@ import type { Property } from '@/data/properties';
 
 interface InfiniteCarouselProps {
   properties: Property[];
+  onCardWidthChange?: (width: number) => void;
 }
 
 const buildCards = (properties: Property[]) =>
@@ -40,7 +41,7 @@ const NAV_OFF_BASE = 16; // px desde el borde de la card hasta la flecha
 const INFO_H    = 90;  // px altura aprox. del panel de info inferior
 const H_PAD     = 32;  // px padding horizontal para que la sombra no se corte
 
-export default function InfiniteCarousel({ properties }: InfiniteCarouselProps) {
+export default function InfiniteCarousel({ properties, onCardWidthChange }: InfiniteCarouselProps) {
   const [cards] = useState(() => buildCards(properties));
   const [startIndex, setStartIndex] = useState(0);
   const [windowWidth, setWindowWidth]       = useState(375);
@@ -79,6 +80,10 @@ export default function InfiniteCarousel({ properties }: InfiniteCarouselProps) 
   const CARD_W = containerWidth > 0
     ? Math.floor(containerWidth / (VISIBLE + (VISIBLE - 1) * GAP_RATIO))
     : 0;
+
+  useEffect(() => {
+    if (CARD_W > 0) onCardWidthChange?.(CARD_W);
+  }, [CARD_W, onCardWidthChange]);
   const GAP    = CARD_W > 0 ? Math.round(CARD_W * GAP_RATIO) : 12;
   const CARD_H = Math.round(CARD_W * 16 / 9);
   const SLOT   = CARD_W + GAP;

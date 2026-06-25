@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { createPortal } from 'react-dom';
 import { X, ChevronLeft, ChevronRight } from 'lucide-react';
+import { useCountAnimation } from '@/hooks/useCountAnimation';
 
 /* ─── Constants ────────────────────────────────────────────────── */
 const FONT  = "'Avenir LT Std', 'Outfit', system-ui, sans-serif";
@@ -1055,9 +1056,33 @@ function MainPreviewCell({ img, alt, onClick }: { img: string; alt: string; onCl
   );
 }
 
+/* Overlay animado con conteo */
+function PhotoCountOverlay({ count }: { count: number }) {
+  const { ref, count: displayCount } = useCountAnimation(count, 700);
+  return (
+    <div
+      ref={ref}
+      style={{
+        position: 'absolute', inset: 0,
+        background: 'rgba(0,0,0,0.55)',
+        display: 'flex', flexDirection: 'column',
+        alignItems: 'center', justifyContent: 'center',
+        pointerEvents: 'none',
+      }}
+    >
+      <span style={{ fontFamily: FONT, fontSize: 'clamp(28px, 3.5vw, 44px)', fontWeight: 800, color: '#fff', lineHeight: 1 }}>
+        +{displayCount}
+      </span>
+      <span style={{ fontFamily: FONT, fontSize: 12, fontWeight: 300, color: 'rgba(255,255,255,0.75)', marginTop: 5, letterSpacing: '0.06em', textTransform: 'uppercase' }}>
+        fotos
+      </span>
+    </div>
+  );
+}
+
 /* Celda pequeña derecha */
-function SmallPreviewCell({ img, alt, onClick, overlay, onHoverIn, onHoverOut }: {
-  img: string; alt: string; onClick: () => void; overlay?: string;
+function SmallPreviewCell({ img, alt, onClick, overlay, overlayCount, onHoverIn, onHoverOut }: {
+  img: string; alt: string; onClick: () => void; overlay?: string; overlayCount?: number;
   onHoverIn: () => void; onHoverOut: () => void;
 }) {
   const [hov, setHov] = useState(false);
@@ -1069,11 +1094,13 @@ function SmallPreviewCell({ img, alt, onClick, overlay, onHoverIn, onHoverOut }:
       onMouseLeave={() => { setHov(false); onHoverOut(); }}
     >
       <img src={img} alt={alt} draggable={false} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', transform: hov ? 'scale(1.04)' : 'scale(1)', transition: `transform 0.55s ${EASE}`, pointerEvents: 'none' }} />
-      {overlay && (
+      {overlayCount !== undefined ? (
+        <PhotoCountOverlay count={overlayCount} />
+      ) : overlay ? (
         <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.52)', display: 'flex', alignItems: 'center', justifyContent: 'center', pointerEvents: 'none' }}>
           <span style={{ fontFamily: FONT, fontSize: 15, fontWeight: 600, color: '#fff', letterSpacing: '0.02em' }}>{overlay}</span>
         </div>
-      )}
+      ) : null}
     </div>
   );
 }
@@ -1094,7 +1121,7 @@ export default function PropertyGallery({ images, title, stats }: PropertyGaller
           to   { opacity: 1; transform: scale(1);    }
         }
       `}</style>
-      <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gridTemplateRows: '1fr 1fr', gap: 4, height: 'clamp(220px, 45vw, 420px)', marginBottom: 24, borderRadius: 0, overflow: 'hidden' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gridTemplateRows: '1fr 1fr', gap: 4, height: 'clamp(320px, 52vw, 520px)', marginBottom: 24, borderRadius: 0, overflow: 'hidden' }}>
         <MainPreviewCell
           img={images[previewIdx] ?? images[0]}
           alt={title}
@@ -1113,7 +1140,7 @@ export default function PropertyGallery({ images, title, stats }: PropertyGaller
           onClick={() => setOpen(true)}
           onHoverIn={() => setPreviewIdx(2)}
           onHoverOut={() => setPreviewIdx(0)}
-          overlay={images.length > 3 ? `+${images.length - 3} fotos` : undefined}
+          overlayCount={images.length > 3 ? images.length - 3 : undefined}
         />
       </div>
       {mounted && open && <BentoGallery images={images} onClose={() => setOpen(false)} stats={stats} title={title} />}
