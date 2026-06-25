@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef, useCallback } from 'react';
+import { flushSync } from 'react-dom';
 import gsap from 'gsap';
 import PropertyCard from './PropertyCard';
 import InfiniteCarousel from './InfiniteCarousel';
@@ -13,6 +14,177 @@ import PropiedadesLeafletMap from './PropiedadesLeafletMap';
 const FONT_HEADING = "'Avenir LT Std', 'Outfit', system-ui, sans-serif";
 const FONT_BODY    = "'Avenir LT Std', 'Outfit', system-ui, sans-serif";
 const RED          = '#f32735';
+
+function applyInkFill(e: React.MouseEvent<HTMLElement>) {
+  const el = e.currentTarget;
+  const rect = el.getBoundingClientRect();
+  const x = e.clientX - rect.left;
+  const y = e.clientY - rect.top;
+  const size = Math.max(Math.hypot(x,y),Math.hypot(rect.width-x,y),Math.hypot(x,rect.height-y),Math.hypot(rect.width-x,rect.height-y)) * 2;
+  el.style.setProperty('--x', `${x}px`);
+  el.style.setProperty('--y', `${y}px`);
+  el.style.setProperty('--size', `${size}px`);
+}
+
+/* ── Carrusel de mapa ampliado ──────────────────────────────────────── */
+function MapCarousel({
+  properties, hoveredId, onHover, onCardClick,
+}: {
+  properties: import('@/data/properties').Property[];
+  hoveredId: number | null;
+  onHover: (p: import('@/data/properties').Property | null) => void;
+  onCardClick: (p: import('@/data/properties').Property) => void;
+}) {
+  const [startIdx, setStartIdx] = useState(0);
+  const [containerWidth, setContainerWidth] = useState(0);
+  const [windowWidth, setWindowWidth] = useState(1280);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const trackRef     = useRef<HTMLDivElement>(null);
+  const isAnimating  = useRef(false);
+
+  const GAP_RATIO = 0.15;
+  const VISIBLE   = windowWidth < 1024 ? 3 : windowWidth < 1536 ? 4 : 5;
+  const CARD_W    = containerWidth > 0
+    ? Math.floor(containerWidth / (VISIBLE + (VISIBLE - 1) * GAP_RATIO))
+    : 0;
+  const GAP       = CARD_W > 0 ? Math.round(CARD_W * GAP_RATIO) : 12;
+  const CARD_H    = Math.round(CARD_W * 16 / 9);
+  const SLOT      = CARD_W + GAP;
+  const INFO_H    = 90;
+  const arrowTopPx = CARD_H > 0 ? Math.round((CARD_H - INFO_H) / 2) : 0;
+
+  const canGoBack    = startIdx > 0;
+  const canGoForward = startIdx + VISIBLE < properties.length;
+
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const measure = () => { const w = el.getBoundingClientRect().width; if (w > 0) setContainerWidth(w); };
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const check = () => setWindowWidth(window.innerWidth);
+    check();
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
+  }, []);
+
+  useEffect(() => {
+    setStartIdx(0);
+    if (trackRef.current) gsap.set(trackRef.current, { x: 0 });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [properties.length]);
+
+  const visibleCards = Array.from(
+    { length: Math.min(VISIBLE + 1, properties.length - startIdx) },
+    (_, i) => ({ ...properties[startIdx + i], _slot: i })
+  );
+
+  const navigate = useCallback((forward: boolean) => {
+    if (isAnimating.current || !trackRef.current || !containerRef.current) return;
+    if (CARD_W === 0) return;
+    if (forward && !canGoForward) return;
+    if (!forward && !canGoBack) return;
+    isAnimating.current = true;
+
+    const slots = containerRef.current.querySelectorAll<HTMLElement>('[data-mc-slot]');
+
+    if (forward) {
+      const exiting  = slots[0];
+      const entering = slots[slots.length - 1];
+      if (entering) gsap.set(entering, { scale: 0.75, opacity: 0 });
+      gsap.timeline({
+        onComplete: () => {
+          flushSync(() => setStartIdx(p => p + 1));
+          gsap.set(trackRef.current, { x: 0 });
+          isAnimating.current = false;
+        },
+      })
+        .to(trackRef.current, { x: -SLOT,  duration: 0.9,  ease: 'power4.out'  }, 0)
+        .to(exiting,          { scale: 0.75, opacity: 0, duration: 0.42, ease: 'power2.in'  }, 0)
+        .to(entering,         { scale: 1,    opacity: 1, duration: 0.66, ease: 'power3.out' }, 0.2);
+    } else {
+      flushSync(() => setStartIdx(p => p - 1));
+      const slots2   = containerRef.current.querySelectorAll<HTMLElement>('[data-mc-slot]');
+      const entering = slots2[0];
+      const exiting  = slots2[slots2.length - 1];
+      gsap.set(trackRef.current, { x: -SLOT });
+      if (entering) gsap.set(entering, { scale: 0.75, opacity: 0 });
+      gsap.timeline({
+        onComplete: () => { isAnimating.current = false; },
+      })
+        .to(trackRef.current, { x: 0,    duration: 0.9,  ease: 'power4.out'  }, 0)
+        .to(exiting,          { scale: 0.75, opacity: 0, duration: 0.42, ease: 'power2.in'  }, 0)
+        .to(entering,         { scale: 1,    opacity: 1, duration: 0.66, ease: 'power3.out' }, 0.2);
+    }
+  }, [CARD_W, SLOT, canGoForward, canGoBack]);
+
+  const trackW = CARD_W > 0 ? visibleCards.length * CARD_W + (visibleCards.length - 1) * GAP : 0;
+  const NAV_OFF = 8;
+
+  return (
+    <div style={{ position: 'relative', width: '100%', marginTop: '12px' }}>
+      <div ref={containerRef} style={{ overflow: 'hidden', width: '100%', paddingTop: '12px', marginTop: '-12px', paddingBottom: '12px', marginBottom: '-12px' }}>
+        {CARD_W > 0 && visibleCards.length > 0 && (
+          <div ref={trackRef} style={{ display: 'flex', gap: `${GAP}px`, width: `${trackW}px`, willChange: 'transform' }}>
+            {visibleCards.map(property => {
+              const isHov = hoveredId === property.id;
+              return (
+                <div
+                  key={property.id}
+                  data-mc-slot={property._slot}
+                  onClick={() => onCardClick(property)}
+                  onMouseEnter={() => onHover(property)}
+                  onMouseLeave={() => onHover(null)}
+                  style={{
+                    width: `${CARD_W}px`, minWidth: `${CARD_W}px`,
+                    height: `${CARD_H}px`, flexShrink: 0,
+                    willChange: 'transform, opacity',
+                    transform: isHov ? 'scale(1.05)' : 'scale(1)',
+                    transition: 'transform 0.22s cubic-bezier(0.34,1.56,0.64,1)',
+                    borderRadius: '8px', overflow: 'hidden', cursor: 'pointer',
+                  }}
+                >
+                  <PropertyCard property={property} />
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </div>
+
+      {/* Flechas — solo si hay más propiedades de las que caben */}
+      {arrowTopPx > 0 && (canGoBack || canGoForward) && (
+        <>
+          {canGoBack && (
+            <button type="button" onClick={() => navigate(false)}
+              onMouseEnter={applyInkFill} onMouseLeave={applyInkFill}
+              className="carousel-nav-btn rounded-full flex items-center justify-center"
+              style={{ position: 'absolute', left: `${NAV_OFF}px`, top: `${arrowTopPx + 12}px`, transform: 'translateY(-50%)', width: '40px', height: '40px', zIndex: 10 }}
+              aria-label="Anterior"
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+            </button>
+          )}
+          {canGoForward && (
+            <button type="button" onClick={() => navigate(true)}
+              onMouseEnter={applyInkFill} onMouseLeave={applyInkFill}
+              className="carousel-nav-btn rounded-full flex items-center justify-center"
+              style={{ position: 'absolute', right: `${NAV_OFF}px`, top: `${arrowTopPx + 12}px`, transform: 'translateY(-50%)', width: '40px', height: '40px', zIndex: 10 }}
+              aria-label="Siguiente"
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+            </button>
+          )}
+        </>
+      )}
+    </div>
+  );
+}
 
 /* ── Botón flotante del mapa (círculo → expande texto a la izquierda) ── */
 function MapFloatButton({
@@ -161,6 +333,15 @@ export default function PropiedadesPage({ initialFilter = 'Todos' }: { initialFi
   const [mapExpanded, setMapExpanded] = useState(false);
   const [visibleInMap, setVisibleInMap] = useState<import('@/data/properties').Property[]>([]);
   const [hoveredMapProperty, setHoveredMapProperty] = useState<import('@/data/properties').Property | null>(null);
+
+  // Animación de entrada por slot — alterna qué card se reemplaza
+  const [replacedSlot, setReplacedSlot] = useState<0 | 1>(1);
+  const nextSlot      = useRef<0 | 1>(0);
+  const prevHovId     = useRef<number | null>(null);
+  const animSlot      = useRef<0 | 1>(0);
+  const shouldAnimate = useRef(false);
+  const cardSlotRefs  = [useRef<HTMLDivElement>(null), useRef<HTMLDivElement>(null)];
+
   const getDefaultPrecioMax = (tipo: string) =>
     tipo === 'Comprar' ? 500_000_000 : tipo === 'Arrendar' ? 15_000_000 : 500_000_000;
 
@@ -194,15 +375,34 @@ export default function PropiedadesPage({ initialFilter = 'Todos' }: { initialFi
 
   const filtered = applyFilters(appliedFilters);
 
-  // Crossfade del panel izquierdo cuando cambia la propiedad hovereada
+  // Efecto 1: detecta nueva propiedad hovereada → decide qué slot reemplazar (alterna)
   useEffect(() => {
-    const el = leftPanelRef.current;
-    if (!el) return;
-    el.style.transition = 'opacity 0.1s ease';
-    el.style.opacity = '0';
-    const t = setTimeout(() => { if (leftPanelRef.current) leftPanelRef.current.style.opacity = '1'; }, 100);
-    return () => clearTimeout(t);
-  }, [hoveredMapProperty?.id]);
+    if (!hoveredMapProperty) { prevHovId.current = null; return; }
+    if (hoveredMapProperty.id === prevHovId.current) return;
+    const base = (visibleInMap.length > 0 ? visibleInMap : filtered).slice(0, 2);
+    if (base.some(p => p.id === hoveredMapProperty.id)) return;
+    prevHovId.current = hoveredMapProperty.id;
+    const slot = nextSlot.current;
+    nextSlot.current = slot === 0 ? 1 : 0;
+    animSlot.current = slot;
+    shouldAnimate.current = true;
+    setReplacedSlot(slot);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [hoveredMapProperty]);
+
+  // Efecto 2: tras commit del slot en el DOM, lanza animación GSAP en esa card
+  useEffect(() => {
+    if (!shouldAnimate.current) return;
+    shouldAnimate.current = false;
+    const el = cardSlotRefs[animSlot.current].current;
+    if (el) {
+      gsap.fromTo(el,
+        { scale: 0.75, opacity: 0 },
+        { scale: 1, opacity: 1, duration: 0.66, ease: 'power3.out' }
+      );
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [replacedSlot]);
 
   useEffect(() => {
     const el = cardsGridRef.current;
@@ -270,10 +470,9 @@ export default function PropiedadesPage({ initialFilter = 'Todos' }: { initialFi
             {/* ── Modo normal: cards izquierda + mapa derecha ── */}
             {!mapExpanded && (() => {
               const baseCards = (visibleInMap.length > 0 ? visibleInMap : filtered).slice(0, 2);
-              const hoveredInLeft = hoveredMapProperty ? baseCards.some(p => p.id === hoveredMapProperty.id) : false;
-              const cardsToShow = hoveredMapProperty && !hoveredInLeft
-                ? (baseCards.length >= 2 ? [baseCards[0], hoveredMapProperty] : [hoveredMapProperty, ...baseCards].slice(0, 2))
-                : baseCards;
+              const hoveredInBase = hoveredMapProperty ? baseCards.some(p => p.id === hoveredMapProperty.id) : false;
+              const slotCards: Array<import('@/data/properties').Property | undefined> = [baseCards[0], baseCards[1]];
+              if (hoveredMapProperty && !hoveredInBase) slotCards[replacedSlot] = hoveredMapProperty;
               return (
               <div style={{ display: 'flex', height: '420px', gap: '15px' }}>
                 {/* Izquierda: cards flotando sobre el fondo */}
@@ -284,11 +483,13 @@ export default function PropiedadesPage({ initialFilter = 'Todos' }: { initialFi
                     gap: '20px',
                     height: '100%',
                   }}>
-                    {cardsToShow.map(property => {
+                    {slotCards.map((property, slotIdx) => {
+                      if (!property) return null;
                       const isHovered = hoveredMapProperty?.id === property.id;
                       return (
                         <div
-                          key={property.id}
+                          key={slotIdx}
+                          ref={cardSlotRefs[slotIdx]}
                           onClick={() => { window.location.href = `/propiedad/${property.id}`; }}
                           style={{
                             cursor: 'pointer',
@@ -342,51 +543,44 @@ export default function PropiedadesPage({ initialFilter = 'Todos' }: { initialFi
               );
             })()}
 
-            {/* ── Modo expandido: mapa full width + carrusel flotante inferior ── */}
+            {/* ── Modo expandido: mapa full width + carrusel debajo ── */}
             {mapExpanded && (() => {
-              const mapProps = (visibleInMap.length > 0 ? visibleInMap : filtered).slice(0, 4);
+              const mapProps = visibleInMap.length > 0 ? visibleInMap : filtered;
               return (
-                <div style={{ boxShadow: '0 10px 48px rgba(0,0,0,0.22), 0 2px 8px rgba(0,0,0,0.10)', overflow: 'hidden', position: 'relative', height: '520px' }}>
-                  {/* Mapa — ocupa todo el contenedor */}
-                  <PropiedadesLeafletMap
-                    properties={filtered}
-                    onBoundsChange={setVisibleInMap}
-                  />
-
-                  {/* Botones flotantes — superior derecha */}
-                  <div style={{ position: 'absolute', top: 12, right: 12, zIndex: 1000, display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <MapFloatButton label="Reducir mapa" onClick={() => setMapExpanded(false)}>
-                      <span style={{ fontSize: '16px', lineHeight: 1, fontWeight: 300 }}>−</span>
-                    </MapFloatButton>
-                    <MapFloatButton label="Cerrar mapa" onClick={() => { setShowMap(false); setMapExpanded(false); }} accent>
-                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
-                        <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
-                      </svg>
-                    </MapFloatButton>
+                <>
+                  {/* Mapa full width */}
+                  <div
+                    onMouseLeave={() => setHoveredMapProperty(null)}
+                    style={{ boxShadow: '0 10px 48px rgba(0,0,0,0.22), 0 2px 8px rgba(0,0,0,0.10)', overflow: 'hidden', position: 'relative', height: '520px', zIndex: 0 }}
+                  >
+                    <PropiedadesLeafletMap
+                      properties={filtered}
+                      onBoundsChange={setVisibleInMap}
+                      onHoverProperty={setHoveredMapProperty}
+                      onClickProperty={p => { window.location.href = `/propiedad/${p.id}`; }}
+                    />
+                    <div style={{ position: 'absolute', top: 12, right: 12, zIndex: 1000, display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <MapFloatButton label="Reducir mapa" onClick={() => setMapExpanded(false)}>
+                        <span style={{ fontSize: '16px', lineHeight: 1, fontWeight: 300 }}>−</span>
+                      </MapFloatButton>
+                      <MapFloatButton label="Cerrar mapa" onClick={() => { setShowMap(false); setMapExpanded(false); }} accent>
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+                          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                        </svg>
+                      </MapFloatButton>
+                    </div>
                   </div>
 
-                  {/* Carrusel flotante — inferior, máx 4 cards, idéntico al modo pequeño */}
+                  {/* Carrusel debajo del mapa */}
                   {mapProps.length > 0 && (
-                    <div style={{
-                      position: 'absolute', bottom: 0, left: 0, right: 0,
-                      zIndex: 500,
-                      background: 'linear-gradient(to top, rgba(0,0,0,0.72) 0%, transparent 100%)',
-                      padding: '32px 16px 14px',
-                    }}>
-                      <p style={{ fontFamily: FONT_BODY, fontSize: '11px', color: 'rgba(255,255,255,0.7)', margin: '0 0 10px 0', textTransform: 'uppercase', letterSpacing: '0.08em', fontWeight: 600 }}>
-                        {(visibleInMap.length > 0 ? visibleInMap : filtered).length} propiedades en esta zona
-                      </p>
-                      <div className="red-scrollbar" style={{ display: 'flex', gap: '12px', overflowX: 'auto', paddingBottom: '4px' }}>
-                        {mapProps.map(property => (
-                          <div key={property.id} style={{ width: '200px', minWidth: '200px', flexShrink: 0, borderRadius: '6px', overflow: 'hidden', cursor: 'pointer' }}
-                            onClick={() => { window.location.href = `/propiedad/${property.id}`; }}>
-                            <PropertyCard property={property} />
-                          </div>
-                        ))}
-                      </div>
-                    </div>
+                    <MapCarousel
+                      properties={mapProps}
+                      hoveredId={hoveredMapProperty?.id ?? null}
+                      onHover={setHoveredMapProperty}
+                      onCardClick={p => { window.location.href = `/propiedad/${p.id}`; }}
+                    />
                   )}
-                </div>
+                </>
               );
             })()}
 

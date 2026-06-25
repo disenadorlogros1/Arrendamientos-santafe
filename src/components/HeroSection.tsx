@@ -1,6 +1,6 @@
 ﻿'use client';
 
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import gsap from 'gsap';
 import { useSplitTextAnimation } from '@/hooks/useSplitTextAnimation';
 
@@ -36,6 +36,7 @@ export default function HeroSection({ onNavigate, searchFormSlot }: HeroSectionP
   const { ref: titleRef, titleAnimating } = useSplitTextAnimation('.hero-title-split', 0, false, true);
   const boldTextRef = useRef<HTMLSpanElement>(null);
   const subtitleRef = useRef<HTMLParagraphElement>(null);
+  const [titleHovered, setTitleHovered] = useState(false);
 
   useEffect(() => {
     if (!boldTextRef.current) return;
@@ -95,14 +96,36 @@ export default function HeroSection({ onNavigate, searchFormSlot }: HeroSectionP
                   margin: 0,
                   textAlign: 'center',
                   color: '#fff',
+                  cursor: 'default',
                 }}
+                onMouseEnter={() => setTitleHovered(true)}
+                onMouseLeave={() => setTitleHovered(false)}
               >
                 60 años
                 <br className="hidden sm:inline" />
-                <span className="block sm:inline-block" style={{ fontWeight: 700, position: 'relative', lineHeight: 'inherit' }}>
+                <span className="block sm:inline-block" style={{ fontWeight: 700, position: 'relative', lineHeight: 'inherit', overflow: 'hidden' }}>
                   <span ref={boldTextRef} style={{ position: 'relative', zIndex: 2, lineHeight: 'inherit' }}>
                     conectando personas
                   </span>
+                  {/* Slash diagonal — aparece en hover, detrás del texto */}
+                  <span
+                    aria-hidden="true"
+                    className="hidden sm:block"
+                    style={{
+                      position: 'absolute',
+                      top: '50%',
+                      left: 0,
+                      width: '100%',
+                      height: '52%',
+                      backgroundColor: RED,
+                      transform: 'translateY(-50%) skewX(-14deg)',
+                      zIndex: 1,
+                      opacity: titleHovered ? 1 : 0,
+                      transition: 'opacity 0.07s ease',
+                      pointerEvents: 'none',
+                    }}
+                  />
+                  {/* Underline animado al montar */}
                   <span
                     aria-hidden="true"
                     className="hidden sm:inline-block"
