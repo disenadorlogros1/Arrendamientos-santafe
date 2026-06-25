@@ -27,7 +27,6 @@ export default function PropertyDetailPage() {
   const property   = properties.find((p) => p.id === propertyId);
 
   // Entrance animation refs
-  const breadcrumbRef  = useRef<HTMLDivElement>(null);
   const galleryRef     = useRef<HTMLDivElement>(null);
   const titleBlockRef  = useRef<HTMLDivElement>(null);
   const formRef        = useRef<HTMLDivElement>(null);
@@ -54,10 +53,7 @@ export default function PropertyDetailPage() {
     const ctx = gsap.context(() => {
       const tl = gsap.timeline({ defaults: { ease: 'power2.out' } });
 
-      // Stage 1: breadcrumb (0ms)
-      tl.from(breadcrumbRef.current, { opacity: 0, y: -8, duration: 0.3 }, 0);
-
-      // Stage 2: gallery fade (50ms)
+      // Stage 1: gallery fade (0ms)
       tl.from(galleryRef.current, { opacity: 0, duration: 0.4 }, 0.05);
 
       // Stage 3: title + price block (120ms) — the key info
@@ -139,35 +135,36 @@ export default function PropertyDetailPage() {
     : [property.image, ...DEFAULT_INTERIOR_GALLERY.filter(img => img !== property.image)];
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50">
+    <div className="min-h-screen flex flex-col bg-white">
       <Header currentPage={currentPage} onNavigate={handleNavigate} isHeroPage={false} />
       <main className="flex-1 pt-[86px] relative">
         <div>
-          {/* Breadcrumb */}
-          <div ref={breadcrumbRef} className="bg-white border-b border-gray-200 py-4 px-6">
-            <div className="max-w-7xl mx-auto">
-              <div className="flex items-center gap-2 text-sm text-gray-600">
-                <button
-                  onClick={() => router.push('/propiedades')}
-                  className="text-brand-red hover:underline font-semibold"
-                  title="Volver"
-                >
-                  ← Atrás
-                </button>
-                <span>/</span>
-                <span className="text-gray-900">{property.title}</span>
-              </div>
-            </div>
-          </div>
-
           <div className="max-w-7xl mx-auto px-6 py-8">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
               {/* Columna izquierda */}
               <div className="lg:col-span-2">
 
-                {/* Galería */}
-                <div ref={galleryRef}>
+                {/* Galería con botón volver */}
+                <div ref={galleryRef} style={{ position: 'relative' }}>
+                  <button
+                    onClick={() => router.back()}
+                    style={{
+                      position: 'absolute', top: 12, left: 12, zIndex: 20,
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      width: 38, height: 38, borderRadius: '50%',
+                      backgroundColor: '#e53935', border: 'none', cursor: 'pointer',
+                      boxShadow: '0 2px 8px rgba(0,0,0,0.25)',
+                      transition: 'background-color 0.2s',
+                    }}
+                    onMouseEnter={e => (e.currentTarget.style.backgroundColor = '#c62828')}
+                    onMouseLeave={e => (e.currentTarget.style.backgroundColor = '#e53935')}
+                    aria-label="Volver"
+                  >
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <polyline points="15 18 9 12 15 6"/>
+                    </svg>
+                  </button>
                   <PropertyGallery
                     images={galleryImages}
                     title={property.title}
@@ -185,23 +182,21 @@ export default function PropertyDetailPage() {
 
                 {/* Título, precio, stats */}
                 <div ref={titleBlockRef} style={{ marginBottom: 24 }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
-                    <span style={{ fontFamily: FONT, fontSize: 11, fontWeight: 700, color: '#f32735', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+                  <h1 style={{ fontFamily: FONT, fontSize: 'clamp(22px, 3.5vw, 34px)', fontWeight: 900, color: '#1a1a1a', lineHeight: 1.15, letterSpacing: '-0.3px', margin: '0 0 8px 0' }}>{property.title}</h1>
+
+                  <p style={{ fontFamily: FONT, fontSize: 'clamp(22px, 3.2vw, 36px)', fontWeight: 900, color: '#f32735', lineHeight: 1.1, letterSpacing: '-0.5px', margin: '0 0 10px 0' }}>{property.price}</p>
+
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 24 }}>
+                    <span style={{ fontFamily: FONT, fontSize: 12, fontWeight: 500, color: '#909090' }}>
                       {property.businessType === 'Comprar' ? 'Venta' : 'Arriendo'}
                     </span>
-                    <span style={{ fontFamily: FONT, fontSize: 11, fontWeight: 500, color: '#909090', letterSpacing: '0.06em', textTransform: 'uppercase' }}>{property.type}</span>
-                    <span style={{ fontFamily: FONT, fontSize: 11, fontWeight: 500, color: '#909090', letterSpacing: '0.06em' }}>
-                      Ref. {property.reference.replace('Ref. ', '')}
+                    <span style={{ color: '#ccc' }}>·</span>
+                    <span style={{ fontFamily: FONT, fontSize: 12, fontWeight: 500, color: '#909090' }}>{property.type}</span>
+                    <span style={{ color: '#ccc' }}>·</span>
+                    <span style={{ fontFamily: FONT, fontSize: 12, fontWeight: 500, color: '#909090' }}>
+                      Código inmueble {property.reference.replace('Ref. ', '')}
                     </span>
                   </div>
-
-                  <h1 style={{ fontFamily: FONT, fontSize: 'clamp(22px, 3.5vw, 34px)', fontWeight: 900, color: '#1a1a1a', lineHeight: 1.15, letterSpacing: '-0.3px', margin: '0 0 8px 0' }}>{property.title}</h1>
-                  <p style={{ fontFamily: FONT, fontSize: 13, fontWeight: 500, color: '#808080', display: 'flex', alignItems: 'center', gap: 5, margin: '0 0 16px 0' }}>
-                    <img src="/icons/icon-location-red.gif" alt="" width="14" height="14" style={{ flexShrink: 0, objectFit: 'contain' }} />
-                    {property.address || property.location}
-                  </p>
-
-                  <p style={{ fontFamily: FONT, fontSize: 'clamp(22px, 3.2vw, 36px)', fontWeight: 900, color: '#f32735', lineHeight: 1.1, letterSpacing: '-0.5px', margin: '0 0 24px 0' }}>{property.price}</p>
 
                   {/* Stats grid */}
                   <div
@@ -309,7 +304,11 @@ export default function PropertyDetailPage() {
                   {/* Mapa */}
                   {property.latitude && property.longitude && (
                     <ScrollReveal y={16} className="mt-6">
-                      <h2 className="text-lg font-bold text-gray-900 mb-4">Ubicación</h2>
+                      <h2 className="text-lg font-bold text-gray-900 mb-2">Ubicación</h2>
+                      <p style={{ fontFamily: FONT, fontSize: 13, fontWeight: 500, color: '#808080', display: 'flex', alignItems: 'center', gap: 5, margin: '0 0 12px 0' }}>
+                        <img src="/icons/icon-location-red.gif" alt="" width="14" height="14" style={{ flexShrink: 0, objectFit: 'contain' }} />
+                        {property.address || property.location}
+                      </p>
                       <MapComponent
                         latitude={property.latitude}
                         longitude={property.longitude}
