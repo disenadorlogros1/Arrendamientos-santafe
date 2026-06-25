@@ -207,8 +207,8 @@ export default function Header({ currentPage, onNavigate, isHeroPage = true, dar
                         <button
                           key={sub.label}
                           onClick={() => { if (sub.page) handleNav(sub.page, sub.filter); }}
-                          className="block w-full text-left px-5 py-2.5 text-[15px] hover:text-white hover:bg-brand-red transition-colors duration-150"
-                          style={{ fontFamily: "'Avenir LT Std', 'Outfit', system-ui, sans-serif", fontWeight: 300, color: '#666' }}
+                          className="block w-full text-left px-5 py-2.5 text-[15px] text-gray-600 hover:text-white hover:bg-brand-red transition-colors duration-150"
+                          style={{ fontFamily: "'Avenir LT Std', 'Outfit', system-ui, sans-serif", fontWeight: 300 }}
                         >
                           {sub.label}
                         </button>
