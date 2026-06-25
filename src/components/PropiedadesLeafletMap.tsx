@@ -119,13 +119,12 @@ export default function PropiedadesLeafletMap({ properties, onBoundsChange, onHo
         const marker = L.marker([p.latitude!, p.longitude!], { icon })
           .addTo(layerRef.current);
 
-        // Hover: usa mouseleave en el elemento DOM para evitar falsos mouseout entre hijos
-        marker.on('add', () => {
-          const el = marker.getElement();
-          if (!el) return;
+        // Usar mouseenter/mouseleave en el elemento DOM directamente (evita falsos mouseout entre hijos)
+        const el = marker.getElement();
+        if (el) {
           el.addEventListener('mouseenter', () => { if (hoverRef.current) hoverRef.current(p); });
           el.addEventListener('mouseleave', () => { if (hoverRef.current) hoverRef.current(null); });
-        });
+        }
 
         // Clic: abre la ficha de la propiedad
         marker.on('click', () => {
