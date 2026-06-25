@@ -30,7 +30,6 @@ export default function PropertyDetailPage() {
   const galleryRef     = useRef<HTMLDivElement>(null);
   const titleBlockRef  = useRef<HTMLDivElement>(null);
   const formRef        = useRef<HTMLDivElement>(null);
-  const statsRef       = useRef<HTMLDivElement>(null);
   const detailsRef     = useRef<HTMLDivElement>(null);
   const charsRef       = useRef<HTMLDivElement>(null);
   const whatsappBtnRef = useRef<HTMLAnchorElement>(null);
@@ -61,20 +60,6 @@ export default function PropertyDetailPage() {
 
       // Stage 4: sticky form panel (200ms)
       tl.from(formRef.current, { opacity: 0, y: 20, duration: 0.45 }, 0.20);
-
-      // Stats grid stagger (scroll-triggered count-up feel)
-      if (statsRef.current) {
-        const statItems = statsRef.current.querySelectorAll('.stat-item');
-        gsap.from(statItems, {
-          opacity: 0,
-          y: 12,
-          scale: 0.95,
-          duration: 0.35,
-          stagger: 0.06,
-          ease: 'back.out(1.4)',
-          scrollTrigger: { trigger: statsRef.current, start: 'top 85%', once: true },
-        });
-      }
 
       // Detail cards stagger
       if (detailsRef.current) {
@@ -198,49 +183,6 @@ export default function PropertyDetailPage() {
                     </span>
                   </div>
 
-                  {/* Stats grid */}
-                  <div
-                    ref={statsRef}
-                    style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16, padding: '16px 0', borderTop: '1px solid #e8e8e8', borderBottom: '1px solid #e8e8e8' }}
-                  >
-                    {property.bedrooms > 0 && (
-                      <div className="stat-item" style={{ textAlign: 'center' }}>
-                        <div style={{ fontFamily: FONT, fontSize: 28, fontWeight: 900, color: '#1a1a1a', lineHeight: 1.1 }}>{property.bedrooms}</div>
-                        <div style={{ fontFamily: FONT, fontSize: 11, fontWeight: 600, color: '#909090', letterSpacing: '0.07em', textTransform: 'uppercase', marginTop: 2 }}>
-                          Habitación{property.bedrooms > 1 ? 'es' : ''}
-                        </div>
-                      </div>
-                    )}
-                    {property.bathrooms > 0 && (
-                      <div className="stat-item" style={{ textAlign: 'center' }}>
-                        <div style={{ fontFamily: FONT, fontSize: 28, fontWeight: 900, color: '#1a1a1a', lineHeight: 1.1 }}>{property.bathrooms}</div>
-                        <div style={{ fontFamily: FONT, fontSize: 11, fontWeight: 600, color: '#909090', letterSpacing: '0.07em', textTransform: 'uppercase', marginTop: 2 }}>Baños</div>
-                      </div>
-                    )}
-                    <div className="stat-item" style={{ textAlign: 'center' }}>
-                      <div style={{ fontFamily: FONT, fontSize: 28, fontWeight: 900, color: '#1a1a1a', lineHeight: 1.1 }}>{property.size}</div>
-                      <div style={{ fontFamily: FONT, fontSize: 11, fontWeight: 600, color: '#909090', letterSpacing: '0.07em', textTransform: 'uppercase', marginTop: 2 }}>Área</div>
-                    </div>
-                    {property.stratum && (
-                      <div className="stat-item" style={{ textAlign: 'center' }}>
-                        <div style={{ fontFamily: FONT, fontSize: 28, fontWeight: 900, color: '#1a1a1a', lineHeight: 1.1 }}>Est. {property.stratum}</div>
-                        <div style={{ fontFamily: FONT, fontSize: 11, fontWeight: 600, color: '#909090', letterSpacing: '0.07em', textTransform: 'uppercase', marginTop: 2 }}>Estrato</div>
-                      </div>
-                    )}
-                    {property.parking && (
-                      <div className="stat-item" style={{ textAlign: 'center' }}>
-                        <div style={{ fontFamily: FONT, fontSize: 28, fontWeight: 900, color: '#1a1a1a', lineHeight: 1.1 }}>{property.parking}</div>
-                        <div style={{ fontFamily: FONT, fontSize: 11, fontWeight: 600, color: '#909090', letterSpacing: '0.07em', textTransform: 'uppercase', marginTop: 2 }}>Parqueaderos</div>
-                      </div>
-                    )}
-                    {property.garage && (
-                      <div className="stat-item" style={{ textAlign: 'center' }}>
-                        <div style={{ fontFamily: FONT, fontSize: 28, fontWeight: 900, color: '#1a1a1a', lineHeight: 1.1 }}>{property.garage}</div>
-                        <div style={{ fontFamily: FONT, fontSize: 11, fontWeight: 600, color: '#909090', letterSpacing: '0.07em', textTransform: 'uppercase', marginTop: 2 }}>Garajes</div>
-                      </div>
-                    )}
-                  </div>
-
                   {/* Descripción */}
                   {property.description && (
                     <ScrollReveal y={12} delay={0}>
@@ -315,7 +257,6 @@ export default function PropertyDetailPage() {
                         title={property.title}
                         businessType={property.businessType || 'Arrendar'}
                       />
-                      <p className="text-xs text-gray-500 mt-2">© OpenStreetMap contributors © CARTO</p>
                     </ScrollReveal>
                   )}
 

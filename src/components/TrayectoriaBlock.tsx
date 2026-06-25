@@ -113,107 +113,48 @@ export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) 
         {/* Timeline — ocupa el espacio donde estaban las stats */}
         <div style={{ flex: 1, overflow: 'hidden', borderBottom: '1px solid #f0f0f0' }}>
 
-          {/* Etiqueta "Línea de tiempo" */}
-          <p
-            className="px-8 sm:px-10 lg:px-12"
-            style={{
-              fontFamily: FONT_BODY,
-              fontWeight: 600,
-              fontSize: '11px',
-              letterSpacing: '0.12em',
-              color: '#bbb',
-              textTransform: 'uppercase',
-              margin: '32px 0 0',
-            }}
-          >
-            Línea de tiempo
-          </p>
-
           {/* Timeline horizontal */}
-          <div className="relative overflow-x-auto" style={{ padding: '0 0 32px' }}>
+          <div className="relative overflow-x-auto" style={{ padding: '32px 0' }}>
             <div
               className="flex min-w-max lg:min-w-full px-8 sm:px-10 lg:px-12"
-              style={{ gap: '8px', paddingTop: '28px', paddingBottom: '8px' }}
+              style={{ gap: '8px' }}
             >
-              {HITOS.map((hito, i) => {
-                const above = i % 2 === 0;
-                return (
+              {HITOS.map((hito) => (
+                <div
+                  key={hito.year}
+                  className="flex flex-col items-center flex-1"
+                  style={{ minWidth: '120px' }}
+                >
+                  {/* Franja de imagen con año superpuesto */}
                   <div
-                    key={hito.year}
-                    className="flex flex-col items-center flex-1"
-                    style={{ minWidth: '120px', gap: '10px' }}
+                    className="group relative z-10 overflow-hidden w-full"
+                    style={{ height: '150px' }}
                   >
-                    {/* Label — alterna arriba / abajo */}
-                    <div
-                      className="flex items-end"
-                      style={{ height: '64px', visibility: above ? 'visible' : 'hidden' }}
-                    >
-                      <p
-                        style={{
-                          fontFamily: FONT_BODY,
-                          fontSize: 'clamp(10px, 0.72vw, 11px)',
-                          fontWeight: 400,
-                          color: '#888',
-                          lineHeight: 1.45,
-                          textAlign: 'center',
-                          margin: 0,
-                        }}
-                      >
-                        {hito.label}
-                      </p>
-                    </div>
-
-                    {/* Franja de imagen con año superpuesto */}
-                    <div
-                      className="group relative z-10 overflow-hidden w-full"
-                      style={{ height: '150px' }}
-                    >
-                      <img
-                        src={hito.img}
-                        alt={hito.year}
-                        className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
-                        style={{ objectPosition: hito.objectPos }}
-                      />
-                      <div style={{
-                        position: 'absolute', bottom: 0, left: 0, right: 0,
-                        background: 'linear-gradient(to top, rgba(0,0,0,0.72) 0%, transparent 100%)',
-                        padding: '20px 0 6px',
-                        textAlign: 'center',
+                    <img
+                      src={hito.img}
+                      alt={hito.year}
+                      className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
+                      style={{ objectPosition: hito.objectPos }}
+                    />
+                    <div style={{
+                      position: 'absolute', bottom: 0, left: 0, right: 0,
+                      background: 'linear-gradient(to top, rgba(0,0,0,0.72) 0%, transparent 100%)',
+                      padding: '20px 0 6px',
+                      textAlign: 'center',
+                    }}>
+                      <span style={{
+                        fontFamily: "'Avenir LT Std', system-ui, sans-serif",
+                        fontSize: 'clamp(14px, 1.3vw, 18px)',
+                        fontWeight: 900,
+                        color: '#fff',
+                        lineHeight: 1,
                       }}>
-                        <span style={{
-                          fontFamily: "'Avenir LT Std', system-ui, sans-serif",
-                          fontSize: 'clamp(14px, 1.3vw, 18px)',
-                          fontWeight: 900,
-                          color: '#fff',
-                          lineHeight: 1,
-                        }}>
-                          {hito.year}
-                        </span>
-                      </div>
-                    </div>
-
-                    {/* Label — abajo para los ítems impares */}
-                    <div
-                      className="flex items-start"
-                      style={{ height: '64px', visibility: above ? 'hidden' : 'visible' }}
-                    >
-                      <p
-                        style={{
-                          fontFamily: FONT_BODY,
-                          fontSize: 'clamp(10px, 0.72vw, 11px)',
-                          fontWeight: 400,
-                          color: '#888',
-                          lineHeight: 1.45,
-                          textAlign: 'center',
-                          margin: 0,
-                        }}
-                      >
-                        {hito.label}
-                      </p>
+                        {hito.year}
+                      </span>
                     </div>
                   </div>
-                );
-              })}
+                </div>
+              ))}
             </div>
           </div>
         </div>

@@ -22,7 +22,7 @@ export default function Footer({ onNavigate }: FooterProps = {}) {
   return (
     <footer className="relative bg-brand-dark text-white" style={{ zIndex: 5 }}>
       <div className="mx-auto max-w-[64rem] px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
           {/* Marca */}
           <div className="space-y-4">
             <img
@@ -147,7 +147,7 @@ export default function Footer({ onNavigate }: FooterProps = {}) {
             </ul>
           </div>
 
-          {/* Contacto y horarios */}
+          {/* Contacto */}
           <div>
             <h4 className="font-semibold text-sm uppercase tracking-wider mb-4 text-white/80">
               Contacto
@@ -182,18 +182,24 @@ export default function Footer({ onNavigate }: FooterProps = {}) {
                   santafe@arrendamientossantafe.com
                 </a>
               </li>
-              <li className="flex items-start gap-2 text-sm text-white/60 pt-2 border-t border-white/10">
-                <Clock className="h-4 w-4 mt-0.5 text-brand-red shrink-0" />
-                <span>
-                  <strong className="text-white/80 block">Horarios</strong>
-                  <span className="block mt-1">Lunes a viernes:</span>
-                  <span className="block">8:00 a.m. – 12:00 m.</span>
-                  <span className="block">1:00 p.m. – 5:00 p.m.</span>
-                  <span className="block mt-1">Sábado:</span>
-                  <span className="block">8:00 a.m. – 1:00 p.m.</span>
-                </span>
-              </li>
             </ul>
+          </div>
+
+          {/* Horarios */}
+          <div>
+            <h4 className="font-semibold text-sm uppercase tracking-wider mb-4 text-white/80">
+              Horarios
+            </h4>
+            <div className="flex items-start gap-2 text-sm text-white/60">
+              <Clock className="h-4 w-4 mt-0.5 text-brand-red shrink-0" />
+              <span>
+                <span className="block font-medium text-white/80">Lunes a viernes:</span>
+                <span className="block">8:00 a.m. – 12:00 m.</span>
+                <span className="block">1:00 p.m. – 5:00 p.m.</span>
+                <span className="block mt-2 font-medium text-white/80">Sábado:</span>
+                <span className="block">8:00 a.m. – 1:00 p.m.</span>
+              </span>
+            </div>
           </div>
         </div>
 
