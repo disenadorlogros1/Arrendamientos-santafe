@@ -264,7 +264,7 @@ export default function PropiedadesPage({ initialFilter = 'Todos' }: { initialFi
       {/* Map panel — solo desktop */}
       {showMap && (
         <>
-        <div className="hidden lg:block" style={{ position: 'relative' }}>
+        <div className="hidden lg:block" style={{ position: 'relative', zIndex: 2 }}>
           <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '0 clamp(16px, 3vw, 52px)' }}>
 
             {/* ── Modo normal: cards izquierda + mapa derecha ── */}
@@ -342,15 +342,18 @@ export default function PropiedadesPage({ initialFilter = 'Todos' }: { initialFi
               );
             })()}
 
-            {/* ── Modo expandido: mapa full width + carrusel inferior ── */}
-            {mapExpanded && (
-              <div style={{ boxShadow: '0 10px 48px rgba(0,0,0,0.22), 0 2px 8px rgba(0,0,0,0.10)', overflow: 'hidden' }}>
-                {/* Mapa ancho completo */}
-                <div style={{ position: 'relative', height: '520px' }}>
+            {/* ── Modo expandido: mapa full width + carrusel flotante inferior ── */}
+            {mapExpanded && (() => {
+              const mapProps = (visibleInMap.length > 0 ? visibleInMap : filtered).slice(0, 4);
+              return (
+                <div style={{ boxShadow: '0 10px 48px rgba(0,0,0,0.22), 0 2px 8px rgba(0,0,0,0.10)', overflow: 'hidden', position: 'relative', height: '520px' }}>
+                  {/* Mapa — ocupa todo el contenedor */}
                   <PropiedadesLeafletMap
                     properties={filtered}
                     onBoundsChange={setVisibleInMap}
                   />
+
+                  {/* Botones flotantes — superior derecha */}
                   <div style={{ position: 'absolute', top: 12, right: 12, zIndex: 1000, display: 'flex', alignItems: 'center', gap: '8px' }}>
                     <MapFloatButton label="Reducir mapa" onClick={() => setMapExpanded(false)}>
                       <span style={{ fontSize: '16px', lineHeight: 1, fontWeight: 300 }}>−</span>
@@ -361,26 +364,31 @@ export default function PropiedadesPage({ initialFilter = 'Todos' }: { initialFi
                       </svg>
                     </MapFloatButton>
                   </div>
-                </div>
 
-                {/* Carrusel horizontal de propiedades visibles en el mapa */}
-                {(visibleInMap.length > 0 ? visibleInMap : filtered).length > 0 && (
-                  <div style={{ background: '#f5f5f5', padding: '16px' }}>
-                    <p style={{ fontFamily: FONT_BODY, fontSize: '12px', color: '#999', margin: '0 0 12px 0', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
-                      {(visibleInMap.length > 0 ? visibleInMap : filtered).length} propiedad{(visibleInMap.length > 0 ? visibleInMap : filtered).length !== 1 ? 'es' : ''} en esta zona
-                    </p>
-                    <div className="red-scrollbar" style={{
-                      display: 'flex', gap: '12px', overflowX: 'auto',
-                      paddingBottom: '8px',
+                  {/* Carrusel flotante — inferior, máx 4 cards, idéntico al modo pequeño */}
+                  {mapProps.length > 0 && (
+                    <div style={{
+                      position: 'absolute', bottom: 0, left: 0, right: 0,
+                      zIndex: 500,
+                      background: 'linear-gradient(to top, rgba(0,0,0,0.72) 0%, transparent 100%)',
+                      padding: '32px 16px 14px',
                     }}>
-                      {(visibleInMap.length > 0 ? visibleInMap : filtered).map(property => (
-                        <PropertyCard key={property.id} property={property} />
-                      ))}
+                      <p style={{ fontFamily: FONT_BODY, fontSize: '11px', color: 'rgba(255,255,255,0.7)', margin: '0 0 10px 0', textTransform: 'uppercase', letterSpacing: '0.08em', fontWeight: 600 }}>
+                        {(visibleInMap.length > 0 ? visibleInMap : filtered).length} propiedades en esta zona
+                      </p>
+                      <div className="red-scrollbar" style={{ display: 'flex', gap: '12px', overflowX: 'auto', paddingBottom: '4px' }}>
+                        {mapProps.map(property => (
+                          <div key={property.id} style={{ width: '200px', minWidth: '200px', flexShrink: 0, borderRadius: '6px', overflow: 'hidden', cursor: 'pointer' }}
+                            onClick={() => { window.location.href = `/propiedad/${property.id}`; }}>
+                            <PropertyCard property={property} />
+                          </div>
+                        ))}
+                      </div>
                     </div>
-                  </div>
-                )}
-              </div>
-            )}
+                  )}
+                </div>
+              );
+            })()}
 
           </div>
         </div>
