@@ -83,17 +83,14 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
   // Refs for scroll-driven clip-path panels
   const panelARef = useRef<HTMLDivElement>(null);
   const clipARef  = useRef<HTMLDivElement>(null);
-  const bgARef    = useRef<HTMLDivElement>(null);
   const gradARef  = useRef<HTMLDivElement>(null);
 
   const panelBRef = useRef<HTMLDivElement>(null);
   const clipBRef  = useRef<HTMLDivElement>(null);
-  const bgBRef    = useRef<HTMLDivElement>(null);
   const gradBRef  = useRef<HTMLDivElement>(null);
 
   const panelCRef = useRef<HTMLDivElement>(null);
   const clipCRef  = useRef<HTMLDivElement>(null);
-  const bgCRef    = useRef<HTMLDivElement>(null);
   const gradCRef  = useRef<HTMLDivElement>(null);
 
   // titleAnimating-driven animations
@@ -136,17 +133,14 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
 
       // Panel A: scroll [0, 0.88] — left reveal
       tl.to(clipARef.current, { clipPath: 'inset(0 0 0 0%)', ease: 'none', duration: D }, 0);
-      tl.to(bgARef.current,   { opacity: 0,                  ease: 'none', duration: D }, 0);
       tl.to(gradARef.current, { opacity: 1,                  ease: 'none', duration: D * 0.7 }, D * 0.3);
 
       // Panel B: scroll [0.06, 0.94] — bottom reveal
       tl.to(clipBRef.current, { clipPath: 'inset(0 0 0% 0)', ease: 'none', duration: D }, 0.06);
-      tl.to(bgBRef.current,   { opacity: 0,                  ease: 'none', duration: D }, 0.06);
       tl.to(gradBRef.current, { opacity: 1,                  ease: 'none', duration: D * 0.7 }, 0.06 + D * 0.3);
 
       // Panel C: scroll [0.12, 1.0] — right reveal
       tl.to(clipCRef.current, { clipPath: 'inset(0 0% 0 0)', ease: 'none', duration: D }, 0.12);
-      tl.to(bgCRef.current,   { opacity: 0,                  ease: 'none', duration: D }, 0.12);
       tl.to(gradCRef.current, { opacity: 1,                  ease: 'none', duration: D * 0.7 }, 0.12 + D * 0.3);
 
       // Panel entry animations
@@ -248,10 +242,6 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
             className="group"
             style={{ gridColumn: '1 / 3', gridRow: '1', position: 'relative', overflow: 'hidden' }}
           >
-            <div ref={bgARef} style={{
-              position: 'absolute', left: 0, top: 0, width: '50%', height: '100%',
-              background: '#2d2d2d', zIndex: 1,
-            }} />
             <div ref={clipARef} style={{ position: 'absolute', inset: 0, zIndex: 0, overflow: 'hidden' }}>
               <div
                 className="absolute inset-0 transition-transform duration-[650ms] ease-out group-hover:scale-[1.06]"
@@ -272,10 +262,6 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
             className="group"
             style={{ gridColumn: '3', gridRow: '1 / 3', position: 'relative', overflow: 'hidden' }}
           >
-            <div ref={bgBRef} style={{
-              position: 'absolute', bottom: 0, left: 0, width: '100%', height: '50%',
-              background: '#2d2d2d', zIndex: 1,
-            }} />
             <div ref={clipBRef} style={{ position: 'absolute', inset: 0, zIndex: 0, overflow: 'hidden' }}>
               <div
                 className="absolute inset-0 transition-transform duration-[650ms] ease-out group-hover:scale-[1.06]"
@@ -296,10 +282,6 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
             className="group"
             style={{ gridColumn: '1 / 3', gridRow: '2', position: 'relative', overflow: 'hidden' }}
           >
-            <div ref={bgCRef} style={{
-              position: 'absolute', right: 0, top: 0, width: '50%', height: '100%',
-              background: '#2d2d2d', zIndex: 1,
-            }} />
             <div ref={clipCRef} style={{ position: 'absolute', inset: 0, zIndex: 0, overflow: 'hidden' }}>
               <div
                 className="absolute inset-0 transition-transform duration-[650ms] ease-out group-hover:scale-[1.06]"
