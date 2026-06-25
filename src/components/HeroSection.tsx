@@ -82,7 +82,7 @@ export default function HeroSection({ onNavigate, searchFormSlot }: HeroSectionP
 
           {/* Contenido — empujado hacia el buscador inferior */}
           <div
-            className="relative flex-1 flex flex-col items-center justify-end px-8 pb-12 pt-16 sm:px-14 sm:pb-14 lg:px-16 lg:pb-16"
+            className="relative flex-1 flex flex-col items-center justify-end px-4 pb-12 pt-16 sm:px-8 sm:pb-14 md:px-14 lg:px-16 lg:pb-16"
             style={{ zIndex: 10 }}
           >
             <div style={{ maxWidth: '700px', width: '100%', textAlign: 'center' }}>

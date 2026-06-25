@@ -36,7 +36,7 @@ function applyInkFill(e: React.MouseEvent<HTMLElement>) {
 // → CARD_W = containerWidth / (VISIBLE + (VISIBLE-1)*0.15)
 const GAP_RATIO = 0.15;
 const NAV_W     = 40;  // px ancho botón flecha
-const NAV_OFF   = 16;  // px desde el borde de la card hasta la flecha
+const NAV_OFF_BASE = 16; // px desde el borde de la card hasta la flecha
 const INFO_H    = 90;  // px altura aprox. del panel de info inferior
 
 export default function InfiniteCarousel({ properties }: InfiniteCarouselProps) {
@@ -84,6 +84,7 @@ export default function InfiniteCarousel({ properties }: InfiniteCarouselProps) 
 
   // Flecha: centrada verticalmente en la zona de imagen (descontando INFO_H)
   const arrowTopPx = CARD_H > 0 ? Math.round((CARD_H - INFO_H) / 2) : 0;
+  const NAV_OFF = Math.max(8, Math.round(containerWidth * 0.02)) || NAV_OFF_BASE;
 
   const visibleCards = Array.from({ length: VISIBLE + 1 }, (_, i) => {
     const idx = (startIndex + i) % cards.length;
@@ -143,7 +144,7 @@ export default function InfiniteCarousel({ properties }: InfiniteCarouselProps) 
       onMouseLeave={() => { isPaused.current = false; }}
     >
       {/* Track con clip — padding extra para que las sombras no se corten */}
-      <div ref={containerRef} style={{ overflow: 'hidden', width: '100%', paddingTop: '32px', marginTop: '-32px', paddingBottom: '32px', marginBottom: '-32px' }}>
+      <div ref={containerRef} style={{ overflow: 'hidden', width: '100%', paddingTop: 'clamp(12px,3vw,32px)', marginTop: 'clamp(-32px,-3vw,-12px)', paddingBottom: 'clamp(12px,3vw,32px)', marginBottom: 'clamp(-32px,-3vw,-12px)' }}>
         {CARD_W > 0 && (
           <div
             ref={trackRef}

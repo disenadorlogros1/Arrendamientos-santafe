@@ -169,7 +169,7 @@ function PriceSelect({
   const display  = pristine ? null : `${fmtCOP(low)} – ${fmtCOP(high)}`;
 
   const dropdown = mounted && open ? (
-    <div ref={dropdownRef} style={{ position: 'fixed', top: pos.top, left: pos.left, width: pos.width, zIndex: 49 }}>
+    <div ref={dropdownRef} style={{ position: 'fixed', top: pos.top, left: pos.left, width: pos.width, zIndex: 9999 }}>
       <div className="bg-white shadow-2xl border border-gray-100" style={{ padding: '16px 20px 22px' }}>
         <PriceRangeSlider min={min} max={max} step={step} value={value} onChange={onChange} />
       </div>
@@ -287,7 +287,7 @@ function CustomSelect({
   const selectOption = (opt: string) => { onChange(opt); setOpen(false); setQuery(''); };
 
   const dropdown = mounted && open ? (
-    <div ref={dropdownRef} style={{ position: 'fixed', top: pos.top, left: pos.left, width: pos.width, zIndex: 49 }}>
+    <div ref={dropdownRef} style={{ position: 'fixed', top: pos.top, left: pos.left, width: pos.width, zIndex: 9999 }}>
       <div className="bg-white shadow-2xl border border-gray-100 max-h-[240px] overflow-y-auto custom-scrollbar">
         {filtered.length === 0
           ? <p style={{ fontFamily: FONT, fontSize: '13px', padding: '10px 16px', color: '#aaa' }}>Sin resultados</p>
@@ -544,8 +544,8 @@ export default function SearchForm({ onNavigate }: SearchFormProps) {
         {/* Filtros: animan con max-height cuando hay tab activo */}
         <div
           style={{
-            maxHeight: searchType ? '260px' : '0px',
-            overflow: 'hidden',
+            maxHeight: searchType ? 'min(400px, calc(100dvh - 180px))' : '0px',
+            overflow: searchType ? 'auto' : 'hidden',
             transition: 'max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1)',
             background: '#fff',
           }}

@@ -61,7 +61,7 @@ export default function PropertyCard({ property }: PropertyCardProps) {
           onClick={(e) => { e.stopPropagation(); handleViewMore(); }}
           className="card-arrow-btn absolute top-3 right-3 flex items-center justify-center rounded-full"
           aria-label="Ver propiedad"
-          style={{ width: '36px', height: '36px' }}
+          style={{ width: '44px', height: '44px' }}
         >
           <span className="arr-primary">
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none">

@@ -120,7 +120,7 @@ export default function QuickAccessGrid({ onNavigate }: QuickAccessGridProps) {
           </p>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 sm:gap-4">
           {items.map((item) => {
             const Icon = item.icon;
             const content = (

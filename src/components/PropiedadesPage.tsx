@@ -29,10 +29,10 @@ function MapFloatButton({
       onMouseLeave={() => setHovered(false)}
       style={{
         display: 'flex', alignItems: 'center', flexDirection: 'row',
-        height: '36px',
+        height: '44px',
         padding: hovered ? '0 14px 0 12px' : '0',
-        width: hovered ? 'auto' : '36px',
-        borderRadius: '18px',
+        width: hovered ? 'auto' : '44px',
+        borderRadius: '22px',
         background: hovered ? bgHov : bg,
         backdropFilter: 'blur(6px)',
         border: '1px solid rgba(255,255,255,0.22)',
@@ -270,7 +270,7 @@ export default function PropiedadesPage({ initialFilter = 'Todos' }: { initialFi
                   <div style={{
                     display: 'grid',
                     gridTemplateColumns: '1fr 1fr',
-                    gap: '10px',
+                    gap: '20px',
                     height: '100%',
                   }}>
                     {cardsToShow.map(property => {
@@ -281,7 +281,7 @@ export default function PropiedadesPage({ initialFilter = 'Todos' }: { initialFi
                           onClick={() => { window.location.href = `/propiedad/${property.id}`; }}
                           style={{
                             cursor: 'pointer',
-                            transform: isHovered ? 'scale(1.08)' : 'scale(1)',
+                            transform: isHovered ? 'scale(1.05)' : 'scale(1)',
                             transition: 'transform 0.22s cubic-bezier(0.34,1.56,0.64,1)',
                             transformOrigin: 'center',
                             position: 'relative',

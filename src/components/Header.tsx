@@ -266,7 +266,7 @@ export default function Header({ currentPage, onNavigate, isHeroPage = true, dar
                 <img src={isDark ? "/icons/icon-menu-white.gif" : "/icons/icon-menu-black.gif"} alt="Menú" className="h-5 w-5" />
               </button>
             </SheetTrigger>
-            <SheetContent side="right" className="w-80 bg-brand-dark border-brand-dark-secondary p-0">
+            <SheetContent side="right" className="w-[min(90vw,320px)] bg-brand-dark border-brand-dark-secondary p-0">
               <SheetTitle className="sr-only">Menú de navegación</SheetTitle>
               <div className="flex flex-col h-full">
                 <div className="flex items-center justify-between p-4 border-b border-white/10">

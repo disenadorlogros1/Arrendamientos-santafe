@@ -1094,7 +1094,7 @@ export default function PropertyGallery({ images, title, stats }: PropertyGaller
           to   { opacity: 1; transform: scale(1);    }
         }
       `}</style>
-      <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gridTemplateRows: '1fr 1fr', gap: 4, height: 420, marginBottom: 24, borderRadius: 8, overflow: 'hidden' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gridTemplateRows: '1fr 1fr', gap: 4, height: 'clamp(220px, 45vw, 420px)', marginBottom: 24, borderRadius: 8, overflow: 'hidden' }}>
         <MainPreviewCell
           img={images[previewIdx] ?? images[0]}
           alt={title}

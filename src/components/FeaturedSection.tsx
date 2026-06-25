@@ -22,7 +22,7 @@ export default function FeaturedSection({ onNavigate }: FeaturedSectionProps) {
 
       {/* Header: título + botón — sin línea gris */}
       <div
-        className="flex items-center justify-between px-6 sm:px-10 lg:px-14"
+        className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-6 px-4 sm:px-10 lg:px-14"
         style={{ paddingTop: '28px', paddingBottom: '20px' }}
       >
         <h2
@@ -46,7 +46,7 @@ export default function FeaturedSection({ onNavigate }: FeaturedSectionProps) {
             onNavigate('propiedades');
             window.scrollTo({ top: 0, behavior: 'smooth' });
           }}
-          className="flex items-center justify-center transition-colors duration-200 sm:w-[340px] w-auto"
+          className="flex items-center justify-center transition-colors duration-200 w-full sm:w-[340px]"
           style={{
             background: '#888888',
             color: '#fff',

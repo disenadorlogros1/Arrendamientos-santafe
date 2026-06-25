@@ -177,7 +177,7 @@ export default function InstitucionalPage({ onNavigate }: InstitucionalPageProps
             </p>
           </ScrollReveal>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
             {team.map((member, i) => (
               <ScrollReveal key={member.name} delay={i * 0.1} y={30}>
                 <div className="text-center">
