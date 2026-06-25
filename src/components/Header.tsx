@@ -156,7 +156,7 @@ export default function Header({ currentPage, onNavigate, isHeroPage = true, dar
       <div className="flex items-center h-[58px] gap-3">
         {/* Logo */}
         <button onClick={() => handleNav('home')} className="shrink-0">
-          <img src="/icons/icon-santa-fe-logo.png" alt="Arrendamientos Santa Fe" className="h-10 md:h-11 w-auto object-contain" style={{ filter: isDark ? 'none' : 'contrast(0) sepia(1) saturate(5000%) hue-rotate(316deg) brightness(1.05)' }} />
+          <img src={isDark ? "/icons/icon-santa-fe-logo.png" : "/icons/icon-santa-fe-logo-red.png"} alt="Arrendamientos Santa Fe" className="h-10 md:h-11 w-auto object-contain" />
         </button>
 
         {/* Nav capsula — ocupa el espacio central */}
