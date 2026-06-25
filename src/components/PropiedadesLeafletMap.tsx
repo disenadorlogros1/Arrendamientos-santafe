@@ -113,18 +113,27 @@ export default function PropiedadesLeafletMap({ properties, onBoundsChange, onHo
       popupAnchor: [0, -52],
     });
 
+    // Timer compartido para debounce del mouseout
+    let leaveTimer: ReturnType<typeof setTimeout>;
+
     properties
       .filter(p => p.latitude && p.longitude)
       .forEach(p => {
         const marker = L.marker([p.latitude!, p.longitude!], { icon })
           .addTo(layerRef.current);
 
-        // Usar mouseenter/mouseleave en el elemento DOM directamente (evita falsos mouseout entre hijos)
-        const el = marker.getElement();
-        if (el) {
-          el.addEventListener('mouseenter', () => { if (hoverRef.current) hoverRef.current(p); });
-          el.addEventListener('mouseleave', () => { if (hoverRef.current) hoverRef.current(null); });
-        }
+        // mouseover: cancela cualquier leave pendiente y activa hover
+        marker.on('mouseover', () => {
+          clearTimeout(leaveTimer);
+          if (hoverRef.current) hoverRef.current(p);
+        });
+
+        // mouseout con debounce 30ms: evita falsos resets al moverse entre hijos del divIcon
+        marker.on('mouseout', () => {
+          leaveTimer = setTimeout(() => {
+            if (hoverRef.current) hoverRef.current(null);
+          }, 30);
+        });
 
         // Clic: abre la ficha de la propiedad
         marker.on('click', () => {
@@ -137,6 +146,8 @@ export default function PropiedadesLeafletMap({ properties, onBoundsChange, onHo
       });
 
     if (mapRef.current) fireUpdate(mapRef.current);
+
+    return () => clearTimeout(leaveTimer);
   }, [ready, properties]);
 
   return (
