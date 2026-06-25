@@ -68,7 +68,6 @@ function SimilarSection({ current }: { current: import('@/data/properties').Prop
   const FILTERS: { key: SimilarFilter; label: string }[] = [
     { key: 'precio',    label: 'Precio'    },
     { key: 'ubicacion', label: 'Ubicación' },
-    { key: 'metros',    label: 'M²'        },
   ];
 
   if (similar.length === 0) return null;
@@ -108,7 +107,7 @@ function SimilarSection({ current }: { current: import('@/data/properties').Prop
       </div>
       {/* Carrusel */}
       <div style={{ flex: 1, minWidth: 0 }}>
-        <InfiniteCarousel properties={similar} />
+        <InfiniteCarousel properties={similar} maxVisible={3} />
       </div>
     </div>
   );
@@ -122,20 +121,94 @@ function DetailRow({ icon, label, value, isRight, spanFull }: { icon: string; la
       onMouseLeave={() => setHov(false)}
       style={{
         display: 'flex', alignItems: 'center', gap: 10,
-        padding: '11px 16px',
-        borderBottom: '1px solid #f0f0f0',
-        borderRight: (isRight || spanFull) ? 'none' : '1px solid #f0f0f0',
-        background: hov ? '#fafafa' : '#fff',
-        transition: 'background 0.15s',
+        padding: '11px 0',
+        borderBottom: `1px solid ${hov ? '#f32735' : '#1a1a1a'}`,
+        background: '#fff',
+        transition: 'border-color 0.2s',
         gridColumn: spanFull ? 'span 2' : undefined,
+        paddingRight: (!isRight && !spanFull) ? 16 : 0,
       }}
     >
       <img
         src={icon} width="18" height="18"
-        style={{ flexShrink: 0, filter: hov ? 'none' : 'grayscale(1) opacity(0.4)', transition: 'filter 0.2s' }}
+        style={{
+          flexShrink: 0,
+          filter: hov
+            ? 'invert(16%) sepia(100%) saturate(6000%) hue-rotate(340deg) brightness(85%)'
+            : 'grayscale(1) opacity(0.4)',
+          transition: 'filter 0.2s',
+        }}
       />
       <span style={{ fontFamily: FONT, fontSize: 13, fontWeight: 700, color: '#444', flex: 1 }}>{label}</span>
-      <span style={{ fontFamily: FONT, fontSize: 13, fontWeight: 400, color: '#666' }}>{value}</span>
+      <span style={{ fontFamily: FONT, fontSize: 13, fontWeight: 400, color: hov ? '#f32735' : '#666', transition: 'color 0.2s' }}>{value}</span>
+    </div>
+  );
+}
+
+function ZoneSection({ zone, zoneLabel }: { zone: NonNullable<ReturnType<typeof getZoneBySlug>>; zoneLabel: string }) {
+  const [hovIdx, setHovIdx] = useState<number | null>(null);
+
+  const cardStyle = (idx: number): React.CSSProperties => ({
+    padding: '24px 16px',
+    flex: idx === 3 ? '0 0 clamp(90px, 11%, 130px)' : 1,
+    borderLeft: '1px solid #e8e8e8',
+    display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center',
+    transform: hovIdx === idx ? 'scale(1.06)' : hovIdx !== null && Math.abs(idx - hovIdx) === 1 ? 'scale(0.96)' : 'scale(1)',
+    zIndex: hovIdx === idx ? 5 : 1,
+    position: 'relative',
+    transition: 'transform 0.28s cubic-bezier(0.25,0.46,0.45,0.94), box-shadow 0.28s ease',
+    boxShadow: hovIdx === idx ? '0 6px 24px rgba(0,0,0,0.14)' : 'none',
+    cursor: 'default',
+    background: '#fff',
+  });
+
+  return (
+    <div style={{ display: 'flex', border: '1px solid #e8e8e8', overflow: 'visible' }}>
+      {/* Card 1 — negra, static */}
+      <div style={{ background: '#1a1a1a', padding: '24px 20px', flex: '0 0 clamp(160px, 22%, 220px)', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+        <h3 style={{ fontFamily: FONT, fontSize: 'clamp(14px, 1.1vw, 17px)', fontWeight: 700, color: '#fff', margin: 0, lineHeight: 1.3 }}>
+          {zoneLabel}
+        </h3>
+      </div>
+      {/* Card 2 — Rentabilidad */}
+      <div
+        onMouseEnter={() => setHovIdx(2)}
+        onMouseLeave={() => setHovIdx(null)}
+        style={cardStyle(2)}
+      >
+        <span style={{ fontFamily: FONT, fontSize: 12, fontWeight: 400, color: '#aaa', marginBottom: 6 }}>Rentabilidad</span>
+        <span style={{ fontFamily: FONT, fontSize: 'clamp(18px, 2.2vw, 26px)', fontWeight: 900, color: '#f32735', lineHeight: 1 }}>{zone.rentability}</span>
+      </div>
+      {/* Card 3 — Estratos */}
+      <div
+        onMouseEnter={() => setHovIdx(3)}
+        onMouseLeave={() => setHovIdx(null)}
+        style={{ ...cardStyle(3), flex: '0 0 clamp(80px, 10%, 110px)' }}
+      >
+        <span style={{ fontFamily: FONT, fontSize: 12, fontWeight: 400, color: '#aaa', marginBottom: 6 }}>Estratos</span>
+        <span style={{ fontFamily: FONT, fontSize: 'clamp(18px, 2.2vw, 26px)', fontWeight: 900, color: '#1a1a1a', lineHeight: 1 }}>{zone.strata}</span>
+      </div>
+      {/* Card 4 — Ver zona */}
+      <div
+        onMouseEnter={() => setHovIdx(4)}
+        onMouseLeave={() => setHovIdx(null)}
+        style={{ ...cardStyle(4), flex: '0 0 clamp(90px, 11%, 130px)', padding: 0 }}
+      >
+        <Link
+          href={`/inversionistas/${zone.slug}`}
+          style={{
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            width: '100%', height: '100%', minHeight: 80,
+            padding: '16px 12px', textDecoration: 'none',
+            background: hovIdx === 4 ? '#1a1a1a' : '#fff',
+            transition: 'background 0.22s ease',
+          }}
+          onMouseEnter={() => setHovIdx(4)}
+          onMouseLeave={() => setHovIdx(null)}
+        >
+          <span style={{ fontFamily: FONT, fontSize: 12, fontWeight: 700, color: hovIdx === 4 ? '#fff' : '#1a1a1a', transition: 'color 0.22s', textAlign: 'center', lineHeight: 1.3 }}>Ver zona</span>
+        </Link>
+      </div>
     </div>
   );
 }
@@ -338,7 +411,7 @@ export default function PropertyDetailPage() {
                     <ScrollReveal y={10}>
                       <h2 style={{ fontFamily: FONT, fontSize: 16, fontWeight: 700, color: '#1a1a1a', marginBottom: 16 }}>Detalles del inmueble</h2>
                     </ScrollReveal>
-                    <div ref={detailsRef} style={{ border: '1px solid #e8e8e8', display: 'grid', gridTemplateColumns: '1fr 1fr' }}>
+                    <div ref={detailsRef} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', columnGap: 32 }}>
                       {[
                         { icon: '/icons/icon-home-red.gif',      label: 'Tipo de inmueble',  value: property.type,                     show: true },
                         { icon: '/icons/icon-area-gray.gif',     label: 'Área construida',   value: property.size,                     show: true },
@@ -406,41 +479,7 @@ export default function PropertyDetailPage() {
                     const zoneLabel = isCompra ? '¿Por qué invertir en esta zona?' : '¿Por qué arrendar en esta zona?';
                     return (
                       <ScrollReveal y={16} className="mt-6">
-                        <div style={{ display: 'flex', border: '1px solid #e8e8e8', overflow: 'hidden' }}>
-                          {/* Card 1 — negra, solo pregunta */}
-                          <div style={{ background: '#1a1a1a', padding: '24px 20px', flex: '0 0 clamp(160px, 22%, 220px)', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                            <h3 style={{ fontFamily: FONT, fontSize: 'clamp(14px, 1.1vw, 17px)', fontWeight: 700, color: '#fff', margin: 0, lineHeight: 1.3 }}>
-                              {zoneLabel}
-                            </h3>
-                          </div>
-                          {/* Card 2 — Rentabilidad */}
-                          <div style={{ padding: '24px 16px', flex: 1, borderLeft: '1px solid #e8e8e8', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center' }}>
-                            <span style={{ fontFamily: FONT, fontSize: 12, fontWeight: 400, color: '#aaa', marginBottom: 6 }}>Rentabilidad</span>
-                            <span style={{ fontFamily: FONT, fontSize: 'clamp(18px, 2.2vw, 26px)', fontWeight: 900, color: '#f32735', lineHeight: 1 }}>{investmentZone.rentability}</span>
-                          </div>
-                          {/* Card 3 — Precio m² */}
-                          <div style={{ padding: '24px 16px', flex: 1, borderLeft: '1px solid #e8e8e8', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center' }}>
-                            <span style={{ fontFamily: FONT, fontSize: 12, fontWeight: 400, color: '#aaa', marginBottom: 6 }}>Precio m²</span>
-                            <span style={{ fontFamily: FONT, fontSize: 'clamp(14px, 1.4vw, 18px)', fontWeight: 900, color: '#1a1a1a', lineHeight: 1.2 }}>{investmentZone.pricePerM2}</span>
-                          </div>
-                          {/* Card 4 — Estratos */}
-                          <div style={{ padding: '24px 16px', flex: '0 0 clamp(80px, 10%, 110px)', borderLeft: '1px solid #e8e8e8', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center' }}>
-                            <span style={{ fontFamily: FONT, fontSize: 12, fontWeight: 400, color: '#aaa', marginBottom: 6 }}>Estratos</span>
-                            <span style={{ fontFamily: FONT, fontSize: 'clamp(18px, 2.2vw, 26px)', fontWeight: 900, color: '#1a1a1a', lineHeight: 1 }}>{investmentZone.strata}</span>
-                          </div>
-                          {/* Card 5 — Ver más */}
-                          <div style={{ flex: '0 0 clamp(100px, 12%, 140px)', borderLeft: '1px solid #e8e8e8', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                            <Link
-                              href={`/inversionistas/${investmentZone.slug}`}
-                              style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width: '100%', height: '100%', padding: '16px 12px', textDecoration: 'none', background: '#fff', transition: 'background 0.2s', gap: 6 }}
-                              onMouseEnter={(e: React.MouseEvent<HTMLAnchorElement>) => (e.currentTarget.style.background = '#1a1a1a')}
-                              onMouseLeave={(e: React.MouseEvent<HTMLAnchorElement>) => (e.currentTarget.style.background = '#fff')}
-                            >
-                              <span style={{ fontFamily: FONT, fontSize: 12, fontWeight: 700, color: 'inherit', textAlign: 'center', lineHeight: 1.3 }}>Ver zona</span>
-                              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-                            </Link>
-                          </div>
-                        </div>
+                        <ZoneSection zone={investmentZone} zoneLabel={zoneLabel} />
                       </ScrollReveal>
                     );
                   })()}

@@ -111,7 +111,7 @@ export default function PropertyCard({ property }: PropertyCardProps) {
 
         {/* Código de referencia */}
         <p style={{ fontFamily: FONT, fontSize: '12px', color: '#909090', fontWeight: 400, margin: 0 }}>
-          Código inmueble: {property.reference}
+          Código inmueble {property.reference.replace('Ref. ', '')}
         </p>
       </div>
     </div>

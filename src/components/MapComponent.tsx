@@ -51,7 +51,7 @@ export default function MapComponent({
             if (!mapRef.current) {
               const zoomLevel = businessType === 'Arrendar' ? 16 : 14;
 
-              mapRef.current = L.map(mapContainerRef.current).setView(
+              mapRef.current = L.map(mapContainerRef.current, { attributionControl: false }).setView(
                 [latitude, longitude],
                 zoomLevel
               );

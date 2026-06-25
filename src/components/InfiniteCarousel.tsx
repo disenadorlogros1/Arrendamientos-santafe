@@ -9,6 +9,7 @@ import type { Property } from '@/data/properties';
 interface InfiniteCarouselProps {
   properties: Property[];
   onCardWidthChange?: (width: number) => void;
+  maxVisible?: number;
 }
 
 const buildCards = (properties: Property[]) =>
@@ -41,7 +42,7 @@ const NAV_OFF_BASE = 16; // px desde el borde de la card hasta la flecha
 const INFO_H    = 90;  // px altura aprox. del panel de info inferior
 const H_PAD     = 32;  // px padding horizontal para que la sombra no se corte
 
-export default function InfiniteCarousel({ properties, onCardWidthChange }: InfiniteCarouselProps) {
+export default function InfiniteCarousel({ properties, onCardWidthChange, maxVisible }: InfiniteCarouselProps) {
   const [cards] = useState(() => buildCards(properties));
   const [startIndex, setStartIndex] = useState(0);
   const [windowWidth, setWindowWidth]       = useState(375);
@@ -74,7 +75,8 @@ export default function InfiniteCarousel({ properties, onCardWidthChange }: Infi
     return () => ro.disconnect();
   }, [isMounted]);
 
-  const VISIBLE = windowWidth < 640 ? 1 : windowWidth < 1024 ? 2 : windowWidth < 1280 ? 3 : windowWidth < 1536 ? 4 : 5;
+  const VISIBLE_RAW = windowWidth < 640 ? 1 : windowWidth < 1024 ? 2 : windowWidth < 1280 ? 3 : windowWidth < 1536 ? 4 : 5;
+  const VISIBLE = maxVisible ? Math.min(VISIBLE_RAW, maxVisible) : VISIBLE_RAW;
 
   // CARD_W y GAP resueltos simultáneamente para que gap = 15% de CARD_W
   const CARD_W = containerWidth > 0
