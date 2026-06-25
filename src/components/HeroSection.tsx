@@ -83,8 +83,8 @@ export default function HeroSection({ onNavigate, searchFormSlot }: HeroSectionP
                 className="hero-title-split text-[clamp(31px,8.8vw,53px)] sm:text-[clamp(28px,3vw,52px)]"
                 style={{
                   fontFamily: FONT_HEADING,
-                  fontWeight: 300,
-                  lineHeight: 0.77,
+                  fontWeight: 700,
+                  lineHeight: 1.1,
                   margin: 0,
                   textAlign: 'center',
                   color: '#fff',
