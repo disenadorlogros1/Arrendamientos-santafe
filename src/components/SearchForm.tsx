@@ -570,7 +570,7 @@ export default function SearchForm({ onNavigate }: SearchFormProps) {
           <div style={{ display: 'flex', alignItems: 'center', gap: '14px', padding: '13px 16px', borderBottom: '1px solid rgba(0,0,0,0.06)' }}>
             <img src="/icons/icon-location-red.gif" alt="" width={20} height={20} style={{ flexShrink: 0 }} />
             <div style={{ flex: 1, minWidth: 0 }}>
-              <p style={labelStyle}>Ubicación</p>
+              <p style={labelStyle}>Ubicación / Mapa</p>
               <CustomSelect label="Ubicación" value={sector} onChange={setSector} options={SECTORES} placeholder="Seleccionar" />
             </div>
           </div>
@@ -667,9 +667,9 @@ export default function SearchForm({ onNavigate }: SearchFormProps) {
             <div ref={el => { contentRefs.current[1] = el; }} style={contentStyle}>
               <img src="/icons/icon-location-red.gif" alt="" width={24} height={24} style={{ flexShrink: 0 }} />
               <div style={{ minWidth: 0, flex: 1 }}>
-                <p style={labelStyle}>Ubicación</p>
+                <p style={labelStyle}>Ubicación / Mapa</p>
                 <CustomSelect
-                  label="Ubicación" value={sector} onChange={setSector}
+                  label="Ubicación / Mapa" value={sector} onChange={setSector}
                   options={SECTORES} placeholder="Seleccionar"
                   onOpen={() => handleCellClick('filters')}
                   searchable

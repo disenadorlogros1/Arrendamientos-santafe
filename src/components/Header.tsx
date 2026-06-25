@@ -161,10 +161,10 @@ export default function Header({ currentPage, onNavigate, isHeroPage = true, dar
 
         {/* Nav capsula — ocupa el espacio central */}
         <div className="hidden lg:flex flex-1 justify-center min-w-0">
-        <nav className={`flex items-center justify-between gap-1 rounded-full px-2 h-[42px] border shadow-lg w-full`}
+        <nav className={`flex items-center justify-between gap-1 rounded-full p-[3px] h-[42px] border shadow-lg w-full`}
           style={{
             overflow: 'visible',
-            maxWidth: '52rem',
+            maxWidth: '64rem',
             backgroundColor: navBgColor,
             borderColor: navBorderColor,
             backdropFilter: 'blur(10px)',
@@ -188,7 +188,7 @@ export default function Header({ currentPage, onNavigate, isHeroPage = true, dar
                   );
                 })()}
                 {/* Dropdown CSS — se muestra con group-hover */}
-                <div className="absolute top-full left-1/2 pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200"
+                <div className="absolute top-full left-1/2 pt-[3px] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200"
                   style={{ transform: 'translateX(-50%)', zIndex: 60 }}>
                   <div className="bg-white rounded-2xl pt-2 pb-1 min-w-[230px] shadow-2xl border border-gray-100">
                     {item.children.map((sub) =>
