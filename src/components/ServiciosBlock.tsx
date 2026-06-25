@@ -74,17 +74,17 @@ export default function ServiciosBlock({ onNavigate: _onNavigate }: ServiciosBlo
   return (
     <section style={{ background: '#fff' }} className="w-full overflow-hidden">
 
-      {/* Título — mismo formato que FeaturedSection */}
+      {/* Título */}
       <div
         className="px-6 sm:px-10 lg:px-14"
-        style={{ paddingTop: '28px', paddingBottom: '28px' }}
+        style={{ paddingTop: '28px', paddingBottom: '28px', textAlign: 'center' }}
       >
         <h2
           style={{
             fontFamily: FONT_HEADING,
             fontWeight: 300,
             fontSize: 'clamp(26px, 2.6vw, 46px)',
-            color: RED,
+            color: '#555',
             lineHeight: 1.2,
             margin: 0,
           }}

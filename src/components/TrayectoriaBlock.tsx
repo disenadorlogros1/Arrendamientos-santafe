@@ -55,9 +55,10 @@ export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) 
               fontFamily: FONT_HEADING,
               fontWeight: 300,
               fontSize: 'clamp(24px, 2.4vw, 42px)',
-              color: RED,
+              color: '#555',
               lineHeight: 1.2,
               margin: 0,
+              width: '100%',
             }}
           >
             Inmobiliaria con{' '}
@@ -90,7 +91,7 @@ export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) 
               onNavigate('historia-60');
               window.scrollTo({ top: 0, behavior: 'smooth' });
             }}
-            className="inline-flex items-center gap-2 self-start transition-colors duration-200"
+            className="inline-flex items-center justify-center gap-2 w-full transition-colors duration-200"
             style={{
               background: RED,
               color: '#fff',

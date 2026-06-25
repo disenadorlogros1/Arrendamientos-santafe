@@ -21,8 +21,8 @@ const TIKTOK_URL = 'https://www.tiktok.com/@arrendamientossantafe';
 export default function Footer({ onNavigate }: FooterProps = {}) {
   return (
     <footer className="relative bg-brand-dark text-white" style={{ zIndex: 5 }}>
-      <div className="mx-auto max-w-[64rem] px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
+      <div className="mx-auto max-w-[88rem] px-4 sm:px-6 lg:px-8 py-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8">
           {/* Marca */}
           <div className="space-y-4">
             <img
@@ -176,10 +176,10 @@ export default function Footer({ onNavigate }: FooterProps = {}) {
               <li>
                 <a
                   href="mailto:santafe@arrendamientossantafe.com"
-                  className="flex items-center gap-2 text-sm text-white/60 hover:text-white transition-colors break-all"
+                  className="flex items-center gap-2 text-sm text-white/60 hover:text-white transition-colors"
                 >
                   <Mail className="h-4 w-4 text-brand-red shrink-0" />
-                  santafe@arrendamientossantafe.com
+                  <span className="break-words min-w-0">santafe@arrendamientossantafe.com</span>
                 </a>
               </li>
             </ul>
@@ -193,11 +193,11 @@ export default function Footer({ onNavigate }: FooterProps = {}) {
             <div className="flex items-start gap-2 text-sm text-white/60">
               <Clock className="h-4 w-4 mt-0.5 text-brand-red shrink-0" />
               <span>
-                <span className="block font-medium text-white/80">Lunes a viernes:</span>
-                <span className="block">8:00 a.m. – 12:00 m.</span>
-                <span className="block">1:00 p.m. – 5:00 p.m.</span>
-                <span className="block mt-2 font-medium text-white/80">Sábado:</span>
-                <span className="block">8:00 a.m. – 1:00 p.m.</span>
+                <span className="block font-medium text-white/80 whitespace-nowrap">Lunes a viernes:</span>
+                <span className="block whitespace-nowrap">8:00 a.m. – 12:00 m.</span>
+                <span className="block whitespace-nowrap">1:00 p.m. – 5:00 p.m.</span>
+                <span className="block mt-2 font-medium text-white/80 whitespace-nowrap">Sábado:</span>
+                <span className="block whitespace-nowrap">8:00 a.m. – 1:00 p.m.</span>
               </span>
             </div>
           </div>

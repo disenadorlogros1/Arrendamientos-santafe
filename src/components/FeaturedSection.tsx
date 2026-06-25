@@ -32,7 +32,7 @@ export default function FeaturedSection({ onNavigate }: FeaturedSectionProps) {
             fontFamily: FONT_HEADING,
             fontWeight: 300,
             fontSize: 'clamp(26px, 2.6vw, 46px)',
-            color: RED,
+            color: '#555',
             lineHeight: 1.2,
             margin: 0,
           }}
