@@ -306,7 +306,10 @@ export default function PropiedadesPage({ initialFilter = 'Todos' }: { initialFi
                 </div>
 
                 {/* Derecha: Mapa con botones flotantes — zIndex:0 contiene los z-indices internos de Leaflet */}
-                <div style={{ flex: 1, position: 'relative', overflow: 'hidden', zIndex: 0, boxShadow: '0 10px 48px rgba(0,0,0,0.22), 0 2px 8px rgba(0,0,0,0.10)' }}>
+                <div
+                  onMouseLeave={() => setHoveredMapProperty(null)}
+                  style={{ flex: 1, position: 'relative', overflow: 'hidden', zIndex: 0, boxShadow: '0 10px 48px rgba(0,0,0,0.22), 0 2px 8px rgba(0,0,0,0.10)' }}
+                >
                   <PropiedadesLeafletMap
                     properties={filtered}
                     onBoundsChange={setVisibleInMap}
