@@ -105,15 +105,15 @@ export default function HeroSection({ onNavigate, searchFormSlot }: HeroSectionP
                     className="hidden sm:block"
                     style={{
                       position: 'absolute',
-                      top: '50%',
+                      top: '62%',
                       left: 0,
                       width: '100%',
-                      height: '52%',
+                      height: '26%',
                       backgroundColor: RED,
-                      transform: 'translateY(-50%) skewX(-14deg)',
+                      transform: `translateY(-50%) skewX(-14deg) scaleX(${titleHovered ? 1 : 0})`,
+                      transformOrigin: 'left center',
                       zIndex: 1,
-                      opacity: titleHovered ? 1 : 0,
-                      transition: 'opacity 0.07s ease',
+                      transition: 'transform 0.18s ease',
                       pointerEvents: 'none',
                     }}
                   />

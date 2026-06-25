@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { flushSync } from 'react-dom';
 import gsap from 'gsap';
 import PropertyCard from './PropertyCard';
@@ -373,7 +373,7 @@ export default function PropiedadesPage({ initialFilter = 'Todos' }: { initialFi
     );
   }, [titleAnimating]);
 
-  const filtered = applyFilters(appliedFilters);
+  const filtered = useMemo(() => applyFilters(appliedFilters), [appliedFilters]);
 
   // Efecto 1: detecta nueva propiedad hovereada → decide qué slot reemplazar (alterna)
   useEffect(() => {
