@@ -155,6 +155,7 @@ export default function PropiedadesPage({ initialFilter = 'Todos' }: { initialFi
   const { ref: titleRef, titleAnimating } = useSplitTextAnimation('.propiedades-title-split', 0, false);
   const subtitleRef = useRef<HTMLParagraphElement>(null);
   const cardsGridRef = useRef<HTMLDivElement>(null);
+  const leftPanelRef = useRef<HTMLDivElement>(null);
 
   const [showMap, setShowMap] = useState(false);
   const [mapExpanded, setMapExpanded] = useState(false);
@@ -192,6 +193,16 @@ export default function PropiedadesPage({ initialFilter = 'Todos' }: { initialFi
   }, [titleAnimating]);
 
   const filtered = applyFilters(appliedFilters);
+
+  // Crossfade del panel izquierdo cuando cambia la propiedad hovereada
+  useEffect(() => {
+    const el = leftPanelRef.current;
+    if (!el) return;
+    el.style.transition = 'opacity 0.1s ease';
+    el.style.opacity = '0';
+    const t = setTimeout(() => { if (leftPanelRef.current) leftPanelRef.current.style.opacity = '1'; }, 100);
+    return () => clearTimeout(t);
+  }, [hoveredMapProperty?.id]);
 
   useEffect(() => {
     const el = cardsGridRef.current;
@@ -266,7 +277,7 @@ export default function PropiedadesPage({ initialFilter = 'Todos' }: { initialFi
               return (
               <div style={{ display: 'flex', height: '420px', gap: '15px' }}>
                 {/* Izquierda: cards flotando sobre el fondo */}
-                <div style={{ flex: 1, position: 'relative' }}>
+                <div ref={leftPanelRef} style={{ flex: 1, position: 'relative' }}>
                   <div style={{
                     display: 'grid',
                     gridTemplateColumns: '1fr 1fr',
