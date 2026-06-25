@@ -1,5 +1,6 @@
-﻿'use client';
+'use client';
 
+import { useState } from 'react';
 import type { PageType } from '@/components/Header';
 
 interface ServiciosBlockProps {
@@ -71,8 +72,11 @@ const servicios = [
 ];
 
 export default function ServiciosBlock({ onNavigate: _onNavigate }: ServiciosBlockProps) {
+  const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
+  const [redIdx] = useState(() => Math.floor(Math.random() * servicios.length));
+
   return (
-    <section style={{ background: '#fff' }} className="w-full overflow-hidden">
+    <section style={{ background: '#fff' }} className="w-full">
 
       {/* Título */}
       <div
@@ -93,88 +97,104 @@ export default function ServiciosBlock({ onNavigate: _onNavigate }: ServiciosBlo
         </h2>
       </div>
 
-      {/* Grid de servicios */}
-      <div
-        className="px-6 sm:px-10 lg:px-14 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5"
-        style={{ paddingBottom: '52px', gap: '20px' }}
-      >
-        {servicios.map((s) => {
-          const url = `https://wa.me/${PHONE}?text=${encodeURIComponent(s.waMsg)}`;
-          return (
-            <div
-              key={s.title}
-              className="flex flex-col"
-              style={{
-                gap: '14px',
-                padding: '24px 20px 20px',
-                borderRadius: '10px',
-                border: '1px solid #eeeeee',
-                background: '#fff',
-                boxShadow: '0 2px 10px rgba(0,0,0,0.05)',
-              }}
-            >
-              {/* Ícono */}
-              <img
-                src={s.icon}
-                alt=""
-                width={40}
-                height={40}
-                style={{ flexShrink: 0, display: 'block' }}
-              />
+      {/* Grid de servicios — cards juntas, bordes rectos */}
+      <div className="px-6 sm:px-10 lg:px-14" style={{ paddingBottom: '52px', overflow: 'visible' }}>
+        <div
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5"
+          style={{ gap: '1px', background: '#e0e0e0', overflow: 'visible' }}
+        >
+          {servicios.map((s, idx) => {
+            const url    = `https://wa.me/${PHONE}?text=${encodeURIComponent(s.waMsg)}`;
+            const isRed  = idx === redIdx;
+            const isHov  = idx === hoveredIdx;
+            const isAdj  = hoveredIdx !== null && Math.abs(idx - hoveredIdx) === 1;
 
-              {/* Título */}
-              <h3
+            return (
+              <div
+                key={s.title}
+                className="flex flex-col"
                 style={{
-                  fontFamily: FONT_HEADING,
-                  fontWeight: 700,
-                  fontSize: 'clamp(16px, 1.2vw, 20px)',
-                  color: '#232222',
-                  margin: 0,
-                  lineHeight: 1.2,
+                  gap: '14px',
+                  padding: '24px 20px 20px',
+                  borderRadius: 0,
+                  background: isRed ? RED : '#fff',
+                  cursor: 'default',
+                  transform: isHov ? 'scale(1.08)' : isAdj ? 'scale(0.96)' : 'scale(1)',
+                  zIndex: isHov ? 10 : 1,
+                  position: 'relative',
+                  transition: 'transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.3s ease',
+                  boxShadow: isHov ? '0 8px 32px rgba(0,0,0,0.18)' : 'none',
                 }}
+                onMouseEnter={() => setHoveredIdx(idx)}
+                onMouseLeave={() => setHoveredIdx(null)}
               >
-                {s.title}
-              </h3>
+                {/* Ícono */}
+                <img
+                  src={s.icon}
+                  alt=""
+                  width={40}
+                  height={40}
+                  style={{
+                    flexShrink: 0,
+                    display: 'block',
+                    filter: isRed ? 'brightness(0) invert(1)' : 'none',
+                  }}
+                />
 
-              {/* Descripción */}
-              <p
-                style={{
-                  fontFamily: FONT_BODY,
-                  fontSize: 'clamp(12.5px, 0.9vw, 14px)',
-                  color: '#666',
-                  margin: 0,
-                  lineHeight: 1.65,
-                  flexGrow: 1,
-                }}
-              >
-                {s.description}
-              </p>
+                {/* Título */}
+                <h3
+                  style={{
+                    fontFamily: FONT_HEADING,
+                    fontWeight: 700,
+                    fontSize: 'clamp(16px, 1.2vw, 20px)',
+                    color: isRed ? '#fff' : '#232222',
+                    margin: 0,
+                    lineHeight: 1.15,
+                  }}
+                >
+                  {s.title}
+                </h3>
 
-              {/* CTA WhatsApp con hero-btn-fill */}
-              <a
-                href={url}
-                target="_blank"
-                rel="noopener noreferrer"
-                onMouseEnter={applyInkFill}
-                onMouseLeave={applyInkFill}
-                className="hero-btn-fill inline-flex items-center justify-center rounded-full"
-                style={{
-                  fontFamily: FONT_BODY,
-                  fontWeight: 300,
-                  fontSize: 'clamp(13px, 0.95vw, 15px)',
-                  textDecoration: 'none',
-                  height: '42px',
-                  paddingLeft: '20px',
-                  paddingRight: '20px',
-                  alignSelf: 'flex-start',
-                  background: '#232222',
-                }}
-              >
-                <span>Hablar con un asesor</span>
-              </a>
-            </div>
-          );
-        })}
+                {/* Descripción */}
+                <p
+                  style={{
+                    fontFamily: FONT_BODY,
+                    fontSize: 'clamp(12.5px, 0.9vw, 14px)',
+                    color: isRed ? 'rgba(255,255,255,0.88)' : '#666',
+                    margin: 0,
+                    lineHeight: 1.15,
+                    flexGrow: 1,
+                  }}
+                >
+                  {s.description}
+                </p>
+
+                {/* CTA WhatsApp */}
+                <a
+                  href={url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onMouseEnter={applyInkFill}
+                  onMouseLeave={applyInkFill}
+                  className="hero-btn-fill inline-flex items-center justify-center rounded-full"
+                  style={{
+                    fontFamily: FONT_BODY,
+                    fontWeight: 300,
+                    fontSize: 'clamp(13px, 0.95vw, 15px)',
+                    textDecoration: 'none',
+                    height: '42px',
+                    paddingLeft: '20px',
+                    paddingRight: '20px',
+                    alignSelf: 'flex-start',
+                    background: isRed ? 'rgba(255,255,255,0.18)' : '#232222',
+                  }}
+                >
+                  <span>Hablar con un asesor</span>
+                </a>
+              </div>
+            );
+          })}
+        </div>
       </div>
     </section>
   );

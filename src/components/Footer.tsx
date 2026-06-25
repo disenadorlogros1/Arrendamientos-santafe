@@ -176,10 +176,10 @@ export default function Footer({ onNavigate }: FooterProps = {}) {
               <li>
                 <a
                   href="mailto:santafe@arrendamientossantafe.com"
-                  className="flex items-center gap-2 text-sm text-white/60 hover:text-white transition-colors"
+                  className="flex items-start gap-2 text-sm text-white/60 hover:text-white transition-colors"
                 >
-                  <Mail className="h-4 w-4 text-brand-red shrink-0" />
-                  <span className="break-words min-w-0">santafe@arrendamientossantafe.com</span>
+                  <Mail className="h-4 w-4 text-brand-red shrink-0 mt-[2px]" />
+                  <span style={{ wordBreak: 'break-all', overflowWrap: 'break-word', minWidth: 0 }}>santafe@arrendamientossantafe.com</span>
                 </a>
               </li>
             </ul>

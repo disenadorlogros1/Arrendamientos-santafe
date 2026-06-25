@@ -9,9 +9,21 @@ interface FeaturedSectionProps {
   onNavigate: (page: PageType) => void;
 }
 
-const FONT_BODY    = "'Avenir LT Std', 'Outfit', system-ui, sans-serif";
 const FONT_HEADING = "'Avenir LT Std', 'Outfit', system-ui, sans-serif";
-const RED          = '#f32735';
+
+function applyInkFill(e: React.MouseEvent<HTMLElement>) {
+  const el = e.currentTarget;
+  const rect = el.getBoundingClientRect();
+  const x = e.clientX - rect.left;
+  const y = e.clientY - rect.top;
+  const size = Math.max(
+    Math.hypot(x, y), Math.hypot(rect.width - x, y),
+    Math.hypot(x, rect.height - y), Math.hypot(rect.width - x, rect.height - y),
+  ) * 2;
+  el.style.setProperty('--x', `${x}px`);
+  el.style.setProperty('--y', `${y}px`);
+  el.style.setProperty('--size', `${size}px`);
+}
 
 export default function FeaturedSection({ onNavigate }: FeaturedSectionProps) {
   const featured = properties.filter((p) => p.featured);
@@ -46,23 +58,15 @@ export default function FeaturedSection({ onNavigate }: FeaturedSectionProps) {
             onNavigate('propiedades');
             window.scrollTo({ top: 0, behavior: 'smooth' });
           }}
-          className="flex items-center justify-center transition-colors duration-200 w-full sm:w-[340px]"
+          onMouseEnter={applyInkFill}
+          onMouseLeave={applyInkFill}
+          className="btn-red-outline inline-flex items-center justify-center w-full sm:w-[240px] h-[42px] px-8"
           style={{
-            background: '#888888',
-            color: '#fff',
-            fontFamily: FONT_BODY,
-            fontWeight: 600,
-            fontSize: 'clamp(15px, 1.2vw, 18px)',
-            letterSpacing: '0.02em',
-            border: 'none',
-            cursor: 'pointer',
-            padding: '10px 32px',
+            fontSize: 'clamp(14px, 1vw, 16px)',
             flexShrink: 0,
           }}
-          onMouseEnter={(e) => (e.currentTarget.style.background = RED)}
-          onMouseLeave={(e) => (e.currentTarget.style.background = '#888888')}
         >
-          Ver más
+          <span>Ver más</span>
         </button>
       </div>
 

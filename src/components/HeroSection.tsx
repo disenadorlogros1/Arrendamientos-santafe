@@ -84,7 +84,7 @@ export default function HeroSection({ onNavigate, searchFormSlot }: HeroSectionP
                 style={{
                   fontFamily: FONT_HEADING,
                   fontWeight: 700,
-                  lineHeight: 1.1,
+                  lineHeight: 1.32,
                   margin: 0,
                   textAlign: 'center',
                   color: '#fff',
@@ -95,7 +95,7 @@ export default function HeroSection({ onNavigate, searchFormSlot }: HeroSectionP
               >
                 60 años
                 <br className="hidden sm:inline" />
-                <span className="block sm:inline-block" style={{ fontWeight: 700, position: 'relative', lineHeight: 'inherit', overflow: 'hidden' }}>
+                <span className="block sm:inline-block" style={{ fontWeight: 300, position: 'relative', lineHeight: 'inherit', overflow: 'hidden' }}>
                   <span style={{ position: 'relative', zIndex: 2, lineHeight: 'inherit' }}>
                     conectando personas
                   </span>
@@ -113,7 +113,7 @@ export default function HeroSection({ onNavigate, searchFormSlot }: HeroSectionP
                       transform: `translateY(-50%) scaleX(${titleHovered ? 1 : 0})`,
                       transformOrigin: 'left center',
                       zIndex: 1,
-                      transition: 'transform 0.18s ease',
+                      transition: 'transform 0.234s ease',
                       pointerEvents: 'none',
                     }}
                   />
@@ -142,7 +142,7 @@ export default function HeroSection({ onNavigate, searchFormSlot }: HeroSectionP
                   onClick={() => onNavigate?.('propiedades')}
                   onMouseEnter={applyInkFill}
                   onMouseLeave={applyInkFill}
-                  className="hero-btn-fill w-full sm:w-auto inline-flex items-center justify-center h-[42px] px-6 rounded-none"
+                  className="hero-btn-fill w-full sm:w-auto inline-flex items-center justify-center h-[42px] px-6 rounded-full"
                   style={{ fontFamily: "'Avenir LT Std', 'Outfit', system-ui, sans-serif", fontWeight: 300, fontSize: '15px' }}
                 >
                   <span>Ver propiedades disponibles</span>

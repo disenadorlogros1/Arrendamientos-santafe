@@ -3,8 +3,21 @@
 import { useRef, useEffect } from 'react';
 import gsap from 'gsap';
 import { useSplitTextAnimation } from '@/hooks/useSplitTextAnimation';
-import { ArrowRight } from 'lucide-react';
 import type { PageType } from '@/components/Header';
+
+function applyInkFill(e: React.MouseEvent<HTMLElement>) {
+  const el = e.currentTarget;
+  const rect = el.getBoundingClientRect();
+  const x = e.clientX - rect.left;
+  const y = e.clientY - rect.top;
+  const size = Math.max(
+    Math.hypot(x, y), Math.hypot(rect.width - x, y),
+    Math.hypot(x, rect.height - y), Math.hypot(rect.width - x, rect.height - y),
+  ) * 2;
+  el.style.setProperty('--x', `${x}px`);
+  el.style.setProperty('--y', `${y}px`);
+  el.style.setProperty('--size', `${size}px`);
+}
 
 interface TrayectoriaBlockProps {
   onNavigate: (page: PageType) => void;
@@ -86,23 +99,12 @@ export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) 
               onNavigate('historia-60');
               window.scrollTo({ top: 0, behavior: 'smooth' });
             }}
-            className="inline-flex items-center justify-center gap-2 w-full transition-colors duration-200"
-            style={{
-              background: RED,
-              color: '#fff',
-              padding: '13px 20px',
-              fontSize: 'clamp(13px, 0.9vw, 14px)',
-              fontWeight: 500,
-              border: 'none',
-              cursor: 'pointer',
-              fontFamily: FONT_BODY,
-              borderRadius: '2px',
-            }}
-            onMouseEnter={(e) => (e.currentTarget.style.background = '#aa182c')}
-            onMouseLeave={(e) => (e.currentTarget.style.background = RED)}
+            onMouseEnter={applyInkFill}
+            onMouseLeave={applyInkFill}
+            className="btn-red-outline inline-flex items-center justify-center w-full h-[46px]"
+            style={{ fontSize: 'clamp(13px, 0.9vw, 14px)' }}
           >
-            Conocer nuestra historia
-            <ArrowRight className="w-4 h-4" />
+            <span>Conocer nuestra historia</span>
           </button>
         </div>
 

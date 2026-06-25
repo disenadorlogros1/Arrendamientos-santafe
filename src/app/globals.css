@@ -444,6 +444,36 @@ html.is-scrolling .red-scrollbar::-webkit-scrollbar-thumb {
   z-index: 1;
 }
 
+/* Outline red buttons — white bg, red border/text, fills red on hover */
+.btn-red-outline {
+  position: relative;
+  overflow: hidden;
+  background: #ffffff;
+  color: #f32735;
+  border: 2px solid #f32735 !important;
+  font-family: 'Avenir LT Std', 'Outfit', system-ui, sans-serif;
+  font-weight: 500;
+  transition: color 0.3s ease;
+  cursor: pointer;
+}
+.btn-red-outline::before {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  background: #f32735;
+  width: var(--size, 300px);
+  height: var(--size, 300px);
+  left: var(--x, 50%);
+  top: var(--y, 50%);
+  transform: translate(-50%, -50%) scale(0);
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+  z-index: 0;
+}
+.btn-red-outline:hover::before { transform: translate(-50%, -50%) scale(1); }
+.btn-red-outline:hover { color: #ffffff; }
+.btn-red-outline > span { position: relative; z-index: 1; }
+
 /* Video hero overlay */
 .hero-video-overlay {
   background: linear-gradient(

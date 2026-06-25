@@ -41,22 +41,30 @@ function HomePage({ onNavigate }: { onNavigate: (page: PageType) => void }) {
       />
 
       {/* Sección 2: Propiedades Destacadas */}
-      <ScrollReveal y={50} start="top 90%">
-        <FeaturedSection onNavigate={onNavigate} />
-      </ScrollReveal>
+      <div style={{ marginTop: '35px' }}>
+        <ScrollReveal y={50} start="top 90%">
+          <FeaturedSection onNavigate={onNavigate} />
+        </ScrollReveal>
+      </div>
 
       {/* Sección 3: Bloque para Propietarios (Consignación) */}
-      <PropietariosBlock onNavigate={onNavigate} />
+      <div style={{ marginTop: '35px' }}>
+        <PropietariosBlock onNavigate={onNavigate} />
+      </div>
 
       {/* Sección 4: Servicios Principales */}
-      <ScrollReveal y={40} start="top 88%">
-        <ServiciosBlock onNavigate={onNavigate} />
-      </ScrollReveal>
+      <div style={{ marginTop: '35px' }}>
+        <ScrollReveal y={40} start="top 88%">
+          <ServiciosBlock onNavigate={onNavigate} />
+        </ScrollReveal>
+      </div>
 
       {/* Sección 5: Bloque Institucional 60 años */}
-      <ScrollReveal y={40} start="top 88%">
-        <TrayectoriaBlock onNavigate={onNavigate} />
-      </ScrollReveal>
+      <div style={{ marginTop: '35px' }}>
+        <ScrollReveal y={40} start="top 88%">
+          <TrayectoriaBlock onNavigate={onNavigate} />
+        </ScrollReveal>
+      </div>
     </>
   );
 }
@@ -140,7 +148,9 @@ export default function Home() {
         {currentPage === 'terminos' && <TerminosPage />}
       </main>
 
-      <Footer onNavigate={handleNavigate} />
+      <div style={{ marginTop: currentPage === 'home' ? '35px' : 0 }}>
+        <Footer onNavigate={handleNavigate} />
+      </div>
     </div>
   );
 }
