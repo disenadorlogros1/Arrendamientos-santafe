@@ -154,9 +154,9 @@ function DetailRow({ icon, label, value, isRight, spanFull }: { icon: string; la
 function ZoneSection({ zone, zoneLabel }: { zone: NonNullable<ReturnType<typeof getZoneBySlug>>; zoneLabel: string }) {
   const [hovIdx, setHovIdx] = useState<number | null>(null);
 
-  const cardStyle = (idx: number): React.CSSProperties => ({
+  const dataCardStyle = (idx: number): React.CSSProperties => ({
     padding: '24px 16px',
-    flex: idx === 3 ? '0 0 clamp(90px, 11%, 130px)' : 1,
+    flex: 1,
     borderLeft: '1px solid #e8e8e8',
     display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center',
     transform: hovIdx === idx ? 'scale(1.06)' : hovIdx !== null && Math.abs(idx - hovIdx) === 1 ? 'scale(0.96)' : 'scale(1)',
@@ -171,26 +171,18 @@ function ZoneSection({ zone, zoneLabel }: { zone: NonNullable<ReturnType<typeof 
   return (
     <div style={{ display: 'flex', border: '1px solid #e8e8e8', overflow: 'visible' }}>
       {/* Card 1 — negra, static */}
-      <div style={{ background: '#1a1a1a', padding: '24px 20px', flex: '0 0 clamp(160px, 22%, 220px)', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+      <div style={{ background: '#1a1a1a', padding: '24px 20px', flex: '0 0 clamp(140px, 20%, 200px)', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
         <h3 style={{ fontFamily: FONT, fontSize: 'clamp(14px, 1.1vw, 17px)', fontWeight: 700, color: '#fff', margin: 0, lineHeight: 1.3 }}>
           {zoneLabel}
         </h3>
       </div>
       {/* Card 2 — Rentabilidad */}
-      <div
-        onMouseEnter={() => setHovIdx(2)}
-        onMouseLeave={() => setHovIdx(null)}
-        style={cardStyle(2)}
-      >
+      <div onMouseEnter={() => setHovIdx(2)} onMouseLeave={() => setHovIdx(null)} style={dataCardStyle(2)}>
         <span style={{ fontFamily: FONT, fontSize: 12, fontWeight: 400, color: '#aaa', marginBottom: 6 }}>Rentabilidad</span>
         <span style={{ fontFamily: FONT, fontSize: 'clamp(18px, 2.2vw, 26px)', fontWeight: 900, color: '#f32735', lineHeight: 1 }}>{zone.rentability}</span>
       </div>
       {/* Card 3 — Estratos */}
-      <div
-        onMouseEnter={() => setHovIdx(3)}
-        onMouseLeave={() => setHovIdx(null)}
-        style={{ ...cardStyle(3), flex: '0 0 clamp(80px, 10%, 110px)' }}
-      >
+      <div onMouseEnter={() => setHovIdx(3)} onMouseLeave={() => setHovIdx(null)} style={dataCardStyle(3)}>
         <span style={{ fontFamily: FONT, fontSize: 12, fontWeight: 400, color: '#aaa', marginBottom: 6 }}>Estratos</span>
         <span style={{ fontFamily: FONT, fontSize: 'clamp(18px, 2.2vw, 26px)', fontWeight: 900, color: '#1a1a1a', lineHeight: 1 }}>{zone.strata}</span>
       </div>
@@ -198,7 +190,7 @@ function ZoneSection({ zone, zoneLabel }: { zone: NonNullable<ReturnType<typeof 
       <div
         onMouseEnter={() => setHovIdx(4)}
         onMouseLeave={() => setHovIdx(null)}
-        style={{ ...cardStyle(4), flex: '0 0 clamp(90px, 11%, 130px)', padding: 0 }}
+        style={{ ...dataCardStyle(4), flex: '0 0 clamp(90px, 12%, 130px)', padding: 0 }}
       >
         <Link
           href={`/inversionistas/${zone.slug}`}
