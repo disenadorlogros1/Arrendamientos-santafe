@@ -55,29 +55,34 @@ export default function PropertyCard({ property }: PropertyCardProps) {
           }}
         />
 
-        {/* Botón único — flecha 45° animada superior derecha */}
+        {/* Botón rojo — flecha superior derecha */}
         <button
           type="button"
           onClick={(e) => { e.stopPropagation(); handleViewMore(); }}
-          className="card-arrow-btn absolute top-3 right-3 flex items-center justify-center rounded-full"
           aria-label="Ver propiedad"
-          style={{ width: '44px', height: '44px' }}
+          style={{
+            position: 'absolute', top: '10px', right: '10px',
+            width: '36px', height: '36px',
+            borderRadius: '50%',
+            background: RED,
+            border: 'none',
+            cursor: 'pointer',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            boxShadow: '0 2px 8px rgba(0,0,0,0.25)',
+            transition: 'background 0.18s ease, transform 0.18s ease',
+            transform: isHovered ? 'scale(1.1)' : 'scale(1)',
+          }}
+          onMouseEnter={e => (e.currentTarget.style.background = '#aa182c')}
+          onMouseLeave={e => (e.currentTarget.style.background = RED)}
         >
-          <span className="arr-primary">
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-              <path d="M2.5 11.5L11.5 2.5M11.5 2.5H5M11.5 2.5V9" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-          </span>
-          <span className="arr-secondary" aria-hidden="true">
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-              <path d="M2.5 11.5L11.5 2.5M11.5 2.5H5M11.5 2.5V9" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-          </span>
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <path d="M2.5 11.5L11.5 2.5M11.5 2.5H5M11.5 2.5V9" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
         </button>
       </div>
 
       {/* Información de la propiedad */}
-      <div style={{ padding: '11px 13px 13px', background: '#fff', flexShrink: 0 }}>
+      <div onClick={handleViewMore} style={{ padding: '11px 13px 13px', background: '#fff', flexShrink: 0, cursor: 'pointer' }}>
         {/* Precio */}
         <p style={{
           fontFamily: FONT,

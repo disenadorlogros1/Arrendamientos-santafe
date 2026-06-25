@@ -7,6 +7,9 @@ interface FooterProps {
   onNavigate?: (page: PageType) => void;
 }
 
+const MAPS_MEDELLIN  = 'https://www.google.com/maps/search/?api=1&query=Calle+44+San+Juan+%2371-34+Medell%C3%ADn+Colombia';
+const MAPS_ENVIGADO  = 'https://www.google.com/maps/search/?api=1&query=Centro+Comercial+Metrosur+Envigado+Colombia';
+const MAPS_RIONEGRO  = 'https://www.google.com/maps/search/?api=1&query=Parque+Comercial+R%C3%ADo+del+Este+Rionegro+Colombia';
 const PSE_URL = 'https://www.psepagos.co/PSEHostingUI/ShowTicketOffice.aspx?ID=9011';
 const SOLICITUD_ARRENDAMIENTO_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSfAg9SMibueBBUy-Pe1rQuO1Rz7U4z7z9uq91pv-gp-0-dCgQ/viewform';
 const REPARACIONES_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSdwCAaLU5ApyfAvf-yEEgj-fMQmnBRIh4614LhDIWtKhBDzyQ/viewform';
@@ -69,24 +72,24 @@ export default function Footer({ onNavigate }: FooterProps = {}) {
             <ul className="space-y-3 text-sm text-white/60">
               <li className="flex items-start gap-2">
                 <MapPin className="h-4 w-4 mt-0.5 text-brand-red shrink-0" />
-                <span>
+                <a href={MAPS_MEDELLIN} target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
                   <strong className="text-white/80 block">Medellín</strong>
                   Calle 44 San Juan #71-34
-                </span>
+                </a>
               </li>
               <li className="flex items-start gap-2">
                 <MapPin className="h-4 w-4 mt-0.5 text-brand-red shrink-0" />
-                <span>
+                <a href={MAPS_ENVIGADO} target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
                   <strong className="text-white/80 block">Envigado</strong>
                   Centro Comercial Metrosur
-                </span>
+                </a>
               </li>
               <li className="flex items-start gap-2">
                 <MapPin className="h-4 w-4 mt-0.5 text-brand-red shrink-0" />
-                <span>
+                <a href={MAPS_RIONEGRO} target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
                   <strong className="text-white/80 block">Rionegro</strong>
                   Parque Comercial Río del Este
-                </span>
+                </a>
               </li>
             </ul>
           </div>
@@ -183,9 +186,11 @@ export default function Footer({ onNavigate }: FooterProps = {}) {
                 <Clock className="h-4 w-4 mt-0.5 text-brand-red shrink-0" />
                 <span>
                   <strong className="text-white/80 block">Horarios</strong>
-                  Lun–Vie: 8:00 a.m. – 12:00 m.<br />
-                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1:00 p.m. – 5:00 p.m.<br />
-                  Sábado: 8:00 a.m. – 1:00 p.m.
+                  <span className="block mt-1">Lunes a viernes:</span>
+                  <span className="block">8:00 a.m. – 12:00 m.</span>
+                  <span className="block">1:00 p.m. – 5:00 p.m.</span>
+                  <span className="block mt-1">Sábado:</span>
+                  <span className="block">8:00 a.m. – 1:00 p.m.</span>
                 </span>
               </li>
             </ul>
