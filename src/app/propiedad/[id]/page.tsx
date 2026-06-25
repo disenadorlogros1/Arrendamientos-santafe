@@ -81,6 +81,8 @@ function SimilarSection({ current }: { current: import('@/data/properties').Prop
         display: 'flex', flexDirection: 'column', justifyContent: 'center',
         padding: '28px 20px', gap: 16,
         paddingTop: 'clamp(12px,3vw,32px)', paddingBottom: 'clamp(12px,3vw,32px)',
+        borderRadius: '8px',
+        overflow: 'hidden',
       }}>
         <h2 style={{ fontFamily: FONT, fontSize: 'clamp(14px, 1.2vw, 18px)', fontWeight: 900, color: '#fff', margin: 0, lineHeight: 1.25 }}>
           Propiedades <span style={{ fontWeight: 300 }}>similares</span>
@@ -587,7 +589,7 @@ export default function PropertyDetailPage() {
             </div>
           </div>
           {/* Propiedades similares */}
-          <div className="max-w-7xl mx-auto px-6">
+          <div className="max-w-7xl mx-auto px-6" style={{ paddingBottom: 64 }}>
             <SimilarSection current={property} />
           </div>
         </div>
