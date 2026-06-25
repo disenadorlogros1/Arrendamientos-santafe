@@ -120,77 +120,106 @@ export default function InversionistasPage() {
         </div>
       </section>
 
-      {/* Investment Zones Section */}
-      <section id="zonas" className="py-16 md:py-24 bg-gray-50">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <ScrollReveal y={20} className="text-center mb-12">
-            <h2
-              className="text-3xl md:text-4xl text-gray-900 mb-4"
-              style={{ fontFamily: FONT, fontWeight: 700 }}
-            >
-              Zonas estratégicas para invertir
-            </h2>
-            <p className="text-gray-600 text-lg max-w-2xl mx-auto" style={{ fontFamily: FONT, fontWeight: 300 }}>
-              Selecciona un sector del área metropolitana para explorar sus zonas y rentabilidades
-            </p>
-          </ScrollReveal>
+      {/* Investment Zones Section — 2 columnas: botones + mapa */}
+      <section id="zonas" style={{ background: '#f7f6f4', paddingBottom: '48px' }}>
 
-          {/* Sector Tabs */}
-          <div className="flex justify-center mb-10">
-            <div className="inline-flex bg-white border border-gray-200 rounded-2xl p-1.5 shadow-sm gap-1">
+        {/* 2-col block */}
+        <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '40px clamp(20px, 4vw, 52px) 32px' }}>
+          <div style={{ display: 'flex', gap: '20px', height: '520px' }}>
+
+            {/* LEFT: 4 sector buttons */}
+            <div style={{ width: '340px', flexShrink: 0, display: 'flex', flexDirection: 'column', gap: '10px' }}>
               {SECTORS.map(sector => {
-                const active = activeSector === sector;
-                const color = SECTOR_COLORS[sector];
+                const color    = SECTOR_COLORS[sector];
+                const zones    = getZonesBySector(sector);
+                const isActive = activeSector === sector;
+                const isHov    = hoveredSector === sector;
                 return (
                   <button
                     key={sector}
                     onClick={() => handleSectorChange(sector)}
+                    onMouseEnter={() => setHoveredSector(sector)}
+                    onMouseLeave={() => setHoveredSector(null)}
                     style={{
-                      fontFamily: FONT,
-                      fontWeight: active ? 700 : 400,
-                      color: active ? color.text : '#6b7280',
-                      background: active ? color.bg : 'transparent',
-                      border: active ? `1.5px solid ${color.border}` : '1.5px solid transparent',
-                      borderRadius: 12,
-                      padding: '8px 24px',
-                      cursor: 'pointer',
-                      fontSize: 14,
-                      transition: 'all 0.2s ease',
-                      whiteSpace: 'nowrap',
+                      flex: 1,
+                      background:  isActive ? color.bg    : isHov ? 'rgba(0,0,0,0.02)' : '#fff',
+                      border:      `1.5px solid ${isActive ? color.border : isHov ? 'rgba(0,0,0,0.1)' : 'rgba(0,0,0,0.06)'}`,
+                      borderRadius: 14,
+                      padding:     '14px 18px',
+                      textAlign:   'left',
+                      cursor:      'pointer',
+                      transition:  'all 0.22s ease',
+                      boxShadow:   isActive ? 'none' : '0 1px 4px rgba(0,0,0,0.04)',
+                      display:     'flex',
+                      flexDirection: 'column',
+                      justifyContent: 'center',
+                      gap:         '7px',
                     }}
                   >
-                    {sector}
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                      <span style={{ fontFamily: FONT, fontWeight: 700, fontSize: '15px', color: isActive ? color.text : '#1a1a1a' }}>
+                        Zona {sector}
+                      </span>
+                      <span style={{
+                        fontFamily: FONT, fontSize: '11px', fontWeight: 600,
+                        color: color.text, background: color.bg,
+                        border: `1px solid ${color.border}`, borderRadius: '20px', padding: '2px 8px',
+                      }}>
+                        {zones.length} zona{zones.length !== 1 ? 's' : ''}
+                      </span>
+                    </div>
+                    <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+                      {zones.map(z => (
+                        <span
+                          key={z.id}
+                          onMouseEnter={e => { e.stopPropagation(); setHoveredZone(z.id); }}
+                          onMouseLeave={e => { e.stopPropagation(); setHoveredZone(null); }}
+                          style={{
+                            fontFamily: FONT, fontSize: '12px', fontWeight: isActive ? 500 : 300,
+                            color: isActive ? color.text : '#888',
+                            padding: isActive ? '1px 7px' : '0',
+                            background: isActive ? `${color.text}14` : 'transparent',
+                            borderRadius: '8px',
+                            transition: 'all 0.15s ease',
+                          }}
+                        >
+                          {z.name}
+                        </span>
+                      ))}
+                    </div>
                   </button>
                 );
               })}
             </div>
-          </div>
 
-          {/* Sector label + zone count */}
-          <div className="flex items-center gap-3 mb-6">
-            <div
-              style={{
-                width: 4,
-                height: 28,
-                borderRadius: 2,
-                background: SECTOR_COLORS[activeSector].text,
-              }}
-            />
-            <h3 style={{ fontFamily: FONT, fontWeight: 700, fontSize: 20, color: '#111827' }}>
+            {/* RIGHT: Leaflet map */}
+            <div style={{ flex: 1, borderRadius: '16px', overflow: 'hidden', border: '1px solid rgba(0,0,0,0.06)', boxShadow: '0 2px 16px rgba(0,0,0,0.06)' }}>
+              <InversionistasLeafletMap
+                zones={allZonePoints}
+                activeSector={hoveredSector ?? activeSector}
+                hoveredZone={hoveredZone}
+              />
+            </div>
+
+          </div>
+        </div>
+
+        {/* Zone cards for active sector */}
+        <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '0 clamp(20px, 4vw, 52px)' }}>
+
+          {/* Sector label */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '20px' }}>
+            <div style={{ width: 3, height: 22, borderRadius: 2, background: SECTOR_COLORS[activeSector].text }} />
+            <h3 style={{ fontFamily: FONT, fontWeight: 700, fontSize: 17, color: '#111827', margin: 0 }}>
               {activeSector} del Área Metropolitana
             </h3>
-            <span
-              style={{
-                fontFamily: FONT,
-                fontSize: 13,
-                fontWeight: 400,
-                color: SECTOR_COLORS[activeSector].text,
-                background: SECTOR_COLORS[activeSector].bg,
-                border: `1px solid ${SECTOR_COLORS[activeSector].border}`,
-                borderRadius: 20,
-                padding: '2px 10px',
-              }}
-            >
+            <span style={{
+              fontFamily: FONT, fontSize: 12, fontWeight: 400,
+              color: SECTOR_COLORS[activeSector].text,
+              background: SECTOR_COLORS[activeSector].bg,
+              border: `1px solid ${SECTOR_COLORS[activeSector].border}`,
+              borderRadius: 20, padding: '2px 10px',
+            }}>
               {visibleZones.length} zona{visibleZones.length !== 1 ? 's' : ''}
             </span>
           </div>
@@ -206,24 +235,14 @@ export default function InversionistasPage() {
                   >
                     <div className="flex items-center justify-between mb-4">
                       <div className="flex items-center gap-3">
-                        {/* Sector pill */}
-                        <span
-                          style={{
-                            fontFamily: FONT,
-                            fontSize: 11,
-                            fontWeight: 700,
-                            color: SECTOR_COLORS[zone.sector].text,
-                            background: SECTOR_COLORS[zone.sector].bg,
-                            border: `1px solid ${SECTOR_COLORS[zone.sector].border}`,
-                            borderRadius: 20,
-                            padding: '2px 9px',
-                          }}
-                        >
+                        <span style={{
+                          fontFamily: FONT, fontSize: 11, fontWeight: 700,
+                          color: SECTOR_COLORS[zone.sector].text, background: SECTOR_COLORS[zone.sector].bg,
+                          border: `1px solid ${SECTOR_COLORS[zone.sector].border}`, borderRadius: 20, padding: '2px 9px',
+                        }}>
                           {zone.sector}
                         </span>
-                        <h3 className="text-2xl font-bold text-gray-900" style={{ fontFamily: FONT }}>
-                          {zone.name}
-                        </h3>
+                        <h3 className="text-2xl font-bold text-gray-900" style={{ fontFamily: FONT }}>{zone.name}</h3>
                       </div>
                       <ChevronDown
                         className="w-6 h-6 flex-shrink-0"
@@ -235,16 +254,10 @@ export default function InversionistasPage() {
                         }}
                       />
                     </div>
-
                     <div className="grid grid-cols-3 gap-4 mb-4">
-                      <div
-                        style={{ background: `${SECTOR_COLORS[zone.sector].bg}` }}
-                        className="p-3 rounded-lg"
-                      >
+                      <div style={{ background: SECTOR_COLORS[zone.sector].bg }} className="p-3 rounded-lg">
                         <p className="text-xs text-gray-600 mb-1" style={{ fontFamily: FONT }}>Rentabilidad</p>
-                        <p className="text-lg font-bold" style={{ color: SECTOR_COLORS[zone.sector].text, fontFamily: FONT }}>
-                          {zone.rentability}
-                        </p>
+                        <p className="text-lg font-bold" style={{ color: SECTOR_COLORS[zone.sector].text, fontFamily: FONT }}>{zone.rentability}</p>
                       </div>
                       <div className="bg-gray-50 p-3 rounded-lg">
                         <p className="text-xs text-gray-600 mb-1" style={{ fontFamily: FONT }}>Precio m²</p>
@@ -256,8 +269,7 @@ export default function InversionistasPage() {
                       </div>
                     </div>
                   </button>
-
-                  {/* Accordion */}
+                  {/* Accordion detail */}
                   <div
                     style={{
                       display: 'grid',
@@ -269,44 +281,17 @@ export default function InversionistasPage() {
                   >
                     <div style={{ overflow: 'hidden' }}>
                       <div className="p-6 space-y-4">
-                        <p className="text-gray-600 leading-relaxed" style={{ fontFamily: FONT, fontWeight: 300 }}>
-                          {zone.description}
-                        </p>
-
+                        <p className="text-gray-600 leading-relaxed" style={{ fontFamily: FONT, fontWeight: 300 }}>{zone.description}</p>
                         <div>
                           <h4 className="font-bold text-gray-900 mb-3" style={{ fontFamily: FONT }}>Ventajas de inversión:</h4>
                           <ul className="space-y-2">
                             {zone.advantages.map((advantage, i) => (
                               <li key={i} className="flex items-start gap-2 text-gray-700">
-                                <span
-                                  className="w-2 h-2 rounded-full mt-2 flex-shrink-0"
-                                  style={{ background: SECTOR_COLORS[zone.sector].text }}
-                                />
+                                <span className="w-2 h-2 rounded-full mt-2 flex-shrink-0" style={{ background: SECTOR_COLORS[zone.sector].text }} />
                                 <span className="text-sm" style={{ fontFamily: FONT, fontWeight: 300 }}>{advantage}</span>
                               </li>
                             ))}
                           </ul>
-                        </div>
-
-                        <div className="grid grid-cols-2 gap-3 pt-4">
-                          <a
-                            href={`/propiedades?location=${zone.name}`}
-                            className="inline-flex items-center justify-center gap-1 h-10 px-4 text-white font-semibold rounded-lg transition-colors text-sm"
-                            style={{ background: SECTOR_COLORS[zone.sector].text, fontFamily: FONT }}
-                          >
-                            Ver propiedades
-                          </a>
-                          <a
-                            href={`/inversionistas/${zone.slug}`}
-                            className="inline-flex items-center justify-center gap-1 h-10 px-4 font-semibold rounded-lg transition-colors text-sm"
-                            style={{
-                              border: `2px solid ${SECTOR_COLORS[zone.sector].text}`,
-                              color: SECTOR_COLORS[zone.sector].text,
-                              fontFamily: FONT,
-                            }}
-                          >
-                            Más información
-                          </a>
                         </div>
                       </div>
                     </div>

@@ -120,27 +120,31 @@ function DetailRow({ icon, label, value, isRight, spanFull }: { icon: string; la
       onMouseEnter={() => setHov(true)}
       onMouseLeave={() => setHov(false)}
       style={{
-        display: 'flex', alignItems: 'center', gap: 10,
-        padding: '11px 0',
-        borderBottom: `1px solid ${hov ? '#f32735' : '#1a1a1a'}`,
-        background: '#fff',
-        transition: 'border-color 0.2s',
+        display: 'flex', alignItems: 'baseline', gap: 8,
+        padding: '10px 0',
         gridColumn: spanFull ? 'span 2' : undefined,
-        paddingRight: (!isRight && !spanFull) ? 16 : 0,
+        paddingRight: (!isRight && !spanFull) ? 24 : 0,
       }}
     >
       <img
-        src={icon} width="18" height="18"
+        src={icon} width="15" height="15"
         style={{
-          flexShrink: 0,
+          flexShrink: 0, alignSelf: 'center',
           filter: hov
             ? 'invert(16%) sepia(100%) saturate(6000%) hue-rotate(340deg) brightness(85%)'
-            : 'grayscale(1) opacity(0.4)',
-          transition: 'filter 0.2s',
+            : 'grayscale(1) opacity(0.35)',
+          transition: 'filter 0.18s',
         }}
       />
-      <span style={{ fontFamily: FONT, fontSize: 13, fontWeight: 700, color: '#444', flex: 1 }}>{label}</span>
-      <span style={{ fontFamily: FONT, fontSize: 13, fontWeight: 400, color: hov ? '#f32735' : '#666', transition: 'color 0.2s' }}>{value}</span>
+      <span style={{ fontFamily: FONT, fontSize: 13, fontWeight: 700, color: '#333', whiteSpace: 'nowrap' }}>{label}</span>
+      {/* Leader line */}
+      <span style={{
+        flex: 1, height: 0, minWidth: 12,
+        borderBottom: `1px solid ${hov ? '#f32735' : '#1a1a1a'}`,
+        marginBottom: 3,
+        transition: 'border-color 0.18s',
+      }} />
+      <span style={{ fontFamily: FONT, fontSize: 13, fontWeight: 400, color: '#666', whiteSpace: 'nowrap' }}>{value}</span>
     </div>
   );
 }
@@ -411,7 +415,7 @@ export default function PropertyDetailPage() {
                     <ScrollReveal y={10}>
                       <h2 style={{ fontFamily: FONT, fontSize: 16, fontWeight: 700, color: '#1a1a1a', marginBottom: 16 }}>Detalles del inmueble</h2>
                     </ScrollReveal>
-                    <div ref={detailsRef} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', columnGap: 32 }}>
+                    <div ref={detailsRef} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', columnGap: 24, rowGap: 0 }}>
                       {[
                         { icon: '/icons/icon-home-red.gif',      label: 'Tipo de inmueble',  value: property.type,                     show: true },
                         { icon: '/icons/icon-area-gray.gif',     label: 'Área construida',   value: property.size,                     show: true },
