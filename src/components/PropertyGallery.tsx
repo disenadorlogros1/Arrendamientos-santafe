@@ -1073,7 +1073,7 @@ function PhotoCountOverlay({ count }: { count: number }) {
       <span style={{ fontFamily: FONT, fontSize: 'clamp(28px, 3.5vw, 44px)', fontWeight: 800, color: '#fff', lineHeight: 1 }}>
         +{displayCount}
       </span>
-      <span style={{ fontFamily: FONT, fontSize: 12, fontWeight: 300, color: 'rgba(255,255,255,0.75)', marginTop: 5, letterSpacing: '0.06em', textTransform: 'uppercase' }}>
+      <span style={{ fontFamily: FONT, fontSize: 12, fontWeight: 300, color: 'rgba(255,255,255,0.75)', marginTop: 5, letterSpacing: '0.04em' }}>
         fotos
       </span>
     </div>

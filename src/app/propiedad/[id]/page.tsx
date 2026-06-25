@@ -15,6 +15,7 @@ import InfiniteCarousel from '@/components/InfiniteCarousel';
 import { getInvestmentZoneForLocation } from '@/data/properties';
 import { getZoneBySlug } from '@/data/investment-zones';
 import type { PageType } from '@/components/Header';
+import { Check, Car, Trees, Wrench, Users, DoorOpen, ShoppingBag, Waves, Shield, Wind, ChefHat, Sun, Dumbbell, PawPrint, Tv, Wifi } from 'lucide-react';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -22,30 +23,47 @@ const FONT = "'Avenir LT Std', 'Outfit', system-ui, sans-serif";
 
 type SimilarFilter = 'precio' | 'ubicacion' | 'metros';
 
+function getSimilar(current: import('@/data/properties').Property, filter: SimilarFilter) {
+  const all = properties.filter(p => p.id !== current.id && p.businessType === current.businessType);
+  const priceNum = parseInt(current.price.replace(/[^0-9]/g, '')) || 0;
+  const areaNum  = parseInt(current.size) || 0;
+  const zone     = current.location.split(',')[0].trim();
+
+  const byPrice = all.filter(p => {
+    const n = parseInt(p.price.replace(/[^0-9]/g, '')) || 0;
+    return priceNum > 0 && n > priceNum * 0.6 && n < priceNum * 1.4;
+  });
+  const byArea = all.filter(p => {
+    const n = parseInt(p.size) || 0;
+    return areaNum > 0 && n > areaNum * 0.6 && n < areaNum * 1.4;
+  });
+  const byZone  = all.filter(p => p.location.includes(zone));
+  const byType  = all.filter(p => p.type === current.type);
+  const byBeds  = all.filter(p => p.bedrooms === current.bedrooms && current.bedrooms > 0);
+
+  if (filter === 'precio') {
+    const base = [...byPrice];
+    if (base.length < 4) { byType.forEach(p => !base.some(b => b.id === p.id) && base.push(p)); }
+    if (base.length < 4) { byBeds.forEach(p => !base.some(b => b.id === p.id) && base.push(p)); }
+    if (base.length < 4) { all.forEach(p => !base.some(b => b.id === p.id) && base.push(p)); }
+    return base.slice(0, 12);
+  }
+  if (filter === 'ubicacion') {
+    const base = [...byZone];
+    if (base.length < 4) { byPrice.forEach(p => !base.some(b => b.id === p.id) && base.push(p)); }
+    if (base.length < 4) { all.forEach(p => !base.some(b => b.id === p.id) && base.push(p)); }
+    return base.slice(0, 12);
+  }
+  // metros
+  const base = [...byArea];
+  if (base.length < 4) { byType.forEach(p => !base.some(b => b.id === p.id) && base.push(p)); }
+  if (base.length < 4) { all.forEach(p => !base.some(b => b.id === p.id) && base.push(p)); }
+  return base.slice(0, 12);
+}
+
 function SimilarSection({ current }: { current: import('@/data/properties').Property }) {
   const [filter, setFilter] = useState<SimilarFilter>('precio');
-
-  const similar = useMemo(() => {
-    const all = properties.filter(p => p.id !== current.id && p.businessType === current.businessType);
-    const priceNum = parseInt(current.price.replace(/[^0-9]/g, '')) || 0;
-
-    if (filter === 'precio') {
-      return all.filter(p => {
-        const n = parseInt(p.price.replace(/[^0-9]/g, '')) || 0;
-        return priceNum > 0 && n > priceNum * 0.6 && n < priceNum * 1.4;
-      }).slice(0, 12);
-    }
-    if (filter === 'ubicacion') {
-      const zone = current.location.split(',')[0].trim();
-      return all.filter(p => p.location.includes(zone)).slice(0, 12);
-    }
-    // metros
-    const areaNum = parseInt(current.size) || 0;
-    return all.filter(p => {
-      const n = parseInt(p.size) || 0;
-      return areaNum > 0 && n > areaNum * 0.6 && n < areaNum * 1.4;
-    }).slice(0, 12);
-  }, [current, filter]);
+  const similar = useMemo(() => getSimilar(current, filter), [current, filter]);
 
   const FILTERS: { key: SimilarFilter; label: string }[] = [
     { key: 'precio',    label: 'Precio'    },
@@ -87,29 +105,55 @@ function SimilarSection({ current }: { current: import('@/data/properties').Prop
   );
 }
 
-function DetailRow({ icon, label, value, isLast }: { icon: string; label: string; value: string; isLast: boolean }) {
+function DetailRow({ icon, label, value, isRight }: { icon: string; label: string; value: string; isRight: boolean }) {
   const [hov, setHov] = useState(false);
   return (
     <div
       onMouseEnter={() => setHov(true)}
       onMouseLeave={() => setHov(false)}
       style={{
-        display: 'flex', alignItems: 'center', gap: 12,
-        padding: '10px 16px',
-        borderBottom: isLast ? 'none' : '1px solid #f0f0f0',
+        display: 'flex', alignItems: 'center', gap: 10,
+        padding: '11px 16px',
+        borderBottom: '1px solid #f0f0f0',
+        borderRight: isRight ? 'none' : '1px solid #f0f0f0',
         background: hov ? '#fafafa' : '#fff',
         transition: 'background 0.15s',
       }}
     >
       <img
-        src={icon}
-        width="20" height="20"
-        style={{ flexShrink: 0, filter: hov ? 'none' : 'grayscale(1) opacity(0.45)', transition: 'filter 0.2s' }}
+        src={icon} width="18" height="18"
+        style={{ flexShrink: 0, filter: hov ? 'none' : 'grayscale(1) opacity(0.4)', transition: 'filter 0.2s' }}
       />
-      <span style={{ fontFamily: FONT, fontSize: 13, color: '#888', flex: 1 }}>{label}</span>
-      <span style={{ fontFamily: FONT, fontSize: 14, fontWeight: 600, color: '#1a1a1a' }}>{value}</span>
+      <div style={{ flex: 1, minWidth: 0 }}>
+        <span style={{ fontFamily: FONT, fontSize: 12, fontWeight: 700, color: '#333', display: 'block' }}>{label}</span>
+        <span style={{ fontFamily: FONT, fontSize: 13, fontWeight: 400, color: '#666' }}>{value}</span>
+      </div>
     </div>
   );
+}
+
+const CHAR_ICONS: Array<{ keys: string[]; icon: React.ReactNode }> = [
+  { keys: ['patio', 'jardín', 'jardin', 'terraza', 'zona verde'], icon: <Trees size={15} className="text-brand-red" /> },
+  { keys: ['parqueo', 'parqueadero', 'garage', 'garaje'],         icon: <Car   size={15} className="text-brand-red" /> },
+  { keys: ['zona de servicios', 'servicios', 'lavadero'],         icon: <Wrench size={15} className="text-brand-red" /> },
+  { keys: ['familiar', 'familia'],                                icon: <Users  size={15} className="text-brand-red" /> },
+  { keys: ['acceso', 'entrada'],                                  icon: <DoorOpen size={15} className="text-brand-red" /> },
+  { keys: ['comercial'],                                          icon: <ShoppingBag size={15} className="text-brand-red" /> },
+  { keys: ['piscina', 'jacuzzi'],                                 icon: <Waves   size={15} className="text-brand-red" /> },
+  { keys: ['seguridad', 'vigilancia', 'portería', 'porteria'],    icon: <Shield  size={15} className="text-brand-red" /> },
+  { keys: ['aire', 'ventilación', 'ventilacion'],                 icon: <Wind    size={15} className="text-brand-red" /> },
+  { keys: ['cocina'],                                             icon: <ChefHat size={15} className="text-brand-red" /> },
+  { keys: ['balcón', 'balcon'],                                   icon: <Sun     size={15} className="text-brand-red" /> },
+  { keys: ['gimnasio', 'gym'],                                    icon: <Dumbbell size={15} className="text-brand-red" /> },
+  { keys: ['mascotas'],                                           icon: <PawPrint size={15} className="text-brand-red" /> },
+  { keys: ['tv', 'televisión', 'television'],                     icon: <Tv      size={15} className="text-brand-red" /> },
+  { keys: ['wifi', 'internet'],                                   icon: <Wifi    size={15} className="text-brand-red" /> },
+];
+
+function getCharIcon(char: string): React.ReactNode {
+  const lower = char.toLowerCase();
+  const match = CHAR_ICONS.find(m => m.keys.some(k => lower.includes(k)));
+  return match?.icon ?? <Check size={15} className="text-brand-red" />;
 }
 
 export default function PropertyDetailPage() {
@@ -125,7 +169,7 @@ export default function PropertyDetailPage() {
   const formRef        = useRef<HTMLDivElement>(null);
   const detailsRef     = useRef<HTMLDivElement>(null);
   const charsRef       = useRef<HTMLDivElement>(null);
-  const whatsappBtnRef = useRef<HTMLAnchorElement>(null);
+
 
   const handleNavigate = (page: PageType) => {
     const routes: Partial<Record<PageType, string>> = {
@@ -180,12 +224,6 @@ export default function PropertyDetailPage() {
         });
       }
 
-      // WhatsApp button attention pulse — fires once after 800ms
-      if (whatsappBtnRef.current) {
-        gsap.timeline({ delay: 0.8 })
-          .to(whatsappBtnRef.current, { scale: 1.03, duration: 0.18, ease: 'power2.out' })
-          .to(whatsappBtnRef.current, { scale: 1,    duration: 0.22, ease: 'power2.inOut' });
-      }
     });
 
     return () => ctx.revert();
@@ -291,24 +329,24 @@ export default function PropertyDetailPage() {
                     <ScrollReveal y={10}>
                       <h2 style={{ fontFamily: FONT, fontSize: 16, fontWeight: 700, color: '#1a1a1a', marginBottom: 16 }}>Detalles del inmueble</h2>
                     </ScrollReveal>
-                    <div ref={detailsRef} style={{ border: '1px solid #e8e8e8' }}>
+                    <div ref={detailsRef} style={{ border: '1px solid #e8e8e8', display: 'grid', gridTemplateColumns: '1fr 1fr' }}>
                       {[
-                        { icon: '/icons/icon-home-red.gif',      label: 'Tipo de inmueble',  value: property.type,                              show: true },
-                        { icon: '/icons/icon-area-gray.gif',     label: 'Área construida',   value: property.size,                              show: true },
-                        { icon: '/icons/icon-bed-gray.gif',      label: 'Habitaciones',      value: String(property.bedrooms),                  show: property.bedrooms > 0 },
-                        { icon: '/icons/icon-bathroom-gray.gif', label: 'Baños',             value: String(property.bathrooms),                 show: property.bathrooms > 0 },
-                        { icon: '/icons/icon-home-red.gif',      label: 'Estrato',           value: `Estrato ${property.stratum}`,              show: !!property.stratum },
-                        { icon: '/icons/icon-home-red.gif',      label: 'Parqueaderos',      value: String(property.parking),                   show: (property.parking ?? 0) > 0 },
-                        { icon: '/icons/icon-home-red.gif',      label: 'Garajes',           value: String(property.garage),                    show: (property.garage ?? 0) > 0 },
-                        { icon: '/icons/icon-home-red.gif',      label: 'Estado',            value: property.estado ?? '',                      show: !!property.estado },
-                        { icon: '/icons/icon-home-red.gif',      label: 'Antigüedad',        value: property.antiguedad ?? '',                  show: !!property.antiguedad },
-                        { icon: '/icons/icon-home-red.gif',      label: 'Piso N°',           value: String(property.pisoNumero),                show: property.pisoNumero !== undefined },
-                        { icon: '/icons/icon-home-red.gif',      label: 'Administración',    value: property.administracion ?? '',              show: !!property.administracion },
-                        { icon: '/icons/icon-home-red.gif',      label: 'Acepta mascotas',   value: property.petFriendly ? 'Sí' : 'No',         show: property.petFriendly !== undefined },
-                        { icon: '/icons/icon-home-red.gif',      label: 'Contrato mínimo',   value: property.contratoMinimo ?? '',              show: !!property.contratoMinimo },
-                        { icon: '/icons/icon-home-red.gif',      label: 'Amoblado',          value: property.furnished ? 'Sí' : 'No',           show: property.furnished !== undefined },
-                      ].filter(r => r.show).map((row, i, arr) => (
-                        <DetailRow key={row.label} icon={row.icon} label={row.label} value={row.value} isLast={i === arr.length - 1} />
+                        { icon: '/icons/icon-home-red.gif',      label: 'Tipo de inmueble',  value: property.type,                     show: true },
+                        { icon: '/icons/icon-area-gray.gif',     label: 'Área construida',   value: property.size,                     show: true },
+                        { icon: '/icons/icon-bed-gray.gif',      label: 'Habitaciones',      value: String(property.bedrooms),         show: property.bedrooms > 0 },
+                        { icon: '/icons/icon-bathroom-gray.gif', label: 'Baños',             value: String(property.bathrooms),        show: property.bathrooms > 0 },
+                        { icon: '/icons/icon-home-red.gif',      label: 'Estrato',           value: `Estrato ${property.stratum}`,     show: !!property.stratum },
+                        { icon: '/icons/icon-home-red.gif',      label: 'Parqueaderos',      value: String(property.parking),          show: (property.parking ?? 0) > 0 },
+                        { icon: '/icons/icon-home-red.gif',      label: 'Garajes',           value: String(property.garage),           show: (property.garage ?? 0) > 0 },
+                        { icon: '/icons/icon-home-red.gif',      label: 'Estado',            value: property.estado ?? '',             show: !!property.estado },
+                        { icon: '/icons/icon-home-red.gif',      label: 'Antigüedad',        value: property.antiguedad ?? '',         show: !!property.antiguedad },
+                        { icon: '/icons/icon-home-red.gif',      label: 'Piso N°',           value: String(property.pisoNumero),       show: property.pisoNumero !== undefined },
+                        { icon: '/icons/icon-home-red.gif',      label: 'Administración',    value: property.administracion ?? '',     show: !!property.administracion },
+                        { icon: '/icons/icon-home-red.gif',      label: 'Acepta mascotas',   value: property.petFriendly ? 'Sí' : 'No', show: property.petFriendly !== undefined },
+                        { icon: '/icons/icon-home-red.gif',      label: 'Contrato mínimo',   value: property.contratoMinimo ?? '',     show: !!property.contratoMinimo },
+                        { icon: '/icons/icon-home-red.gif',      label: 'Amoblado',          value: property.furnished ? 'Sí' : 'No', show: property.furnished !== undefined },
+                      ].filter(r => r.show).map((row, i) => (
+                        <DetailRow key={row.label} icon={row.icon} label={row.label} value={row.value} isRight={i % 2 === 1} />
                       ))}
                     </div>
                   </div>
@@ -342,7 +380,7 @@ export default function PropertyDetailPage() {
                             key={idx}
                             className="char-pill flex items-center gap-2 px-3 py-2 bg-white border border-gray-200"
                           >
-                            <span className="text-red-600">✓</span>
+                            {getCharIcon(char)}
                             <span style={{ fontFamily: FONT, fontSize: 13, color: '#444' }}>{char}</span>
                           </div>
                         ))}
@@ -359,37 +397,43 @@ export default function PropertyDetailPage() {
                     const zoneLabel = isCompra ? '¿Por qué invertir en esta zona?' : '¿Por qué arrendar en esta zona?';
                     return (
                       <ScrollReveal y={16} className="mt-6">
-                        <div style={{ borderLeft: '4px solid #f32735', padding: '20px 20px 20px 20px', background: 'rgba(243,39,53,0.03)', borderTop: '1px solid #f5e0e0', borderBottom: '1px solid #f5e0e0', borderRight: '1px solid #f5e0e0' }}>
-                          <h2 style={{ fontFamily: FONT, fontSize: 15, fontWeight: 700, color: '#1a1a1a', marginBottom: 8 }}>
-                            {isCompra ? 'Zona de inversión' : 'Por qué vivir aquí'}
-                          </h2>
-                          <p style={{ fontFamily: FONT, fontSize: 13, color: '#666', marginBottom: 16, lineHeight: 1.6 }}>
-                            Esta propiedad se encuentra en{' '}
-                            <strong style={{ color: '#f32735' }}>{investmentZone.name}</strong>,
-                            {isCompra ? ' una zona con alta demanda y potencial de rentabilidad.' : ' una zona con buena conectividad y calidad de vida.'}
-                          </p>
-                          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12, marginBottom: 16 }}>
-                            <div style={{ textAlign: 'center' }}>
-                              <p style={{ fontSize: 11, color: '#888', marginBottom: 2 }}>Rentabilidad</p>
-                              <p style={{ fontFamily: FONT, fontWeight: 700, color: '#f32735', fontSize: 16 }}>{investmentZone.rentability}</p>
-                            </div>
-                            <div style={{ textAlign: 'center' }}>
-                              <p style={{ fontSize: 11, color: '#888', marginBottom: 2 }}>Precio m²</p>
-                              <p style={{ fontFamily: FONT, fontWeight: 700, color: '#1a1a1a', fontSize: 13 }}>{investmentZone.pricePerM2}</p>
-                            </div>
-                            <div style={{ textAlign: 'center' }}>
-                              <p style={{ fontSize: 11, color: '#888', marginBottom: 2 }}>Estratos</p>
-                              <p style={{ fontFamily: FONT, fontWeight: 700, color: '#1a1a1a', fontSize: 15 }}>{investmentZone.strata}</p>
-                            </div>
+                        <div style={{ display: 'flex', border: '1px solid #e8e8e8', overflow: 'hidden' }}>
+                          {/* Card 1 — negra, pregunta */}
+                          <div style={{ background: '#1a1a1a', padding: '24px 20px', flex: '0 0 clamp(160px, 22%, 220px)', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                            <span style={{ fontFamily: FONT, fontSize: 11, fontWeight: 300, color: 'rgba(255,255,255,0.5)', marginBottom: 8, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+                              {isCompra ? 'Zona de inversión' : 'Vivir aquí'}
+                            </span>
+                            <h3 style={{ fontFamily: FONT, fontSize: 'clamp(14px, 1.1vw, 17px)', fontWeight: 700, color: '#fff', margin: 0, lineHeight: 1.3 }}>
+                              {zoneLabel}
+                            </h3>
                           </div>
-                          <Link
-                            href={`/inversionistas/${investmentZone.slug}`}
-                            style={{ display: 'inline-flex', alignItems: 'center', gap: 6, height: 40, padding: '0 20px', backgroundColor: '#f32735', color: '#fff', fontFamily: FONT, fontWeight: 600, fontSize: 13, textDecoration: 'none', transition: 'background-color 0.2s', borderRadius: 0 }}
-                            onMouseEnter={(e: React.MouseEvent<HTMLAnchorElement>) => (e.currentTarget.style.backgroundColor = '#c62828')}
-                            onMouseLeave={(e: React.MouseEvent<HTMLAnchorElement>) => (e.currentTarget.style.backgroundColor = '#f32735')}
-                          >
-                            {zoneLabel}
-                          </Link>
+                          {/* Card 2 — Rentabilidad */}
+                          <div style={{ padding: '24px 16px', flex: 1, borderLeft: '1px solid #e8e8e8', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                            <span style={{ fontFamily: FONT, fontSize: 11, color: '#aaa', marginBottom: 6, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Rentabilidad</span>
+                            <span style={{ fontFamily: FONT, fontSize: 'clamp(18px, 1.8vw, 24px)', fontWeight: 700, color: '#f32735', lineHeight: 1 }}>{investmentZone.rentability}</span>
+                          </div>
+                          {/* Card 3 — Precio m² */}
+                          <div style={{ padding: '24px 16px', flex: 1, borderLeft: '1px solid #e8e8e8', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                            <span style={{ fontFamily: FONT, fontSize: 11, color: '#aaa', marginBottom: 6, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Precio m²</span>
+                            <span style={{ fontFamily: FONT, fontSize: 'clamp(12px, 1vw, 14px)', fontWeight: 700, color: '#1a1a1a', lineHeight: 1.3 }}>{investmentZone.pricePerM2}</span>
+                          </div>
+                          {/* Card 4 — Estratos */}
+                          <div style={{ padding: '24px 16px', flex: '0 0 clamp(80px, 10%, 100px)', borderLeft: '1px solid #e8e8e8', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                            <span style={{ fontFamily: FONT, fontSize: 11, color: '#aaa', marginBottom: 6, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Estratos</span>
+                            <span style={{ fontFamily: FONT, fontSize: 'clamp(18px, 1.8vw, 24px)', fontWeight: 700, color: '#1a1a1a', lineHeight: 1 }}>{investmentZone.strata}</span>
+                          </div>
+                          {/* Card 5 — Ver más */}
+                          <div style={{ flex: '0 0 clamp(100px, 12%, 140px)', borderLeft: '1px solid #e8e8e8', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                            <Link
+                              href={`/inversionistas/${investmentZone.slug}`}
+                              style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width: '100%', height: '100%', padding: '16px 12px', textDecoration: 'none', background: '#fff', transition: 'background 0.2s', gap: 6 }}
+                              onMouseEnter={(e: React.MouseEvent<HTMLAnchorElement>) => (e.currentTarget.style.background = '#1a1a1a')}
+                              onMouseLeave={(e: React.MouseEvent<HTMLAnchorElement>) => (e.currentTarget.style.background = '#fff')}
+                            >
+                              <span style={{ fontFamily: FONT, fontSize: 12, fontWeight: 700, color: 'inherit', textAlign: 'center', lineHeight: 1.3 }}>Ver zona</span>
+                              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                            </Link>
+                          </div>
                         </div>
                       </ScrollReveal>
                     );
@@ -422,7 +466,6 @@ export default function PropertyDetailPage() {
 
                   {/* WhatsApp CTA */}
                   <a
-                    ref={whatsappBtnRef}
                     href={`https://wa.me/573006557529?text=${encodeURIComponent(
                       `Hola, quisiera consultar disponibilidad del inmueble ${property.reference} (${property.title}).`
                     )}`}
@@ -443,62 +486,6 @@ export default function PropertyDetailPage() {
                     </svg>
                     Escribir por WhatsApp
                   </a>
-
-                  <span style={{ textAlign: 'center', fontSize: '13px', color: '#909090', display: 'block' }}>
-                    o envía un mensaje
-                  </span>
-
-                  <form style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}
-                    onSubmit={e => e.preventDefault()}
-                  >
-                    {[
-                      { label: 'Tu nombre', type: 'text', placeholder: 'Nombre completo' },
-                      { label: 'Teléfono', type: 'tel', placeholder: '300 000 0000' },
-                    ].map(({ label, type, placeholder }) => (
-                      <div key={label} style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
-                        <label style={{ fontSize: '13px', fontWeight: 600, color: '#333' }}>{label}</label>
-                        <input
-                          type={type}
-                          placeholder={placeholder}
-                          style={{
-                            border: '1px solid #ccc', borderRadius: 0, padding: '10px 12px',
-                            fontSize: '14px', color: '#333', outline: 'none',
-                            transition: 'border-color 0.2s', fontFamily: 'inherit', background: '#fff',
-                          }}
-                          onFocus={e => (e.currentTarget.style.borderColor = '#e53935')}
-                          onBlur={e => (e.currentTarget.style.borderColor = '#ccc')}
-                        />
-                      </div>
-                    ))}
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
-                      <label style={{ fontSize: '13px', fontWeight: 600, color: '#333' }}>
-                        Mensaje <span style={{ fontWeight: 400, color: '#888' }}>(opcional)</span>
-                      </label>
-                      <textarea
-                        placeholder="¿Está disponible para visitar esta semana?"
-                        style={{
-                          border: '1px solid #ccc', borderRadius: 0, padding: '10px 12px',
-                          fontSize: '14px', color: '#333', outline: 'none',
-                          transition: 'border-color 0.2s', fontFamily: 'inherit', background: '#fff',
-                          minHeight: '80px', resize: 'vertical',
-                        }}
-                        onFocus={e => (e.currentTarget.style.borderColor = '#e53935')}
-                        onBlur={e => (e.currentTarget.style.borderColor = '#ccc')}
-                      />
-                    </div>
-                    <button
-                      type="submit"
-                      style={{
-                        backgroundColor: '#e53935', color: '#fff', fontWeight: 700, fontSize: '15px',
-                        padding: '13px', border: 'none', borderRadius: 0, cursor: 'pointer',
-                        width: '100%', transition: 'background-color 0.2s',
-                      }}
-                      onMouseEnter={e => (e.currentTarget.style.backgroundColor = '#c62828')}
-                      onMouseLeave={e => (e.currentTarget.style.backgroundColor = '#e53935')}
-                    >
-                      Enviar consulta
-                    </button>
-                  </form>
 
                   {/* Compartir */}
                   <div style={{ borderTop: '1px solid #eee', paddingTop: '14px', display: 'flex', flexDirection: 'column', gap: '10px', alignItems: 'center' }}>
