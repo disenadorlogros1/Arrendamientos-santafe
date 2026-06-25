@@ -668,7 +668,7 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', onApply, o
             <div style={{ ...contentStyle, opacity: codigoCollapsed ? 0 : 1, transition: 'opacity 0.15s ease' }}>
               <img src="/icons/icon-location-red.gif" alt="" width={24} height={24} style={{ flexShrink: 0 }} />
               <div style={{ minWidth: 0, flex: 1 }}>
-                <p style={labelStyle}>Ubicación</p>
+                <p style={labelStyle}>Ubicación / Mapa</p>
                 <CustomSelect
                   value={sector}
                   onChange={setSector}

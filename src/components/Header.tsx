@@ -151,27 +151,28 @@ export default function Header({ currentPage, onNavigate, isHeroPage = true, dar
   const navBorderColor = isDark ? 'rgba(255, 255, 255, 0.3)' : 'rgba(0, 0, 0, 0.1)';
 
   return (
-    <header className={`fixed top-0 left-0 right-0 pt-4 pb-3 px-4 sm:px-6 lg:px-8 transition-all duration-300 ${headerBackground}`}
-      style={{ zIndex: 50, backgroundColor: headerBgColor, backfaceVisibility: 'hidden' }}>
-      <div className="flex items-center h-[58px] gap-3">
-        {/* Logo */}
-        <button onClick={() => handleNav('home')} className="shrink-0">
-          <img src={isDark ? "/icons/icon-santa-fe-logo.png" : "/icons/icon-santa-fe-logo-red.png"} alt="Arrendamientos Santa Fe" className="h-10 md:h-11 w-auto object-contain" />
-        </button>
+    <header className={`fixed top-0 left-0 right-0 transition-all duration-300 ${headerBackground}`}
+      style={{ zIndex: 50, backgroundColor: headerBgColor, backfaceVisibility: 'hidden', height: '86px' }}>
 
-        {/* Nav capsula — ocupa el espacio central */}
-        <div className="hidden lg:flex flex-1 justify-center min-w-0">
-        <nav className={`flex items-center justify-between gap-1 rounded-full p-[3px] h-[42px] border shadow-lg w-full`}
+      {/* Logo — absolute izquierda */}
+      <button
+        onClick={() => handleNav('home')}
+        className="absolute top-1/2 -translate-y-1/2 left-4 sm:left-6 lg:left-8"
+      >
+        <img src={isDark ? "/icons/icon-santa-fe-logo.png" : "/icons/icon-santa-fe-logo-red.png"} alt="Arrendamientos Santa Fe" className="h-10 md:h-11 w-auto object-contain" />
+      </button>
+
+      {/* Nav — centrada con mismo maxWidth y padding que el SearchForm */}
+      <div className="hidden lg:flex items-center h-full mx-auto px-4 sm:px-6 lg:px-8" style={{ maxWidth: '64rem' }}>
+        <nav className="flex items-center justify-between gap-1 rounded-full p-[3px] h-[42px] border shadow-lg w-full"
           style={{
             overflow: 'visible',
-            maxWidth: '64rem',
             backgroundColor: navBgColor,
             borderColor: navBorderColor,
             backdropFilter: 'blur(10px)',
           }}>
           {navItems.map((item) =>
             item.children ? (
-              /* Item con dropdown — CSS puro, sin JS */
               <div key={item.label} className="relative group flex-1">
                 {(() => {
                   const isActive = currentPage === item.page || item.children?.some(c => c.page === currentPage);
@@ -187,10 +188,9 @@ export default function Header({ currentPage, onNavigate, isHeroPage = true, dar
                     </button>
                   );
                 })()}
-                {/* Dropdown CSS — se muestra con group-hover */}
                 <div className="absolute top-full left-1/2 pt-[3px] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200"
                   style={{ transform: 'translateX(-50%)', zIndex: 60 }}>
-                  <div className="bg-white rounded-2xl pt-2 pb-1 min-w-[230px] shadow-2xl border border-gray-100">
+                  <div className="bg-white rounded-2xl min-w-[230px] shadow-2xl border border-gray-100 overflow-hidden">
                     {item.children.map((sub) =>
                       sub.href ? (
                         <a
@@ -198,23 +198,17 @@ export default function Header({ currentPage, onNavigate, isHeroPage = true, dar
                           href={sub.href}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="block w-full text-left px-5 py-2.5 text-[15px] text-gray-700 hover:text-white hover:bg-brand-red transition-colors duration-150 first:rounded-t-2xl last:rounded-b-2xl"
+                          className="block w-full text-left px-5 py-2.5 text-[15px] text-gray-700 hover:text-white hover:bg-brand-red transition-colors duration-150"
                           style={{ fontFamily: "'Avenir LT Std', 'Outfit', system-ui, sans-serif", fontWeight: 300 }}
-                          onMouseEnter={(e) => e.target.style.color = 'white'}
-                          onMouseLeave={(e) => e.target.style.color = '#374151'}
                         >
                           {sub.label}
                         </a>
                       ) : (
                         <button
                           key={sub.label}
-                          onClick={() => {
-                            if (sub.page) handleNav(sub.page, sub.filter);
-                          }}
-                          className="block w-full text-left px-5 py-2.5 text-[15px] text-gray-700 hover:text-white hover:bg-brand-red transition-colors duration-150 first:rounded-t-2xl last:rounded-b-2xl"
+                          onClick={() => { if (sub.page) handleNav(sub.page, sub.filter); }}
+                          className="block w-full text-left px-5 py-2.5 text-[15px] hover:text-white hover:bg-brand-red transition-colors duration-150"
                           style={{ fontFamily: "'Avenir LT Std', 'Outfit', system-ui, sans-serif", fontWeight: 300, color: '#666' }}
-                          onMouseEnter={(e) => e.currentTarget.style.color = 'white'}
-                          onMouseLeave={(e) => e.currentTarget.style.color = '#666'}
                         >
                           {sub.label}
                         </button>
@@ -224,7 +218,6 @@ export default function Header({ currentPage, onNavigate, isHeroPage = true, dar
                 </div>
               </div>
             ) : (
-              /* Item sin dropdown — click navega */
               (() => {
                 const isActive = currentPage === item.page;
                 return (
@@ -243,19 +236,18 @@ export default function Header({ currentPage, onNavigate, isHeroPage = true, dar
             )
           )}
         </nav>
-        </div>
+      </div>
 
-        {/* Spacer mobile — empuja iconos a la derecha */}
-        <div className="flex-1 lg:hidden" />
+      {/* Botones desktop — absolute derecha */}
+      <div className="hidden lg:flex items-center gap-2 absolute top-1/2 -translate-y-1/2 right-4 sm:right-6 lg:right-8">
+        <WhatsAppButton />
+        <PSEButton />
+      </div>
 
-        {/* WhatsApp + PSE desktop */}
-        <div className="hidden lg:flex shrink-0 items-center gap-2">
-          <WhatsAppButton />
-          <PSEButton />
-        </div>
-
-        {/* Mobile */}
-        <div className="flex items-center gap-2 lg:hidden">
+      {/* Mobile: logo ya está absoluto arriba; spacer + icons */}
+      <div className="flex lg:hidden items-center h-full px-4 sm:px-6">
+        <div className="flex-1" />
+        <div className="flex items-center gap-2">
           {/* Mobile WhatsApp: Icono, alterna cada 5 segundos */}
           <MobileWhatsAppButton />
           {/* Mobile PSE: Icono, alterna cada 5 segundos */}

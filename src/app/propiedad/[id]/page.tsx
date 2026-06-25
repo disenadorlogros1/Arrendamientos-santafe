@@ -74,23 +74,31 @@ function SimilarSection({ current }: { current: import('@/data/properties').Prop
   if (similar.length === 0) return null;
 
   return (
-    <div style={{ marginTop: 40, borderTop: '1px solid #f0f0f0', paddingTop: 32 }}>
-      <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: 12, marginBottom: 4, paddingLeft: 16, paddingRight: 16 }}>
-        <h2 style={{ fontFamily: FONT, fontSize: 'clamp(20px, 2.4vw, 32px)', fontWeight: 900, color: '#1a1a1a', margin: 0 }}>
+    <div style={{ marginTop: 32, display: 'flex', alignItems: 'stretch' }}>
+      {/* Card negra estática */}
+      <div style={{
+        flexShrink: 0, width: 'clamp(140px, 16%, 200px)',
+        background: '#1a1a1a',
+        display: 'flex', flexDirection: 'column', justifyContent: 'center',
+        padding: '28px 20px', gap: 16,
+        paddingTop: 'clamp(12px,3vw,32px)', paddingBottom: 'clamp(12px,3vw,32px)',
+      }}>
+        <h2 style={{ fontFamily: FONT, fontSize: 'clamp(14px, 1.2vw, 18px)', fontWeight: 900, color: '#fff', margin: 0, lineHeight: 1.25 }}>
           Propiedades <span style={{ fontWeight: 300 }}>similares</span>
         </h2>
-        <div style={{ display: 'flex', gap: 6 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
           {FILTERS.map(f => (
             <button
               key={f.key}
               onClick={() => setFilter(f.key)}
               style={{
-                fontFamily: FONT, fontSize: 13, fontWeight: filter === f.key ? 700 : 400,
-                padding: '6px 16px', border: '1px solid',
-                borderColor: filter === f.key ? '#f32735' : '#ddd',
-                backgroundColor: filter === f.key ? '#f32735' : '#fff',
-                color: filter === f.key ? '#fff' : '#555',
+                fontFamily: FONT, fontSize: 12, fontWeight: filter === f.key ? 700 : 400,
+                padding: '6px 10px', border: '1px solid',
+                borderColor: filter === f.key ? '#f32735' : 'rgba(255,255,255,0.2)',
+                backgroundColor: filter === f.key ? '#f32735' : 'transparent',
+                color: filter === f.key ? '#fff' : 'rgba(255,255,255,0.65)',
                 borderRadius: 0, cursor: 'pointer', transition: 'all 0.15s',
+                textAlign: 'left',
               }}
             >
               {f.label}
@@ -98,14 +106,15 @@ function SimilarSection({ current }: { current: import('@/data/properties').Prop
           ))}
         </div>
       </div>
-      <div style={{ paddingTop: '1.5%', paddingBottom: '1.5%' }}>
+      {/* Carrusel */}
+      <div style={{ flex: 1, minWidth: 0 }}>
         <InfiniteCarousel properties={similar} />
       </div>
     </div>
   );
 }
 
-function DetailRow({ icon, label, value, isRight }: { icon: string; label: string; value: string; isRight: boolean }) {
+function DetailRow({ icon, label, value, isRight, spanFull }: { icon: string; label: string; value: string; isRight: boolean; spanFull?: boolean }) {
   const [hov, setHov] = useState(false);
   return (
     <div
@@ -115,19 +124,18 @@ function DetailRow({ icon, label, value, isRight }: { icon: string; label: strin
         display: 'flex', alignItems: 'center', gap: 10,
         padding: '11px 16px',
         borderBottom: '1px solid #f0f0f0',
-        borderRight: isRight ? 'none' : '1px solid #f0f0f0',
+        borderRight: (isRight || spanFull) ? 'none' : '1px solid #f0f0f0',
         background: hov ? '#fafafa' : '#fff',
         transition: 'background 0.15s',
+        gridColumn: spanFull ? 'span 2' : undefined,
       }}
     >
       <img
         src={icon} width="18" height="18"
         style={{ flexShrink: 0, filter: hov ? 'none' : 'grayscale(1) opacity(0.4)', transition: 'filter 0.2s' }}
       />
-      <div style={{ flex: 1, minWidth: 0 }}>
-        <span style={{ fontFamily: FONT, fontSize: 12, fontWeight: 700, color: '#333', display: 'block' }}>{label}</span>
-        <span style={{ fontFamily: FONT, fontSize: 13, fontWeight: 400, color: '#666' }}>{value}</span>
-      </div>
+      <span style={{ fontFamily: FONT, fontSize: 13, fontWeight: 700, color: '#444', flex: 1 }}>{label}</span>
+      <span style={{ fontFamily: FONT, fontSize: 13, fontWeight: 400, color: '#666' }}>{value}</span>
     </div>
   );
 }
@@ -298,9 +306,10 @@ export default function PropertyDetailPage() {
 
                 {/* Título, precio, stats */}
                 <div ref={titleBlockRef} style={{ marginBottom: 24 }}>
-                  <h1 style={{ fontFamily: FONT, fontSize: 'clamp(22px, 3.5vw, 34px)', fontWeight: 900, color: '#1a1a1a', lineHeight: 1.1, letterSpacing: '-0.3px', margin: '0 0 4px 0' }}>{property.title}</h1>
-
-                  <p style={{ fontFamily: FONT, fontSize: 'clamp(22px, 3.2vw, 36px)', fontWeight: 900, color: '#f32735', lineHeight: 1.05, letterSpacing: '-0.5px', margin: '0 0 5px 0' }}>{property.price}</p>
+                  <div style={{ display: 'flex', alignItems: 'baseline', flexWrap: 'wrap', gap: '10px 20px', margin: '0 0 5px 0' }}>
+                    <h1 style={{ fontFamily: FONT, fontSize: 'clamp(22px, 3.5vw, 34px)', fontWeight: 900, color: '#1a1a1a', lineHeight: 1.1, letterSpacing: '-0.3px', margin: 0 }}>{property.title}</h1>
+                    <p style={{ fontFamily: FONT, fontSize: 'clamp(20px, 3vw, 32px)', fontWeight: 900, color: '#f32735', lineHeight: 1.05, letterSpacing: '-0.5px', margin: 0 }}>{property.price}</p>
+                  </div>
 
                   <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 16 }}>
                     <span style={{ fontFamily: FONT, fontSize: 12, fontWeight: 500, color: '#909090' }}>
@@ -319,7 +328,7 @@ export default function PropertyDetailPage() {
                     <ScrollReveal y={12} delay={0}>
                       <div style={{ marginTop: 24 }}>
                         <h2 style={{ fontFamily: FONT, fontSize: 16, fontWeight: 700, color: '#1a1a1a', marginBottom: 10 }}>Descripción</h2>
-                        <p style={{ fontFamily: FONT, fontSize: 14, color: '#909090', lineHeight: 1.7 }}>{property.description}</p>
+                        <p style={{ fontFamily: FONT, fontSize: 14, fontWeight: 300, color: '#909090', lineHeight: 1.4 }}>{property.description}</p>
                       </div>
                     </ScrollReveal>
                   )}
@@ -345,8 +354,8 @@ export default function PropertyDetailPage() {
                         { icon: '/icons/icon-home-red.gif',      label: 'Acepta mascotas',   value: property.petFriendly ? 'Sí' : 'No', show: property.petFriendly !== undefined },
                         { icon: '/icons/icon-home-red.gif',      label: 'Contrato mínimo',   value: property.contratoMinimo ?? '',     show: !!property.contratoMinimo },
                         { icon: '/icons/icon-home-red.gif',      label: 'Amoblado',          value: property.furnished ? 'Sí' : 'No', show: property.furnished !== undefined },
-                      ].filter(r => r.show).map((row, i) => (
-                        <DetailRow key={row.label} icon={row.icon} label={row.label} value={row.value} isRight={i % 2 === 1} />
+                      ].filter(r => r.show).map((row, i, arr) => (
+                        <DetailRow key={row.label} icon={row.icon} label={row.label} value={row.value} isRight={i % 2 === 1} spanFull={i === arr.length - 1 && arr.length % 2 === 1} />
                       ))}
                     </div>
                   </div>
@@ -398,29 +407,26 @@ export default function PropertyDetailPage() {
                     return (
                       <ScrollReveal y={16} className="mt-6">
                         <div style={{ display: 'flex', border: '1px solid #e8e8e8', overflow: 'hidden' }}>
-                          {/* Card 1 — negra, pregunta */}
+                          {/* Card 1 — negra, solo pregunta */}
                           <div style={{ background: '#1a1a1a', padding: '24px 20px', flex: '0 0 clamp(160px, 22%, 220px)', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                            <span style={{ fontFamily: FONT, fontSize: 11, fontWeight: 300, color: 'rgba(255,255,255,0.5)', marginBottom: 8, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
-                              {isCompra ? 'Zona de inversión' : 'Vivir aquí'}
-                            </span>
                             <h3 style={{ fontFamily: FONT, fontSize: 'clamp(14px, 1.1vw, 17px)', fontWeight: 700, color: '#fff', margin: 0, lineHeight: 1.3 }}>
                               {zoneLabel}
                             </h3>
                           </div>
                           {/* Card 2 — Rentabilidad */}
-                          <div style={{ padding: '24px 16px', flex: 1, borderLeft: '1px solid #e8e8e8', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                            <span style={{ fontFamily: FONT, fontSize: 11, color: '#aaa', marginBottom: 6, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Rentabilidad</span>
-                            <span style={{ fontFamily: FONT, fontSize: 'clamp(18px, 1.8vw, 24px)', fontWeight: 700, color: '#f32735', lineHeight: 1 }}>{investmentZone.rentability}</span>
+                          <div style={{ padding: '24px 16px', flex: 1, borderLeft: '1px solid #e8e8e8', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center' }}>
+                            <span style={{ fontFamily: FONT, fontSize: 12, fontWeight: 400, color: '#aaa', marginBottom: 6 }}>Rentabilidad</span>
+                            <span style={{ fontFamily: FONT, fontSize: 'clamp(18px, 2.2vw, 26px)', fontWeight: 900, color: '#f32735', lineHeight: 1 }}>{investmentZone.rentability}</span>
                           </div>
                           {/* Card 3 — Precio m² */}
-                          <div style={{ padding: '24px 16px', flex: 1, borderLeft: '1px solid #e8e8e8', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                            <span style={{ fontFamily: FONT, fontSize: 11, color: '#aaa', marginBottom: 6, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Precio m²</span>
-                            <span style={{ fontFamily: FONT, fontSize: 'clamp(12px, 1vw, 14px)', fontWeight: 700, color: '#1a1a1a', lineHeight: 1.3 }}>{investmentZone.pricePerM2}</span>
+                          <div style={{ padding: '24px 16px', flex: 1, borderLeft: '1px solid #e8e8e8', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center' }}>
+                            <span style={{ fontFamily: FONT, fontSize: 12, fontWeight: 400, color: '#aaa', marginBottom: 6 }}>Precio m²</span>
+                            <span style={{ fontFamily: FONT, fontSize: 'clamp(14px, 1.4vw, 18px)', fontWeight: 900, color: '#1a1a1a', lineHeight: 1.2 }}>{investmentZone.pricePerM2}</span>
                           </div>
                           {/* Card 4 — Estratos */}
-                          <div style={{ padding: '24px 16px', flex: '0 0 clamp(80px, 10%, 100px)', borderLeft: '1px solid #e8e8e8', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                            <span style={{ fontFamily: FONT, fontSize: 11, color: '#aaa', marginBottom: 6, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Estratos</span>
-                            <span style={{ fontFamily: FONT, fontSize: 'clamp(18px, 1.8vw, 24px)', fontWeight: 700, color: '#1a1a1a', lineHeight: 1 }}>{investmentZone.strata}</span>
+                          <div style={{ padding: '24px 16px', flex: '0 0 clamp(80px, 10%, 110px)', borderLeft: '1px solid #e8e8e8', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center' }}>
+                            <span style={{ fontFamily: FONT, fontSize: 12, fontWeight: 400, color: '#aaa', marginBottom: 6 }}>Estratos</span>
+                            <span style={{ fontFamily: FONT, fontSize: 'clamp(18px, 2.2vw, 26px)', fontWeight: 900, color: '#1a1a1a', lineHeight: 1 }}>{investmentZone.strata}</span>
                           </div>
                           {/* Card 5 — Ver más */}
                           <div style={{ flex: '0 0 clamp(100px, 12%, 140px)', borderLeft: '1px solid #e8e8e8', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -489,7 +495,7 @@ export default function PropertyDetailPage() {
 
                   {/* Compartir */}
                   <div style={{ borderTop: '1px solid #eee', paddingTop: '14px', display: 'flex', flexDirection: 'column', gap: '10px', alignItems: 'center' }}>
-                    <span style={{ fontSize: '12px', fontWeight: 600, color: '#888', letterSpacing: '0.02em' }}>
+                    <span style={{ fontFamily: FONT, fontSize: '13px', fontWeight: 400, color: '#909090' }}>
                       Compartir propiedad
                     </span>
                     <div style={{ display: 'flex', gap: '8px', width: '100%' }}>
@@ -499,7 +505,7 @@ export default function PropertyDetailPage() {
                         style={{
                           display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px',
                           backgroundColor: '#f5f5f5', color: '#444', fontSize: '13px', fontWeight: 600,
-                          padding: '9px 14px', borderRadius: 0, border: '1px solid #e0e0e0', cursor: 'pointer',
+                          padding: '9px 14px', borderRadius: '999px', border: '1px solid #e0e0e0', cursor: 'pointer',
                           flex: 1, transition: 'background-color 0.2s',
                         }}
                         onMouseEnter={e => (e.currentTarget.style.backgroundColor = '#e8e8e8')}
