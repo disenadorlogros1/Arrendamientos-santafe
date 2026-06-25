@@ -35,6 +35,11 @@ export interface Property {
   longitude?: number;
   investmentZone?: "el-poblado" | "laureles" | "envigado" | "sabaneta";
   images?: string[];
+  administracion?: string;
+  antiguedad?: string;
+  estado?: 'Nuevo' | 'Usado';
+  contratoMinimo?: string;
+  pisoNumero?: number;
 }
 
 // Location to investment zone mapping

@@ -198,45 +198,94 @@ export default function PropertyDetailPage() {
                     <ScrollReveal y={10}>
                       <h2 style={{ fontFamily: FONT, fontSize: 16, fontWeight: 700, color: '#1a1a1a', marginBottom: 16 }}>Detalles del inmueble</h2>
                     </ScrollReveal>
-                    <div ref={detailsRef} className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div ref={detailsRef} className="grid grid-cols-1 md:grid-cols-2 gap-3">
+
+                      {/* Siempre visibles */}
                       <div className="detail-card flex items-center gap-3 p-3 bg-gray-50 rounded">
                         <img src="/icons/icon-home-red.gif" alt="Tipo" width="24" height="24" />
-                        <div>
-                          <div className="text-xs text-gray-600">Tipo de inmueble</div>
-                          <div className="font-semibold text-gray-900">{property.type}</div>
-                        </div>
+                        <div><div className="text-xs text-gray-600">Tipo de inmueble</div><div className="font-semibold text-gray-900">{property.type}</div></div>
                       </div>
                       <div className="detail-card flex items-center gap-3 p-3 bg-gray-50 rounded">
                         <img src="/icons/icon-area-gray.gif" alt="Área" width="24" height="24" />
-                        <div>
-                          <div className="text-xs text-gray-600">Área construida</div>
-                          <div className="font-semibold text-gray-900">{property.size}</div>
-                        </div>
+                        <div><div className="text-xs text-gray-600">Área construida</div><div className="font-semibold text-gray-900">{property.size}</div></div>
                       </div>
-                      {property.stratum && (
-                        <div className="detail-card flex items-center gap-3 p-3 bg-gray-50 rounded">
-                          <img src="/icons/icon-home-red.gif" alt="Estrato" width="24" height="24" />
-                          <div>
-                            <div className="text-xs text-gray-600">Estrato</div>
-                            <div className="font-semibold text-gray-900">Est. {property.stratum}</div>
-                          </div>
-                        </div>
-                      )}
+
+                      {/* Condicionales */}
                       {property.bedrooms > 0 && (
                         <div className="detail-card flex items-center gap-3 p-3 bg-gray-50 rounded">
                           <img src="/icons/icon-bed-gray.gif" alt="Habitaciones" width="24" height="24" />
-                          <div>
-                            <div className="text-xs text-gray-600">Habitaciones</div>
-                            <div className="font-semibold text-gray-900">{property.bedrooms}</div>
-                          </div>
+                          <div><div className="text-xs text-gray-600">Habitaciones</div><div className="font-semibold text-gray-900">{property.bedrooms}</div></div>
                         </div>
                       )}
                       {property.bathrooms > 0 && (
                         <div className="detail-card flex items-center gap-3 p-3 bg-gray-50 rounded">
                           <img src="/icons/icon-bathroom-gray.gif" alt="Baños" width="24" height="24" />
+                          <div><div className="text-xs text-gray-600">Baños</div><div className="font-semibold text-gray-900">{property.bathrooms}</div></div>
+                        </div>
+                      )}
+                      {property.stratum && (
+                        <div className="detail-card flex items-center gap-3 p-3 bg-gray-50 rounded">
+                          <img src="/icons/icon-home-red.gif" alt="Estrato" width="24" height="24" />
+                          <div><div className="text-xs text-gray-600">Estrato</div><div className="font-semibold text-gray-900">Estrato {property.stratum}</div></div>
+                        </div>
+                      )}
+                      {(property.parking ?? 0) > 0 && (
+                        <div className="detail-card flex items-center gap-3 p-3 bg-gray-50 rounded">
+                          <img src="/icons/icon-home-red.gif" alt="Parqueaderos" width="24" height="24" />
+                          <div><div className="text-xs text-gray-600">Parqueaderos</div><div className="font-semibold text-gray-900">{property.parking}</div></div>
+                        </div>
+                      )}
+                      {(property.garage ?? 0) > 0 && (
+                        <div className="detail-card flex items-center gap-3 p-3 bg-gray-50 rounded">
+                          <img src="/icons/icon-home-red.gif" alt="Garajes" width="24" height="24" />
+                          <div><div className="text-xs text-gray-600">Garajes</div><div className="font-semibold text-gray-900">{property.garage}</div></div>
+                        </div>
+                      )}
+                      {property.estado && (
+                        <div className="detail-card flex items-center gap-3 p-3 bg-gray-50 rounded">
+                          <img src="/icons/icon-home-red.gif" alt="Estado" width="24" height="24" />
+                          <div><div className="text-xs text-gray-600">Estado</div><div className="font-semibold text-gray-900">{property.estado}</div></div>
+                        </div>
+                      )}
+                      {property.antiguedad && (
+                        <div className="detail-card flex items-center gap-3 p-3 bg-gray-50 rounded">
+                          <img src="/icons/icon-home-red.gif" alt="Antigüedad" width="24" height="24" />
+                          <div><div className="text-xs text-gray-600">Antigüedad</div><div className="font-semibold text-gray-900">{property.antiguedad}</div></div>
+                        </div>
+                      )}
+                      {property.pisoNumero !== undefined && (
+                        <div className="detail-card flex items-center gap-3 p-3 bg-gray-50 rounded">
+                          <img src="/icons/icon-home-red.gif" alt="Piso" width="24" height="24" />
+                          <div><div className="text-xs text-gray-600">Piso N°</div><div className="font-semibold text-gray-900">{property.pisoNumero}</div></div>
+                        </div>
+                      )}
+                      {property.administracion && (
+                        <div className="detail-card flex items-center gap-3 p-3 bg-gray-50 rounded">
+                          <img src="/icons/icon-home-red.gif" alt="Administración" width="24" height="24" />
+                          <div><div className="text-xs text-gray-600">Administración</div><div className="font-semibold text-gray-900">{property.administracion}</div></div>
+                        </div>
+                      )}
+                      {property.petFriendly !== undefined && (
+                        <div className="detail-card flex items-center gap-3 p-3 bg-gray-50 rounded">
+                          <img src="/icons/icon-home-red.gif" alt="Mascotas" width="24" height="24" />
                           <div>
-                            <div className="text-xs text-gray-600">Baños</div>
-                            <div className="font-semibold text-gray-900">{property.bathrooms}</div>
+                            <div className="text-xs text-gray-600">Acepta mascotas</div>
+                            <div className="font-semibold text-gray-900">{property.petFriendly ? 'Sí' : 'No'}</div>
+                          </div>
+                        </div>
+                      )}
+                      {property.contratoMinimo && (
+                        <div className="detail-card flex items-center gap-3 p-3 bg-gray-50 rounded">
+                          <img src="/icons/icon-home-red.gif" alt="Contrato" width="24" height="24" />
+                          <div><div className="text-xs text-gray-600">Contrato mínimo</div><div className="font-semibold text-gray-900">{property.contratoMinimo}</div></div>
+                        </div>
+                      )}
+                      {property.furnished !== undefined && (
+                        <div className="detail-card flex items-center gap-3 p-3 bg-gray-50 rounded">
+                          <img src="/icons/icon-home-red.gif" alt="Amoblado" width="24" height="24" />
+                          <div>
+                            <div className="text-xs text-gray-600">Amoblado</div>
+                            <div className="font-semibold text-gray-900">{property.furnished ? 'Sí' : 'No'}</div>
                           </div>
                         </div>
                       )}
@@ -474,6 +523,42 @@ export default function PropertyDetailPage() {
             </div>
           </div>
         </div>
+      {/* JSON-LD Schema.org — RealEstateListing */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'RealEstateListing',
+          name: property.title,
+          description: property.description ?? '',
+          url: typeof window !== 'undefined' ? window.location.href : '',
+          image: galleryImages[0] ?? property.image,
+          offers: {
+            '@type': 'Offer',
+            priceCurrency: 'COP',
+            price: property.price.replace(/[^0-9]/g, ''),
+            availability: 'https://schema.org/InStock',
+          },
+          address: {
+            '@type': 'PostalAddress',
+            streetAddress: property.address ?? property.location,
+            addressLocality: 'Medellín',
+            addressRegion: 'Antioquia',
+            addressCountry: 'CO',
+          },
+          ...(property.latitude && property.longitude ? {
+            geo: { '@type': 'GeoCoordinates', latitude: property.latitude, longitude: property.longitude },
+          } : {}),
+          numberOfRooms: property.bedrooms,
+          numberOfBathroomsTotal: property.bathrooms,
+          floorSize: { '@type': 'QuantitativeValue', value: parseInt(property.size), unitCode: 'MTK' },
+          petsAllowed: property.petFriendly ?? false,
+          ...(property.antiguedad ? { yearBuilt: property.antiguedad } : {}),
+          amenityFeature: (property.characteristics ?? []).map(c => ({
+            '@type': 'LocationFeatureSpecification', name: c, value: true,
+          })),
+        })}}
+      />
       </main>
       <Footer onNavigate={handleNavigate} />
     </div>
