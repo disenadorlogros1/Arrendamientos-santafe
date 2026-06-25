@@ -5,11 +5,15 @@ import gsap from 'gsap';
 import { Calendar, Home, DollarSign } from 'lucide-react';
 import { useSplitTextAnimation } from '@/hooks/useSplitTextAnimation';
 import ScrollReveal from '@/components/ScrollReveal';
+import type { PageType } from '@/components/Header';
 
 const WHATSAPP_URL = 'https://wa.me/573006557529?text=Hola%2C%20quisiera%20consignar%20una%20propiedad%20con%20Arrendamientos%20Santa%20Fe.';
-const PRIVACY_POLICY_URL = 'https://bit.ly/34WpJ7H';
 
-export default function ConsignacionPage() {
+interface ConsignacionPageProps {
+  onNavigate?: (page: PageType) => void;
+}
+
+export default function ConsignacionPage({ onNavigate }: ConsignacionPageProps = {}) {
   const { ref: titleRef, titleAnimating } = useSplitTextAnimation('.consignacion-title-split', 0, false);
   const subtitleRef = useRef<HTMLParagraphElement>(null);
   const ctaBtnRef = useRef<HTMLDivElement>(null);
@@ -130,10 +134,16 @@ export default function ConsignacionPage() {
             </a>
 
             <p className="text-sm text-gray-600 max-w-2xl mx-auto">
-              *Al enviar el formulario estoy aceptando la política de tratamiento de datos:{' '}
-              <a href={PRIVACY_POLICY_URL} target="_blank" rel="noopener noreferrer" className="text-brand-red hover:underline">
-                {PRIVACY_POLICY_URL}
-              </a>
+              *Al continuar estoy aceptando la{' '}
+              <button
+                type="button"
+                onClick={() => { onNavigate?.('politicas'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                className="text-brand-red hover:underline font-medium"
+                style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0, fontSize: 'inherit', fontFamily: 'inherit' }}
+              >
+                política de tratamiento de datos personales
+              </button>
+              .
             </p>
           </ScrollReveal>
         </div>

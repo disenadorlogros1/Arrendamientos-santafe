@@ -137,7 +137,7 @@ export default function Home() {
         <div key={currentPage} className="page-fade-in">
           {currentPage === 'home' && <HomePage onNavigate={handleNavigate} />}
           {currentPage === 'propiedades' && <PropiedadesPage initialFilter={propiedadesFilter} />}
-          {currentPage === 'consignacion' && <ConsignacionPage />}
+          {currentPage === 'consignacion' && <ConsignacionPage onNavigate={handleNavigate} />}
           {currentPage === 'hipotecas' && <HipotecasPage />}
           {currentPage === 'servicios' && <ServiciosPage />}
           {currentPage === 'nosotros' && <InstitucionalPage onNavigate={handleNavigate} />}
