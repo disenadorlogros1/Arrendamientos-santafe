@@ -492,9 +492,10 @@ interface Props {
   initialTipo?: 'Todos' | 'Arrendar' | 'Comprar';
   onApply: (f: PropSearchFilters) => void;
   onShowMap?: () => void;
+  collapsed?: boolean;
 }
 
-export default function PropiedadesSearchBar({ initialTipo = 'Todos', onApply, onShowMap }: Props) {
+export default function PropiedadesSearchBar({ initialTipo = 'Todos', onApply, onShowMap, collapsed = false }: Props) {
   const [tipo,          setTipo]          = useState<'Todos' | 'Arrendar' | 'Comprar'>(initialTipo);
   const [codigo,        setCodigo]        = useState('');
   const [codigoActive,  setCodigoActive]  = useState(false);
@@ -613,6 +614,11 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', onApply, o
         </div>
 
         {/* ── Grid único: filtros principales + avanzados alineados ─── */}
+        <div style={{
+          overflow: 'hidden',
+          maxHeight: collapsed ? '0px' : '500px',
+          transition: 'max-height 0.35s cubic-bezier(0.4,0,0.2,1)',
+        }}>
         <div style={{
           display: 'grid',
           gridTemplateColumns: codigoCollapsed ? `calc(100% - 156px) 52px 52px 52px` : '25% 25% 25% 25%',
@@ -857,6 +863,7 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', onApply, o
           </button>
 
         </div>
+        </div>{/* end collapse wrapper */}
 
       </div>
     </div>

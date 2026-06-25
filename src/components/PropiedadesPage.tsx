@@ -458,6 +458,7 @@ export default function PropiedadesPage({ initialFilter = 'Todos' }: { initialFi
           initialTipo={initialFilter || 'Todos'}
           onApply={setAppliedFilters}
           onShowMap={() => setShowMap(true)}
+          collapsed={showMap}
         />
       </div>
 

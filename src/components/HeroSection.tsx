@@ -34,17 +34,9 @@ const RED          = '#f32735';
 
 export default function HeroSection({ onNavigate, searchFormSlot }: HeroSectionProps) {
   const { ref: titleRef, titleAnimating } = useSplitTextAnimation('.hero-title-split', 0, false, true);
-  const boldTextRef = useRef<HTMLSpanElement>(null);
   const subtitleRef = useRef<HTMLParagraphElement>(null);
   const [titleHovered, setTitleHovered] = useState(false);
 
-  useEffect(() => {
-    if (!boldTextRef.current) return;
-    const underlineEl = boldTextRef.current.nextElementSibling;
-    if (!underlineEl) return;
-    gsap.set(underlineEl, { scaleX: 0, transformOrigin: 'left center' });
-    gsap.to(underlineEl, { scaleX: 1, duration: 0.9, delay: 1.6, ease: 'power3.out' });
-  }, []);
 
   useEffect(() => {
     if (!titleAnimating || !subtitleRef.current) return;
@@ -104,7 +96,7 @@ export default function HeroSection({ onNavigate, searchFormSlot }: HeroSectionP
                 60 años
                 <br className="hidden sm:inline" />
                 <span className="block sm:inline-block" style={{ fontWeight: 700, position: 'relative', lineHeight: 'inherit', overflow: 'hidden' }}>
-                  <span ref={boldTextRef} style={{ position: 'relative', zIndex: 2, lineHeight: 'inherit' }}>
+                  <span style={{ position: 'relative', zIndex: 2, lineHeight: 'inherit' }}>
                     conectando personas
                   </span>
                   {/* Slash diagonal — aparece en hover, detrás del texto */}
@@ -123,21 +115,6 @@ export default function HeroSection({ onNavigate, searchFormSlot }: HeroSectionP
                       opacity: titleHovered ? 1 : 0,
                       transition: 'opacity 0.07s ease',
                       pointerEvents: 'none',
-                    }}
-                  />
-                  {/* Underline animado al montar */}
-                  <span
-                    aria-hidden="true"
-                    className="hidden sm:inline-block"
-                    style={{
-                      position: 'absolute',
-                      top: '72%',
-                      left: 0,
-                      width: '100%',
-                      height: '0.15em',
-                      backgroundColor: RED,
-                      transform: 'translateY(-50%)',
-                      zIndex: 1,
                     }}
                   />
                 </span>
