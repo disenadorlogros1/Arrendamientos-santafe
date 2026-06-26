@@ -45,20 +45,20 @@ const BARRIO_SECTOR: Record<string, Sector> = {
   'san-jeronimo': 'Occidente', 'santa-fe-de-antioquia': 'Occidente', 'sopetran': 'Occidente',
 };
 
-// Etiquetas legibles
-const BARRIO_LABEL: Record<string, string> = {
-  'bello': 'Bello', 'copacabana': 'Copacabana', 'barbosa': 'Barbosa', 'girardota': 'Girardota',
-  'aranjuez': 'Aranjuez', 'castilla': 'Castilla', 'doce-de-octubre': 'Doce de Octubre',
-  'manrique': 'Manrique', 'santa-cruz': 'Santa Cruz',
-  'envigado': 'Envigado', 'sabaneta': 'Sabaneta', 'itagui': 'Itagüí', 'la-estrella': 'La Estrella',
-  'caldas': 'Caldas', 'guayabal': 'Guayabal', 'san-antonio-de-prado': 'San Antonio de Prado', 'amaga': 'Amagá',
-  'el-poblado': 'El Poblado', 'rionegro': 'Rionegro', 'guarne': 'Guarne', 'la-ceja': 'La Ceja',
-  'marinilla': 'Marinilla', 'buenos-aires': 'Buenos Aires', 'el-carmen-de-viboral': 'El Carmen',
-  'enciso': 'Enciso', 'santa-elena': 'Santa Elena', 'villa-hermosa': 'Villa Hermosa', 'guatape': 'Guatapé',
-  'laureles': 'Laureles', 'belen': 'Belén', 'la-america': 'La América',
-  'robledo': 'Robledo', 'san-cristobal': 'San Cristóbal', 'san-javier': 'San Javier',
-  'san-pedro-de-los-milagros': 'San Pedro', 'san-sebastian-de-palmitas': 'S. Sebastián',
-  'san-jeronimo': 'San Jerónimo', 'santa-fe-de-antioquia': 'Sta. Fe Ant.', 'sopetran': 'Sopetrán',
+// Estadísticas por sector — actualizar con datos reales
+const SECTOR_STATS: Record<Sector, { barrios: number; propiedades: number }> = {
+  Norte:     { barrios: 9,  propiedades: 12 },
+  Sur:       { barrios: 8,  propiedades: 18 },
+  Oriente:   { barrios: 11, propiedades: 8  },
+  Occidente: { barrios: 11, propiedades: 24 },
+};
+
+// Posición visual central de cada sector para el marcador de estadísticas
+const SECTOR_LABEL_POS: Record<Sector, [number, number]> = {
+  Norte:     [6.34, -75.56],
+  Sur:       [6.15, -75.61],
+  Oriente:   [6.18, -75.49],
+  Occidente: [6.28, -75.64],
 };
 
 // Polígonos reales OSM — nominatim.openstreetmap.org/lookup (threshold=0.0005, alta resolución)
@@ -2458,8 +2458,9 @@ const ZONE_POLYGONS: Record<string, [number, number][]> = {
 export default function InversionistasLeafletMap({ activeSector, hoveredSector }: Props) {
   const containerRef  = useRef<HTMLDivElement>(null);
   const mapRef        = useRef<any>(null);
-  const polygonsRef   = useRef<Record<string, { polygon: any; label: any }>>({});
-  const prevSectorRef = useRef<Sector | null>(null);
+  const polygonsRef      = useRef<Record<string, { polygon: any }>>({});
+  const sectorMarkersRef = useRef<Record<string, any>>({});
+  const prevSectorRef    = useRef<Sector | null>(null);
 
   useEffect(() => {
     if (!document.querySelector('link[href*="leaflet"]')) {
@@ -2494,21 +2495,32 @@ export default function InversionistasLeafletMap({ activeSector, hoveredSector }
           fillColor: '#ccc', fillOpacity: 0.05, opacity: 0.3,
         }).addTo(mapRef.current);
 
-        const lat = coords.reduce((s, c) => s + c[0], 0) / coords.length;
-        const lng = coords.reduce((s, c) => s + c[1], 0) / coords.length;
-        const labelText = BARRIO_LABEL[id] ?? id;
+        polygonsRef.current[id] = { polygon };
+      }
 
-        const marker = L.marker([lat, lng], {
-          icon: L.divIcon({
-            className: '',
-            html: `<span style="font-family:'Avenir LT Std','Outfit',sans-serif;font-size:9px;font-weight:600;color:#666;background:rgba(255,255,255,0.9);padding:1px 5px;border-radius:2px;white-space:nowrap;box-shadow:0 1px 3px rgba(0,0,0,0.08);display:inline-block;transform:translate(-50%,-50%)">${labelText}</span>`,
-            iconSize:   [0, 0],
-            iconAnchor: [0, 0],
-          }),
+      // Marcadores de estadísticas por sector
+      const makeSectorIcon = (sector: Sector, isActive: boolean) => {
+        const stats = SECTOR_STATS[sector];
+        const col   = isActive ? RED : '#888';
+        return L.divIcon({
+          className: '',
+          html: `<div style="transform:translate(-50%,-50%);text-align:center;pointer-events:none">
+            <div style="font-family:'Avenir LT Std','Outfit',sans-serif;font-size:36px;font-weight:900;color:${col};line-height:1;text-shadow:0 1px 6px rgba(255,255,255,1),0 1px 3px rgba(255,255,255,0.9)">${stats.barrios}</div>
+            <div style="font-family:'Avenir LT Std','Outfit',sans-serif;font-size:10px;font-weight:500;color:#fff;background:${isActive ? col : '#aaa'};padding:2px 8px;margin-top:3px;white-space:nowrap">${stats.propiedades} propiedades</div>
+          </div>`,
+          iconSize:   [0, 0],
+          iconAnchor: [0, 0],
+        });
+      };
+
+      for (const s of Object.keys(SECTOR_LABEL_POS) as Sector[]) {
+        const pos    = SECTOR_LABEL_POS[s];
+        const marker = L.marker(pos, {
+          icon:        makeSectorIcon(s, false),
           interactive: false,
+          zIndexOffset: 1000,
         }).addTo(mapRef.current);
-
-        polygonsRef.current[id] = { polygon, label: marker };
+        sectorMarkersRef.current[s] = { marker, makeSectorIcon };
       }
     };
 
@@ -2542,6 +2554,13 @@ export default function InversionistasLeafletMap({ activeSector, hoveredSector }
       } else {
         refs.polygon.setStyle({ color: '#ccc', weight: 0.4, fillColor: '#ccc', fillOpacity: 0.04, opacity: 0.25 });
       }
+    }
+
+    // Actualizar marcadores de sector
+    const effectiveSector = hoveredSector ?? activeSector;
+    for (const [s, ref] of Object.entries(sectorMarkersRef.current)) {
+      const isActive = s === effectiveSector;
+      ref.marker.setIcon(ref.makeSectorIcon(s as Sector, isActive));
     }
 
     const targetSector = hoveredSector ?? activeSector;

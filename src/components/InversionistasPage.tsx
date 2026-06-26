@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import gsap from 'gsap';
 import { TrendingUp, BarChart3, DollarSign, MapPin, ChevronDown, ArrowRight } from 'lucide-react';
 import { SECTORS, getZonesBySector, type Sector } from '@/data/investment-zones';
@@ -36,8 +37,9 @@ const SECTOR_SUBTITLES: Record<Sector, string> = {
 const WHATSAPP_URL = 'https://wa.me/573006557529?text=Hola%2C%20quisiera%20consultar%20oportunidades%20de%20inversión%20inmobiliaria.';
 
 export default function InversionistasPage() {
+  const router = useRouter();
   const { ref: titleRef, titleAnimating } = useSplitTextAnimation('.inversionistas-title-split', 0, false);
-  const [activeSector, setActiveSector] = useState<Sector>('Norte');
+  const [activeSector,  setActiveSector]  = useState<Sector>('Norte');
   const [hoveredSector, setHoveredSector] = useState<Sector | null>(null);
   const [expandedZone,  setExpandedZone]  = useState<string | null>(null);
   const subtitleRef = useRef<HTMLParagraphElement>(null);
@@ -45,10 +47,9 @@ export default function InversionistasPage() {
 
   const visibleZones = getZonesBySector(activeSector);
 
-  /* Reset expanded zone when switching sector */
-  const handleSectorChange = (sector: Sector) => {
+  const handleSectorHover = (sector: Sector) => {
+    setHoveredSector(sector);
     setActiveSector(sector);
-    setExpandedZone(null);
   };
 
   useEffect(() => {
