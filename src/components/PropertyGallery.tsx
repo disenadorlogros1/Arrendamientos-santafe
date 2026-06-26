@@ -79,6 +79,7 @@ function buildCols(hoveredCol: number | null, isLandscape: boolean, cols: number
 
 /* ─── InfoCard — ficha informativa en celda de filler ─────────── */
 const WA_NUM = '573006557529';
+const RED    = '#f32735';
 
 function InfoCard({ type, stats, title }: {
   type: 0 | 1 | 2 | 3 | 4;
@@ -86,27 +87,41 @@ function InfoCard({ type, stats, title }: {
   title: string;
 }) {
   const [copied, setCopied] = React.useState(false);
+
   const baseStyle: React.CSSProperties = {
     width: '100%', height: '100%',
     display: 'flex', flexDirection: 'column',
-    justifyContent: 'space-between',
-    padding: '18px 16px 16px',
+    padding: '16px 16px 14px',
     textDecoration: 'none',
     fontFamily: FONT,
     color: '#fff',
-    background: 'linear-gradient(145deg, #1a1a1a 0%, #111 100%)',
-    border: '1px solid rgba(255,255,255,0.09)',
-    borderRadius: 0,
+    background: '#111',
+    borderTop: `3px solid ${RED}`,
     boxSizing: 'border-box',
     cursor: 'pointer',
     overflow: 'hidden',
-    transition: `background 0.25s ${EASE}`,
+    position: 'relative',
   };
 
+  /* Marca superior — favicon + nombre */
+  const BrandMark = () => (
+    <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 14 }}>
+      <img src="/icons/icon-favicon-white.gif" width={14} height={14} style={{ opacity: 0.7, flexShrink: 0 }} alt="" />
+      <span style={{ fontSize: 9, fontWeight: 600, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.35)' }}>
+        Arrendamientos Santa Fe
+      </span>
+    </div>
+  );
+
+  /* Línea roja separadora */
+  const RedLine = () => (
+    <div style={{ height: 2, background: RED, margin: '12px 0 12px' }} />
+  );
+
   const labelStyle: React.CSSProperties = {
-    fontSize: 10, fontWeight: 600, letterSpacing: '0.1em',
-    textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)',
-    marginBottom: 6,
+    fontSize: 10, fontWeight: 700, letterSpacing: '0.1em',
+    textTransform: 'uppercase', color: RED,
+    marginBottom: 5,
   };
 
   const titleStyle: React.CSSProperties = {
@@ -115,131 +130,130 @@ function InfoCard({ type, stats, title }: {
   };
 
   const bodyStyle: React.CSSProperties = {
-    fontSize: 12, color: 'rgba(255,255,255,0.55)', lineHeight: 1.45,
+    fontSize: 12, color: 'rgba(255,255,255,0.5)', lineHeight: 1.5,
     flexGrow: 1,
   };
 
   const ctaStyle: React.CSSProperties = {
-    marginTop: 12,
-    display: 'inline-flex', alignItems: 'center', gap: 6,
-    fontSize: 12, fontWeight: 700,
+    display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+    width: '100%',
+    padding: '9px 12px',
+    background: RED,
     color: '#fff',
-    background: 'rgba(255,255,255,0.1)',
-    border: '1px solid rgba(255,255,255,0.18)',
-    borderRadius: 6,
-    padding: '6px 12px',
+    fontSize: 12, fontWeight: 700,
+    borderRadius: 0,
+    border: 'none',
     textDecoration: 'none',
-    letterSpacing: '0.02em',
+    letterSpacing: '0.03em',
+    cursor: 'pointer',
     flexShrink: 0,
+    boxSizing: 'border-box' as const,
   };
 
-  const iconBox: React.CSSProperties = {
-    width: 32, height: 32, borderRadius: 0,
-    background: 'rgba(255,255,255,0.08)',
-    display: 'flex', alignItems: 'center', justifyContent: 'center',
-    marginBottom: 10, flexShrink: 0,
-  };
-
-  /* ── Card 0: Ubicación / Inversión ── */
-  /* Si no hay zona configurada, caer a la card de similares para no enlazar a zona incorrecta */
   const effectiveType = (type === 0 && !stats?.zone) ? 2 : type;
+
+  /* ── Card 0: Zona de inversión ── */
   if (effectiveType === 0) {
     const slug     = stats?.zone ?? '';
-    const zoneName = slug.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+    const zoneName = slug.charAt(0).toUpperCase() + slug.slice(1) + ' de Medellín';
     const href     = `/inversionistas/${slug}`;
     return (
       <a href={href} style={baseStyle} onClick={e => e.stopPropagation()}>
-        <div style={iconBox}>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/>
-          </svg>
-        </div>
-        <div>
+        <BrandMark />
+        <div style={{ flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+          <img src="/icons/icon-location-white.gif" width={28} height={28} style={{ marginBottom: 12, opacity: 0.9 }} alt="" />
           <div style={labelStyle}>Zona de inversión</div>
           <div style={titleStyle}>{zoneName}</div>
-          <div style={bodyStyle}>Descubre por qué invertir en esta zona es una oportunidad única en el mercado inmobiliario.</div>
+          <div style={bodyStyle}>Rentabilidades, valorización y oportunidades en esta zona del mercado inmobiliario.</div>
         </div>
-        <div style={ctaStyle}>Invertir en esta zona &rarr;</div>
+        <RedLine />
+        <div style={ctaStyle}>
+          <span>Invertir en esta zona</span>
+          <img src="/icons/icon-location-white.gif" width={13} height={13} alt="" />
+        </div>
       </a>
     );
   }
 
-  /* ── Card 1: Precio y comodidades ── */
+  /* ── Card 1: WhatsApp / asesor ── */
   if (effectiveType === 1) {
-    const ref = stats?.reference ?? '';
-    const msg = encodeURIComponent(`Hola, me interesa la propiedad${ref ? ` ${ref}` : ''} (${title}). ¿Podrían darme más información?`);
+    const ref  = stats?.reference ?? '';
+    const msg  = encodeURIComponent(`Hola, me interesa la propiedad${ref ? ` ${ref}` : ''} (${title}). ¿Podrían darme más información?`);
     const href = `https://wa.me/${WA_NUM}?text=${msg}`;
+    const attrs = [
+      stats?.bedrooms  ? `${stats.bedrooms} hab.`   : null,
+      stats?.bathrooms ? `${stats.bathrooms} baños`  : null,
+      stats?.area      ? stats.area                  : null,
+      stats?.parking   ? `${stats.parking} parq.`   : null,
+    ].filter(Boolean).join('  ·  ');
     return (
       <a href={href} target="_blank" rel="noopener noreferrer" style={baseStyle} onClick={e => e.stopPropagation()}>
-        <div style={iconBox}>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
-          </svg>
-        </div>
-        <div>
+        <BrandMark />
+        <div style={{ flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+          <img src="/icons/icon-whatsapp-white.gif" width={28} height={28} style={{ marginBottom: 12, opacity: 0.9 }} alt="" />
           <div style={labelStyle}>Precio</div>
-          {stats?.price && <div style={titleStyle}>{stats.price}</div>}
-          <div style={bodyStyle}>
-            {[
-              stats?.bedrooms  ? `${stats.bedrooms} hab.`  : null,
-              stats?.bathrooms ? `${stats.bathrooms} baños` : null,
-              stats?.area      ? stats.area                 : null,
-              stats?.parking   ? `${stats.parking} parq.`  : null,
-            ].filter(Boolean).join('  ·  ')}
-          </div>
+          {stats?.price && (
+            <div style={{ fontSize: 20, fontWeight: 900, color: '#fff', lineHeight: 1.1, marginBottom: 6 }}>
+              {stats.price}
+            </div>
+          )}
+          {attrs && <div style={bodyStyle}>{attrs}</div>}
         </div>
-        <div style={ctaStyle}>Hablar con un asesor &rarr;</div>
+        <RedLine />
+        <div style={ctaStyle}>
+          <span>Hablar con un asesor</span>
+          <img src="/icons/icon-whatsapp-white.gif" width={13} height={13} alt="" />
+        </div>
       </a>
     );
   }
 
-  /* ── Card 2: Propiedades similares ── */
+  /* ── Card 2: Ver propiedades ── */
   if (effectiveType === 2) {
     return (
       <a href="/propiedades" style={baseStyle} onClick={e => e.stopPropagation()}>
-        <div style={iconBox}>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
-          </svg>
-        </div>
-        <div>
+        <BrandMark />
+        <div style={{ flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+          <img src="/icons/icon-home-white.gif" width={28} height={28} style={{ marginBottom: 12, opacity: 0.9 }} alt="" />
           <div style={labelStyle}>Explora más</div>
           <div style={titleStyle}>Propiedades similares</div>
           <div style={bodyStyle}>Encuentra otras propiedades con características parecidas en nuestra oferta.</div>
         </div>
-        <div style={ctaStyle}>Ver propiedades &rarr;</div>
+        <RedLine />
+        <div style={ctaStyle}>
+          <span>Ver propiedades</span>
+          <img src="/icons/icon-home-white.gif" width={13} height={13} alt="" />
+        </div>
       </a>
     );
   }
 
-  /* ── Card 3: Solicitar visita ── */
+  /* ── Card 3: Agendar visita ── */
   if (effectiveType === 3) {
-    const ref = stats?.reference ?? '';
-    const msg = encodeURIComponent(
-      `Hola, quisiera agendar una visita para la propiedad${ref ? ` ${ref}` : ''} (${title}). ¿Cuándo podría visitarla?`
-    );
+    const ref  = stats?.reference ?? '';
+    const msg  = encodeURIComponent(`Hola, quisiera agendar una visita para la propiedad${ref ? ` ${ref}` : ''} (${title}). ¿Cuándo podría visitarla?`);
     const href = `https://wa.me/${WA_NUM}?text=${msg}`;
     return (
       <a href={href} target="_blank" rel="noopener noreferrer" style={baseStyle} onClick={e => e.stopPropagation()}>
-        <div style={iconBox}>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
-            <line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
-          </svg>
-        </div>
-        <div>
+        <BrandMark />
+        <div style={{ flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+          <img src="/icons/icon-schedule-white.gif" width={28} height={28} style={{ marginBottom: 12, opacity: 0.9 }} alt="" />
           <div style={labelStyle}>Agenda tu visita</div>
           <div style={titleStyle}>¿Te gustaría conocerla en persona?</div>
-          <div style={bodyStyle}>Coordina una visita con nuestros asesores y descubre todos los detalles de esta propiedad.</div>
+          <div style={bodyStyle}>Coordina una visita con nuestros asesores y conoce todos los detalles.</div>
         </div>
-        <div style={ctaStyle}>Agendar visita &rarr;</div>
+        <RedLine />
+        <div style={ctaStyle}>
+          <span>Agendar visita</span>
+          <img src="/icons/icon-schedule-white.gif" width={13} height={13} alt="" />
+        </div>
       </a>
     );
   }
 
-  /* ── Card 4: Compartir propiedad ── */
-  const shareUrl = typeof window !== 'undefined' ? window.location.href : '';
-  const waShareMsg = encodeURIComponent(`Mira esta propiedad: ${title}\n${shareUrl}`);
+  /* ── Card 4: Compartir ── */
+  const shareUrl    = typeof window !== 'undefined' ? window.location.href : '';
+  const waShareMsg  = encodeURIComponent(`Mira esta propiedad: ${title}\n${shareUrl}`);
   const waShareHref = `https://wa.me/?text=${waShareMsg}`;
 
   const handleCopy = (e: React.MouseEvent) => {
@@ -253,48 +267,32 @@ function InfoCard({ type, stats, title }: {
 
   return (
     <div style={baseStyle} onClick={e => e.stopPropagation()}>
-      <div style={iconBox}>
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
-          <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
-        </svg>
-      </div>
-      <div>
+      <BrandMark />
+      <div style={{ flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+        <img src="/icons/icon-consult-white.gif" width={28} height={28} style={{ marginBottom: 12, opacity: 0.9 }} alt="" />
         <div style={labelStyle}>Compartir</div>
         <div style={titleStyle}>Envía esta propiedad</div>
         <div style={bodyStyle}>Comparte los detalles con quien quieras por WhatsApp o copia el enlace.</div>
       </div>
-      <div style={{ marginTop: 12, display: 'flex', flexDirection: 'column', gap: 6 }}>
+      <RedLine />
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
         <a
           href={waShareHref} target="_blank" rel="noopener noreferrer"
-          style={{ ...ctaStyle, background: 'rgba(37,211,102,0.15)', borderColor: 'rgba(37,211,102,0.35)', color: '#4ade80' }}
+          style={{ ...ctaStyle, textDecoration: 'none' }}
           onClick={e => e.stopPropagation()}
         >
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
-            <path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.553 4.116 1.522 5.847L.057 23.882a.5.5 0 0 0 .614.612l6.101-1.597A11.944 11.944 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.898 0-3.677-.524-5.198-1.435l-.373-.224-3.862 1.011 1.027-3.752-.243-.385A9.954 9.954 0 0 1 2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/>
-          </svg>
-          Enviar por WhatsApp
+          <span>Enviar por WhatsApp</span>
+          <img src="/icons/icon-whatsapp-white.gif" width={13} height={13} alt="" />
         </a>
         <button
-          style={{ ...ctaStyle, cursor: 'pointer', border: 'none', background: copied ? 'rgba(255,255,255,0.15)' : 'rgba(255,255,255,0.08)' }}
+          style={{ ...ctaStyle, background: copied ? 'rgba(255,255,255,0.18)' : 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)' }}
           onClick={handleCopy}
         >
-          {copied ? (
-            <>
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <polyline points="20 6 9 17 4 12"/>
-              </svg>
-              ¡Enlace copiado!
-            </>
-          ) : (
-            <>
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
-              </svg>
-              Copiar enlace
-            </>
-          )}
+          <span>{copied ? '¡Enlace copiado!' : 'Copiar enlace'}</span>
+          {copied
+            ? <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            : <img src="/icons/icon-code-white.gif" width={13} height={13} alt="" />
+          }
         </button>
       </div>
     </div>
