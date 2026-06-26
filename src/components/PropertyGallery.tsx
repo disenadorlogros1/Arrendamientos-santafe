@@ -785,7 +785,27 @@ function BentoGallery({ images, onClose, stats, title }: {
   /* ── Desktop ─────────────────────────────────────────────────── */
   return createPortal(
     <>
-      <style>{`.bento-carousel::-webkit-scrollbar { display: none; }`}</style>
+      <style>{`
+        .bento-carousel::-webkit-scrollbar { display: none; }
+        .gallery-cta-btn { position: relative; overflow: hidden; }
+        .gallery-cta-btn::after {
+          content: '';
+          position: absolute;
+          left: var(--ink-x, 50%);
+          top: var(--ink-y, 50%);
+          width: var(--ink-size, 0);
+          height: var(--ink-size, 0);
+          transform: translate(-50%, -50%);
+          background: rgba(255,255,255,0.22);
+          border-radius: 50%;
+          animation: gallery-ink 0.55s ease-out forwards;
+          pointer-events: none;
+        }
+        @keyframes gallery-ink {
+          from { opacity: 1; transform: translate(-50%, -50%) scale(0); }
+          to   { opacity: 0; transform: translate(-50%, -50%) scale(1); }
+        }
+      `}</style>
 
       <div onClick={onClose} style={{ position: 'fixed', inset: 0, zIndex: 1000, background: '#0c0c0c', display: 'flex', flexDirection: 'column', cursor: 'default' }}>
 
