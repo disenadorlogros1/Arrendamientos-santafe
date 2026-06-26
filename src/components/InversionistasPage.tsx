@@ -1,8 +1,9 @@
 'use client';
 
 import { useState, useRef, useEffect, useMemo } from 'react';
+import Link from 'next/link';
 import gsap from 'gsap';
-import { TrendingUp, BarChart3, DollarSign, MapPin, ChevronDown } from 'lucide-react';
+import { TrendingUp, BarChart3, DollarSign, MapPin, ChevronDown, ArrowRight } from 'lucide-react';
 import { investmentZones, SECTORS, getZonesBySector, type Sector } from '@/data/investment-zones';
 import { useSplitTextAnimation } from '@/hooks/useSplitTextAnimation';
 import ScrollReveal from '@/components/ScrollReveal';
@@ -25,15 +26,10 @@ const SECTOR_COLORS: Record<Sector, { bg: string; border: string; text: string }
 };
 
 const ZONE_COORDS: Record<string, [number, number]> = {
-  'bello':      [6.3375, -75.5543],
-  'copacabana': [6.3529, -75.5092],
-  'envigado':   [6.1729, -75.5938],
-  'sabaneta':   [6.1515, -75.6172],
-  'itagui':     [6.1847, -75.5993],
-  'el-poblado': [6.2088, -75.5631],
-  'rionegro':   [6.1543, -75.3760],
-  'laureles':   [6.2518, -75.6013],
-  'belen':      [6.2285, -75.6192],
+  'norte':     [6.3375, -75.5543],
+  'sur':       [6.1680, -75.6050],
+  'oriente':   [6.2088, -75.5631],
+  'occidente': [6.2420, -75.6180],
 };
 
 const WHATSAPP_URL = 'https://wa.me/573006557529?text=Hola%2C%20quisiera%20consultar%20oportunidades%20de%20inversión%20inmobiliaria.';
@@ -130,7 +126,6 @@ export default function InversionistasPage() {
             {/* LEFT: 4 sector buttons */}
             <div style={{ width: '340px', flexShrink: 0, display: 'flex', flexDirection: 'column', gap: '10px' }}>
               {SECTORS.map(sector => {
-                const color    = SECTOR_COLORS[sector];
                 const zones    = getZonesBySector(sector);
                 const isActive = activeSector === sector;
                 const isHov    = hoveredSector === sector;
@@ -141,29 +136,31 @@ export default function InversionistasPage() {
                     onMouseEnter={() => setHoveredSector(sector)}
                     onMouseLeave={() => setHoveredSector(null)}
                     style={{
-                      flex: 1,
-                      background:  isActive ? color.bg    : isHov ? 'rgba(0,0,0,0.02)' : '#fff',
-                      border:      `1.5px solid ${isActive ? color.border : isHov ? 'rgba(0,0,0,0.1)' : 'rgba(0,0,0,0.06)'}`,
-                      borderRadius: 14,
-                      padding:     '14px 18px',
-                      textAlign:   'left',
-                      cursor:      'pointer',
-                      transition:  'all 0.22s ease',
-                      boxShadow:   isActive ? 'none' : '0 1px 4px rgba(0,0,0,0.04)',
-                      display:     'flex',
+                      flex:          1,
+                      background:    isActive ? '#f32735' : isHov ? '#f5f5f5' : '#fff',
+                      border:        `1.5px solid ${isActive ? '#f32735' : isHov ? '#bbb' : '#e0e0e0'}`,
+                      borderRadius:  0,
+                      padding:       '14px 18px',
+                      textAlign:     'left',
+                      cursor:        'pointer',
+                      transition:    'background 0.18s ease, border-color 0.18s ease',
+                      display:       'flex',
                       flexDirection: 'column',
                       justifyContent: 'center',
-                      gap:         '7px',
+                      gap:           '7px',
                     }}
                   >
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                      <span style={{ fontFamily: FONT, fontWeight: 700, fontSize: '15px', color: isActive ? color.text : '#1a1a1a' }}>
+                      <span style={{ fontFamily: FONT, fontWeight: 700, fontSize: '15px', color: isActive ? '#fff' : '#0d0d0d' }}>
                         Zona {sector}
                       </span>
                       <span style={{
                         fontFamily: FONT, fontSize: '11px', fontWeight: 600,
-                        color: color.text, background: color.bg,
-                        border: `1px solid ${color.border}`, borderRadius: '20px', padding: '2px 8px',
+                        color:      isActive ? 'rgba(255,255,255,0.85)' : '#888',
+                        background: isActive ? 'rgba(255,255,255,0.18)' : '#f0f0f0',
+                        border:     `1px solid ${isActive ? 'rgba(255,255,255,0.25)' : '#e0e0e0'}`,
+                        borderRadius: '2px',
+                        padding: '2px 8px',
                       }}>
                         {zones.length} zona{zones.length !== 1 ? 's' : ''}
                       </span>
@@ -175,12 +172,10 @@ export default function InversionistasPage() {
                           onMouseEnter={e => { e.stopPropagation(); setHoveredZone(z.id); }}
                           onMouseLeave={e => { e.stopPropagation(); setHoveredZone(null); }}
                           style={{
-                            fontFamily: FONT, fontSize: '12px', fontWeight: isActive ? 500 : 300,
-                            color: isActive ? color.text : '#888',
-                            padding: isActive ? '1px 7px' : '0',
-                            background: isActive ? `${color.text}14` : 'transparent',
-                            borderRadius: '8px',
-                            transition: 'all 0.15s ease',
+                            fontFamily: FONT,
+                            fontSize:   '12px',
+                            fontWeight: isActive ? 500 : 300,
+                            color:      isActive ? 'rgba(255,255,255,0.85)' : '#888',
                           }}
                         >
                           {z.name}
@@ -293,6 +288,29 @@ export default function InversionistasPage() {
                             ))}
                           </ul>
                         </div>
+                        <Link
+                          href={`/inversionistas/${zone.slug}`}
+                          style={{
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: 8,
+                            marginTop: 8,
+                            padding: '10px 20px',
+                            background: '#1a1a1a',
+                            color: '#fff',
+                            borderRadius: 0,
+                            fontFamily: FONT,
+                            fontSize: 13,
+                            fontWeight: 500,
+                            textDecoration: 'none',
+                            transition: 'background 0.18s',
+                          }}
+                          onMouseEnter={e => (e.currentTarget.style.background = SECTOR_COLORS[zone.sector].text)}
+                          onMouseLeave={e => (e.currentTarget.style.background = '#1a1a1a')}
+                        >
+                          Ver análisis completo de {zone.name}
+                          <ArrowRight size={14} />
+                        </Link>
                       </div>
                     </div>
                   </div>

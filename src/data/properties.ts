@@ -33,7 +33,7 @@ export interface Property {
   businessType?: "Arrendar" | "Comprar";
   latitude?: number;
   longitude?: number;
-  investmentZone?: "el-poblado" | "laureles" | "envigado" | "sabaneta";
+  investmentZone?: "norte" | "sur" | "oriente" | "occidente";
   images?: string[];
   administracion?: string;
   antiguedad?: string;
@@ -43,123 +43,123 @@ export interface Property {
 }
 
 // Location to investment zone mapping
-// Sector Norte  → bello | copacabana
-// Sector Sur    → envigado | sabaneta | itagui
-// Sector Oriente→ el-poblado | rionegro
-// Sector Occidente → laureles | belen
+// Sector Norte     → norte
+// Sector Sur       → sur
+// Sector Oriente   → oriente
+// Sector Occidente → occidente
 export const locationToZoneMap: Record<string, string | undefined> = {
 
   /* ── Municipios Norte ──────────────────────────────────────────── */
-  "Bello":           "bello",
-  "Copacabana":      "copacabana",
-  "Barbosa":         "copacabana",   // norte extremo, más cercano a Copacabana
-  "Girardota":       "copacabana",   // entre Copacabana y Barbosa
-  "San Pedro":       "copacabana",   // norte del Valle de Aburrá
+  "Bello":           "norte",
+  "Copacabana":      "norte",
+  "Barbosa":         "norte",
+  "Girardota":       "norte",
+  "San Pedro":       "norte",
 
   /* ── Municipios Sur ────────────────────────────────────────────── */
-  "Envigado":        "envigado",
-  "Sabaneta":        "sabaneta",
-  "Itagüí":          "itagui",
-  "La Estrella":     "sabaneta",     // sur del área metropolitana
-  "Caldas":          "sabaneta",     // sur extremo
-  "Amaga":           "sabaneta",     // suroeste, referente más cercano: sur
-  "San Antonio de Prado": "itagui",  // corregimiento sur de Medellín, limita con Itagüí
+  "Envigado":        "sur",
+  "Sabaneta":        "sur",
+  "Itagüí":          "sur",
+  "La Estrella":     "sur",
+  "Caldas":          "sur",
+  "Amaga":           "sur",
+  "San Antonio de Prado": "sur",
 
   /* ── Municipios Oriente ────────────────────────────────────────── */
-  "Rionegro":        "rionegro",
-  "Guarne":          "rionegro",     // oriente antioqueño
-  "Marinilla":       "rionegro",     // oriente antioqueño
-  "La Ceja":         "rionegro",     // oriente antioqueño
-  "Guatapé":         "rionegro",     // oriente antioqueño lejano
-  "Llanogrande":     "rionegro",     // valle del oriente, zona aeropuerto
-  "San Vicente Ferrer": "rionegro",  // oriente antioqueño
-  "Retiro":          "rionegro",     // altiplano oriente
-  "Santa Elena":     "rionegro",     // corregimiento oriental de Medellín
+  "Rionegro":        "oriente",
+  "Guarne":          "oriente",
+  "Marinilla":       "oriente",
+  "La Ceja":         "oriente",
+  "Guatapé":         "oriente",
+  "Llanogrande":     "oriente",
+  "San Vicente Ferrer": "oriente",
+  "Retiro":          "oriente",
+  "Santa Elena":     "oriente",
 
   /* ── Municipios Occidente Antioqueño ───────────────────────────── */
-  "Sopetran":        "belen",        // occidente antioqueño → sector Occidente
-  "San Jerónimo":    "belen",        // occidente antioqueño → sector Occidente
-  "Santa Fe de Antioquia": "belen",  // occidente antioqueño → sector Occidente
+  "Sopetran":        "occidente",
+  "San Jerónimo":    "occidente",
+  "Santa Fe de Antioquia": "occidente",
 
   /* ── Barrios de Medellín — Norte / Nororiente ─────────────────── */
-  "Aranjuez":        "bello",
-  "Barrio Trinidad": "bello",
-  "Boston":          "bello",        // nororiente de Medellín
-  "Boyacá":          "bello",        // norte
-  "Caribe":          "bello",        // norte
-  "Castilla":        "bello",        // norte
-  "Campo Valdés":    "bello",        // norte / nororiente
-  "Doce de Octubre": "bello",        // norte
-  "Francisco Antonio Zea": "bello",  // barrio norte de Medellín
-  "Barrio Girardot": "bello",        // norte
-  "Barrio Colombia": "bello",        // norte / centro-norte
-  "Las Brisas":      "bello",        // norte
-  "Lourdes":         "bello",        // nororiente
-  "Manrique":        "bello",        // nororiente
-  "Milagrosa":       "bello",        // nororiente
-  "Prado":           "bello",        // centro-norte
-  "Santa Cruz":      "bello",        // norte
-  "Toscana":         "bello",        // norte (La Colina / Toscana)
-  "Tricentenario":   "bello",        // norte
-  "Simón Bolívar":   "bello",        // norte / centro
-  "Barrio Córdoba":  "bello",        // norte
+  "Aranjuez":        "norte",
+  "Barrio Trinidad": "norte",
+  "Boston":          "norte",
+  "Boyacá":          "norte",
+  "Caribe":          "norte",
+  "Castilla":        "norte",
+  "Campo Valdés":    "norte",
+  "Doce de Octubre": "norte",
+  "Francisco Antonio Zea": "norte",
+  "Barrio Girardot": "norte",
+  "Barrio Colombia": "norte",
+  "Las Brisas":      "norte",
+  "Lourdes":         "norte",
+  "Manrique":        "norte",
+  "Milagrosa":       "norte",
+  "Prado":           "norte",
+  "Santa Cruz":      "norte",
+  "Toscana":         "norte",
+  "Tricentenario":   "norte",
+  "Simón Bolívar":   "norte",
+  "Barrio Córdoba":  "norte",
 
   /* ── Barrios de Medellín — Oriente / Sureste ───────────────────── */
-  "Poblado":         "el-poblado",
-  "El Poblado":      "el-poblado",
-  "Castropol":       "el-poblado",
-  "San Diego Poblado":"el-poblado",
-  "Rosales":         "el-poblado",   // sector de El Poblado
-  "Enciso":          "el-poblado",   // suroriente de Medellín
-  "Caicedo":         "el-poblado",   // suroriente
-  "Buenos Aires":    "el-poblado",   // suroriente (común Buenos Aires)
-  "Villa Hermosa":   "el-poblado",   // oriente de Medellín
-  "San Diego":       "el-poblado",   // colinda con Poblado / centro
+  "Poblado":         "oriente",
+  "El Poblado":      "oriente",
+  "Castropol":       "oriente",
+  "San Diego Poblado":"oriente",
+  "Rosales":         "oriente",
+  "Enciso":          "oriente",
+  "Caicedo":         "oriente",
+  "Buenos Aires":    "oriente",
+  "Villa Hermosa":   "oriente",
+  "San Diego":       "oriente",
 
   /* ── Barrios de Medellín — Occidente (Laureles) ───────────────── */
-  "Laureles":        "laureles",
-  "Estadio":         "laureles",     // adyacente a Laureles
-  "Floresta":        "laureles",     // comuna Laureles
-  "Florida Nueva":   "laureles",     // La América, zona occidente
-  "La América":      "laureles",
-  "Los Colores":     "laureles",
-  "Castellana":      "laureles",
-  "Conquistadores":  "laureles",
-  "Naranjal":        "laureles",     // centro-occidente
-  "San Joaquín":     "laureles",
-  "Santa Mónica":    "laureles",
-  "Sevilla":         "laureles",     // zona Laureles
-  "Malibu":          "laureles",
-  "Barrio Cristóbal":"laureles",     // La América / San Cristóbal norte
-  "Mayorca":         "sabaneta",     // centro comercial y zona en Sabaneta
-  "Cerca Éxito de Colombia": "laureles",
+  "Laureles":        "occidente",
+  "Estadio":         "occidente",
+  "Floresta":        "occidente",
+  "Florida Nueva":   "occidente",
+  "La América":      "occidente",
+  "Los Colores":     "occidente",
+  "Castellana":      "occidente",
+  "Conquistadores":  "occidente",
+  "Naranjal":        "occidente",
+  "San Joaquín":     "occidente",
+  "Santa Mónica":    "occidente",
+  "Sevilla":         "occidente",
+  "Malibu":          "occidente",
+  "Barrio Cristóbal":"occidente",
+  "Mayorca":         "sur",
+  "Cerca Éxito de Colombia": "occidente",
 
   /* ── Barrios de Medellín — Occidente (Belén) ──────────────────── */
-  "Belén":           "belen",
-  "Belencito":       "belen",
-  "Campo Amor":      "belen",
-  "Cristo Rey":      "belen",
-  "Fátima":          "belen",
-  "Florencia":       "belen",
-  "Guayabal":        "belen",        // sur-occidente, frontera Belén/Itagüí
-  "López de Mesa":   "belen",
-  "Loreto":          "belen",        // San Cristóbal, occidente
-  "Los Olivos":      "belen",        // noroccidente
-  "Pedregal":        "belen",        // occidente
-  "Robledo":         "belen",        // noroccidente de Medellín
-  "San Cristóbal":   "belen",        // corregimiento occidente
-  "San Javier":      "belen",        // occidente
-  "San Pablo":       "belen",        // occidente / Belén
-  "San Sebastián de Palmitas": "belen", // corregimiento extremo occidente
-  "Calasanz":        "belen",        // occidente, frontera Laureles/Belén
+  "Belén":           "occidente",
+  "Belencito":       "occidente",
+  "Campo Amor":      "occidente",
+  "Cristo Rey":      "occidente",
+  "Fátima":          "occidente",
+  "Florencia":       "occidente",
+  "Guayabal":        "occidente",
+  "López de Mesa":   "occidente",
+  "Loreto":          "occidente",
+  "Los Olivos":      "occidente",
+  "Pedregal":        "occidente",
+  "Robledo":         "occidente",
+  "San Cristóbal":   "occidente",
+  "San Javier":      "occidente",
+  "San Pablo":       "occidente",
+  "San Sebastián de Palmitas": "occidente",
+  "Calasanz":        "occidente",
 
   /* ── Centro / sin zona clara ────────────────────────────────────── */
-  "Barrio Santa Fe": "laureles",     // centro, más próximo a Laureles
-  "Centro":          "laureles",     // centro histórico
-  "San Benito":      "laureles",     // centro
-  "El Carmen":       "belen",        // San Cristóbal
-  "Velódromo":       "laureles",     // zona estadio / Laureles
-  "Velodromo":       "laureles",
+  "Barrio Santa Fe": "occidente",
+  "Centro":          "occidente",
+  "San Benito":      "occidente",
+  "El Carmen":       "occidente",
+  "Velódromo":       "occidente",
+  "Velodromo":       "occidente",
 };
 
 export function getInvestmentZoneForLocation(location: string): string | undefined {
