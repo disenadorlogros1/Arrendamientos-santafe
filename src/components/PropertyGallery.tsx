@@ -135,8 +135,8 @@ function InfoCard({ type, stats, title }: {
   );
 
   const bigTitle: React.CSSProperties = {
-    fontSize: 22, fontWeight: 800, lineHeight: 1.2,
-    color: '#fff', marginBottom: 8,
+    fontSize: 26, fontWeight: 800, lineHeight: 1.15,
+    color: '#fff', marginBottom: 10,
   };
 
   const labelStyle: React.CSSProperties = {
@@ -152,11 +152,11 @@ function InfoCard({ type, stats, title }: {
     display: 'flex', alignItems: 'center', justifyContent: 'center',
     width: '100%',
     padding: '10px 18px',
-    background: RED,
+    background: 'transparent',
     color: '#fff',
     fontSize: 12, fontWeight: 700,
     borderRadius: 999,
-    border: 'none',
+    border: '1px solid rgba(255,255,255,0.45)',
     textDecoration: 'none',
     letterSpacing: '0.03em',
     cursor: 'pointer',
@@ -164,6 +164,7 @@ function InfoCard({ type, stats, title }: {
     boxSizing: 'border-box' as const,
     position: 'relative',
     overflow: 'hidden',
+    transition: 'background 0.2s ease, border-color 0.2s ease',
   };
 
   const effectiveType = (type === 0 && !stats?.zone) ? 2 : type;
@@ -294,7 +295,7 @@ function InfoCard({ type, stats, title }: {
         </a>
         <button
           className="gallery-cta-btn"
-          style={{ ...ctaStyle, background: copied ? 'rgba(255,255,255,0.22)' : 'rgba(255,255,255,0.12)', border: '1px solid rgba(255,255,255,0.22)' }}
+          style={{ ...ctaStyle, background: copied ? RED : 'transparent' }}
           onMouseEnter={applyInkFill} onMouseLeave={applyInkFill}
           onClick={handleCopy}
         >
@@ -789,6 +790,7 @@ function BentoGallery({ images, onClose, stats, title }: {
       <style>{`
         .bento-carousel::-webkit-scrollbar { display: none; }
         .gallery-cta-btn { position: relative; overflow: hidden; }
+        .gallery-cta-btn:hover { background: #f32735 !important; border-color: #f32735 !important; }
         @keyframes gallery-ink {
           from { opacity: 1; transform: translate(-50%, -50%) scale(0); }
           to   { opacity: 0; transform: translate(-50%, -50%) scale(1); }
@@ -932,7 +934,8 @@ function BentoGallery({ images, onClose, stats, title }: {
               cardFinalGc = rp?.gc ?? cardCol + 1;
               cardFinalGr = rp?.gr ?? cardRow + 1;
             } else if (!isHovering && infoCardIsLast && trailingEmpty > 0) {
-              cardFinalGc = `${cardCol + 1} / ${cardCol + trailingEmpty + 2}`;
+              const maxSpan = Math.min(trailingEmpty + 1, 2);
+              cardFinalGc = `${cardCol + 1} / ${cardCol + maxSpan + 1}`;
               cardFinalGr = cardRow + 1;
             } else {
               cardFinalGc = cardCol + 1;
