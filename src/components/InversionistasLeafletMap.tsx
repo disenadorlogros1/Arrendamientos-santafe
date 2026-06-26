@@ -12,21 +12,40 @@ export interface ZonePoint {
 }
 
 interface Props {
-  zones: ZonePoint[];
   activeSector: Sector | null;
-  hoveredZone: string | null;
+  hoveredSector: Sector | null;
 }
 
 const RED = '#f32735';
 
 const SECTOR_VIEW: Record<Sector, { center: [number, number]; zoom: number }> = {
-  Norte:     { center: [6.36,  -75.55], zoom: 11 },
-  Sur:       { center: [6.16,  -75.60], zoom: 12 },
-  Oriente:   { center: [6.18,  -75.44], zoom: 10 },
-  Occidente: { center: [6.245, -75.605], zoom: 13 },
+  Norte:     { center: [6.365,  -75.575], zoom: 11 },
+  Sur:       { center: [6.155,  -75.608], zoom: 12 },
+  Oriente:   { center: [6.160,  -75.510], zoom: 10 },
+  Occidente: { center: [6.240,  -75.604], zoom: 13 },
 };
 
-// Polígonos reales OSM — fuente: nominatim.openstreetmap.org/lookup (Rel. IDs verificados)
+// Municipios reales por sector
+const SECTOR_MUNICIPALITIES: Record<Sector, string[]> = {
+  Norte:     ['bello', 'copacabana'],
+  Sur:       ['envigado', 'sabaneta', 'itagui'],
+  Oriente:   ['el-poblado', 'rionegro'],
+  Occidente: ['laureles', 'belen'],
+};
+
+const MUNICIPALITY_SECTOR: Record<string, Sector> = {};
+for (const [sector, ids] of Object.entries(SECTOR_MUNICIPALITIES)) {
+  ids.forEach(id => { MUNICIPALITY_SECTOR[id] = sector as Sector; });
+}
+
+const MUNICIPALITY_LABEL: Record<string, string> = {
+  bello: 'Bello', copacabana: 'Copacabana',
+  envigado: 'Envigado', sabaneta: 'Sabaneta', itagui: 'Itagüí',
+  'el-poblado': 'El Poblado', rionegro: 'Rionegro',
+  laureles: 'Laureles', belen: 'Belén',
+};
+
+// Polígonos reales OSM — nominatim.openstreetmap.org/lookup
 const ZONE_POLYGONS: Record<string, [number, number][]> = {
   // Bello municipio — R1307262
   bello: [
@@ -106,7 +125,7 @@ const ZONE_POLYGONS: Record<string, [number, number][]> = {
   ],
 };
 
-export default function InversionistasLeafletMap({ zones, activeSector, hoveredZone }: Props) {
+export default function InversionistasLeafletMap({ activeSector, hoveredSector }: Props) {
   const containerRef  = useRef<HTMLDivElement>(null);
   const mapRef        = useRef<any>(null);
   const polygonsRef   = useRef<Record<string, { polygon: any; label: any }>>({});
@@ -125,46 +144,42 @@ export default function InversionistasLeafletMap({ zones, activeSector, hoveredZ
       const L = (window as any).L;
 
       mapRef.current = L.map(containerRef.current, {
-        zoomControl:       false,
-        scrollWheelZoom:   false,
+        zoomControl:        false,
+        scrollWheelZoom:    false,
         attributionControl: false,
-        dragging:          false,
-        doubleClickZoom:   false,
-        touchZoom:         false,
+        dragging:           false,
+        doubleClickZoom:    false,
+        touchZoom:          false,
       }).setView([6.2442, -75.5812], 10);
 
       L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
         maxZoom: 19,
       }).addTo(mapRef.current);
 
-      zones.forEach(zone => {
-        const coords = ZONE_POLYGONS[zone.id];
-        if (!coords || coords.length < 3) return;
+      for (const [id, coords] of Object.entries(ZONE_POLYGONS)) {
+        if (coords.length < 3) continue;
 
         const polygon = L.polygon(coords, {
-          color:       '#aaa',
-          weight:      1.5,
-          fillColor:   '#aaa',
-          fillOpacity: 0.06,
-          opacity:     0.4,
+          color: '#aaa', weight: 1.5,
+          fillColor: '#aaa', fillOpacity: 0.06, opacity: 0.4,
         }).addTo(mapRef.current);
 
-        // Etiqueta centrada en el polígono
         const lat = coords.reduce((s, c) => s + c[0], 0) / coords.length;
         const lng = coords.reduce((s, c) => s + c[1], 0) / coords.length;
+        const label = MUNICIPALITY_LABEL[id] ?? id;
 
-        const label = L.marker([lat, lng], {
+        const marker = L.marker([lat, lng], {
           icon: L.divIcon({
             className: '',
-            html: `<span style="font-family:'Avenir LT Std','Outfit',sans-serif;font-size:10px;font-weight:700;color:#555;background:rgba(255,255,255,0.92);padding:2px 7px;border-radius:3px;white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,0.10);border:1px solid rgba(0,0,0,0.08);display:inline-block;transform:translate(-50%,-50%)">${zone.name}</span>`,
+            html: `<span style="font-family:'Avenir LT Std','Outfit',sans-serif;font-size:10px;font-weight:700;color:#555;background:rgba(255,255,255,0.92);padding:2px 7px;border-radius:3px;white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,0.10);border:1px solid rgba(0,0,0,0.08);display:inline-block;transform:translate(-50%,-50%)">${label}</span>`,
             iconSize:   [0, 0],
             iconAnchor: [0, 0],
           }),
           interactive: false,
         }).addTo(mapRef.current);
 
-        polygonsRef.current[zone.id] = { polygon, label };
-      });
+        polygonsRef.current[id] = { polygon, label: marker };
+      }
     };
 
     if ((window as any).L) {
@@ -178,16 +193,17 @@ export default function InversionistasLeafletMap({ zones, activeSector, hoveredZ
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // Actualizar estilos cuando cambia sector activo u hover
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
 
-    zones.forEach(zone => {
-      const refs = polygonsRef.current[zone.id];
-      if (!refs) return;
+    const effectiveSector = hoveredSector ?? activeSector;
 
-      const inActive = !activeSector || zone.sector === activeSector;
-      const isHov    = hoveredZone === zone.id;
+    for (const [id, refs] of Object.entries(polygonsRef.current)) {
+      const sector = MUNICIPALITY_SECTOR[id];
+      const inActive = !effectiveSector || sector === effectiveSector;
+      const isHov    = hoveredSector !== null && sector === hoveredSector;
 
       if (isHov) {
         refs.polygon.setStyle({
@@ -197,26 +213,27 @@ export default function InversionistasLeafletMap({ zones, activeSector, hoveredZ
       } else if (inActive) {
         refs.polygon.setStyle({
           color: RED, weight: 1.5,
-          fillColor: RED, fillOpacity: 0.15, opacity: 0.75,
+          fillColor: RED, fillOpacity: 0.15, opacity: 0.8,
         });
       } else {
         refs.polygon.setStyle({
-          color: '#aaa', weight: 1,
-          fillColor: '#aaa', fillOpacity: 0.04, opacity: 0.25,
+          color: '#ccc', weight: 1,
+          fillColor: '#ccc', fillOpacity: 0.04, opacity: 0.3,
         });
       }
-    });
+    }
 
-    if (activeSector !== prevSectorRef.current) {
-      prevSectorRef.current = activeSector;
-      if (activeSector) {
-        const v = SECTOR_VIEW[activeSector];
+    const targetSector = hoveredSector ?? activeSector;
+    if (targetSector !== prevSectorRef.current) {
+      prevSectorRef.current = targetSector;
+      if (targetSector) {
+        const v = SECTOR_VIEW[targetSector];
         map.flyTo(v.center, v.zoom, { duration: 0.7, easeLinearity: 0.5 });
       } else {
         map.flyTo([6.2442, -75.5812], 10, { duration: 0.7, easeLinearity: 0.5 });
       }
     }
-  }, [activeSector, hoveredZone, zones]);
+  }, [activeSector, hoveredSector]);
 
   return <div ref={containerRef} style={{ width: '100%', height: '100%' }} />;
 }
