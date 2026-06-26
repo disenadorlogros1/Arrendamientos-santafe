@@ -90,9 +90,17 @@ function applyInkFill(e: React.MouseEvent<HTMLElement>) {
     Math.hypot(x, y), Math.hypot(rect.width - x, y),
     Math.hypot(x, rect.height - y), Math.hypot(rect.width - x, rect.height - y),
   ) * 2;
-  el.style.setProperty('--ink-x', `${x}px`);
-  el.style.setProperty('--ink-y', `${y}px`);
-  el.style.setProperty('--ink-size', `${size}px`);
+  const ripple = document.createElement('span');
+  ripple.style.cssText = `
+    position:absolute; border-radius:50%; pointer-events:none;
+    width:${size}px; height:${size}px;
+    left:${x}px; top:${y}px;
+    transform:translate(-50%,-50%) scale(0);
+    background:rgba(255,255,255,0.28);
+    animation:gallery-ink 0.6s ease-out forwards;
+  `;
+  el.appendChild(ripple);
+  setTimeout(() => ripple.remove(), 650);
 }
 
 function InfoCard({ type, stats, title }: {
@@ -169,10 +177,8 @@ function InfoCard({ type, stats, title }: {
       <a href={href} style={baseStyle} onClick={e => e.stopPropagation()}>
         <BrandMark />
         <div style={{ flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-          <img src="/icons/icon-location-white.gif" width={28} height={28} style={{ marginBottom: 12, opacity: 0.9 }} alt="" />
-          <div style={labelStyle}>Zona de inversión</div>
-          <div style={bigTitle}>{zoneName}</div>
-          <div style={bodyStyle}>Rentabilidades, valorización y oportunidades en esta zona del mercado inmobiliario.</div>
+          <div style={bigTitle}>¿Buscas una zona para invertir?</div>
+          <div style={bodyStyle}>Rentabilidades, valorización y oportunidades en {zoneName} del mercado inmobiliario.</div>
         </div>
         <div style={{ height: 12 }} />
         <a href={href} className="gallery-cta-btn" style={ctaStyle}
@@ -199,8 +205,6 @@ function InfoCard({ type, stats, title }: {
       <a href={href} target="_blank" rel="noopener noreferrer" style={baseStyle} onClick={e => e.stopPropagation()}>
         <BrandMark />
         <div style={{ flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-          <img src="/icons/icon-whatsapp-white.gif" width={28} height={28} style={{ marginBottom: 12, opacity: 0.9 }} alt="" />
-          <div style={labelStyle}>Precio</div>
           {stats?.price && (
             <div style={{ fontSize: 22, fontWeight: 900, color: '#fff', lineHeight: 1.1, marginBottom: 6 }}>
               {stats.price}
@@ -224,8 +228,6 @@ function InfoCard({ type, stats, title }: {
       <a href="/propiedades" style={baseStyle} onClick={e => e.stopPropagation()}>
         <BrandMark />
         <div style={{ flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-          <img src="/icons/icon-home-white.gif" width={28} height={28} style={{ marginBottom: 12, opacity: 0.9 }} alt="" />
-          <div style={labelStyle}>Explora más</div>
           <div style={bigTitle}>Propiedades similares</div>
           <div style={bodyStyle}>Encuentra otras propiedades con características parecidas en nuestra oferta.</div>
         </div>
