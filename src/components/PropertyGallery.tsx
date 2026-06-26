@@ -107,7 +107,7 @@ function InfoCard({ type, stats, title }: {
   const BrandMark = () => (
     <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 14 }}>
       <img src="/icons/icon-favicon-white.gif" width={14} height={14} style={{ opacity: 0.7, flexShrink: 0 }} alt="" />
-      <span style={{ fontSize: 9, fontWeight: 600, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.35)' }}>
+      <span style={{ fontSize: 9, fontWeight: 600, letterSpacing: '0.06em', color: 'rgba(255,255,255,0.35)' }}>
         Arrendamientos Santa Fe
       </span>
     </div>
@@ -237,9 +237,7 @@ function InfoCard({ type, stats, title }: {
       <a href={href} target="_blank" rel="noopener noreferrer" style={baseStyle} onClick={e => e.stopPropagation()}>
         <BrandMark />
         <div style={{ flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-          <img src="/icons/icon-schedule-white.gif" width={28} height={28} style={{ marginBottom: 12, opacity: 0.9 }} alt="" />
-          <div style={labelStyle}>Agenda tu visita</div>
-          <div style={titleStyle}>¿Te gustaría conocerla en persona?</div>
+          <div style={{ fontSize: 22, fontWeight: 800, color: '#fff', lineHeight: 1.2, marginBottom: 10 }}>¿Te gustaría conocerla en persona?</div>
           <div style={bodyStyle}>Coordina una visita con nuestros asesores y conoce todos los detalles.</div>
         </div>
         <RedLine />
