@@ -62,7 +62,7 @@ export default function PropiedadesLeafletMap({ properties, onBoundsChange, onHo
 
       mapRef.current = L.map(containerRef.current, {
         zoomControl: true,
-        scrollWheelZoom: true,
+        scrollWheelZoom: false,
         attributionControl: false,
       }).setView([6.2442, -75.5812], 12);
 

@@ -2476,7 +2476,7 @@ export default function InversionistasLeafletMap({ activeSector, hoveredSector }
 
       mapRef.current = L.map(containerRef.current, {
         zoomControl:        true,
-        scrollWheelZoom:    true,
+        scrollWheelZoom:    false,
         attributionControl: false,
         dragging:           true,
         doubleClickZoom:    true,
