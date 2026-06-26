@@ -165,7 +165,7 @@ export default function NeighborhoodMap({ zone }: Props) {
   return (
     <div style={{ position: 'relative', width: '100%' }}>
       {/* Mapa */}
-      <div style={{ position: 'relative', width: '100%', height: 480, background: '#0a0a0a' }}>
+      <div style={{ position: 'relative', width: '100%', height: 480, background: '#f5f5f5' }}>
         <div ref={containerRef} style={{ width: '100%', height: '100%' }} />
 
         {/* Overlay label superior */}
@@ -173,12 +173,12 @@ export default function NeighborhoodMap({ zone }: Props) {
           position: 'absolute', top: 16, left: 16, zIndex: 1000,
           display: 'flex', alignItems: 'center', gap: 8,
           padding: '6px 12px',
-          background: 'rgba(10,10,10,0.85)', backdropFilter: 'blur(8px)',
-          border: '1px solid rgba(255,255,255,0.1)',
+          background: 'rgba(255,255,255,0.92)', backdropFilter: 'blur(8px)',
+          border: '1px solid rgba(0,0,0,0.1)',
           fontFamily: FONT,
         }}>
-          <img src="/icons/icon-favicon-white.gif" width={11} height={11} style={{ opacity: 0.5 }} alt="" />
-          <span style={{ fontSize: 10, fontWeight: 600, letterSpacing: '0.08em', color: 'rgba(255,255,255,0.4)' }}>
+          <img src="/icons/icon-favicon-red.gif" width={11} height={11} style={{ opacity: 0.7 }} alt="" />
+          <span style={{ fontSize: 10, fontWeight: 600, letterSpacing: '0.08em', color: '#888' }}>
             {zone.subzones.length} sectores · Pasa el cursor para explorar
           </span>
         </div>
@@ -201,8 +201,8 @@ export default function NeighborhoodMap({ zone }: Props) {
       {/* Ficha inferior — se muestra al hover */}
       <div style={{
         width: '100%',
-        background: '#111',
-        borderTop: `3px solid ${hovered ? RED : 'rgba(255,255,255,0.06)'}`,
+        background: '#f7f7f7',
+        borderTop: `3px solid ${hovered ? RED : '#e8e8e8'}`,
         overflow: 'hidden',
         maxHeight: hovered ? 260 : 0,
         transition: 'max-height 0.35s cubic-bezier(0.4,0,0.2,1), border-color 0.2s ease',
