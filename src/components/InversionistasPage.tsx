@@ -189,107 +189,113 @@ export default function InversionistasPage() {
         </div>
 
         {/* Zone cards for active sector */}
-        <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '0 clamp(20px, 4vw, 52px)' }}>
+        <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '0 clamp(20px, 4vw, 52px) 40px' }}>
+          {visibleZones.map((zone) => (
+            <div key={zone.id} style={{ background: '#fff', borderTop: '2px solid #f32735' }}>
 
-          {/* Zone Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {visibleZones.map((zone, index) => (
-              <ScrollReveal key={zone.id} delay={index * 0.08} y={16}>
-                <div className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm hover:shadow-md transition-all">
-                  <button
-                    onClick={() => setExpandedZone(expandedZone === zone.id ? null : zone.id)}
-                    className="w-full p-6 text-left hover:bg-gray-50 transition-colors"
-                  >
-                    <div className="flex items-center justify-between mb-4">
-                      <div className="flex items-center gap-3">
-                        <span style={{
-                          fontFamily: FONT, fontSize: 11, fontWeight: 700,
-                          color: SECTOR_COLORS[zone.sector].text, background: SECTOR_COLORS[zone.sector].bg,
-                          border: `1px solid ${SECTOR_COLORS[zone.sector].border}`, borderRadius: 20, padding: '2px 9px',
-                        }}>
-                          {zone.sector}
-                        </span>
-                        <h3 className="text-2xl font-bold text-gray-900" style={{ fontFamily: FONT }}>{zone.name}</h3>
-                      </div>
-                      <ChevronDown
-                        className="w-6 h-6 flex-shrink-0"
-                        strokeWidth={expandedZone === zone.id ? 2.5 : 1.8}
+              {/* Header row */}
+              <button
+                onClick={() => setExpandedZone(expandedZone === zone.id ? null : zone.id)}
+                style={{
+                  width: '100%', padding: '22px 28px', textAlign: 'left', cursor: 'pointer',
+                  background: 'transparent', border: 'none',
+                  display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                  gap: '16px',
+                }}
+              >
+                {/* Title + metrics inline */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '32px', flex: 1, flexWrap: 'wrap' }}>
+                  <h3 style={{ fontFamily: FONT, fontWeight: 700, fontSize: '22px', color: '#0d0d0d', margin: 0, whiteSpace: 'nowrap' }}>
+                    {zone.name}
+                  </h3>
+
+                  {/* Separator */}
+                  <div style={{ width: '1px', height: '32px', background: '#e8e8e8', flexShrink: 0 }} />
+
+                  {/* Metrics */}
+                  {[
+                    { label: 'Rentabilidad', value: zone.rentability, accent: true },
+                    { label: 'Precio m²',    value: zone.pricePerM2  },
+                    { label: 'Estratos',     value: zone.strata      },
+                  ].map((m, i) => (
+                    <div key={i} style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
+                      <span style={{ fontFamily: FONT, fontSize: '9px', fontWeight: 600, color: '#aaa', textTransform: 'uppercase', letterSpacing: '0.6px' }}>
+                        {m.label}
+                      </span>
+                      <span style={{ fontFamily: FONT, fontSize: '15px', fontWeight: 700, color: m.accent ? '#f32735' : '#0d0d0d' }}>
+                        {m.value}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Chevron */}
+                <ChevronDown
+                  size={20} strokeWidth={2}
+                  style={{
+                    color: '#f32735', flexShrink: 0,
+                    transform: expandedZone === zone.id ? 'rotate(180deg)' : 'rotate(0deg)',
+                    transition: 'transform 0.3s ease',
+                  }}
+                />
+              </button>
+
+              {/* Accordion body */}
+              <div style={{
+                display: 'grid',
+                gridTemplateRows: expandedZone === zone.id ? '1fr' : '0fr',
+                opacity: expandedZone === zone.id ? 1 : 0,
+                transition: 'grid-template-rows 0.3s ease, opacity 0.25s ease',
+                borderTop: '1px solid #f0f0f0',
+              }}>
+                <div style={{ overflow: 'hidden' }}>
+                  <div style={{ padding: '24px 28px', display: 'flex', gap: '48px' }}>
+
+                    {/* Description */}
+                    <div style={{ flex: 1 }}>
+                      <p style={{ fontFamily: FONT, fontSize: '14px', fontWeight: 300, color: '#555', lineHeight: 1.7, margin: 0 }}>
+                        {zone.description}
+                      </p>
+                    </div>
+
+                    {/* Advantages */}
+                    <div style={{ flex: 1 }}>
+                      <p style={{ fontFamily: FONT, fontSize: '11px', fontWeight: 700, color: '#aaa', textTransform: 'uppercase', letterSpacing: '0.8px', marginBottom: '12px' }}>
+                        Ventajas de inversión
+                      </p>
+                      <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 20px 0', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                        {zone.advantages.map((adv, i) => (
+                          <li key={i} style={{ display: 'flex', gap: '10px', alignItems: 'flex-start' }}>
+                            <span style={{ color: '#f32735', fontSize: '8px', marginTop: '5px', flexShrink: 0 }}>■</span>
+                            <span style={{ fontFamily: FONT, fontSize: '13px', fontWeight: 300, color: '#444', lineHeight: 1.5 }}>{adv}</span>
+                          </li>
+                        ))}
+                      </ul>
+                      <Link
+                        href={`/inversionistas/${zone.slug}`}
                         style={{
-                          color: SECTOR_COLORS[zone.sector].text,
-                          transform: expandedZone === zone.id ? 'rotate(180deg)' : 'rotate(0deg)',
-                          transition: 'transform 0.3s ease',
+                          display: 'inline-flex', alignItems: 'center', gap: '8px',
+                          padding: '10px 20px',
+                          background: '#f32735', color: '#fff',
+                          fontFamily: FONT, fontSize: '13px', fontWeight: 600,
+                          textDecoration: 'none', transition: 'background 0.18s',
                         }}
-                      />
+                        onMouseEnter={e => (e.currentTarget.style.background = '#c41e2a')}
+                        onMouseLeave={e => (e.currentTarget.style.background = '#f32735')}
+                      >
+                        Ver análisis completo
+                        <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
+                          <path d="M2.5 11.5L11.5 2.5M11.5 2.5H5M11.5 2.5V9" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                        </svg>
+                      </Link>
                     </div>
-                    <div className="grid grid-cols-3 gap-4 mb-4">
-                      <div style={{ background: SECTOR_COLORS[zone.sector].bg }} className="p-3 rounded-lg">
-                        <p className="text-xs text-gray-600 mb-1" style={{ fontFamily: FONT }}>Rentabilidad</p>
-                        <p className="text-lg font-bold" style={{ color: SECTOR_COLORS[zone.sector].text, fontFamily: FONT }}>{zone.rentability}</p>
-                      </div>
-                      <div className="bg-gray-50 p-3 rounded-lg">
-                        <p className="text-xs text-gray-600 mb-1" style={{ fontFamily: FONT }}>Precio m²</p>
-                        <p className="text-sm font-bold text-gray-900" style={{ fontFamily: FONT }}>{zone.pricePerM2}</p>
-                      </div>
-                      <div className="bg-gray-50 p-3 rounded-lg">
-                        <p className="text-xs text-gray-600 mb-1" style={{ fontFamily: FONT }}>Estratos</p>
-                        <p className="text-lg font-bold text-gray-900" style={{ fontFamily: FONT }}>{zone.strata}</p>
-                      </div>
-                    </div>
-                  </button>
-                  {/* Accordion detail */}
-                  <div
-                    style={{
-                      display: 'grid',
-                      gridTemplateRows: expandedZone === zone.id ? '1fr' : '0fr',
-                      opacity: expandedZone === zone.id ? 1 : 0,
-                      transition: 'grid-template-rows 0.3s ease, opacity 0.3s ease',
-                    }}
-                    className="border-t border-gray-200"
-                  >
-                    <div style={{ overflow: 'hidden' }}>
-                      <div className="p-6 space-y-4">
-                        <p className="text-gray-600 leading-relaxed" style={{ fontFamily: FONT, fontWeight: 300 }}>{zone.description}</p>
-                        <div>
-                          <h4 className="font-bold text-gray-900 mb-3" style={{ fontFamily: FONT }}>Ventajas de inversión:</h4>
-                          <ul className="space-y-2">
-                            {zone.advantages.map((advantage, i) => (
-                              <li key={i} className="flex items-start gap-2 text-gray-700">
-                                <span className="w-2 h-2 rounded-full mt-2 flex-shrink-0" style={{ background: SECTOR_COLORS[zone.sector].text }} />
-                                <span className="text-sm" style={{ fontFamily: FONT, fontWeight: 300 }}>{advantage}</span>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                        <Link
-                          href={`/inversionistas/${zone.slug}`}
-                          style={{
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            gap: 8,
-                            marginTop: 8,
-                            padding: '10px 20px',
-                            background: '#1a1a1a',
-                            color: '#fff',
-                            borderRadius: 0,
-                            fontFamily: FONT,
-                            fontSize: 13,
-                            fontWeight: 500,
-                            textDecoration: 'none',
-                            transition: 'background 0.18s',
-                          }}
-                          onMouseEnter={e => (e.currentTarget.style.background = SECTOR_COLORS[zone.sector].text)}
-                          onMouseLeave={e => (e.currentTarget.style.background = '#1a1a1a')}
-                        >
-                          Ver análisis completo de {zone.name}
-                          <ArrowRight size={14} />
-                        </Link>
-                      </div>
-                    </div>
+
                   </div>
                 </div>
-              </ScrollReveal>
-            ))}
-          </div>
+              </div>
+
+            </div>
+          ))}
         </div>
       </section>
 
