@@ -19,10 +19,10 @@ interface Props {
 const RED = '#f32735';
 
 const SECTOR_VIEW: Record<Sector, { center: [number, number]; zoom: number }> = {
-  Norte:     { center: [6.36,  -75.57], zoom: 10 },
-  Sur:       { center: [6.13,  -75.61], zoom: 11 },
-  Oriente:   { center: [6.16,  -75.49], zoom: 10 },
-  Occidente: { center: [6.29,  -75.63], zoom: 10 },
+  Norte:     { center: [6.36,  -75.57], zoom: 12 },
+  Sur:       { center: [6.13,  -75.61], zoom: 12 },
+  Oriente:   { center: [6.16,  -75.49], zoom: 11 },
+  Occidente: { center: [6.29,  -75.63], zoom: 12 },
 };
 
 // Sector de cada barrio/municipio
@@ -2490,7 +2490,7 @@ export default function InversionistasLeafletMap({ activeSector, hoveredSector }
         if (coords.length < 3) continue;
 
         const polygon = L.polygon(coords, {
-          color: '#ccc', weight: 1, smoothFactor: 0,
+          color: '#ccc', weight: 0.5, smoothFactor: 0,
           fillColor: '#ccc', fillOpacity: 0.05, opacity: 0.3,
         }).addTo(mapRef.current);
 
@@ -2535,11 +2535,11 @@ export default function InversionistasLeafletMap({ activeSector, hoveredSector }
       const isHov    = hoveredSector !== null && sector === hoveredSector;
 
       if (isHov) {
-        refs.polygon.setStyle({ color: RED, weight: 2.5, fillColor: RED, fillOpacity: 0.30, opacity: 1 });
+        refs.polygon.setStyle({ color: RED, weight: 1, fillColor: RED, fillOpacity: 0.30, opacity: 1 });
       } else if (inActive) {
-        refs.polygon.setStyle({ color: RED, weight: 1.5, fillColor: RED, fillOpacity: 0.18, opacity: 0.85 });
+        refs.polygon.setStyle({ color: RED, weight: 0.6, fillColor: RED, fillOpacity: 0.18, opacity: 0.85 });
       } else {
-        refs.polygon.setStyle({ color: '#ccc', weight: 0.8, fillColor: '#ccc', fillOpacity: 0.04, opacity: 0.25 });
+        refs.polygon.setStyle({ color: '#ccc', weight: 0.4, fillColor: '#ccc', fillOpacity: 0.04, opacity: 0.25 });
       }
     }
 
