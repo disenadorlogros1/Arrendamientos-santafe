@@ -61,7 +61,7 @@ export default function NeighborhoodMap({ zone }: Props) {
 
       mapRef.current = L.map(containerRef.current, {
         zoomControl:        false,
-        scrollWheelZoom:    false,
+        scrollWheelZoom:    true,
         attributionControl: false,
         dragging:           true,
         doubleClickZoom:    false,

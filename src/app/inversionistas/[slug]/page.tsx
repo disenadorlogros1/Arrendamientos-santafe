@@ -15,9 +15,9 @@ import NeighborhoodMap from '@/components/NeighborhoodMap';
 
 const FONT  = "'Avenir LT Std', 'Outfit', system-ui, sans-serif";
 const RED   = '#f32735';
-const DARK  = '#0d0d0d';
-const DARK2 = '#111';
-const DARK3 = '#161616';
+const DARK  = '#fff';
+const DARK2 = '#f7f7f7';
+const DARK3 = '#f0f0f0';
 const WHATSAPP_URL = 'https://wa.me/573006557529?text=Hola%2C%20quisiera%20consultar%20oportunidades%20de%20inversión%20inmobiliaria.';
 
 function applyInkFill(e: React.MouseEvent<HTMLElement>) {
@@ -72,13 +72,6 @@ export default function InversionZonePage() {
   }, [zone]);
 
   useEffect(() => {
-    // Forzar fondo oscuro — el layout tiene bg-background (blanco)
-    const prev = document.body.style.background;
-    document.body.style.background = '#0d0d0d';
-    return () => { document.body.style.background = prev; };
-  }, []);
-
-  useEffect(() => {
     const el = heroRef.current;
     if (!el) return;
     el.style.opacity   = '0';
@@ -96,11 +89,11 @@ export default function InversionZonePage() {
 
   if (!zone) {
     return (
-      <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: DARK }}>
+      <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: '#fff' }}>
         <Header currentPage={currentPage} onNavigate={handleNavigate} isHeroPage={false} darkHeader />
         <main style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', paddingTop: 120 }}>
           <div style={{ textAlign: 'center', fontFamily: FONT }}>
-            <h1 style={{ fontSize: 24, fontWeight: 800, color: '#fff', marginBottom: 16 }}>Zona no encontrada</h1>
+            <h1 style={{ fontSize: 24, fontWeight: 800, color: '#111', marginBottom: 16 }}>Zona no encontrada</h1>
             <Link href="/inversionistas" style={{ color: RED, textDecoration: 'none', fontSize: 14 }}>
               ← Volver a zonas de inversión
             </Link>
@@ -114,24 +107,24 @@ export default function InversionZonePage() {
   const otherZones = investmentZones.filter((z) => z.id !== zone.id);
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: DARK, fontFamily: FONT }}>
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: '#fff', fontFamily: FONT }}>
       <style>{ZONE_INK_CSS}</style>
       <Header currentPage={currentPage} onNavigate={handleNavigate} isHeroPage={false} darkHeader />
 
       <main style={{ flex: 1 }}>
 
         {/* ── Hero ──────────────────────────────────────────── */}
-        <section style={{ background: DARK, paddingTop: 120, paddingBottom: 64, borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+        <section style={{ background: '#fff', paddingTop: 120, paddingBottom: 64, borderBottom: '1px solid #e8e8e8' }}>
           <div style={{ maxWidth: 1120, margin: '0 auto', padding: '0 24px' }}>
             <div ref={heroRef}>
               {/* Marca + breadcrumb */}
               <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 32 }}>
-                <img src="/icons/icon-favicon-white.gif" width={13} height={13} style={{ opacity: 0.45 }} alt="" />
-                <span style={{ fontSize: 10, fontWeight: 600, letterSpacing: '0.08em', color: 'rgba(255,255,255,0.28)' }}>
+                <img src="/icons/icon-favicon-red.gif" width={13} height={13} style={{ opacity: 0.7 }} alt="" />
+                <span style={{ fontSize: 10, fontWeight: 600, letterSpacing: '0.08em', color: '#aaa' }}>
                   Arrendamientos Santa Fe
                 </span>
-                <span style={{ color: 'rgba(255,255,255,0.15)', fontSize: 10 }}>·</span>
-                <Link href="/inversionistas" style={{ fontSize: 10, fontWeight: 500, letterSpacing: '0.06em', color: 'rgba(255,255,255,0.28)', textDecoration: 'none' }}>
+                <span style={{ color: '#ddd', fontSize: 10 }}>·</span>
+                <Link href="/inversionistas" style={{ fontSize: 10, fontWeight: 500, letterSpacing: '0.06em', color: '#aaa', textDecoration: 'none' }}>
                   Zonas de inversión
                 </Link>
               </div>
@@ -141,10 +134,10 @@ export default function InversionZonePage() {
                 {zone.sector}
               </div>
 
-              <h1 style={{ fontSize: 'clamp(36px, 5vw, 64px)', fontWeight: 900, color: '#fff', lineHeight: 1.05, margin: '0 0 20px', letterSpacing: '-0.02em' }}>
+              <h1 style={{ fontSize: 'clamp(36px, 5vw, 64px)', fontWeight: 900, color: '#111', lineHeight: 1.05, margin: '0 0 20px', letterSpacing: '-0.02em' }}>
                 {zone.h1Title}
               </h1>
-              <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.48)', lineHeight: 1.75, maxWidth: 640, margin: 0 }}>
+              <p style={{ fontSize: 16, color: '#666', lineHeight: 1.75, maxWidth: 640, margin: 0 }}>
                 {zone.description}
               </p>
             </div>
@@ -152,18 +145,15 @@ export default function InversionZonePage() {
         </section>
 
         {/* ── Stats ─────────────────────────────────────────── */}
-        <section style={{ background: DARK2, padding: '0', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+        <section style={{ background: DARK2, padding: '0', borderBottom: '1px solid #e8e8e8' }}>
           <div style={{ maxWidth: 1120, margin: '0 auto', padding: '0 24px' }}>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 2 }}>
               {STATS_META.map((meta) => (
                 <div key={meta.key} style={{ background: DARK3, borderTop: `3px solid ${RED}`, padding: '32px 28px 28px', boxSizing: 'border-box' as const }}>
-                  <img src={meta.icon} width={20} height={20} alt="" style={{ opacity: 0.5, marginBottom: 14, display: 'block' }}
-                    onError={e => { (e.target as HTMLImageElement).style.display = 'none'; }}
-                  />
                   <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase' as const, color: RED, marginBottom: 10 }}>
                     {meta.label}
                   </div>
-                  <div style={{ fontSize: 26, fontWeight: 900, color: '#fff', lineHeight: 1.1, letterSpacing: '-0.01em' }}>
+                  <div style={{ fontSize: 26, fontWeight: 900, color: '#111', lineHeight: 1.1, letterSpacing: '-0.01em' }}>
                     {zone[meta.key]}
                   </div>
                 </div>
@@ -173,14 +163,14 @@ export default function InversionZonePage() {
         </section>
 
         {/* ── Ventajas ──────────────────────────────────────── */}
-        <section style={{ background: DARK, padding: '72px 0', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+        <section style={{ background: '#fff', padding: '72px 0', borderBottom: '1px solid #e8e8e8' }}>
           <div style={{ maxWidth: 1120, margin: '0 auto', padding: '0 24px' }}>
             <ScrollReveal y={16}>
               <div style={{ marginBottom: 48 }}>
                 <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase' as const, color: RED, marginBottom: 12 }}>
                   Por qué invertir aquí
                 </div>
-                <h2 style={{ fontSize: 'clamp(26px, 3.5vw, 40px)', fontWeight: 900, color: '#fff', margin: 0, letterSpacing: '-0.01em' }}>
+                <h2 style={{ fontSize: 'clamp(26px, 3.5vw, 40px)', fontWeight: 900, color: '#111', margin: 0, letterSpacing: '-0.01em' }}>
                   Ventajas de {zone.name}
                 </h2>
               </div>
@@ -193,7 +183,7 @@ export default function InversionZonePage() {
                     <div style={{ fontSize: 11, fontWeight: 800, color: RED, marginBottom: 10, letterSpacing: '0.04em' }}>
                       {String(i + 1).padStart(2, '0')}
                     </div>
-                    <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.7)', lineHeight: 1.65, margin: 0 }}>{adv}</p>
+                    <p style={{ fontSize: 14, color: '#444', lineHeight: 1.65, margin: 0 }}>{adv}</p>
                   </div>
                 </ScrollReveal>
               ))}
@@ -202,14 +192,14 @@ export default function InversionZonePage() {
         </section>
 
         {/* ── Mapa de barrios ───────────────────────────────── */}
-        <section style={{ background: DARK, borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+        <section style={{ background: DARK2, borderBottom: '1px solid #e8e8e8' }}>
           <div style={{ maxWidth: 1120, margin: '0 auto', padding: '0 24px' }}>
             <ScrollReveal y={16}>
               <div style={{ paddingTop: 64, paddingBottom: 36 }}>
                 <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase' as const, color: RED, marginBottom: 12 }}>
                   Cobertura
                 </div>
-                <h2 style={{ fontSize: 'clamp(22px, 3vw, 34px)', fontWeight: 900, color: '#fff', margin: 0 }}>
+                <h2 style={{ fontSize: 'clamp(22px, 3vw, 34px)', fontWeight: 900, color: '#111', margin: 0 }}>
                   Sectores y barrios de {zone.name}
                 </h2>
               </div>
@@ -221,14 +211,14 @@ export default function InversionZonePage() {
 
         {/* ── Propiedades relacionadas ──────────────────────── */}
         {relatedProperties.length > 0 && (
-          <section style={{ background: DARK, padding: '72px 0', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+          <section style={{ background: '#fff', padding: '72px 0', borderBottom: '1px solid #e8e8e8' }}>
             <div style={{ maxWidth: 1120, margin: '0 auto', padding: '0 24px' }}>
               <ScrollReveal y={16}>
                 <div style={{ marginBottom: 40 }}>
                   <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase' as const, color: RED, marginBottom: 12 }}>
                     Portafolio
                   </div>
-                  <h2 style={{ fontSize: 'clamp(22px, 3vw, 34px)', fontWeight: 900, color: '#fff', margin: 0 }}>
+                  <h2 style={{ fontSize: 'clamp(22px, 3vw, 34px)', fontWeight: 900, color: '#111', margin: 0 }}>
                     Propiedades para inversión en {zone.name}
                   </h2>
                 </div>
@@ -267,14 +257,14 @@ export default function InversionZonePage() {
         )}
 
         {/* ── Otras zonas ───────────────────────────────────── */}
-        <section style={{ background: DARK2, padding: '72px 0', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+        <section style={{ background: DARK2, padding: '72px 0', borderBottom: '1px solid #e8e8e8' }}>
           <div style={{ maxWidth: 1120, margin: '0 auto', padding: '0 24px' }}>
             <ScrollReveal y={16}>
               <div style={{ marginBottom: 48 }}>
                 <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase' as const, color: RED, marginBottom: 12 }}>
                   Explorar
                 </div>
-                <h2 style={{ fontSize: 'clamp(22px, 3vw, 34px)', fontWeight: 900, color: '#fff', margin: 0 }}>
+                <h2 style={{ fontSize: 'clamp(22px, 3vw, 34px)', fontWeight: 900, color: '#111', margin: 0 }}>
                   Otras zonas de inversión
                 </h2>
               </div>
@@ -344,8 +334,8 @@ function OtherZoneCard({ zone }: { zone: typeof investmentZones[0] }) {
       href={`/inversionistas/${zone.slug}`}
       style={{
         display: 'block',
-        background: hovered ? '#1a1a1a' : DARK2,
-        borderTop: `3px solid ${hovered ? RED : 'rgba(255,255,255,0.07)'}`,
+        background: hovered ? '#ececec' : DARK3,
+        borderTop: `3px solid ${hovered ? RED : '#e0e0e0'}`,
         padding: '24px 22px 22px',
         textDecoration: 'none',
         transition: 'background 0.18s, border-color 0.18s',
@@ -356,19 +346,19 @@ function OtherZoneCard({ zone }: { zone: typeof investmentZones[0] }) {
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
-      <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.09em', textTransform: 'uppercase' as const, color: hovered ? RED : 'rgba(255,255,255,0.22)', marginBottom: 10, transition: 'color 0.18s' }}>
+      <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.09em', textTransform: 'uppercase' as const, color: hovered ? RED : '#bbb', marginBottom: 10, transition: 'color 0.18s' }}>
         {zone.sector}
       </div>
-      <div style={{ fontSize: 20, fontWeight: 800, color: '#fff', marginBottom: 14, lineHeight: 1.15 }}>
+      <div style={{ fontSize: 20, fontWeight: 800, color: '#111', marginBottom: 14, lineHeight: 1.15 }}>
         {zone.name}
       </div>
-      <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.38)', marginBottom: 4 }}>
+      <div style={{ fontSize: 12, color: '#888', marginBottom: 4 }}>
         <span style={{ color: RED, fontWeight: 700 }}>{zone.rentability}</span> rentabilidad
       </div>
-      <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.38)' }}>
+      <div style={{ fontSize: 12, color: '#888' }}>
         {zone.pricePerM2} / m²
       </div>
-      <div style={{ marginTop: 20, display: 'flex', alignItems: 'center', gap: 6, color: hovered ? RED : 'rgba(255,255,255,0.25)', fontSize: 12, fontWeight: 600, transition: 'color 0.18s' }}>
+      <div style={{ marginTop: 20, display: 'flex', alignItems: 'center', gap: 6, color: hovered ? RED : '#bbb', fontSize: 12, fontWeight: 600, transition: 'color 0.18s' }}>
         Ver análisis
         <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
           <path d="M2 6h8M7 3l3 3-3 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
