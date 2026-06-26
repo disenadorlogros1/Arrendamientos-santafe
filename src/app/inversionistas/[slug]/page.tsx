@@ -8,9 +8,10 @@ import Footer from '@/components/Footer';
 import PropertyCard from '@/components/PropertyCard';
 import ScrollReveal from '@/components/ScrollReveal';
 import { investmentZones, getZoneBySlug } from '@/data/investment-zones';
-import { properties, getNeighborhoodsForZone } from '@/data/properties';
+import { properties } from '@/data/properties';
 import type { PageType } from '@/components/Header';
 import { navigate } from '@/lib/navigate';
+import NeighborhoodMap from '@/components/NeighborhoodMap';
 
 const FONT  = "'Avenir LT Std', 'Outfit', system-ui, sans-serif";
 const RED   = '#f32735';
@@ -70,10 +71,12 @@ export default function InversionZonePage() {
     );
   }, [zone]);
 
-  const neighborhoods = useMemo(
-    () => (zone ? getNeighborhoodsForZone(zone.slug) : []),
-    [zone],
-  );
+  useEffect(() => {
+    // Forzar fondo oscuro — el layout tiene bg-background (blanco)
+    const prev = document.body.style.background;
+    document.body.style.background = '#0d0d0d';
+    return () => { document.body.style.background = prev; };
+  }, []);
 
   useEffect(() => {
     const el = heroRef.current;
@@ -198,39 +201,23 @@ export default function InversionZonePage() {
           </div>
         </section>
 
-        {/* ── Sectores y barrios ────────────────────────────── */}
-        {neighborhoods.length > 0 && (
-          <section style={{ background: DARK2, padding: '64px 0', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
-            <div style={{ maxWidth: 1120, margin: '0 auto', padding: '0 24px' }}>
-              <ScrollReveal y={16}>
-                <div style={{ marginBottom: 36 }}>
-                  <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase' as const, color: RED, marginBottom: 12 }}>
-                    Cobertura
-                  </div>
-                  <h2 style={{ fontSize: 'clamp(22px, 3vw, 34px)', fontWeight: 900, color: '#fff', margin: 0 }}>
-                    Sectores y barrios de {zone.name}
-                  </h2>
+        {/* ── Mapa de barrios ───────────────────────────────── */}
+        <section style={{ background: DARK, borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+          <div style={{ maxWidth: 1120, margin: '0 auto', padding: '0 24px' }}>
+            <ScrollReveal y={16}>
+              <div style={{ paddingTop: 64, paddingBottom: 36 }}>
+                <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase' as const, color: RED, marginBottom: 12 }}>
+                  Cobertura
                 </div>
-              </ScrollReveal>
-
-              <div style={{ display: 'flex', flexWrap: 'wrap' as const, gap: 8 }}>
-                {neighborhoods.map((name, i) => (
-                  <ScrollReveal key={name} delay={i * 0.02} y={8}>
-                    <span style={{
-                      display: 'inline-block',
-                      padding: '6px 14px',
-                      border: '1px solid rgba(255,255,255,0.14)',
-                      color: 'rgba(255,255,255,0.55)',
-                      fontSize: 12, fontWeight: 500, fontFamily: FONT,
-                    }}>
-                      {name}
-                    </span>
-                  </ScrollReveal>
-                ))}
+                <h2 style={{ fontSize: 'clamp(22px, 3vw, 34px)', fontWeight: 900, color: '#fff', margin: 0 }}>
+                  Sectores y barrios de {zone.name}
+                </h2>
               </div>
-            </div>
-          </section>
-        )}
+            </ScrollReveal>
+          </div>
+          <NeighborhoodMap zone={zone} />
+          <div style={{ height: 64 }} />
+        </section>
 
         {/* ── Propiedades relacionadas ──────────────────────── */}
         {relatedProperties.length > 0 && (
