@@ -365,10 +365,22 @@ const ZONE_POLYGONS: Record<string, [number, number][]> = {
   ],
 };
 
+// Colores del estilo flat-choropleth
+const GRAY_FILL    = '#d4d4d4';
+const GRAY_BORDER  = '#b8b8b8';
+const RED_FILL     = '#f32735';
+const RED_BORDER   = '#c41e2a';
+const DOT_INACTIVE = '#b0b0b0';
+const DOT_ACTIVE   = '#f32735';
+
+function makeDotIcon(color: string) {
+  return `<div style="width:7px;height:7px;border-radius:50%;background:${color};border:1.5px solid rgba(255,255,255,0.9);box-shadow:0 1px 3px rgba(0,0,0,0.25);transform:translate(-50%,-50%)"></div>`;
+}
+
 export default function InversionistasLeafletMap({ activeSector, hoveredSector }: Props) {
   const containerRef  = useRef<HTMLDivElement>(null);
   const mapRef        = useRef<any>(null);
-  const polygonsRef   = useRef<Record<string, { polygon: any; label: any }>>({});
+  const polygonsRef   = useRef<Record<string, { polygon: any; dot: any }>>({});
   const prevSectorRef = useRef<Sector | null>(null);
 
   useEffect(() => {
@@ -390,35 +402,39 @@ export default function InversionistasLeafletMap({ activeSector, hoveredSector }
         dragging:           false,
         doubleClickZoom:    false,
         touchZoom:          false,
+        // Fondo blanco puro — sin tile layer
       }).setView([6.25, -75.58], 9);
 
-      L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-        maxZoom: 19,
+      // Fondo blanco sin etiquetas
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png', {
+        maxZoom: 19, opacity: 0.25,
       }).addTo(mapRef.current);
 
       for (const [id, coords] of Object.entries(ZONE_POLYGONS)) {
         if (coords.length < 3) continue;
 
         const polygon = L.polygon(coords, {
-          color: '#ccc', weight: 1,
-          fillColor: '#ccc', fillOpacity: 0.05, opacity: 0.3,
+          color:       GRAY_BORDER,
+          weight:      1,
+          fillColor:   GRAY_FILL,
+          fillOpacity: 0.85,
+          opacity:     1,
         }).addTo(mapRef.current);
 
         const lat = coords.reduce((s, c) => s + c[0], 0) / coords.length;
         const lng = coords.reduce((s, c) => s + c[1], 0) / coords.length;
-        const labelText = BARRIO_LABEL[id] ?? id;
 
-        const marker = L.marker([lat, lng], {
+        const dot = L.marker([lat, lng], {
           icon: L.divIcon({
-            className: '',
-            html: `<span style="font-family:'Avenir LT Std','Outfit',sans-serif;font-size:9px;font-weight:600;color:#666;background:rgba(255,255,255,0.9);padding:1px 5px;border-radius:2px;white-space:nowrap;box-shadow:0 1px 3px rgba(0,0,0,0.08);display:inline-block;transform:translate(-50%,-50%)">${labelText}</span>`,
+            className:  '',
+            html:       makeDotIcon(DOT_INACTIVE),
             iconSize:   [0, 0],
             iconAnchor: [0, 0],
           }),
           interactive: false,
         }).addTo(mapRef.current);
 
-        polygonsRef.current[id] = { polygon, label: marker };
+        polygonsRef.current[id] = { polygon, dot };
       }
     };
 
@@ -440,16 +456,19 @@ export default function InversionistasLeafletMap({ activeSector, hoveredSector }
     const effectiveSector = hoveredSector ?? activeSector;
 
     for (const [id, refs] of Object.entries(polygonsRef.current)) {
-      const sector = BARRIO_SECTOR[id];
+      const sector   = BARRIO_SECTOR[id];
       const inActive = !effectiveSector || sector === effectiveSector;
       const isHov    = hoveredSector !== null && sector === hoveredSector;
 
       if (isHov) {
-        refs.polygon.setStyle({ color: RED, weight: 2.5, fillColor: RED, fillOpacity: 0.30, opacity: 1 });
+        refs.polygon.setStyle({ color: RED_BORDER, weight: 1.5, fillColor: RED_FILL, fillOpacity: 0.95, opacity: 1 });
+        refs.dot.setIcon((window as any).L.divIcon({ className: '', html: makeDotIcon('#fff'), iconSize: [0,0], iconAnchor: [0,0] }));
       } else if (inActive) {
-        refs.polygon.setStyle({ color: RED, weight: 1.5, fillColor: RED, fillOpacity: 0.18, opacity: 0.85 });
+        refs.polygon.setStyle({ color: RED_BORDER, weight: 1, fillColor: RED_FILL, fillOpacity: 0.75, opacity: 1 });
+        refs.dot.setIcon((window as any).L.divIcon({ className: '', html: makeDotIcon('#fff'), iconSize: [0,0], iconAnchor: [0,0] }));
       } else {
-        refs.polygon.setStyle({ color: '#ccc', weight: 0.8, fillColor: '#ccc', fillOpacity: 0.04, opacity: 0.25 });
+        refs.polygon.setStyle({ color: GRAY_BORDER, weight: 1, fillColor: GRAY_FILL, fillOpacity: 0.85, opacity: 1 });
+        refs.dot.setIcon((window as any).L.divIcon({ className: '', html: makeDotIcon(DOT_INACTIVE), iconSize: [0,0], iconAnchor: [0,0] }));
       }
     }
 

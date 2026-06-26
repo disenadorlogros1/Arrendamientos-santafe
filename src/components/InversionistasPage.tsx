@@ -173,7 +173,7 @@ export default function InversionistasPage() {
             </div>
 
             {/* RIGHT: Leaflet map */}
-            <div style={{ flex: 1, borderRadius: '16px', overflow: 'hidden', border: '1px solid rgba(0,0,0,0.06)', boxShadow: '0 2px 16px rgba(0,0,0,0.06)' }}>
+            <div style={{ flex: 1, borderRadius: '0', overflow: 'hidden', border: '1px solid #e8e8e8', background: '#f9f9f9' }}>
               <InversionistasLeafletMap
                 activeSector={activeSector}
                 hoveredSector={hoveredSector}
