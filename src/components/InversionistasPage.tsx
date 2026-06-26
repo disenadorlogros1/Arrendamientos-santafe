@@ -169,106 +169,27 @@ export default function InversionistasPage() {
               })}
             </div>
 
-            {/* RIGHT: mapa + panel debajo */}
-            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0 }}>
-
-              {/* Mapa */}
-              <div style={{ flex: 1, overflow: 'hidden' }}>
-                <InversionistasLeafletMap
-                  activeSector={activeSector}
-                  hoveredSector={hoveredSector}
-                />
-              </div>
-
-              {/* Panel debajo del mapa — siempre visible, contenido cambia con el sector activo */}
-              {(() => {
-                const zone = getZonesBySector(activeSector)[0];
-                return (
-                  <div
-                    onClick={() => router.push(`/inversionistas/${zone.slug}`)}
-                    style={{
-                      background: '#fff',
-                      borderTop:  '2px solid #f32735',
-                      padding:    '16px 20px',
-                      cursor:     'pointer',
-                      display:    'flex',
-                      alignItems: 'center',
-                      gap:        '20px',
-                      transition: 'background 0.18s ease',
-                    }}
-                    onMouseEnter={e => (e.currentTarget.style.background = '#fafafa')}
-                    onMouseLeave={e => (e.currentTarget.style.background = '#fff')}
-                  >
-                    {/* Título zona */}
-                    <div style={{ minWidth: '160px' }}>
-                      <div style={{ fontFamily: FONT, fontWeight: 700, fontSize: '16px', color: '#0d0d0d', lineHeight: 1.2 }}>
-                        Zona {activeSector}
-                      </div>
-                      <div style={{ fontFamily: FONT, fontSize: '11px', color: '#999', marginTop: '2px' }}>
-                        {SECTOR_SUBTITLES[activeSector]}
-                      </div>
-                    </div>
-
-                    {/* Separador */}
-                    <div style={{ width: '1px', height: '36px', background: '#ebebeb', flexShrink: 0 }} />
-
-                    {/* Métricas */}
-                    {[
-                      { label: 'Rentabilidad', value: zone.rentability },
-                      { label: 'Precio m²',    value: zone.pricePerM2 },
-                      { label: 'Estratos',     value: zone.strata },
-                    ].map((m, i) => (
-                      <div key={i} style={{ minWidth: '100px' }}>
-                        <div style={{ fontFamily: FONT, fontSize: '9px', fontWeight: 600, color: '#aaa', textTransform: 'uppercase', letterSpacing: '0.6px', marginBottom: '3px' }}>
-                          {m.label}
-                        </div>
-                        <div style={{ fontFamily: FONT, fontSize: '13px', fontWeight: 700, color: '#0d0d0d' }}>
-                          {m.value}
-                        </div>
-                      </div>
-                    ))}
-
-                    {/* Separador */}
-                    <div style={{ width: '1px', height: '36px', background: '#ebebeb', flexShrink: 0 }} />
-
-                    {/* Ver análisis */}
-                    <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      <span style={{ fontFamily: FONT, fontSize: '12px', fontWeight: 600, color: '#f32735' }}>
-                        Ver análisis completo
-                      </span>
-                      <div style={{ width: '30px', height: '30px', borderRadius: '50%', background: '#f32735', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
-                          <path d="M2.5 11.5L11.5 2.5M11.5 2.5H5M11.5 2.5V9" stroke="#fff" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
-                        </svg>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })()}
+            {/* RIGHT: solo mapa */}
+            <div style={{ flex: 1, overflow: 'hidden', minWidth: 0 }}>
+              <InversionistasLeafletMap
+                activeSector={activeSector}
+                hoveredSector={hoveredSector}
+              />
             </div>
 
+          </div>
+
+          {/* Sector label — mismo ancho que el bloque de 2 columnas */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', margin: '24px 0 20px' }}>
+            <div style={{ width: '3px', height: '24px', background: '#f32735', flexShrink: 0 }} />
+            <h3 style={{ fontFamily: FONT, fontWeight: 700, fontSize: '17px', color: '#111827', margin: 0 }}>
+              {activeSector} del Área Metropolitana
+            </h3>
           </div>
         </div>
 
         {/* Zone cards for active sector */}
         <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '0 clamp(20px, 4vw, 52px)' }}>
-
-          {/* Sector label */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '20px' }}>
-            <div style={{ width: 3, height: 22, borderRadius: 2, background: SECTOR_COLORS[activeSector].text }} />
-            <h3 style={{ fontFamily: FONT, fontWeight: 700, fontSize: 17, color: '#111827', margin: 0 }}>
-              {activeSector} del Área Metropolitana
-            </h3>
-            <span style={{
-              fontFamily: FONT, fontSize: 12, fontWeight: 400,
-              color: SECTOR_COLORS[activeSector].text,
-              background: SECTOR_COLORS[activeSector].bg,
-              border: `1px solid ${SECTOR_COLORS[activeSector].border}`,
-              borderRadius: 20, padding: '2px 10px',
-            }}>
-              {visibleZones.length} zona{visibleZones.length !== 1 ? 's' : ''}
-            </span>
-          </div>
 
           {/* Zone Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
