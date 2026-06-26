@@ -2535,9 +2535,10 @@ export default function InversionistasLeafletMap({ activeSector, hoveredSector }
       const isHov    = hoveredSector !== null && sector === hoveredSector;
 
       if (isHov) {
-        refs.polygon.setStyle({ color: RED, weight: 1, fillColor: RED, fillOpacity: 0.30, opacity: 1 });
+        // border = fill → barrios del sector se ven como una sola mancha sin divisiones internas
+        refs.polygon.setStyle({ color: RED, weight: 0.5, fillColor: RED, fillOpacity: 0.28, opacity: 0.28 });
       } else if (inActive) {
-        refs.polygon.setStyle({ color: RED, weight: 0.6, fillColor: RED, fillOpacity: 0.18, opacity: 0.85 });
+        refs.polygon.setStyle({ color: RED, weight: 0.5, fillColor: RED, fillOpacity: 0.18, opacity: 0.85 });
       } else {
         refs.polygon.setStyle({ color: '#ccc', weight: 0.4, fillColor: '#ccc', fillOpacity: 0.04, opacity: 0.25 });
       }
