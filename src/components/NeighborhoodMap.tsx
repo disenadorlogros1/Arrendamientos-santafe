@@ -37,30 +37,36 @@ export default function NeighborhoodMap({ zone }: Props) {
     const subzones  = zone.subzones;
     const viewConf  = ZONE_CENTER[zone.slug] ?? { lat: 6.25, lng: -75.58, zoom: 12 };
 
-    const buildMarkerHtml = (label: string, active: boolean) => {
-      const bg   = active ? RED : 'rgba(20,20,20,0.85)';
-      const border = active ? RED : 'rgba(255,255,255,0.25)';
-      return `<div style="
-        display:flex; align-items:center; justify-content:center;
-        padding:4px 10px;
-        background:${bg};
-        border:1px solid ${border};
+    const pinHtml = (active: boolean) => {
+      const fill = active ? RED : '#222';
+      const scale = active ? 1.35 : 1;
+      return `<div style="transform:translate(-50%,-100%) scale(${scale});transform-origin:50% 100%;transition:transform 0.18s ease;pointer-events:none;">
+        <svg width="22" height="30" viewBox="0 0 22 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M11 0C4.925 0 0 4.925 0 11C0 19.25 11 30 11 30C11 30 22 19.25 22 11C22 4.925 17.075 0 11 0Z" fill="${fill}"/>
+          <circle cx="11" cy="11" r="4.5" fill="white"/>
+        </svg>
+      </div>`;
+    };
+
+    const labelHtml = (label: string, active: boolean) =>
+      `<div style="
+        padding:3px 8px;
+        background:${active ? RED : 'rgba(255,255,255,0.92)'};
+        border:1px solid ${active ? RED : 'rgba(0,0,0,0.12)'};
         font-family:'Avenir LT Std','Outfit',sans-serif;
-        font-size:10px; font-weight:700; letter-spacing:0.04em;
-        color:#fff; white-space:nowrap;
-        transform:translate(-50%,-50%);
-        box-shadow:0 2px 10px rgba(0,0,0,0.4);
-        transition:background 0.18s, border-color 0.18s;
+        font-size:9px; font-weight:700; letter-spacing:0.04em;
+        color:${active ? '#fff' : '#222'}; white-space:nowrap;
+        transform:translate(-50%,6px);
+        box-shadow:0 1px 6px rgba(0,0,0,0.12);
         pointer-events:none;
       ">${label}</div>`;
-    };
 
     const init = () => {
       if (!containerRef.current || mapRef.current) return;
       const L = (window as any).L;
 
       mapRef.current = L.map(containerRef.current, {
-        zoomControl:        false,
+        zoomControl:        true,
         scrollWheelZoom:    true,
         attributionControl: false,
         dragging:           true,
@@ -68,8 +74,8 @@ export default function NeighborhoodMap({ zone }: Props) {
         touchZoom:          true,
       }).setView([viewConf.lat, viewConf.lng], viewConf.zoom);
 
-      // Mapa oscuro CartoDB Dark Matter
-      L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+      // Mapa claro CartoDB Positron
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
         maxZoom: 19,
       }).addTo(mapRef.current);
 
@@ -77,34 +83,32 @@ export default function NeighborhoodMap({ zone }: Props) {
         const data = NEIGHBORHOOD_DATA[name];
         if (!data) continue;
 
-        const icon = L.divIcon({
+        // Pin de ubicación
+        const pinIcon = L.divIcon({
           className: '',
-          html: buildMarkerHtml(name, false),
+          html: pinHtml(false),
           iconSize:   [0, 0],
           iconAnchor: [0, 0],
         });
+        const pin = L.marker([data.lat, data.lng], { icon: pinIcon }).addTo(mapRef.current);
 
-        const marker = L.marker([data.lat, data.lng], { icon }).addTo(mapRef.current);
+        // Etiqueta de nombre debajo del pin
+        const labelIcon = L.divIcon({
+          className: '',
+          html: labelHtml(name, false),
+          iconSize:   [0, 0],
+          iconAnchor: [0, 0],
+        });
+        const label = L.marker([data.lat, data.lng], { icon: labelIcon, interactive: false }).addTo(mapRef.current);
 
-        // Área interactiva invisible sobre cada marcador
-        const circle = L.circle([data.lat, data.lng], {
-          radius:      800,
-          color:       RED,
-          weight:      1.5,
-          fillColor:   RED,
-          fillOpacity: 0.06,
-          opacity:     0.2,
+        // Área de hover invisible
+        const hitArea = L.circle([data.lat, data.lng], {
+          radius: 500, color: 'transparent', weight: 0, fillOpacity: 0,
         }).addTo(mapRef.current);
 
-        circle.on('mouseover', () => {
-          // Actualizar icono a estado activo
-          marker.setIcon(L.divIcon({
-            className: '',
-            html: buildMarkerHtml(name, true),
-            iconSize:   [0, 0],
-            iconAnchor: [0, 0],
-          }));
-          circle.setStyle({ fillOpacity: 0.22, opacity: 0.7, weight: 2 });
+        hitArea.on('mouseover', () => {
+          pin.setIcon(L.divIcon({ className: '', html: pinHtml(true), iconSize: [0,0], iconAnchor: [0,0] }));
+          label.setIcon(L.divIcon({ className: '', html: labelHtml(name, true), iconSize: [0,0], iconAnchor: [0,0] }));
           setHovered({
             name:        data.name,
             rentBlurb:   data.rentBlurb,
@@ -115,18 +119,13 @@ export default function NeighborhoodMap({ zone }: Props) {
           });
         });
 
-        circle.on('mouseout', () => {
-          marker.setIcon(L.divIcon({
-            className: '',
-            html: buildMarkerHtml(name, false),
-            iconSize:   [0, 0],
-            iconAnchor: [0, 0],
-          }));
-          circle.setStyle({ fillOpacity: 0.06, opacity: 0.2, weight: 1.5 });
+        hitArea.on('mouseout', () => {
+          pin.setIcon(L.divIcon({ className: '', html: pinHtml(false), iconSize: [0,0], iconAnchor: [0,0] }));
+          label.setIcon(L.divIcon({ className: '', html: labelHtml(name, false), iconSize: [0,0], iconAnchor: [0,0] }));
           setHovered(null);
         });
 
-        markersRef.current[name] = { marker, circle };
+        markersRef.current[name] = { pin, label, hitArea };
       }
     };
 
