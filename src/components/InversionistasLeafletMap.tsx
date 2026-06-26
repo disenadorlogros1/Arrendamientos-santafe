@@ -19,10 +19,10 @@ interface Props {
 const RED = '#f32735';
 
 const SECTOR_VIEW: Record<Sector, { center: [number, number]; zoom: number }> = {
-  Norte:     { center: [6.36,  -75.57], zoom: 12 },
-  Sur:       { center: [6.13,  -75.61], zoom: 12 },
-  Oriente:   { center: [6.16,  -75.49], zoom: 11 },
-  Occidente: { center: [6.29,  -75.63], zoom: 12 },
+  Norte:     { center: [6.36,  -75.57], zoom: 10 },
+  Sur:       { center: [6.13,  -75.61], zoom: 11 },
+  Oriente:   { center: [6.16,  -75.49], zoom: 10 },
+  Occidente: { center: [6.29,  -75.63], zoom: 10 },
 };
 
 // Sector de cada barrio/municipio
@@ -2474,12 +2474,12 @@ export default function InversionistasLeafletMap({ activeSector, hoveredSector }
       const L = (window as any).L;
 
       mapRef.current = L.map(containerRef.current, {
-        zoomControl:        false,
-        scrollWheelZoom:    false,
+        zoomControl:        true,
+        scrollWheelZoom:    true,
         attributionControl: false,
-        dragging:           false,
-        doubleClickZoom:    false,
-        touchZoom:          false,
+        dragging:           true,
+        doubleClickZoom:    true,
+        touchZoom:          true,
       }).setView([6.25, -75.58], 9);
 
       L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
