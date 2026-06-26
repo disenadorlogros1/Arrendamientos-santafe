@@ -281,7 +281,6 @@ function InfoCard({ type, stats, title }: {
     <div style={baseStyle} onClick={e => e.stopPropagation()}>
       <BrandMark />
       <div style={{ flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-        <img src="/icons/icon-consult-white.gif" width={28} height={28} style={{ marginBottom: 12, opacity: 0.9 }} alt="" />
         <div style={bigTitle}>Envía esta propiedad</div>
         <div style={bodyStyle}>Comparte los detalles con quien quieras por WhatsApp o copia el enlace.</div>
       </div>
@@ -790,19 +789,6 @@ function BentoGallery({ images, onClose, stats, title }: {
       <style>{`
         .bento-carousel::-webkit-scrollbar { display: none; }
         .gallery-cta-btn { position: relative; overflow: hidden; }
-        .gallery-cta-btn::after {
-          content: '';
-          position: absolute;
-          left: var(--ink-x, 50%);
-          top: var(--ink-y, 50%);
-          width: var(--ink-size, 0);
-          height: var(--ink-size, 0);
-          transform: translate(-50%, -50%);
-          background: rgba(255,255,255,0.22);
-          border-radius: 50%;
-          animation: gallery-ink 0.55s ease-out forwards;
-          pointer-events: none;
-        }
         @keyframes gallery-ink {
           from { opacity: 1; transform: translate(-50%, -50%) scale(0); }
           to   { opacity: 0; transform: translate(-50%, -50%) scale(1); }
