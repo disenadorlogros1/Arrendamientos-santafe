@@ -2557,7 +2557,6 @@ export default function InversionistasLeafletMap({ activeSector, hoveredSector }
     }
 
     // Actualizar marcadores de sector
-    const effectiveSector = hoveredSector ?? activeSector;
     for (const [s, ref] of Object.entries(sectorMarkersRef.current)) {
       const isActive = s === effectiveSector;
       ref.marker.setIcon(ref.makeSectorIcon(s as Sector, isActive));
