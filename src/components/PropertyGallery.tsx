@@ -81,6 +81,20 @@ function buildCols(hoveredCol: number | null, isLandscape: boolean, cols: number
 const WA_NUM = '573006557529';
 const RED    = '#f32735';
 
+function applyInkFill(e: React.MouseEvent<HTMLElement>) {
+  const el   = e.currentTarget;
+  const rect = el.getBoundingClientRect();
+  const x    = e.clientX - rect.left;
+  const y    = e.clientY - rect.top;
+  const size = Math.max(
+    Math.hypot(x, y), Math.hypot(rect.width - x, y),
+    Math.hypot(x, rect.height - y), Math.hypot(rect.width - x, rect.height - y),
+  ) * 2;
+  el.style.setProperty('--ink-x', `${x}px`);
+  el.style.setProperty('--ink-y', `${y}px`);
+  el.style.setProperty('--ink-size', `${size}px`);
+}
+
 function InfoCard({ type, stats, title }: {
   type: 0 | 1 | 2 | 3 | 4;
   stats?: PropertyStats;
@@ -103,7 +117,6 @@ function InfoCard({ type, stats, title }: {
     position: 'relative',
   };
 
-  /* Marca superior — favicon + nombre */
   const BrandMark = () => (
     <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 14 }}>
       <img src="/icons/icon-favicon-white.gif" width={14} height={14} style={{ opacity: 0.7, flexShrink: 0 }} alt="" />
@@ -113,41 +126,36 @@ function InfoCard({ type, stats, title }: {
     </div>
   );
 
-  /* Línea roja separadora */
-  const RedLine = () => (
-    <div style={{ height: 2, background: RED, margin: '12px 0 12px' }} />
-  );
+  const bigTitle: React.CSSProperties = {
+    fontSize: 22, fontWeight: 800, lineHeight: 1.2,
+    color: '#fff', marginBottom: 8,
+  };
 
   const labelStyle: React.CSSProperties = {
     fontSize: 10, fontWeight: 700, letterSpacing: '0.1em',
-    textTransform: 'uppercase', color: RED,
-    marginBottom: 5,
-  };
-
-  const titleStyle: React.CSSProperties = {
-    fontSize: 15, fontWeight: 700, lineHeight: 1.25,
-    color: '#fff', marginBottom: 6,
+    textTransform: 'uppercase', color: RED, marginBottom: 5,
   };
 
   const bodyStyle: React.CSSProperties = {
-    fontSize: 12, color: 'rgba(255,255,255,0.5)', lineHeight: 1.5,
-    flexGrow: 1,
+    fontSize: 12, color: 'rgba(255,255,255,0.5)', lineHeight: 1.5, flexGrow: 1,
   };
 
   const ctaStyle: React.CSSProperties = {
-    display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+    display: 'flex', alignItems: 'center', justifyContent: 'center',
     width: '100%',
-    padding: '9px 12px',
+    padding: '10px 18px',
     background: RED,
     color: '#fff',
     fontSize: 12, fontWeight: 700,
-    borderRadius: 0,
+    borderRadius: 999,
     border: 'none',
     textDecoration: 'none',
     letterSpacing: '0.03em',
     cursor: 'pointer',
     flexShrink: 0,
     boxSizing: 'border-box' as const,
+    position: 'relative',
+    overflow: 'hidden',
   };
 
   const effectiveType = (type === 0 && !stats?.zone) ? 2 : type;
@@ -163,14 +171,15 @@ function InfoCard({ type, stats, title }: {
         <div style={{ flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
           <img src="/icons/icon-location-white.gif" width={28} height={28} style={{ marginBottom: 12, opacity: 0.9 }} alt="" />
           <div style={labelStyle}>Zona de inversión</div>
-          <div style={titleStyle}>{zoneName}</div>
+          <div style={bigTitle}>{zoneName}</div>
           <div style={bodyStyle}>Rentabilidades, valorización y oportunidades en esta zona del mercado inmobiliario.</div>
         </div>
-        <RedLine />
-        <div style={ctaStyle}>
-          <span>Invertir en esta zona</span>
-          <img src="/icons/icon-location-white.gif" width={13} height={13} alt="" />
-        </div>
+        <div style={{ height: 12 }} />
+        <a href={href} className="gallery-cta-btn" style={ctaStyle}
+          onMouseEnter={applyInkFill} onMouseLeave={applyInkFill}
+          onClick={e => e.stopPropagation()}>
+          Invertir en esta zona
+        </a>
       </a>
     );
   }
@@ -181,10 +190,10 @@ function InfoCard({ type, stats, title }: {
     const msg  = encodeURIComponent(`Hola, me interesa la propiedad${ref ? ` ${ref}` : ''} (${title}). ¿Podrían darme más información?`);
     const href = `https://wa.me/${WA_NUM}?text=${msg}`;
     const attrs = [
-      stats?.bedrooms  ? `${stats.bedrooms} hab.`   : null,
-      stats?.bathrooms ? `${stats.bathrooms} baños`  : null,
-      stats?.area      ? stats.area                  : null,
-      stats?.parking   ? `${stats.parking} parq.`   : null,
+      stats?.bedrooms  ? `${stats.bedrooms} hab.`  : null,
+      stats?.bathrooms ? `${stats.bathrooms} baños` : null,
+      stats?.area      ? stats.area                 : null,
+      stats?.parking   ? `${stats.parking} parq.`  : null,
     ].filter(Boolean).join('  ·  ');
     return (
       <a href={href} target="_blank" rel="noopener noreferrer" style={baseStyle} onClick={e => e.stopPropagation()}>
@@ -193,17 +202,18 @@ function InfoCard({ type, stats, title }: {
           <img src="/icons/icon-whatsapp-white.gif" width={28} height={28} style={{ marginBottom: 12, opacity: 0.9 }} alt="" />
           <div style={labelStyle}>Precio</div>
           {stats?.price && (
-            <div style={{ fontSize: 20, fontWeight: 900, color: '#fff', lineHeight: 1.1, marginBottom: 6 }}>
+            <div style={{ fontSize: 22, fontWeight: 900, color: '#fff', lineHeight: 1.1, marginBottom: 6 }}>
               {stats.price}
             </div>
           )}
           {attrs && <div style={bodyStyle}>{attrs}</div>}
         </div>
-        <RedLine />
-        <div style={ctaStyle}>
-          <span>Hablar con un asesor</span>
-          <img src="/icons/icon-whatsapp-white.gif" width={13} height={13} alt="" />
-        </div>
+        <div style={{ height: 12 }} />
+        <a href={href} target="_blank" rel="noopener noreferrer" className="gallery-cta-btn" style={ctaStyle}
+          onMouseEnter={applyInkFill} onMouseLeave={applyInkFill}
+          onClick={e => e.stopPropagation()}>
+          Hablar con un asesor
+        </a>
       </a>
     );
   }
@@ -216,14 +226,15 @@ function InfoCard({ type, stats, title }: {
         <div style={{ flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
           <img src="/icons/icon-home-white.gif" width={28} height={28} style={{ marginBottom: 12, opacity: 0.9 }} alt="" />
           <div style={labelStyle}>Explora más</div>
-          <div style={titleStyle}>Propiedades similares</div>
+          <div style={bigTitle}>Propiedades similares</div>
           <div style={bodyStyle}>Encuentra otras propiedades con características parecidas en nuestra oferta.</div>
         </div>
-        <RedLine />
-        <div style={ctaStyle}>
-          <span>Ver propiedades</span>
-          <img src="/icons/icon-home-white.gif" width={13} height={13} alt="" />
-        </div>
+        <div style={{ height: 12 }} />
+        <a href="/propiedades" className="gallery-cta-btn" style={ctaStyle}
+          onMouseEnter={applyInkFill} onMouseLeave={applyInkFill}
+          onClick={e => e.stopPropagation()}>
+          Ver propiedades
+        </a>
       </a>
     );
   }
@@ -237,14 +248,15 @@ function InfoCard({ type, stats, title }: {
       <a href={href} target="_blank" rel="noopener noreferrer" style={baseStyle} onClick={e => e.stopPropagation()}>
         <BrandMark />
         <div style={{ flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-          <div style={{ fontSize: 22, fontWeight: 800, color: '#fff', lineHeight: 1.2, marginBottom: 10 }}>¿Te gustaría conocerla en persona?</div>
+          <div style={bigTitle}>¿Quieres conocer esta propiedad en persona?</div>
           <div style={bodyStyle}>Coordina una visita con nuestros asesores y conoce todos los detalles.</div>
         </div>
-        <RedLine />
-        <div style={ctaStyle}>
-          <span>Agendar visita</span>
-          <img src="/icons/icon-schedule-white.gif" width={13} height={13} alt="" />
-        </div>
+        <div style={{ height: 12 }} />
+        <a href={href} target="_blank" rel="noopener noreferrer" className="gallery-cta-btn" style={ctaStyle}
+          onMouseEnter={applyInkFill} onMouseLeave={applyInkFill}
+          onClick={e => e.stopPropagation()}>
+          Agendar visita
+        </a>
       </a>
     );
   }
@@ -268,29 +280,24 @@ function InfoCard({ type, stats, title }: {
       <BrandMark />
       <div style={{ flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
         <img src="/icons/icon-consult-white.gif" width={28} height={28} style={{ marginBottom: 12, opacity: 0.9 }} alt="" />
-        <div style={labelStyle}>Compartir</div>
-        <div style={titleStyle}>Envía esta propiedad</div>
+        <div style={bigTitle}>Envía esta propiedad</div>
         <div style={bodyStyle}>Comparte los detalles con quien quieras por WhatsApp o copia el enlace.</div>
       </div>
-      <RedLine />
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-        <a
-          href={waShareHref} target="_blank" rel="noopener noreferrer"
-          style={{ ...ctaStyle, textDecoration: 'none' }}
-          onClick={e => e.stopPropagation()}
-        >
-          <span>Enviar por WhatsApp</span>
-          <img src="/icons/icon-whatsapp-white.gif" width={13} height={13} alt="" />
+      <div style={{ height: 12 }} />
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+        <a href={waShareHref} target="_blank" rel="noopener noreferrer"
+          className="gallery-cta-btn" style={ctaStyle}
+          onMouseEnter={applyInkFill} onMouseLeave={applyInkFill}
+          onClick={e => e.stopPropagation()}>
+          Enviar por WhatsApp
         </a>
         <button
-          style={{ ...ctaStyle, background: copied ? 'rgba(255,255,255,0.18)' : 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)' }}
+          className="gallery-cta-btn"
+          style={{ ...ctaStyle, background: copied ? 'rgba(255,255,255,0.22)' : 'rgba(255,255,255,0.12)', border: '1px solid rgba(255,255,255,0.22)' }}
+          onMouseEnter={applyInkFill} onMouseLeave={applyInkFill}
           onClick={handleCopy}
         >
-          <span>{copied ? '¡Enlace copiado!' : 'Copiar enlace'}</span>
-          {copied
-            ? <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-            : <img src="/icons/icon-code-white.gif" width={13} height={13} alt="" />
-          }
+          {copied ? '¡Enlace copiado!' : 'Copiar enlace'}
         </button>
       </div>
     </div>
