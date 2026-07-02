@@ -220,38 +220,39 @@ export default function InversionistasPage() {
               <button
                 onClick={() => setExpandedZone(expandedZone === zone.id ? null : zone.id)}
                 style={{
-                  width: '100%', padding: '22px 28px', textAlign: 'left', cursor: 'pointer',
+                  width: '100%', padding: '18px 28px', textAlign: 'left', cursor: 'pointer',
                   background: 'transparent', border: 'none',
-                  display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                  gap: '16px',
+                  display: 'flex', alignItems: 'center', gap: '32px',
                 }}
               >
-                {/* Title + metrics vertical */}
-                <div style={{ flex: 1 }}>
-                  <h3 style={{ fontFamily: FONT, fontWeight: 700, fontSize: '22px', color: '#0d0d0d', margin: '0 0 10px 0' }}>
-                    {zone.name}
-                  </h3>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
-                    {[
-                      { label: 'Rentabilidad', value: zone.rentability, accent: true },
-                      { label: 'Precio m²',    value: zone.pricePerM2  },
-                      { label: 'Estratos',     value: zone.strata      },
-                    ].map((m, i) => (
-                      <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                        <span style={{ fontFamily: FONT, fontSize: '9px', fontWeight: 600, color: '#aaa', textTransform: 'uppercase', letterSpacing: '0.6px', width: '78px', flexShrink: 0 }}>
-                          {m.label}
-                        </span>
-                        <span style={{ fontFamily: FONT, fontSize: '13px', fontWeight: 700, color: m.accent ? '#f32735' : '#0d0d0d' }}>
-                          {m.value}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
+                {/* Título */}
+                <h3 style={{ fontFamily: FONT, fontWeight: 700, fontSize: '18px', color: '#0d0d0d', margin: 0, minWidth: '200px', flexShrink: 0 }}>
+                  {zone.name}
+                </h3>
+
+                {/* Separador */}
+                <div style={{ width: '1px', height: '28px', background: '#e8e8e8', flexShrink: 0 }} />
+
+                {/* Métricas en fila horizontal */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '32px', flex: 1 }}>
+                  {[
+                    { label: 'Rentabilidad', value: zone.rentability, accent: true },
+                    { label: 'Estratos',     value: zone.strata      },
+                  ].map((m, i) => (
+                    <div key={i} style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                      <span style={{ fontFamily: FONT, fontSize: '9px', fontWeight: 600, color: '#aaa', textTransform: 'uppercase', letterSpacing: '0.6px' }}>
+                        {m.label}
+                      </span>
+                      <span style={{ fontFamily: FONT, fontSize: '14px', fontWeight: 700, color: m.accent ? '#f32735' : '#0d0d0d' }}>
+                        {m.value}
+                      </span>
+                    </div>
+                  ))}
                 </div>
 
                 {/* Chevron */}
                 <ChevronDown
-                  size={20} strokeWidth={2}
+                  size={18} strokeWidth={2}
                   style={{
                     color: '#f32735', flexShrink: 0,
                     transform: expandedZone === zone.id ? 'rotate(180deg)' : 'rotate(0deg)',

@@ -14,7 +14,6 @@ import ScrollReveal from '@/components/ScrollReveal';
 import PropiedadesPage from '@/components/PropiedadesPage';
 import ConsignacionPage from '@/components/ConsignacionPage';
 import HipotecasPage from '@/components/HipotecasPage';
-import ServiciosPage from '@/components/ServiciosPage';
 import InstitucionalPage from '@/components/InstitucionalPage';
 import BlogPage from '@/components/BlogPage';
 import Historia60Page from '@/components/Historia60Page';
@@ -69,7 +68,7 @@ function HomePage({ onNavigate }: { onNavigate: (page: PageType) => void }) {
   );
 }
 
-const VALID_PAGES: PageType[] = ['home', 'propiedades', 'consignacion', 'hipotecas', 'servicios', 'nosotros', 'blog', 'historia-60', 'blog-article', 'inversionistas', 'politicas', 'terminos'];
+const VALID_PAGES: PageType[] = ['home', 'propiedades', 'consignacion', 'hipotecas', 'nosotros', 'blog', 'historia-60', 'blog-article', 'inversionistas', 'politicas', 'terminos'];
 
 function pageFromHash(hash: string): { page: PageType; filter: 'Todos' | 'Arrendar' | 'Comprar' } {
   if (hash === 'propiedades-arrendar') return { page: 'propiedades', filter: 'Arrendar' };
@@ -139,7 +138,6 @@ export default function Home() {
           {currentPage === 'propiedades' && <PropiedadesPage initialFilter={propiedadesFilter} />}
           {currentPage === 'consignacion' && <ConsignacionPage onNavigate={handleNavigate} />}
           {currentPage === 'hipotecas' && <HipotecasPage />}
-          {currentPage === 'servicios' && <ServiciosPage />}
           {currentPage === 'nosotros' && <InstitucionalPage onNavigate={handleNavigate} />}
           {currentPage === 'blog' && <BlogPage onNavigate={handleNavigate} onOpenArticle={handleOpenArticle} />}
           {currentPage === 'blog-article' && <BlogArticlePage articleId={articleId} onNavigate={handleNavigate} />}
