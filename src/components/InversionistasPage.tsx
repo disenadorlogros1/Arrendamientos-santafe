@@ -226,13 +226,13 @@ const [titleHovered,  setTitleHovered]  = useState(false);
                   {zone.name}
                 </h3>
 
-                {/* Métricas en columna */}
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '0', flex: 1 }}>
+                {/* Métricas en fila */}
+                <div style={{ display: 'flex', gap: '0', borderTop: '1px solid #f0f0f0', borderBottom: '1px solid #f0f0f0', flex: 1 }}>
                   {[
                     { label: 'Rentabilidad', value: zone.rentability, accent: true },
                     { label: 'Estratos',     value: zone.strata      },
                   ].map((m, i) => (
-                    <div key={i} style={{ padding: '12px 0', borderBottom: '1px solid #f0f0f0' }}>
+                    <div key={i} style={{ flex: 1, padding: '12px 0', borderRight: i === 0 ? '1px solid #f0f0f0' : 'none', paddingRight: i === 0 ? '16px' : '0', paddingLeft: i === 1 ? '16px' : '0' }}>
                       <div style={{ fontFamily: FONT, fontSize: '9px', fontWeight: 600, color: '#aaa', letterSpacing: '0.4px', marginBottom: '4px' }}>
                         {m.label}
                       </div>
@@ -243,19 +243,19 @@ const [titleHovered,  setTitleHovered]  = useState(false);
                   ))}
                 </div>
 
-                {/* CTA */}
+                {/* CTA full width */}
                 <Link
                   href={`/inversionistas/${zone.slug}`}
                   style={{
-                    marginTop: '20px', display: 'inline-flex', alignItems: 'center', gap: '8px',
-                    padding: '10px 16px', background: '#f32735', color: '#fff',
+                    marginTop: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
+                    padding: '11px 16px', background: '#f32735', color: '#fff',
                     fontFamily: FONT, fontSize: '13px', fontWeight: 600,
-                    textDecoration: 'none', transition: 'background 0.18s', alignSelf: 'flex-start',
+                    textDecoration: 'none', transition: 'background 0.18s',
                   }}
                   onMouseEnter={e => (e.currentTarget.style.background = '#c41e2a')}
                   onMouseLeave={e => (e.currentTarget.style.background = '#f32735')}
                 >
-                  Ver análisis
+                  Ver más
                   <svg width="11" height="11" viewBox="0 0 14 14" fill="none">
                     <path d="M2.5 11.5L11.5 2.5M11.5 2.5H5M11.5 2.5V9" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                   </svg>
