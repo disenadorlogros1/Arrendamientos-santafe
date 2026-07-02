@@ -165,7 +165,7 @@ export default function Header({ currentPage, onNavigate, isHeroPage = true, dar
         <div className="flex-1 flex items-center justify-center min-w-0">
           <nav className="flex items-center justify-between gap-1 rounded-full p-[3px] h-[42px] border shadow-lg w-full"
             style={{
-              maxWidth: '46rem',
+              maxWidth: '64rem',
               overflow: 'visible',
               backgroundColor: navBgColor,
               borderColor: navBorderColor,
