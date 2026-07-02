@@ -230,11 +230,10 @@ const [titleHovered,  setTitleHovered]  = useState(false);
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0', flex: 1 }}>
                   {[
                     { label: 'Rentabilidad', value: zone.rentability, accent: true },
-                    { label: 'Precio m²',    value: zone.pricePerM2  },
                     { label: 'Estratos',     value: zone.strata      },
                   ].map((m, i) => (
                     <div key={i} style={{ padding: '12px 0', borderBottom: '1px solid #f0f0f0' }}>
-                      <div style={{ fontFamily: FONT, fontSize: '9px', fontWeight: 600, color: '#aaa', textTransform: 'uppercase', letterSpacing: '0.6px', marginBottom: '4px' }}>
+                      <div style={{ fontFamily: FONT, fontSize: '9px', fontWeight: 600, color: '#aaa', letterSpacing: '0.4px', marginBottom: '4px' }}>
                         {m.label}
                       </div>
                       <div style={{ fontFamily: FONT, fontSize: '15px', fontWeight: 700, color: m.accent ? '#f32735' : '#0d0d0d' }}>
