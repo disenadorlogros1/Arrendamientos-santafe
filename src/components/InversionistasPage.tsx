@@ -27,10 +27,10 @@ const SECTOR_COLORS: Record<Sector, { bg: string; border: string; text: string }
 };
 
 const SECTOR_SUBTITLES: Record<Sector, string> = {
-  Norte:     'Norte de Antioquia',
-  Sur:       'Sur de Antioquia',
-  Oriente:   'Oriente antioqueño',
-  Occidente: 'Occidente de Medellín',
+  Norte:     'Norte del Valle de Aburrá',
+  Sur:       'Sur del Valle de Aburrá',
+  Oriente:   'Oriente del Valle de Aburrá',
+  Occidente: 'Occidente del Valle de Aburrá',
 };
 
 
@@ -89,14 +89,14 @@ export default function InversionistasPage() {
         <div className="relative z-10 text-center px-4 sm:px-6 lg:px-8 max-w-4xl" ref={titleRef}>
           <h1
             className="inversionistas-title-split leading-tight text-white text-center"
-            style={{ fontFamily: FONT, fontWeight: 300, lineHeight: '1.25', fontSize: 'clamp(28px, 4vw, 52px)' }}
+            style={{ fontFamily: FONT, fontWeight: 300, lineHeight: '1.0', fontSize: 'clamp(28px, 4vw, 52px)' }}
             onMouseEnter={() => setTitleHovered(true)}
             onMouseLeave={() => setTitleHovered(false)}
           >
             <span style={{ display: 'block', fontWeight: 300 }}>
               Invierte con la experiencia de
             </span>
-            <span style={{ display: 'inline-block', fontWeight: 900, color: '#fff', marginTop: '6px', position: 'relative', overflow: 'hidden' }}>
+            <span style={{ display: 'inline-block', fontWeight: 900, color: '#fff', marginTop: '0px', position: 'relative', overflow: 'hidden' }}>
               <span style={{ position: 'relative', zIndex: 2 }}>
                 60 años en el mercado inmobiliario
               </span>
@@ -141,7 +141,7 @@ export default function InversionistasPage() {
       </section>
 
       {/* Investment Zones Section — 2 columnas: tarjetas + mapa */}
-      <section id="zonas" style={{ background: '#f7f6f4', paddingBottom: '48px' }}>
+      <section id="zonas" style={{ background: '#f7f6f4', paddingBottom: '48px', isolation: 'isolate', position: 'relative', zIndex: 0 }}>
 
         {/* 2-col block */}
         <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '40px clamp(20px, 4vw, 52px) 0' }}>
@@ -209,13 +209,6 @@ export default function InversionistasPage() {
 
           </div>
 
-          {/* Sector label — mismo ancho que el bloque de 2 columnas */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', margin: '24px 0 20px' }}>
-            <div style={{ width: '3px', height: '24px', background: '#f32735', flexShrink: 0 }} />
-            <h3 style={{ fontFamily: FONT, fontWeight: 700, fontSize: '17px', color: '#111827', margin: 0 }}>
-              {activeSector ? `${activeSector} del Área Metropolitana` : 'Valle de Aburrá y municipios aledaños'}
-            </h3>
-          </div>
         </div>
 
         {/* Zone cards for active sector */}
@@ -233,30 +226,27 @@ export default function InversionistasPage() {
                   gap: '16px',
                 }}
               >
-                {/* Title + metrics inline */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: '32px', flex: 1, flexWrap: 'wrap' }}>
-                  <h3 style={{ fontFamily: FONT, fontWeight: 700, fontSize: '22px', color: '#0d0d0d', margin: 0, whiteSpace: 'nowrap' }}>
+                {/* Title + metrics vertical */}
+                <div style={{ flex: 1 }}>
+                  <h3 style={{ fontFamily: FONT, fontWeight: 700, fontSize: '22px', color: '#0d0d0d', margin: '0 0 10px 0' }}>
                     {zone.name}
                   </h3>
-
-                  {/* Separator */}
-                  <div style={{ width: '1px', height: '32px', background: '#e8e8e8', flexShrink: 0 }} />
-
-                  {/* Metrics */}
-                  {[
-                    { label: 'Rentabilidad', value: zone.rentability, accent: true },
-                    { label: 'Precio m²',    value: zone.pricePerM2  },
-                    { label: 'Estratos',     value: zone.strata      },
-                  ].map((m, i) => (
-                    <div key={i} style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
-                      <span style={{ fontFamily: FONT, fontSize: '9px', fontWeight: 600, color: '#aaa', textTransform: 'uppercase', letterSpacing: '0.6px' }}>
-                        {m.label}
-                      </span>
-                      <span style={{ fontFamily: FONT, fontSize: '15px', fontWeight: 700, color: m.accent ? '#f32735' : '#0d0d0d' }}>
-                        {m.value}
-                      </span>
-                    </div>
-                  ))}
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
+                    {[
+                      { label: 'Rentabilidad', value: zone.rentability, accent: true },
+                      { label: 'Precio m²',    value: zone.pricePerM2  },
+                      { label: 'Estratos',     value: zone.strata      },
+                    ].map((m, i) => (
+                      <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                        <span style={{ fontFamily: FONT, fontSize: '9px', fontWeight: 600, color: '#aaa', textTransform: 'uppercase', letterSpacing: '0.6px', width: '78px', flexShrink: 0 }}>
+                          {m.label}
+                        </span>
+                        <span style={{ fontFamily: FONT, fontSize: '13px', fontWeight: 700, color: m.accent ? '#f32735' : '#0d0d0d' }}>
+                          {m.value}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
 
                 {/* Chevron */}

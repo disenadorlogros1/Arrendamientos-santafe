@@ -2533,6 +2533,7 @@ export default function InversionistasLeafletMap({ activeSector, hoveredSector, 
           interactive: false,
           zIndexOffset: 1000,
         }).addTo(mapRef.current);
+        marker.setOpacity(0);
         sectorMarkersRef.current[s] = { marker, makeSectorIcon };
       }
     };
@@ -2569,10 +2570,11 @@ export default function InversionistasLeafletMap({ activeSector, hoveredSector, 
       }
     }
 
-    // Actualizar marcadores de sector
+    // Actualizar marcadores de sector — solo visible cuando hay sector activo/hover
     for (const [s, ref] of Object.entries(sectorMarkersRef.current)) {
-      const isActive = s === effectiveSector;
-      ref.marker.setIcon(ref.makeSectorIcon(s as Sector, isActive));
+      const isVisible = effectiveSector !== null && s === effectiveSector;
+      ref.marker.setOpacity(isVisible ? 1 : 0);
+      if (isVisible) ref.marker.setIcon(ref.makeSectorIcon(s as Sector, true));
     }
 
     const targetSector = hoveredSector ?? activeSector;
