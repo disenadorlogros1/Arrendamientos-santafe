@@ -13,10 +13,10 @@ import InversionistasLeafletMap from '@/components/InversionistasLeafletMap';
 const FONT = "'Avenir LT Std', 'Outfit', system-ui, sans-serif";
 
 const beneficios = [
-  { icon: TrendingUp, title: 'Rentabilidad comprobada', description: '60 años de experiencia generando retornos consistentes para nuestros inversionistas' },
-  { icon: BarChart3, title: 'Análisis de mercado', description: 'Acceso a estudios y reportes detallados del mercado inmobiliario en Antioquia' },
-  { icon: DollarSign, title: 'Múltiples opciones', description: 'Desde arrendamiento hasta proyectos de desarrollo inmobiliario' },
-  { icon: MapPin, title: 'Ubicaciones estratégicas', description: 'Propiedades en las mejores zonas de Medellín y área metropolitana' },
+  { icon: TrendingUp, title: 'Trayectoria comprobada', description: 'Desde 1966, con más de 2.000 inmuebles en gestión activa entre arrendamiento y venta.' },
+  { icon: BarChart3, title: 'Análisis de mercado', description: 'Acceso a estudios y reportes detallados del mercado inmobiliario en Antioquia.' },
+  { icon: DollarSign, title: 'Servicios integrales', description: 'Arrendamiento, venta, avalúos e hipotecas, todo en un solo lugar.' },
+  { icon: MapPin, title: 'Ubicaciones estratégicas', description: 'Propiedades en las mejores zonas del Valle de Aburrá y municipios aledaños.' },
 ];
 
 const SECTOR_COLORS: Record<Sector, { bg: string; border: string; text: string }> = {
@@ -88,29 +88,41 @@ export default function InversionistasPage() {
 
         <div className="relative z-10 text-center px-4 sm:px-6 lg:px-8 max-w-4xl" ref={titleRef}>
           <h1
-            className="inversionistas-title-split text-3xl sm:text-4xl lg:text-5xl leading-tight text-white text-center"
-            style={{ fontFamily: FONT, fontWeight: 300, lineHeight: '1.2' }}
+            className="inversionistas-title-split leading-tight text-white text-center"
+            style={{ fontFamily: FONT, fontWeight: 300, lineHeight: '1.25', fontSize: 'clamp(28px, 4vw, 52px)' }}
           >
-            Inversión inmobiliaria en Medellín y el Valle de{' '}
-            <span className="text-brand-red inline-block" style={{ fontWeight: 700 }}>
-              Aburrá
+            <span style={{ display: 'block', fontWeight: 300 }}>
+              Invierte con la experiencia de
+            </span>
+            <span style={{
+              display: 'inline-block',
+              fontWeight: 900,
+              color: '#f32735',
+              marginTop: '6px',
+            }}>
+              60 años en el mercado inmobiliario
             </span>
           </h1>
 
           <p
             ref={subtitleRef}
-            className="mt-5 text-base sm:text-lg text-white/80 max-w-2xl mx-auto leading-relaxed text-center"
-            style={{ fontFamily: FONT, fontWeight: 300, lineHeight: '1.45', opacity: 0 }}
+            className="mt-5 text-base sm:text-lg text-white/80 max-w-2xl mx-auto text-center"
+            style={{ fontFamily: FONT, fontWeight: 300, lineHeight: '1.5', opacity: 0 }}
           >
-            Conoce las zonas con mayor potencial de valorización y rentabilidad inmobiliaria en Antioquia.
+            Identifica las zonas del Valle de Aburrá y municipios aledaños con<br />
+            <span style={{ color: 'rgba(255,255,255,0.95)', fontWeight: 400 }}>mayor potencial de valorización</span>
           </p>
 
           <div ref={ctaBtnRef} className="mt-8 text-center" style={{ opacity: 0 }}>
             <a
               href="#zonas"
-              className="inline-flex items-center gap-2 h-12 px-8 bg-brand-red hover:bg-white hover:text-brand-red text-white font-semibold rounded-none transition-all duration-300 transform hover:scale-105"
+              className="inline-flex items-center gap-3 h-12 px-8 bg-brand-red hover:bg-white hover:text-brand-red text-white font-semibold rounded-none transition-all duration-300"
+              style={{ fontFamily: FONT }}
             >
-              Ver zonas estratégicas
+              Explora el mapa de zonas
+              <svg width="18" height="18" viewBox="0 0 18 18" fill="none" style={{ flexShrink: 0 }}>
+                <path d="M9 3.5L9 14.5M9 14.5L14 9.5M9 14.5L4 9.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
             </a>
           </div>
         </div>
