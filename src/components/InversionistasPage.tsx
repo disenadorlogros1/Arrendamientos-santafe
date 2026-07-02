@@ -4,19 +4,29 @@ import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import gsap from 'gsap';
-import { TrendingUp, BarChart3, DollarSign, MapPin, ArrowRight } from 'lucide-react';
 import { SECTORS, getZonesBySector, investmentZones, type Sector } from '@/data/investment-zones';
 import { useSplitTextAnimation } from '@/hooks/useSplitTextAnimation';
 import ScrollReveal from '@/components/ScrollReveal';
+
+function applyInkFill(e: React.MouseEvent<HTMLElement>) {
+  const el = e.currentTarget;
+  const rect = el.getBoundingClientRect();
+  const x = e.clientX - rect.left;
+  const y = e.clientY - rect.top;
+  const size = Math.max(Math.hypot(x,y),Math.hypot(rect.width-x,y),Math.hypot(x,rect.height-y),Math.hypot(rect.width-x,rect.height-y)) * 2;
+  el.style.setProperty('--x', `${x}px`);
+  el.style.setProperty('--y', `${y}px`);
+  el.style.setProperty('--size', `${size}px`);
+}
 import InversionistasLeafletMap from '@/components/InversionistasLeafletMap';
 
 const FONT = "'Avenir LT Std', 'Outfit', system-ui, sans-serif";
 
 const beneficios = [
-  { icon: TrendingUp, title: 'Trayectoria comprobada', description: 'Desde 1966, con más de 2.000 inmuebles en gestión activa entre arrendamiento y venta.' },
-  { icon: BarChart3, title: 'Análisis de mercado', description: 'Acceso a estudios y reportes detallados del mercado inmobiliario en Antioquia.' },
-  { icon: DollarSign, title: 'Servicios integrales', description: 'Arrendamiento, venta, avalúos e hipotecas, todo en un solo lugar.' },
-  { icon: MapPin, title: 'Ubicaciones estratégicas', description: 'Propiedades en las mejores zonas del Valle de Aburrá y municipios aledaños.' },
+  { icon: '/icons/icon-home-red.gif',        title: 'Trayectoria comprobada',    description: 'Desde 1966, con más de 2.000 inmuebles en gestión activa entre arrendamiento y venta en Antioquia.' },
+  { icon: '/icons/icon-area-red.gif',         title: 'Análisis de mercado',       description: 'Acceso a estudios y reportes detallados del mercado inmobiliario por zona, estrato y tipo de inmueble.' },
+  { icon: '/icons/icon-credit-card-red.gif',  title: 'Servicios integrales',      description: 'Arrendamiento, venta, avalúos e hipotecas, todo en un solo lugar con un equipo dedicado.' },
+  { icon: '/icons/icon-location-red.gif',     title: 'Ubicaciones estratégicas',  description: 'Propiedades en las mejores zonas del Valle de Aburrá y municipios aledaños con alto potencial.' },
 ];
 
 const SECTOR_COLORS: Record<Sector, { bg: string; border: string; text: string }> = {
@@ -41,7 +51,8 @@ export default function InversionistasPage() {
   const { ref: titleRef, titleAnimating } = useSplitTextAnimation('.inversionistas-title-split', 0, false);
   const [activeSector,  setActiveSector]  = useState<Sector | null>(null);
   const [hoveredSector, setHoveredSector] = useState<Sector | null>(null);
-const [titleHovered,  setTitleHovered]  = useState(false);
+  const [titleHovered,     setTitleHovered]     = useState(false);
+  const [hoveredBeneficio, setHoveredBeneficio] = useState<number | null>(null);
   const subtitleRef = useRef<HTMLParagraphElement>(null);
   const ctaBtnRef   = useRef<HTMLDivElement>(null);
 
@@ -264,30 +275,62 @@ const [titleHovered,  setTitleHovered]  = useState(false);
         </div>
       </section>
 
-      {/* Benefits Section */}
-      <section className="py-16 md:py-24 bg-white">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <ScrollReveal y={20} className="text-center mb-16">
-            <h2
-              className="text-3xl md:text-4xl text-gray-900 mb-4"
-              style={{ fontFamily: FONT, fontWeight: 700 }}
-            >
-              ¿Por qué invertir con nosotros?
-            </h2>
-          </ScrollReveal>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {beneficios.map((beneficio, i) => (
-              <ScrollReveal key={beneficio.title} delay={i * 0.1} y={20}>
-                <div className="bg-gray-50 rounded-xl p-6">
-                  <div className="w-12 h-12 bg-brand-red/10 rounded-lg flex items-center justify-center mb-4">
-                    <beneficio.icon className="w-6 h-6 text-brand-red" />
-                  </div>
-                  <h3 className="text-lg font-bold text-gray-900 mb-2" style={{ fontFamily: FONT }}>{beneficio.title}</h3>
-                  <p className="text-gray-600 text-sm leading-relaxed" style={{ fontFamily: FONT, fontWeight: 300 }}>{beneficio.description}</p>
+      {/* Benefits Section — mismo estilo que ServiciosBlock del home */}
+      <section style={{ background: '#fff' }} className="w-full">
+        <div className="px-6 sm:px-10 lg:px-14" style={{ paddingTop: '28px', paddingBottom: '28px', textAlign: 'center' }}>
+          <h2 style={{ fontFamily: FONT, fontWeight: 300, fontSize: 'clamp(26px, 2.6vw, 46px)', color: '#555', lineHeight: 1.2, margin: 0 }}>
+            ¿Por qué <span style={{ fontWeight: 700 }}>invertir con nosotros?</span>
+          </h2>
+        </div>
+        <div className="px-6 sm:px-10 lg:px-14" style={{ paddingBottom: '52px', overflow: 'visible' }}>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4" style={{ gap: '0', overflow: 'visible' }}>
+            {beneficios.map((b, idx) => {
+              const isRed = idx === 0;
+              const isHov = hoveredBeneficio === idx;
+              const isAdj = hoveredBeneficio !== null && Math.abs(idx - hoveredBeneficio) === 1;
+              return (
+                <div
+                  key={b.title}
+                  className="flex flex-col"
+                  style={{
+                    gap: '14px', padding: '24px 20px 20px',
+                    background: isRed ? '#f32735' : '#fff',
+                    cursor: 'default',
+                    transform: isHov ? 'scale(1.08)' : isAdj ? 'scale(0.96)' : 'scale(1)',
+                    zIndex: isHov ? 10 : 1, position: 'relative',
+                    transition: 'transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.3s ease',
+                    boxShadow: isHov ? '0 8px 32px rgba(0,0,0,0.18)' : 'none',
+                  }}
+                  onMouseEnter={() => setHoveredBeneficio(idx)}
+                  onMouseLeave={() => setHoveredBeneficio(null)}
+                >
+                  <img src={b.icon} alt="" width={40} height={40} style={{ flexShrink: 0, display: 'block', filter: isRed ? 'brightness(0) invert(1)' : 'none' }} />
+                  <h3 style={{ fontFamily: FONT, fontWeight: 700, fontSize: 'clamp(16px, 1.2vw, 20px)', color: isRed ? '#fff' : '#232222', margin: 0, lineHeight: 1.15 }}>
+                    {b.title}
+                  </h3>
+                  <p style={{ fontFamily: FONT, fontWeight: 300, fontSize: 'clamp(12.5px, 0.9vw, 14px)', color: isRed ? 'rgba(255,255,255,0.75)' : 'rgba(0,0,0,0.55)', margin: 0, lineHeight: 1.5, flexGrow: 1 }}>
+                    {b.description}
+                  </p>
+                  <a
+                    href={WHATSAPP_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onMouseEnter={applyInkFill}
+                    onMouseLeave={applyInkFill}
+                    className="hero-btn-fill inline-flex items-center justify-center rounded-full"
+                    style={{
+                      fontFamily: FONT, fontWeight: 300, fontSize: 'clamp(13px, 0.95vw, 15px)',
+                      textDecoration: 'none', height: '42px', paddingLeft: '20px', paddingRight: '20px',
+                      alignSelf: 'flex-start',
+                      background: isRed ? '#f32735' : '#232222',
+                      border: isRed ? '1px solid rgba(255,255,255,0.7)' : 'none',
+                    }}
+                  >
+                    <span>Hablar con un asesor</span>
+                  </a>
                 </div>
-              </ScrollReveal>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>

@@ -344,88 +344,33 @@ function CustomSelect({
   );
 }
 
-/* ── AreaSelect — slider igual que PriceSelect ───────────────────────── */
-
-const AREA_MIN = 0;
-const AREA_MAX = 500;
-const AREA_STEP = 5;
-
-function fmtArea(n: number): string {
-  return `${n} m²`;
-}
+/* ── AreaSelect — dos inputs min/max directo en la celda ─────────────── */
 
 function AreaSelect({
   areaMin, areaMax, onChangeMin, onChangeMax,
 }: { areaMin: string; areaMax: string; onChangeMin: (v: string) => void; onChangeMax: (v: string) => void }) {
-  const [open, setOpen]       = useState(false);
-  const [mounted, setMounted] = useState(false);
-  const buttonRef             = useRef<HTMLButtonElement>(null);
-  const dropdownRef           = useRef<HTMLDivElement>(null);
-  const [pos, setPos]         = useState({ top: 0, left: 0, width: 0 });
-
-  const low  = areaMin ? parseInt(areaMin)  : AREA_MIN;
-  const high = areaMax ? parseInt(areaMax)  : AREA_MAX;
-  const sliderValue: [number, number] = [low, high];
-
-  useEffect(() => { setMounted(true); }, []);
-
-  const updatePos = useCallback(() => {
-    if (buttonRef.current) {
-      const r = buttonRef.current.getBoundingClientRect();
-      setPos({ top: r.bottom + 2, left: r.left, width: Math.max(r.width, 260) });
-    }
-  }, []);
-
-  useEffect(() => {
-    if (!open || !mounted) return;
-    const handler = (e: MouseEvent) => {
-      const t = e.target as Node;
-      if (!dropdownRef.current?.contains(t) && !buttonRef.current?.contains(t)) setOpen(false);
-    };
-    const id = setTimeout(() => document.addEventListener('mousedown', handler), 0);
-    return () => { clearTimeout(id); document.removeEventListener('mousedown', handler); };
-  }, [open, mounted]);
-
-  useEffect(() => {
-    if (!open) return;
-    window.addEventListener('scroll', updatePos, { passive: true });
-    return () => window.removeEventListener('scroll', updatePos);
-  }, [open, updatePos]);
-
-  const handleSlider = ([newLow, newHigh]: [number, number]) => {
-    onChangeMin(newLow === AREA_MIN ? '' : String(newLow));
-    onChangeMax(newHigh === AREA_MAX ? '' : String(newHigh));
-  };
-
-  const pristine = !areaMin && !areaMax;
-  const display  = pristine ? null : `${fmtArea(low)} – ${fmtArea(high)}`;
-
-  const dropdown = mounted && open ? (
-    <div ref={dropdownRef} style={{ position: 'fixed', top: pos.top, left: pos.left, width: pos.width, zIndex: 9999 }}>
-      <div className="bg-white shadow-2xl border border-gray-100" style={{ padding: '16px 20px 22px' }}>
-        <PriceRangeSlider
-          min={AREA_MIN} max={AREA_MAX} step={AREA_STEP}
-          value={sliderValue}
-          onChange={handleSlider}
-          formatter={fmtArea}
-        />
-      </div>
-    </div>
-  ) : null;
-
   return (
-    <div className="min-w-0 w-full">
-      <button
-        ref={buttonRef}
-        type="button"
-        onClick={() => { if (!open) { updatePos(); setOpen(true); } else setOpen(false); }}
-        className="w-full flex items-center bg-transparent border-none outline-none cursor-pointer text-left"
-      >
-        <span style={{ fontFamily: FONT, fontSize: '14px', fontWeight: 400, color: display ? COLOR_VALUE : '#b8b8b8', lineHeight: 1, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-          {display || 'Seleccionar'}
-        </span>
-      </button>
-      {dropdown && createPortal(dropdown, document.body)}
+    <div style={{ display: 'flex', alignItems: 'center', gap: '4px', minWidth: 0 }}>
+      <input
+        type="number"
+        min={0}
+        value={areaMin}
+        onChange={e => onChangeMin(e.target.value)}
+        placeholder="Min"
+        className="search-field-input"
+        style={{ fontFamily: FONT, fontSize: '13px', fontWeight: 400, color: areaMin ? COLOR_VALUE : '#b8b8b8', background: 'transparent', border: 'none', outline: 'none', width: '46px', lineHeight: 1 }}
+      />
+      <span style={{ color: '#ccc', fontSize: '11px', flexShrink: 0 }}>–</span>
+      <input
+        type="number"
+        min={0}
+        value={areaMax}
+        onChange={e => onChangeMax(e.target.value)}
+        placeholder="Máx"
+        className="search-field-input"
+        style={{ fontFamily: FONT, fontSize: '13px', fontWeight: 400, color: areaMax ? COLOR_VALUE : '#b8b8b8', background: 'transparent', border: 'none', outline: 'none', width: '46px', lineHeight: 1 }}
+      />
+      <span style={{ fontFamily: FONT, fontSize: '11px', color: '#bbb', flexShrink: 0 }}>m²</span>
     </div>
   );
 }
