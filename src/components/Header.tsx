@@ -154,16 +154,16 @@ export default function Header({ currentPage, onNavigate, isHeroPage = true, dar
     <header className={`fixed top-0 left-0 right-0 transition-all duration-300 ${headerBackground}`}
       style={{ zIndex: 50, backgroundColor: headerBgColor, backfaceVisibility: 'hidden', height: '86px' }}>
 
-      {/* ── Desktop: logo izq | nav centrado absolute (= buscador) | botones der ── */}
-      <div className="hidden lg:flex items-center h-full px-4 lg:px-8 relative">
-        {/* Logo — flujo normal, izquierda */}
-        <button onClick={() => handleNav('home')} className="shrink-0 relative z-10">
+      {/* ── Desktop lg: flex-1 nav | Desktop xl+: nav absoluta centrada como buscador ── */}
+      <div className="hidden lg:flex items-center h-full px-4 lg:px-8 gap-4 xl:gap-0 xl:relative">
+        {/* Logo — flujo normal izquierda; z-10 solo en xl donde la nav es absoluta */}
+        <button onClick={() => handleNav('home')} className="shrink-0 xl:relative xl:z-10">
           <img src={isDark ? "/icons/icon-santa-fe-logo.png" : "/icons/icon-santa-fe-logo-red.png"} alt="Arrendamientos Santa Fe" className="h-10 md:h-11 w-auto object-contain" />
         </button>
 
-        {/* Nav — posición absoluta centrada idéntica al buscador del hero */}
-        <div className="absolute inset-0 flex items-center justify-center px-4 lg:px-8 pointer-events-none">
-          <nav className="flex items-center justify-between gap-1 rounded-full p-[3px] h-[42px] border shadow-lg w-full pointer-events-auto"
+        {/* Nav — flex-1 en lg (sin solapamiento); absoluta centrada en xl+ */}
+        <div className="flex-1 min-w-0 flex items-center justify-center xl:flex-none xl:absolute xl:inset-0 xl:px-8 xl:pointer-events-none">
+          <nav className="flex items-center justify-between gap-1 rounded-full p-[3px] h-[42px] border shadow-lg w-full xl:pointer-events-auto"
             style={{
               maxWidth: '64rem',
               overflow: 'visible',
@@ -227,8 +227,8 @@ export default function Header({ currentPage, onNavigate, isHeroPage = true, dar
           </nav>
         </div>
 
-        {/* Botones — flujo normal, derecha */}
-        <div className="flex items-center gap-2 shrink-0 ml-auto relative z-10">
+        {/* Botones — flujo normal en lg; ml-auto + z-10 en xl donde la nav es absoluta */}
+        <div className="flex items-center gap-2 shrink-0 xl:ml-auto xl:relative xl:z-10">
           <WhatsAppButton />
           <PSEButton />
         </div>
