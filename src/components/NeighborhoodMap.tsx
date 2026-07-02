@@ -7,6 +7,27 @@ import { NEIGHBORHOOD_DATA, BARRIO_IMAGES } from '@/data/neighborhood-data';
 const FONT = "'Avenir LT Std', 'Outfit', system-ui, sans-serif";
 const RED  = '#f32735';
 
+const NAME_TO_SLUG: Record<string, string> = {
+  'Bello': 'bello', 'Copacabana': 'copacabana', 'Aranjuez': 'aranjuez',
+  'Castilla': 'castilla', 'Manrique': 'manrique', 'Popular': 'popular',
+  'Santa Cruz': 'santa-cruz', 'Tricentenario': 'tricentenario',
+  'Campo Valdés': 'campo-valdes', 'Doce de Octubre': 'doce-de-octubre',
+  'Caribe': 'caribe', 'Prado': 'prado', 'Boyacá': 'boyaca',
+  'Envigado': 'envigado', 'Sabaneta': 'sabaneta', 'Itagüí': 'itagui',
+  'La Estrella': 'la-estrella', 'Caldas': 'caldas', 'Guayabal': 'guayabal',
+  'San Antonio de Prado': 'san-antonio-de-prado', 'Belencito': 'belencito',
+  'El Poblado': 'el-poblado', 'Castropol': 'el-poblado', 'Rosales': 'el-poblado',
+  'San Diego': 'san-diego', 'Rionegro': 'rionegro', 'Llanogrande': 'llanogrande',
+  'Guarne': 'guarne', 'La Ceja': 'la-ceja', 'Retiro': 'retiro',
+  'Marinilla': 'marinilla', 'Santa Elena': 'santa-elena',
+  'Laureles': 'laureles', 'Estadio': 'estadio', 'Florida Nueva': 'florida-nueva',
+  'La América': 'la-america', 'Los Colores': 'los-colores',
+  'Castellana': 'laureles', 'Conquistadores': 'laureles',
+  'Belén': 'belen', 'Campo Amor': 'campo-amor', 'Robledo': 'robledo',
+  'San Cristóbal': 'san-cristobal', 'Calasanz': 'calasanz',
+  'San Javier': 'san-javier', 'Naranjal': 'naranjal',
+};
+
 interface Props {
   zone: InvestmentZone;
 }
@@ -157,9 +178,7 @@ export default function NeighborhoodMap({ zone }: Props) {
   }, [zone.slug]);
 
   const imgSrc = hovered
-    ? hovered.imageIdx === 1
-      ? '/images/Barrios medellín.jpg'
-      : `/images/Barrios medellín (${hovered.imageIdx}).jpg`
+    ? `/images/barrios/${NAME_TO_SLUG[hovered.name] ?? 'el-poblado'}.jpg`
     : null;
 
   return (
