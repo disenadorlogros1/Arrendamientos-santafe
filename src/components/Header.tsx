@@ -19,7 +19,7 @@ function applyInkFill(e: React.MouseEvent<HTMLElement>) {
   el.style.setProperty('--size', `${size}px`);
 }
 
-export type PageType = 'home' | 'propiedades' | 'consignacion' | 'hipotecas' | 'servicios' | 'nosotros' | 'blog' | 'historia-60' | 'blog-article' | 'inversionistas' | 'politicas' | 'terminos';
+export type PageType = 'home' | 'propiedades' | 'consignacion' | 'hipotecas' | 'nosotros' | 'blog' | 'historia-60' | 'blog-article' | 'inversionistas' | 'politicas' | 'terminos';
 
 interface HeaderProps { currentPage: PageType; onNavigate: (page: PageType, filter?: string) => void; isHeroPage?: boolean; darkHeader?: boolean; }
 interface SubItem { label: string; page?: PageType; href?: string; filter?: string; }
@@ -69,10 +69,6 @@ const navItems: NavItem[] = [
     { label: 'Arriendo', page: 'propiedades', filter: 'Arrendar' },
     { label: 'Comprar', page: 'propiedades', filter: 'Comprar' },
     { label: 'Para inversionistas', page: 'inversionistas' },
-  ]},
-  { label: 'Servicios', page: 'servicios' as const, children: [
-    { label: 'Solicitud de arrendamiento', href: SOLICITUD_ARRENDAMIENTO_URL },
-    { label: 'Reportar reparación', href: REPARACIONES_URL },
   ]},
   { label: 'Nosotros', page: 'nosotros' as const, children: [
     { label: 'Quiénes somos', page: 'nosotros' },
@@ -154,18 +150,18 @@ export default function Header({ currentPage, onNavigate, isHeroPage = true, dar
     <header className={`fixed top-0 left-0 right-0 transition-all duration-300 ${headerBackground}`}
       style={{ zIndex: 50, backgroundColor: headerBgColor, backfaceVisibility: 'hidden', height: '86px' }}>
 
-      {/* ── Desktop: flex-row logo | nav | buttons ───────── */}
-      <div className="hidden lg:flex items-center h-full px-4 lg:px-8 gap-4">
+      {/* ── Desktop: contenedor centrado al mismo ancho que el buscador del hero ── */}
+      <div className="hidden lg:flex items-center justify-center h-full px-4 lg:px-8">
+        <div className="w-full flex items-center gap-4" style={{ maxWidth: '64rem' }}>
         {/* Logo */}
         <button onClick={() => handleNav('home')} className="shrink-0">
           <img src={isDark ? "/icons/icon-santa-fe-logo.png" : "/icons/icon-santa-fe-logo-red.png"} alt="Arrendamientos Santa Fe" className="h-10 md:h-11 w-auto object-contain" />
         </button>
 
         {/* Nav — crece para ocupar el espacio central */}
-        <div className="flex-1 flex items-center justify-center min-w-0">
+        <div className="flex-1 flex items-center min-w-0">
           <nav className="flex items-center justify-between gap-1 rounded-full p-[3px] h-[42px] border shadow-lg w-full"
             style={{
-              maxWidth: '64rem',
               overflow: 'visible',
               backgroundColor: navBgColor,
               borderColor: navBorderColor,
@@ -232,6 +228,7 @@ export default function Header({ currentPage, onNavigate, isHeroPage = true, dar
           <WhatsAppButton />
           <PSEButton />
         </div>
+        </div>{/* /inner maxWidth container */}
       </div>
 
       {/* ── Mobile: logo absoluto + iconos derecha ────────── */}
