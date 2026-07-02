@@ -219,10 +219,10 @@ const [titleHovered,  setTitleHovered]  = useState(false);
             background: '#e0e0e0',
           }}>
             {visibleZones.map((zone) => (
-              <div key={zone.id} style={{ background: '#fff', borderTop: '3px solid #f32735', padding: '28px 24px', display: 'flex', flexDirection: 'column' }}>
+              <div key={zone.id} style={{ background: '#fff', borderTop: '3px solid #f32735', padding: '20px 16px 0', display: 'flex', flexDirection: 'column' }}>
 
                 {/* Nombre zona */}
-                <h3 style={{ fontFamily: FONT, fontWeight: 700, fontSize: '17px', color: '#0d0d0d', margin: '0 0 20px 0', lineHeight: 1.25 }}>
+                <h3 style={{ fontFamily: FONT, fontWeight: 700, fontSize: '17px', color: '#0d0d0d', margin: '0 0 12px 0', lineHeight: 1.25, textAlign: 'center' }}>
                   {zone.name}
                 </h3>
 
@@ -232,8 +232,8 @@ const [titleHovered,  setTitleHovered]  = useState(false);
                     { label: 'Rentabilidad', value: zone.rentability, accent: true },
                     { label: 'Estratos',     value: zone.strata      },
                   ].map((m, i) => (
-                    <div key={i} style={{ flex: 1, padding: '12px 0', borderRight: i === 0 ? '1px solid #f0f0f0' : 'none', paddingRight: i === 0 ? '16px' : '0', paddingLeft: i === 1 ? '16px' : '0' }}>
-                      <div style={{ fontFamily: FONT, fontSize: '9px', fontWeight: 600, color: '#aaa', letterSpacing: '0.4px', marginBottom: '4px' }}>
+                    <div key={i} style={{ flex: 1, padding: '8px 0', borderRight: i === 0 ? '1px solid #f0f0f0' : 'none', textAlign: 'center' }}>
+                      <div style={{ fontFamily: FONT, fontSize: '9px', fontWeight: 600, color: '#aaa', letterSpacing: '0.4px', marginBottom: '2px' }}>
                         {m.label}
                       </div>
                       <div style={{ fontFamily: FONT, fontSize: '15px', fontWeight: 700, color: m.accent ? '#f32735' : '#0d0d0d' }}>
@@ -247,7 +247,7 @@ const [titleHovered,  setTitleHovered]  = useState(false);
                 <Link
                   href={`/inversionistas/${zone.slug}`}
                   style={{
-                    marginTop: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
+                    marginTop: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
                     padding: '11px 16px', background: '#f32735', color: '#fff',
                     fontFamily: FONT, fontSize: '13px', fontWeight: 600,
                     textDecoration: 'none', transition: 'background 0.18s',
