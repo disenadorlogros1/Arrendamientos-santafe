@@ -52,6 +52,11 @@ export default function InversionistasPage() {
     setActiveSector(sector);
   };
 
+  const handleMapHover = (sector: Sector | null) => {
+    setHoveredSector(sector);
+    if (sector) setActiveSector(sector);
+  };
+
   useEffect(() => {
     if (!titleAnimating) return;
     if (subtitleRef.current) {
@@ -174,6 +179,7 @@ export default function InversionistasPage() {
               <InversionistasLeafletMap
                 activeSector={activeSector}
                 hoveredSector={hoveredSector}
+                onSectorHover={handleMapHover}
               />
             </div>
 

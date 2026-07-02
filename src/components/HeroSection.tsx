@@ -97,7 +97,7 @@ export default function HeroSection({ onNavigate, searchFormSlot }: HeroSectionP
                 onMouseEnter={() => setTitleHovered(true)}
                 onMouseLeave={() => setTitleHovered(false)}
               >
-                <span>60 años</span>
+                <span style={{ fontWeight: 200 }}>60 años</span>
                 <span style={{ fontWeight: 300, position: 'relative', overflow: 'hidden' }}>
                   <span style={{ position: 'relative', zIndex: 2 }}>
                     conectando personas

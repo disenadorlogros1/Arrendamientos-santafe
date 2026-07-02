@@ -114,17 +114,25 @@ export default function InversionZonePage() {
       <main style={{ flex: 1 }}>
 
         {/* ── Hero ──────────────────────────────────────────── */}
-        <section style={{ background: '#fff', paddingTop: 120, paddingBottom: 64, borderBottom: '1px solid #e8e8e8' }}>
-          <div style={{ maxWidth: 1120, margin: '0 auto', padding: '0 24px' }}>
+        <section style={{ position: 'relative', overflow: 'hidden', background: '#0d0d0d', paddingTop: 120, paddingBottom: 64 }}>
+          {/* Imagen de fondo con opacidad baja */}
+          <div style={{
+            position: 'absolute', inset: 0,
+            backgroundImage: 'url(/images/banner_inversionistas.png)',
+            backgroundSize: 'cover', backgroundPosition: 'center',
+            opacity: 0.18,
+            pointerEvents: 'none',
+          }} />
+          <div style={{ maxWidth: 1120, margin: '0 auto', padding: '0 24px', position: 'relative', zIndex: 1 }}>
             <div ref={heroRef}>
-              {/* Marca + breadcrumb */}
+              {/* Breadcrumb */}
               <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 32 }}>
-                <img src="/icons/icon-favicon-red.gif" width={13} height={13} style={{ opacity: 0.7 }} alt="" />
-                <span style={{ fontSize: 10, fontWeight: 600, letterSpacing: '0.08em', color: '#aaa' }}>
+                <img src="/icons/icon-favicon-white.gif" width={13} height={13} style={{ opacity: 0.4 }} alt="" />
+                <span style={{ fontSize: 10, fontWeight: 600, letterSpacing: '0.08em', color: 'rgba(255,255,255,0.4)' }}>
                   Arrendamientos Santa Fe
                 </span>
-                <span style={{ color: '#ddd', fontSize: 10 }}>·</span>
-                <Link href="/inversionistas" style={{ fontSize: 10, fontWeight: 500, letterSpacing: '0.06em', color: '#aaa', textDecoration: 'none' }}>
+                <span style={{ color: 'rgba(255,255,255,0.2)', fontSize: 10 }}>·</span>
+                <Link href="/inversionistas" style={{ fontSize: 10, fontWeight: 500, letterSpacing: '0.06em', color: 'rgba(255,255,255,0.4)', textDecoration: 'none' }}>
                   Zonas de inversión
                 </Link>
               </div>
@@ -134,10 +142,10 @@ export default function InversionZonePage() {
                 {zone.sector}
               </div>
 
-              <h1 style={{ fontSize: 'clamp(36px, 5vw, 64px)', fontWeight: 900, color: '#111', lineHeight: 1.05, margin: '0 0 20px', letterSpacing: '-0.02em' }}>
+              <h1 style={{ fontSize: 'clamp(36px, 5vw, 64px)', fontWeight: 900, color: '#fff', lineHeight: 1.05, margin: '0 0 20px', letterSpacing: '-0.02em' }}>
                 {zone.h1Title}
               </h1>
-              <p style={{ fontSize: 16, color: '#666', lineHeight: 1.75, maxWidth: 640, margin: 0 }}>
+              <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.58)', lineHeight: 1.75, maxWidth: 640, margin: 0 }}>
                 {zone.description}
               </p>
             </div>
@@ -145,15 +153,15 @@ export default function InversionZonePage() {
         </section>
 
         {/* ── Stats ─────────────────────────────────────────── */}
-        <section style={{ background: DARK2, padding: '0', borderBottom: '1px solid #e8e8e8' }}>
+        <section style={{ background: '#111', padding: '0', borderBottom: '1px solid #1e1e1e' }}>
           <div style={{ maxWidth: 1120, margin: '0 auto', padding: '0 24px' }}>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 2 }}>
               {STATS_META.map((meta) => (
-                <div key={meta.key} style={{ background: DARK3, borderTop: `3px solid ${RED}`, padding: '32px 28px 28px', boxSizing: 'border-box' as const }}>
+                <div key={meta.key} style={{ background: '#161616', borderTop: `3px solid ${RED}`, padding: '32px 28px 28px', boxSizing: 'border-box' as const }}>
                   <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase' as const, color: RED, marginBottom: 10 }}>
                     {meta.label}
                   </div>
-                  <div style={{ fontSize: 26, fontWeight: 900, color: '#111', lineHeight: 1.1, letterSpacing: '-0.01em' }}>
+                  <div style={{ fontSize: 26, fontWeight: 900, color: '#fff', lineHeight: 1.1, letterSpacing: '-0.01em' }}>
                     {zone[meta.key]}
                   </div>
                 </div>

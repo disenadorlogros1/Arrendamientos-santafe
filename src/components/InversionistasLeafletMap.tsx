@@ -14,6 +14,7 @@ export interface ZonePoint {
 interface Props {
   activeSector: Sector | null;
   hoveredSector: Sector | null;
+  onSectorHover?: (sector: Sector | null) => void;
 }
 
 const RED = '#f32735';
@@ -2455,12 +2456,15 @@ const ZONE_POLYGONS: Record<string, [number, number][]> = {
 };
 
 
-export default function InversionistasLeafletMap({ activeSector, hoveredSector }: Props) {
-  const containerRef  = useRef<HTMLDivElement>(null);
-  const mapRef        = useRef<any>(null);
+export default function InversionistasLeafletMap({ activeSector, hoveredSector, onSectorHover }: Props) {
+  const containerRef     = useRef<HTMLDivElement>(null);
+  const mapRef           = useRef<any>(null);
   const polygonsRef      = useRef<Record<string, { polygon: any }>>({});
   const sectorMarkersRef = useRef<Record<string, any>>({});
   const prevSectorRef    = useRef<Sector | null>(null);
+  const onHoverRef       = useRef(onSectorHover);
+  const hoverTimerRef    = useRef<any>(null);
+  useEffect(() => { onHoverRef.current = onSectorHover; }, [onSectorHover]);
 
   useEffect(() => {
     if (!document.querySelector('link[href*="leaflet"]')) {
@@ -2494,6 +2498,15 @@ export default function InversionistasLeafletMap({ activeSector, hoveredSector }
           color: '#ccc', weight: 0.5, smoothFactor: 0,
           fillColor: '#ccc', fillOpacity: 0.05, opacity: 0.3,
         }).addTo(mapRef.current);
+
+        const sector = BARRIO_SECTOR[id];
+        polygon.on('mouseover', () => {
+          clearTimeout(hoverTimerRef.current);
+          if (sector) onHoverRef.current?.(sector);
+        });
+        polygon.on('mouseout', () => {
+          hoverTimerRef.current = setTimeout(() => onHoverRef.current?.(null), 60);
+        });
 
         polygonsRef.current[id] = { polygon };
       }
