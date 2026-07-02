@@ -154,103 +154,95 @@ export default function Header({ currentPage, onNavigate, isHeroPage = true, dar
     <header className={`fixed top-0 left-0 right-0 transition-all duration-300 ${headerBackground}`}
       style={{ zIndex: 50, backgroundColor: headerBgColor, backfaceVisibility: 'hidden', height: '86px' }}>
 
-      {/* Logo — absolute izquierda */}
-      <button
-        onClick={() => handleNav('home')}
-        className="absolute top-1/2 -translate-y-1/2 left-4 sm:left-6 lg:left-8"
-      >
-        <img src={isDark ? "/icons/icon-santa-fe-logo.png" : "/icons/icon-santa-fe-logo-red.png"} alt="Arrendamientos Santa Fe" className="h-10 md:h-11 w-auto object-contain" />
-      </button>
+      {/* ── Desktop: flex-row logo | nav | buttons ───────── */}
+      <div className="hidden lg:flex items-center h-full px-4 lg:px-8 gap-4">
+        {/* Logo */}
+        <button onClick={() => handleNav('home')} className="shrink-0">
+          <img src={isDark ? "/icons/icon-santa-fe-logo.png" : "/icons/icon-santa-fe-logo-red.png"} alt="Arrendamientos Santa Fe" className="h-10 md:h-11 w-auto object-contain" />
+        </button>
 
-      {/* Nav — centrada con mismo maxWidth y padding que el SearchForm */}
-      <div className="hidden lg:flex items-center h-full mx-auto px-4 sm:px-6 lg:px-8" style={{ maxWidth: '64rem' }}>
-        <nav className="flex items-center justify-between gap-1 rounded-full p-[3px] h-[42px] border shadow-lg w-full"
-          style={{
-            overflow: 'visible',
-            backgroundColor: navBgColor,
-            borderColor: navBorderColor,
-            backdropFilter: 'blur(10px)',
-          }}>
-          {navItems.map((item) =>
-            item.children ? (
-              <div key={item.label} className="relative group flex-1">
-                {(() => {
-                  const isActive = currentPage === item.page || item.children?.some(c => c.page === currentPage);
+        {/* Nav — crece para ocupar el espacio central */}
+        <div className="flex-1 flex items-center justify-center min-w-0">
+          <nav className="flex items-center justify-between gap-1 rounded-full p-[3px] h-[42px] border shadow-lg w-full"
+            style={{
+              maxWidth: '44rem',
+              overflow: 'visible',
+              backgroundColor: navBgColor,
+              borderColor: navBorderColor,
+              backdropFilter: 'blur(10px)',
+            }}>
+            {navItems.map((item) =>
+              item.children ? (
+                <div key={item.label} className="relative group flex-1">
+                  {(() => {
+                    const isActive = currentPage === item.page || item.children?.some(c => c.page === currentPage);
+                    return (
+                      <button
+                        onClick={() => { if (item.page) handleNav(item.page); }}
+                        onMouseEnter={e => { setHoveredNav(item.label); if (!isActive) applyInkFill(e); }}
+                        onMouseLeave={e => { setHoveredNav(null); if (!isActive) applyInkFill(e); }}
+                        className={isActive ? 'w-full px-2 py-2 rounded-full' : 'nav-ink-btn w-full px-2 py-2 rounded-full'}
+                        style={{ fontFamily: "'Avenir LT Std', 'Outfit', system-ui, sans-serif", fontWeight: (isActive || hoveredNav === item.label) ? 700 : 300, fontSize: '15px', color: isActive ? '#fff' : headerTextColor, background: isActive ? '#f32735' : 'transparent', transition: 'background 0.2s ease, color 0.2s ease' }}
+                      >
+                        <span style={{ fontWeight: 'inherit' }}>{item.label}</span>
+                      </button>
+                    );
+                  })()}
+                  <div className="absolute top-full left-1/2 pt-[3px] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200"
+                    style={{ transform: 'translateX(-50%)', zIndex: 60 }}>
+                    <div className="bg-white rounded-2xl min-w-[230px] shadow-2xl border border-gray-100 overflow-hidden">
+                      {item.children.map((sub) =>
+                        sub.href ? (
+                          <a key={sub.label} href={sub.href} target="_blank" rel="noopener noreferrer"
+                            className="block w-full text-left px-5 py-2.5 text-[15px] text-gray-700 hover:text-white hover:bg-brand-red transition-colors duration-150"
+                            style={{ fontFamily: "'Avenir LT Std', 'Outfit', system-ui, sans-serif", fontWeight: 300 }}>
+                            {sub.label}
+                          </a>
+                        ) : (
+                          <button key={sub.label} onClick={() => { if (sub.page) handleNav(sub.page, sub.filter); }}
+                            className="block w-full text-left px-5 py-2.5 text-[15px] text-gray-600 hover:text-white hover:bg-brand-red transition-colors duration-150"
+                            style={{ fontFamily: "'Avenir LT Std', 'Outfit', system-ui, sans-serif", fontWeight: 300 }}>
+                            {sub.label}
+                          </button>
+                        )
+                      )}
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                (() => {
+                  const isActive = currentPage === item.page;
                   return (
-                    <button
-                      onClick={() => { if (item.page) handleNav(item.page); }}
+                    <button key={item.label} onClick={() => handleNav(item.page || 'home')}
                       onMouseEnter={e => { setHoveredNav(item.label); if (!isActive) applyInkFill(e); }}
                       onMouseLeave={e => { setHoveredNav(null); if (!isActive) applyInkFill(e); }}
-                      className={isActive ? 'w-full px-2 py-2 rounded-full' : 'nav-ink-btn w-full px-2 py-2 rounded-full'}
-                      style={{ fontFamily: "'Avenir LT Std', 'Outfit', system-ui, sans-serif", fontWeight: (isActive || hoveredNav === item.label) ? 700 : 300, fontSize: '15px', color: isActive ? '#fff' : headerTextColor, background: isActive ? '#f32735' : 'transparent', transition: 'background 0.2s ease, color 0.2s ease' }}
-                    >
+                      className={isActive ? 'flex-1 px-2 py-2 rounded-full' : 'nav-ink-btn flex-1 px-2 py-2 rounded-full'}
+                      style={{ fontFamily: "'Avenir LT Std', 'Outfit', system-ui, sans-serif", fontWeight: (isActive || hoveredNav === item.label) ? 700 : 300, fontSize: '15px', color: isActive ? '#fff' : headerTextColor, background: isActive ? '#f32735' : 'transparent', transition: 'background 0.2s ease, color 0.2s ease' }}>
                       <span style={{ fontWeight: 'inherit' }}>{item.label}</span>
                     </button>
                   );
-                })()}
-                <div className="absolute top-full left-1/2 pt-[3px] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200"
-                  style={{ transform: 'translateX(-50%)', zIndex: 60 }}>
-                  <div className="bg-white rounded-2xl min-w-[230px] shadow-2xl border border-gray-100 overflow-hidden">
-                    {item.children.map((sub) =>
-                      sub.href ? (
-                        <a
-                          key={sub.label}
-                          href={sub.href}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="block w-full text-left px-5 py-2.5 text-[15px] text-gray-700 hover:text-white hover:bg-brand-red transition-colors duration-150"
-                          style={{ fontFamily: "'Avenir LT Std', 'Outfit', system-ui, sans-serif", fontWeight: 300 }}
-                        >
-                          {sub.label}
-                        </a>
-                      ) : (
-                        <button
-                          key={sub.label}
-                          onClick={() => { if (sub.page) handleNav(sub.page, sub.filter); }}
-                          className="block w-full text-left px-5 py-2.5 text-[15px] text-gray-600 hover:text-white hover:bg-brand-red transition-colors duration-150"
-                          style={{ fontFamily: "'Avenir LT Std', 'Outfit', system-ui, sans-serif", fontWeight: 300 }}
-                        >
-                          {sub.label}
-                        </button>
-                      )
-                    )}
-                  </div>
-                </div>
-              </div>
-            ) : (
-              (() => {
-                const isActive = currentPage === item.page;
-                return (
-                  <button
-                    key={item.label}
-                    onClick={() => handleNav(item.page || 'home')}
-                    onMouseEnter={e => { setHoveredNav(item.label); if (!isActive) applyInkFill(e); }}
-                    onMouseLeave={e => { setHoveredNav(null); if (!isActive) applyInkFill(e); }}
-                    className={isActive ? 'flex-1 px-2 py-2 rounded-full' : 'nav-ink-btn flex-1 px-2 py-2 rounded-full'}
-                    style={{ fontFamily: "'Avenir LT Std', 'Outfit', system-ui, sans-serif", fontWeight: (isActive || hoveredNav === item.label) ? 700 : 300, fontSize: '15px', color: isActive ? '#fff' : headerTextColor, background: isActive ? '#f32735' : 'transparent', transition: 'background 0.2s ease, color 0.2s ease' }}
-                  >
-                    <span style={{ fontWeight: 'inherit' }}>{item.label}</span>
-                  </button>
-                );
-              })()
-            )
-          )}
-        </nav>
+                })()
+              )
+            )}
+          </nav>
+        </div>
+
+        {/* Botones — nunca se montan sobre la nav */}
+        <div className="flex items-center gap-2 shrink-0">
+          <WhatsAppButton />
+          <PSEButton />
+        </div>
       </div>
 
-      {/* Botones desktop — absolute derecha */}
-      <div className="hidden lg:flex items-center gap-2 absolute top-1/2 -translate-y-1/2 right-4 sm:right-6 lg:right-8">
-        <WhatsAppButton />
-        <PSEButton />
-      </div>
+      {/* ── Mobile: logo absoluto + iconos derecha ────────── */}
+      <button onClick={() => handleNav('home')} className="lg:hidden absolute top-1/2 -translate-y-1/2 left-4 sm:left-6">
+        <img src={isDark ? "/icons/icon-santa-fe-logo.png" : "/icons/icon-santa-fe-logo-red.png"} alt="Arrendamientos Santa Fe" className="h-10 w-auto object-contain" />
+      </button>
 
-      {/* Mobile: logo ya está absoluto arriba; spacer + icons */}
       <div className="flex lg:hidden items-center h-full px-4 sm:px-6">
         <div className="flex-1" />
         <div className="flex items-center gap-2">
-          {/* Mobile WhatsApp: Icono, alterna cada 5 segundos */}
           <MobileWhatsAppButton />
-          {/* Mobile PSE: Icono, alterna cada 5 segundos */}
           <MobilePSEButton />
           <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
             <SheetTrigger asChild>
