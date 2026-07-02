@@ -232,7 +232,7 @@ const [titleHovered,  setTitleHovered]  = useState(false);
                     { label: 'Rentabilidad', value: zone.rentability, accent: true },
                     { label: 'Estratos',     value: zone.strata      },
                   ].map((m, i) => (
-                    <div key={i} style={{ flex: 1, padding: '8px 0', borderRight: i === 0 ? '1px solid #f0f0f0' : 'none', textAlign: 'center' }}>
+                    <div key={i} style={{ flex: 1, padding: '8px 0', textAlign: 'center' }}>
                       <div style={{ fontFamily: FONT, fontSize: '9px', fontWeight: 600, color: '#aaa', letterSpacing: '0.4px', marginBottom: '2px' }}>
                         {m.label}
                       </div>
@@ -256,9 +256,6 @@ const [titleHovered,  setTitleHovered]  = useState(false);
                   onMouseLeave={e => (e.currentTarget.style.background = '#f32735')}
                 >
                   Ver más
-                  <svg width="11" height="11" viewBox="0 0 14 14" fill="none">
-                    <path d="M2.5 11.5L11.5 2.5M11.5 2.5H5M11.5 2.5V9" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
                 </Link>
 
               </div>
