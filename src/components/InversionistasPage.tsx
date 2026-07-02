@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import gsap from 'gsap';
 import { TrendingUp, BarChart3, DollarSign, MapPin, ChevronDown, ArrowRight } from 'lucide-react';
-import { SECTORS, getZonesBySector, type Sector } from '@/data/investment-zones';
+import { SECTORS, getZonesBySector, investmentZones, type Sector } from '@/data/investment-zones';
 import { useSplitTextAnimation } from '@/hooks/useSplitTextAnimation';
 import ScrollReveal from '@/components/ScrollReveal';
 import InversionistasLeafletMap from '@/components/InversionistasLeafletMap';
@@ -39,13 +39,14 @@ const WHATSAPP_URL = 'https://wa.me/573006557529?text=Hola%2C%20quisiera%20consu
 export default function InversionistasPage() {
   const router = useRouter();
   const { ref: titleRef, titleAnimating } = useSplitTextAnimation('.inversionistas-title-split', 0, false);
-  const [activeSector,  setActiveSector]  = useState<Sector>('Norte');
+  const [activeSector,  setActiveSector]  = useState<Sector | null>(null);
   const [hoveredSector, setHoveredSector] = useState<Sector | null>(null);
   const [expandedZone,  setExpandedZone]  = useState<string | null>(null);
+  const [titleHovered,  setTitleHovered]  = useState(false);
   const subtitleRef = useRef<HTMLParagraphElement>(null);
   const ctaBtnRef   = useRef<HTMLDivElement>(null);
 
-  const visibleZones = getZonesBySector(activeSector);
+  const visibleZones = activeSector ? getZonesBySector(activeSector) : investmentZones;
 
   const handleSectorHover = (sector: Sector) => {
     setHoveredSector(sector);
@@ -54,7 +55,6 @@ export default function InversionistasPage() {
 
   const handleMapHover = (sector: Sector | null) => {
     setHoveredSector(sector);
-    if (sector) setActiveSector(sector);
   };
 
   useEffect(() => {
@@ -90,17 +90,32 @@ export default function InversionistasPage() {
           <h1
             className="inversionistas-title-split leading-tight text-white text-center"
             style={{ fontFamily: FONT, fontWeight: 300, lineHeight: '1.25', fontSize: 'clamp(28px, 4vw, 52px)' }}
+            onMouseEnter={() => setTitleHovered(true)}
+            onMouseLeave={() => setTitleHovered(false)}
           >
             <span style={{ display: 'block', fontWeight: 300 }}>
               Invierte con la experiencia de
             </span>
-            <span style={{
-              display: 'inline-block',
-              fontWeight: 900,
-              color: '#f32735',
-              marginTop: '6px',
-            }}>
-              60 años en el mercado inmobiliario
+            <span style={{ display: 'inline-block', fontWeight: 900, color: '#fff', marginTop: '6px', position: 'relative', overflow: 'hidden' }}>
+              <span style={{ position: 'relative', zIndex: 2 }}>
+                60 años en el mercado inmobiliario
+              </span>
+              <span
+                aria-hidden="true"
+                style={{
+                  position: 'absolute',
+                  top: '62%',
+                  left: 0,
+                  width: '100%',
+                  height: '13%',
+                  backgroundColor: '#f32735',
+                  transform: `translateY(-50%) scaleX(${titleHovered ? 1 : 0})`,
+                  transformOrigin: 'left center',
+                  zIndex: 1,
+                  transition: 'transform 0.234s ease',
+                  pointerEvents: 'none',
+                }}
+              />
             </span>
           </h1>
 
@@ -116,13 +131,10 @@ export default function InversionistasPage() {
           <div ref={ctaBtnRef} className="mt-8 text-center" style={{ opacity: 0 }}>
             <a
               href="#zonas"
-              className="inline-flex items-center gap-3 h-12 px-8 bg-brand-red hover:bg-white hover:text-brand-red text-white font-semibold rounded-none transition-all duration-300"
+              className="inline-flex items-center h-12 px-8 bg-brand-red hover:bg-white hover:text-brand-red text-white font-semibold rounded-none transition-all duration-300"
               style={{ fontFamily: FONT }}
             >
               Explora el mapa de zonas
-              <svg width="18" height="18" viewBox="0 0 18 18" fill="none" style={{ flexShrink: 0 }}>
-                <path d="M9 3.5L9 14.5M9 14.5L14 9.5M9 14.5L4 9.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
             </a>
           </div>
         </div>
@@ -201,7 +213,7 @@ export default function InversionistasPage() {
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px', margin: '24px 0 20px' }}>
             <div style={{ width: '3px', height: '24px', background: '#f32735', flexShrink: 0 }} />
             <h3 style={{ fontFamily: FONT, fontWeight: 700, fontSize: '17px', color: '#111827', margin: 0 }}>
-              {activeSector} del Área Metropolitana
+              {activeSector ? `${activeSector} del Área Metropolitana` : 'Valle de Aburrá y municipios aledaños'}
             </h3>
           </div>
         </div>
