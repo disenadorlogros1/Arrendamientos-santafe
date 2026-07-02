@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import gsap from 'gsap';
-import { TrendingUp, BarChart3, DollarSign, MapPin, ChevronDown, ArrowRight } from 'lucide-react';
+import { TrendingUp, BarChart3, DollarSign, MapPin, ArrowRight } from 'lucide-react';
 import { SECTORS, getZonesBySector, investmentZones, type Sector } from '@/data/investment-zones';
 import { useSplitTextAnimation } from '@/hooks/useSplitTextAnimation';
 import ScrollReveal from '@/components/ScrollReveal';
@@ -41,8 +41,7 @@ export default function InversionistasPage() {
   const { ref: titleRef, titleAnimating } = useSplitTextAnimation('.inversionistas-title-split', 0, false);
   const [activeSector,  setActiveSector]  = useState<Sector | null>(null);
   const [hoveredSector, setHoveredSector] = useState<Sector | null>(null);
-  const [expandedZone,  setExpandedZone]  = useState<string | null>(null);
-  const [titleHovered,  setTitleHovered]  = useState(false);
+const [titleHovered,  setTitleHovered]  = useState(false);
   const subtitleRef = useRef<HTMLParagraphElement>(null);
   const ctaBtnRef   = useRef<HTMLDivElement>(null);
 
@@ -211,112 +210,61 @@ export default function InversionistasPage() {
 
         </div>
 
-        {/* Zone cards for active sector */}
+        {/* Zone columns grid */}
         <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '0 clamp(20px, 4vw, 52px) 40px' }}>
-          {visibleZones.map((zone) => (
-            <div key={zone.id} style={{ background: '#fff', borderTop: '2px solid #f32735' }}>
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: `repeat(${visibleZones.length}, 1fr)`,
+            gap: '1px',
+            background: '#e0e0e0',
+          }}>
+            {visibleZones.map((zone) => (
+              <div key={zone.id} style={{ background: '#fff', borderTop: '3px solid #f32735', padding: '28px 24px', display: 'flex', flexDirection: 'column' }}>
 
-              {/* Header row */}
-              <button
-                onClick={() => setExpandedZone(expandedZone === zone.id ? null : zone.id)}
-                style={{
-                  width: '100%', padding: '18px 28px', textAlign: 'left', cursor: 'pointer',
-                  background: 'transparent', border: 'none',
-                  display: 'flex', alignItems: 'center', gap: '32px',
-                }}
-              >
-                {/* Título */}
-                <h3 style={{ fontFamily: FONT, fontWeight: 700, fontSize: '18px', color: '#0d0d0d', margin: 0, minWidth: '200px', flexShrink: 0 }}>
+                {/* Nombre zona */}
+                <h3 style={{ fontFamily: FONT, fontWeight: 700, fontSize: '17px', color: '#0d0d0d', margin: '0 0 20px 0', lineHeight: 1.25 }}>
                   {zone.name}
                 </h3>
 
-                {/* Separador */}
-                <div style={{ width: '1px', height: '28px', background: '#e8e8e8', flexShrink: 0 }} />
-
-                {/* Métricas en fila horizontal */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: '32px', flex: 1 }}>
+                {/* Métricas en columna */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0', flex: 1 }}>
                   {[
                     { label: 'Rentabilidad', value: zone.rentability, accent: true },
+                    { label: 'Precio m²',    value: zone.pricePerM2  },
                     { label: 'Estratos',     value: zone.strata      },
                   ].map((m, i) => (
-                    <div key={i} style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
-                      <span style={{ fontFamily: FONT, fontSize: '9px', fontWeight: 600, color: '#aaa', textTransform: 'uppercase', letterSpacing: '0.6px' }}>
+                    <div key={i} style={{ padding: '12px 0', borderBottom: '1px solid #f0f0f0' }}>
+                      <div style={{ fontFamily: FONT, fontSize: '9px', fontWeight: 600, color: '#aaa', textTransform: 'uppercase', letterSpacing: '0.6px', marginBottom: '4px' }}>
                         {m.label}
-                      </span>
-                      <span style={{ fontFamily: FONT, fontSize: '14px', fontWeight: 700, color: m.accent ? '#f32735' : '#0d0d0d' }}>
+                      </div>
+                      <div style={{ fontFamily: FONT, fontSize: '15px', fontWeight: 700, color: m.accent ? '#f32735' : '#0d0d0d' }}>
                         {m.value}
-                      </span>
+                      </div>
                     </div>
                   ))}
                 </div>
 
-                {/* Chevron */}
-                <ChevronDown
-                  size={18} strokeWidth={2}
+                {/* CTA */}
+                <Link
+                  href={`/inversionistas/${zone.slug}`}
                   style={{
-                    color: '#f32735', flexShrink: 0,
-                    transform: expandedZone === zone.id ? 'rotate(180deg)' : 'rotate(0deg)',
-                    transition: 'transform 0.3s ease',
+                    marginTop: '20px', display: 'inline-flex', alignItems: 'center', gap: '8px',
+                    padding: '10px 16px', background: '#f32735', color: '#fff',
+                    fontFamily: FONT, fontSize: '13px', fontWeight: 600,
+                    textDecoration: 'none', transition: 'background 0.18s', alignSelf: 'flex-start',
                   }}
-                />
-              </button>
+                  onMouseEnter={e => (e.currentTarget.style.background = '#c41e2a')}
+                  onMouseLeave={e => (e.currentTarget.style.background = '#f32735')}
+                >
+                  Ver análisis
+                  <svg width="11" height="11" viewBox="0 0 14 14" fill="none">
+                    <path d="M2.5 11.5L11.5 2.5M11.5 2.5H5M11.5 2.5V9" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </Link>
 
-              {/* Accordion body */}
-              <div style={{
-                display: 'grid',
-                gridTemplateRows: expandedZone === zone.id ? '1fr' : '0fr',
-                opacity: expandedZone === zone.id ? 1 : 0,
-                transition: 'grid-template-rows 0.3s ease, opacity 0.25s ease',
-                borderTop: '1px solid #f0f0f0',
-              }}>
-                <div style={{ overflow: 'hidden' }}>
-                  <div style={{ padding: '24px 28px', display: 'flex', gap: '48px' }}>
-
-                    {/* Description */}
-                    <div style={{ flex: 1 }}>
-                      <p style={{ fontFamily: FONT, fontSize: '14px', fontWeight: 300, color: '#555', lineHeight: 1.7, margin: 0 }}>
-                        {zone.description}
-                      </p>
-                    </div>
-
-                    {/* Advantages */}
-                    <div style={{ flex: 1 }}>
-                      <p style={{ fontFamily: FONT, fontSize: '11px', fontWeight: 700, color: '#aaa', textTransform: 'uppercase', letterSpacing: '0.8px', marginBottom: '12px' }}>
-                        Ventajas de inversión
-                      </p>
-                      <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 20px 0', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                        {zone.advantages.map((adv, i) => (
-                          <li key={i} style={{ display: 'flex', gap: '10px', alignItems: 'flex-start' }}>
-                            <span style={{ color: '#f32735', fontSize: '8px', marginTop: '5px', flexShrink: 0 }}>■</span>
-                            <span style={{ fontFamily: FONT, fontSize: '13px', fontWeight: 300, color: '#444', lineHeight: 1.5 }}>{adv}</span>
-                          </li>
-                        ))}
-                      </ul>
-                      <Link
-                        href={`/inversionistas/${zone.slug}`}
-                        style={{
-                          display: 'inline-flex', alignItems: 'center', gap: '8px',
-                          padding: '10px 20px',
-                          background: '#f32735', color: '#fff',
-                          fontFamily: FONT, fontSize: '13px', fontWeight: 600,
-                          textDecoration: 'none', transition: 'background 0.18s',
-                        }}
-                        onMouseEnter={e => (e.currentTarget.style.background = '#c41e2a')}
-                        onMouseLeave={e => (e.currentTarget.style.background = '#f32735')}
-                      >
-                        Ver análisis completo
-                        <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
-                          <path d="M2.5 11.5L11.5 2.5M11.5 2.5H5M11.5 2.5V9" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                        </svg>
-                      </Link>
-                    </div>
-
-                  </div>
-                </div>
               </div>
-
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </section>
 
