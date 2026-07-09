@@ -346,33 +346,99 @@ function CustomSelect({
   );
 }
 
-/* ── AreaSelect — dos inputs min/max directo en la celda ─────────────── */
+/* ── AreaRangeSlider — igual que PriceRangeSlider pero para m² ───────── */
 
-function AreaSelect({
-  areaMin, areaMax, onChangeMin, onChangeMax,
-}: { areaMin: string; areaMax: string; onChangeMin: (v: string) => void; onChangeMax: (v: string) => void }) {
+const AREA_SLIDER_MIN = 0;
+const AREA_SLIDER_MAX = 500;
+const AREA_STEP       = 5;
+
+function AreaRangeSlider({
+  areaMin, areaMax, onChange,
+}: { areaMin: string; areaMax: string; onChange: (min: string, max: string) => void }) {
+  const low  = areaMin ? Math.max(AREA_SLIDER_MIN, Number(areaMin)) : AREA_SLIDER_MIN;
+  const high = areaMax ? Math.min(AREA_SLIDER_MAX, Number(areaMax)) : AREA_SLIDER_MAX;
+
+  const trackRef  = useRef<HTMLDivElement>(null);
+  const dragging  = useRef<'low' | 'high' | null>(null);
+  const lowRef    = useRef(low);
+  const highRef   = useRef(high);
+  lowRef.current  = low;
+  highRef.current = high;
+
+  const pctLow  = ((low  - AREA_SLIDER_MIN) / (AREA_SLIDER_MAX - AREA_SLIDER_MIN)) * 100;
+  const pctHigh = ((high - AREA_SLIDER_MIN) / (AREA_SLIDER_MAX - AREA_SLIDER_MIN)) * 100;
+
+  const valFromX = (clientX: number) => {
+    if (!trackRef.current) return null;
+    const r   = trackRef.current.getBoundingClientRect();
+    const pct = Math.max(0, Math.min(1, (clientX - r.left) / r.width));
+    return Math.round((AREA_SLIDER_MIN + pct * (AREA_SLIDER_MAX - AREA_SLIDER_MIN)) / AREA_STEP) * AREA_STEP;
+  };
+
+  const emit = (newLow: number, newHigh: number) => {
+    onChange(
+      newLow > AREA_SLIDER_MIN ? String(newLow) : '',
+      newHigh < AREA_SLIDER_MAX ? String(newHigh) : '',
+    );
+  };
+
+  const move = (clientX: number) => {
+    const v = valFromX(clientX);
+    if (v === null) return;
+    if (dragging.current === 'low')
+      emit(Math.max(AREA_SLIDER_MIN, Math.min(v, highRef.current - AREA_STEP)), highRef.current);
+    else
+      emit(lowRef.current, Math.min(AREA_SLIDER_MAX, Math.max(v, lowRef.current + AREA_STEP)));
+  };
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    e.preventDefault();
+    const v = valFromX(e.clientX);
+    if (v === null) return;
+    dragging.current = Math.abs(v - lowRef.current) <= Math.abs(v - highRef.current) ? 'low' : 'high';
+    move(e.clientX);
+    const onMove = (ev: MouseEvent) => move(ev.clientX);
+    const onUp   = () => { dragging.current = null; window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseup', onUp); };
+    window.addEventListener('mousemove', onMove);
+    window.addEventListener('mouseup', onUp);
+  };
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    const v = valFromX(e.touches[0].clientX);
+    if (v === null) return;
+    dragging.current = Math.abs(v - lowRef.current) <= Math.abs(v - highRef.current) ? 'low' : 'high';
+    move(e.touches[0].clientX);
+    const onMove = (ev: TouchEvent) => { ev.preventDefault(); move(ev.touches[0].clientX); };
+    const onEnd  = () => { dragging.current = null; window.removeEventListener('touchmove', onMove); window.removeEventListener('touchend', onEnd); };
+    window.addEventListener('touchmove', onMove, { passive: false });
+    window.addEventListener('touchend', onEnd);
+  };
+
+  const label = low === AREA_SLIDER_MIN && high === AREA_SLIDER_MAX
+    ? 'Cualquier área'
+    : low === AREA_SLIDER_MIN
+      ? `Hasta ${high} m²`
+      : high === AREA_SLIDER_MAX
+        ? `Desde ${low} m²`
+        : `${low} – ${high} m²`;
+
   return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: '4px', minWidth: 0 }}>
-      <input
-        type="number"
-        min={0}
-        value={areaMin}
-        onChange={e => onChangeMin(e.target.value)}
-        placeholder="Min"
-        className="search-field-input"
-        style={{ fontFamily: FONT, fontSize: '13px', fontWeight: 400, color: areaMin ? COLOR_VALUE : '#b8b8b8', background: 'transparent', border: 'none', outline: 'none', width: '46px', lineHeight: 1 }}
-      />
-      <span style={{ color: '#ccc', fontSize: '11px', flexShrink: 0 }}>–</span>
-      <input
-        type="number"
-        min={0}
-        value={areaMax}
-        onChange={e => onChangeMax(e.target.value)}
-        placeholder="Máx"
-        className="search-field-input"
-        style={{ fontFamily: FONT, fontSize: '13px', fontWeight: 400, color: areaMax ? COLOR_VALUE : '#b8b8b8', background: 'transparent', border: 'none', outline: 'none', width: '46px', lineHeight: 1 }}
-      />
-      <span style={{ fontFamily: FONT, fontSize: '11px', color: '#bbb', flexShrink: 0 }}>m²</span>
+    <div style={{ userSelect: 'none', width: '100%' }}>
+      <div
+        ref={trackRef}
+        style={{ position: 'relative', height: '20px', cursor: 'pointer', marginTop: '4px' }}
+        onMouseDown={handleMouseDown}
+        onTouchStart={handleTouchStart}
+      >
+        <div style={{ position: 'absolute', top: '50%', left: 0, right: 0, height: '3px', transform: 'translateY(-50%)', background: '#e8e8e8', borderRadius: '2px', pointerEvents: 'none' }}>
+          <div style={{ position: 'absolute', left: `${pctLow}%`, right: `${100 - pctHigh}%`, top: 0, bottom: 0, background: RED, borderRadius: '2px' }} />
+        </div>
+        <div style={{ position: 'absolute', left: `${pctLow}%`, top: '50%', transform: 'translate(-50%,-50%)', width: '10px', height: '10px', background: RED, borderRadius: '50%', pointerEvents: 'none', zIndex: 2 }} />
+        <div style={{ position: 'absolute', left: `${pctHigh}%`, top: '50%', transform: 'translate(-50%,-50%)', width: '10px', height: '10px', background: RED, borderRadius: '50%', pointerEvents: 'none', zIndex: 2 }} />
+      </div>
+      <p style={{ fontFamily: FONT, fontSize: '12px', fontWeight: 500, color: COLOR_VALUE, textAlign: 'center', margin: '8px 0 0', lineHeight: 1 }}>
+        {label}
+      </p>
     </div>
   );
 }
@@ -735,95 +801,110 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', onApply, o
             </div>
           </div>
 
-          {/* ── Filtros avanzados (mismas columnas del grid) ─────────── */}
-          {showAdvanced && <>
+          {/* ── Filtros avanzados — sub-grid propio de 4 columnas ─────── */}
+          {showAdvanced && (
+            <div style={{ gridColumn: '1 / -1', display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', borderTop: DIVIDER }}>
 
-            {/* Fila adv-1 — Col 1: Habitaciones */}
-            <div style={{ borderRight: DIVIDER, borderBottom: DIVIDER }}>
-              <div style={advContentStyle}>
-                <img src="/icons/icon-bed-red.gif" alt="" width={24} height={24} style={{ flexShrink: 0, marginTop: '2px' }} />
-                <div style={{ minWidth: 0, flex: 1 }}>
-                  <p style={labelStyle}>Habitaciones</p>
-                  <div style={{ display: 'flex', gap: '5px', marginTop: '4px', flexWrap: 'wrap' }}>
-                    {[1, 2, 3, 4, 5].map(n => (
-                      <Chip key={n} label={n === 5 ? '5+' : String(n)} active={habitaciones === n} onClick={() => setHabitaciones(habitaciones === n ? null : n)} />
-                    ))}
+              {/* Col 1: Habitaciones */}
+              <div style={{ borderRight: DIVIDER, borderBottom: DIVIDER }}>
+                <div style={advContentStyle}>
+                  <img src="/icons/icon-bed-red.gif" alt="" width={24} height={24} style={{ flexShrink: 0, marginTop: '2px' }} />
+                  <div style={{ minWidth: 0, flex: 1 }}>
+                    <p style={labelStyle}>Habitaciones</p>
+                    <div style={{ display: 'flex', gap: '5px', marginTop: '4px', flexWrap: 'wrap' }}>
+                      {[1, 2, 3, 4, 5].map(n => (
+                        <Chip key={n} label={n === 5 ? '5+' : String(n)} active={habitaciones === n} onClick={() => setHabitaciones(habitaciones === n ? null : n)} />
+                      ))}
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
 
-            {/* Fila adv-1 — Col 2: Baños */}
-            <div style={{ borderRight: DIVIDER, borderBottom: DIVIDER }}>
-              <div style={advContentStyle}>
-                <img src="/icons/icon-bathroom-red.gif" alt="" width={24} height={24} style={{ flexShrink: 0, marginTop: '2px' }} />
-                <div style={{ minWidth: 0, flex: 1 }}>
-                  <p style={labelStyle}>Baños</p>
-                  <div style={{ display: 'flex', gap: '5px', marginTop: '4px', flexWrap: 'wrap' }}>
-                    {[1, 2, 3, 4].map(n => (
-                      <Chip key={n} label={n === 4 ? '4+' : String(n)} active={banos === n} onClick={() => setBanos(banos === n ? null : n)} />
-                    ))}
+              {/* Col 2: Baños */}
+              <div style={{ borderRight: DIVIDER, borderBottom: DIVIDER }}>
+                <div style={advContentStyle}>
+                  <img src="/icons/icon-bathroom-red.gif" alt="" width={24} height={24} style={{ flexShrink: 0, marginTop: '2px' }} />
+                  <div style={{ minWidth: 0, flex: 1 }}>
+                    <p style={labelStyle}>Baños</p>
+                    <div style={{ display: 'flex', gap: '5px', marginTop: '4px', flexWrap: 'wrap' }}>
+                      {[1, 2, 3, 4].map(n => (
+                        <Chip key={n} label={n === 4 ? '4+' : String(n)} active={banos === n} onClick={() => setBanos(banos === n ? null : n)} />
+                      ))}
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
 
-            {/* Fila adv-1 — Col 3: Parqueadero */}
-            <div style={{ borderRight: DIVIDER, borderBottom: DIVIDER }}>
-              <div style={advContentStyle}>
-                <img src="/icons/icon-sliders-red.gif" alt="" width={24} height={24} style={{ flexShrink: 0, marginTop: '2px' }} />
-                <div style={{ minWidth: 0, flex: 1 }}>
-                  <p style={labelStyle}>Parqueadero</p>
-                  <div style={{ display: 'flex', gap: '5px', marginTop: '4px', flexWrap: 'nowrap' }}>
-                    <Chip label="Con parqueadero" active={parqueadero === 'con'} onClick={() => setParqueadero(parqueadero === 'con' ? null : 'con')} />
-                    <Chip label="Sin parqueadero" active={parqueadero === 'sin'} onClick={() => setParqueadero(parqueadero === 'sin' ? null : 'sin')} />
+              {/* Col 3: Parqueadero */}
+              <div style={{ borderRight: DIVIDER, borderBottom: DIVIDER }}>
+                <div style={advContentStyle}>
+                  <img src="/icons/icon-sliders-red.gif" alt="" width={24} height={24} style={{ flexShrink: 0, marginTop: '2px' }} />
+                  <div style={{ minWidth: 0, flex: 1 }}>
+                    <p style={labelStyle}>Parqueadero</p>
+                    <div style={{ display: 'flex', gap: '5px', marginTop: '4px', flexWrap: 'nowrap' }}>
+                      <Chip label="Con parqueadero" active={parqueadero === 'con'} onClick={() => setParqueadero(parqueadero === 'con' ? null : 'con')} />
+                      <Chip label="Sin parqueadero" active={parqueadero === 'sin'} onClick={() => setParqueadero(parqueadero === 'sin' ? null : 'sin')} />
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
 
-            {/* Fila adv-1 — Col 4: Área */}
-            <div style={{ borderBottom: DIVIDER }}>
-              <div style={advContentStyle}>
-                <img src="/icons/icon-area-red.gif" alt="" width={24} height={24} style={{ flexShrink: 0, marginTop: '2px' }} />
-                <div style={{ minWidth: 0, flex: 1 }}>
-                  <p style={labelStyle}>Área (m²)</p>
-                  <AreaSelect areaMin={areaMin} areaMax={areaMax} onChangeMin={setAreaMin} onChangeMax={setAreaMax} />
-                </div>
-              </div>
-            </div>
-
-            {/* Fila adv-2 — Col 1: Estrato */}
-            <div style={{ borderRight: DIVIDER }}>
-              <div style={advContentStyle}>
-                <img src="/icons/icon-code-red.gif" alt="" width={24} height={24} style={{ flexShrink: 0, marginTop: '2px' }} />
-                <div style={{ minWidth: 0, flex: 1 }}>
-                  <p style={labelStyle}>Estrato</p>
-                  <div style={{ display: 'flex', gap: '4px', marginTop: '4px', flexWrap: 'nowrap' }}>
-                    {ESTRATOS.map(e => (
-                      <Chip key={e} label={e} active={estrato.includes(e)} onClick={() => toggleEstrato(e)} />
-                    ))}
+              {/* Col 4: Área */}
+              <div style={{ borderBottom: DIVIDER }}>
+                <div style={advContentStyle}>
+                  <img src="/icons/icon-area-red.gif" alt="" width={24} height={24} style={{ flexShrink: 0, marginTop: '2px' }} />
+                  <div style={{ minWidth: 0, flex: 1 }}>
+                    <p style={labelStyle}>Área (m²)</p>
+                    <AreaRangeSlider
+                      areaMin={areaMin}
+                      areaMax={areaMax}
+                      onChange={(min, max) => {
+                        setAreaMin(min);
+                        setAreaMax(max);
+                        onApply({
+                          tipo, textoBusqueda, codigo, sector, tipoPropiedad,
+                          precioMin: precioRange[0], precioMax: precioRange[1],
+                          habitaciones, banos, parqueadero,
+                          areaMin: min, areaMax: max, estrato, comodidades,
+                        });
+                      }}
+                    />
                   </div>
                 </div>
               </div>
-            </div>
 
-            {/* Fila adv-2 — Col 2-4: Comodidades */}
-            <div style={{ gridColumn: 'span 3' }}>
-              <div style={advContentStyle}>
-                <img src="/icons/icon-favorite-red.gif" alt="" width={24} height={24} style={{ flexShrink: 0, marginTop: '2px' }} />
-                <div style={{ minWidth: 0, flex: 1 }}>
-                  <p style={labelStyle}>Comodidades</p>
-                  <div style={{ display: 'flex', gap: '5px', marginTop: '4px', flexWrap: 'wrap' }}>
-                    {COMODIDADES.map(c => (
-                      <Chip key={c} label={c} active={comodidades.includes(c)} onClick={() => toggleComodidad(c)} />
-                    ))}
+              {/* Col 1: Estrato */}
+              <div style={{ borderRight: DIVIDER }}>
+                <div style={advContentStyle}>
+                  <img src="/icons/icon-code-red.gif" alt="" width={24} height={24} style={{ flexShrink: 0, marginTop: '2px' }} />
+                  <div style={{ minWidth: 0, flex: 1 }}>
+                    <p style={labelStyle}>Estrato</p>
+                    <div style={{ display: 'flex', gap: '4px', marginTop: '4px', flexWrap: 'nowrap' }}>
+                      {ESTRATOS.map(e => (
+                        <Chip key={e} label={e} active={estrato.includes(e)} onClick={() => toggleEstrato(e)} />
+                      ))}
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
 
-          </>}
+              {/* Col 2-4: Comodidades */}
+              <div style={{ gridColumn: 'span 3' }}>
+                <div style={advContentStyle}>
+                  <img src="/icons/icon-favorite-red.gif" alt="" width={24} height={24} style={{ flexShrink: 0, marginTop: '2px' }} />
+                  <div style={{ minWidth: 0, flex: 1 }}>
+                    <p style={labelStyle}>Comodidades</p>
+                    <div style={{ display: 'flex', gap: '5px', marginTop: '4px', flexWrap: 'wrap' }}>
+                      {COMODIDADES.map(c => (
+                        <Chip key={c} label={c} active={comodidades.includes(c)} onClick={() => toggleComodidad(c)} />
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          )}
 
         </div>
 
