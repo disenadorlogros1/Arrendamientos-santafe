@@ -41,6 +41,8 @@ function computeCols(n: number): number {
 /*
  * Divide las imágenes en álbumes de 12.
  * Si el último álbum tiene menos de 6 fotos, se redistribuye con el penúltimo.
+ * Si un álbum (no el último) llena el grid exactamente (n % cols === 0),
+ * su última foto pasa al siguiente álbum para dejar espacio a la InfoCard.
  */
 function computeAlbums(images: string[]): string[][] {
   if (images.length <= 12) return [images];
@@ -57,6 +59,15 @@ function computeAlbums(images: string[]): string[][] {
     const half        = Math.ceil(combined.length / 2);
     albums[albums.length - 2] = combined.slice(0, half);
     albums[albums.length - 1] = combined.slice(half);
+  }
+  // Para álbumes no-finales: si llena el grid exactamente, pasar última foto al siguiente
+  for (let j = 0; j < albums.length - 1; j++) {
+    const n = albums[j].length;
+    const c = computeCols(n);
+    if (n % c === 0) {
+      albums[j + 1] = [albums[j][n - 1], ...albums[j + 1]];
+      albums[j]     = albums[j].slice(0, n - 1);
+    }
   }
   return albums;
 }
