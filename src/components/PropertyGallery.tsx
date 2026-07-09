@@ -39,14 +39,12 @@ function computeCols(n: number): number {
 }
 
 /*
- * Divide las imágenes en álbumes de 12.
+ * Divide las imágenes en álbumes de 11 (deja 1 slot para la InfoCard en un grid 4×3=12).
  * Si el último álbum tiene menos de 6 fotos, se redistribuye con el penúltimo.
- * Si un álbum (no el último) llena el grid exactamente (n % cols === 0),
- * su última foto pasa al siguiente álbum para dejar espacio a la InfoCard.
  */
 function computeAlbums(images: string[]): string[][] {
-  if (images.length <= 12) return [images];
-  const ALBUM_SIZE = 12;
+  if (images.length <= 11) return [images];
+  const ALBUM_SIZE = 11;
   const MIN_LAST   = 6;
   const albums: string[][] = [];
   for (let i = 0; i < images.length; i += ALBUM_SIZE) {
@@ -59,15 +57,6 @@ function computeAlbums(images: string[]): string[][] {
     const half        = Math.ceil(combined.length / 2);
     albums[albums.length - 2] = combined.slice(0, half);
     albums[albums.length - 1] = combined.slice(half);
-  }
-  // Para álbumes no-finales: si llena el grid exactamente, pasar última foto al siguiente
-  for (let j = 0; j < albums.length - 1; j++) {
-    const n = albums[j].length;
-    const c = computeCols(n);
-    if (n % c === 0) {
-      albums[j + 1] = [albums[j][n - 1], ...albums[j + 1]];
-      albums[j]     = albums[j].slice(0, n - 1);
-    }
   }
   return albums;
 }
@@ -633,9 +622,10 @@ function BentoGallery({ images, onClose, stats, title }: {
     const key = `${activeAlbum}-${gridCount}`;
     if (!injectPositions.current.has(key)) {
       const totalRows = Math.ceil(gridCount / cols);
-      /* Elige una fila aleatoria: 0 = primera, totalRows = después de la última */
+      /* Elige una fila aleatoria: 0 = primera, totalRows = después de la última.
+       * Se capea a gridCount para que la InfoCard nunca caiga fuera del grid. */
       const randomRow = Math.floor(Math.random() * (totalRows + 1));
-      injectPositions.current.set(key, randomRow * cols);
+      injectPositions.current.set(key, Math.min(randomRow * cols, gridCount));
     }
     return injectPositions.current.get(key)!;
   }, [activeAlbum, gridCount, cols]);
