@@ -45,6 +45,7 @@ const DIVIDER     = '1px solid rgba(0,0,0,0.07)';
 
 export interface PropSearchFilters {
   tipo: 'Todos' | 'Arrendar' | 'Comprar';
+  textoBusqueda: string;
   codigo: string;
   sector: string;
   tipoPropiedad: string;
@@ -61,6 +62,7 @@ export interface PropSearchFilters {
 
 export const DEFAULT_FILTERS: PropSearchFilters = {
   tipo: 'Todos',
+  textoBusqueda: '',
   codigo: '',
   sector: '',
   tipoPropiedad: '',
@@ -441,9 +443,10 @@ interface Props {
 }
 
 export default function PropiedadesSearchBar({ initialTipo = 'Todos', onApply, onShowMap, collapsed = false }: Props) {
-  const [tipo,          setTipo]          = useState<'Todos' | 'Arrendar' | 'Comprar'>(initialTipo);
-  const [codigo,        setCodigo]        = useState('');
-  const [codigoActive,  setCodigoActive]  = useState(false);
+  const [tipo,           setTipo]          = useState<'Todos' | 'Arrendar' | 'Comprar'>(initialTipo);
+  const [textoBusqueda,  setTextoBusqueda] = useState('');
+  const [codigo,         setCodigo]        = useState('');
+  const [codigoActive,   setCodigoActive]  = useState(false);
   const [sector,        setSector]        = useState('');
   const [tipoPropiedad, setTipoPropiedad] = useState('');
 
@@ -485,7 +488,7 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', onApply, o
 
   const handleApply = () => {
     onApply({
-      tipo, codigo, sector, tipoPropiedad,
+      tipo, textoBusqueda, codigo, sector, tipoPropiedad,
       precioMin: precioRange[0], precioMax: precioRange[1],
       habitaciones, banos, parqueadero,
       areaMin, areaMax, estrato, comodidades,
@@ -494,7 +497,7 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', onApply, o
 
   const handleClear = () => {
     const defaultRange = defaultPrecioRange(tipo);
-    setCodigo(''); setSector(''); setTipoPropiedad('');
+    setTextoBusqueda(''); setCodigo(''); setSector(''); setTipoPropiedad('');
     setPrecioRange(defaultRange);
     setHabitaciones(null); setBanos(null); setParqueadero(null);
     setAreaMin(''); setAreaMax(''); setEstrato([]); setComodidades([]);
@@ -527,7 +530,7 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', onApply, o
                   setTipo(t);
                   setPrecioRange(newRange);
                   onApply({
-                    tipo: t, codigo, sector, tipoPropiedad,
+                    tipo: t, textoBusqueda, codigo, sector, tipoPropiedad,
                     precioMin: newRange[0], precioMax: newRange[1],
                     habitaciones, banos, parqueadero,
                     areaMin, areaMax, estrato, comodidades,
@@ -566,13 +569,43 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', onApply, o
         }}>
         <div style={{
           display: 'grid',
-          gridTemplateColumns: codigoCollapsed ? `calc(100% - 156px) 52px 52px 52px` : '25% 25% 25% 25%',
+          gridTemplateColumns: codigoCollapsed ? `2fr 2fr 52px 52px 52px` : 'repeat(5, 1fr)',
           transition: 'grid-template-columns 0.38s cubic-bezier(0.4,0,0.2,1)',
         }}>
 
           {/* ── Fila principal ──────────────────────────────────────── */}
 
-          {/* Col 1: Código inmueble */}
+          {/* Col 1: Búsqueda libre tipo Google */}
+          <div style={{ borderRight: DIVIDER, borderBottom: DIVIDER, overflow: 'hidden', cursor: 'text' }}>
+            <div style={contentStyle}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={RED} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+                <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+              </svg>
+              <div style={{ minWidth: 0, flex: 1 }}>
+                <p style={labelStyle}>¿Qué buscas?</p>
+                <input
+                  type="text"
+                  value={textoBusqueda}
+                  onChange={e => {
+                    const v = e.target.value;
+                    setTextoBusqueda(v);
+                    onApply({
+                      tipo, textoBusqueda: v, codigo, sector, tipoPropiedad,
+                      precioMin: precioRange[0], precioMax: precioRange[1],
+                      habitaciones, banos, parqueadero,
+                      areaMin, areaMax, estrato, comodidades,
+                    });
+                  }}
+                  onFocus={() => setShowAdvanced(false)}
+                  placeholder="Ej: inmueble cerca a Niquia"
+                  className="search-field-input"
+                  style={{ fontFamily: FONT, fontSize: '14px', fontWeight: 400, color: textoBusqueda ? COLOR_VALUE : '#b8b8b8', background: 'transparent', border: 'none', outline: 'none', width: '100%', lineHeight: 1 }}
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Col 2: Código inmueble */}
           <div
             style={{ borderRight: DIVIDER, borderBottom: DIVIDER, overflow: 'hidden', cursor: 'text' }}
             onClick={() => { setCodigoActive(true); setShowAdvanced(false); }}
@@ -588,7 +621,7 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', onApply, o
                     const v = e.target.value;
                     setCodigo(v);
                     onApply({
-                      tipo, codigo: v, sector, tipoPropiedad,
+                      tipo, textoBusqueda, codigo: v, sector, tipoPropiedad,
                       precioMin: precioRange[0], precioMax: precioRange[1],
                       habitaciones, banos, parqueadero,
                       areaMin, areaMax, estrato, comodidades,

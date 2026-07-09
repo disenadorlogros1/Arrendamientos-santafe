@@ -238,6 +238,7 @@ function MapFloatButton({
 
 function hasSecondaryFilters(filters: PropSearchFilters): boolean {
   return (
+    !!filters.textoBusqueda ||
     !!filters.codigo ||
     !!filters.sector ||
     !!filters.tipoPropiedad ||
@@ -262,6 +263,15 @@ function parseArea(s: string): number {
 function applyFilters(filters: PropSearchFilters) {
   return properties.filter((p) => {
     if (filters.tipo !== 'Todos' && p.businessType && p.businessType !== filters.tipo) return false;
+
+    if (filters.textoBusqueda) {
+      const q = filters.textoBusqueda.toLowerCase();
+      const haystack = [
+        p.title, p.location, p.address, p.type, p.description, p.reference,
+        ...(p.characteristics ?? []),
+      ].filter(Boolean).join(' ').toLowerCase();
+      if (!haystack.includes(q)) return false;
+    }
 
     if (filters.codigo) {
       const q = filters.codigo.toLowerCase();
