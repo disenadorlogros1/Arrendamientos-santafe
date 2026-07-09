@@ -357,6 +357,7 @@ export default function PropiedadesPage({ initialFilter = 'Todos' }: { initialFi
 
   const [appliedFilters, setAppliedFilters] = useState<PropSearchFilters>({
     tipo: initialFilter || 'Todos',
+    textoBusqueda: '',
     codigo: '',
     sector: '',
     tipoPropiedad: '',
@@ -692,6 +693,7 @@ export default function PropiedadesPage({ initialFilter = 'Todos' }: { initialFi
                 type="button"
                 onClick={() => setAppliedFilters(prev => ({
                   tipo: prev.tipo,
+                  textoBusqueda: '',
                   sector: '',
                   precioMin: 0,
                   precioMax: getDefaultPrecioMax(prev.tipo),
