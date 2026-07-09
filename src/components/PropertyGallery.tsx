@@ -112,13 +112,12 @@ function InfoCard({ type, stats, title }: {
 
   const baseStyle: React.CSSProperties = {
     width: '100%', height: '100%',
-    display: 'flex', flexDirection: 'column',
+    display: 'flex', flexDirection: 'column', alignItems: 'center',
     padding: '20px 20px 16px',
     textDecoration: 'none',
     fontFamily: FONT,
     color: '#0d0d0d',
     background: '#fff',
-    borderTop: `3px solid ${RED}`,
     boxSizing: 'border-box',
     cursor: 'pointer',
     overflow: 'hidden',
@@ -127,7 +126,7 @@ function InfoCard({ type, stats, title }: {
 
   const bigTitle: React.CSSProperties = {
     fontSize: 39, fontWeight: 800, lineHeight: 1.1,
-    color: '#0d0d0d', marginBottom: 10,
+    color: '#0d0d0d', marginBottom: 10, textAlign: 'center',
   };
 
   const labelStyle: React.CSSProperties = {
@@ -136,7 +135,7 @@ function InfoCard({ type, stats, title }: {
   };
 
   const bodyStyle: React.CSSProperties = {
-    fontSize: 12, color: 'rgba(0,0,0,0.45)', lineHeight: 1.5, flexGrow: 1,
+    fontSize: 17, color: 'rgba(0,0,0,0.45)', lineHeight: 1.5, flexGrow: 1, textAlign: 'center',
   };
 
   const ctaStyle: React.CSSProperties = {
@@ -782,7 +781,7 @@ function BentoGallery({ images, onClose, stats, title }: {
       <style>{`
         .bento-carousel::-webkit-scrollbar { display: none; }
         .gallery-cta-btn { position: relative; overflow: hidden; }
-        .gallery-cta-btn:hover { background: #f32735 !important; border-color: #f32735 !important; }
+        .gallery-cta-btn:hover { background: #f32735 !important; border-color: #f32735 !important; color: #fff !important; }
         @keyframes gallery-ink {
           from { opacity: 1; transform: translate(-50%, -50%) scale(0); }
           to   { opacity: 0; transform: translate(-50%, -50%) scale(1); }
