@@ -96,7 +96,7 @@ function applyInkFill(e: React.MouseEvent<HTMLElement>) {
     width:${size}px; height:${size}px;
     left:${x}px; top:${y}px;
     transform:translate(-50%,-50%) scale(0);
-    background:rgba(255,255,255,0.28);
+    background:rgba(0,0,0,0.08);
     animation:gallery-ink 0.6s ease-out forwards;
   `;
   el.appendChild(ripple);
@@ -113,11 +113,11 @@ function InfoCard({ type, stats, title }: {
   const baseStyle: React.CSSProperties = {
     width: '100%', height: '100%',
     display: 'flex', flexDirection: 'column',
-    padding: '16px 16px 14px',
+    padding: '20px 20px 16px',
     textDecoration: 'none',
     fontFamily: FONT,
-    color: '#fff',
-    background: '#111',
+    color: '#0d0d0d',
+    background: '#fff',
     borderTop: `3px solid ${RED}`,
     boxSizing: 'border-box',
     cursor: 'pointer',
@@ -125,18 +125,9 @@ function InfoCard({ type, stats, title }: {
     position: 'relative',
   };
 
-  const BrandMark = () => (
-    <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 14 }}>
-      <img src="/icons/icon-favicon-white.gif" width={14} height={14} style={{ opacity: 0.7, flexShrink: 0 }} alt="" />
-      <span style={{ fontSize: 9, fontWeight: 600, letterSpacing: '0.06em', color: 'rgba(255,255,255,0.35)' }}>
-        Arrendamientos Santa Fe
-      </span>
-    </div>
-  );
-
   const bigTitle: React.CSSProperties = {
-    fontSize: 26, fontWeight: 800, lineHeight: 1.15,
-    color: '#fff', marginBottom: 10,
+    fontSize: 39, fontWeight: 800, lineHeight: 1.1,
+    color: '#0d0d0d', marginBottom: 10,
   };
 
   const labelStyle: React.CSSProperties = {
@@ -145,7 +136,7 @@ function InfoCard({ type, stats, title }: {
   };
 
   const bodyStyle: React.CSSProperties = {
-    fontSize: 12, color: 'rgba(255,255,255,0.5)', lineHeight: 1.5, flexGrow: 1,
+    fontSize: 12, color: 'rgba(0,0,0,0.45)', lineHeight: 1.5, flexGrow: 1,
   };
 
   const ctaStyle: React.CSSProperties = {
@@ -153,10 +144,10 @@ function InfoCard({ type, stats, title }: {
     width: '100%',
     padding: '10px 18px',
     background: 'transparent',
-    color: '#fff',
+    color: '#0d0d0d',
     fontSize: 12, fontWeight: 700,
     borderRadius: 999,
-    border: '1px solid rgba(255,255,255,0.45)',
+    border: '1px solid rgba(0,0,0,0.3)',
     textDecoration: 'none',
     letterSpacing: '0.03em',
     cursor: 'pointer',
@@ -176,7 +167,6 @@ function InfoCard({ type, stats, title }: {
     const href     = `/inversionistas/${slug}`;
     return (
       <a href={href} style={baseStyle} onClick={e => e.stopPropagation()}>
-        <BrandMark />
         <div style={{ flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
           <div style={bigTitle}>¿Buscas una zona para invertir?</div>
           <div style={bodyStyle}>Rentabilidades, valorización y oportunidades en {zoneName} del mercado inmobiliario.</div>
@@ -204,10 +194,9 @@ function InfoCard({ type, stats, title }: {
     ].filter(Boolean).join('  ·  ');
     return (
       <a href={href} target="_blank" rel="noopener noreferrer" style={baseStyle} onClick={e => e.stopPropagation()}>
-        <BrandMark />
         <div style={{ flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
           {stats?.price && (
-            <div style={{ fontSize: 22, fontWeight: 900, color: '#fff', lineHeight: 1.1, marginBottom: 6 }}>
+            <div style={{ fontSize: 22, fontWeight: 900, color: '#0d0d0d', lineHeight: 1.1, marginBottom: 6 }}>
               {stats.price}
             </div>
           )}
@@ -227,7 +216,6 @@ function InfoCard({ type, stats, title }: {
   if (effectiveType === 2) {
     return (
       <a href="/propiedades" style={baseStyle} onClick={e => e.stopPropagation()}>
-        <BrandMark />
         <div style={{ flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
           <div style={bigTitle}>Propiedades similares</div>
           <div style={bodyStyle}>Encuentra otras propiedades con características parecidas en nuestra oferta.</div>
@@ -249,7 +237,6 @@ function InfoCard({ type, stats, title }: {
     const href = `https://wa.me/${WA_NUM}?text=${msg}`;
     return (
       <a href={href} target="_blank" rel="noopener noreferrer" style={baseStyle} onClick={e => e.stopPropagation()}>
-        <BrandMark />
         <div style={{ flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
           <div style={bigTitle}>¿Quieres conocer esta propiedad en persona?</div>
           <div style={bodyStyle}>Coordina una visita con nuestros asesores y conoce todos los detalles.</div>
@@ -280,7 +267,6 @@ function InfoCard({ type, stats, title }: {
 
   return (
     <div style={baseStyle} onClick={e => e.stopPropagation()}>
-      <BrandMark />
       <div style={{ flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
         <div style={bigTitle}>Envía esta propiedad</div>
         <div style={bodyStyle}>Comparte los detalles con quien quieras por WhatsApp o copia el enlace.</div>
