@@ -611,28 +611,33 @@ function BentoGallery({ images, onClose, stats, title }: {
 
   /* Columnas dinámicas según cantidad de imágenes del álbum activo */
   const cols = computeCols(albumImages.length);
+  /* Si las fotos llenan el grid exactamente, quitar la última para que InfoCard no genere fila extra */
+  const gridCount  = (albumImages.length % cols === 0 && albumImages.length > 0)
+    ? albumImages.length - 1
+    : albumImages.length;
+  const gridImages = albumImages.slice(0, gridCount);
 
   /* ── Posición aleatoria de la InfoCard, estable por álbum ────── */
   const injectAt = useMemo(() => {
-    const key = `${activeAlbum}-${albumImages.length}`;
+    const key = `${activeAlbum}-${gridCount}`;
     if (!injectPositions.current.has(key)) {
-      const totalRows = Math.ceil(albumImages.length / cols);
+      const totalRows = Math.ceil(gridCount / cols);
       /* Elige una fila aleatoria: 0 = primera, totalRows = después de la última */
       const randomRow = Math.floor(Math.random() * (totalRows + 1));
       injectPositions.current.set(key, randomRow * cols);
     }
     return injectPositions.current.get(key)!;
-  }, [activeAlbum, albumImages.length, cols]);
+  }, [activeAlbum, gridCount, cols]);
 
-  /* Filas = ceil de (imágenes + 1 InfoCard) */
-  const rows = Math.ceil((albumImages.length + 1) / cols);
+  /* Filas = ceil de (imágenes en grid + 1 InfoCard) */
+  const rows = Math.ceil((gridCount + 1) / cols);
 
   /* Celdas vacías al final del grid (tras inyectar la InfoCard) */
-  const totalCells    = albumImages.length + 1;
+  const totalCells    = gridCount + 1;
   const trailingEmpty = (cols - (totalCells % cols)) % cols;
-  const lastImgIdx    = albumImages.length - 1;
+  const lastImgIdx    = gridCount - 1;
   /* ¿El último elemento del grid es la InfoCard? (injectAt >= n → InfoCard va al final) */
-  const infoCardIsLast = injectAt >= albumImages.length;
+  const infoCardIsLast = injectAt >= gridCount;
 
   /* ¿Es landscape la imagen bajo el cursor? */
   const hoveredIsLandscape = hoveredIdx !== null ? (orientations[hoveredIdx] ?? false) : false;
@@ -853,7 +858,7 @@ function BentoGallery({ images, onClose, stats, title }: {
           }}
         >
           {/* ── Imágenes: posición explícita offset por la InfoCard ── */}
-          {albumImages.map((img, idx) => {
+          {gridImages.map((img, idx) => {
             /* cellPos: posición real en el grid (desplazada +1 si InfoCard está antes) */
             const cp        = idx < injectAt ? idx : idx + 1;
             const normalCol = cp % cols;
