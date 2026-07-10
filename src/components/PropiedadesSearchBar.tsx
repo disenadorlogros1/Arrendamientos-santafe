@@ -572,14 +572,15 @@ const advContentStyle: React.CSSProperties = {
 
 interface Props {
   initialTipo?: 'Todos' | 'Arrendar' | 'Comprar';
+  initialTextoBusqueda?: string;
   onApply: (f: PropSearchFilters) => void;
   onShowMap?: () => void;
   collapsed?: boolean;
 }
 
-export default function PropiedadesSearchBar({ initialTipo = 'Todos', onApply, onShowMap, collapsed = false }: Props) {
+export default function PropiedadesSearchBar({ initialTipo = 'Todos', initialTextoBusqueda = '', onApply, onShowMap, collapsed = false }: Props) {
   const [tipo,           setTipo]          = useState<'Todos' | 'Arrendar' | 'Comprar'>(initialTipo);
-  const [textoBusqueda,  setTextoBusqueda] = useState('');
+  const [textoBusqueda,  setTextoBusqueda] = useState(initialTextoBusqueda);
   const [busquedaActive, setBusquedaActive] = useState(false);
   const [codigo,         setCodigo]        = useState('');
   const [codigoActive,   setCodigoActive]  = useState(false);

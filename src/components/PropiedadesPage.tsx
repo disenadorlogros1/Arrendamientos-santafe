@@ -333,7 +333,7 @@ function applyFilters(filters: PropSearchFilters) {
   });
 }
 
-export default function PropiedadesPage({ initialFilter = 'Todos' }: { initialFilter?: 'Todos' | 'Arrendar' | 'Comprar' }) {
+export default function PropiedadesPage({ initialFilter = 'Todos', initialQueString = '' }: { initialFilter?: 'Todos' | 'Arrendar' | 'Comprar'; initialQueString?: string }) {
   const { ref: titleRef, titleAnimating } = useSplitTextAnimation('.propiedades-title-split', 0, false);
   const subtitleRef = useRef<HTMLParagraphElement>(null);
   const cardsGridRef = useRef<HTMLDivElement>(null);
@@ -357,7 +357,7 @@ export default function PropiedadesPage({ initialFilter = 'Todos' }: { initialFi
 
   const [appliedFilters, setAppliedFilters] = useState<PropSearchFilters>({
     tipo: initialFilter || 'Todos',
-    textoBusqueda: '',
+    textoBusqueda: initialQueString,
     codigo: '',
     sector: '',
     tipoPropiedad: '',
@@ -467,6 +467,7 @@ export default function PropiedadesPage({ initialFilter = 'Todos' }: { initialFi
       <div style={{ position: 'sticky', top: '86px', zIndex: 40, backgroundColor: '#f7f6f4' }}>
         <PropiedadesSearchBar
           initialTipo={initialFilter || 'Todos'}
+          initialTextoBusqueda={initialQueString}
           onApply={setAppliedFilters}
           onShowMap={() => setShowMap(true)}
           collapsed={showMap}

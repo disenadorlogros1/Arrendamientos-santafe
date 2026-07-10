@@ -1,8 +1,8 @@
-﻿'use client';
+'use client';
 
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { createPortal } from 'react-dom';
-import gsap from 'gsap';
+import { useRouter } from 'next/navigation';
 
 /* ── Datos ───────────────────────────────────────────────────────── */
 
@@ -200,16 +200,6 @@ const COLOR_LABEL = '#888';
 const COLOR_VALUE = '#1a1a1a';
 const RED         = '#f32735';
 const RED_HOVER   = '#aa182c';
-const ICON_ONLY_W = 52; // ancho de celda colapsada
-
-/* ── Iconos GIF para estado colapsado ────────────────────────────── */
-
-const GRAY_FILTER = 'grayscale(1) opacity(0.5)';
-
-const IconCodigo    = () => <img src="/icons/icon-code-Gray.gif"     alt="" width={22} height={22} />;
-const IconUbicacion = () => <img src="/icons/icon-location-red.gif"  alt="" width={22} height={22} style={{ filter: GRAY_FILTER }} />;
-const IconTipo      = () => <img src="/icons/icon-home-red.gif"      alt="" width={22} height={22} style={{ filter: GRAY_FILTER }} />;
-const IconPrecio    = () => <img src="/icons/icon-dollar-red.gif"    alt="" width={22} height={22} style={{ filter: GRAY_FILTER }} />;
 
 /* ── CustomSelect ────────────────────────────────────────────────── */
 
@@ -353,140 +343,60 @@ interface SearchFormProps {
   onNavigate?: (page: 'propiedades') => void;
 }
 
-type FilterMode = 'default' | 'codigo' | 'filters';
-
 /* ── Componente principal ────────────────────────────────────────── */
 
 export default function SearchForm({ onNavigate }: SearchFormProps) {
-  // null = ningún tab seleccionado (ambos en blanco 40%)
-  const [searchType, setSearchType] = useState<'arrendar' | 'comprar' | null>(null);
-  const [filterMode, setFilterMode] = useState<FilterMode>('default');
+  const router = useRouter();
+
+  const [searchType,  setSearchType]  = useState<'arrendar' | 'comprar' | null>(null);
+  const [queString,   setQueString]   = useState('');
+  const [queActive,   setQueActive]   = useState(false);
   const [codigo,      setCodigo]      = useState('');
   const [sector,      setSector]      = useState('');
   const [tipo,        setTipo]        = useState('');
   const [precioRange, setPrecioRange] = useState<[number, number]>([0, 15_000_000]);
 
-  /* Refs GSAP */
-  const rowRef      = useRef<HTMLDivElement>(null);
-  const buscarRef   = useRef<HTMLButtonElement>(null);
-  const cellRefs    = useRef<(HTMLDivElement | null)[]>([null, null, null, null]);
-  const contentRefs = useRef<(HTMLDivElement | null)[]>([null, null, null, null]);
-  const iconRefs    = useRef<(HTMLDivElement | null)[]>([null, null, null, null]);
-  // Rastrea si ya fijamos anchos explícitos (para hacer lock en la primera interacción)
-  const widthsLocked = useRef(false);
+  const searchWrapRef = useRef<HTMLDivElement>(null);
+  const queInputRef   = useRef<HTMLInputElement>(null);
 
-  /* Estado inicial de iconos via GSAP (no en style prop de React) */
+  const activateQue = useCallback(() => {
+    setQueActive(true);
+    setTimeout(() => queInputRef.current?.focus(), 10);
+  }, []);
+
+  const deactivateQue = useCallback(() => {
+    setQueActive(false);
+    queInputRef.current?.blur();
+  }, []);
+
+  const handleBuscar = useCallback(() => {
+    if (queString.trim()) {
+      router.push(`/propiedades?q=${encodeURIComponent(queString.trim())}`);
+    } else {
+      onNavigate?.('propiedades');
+    }
+  }, [queString, router, onNavigate]);
+
+  /* Clic fuera del buscador → desactiva "Qué buscas" */
   useEffect(() => {
-    iconRefs.current.forEach(el => {
-      if (el) gsap.set(el, { opacity: 0, scale: 0.7 });
-    });
-  }, []);
-
-  /* Fija anchos explícitos justo antes de la primera animación */
-  const lockWidths = useCallback(() => {
-    if (widthsLocked.current) return;
-    cellRefs.current.forEach(cell => {
-      if (!cell) return;
-      const w = cell.getBoundingClientRect().width;
-      if (w > 0) {
-        // flexBasis:'auto' es crítico: Tailwind flex-1 pone flex-basis:0%
-        // Con flex-grow:0 y flex-basis:0% la celda colapsa a 0. 'auto' hace que
-        // el width explícito sea respetado por el navegador.
-        gsap.set(cell, { width: w, flexGrow: 0, flexShrink: 0, flexBasis: 'auto' });
-      }
-    });
-    widthsLocked.current = true;
-  }, []);
-
-  /* Animación coordinada (misma curva que el carrusel) */
-  const animateMode = useCallback((mode: FilterMode) => {
-    if (typeof window === 'undefined' || window.innerWidth < 1024) return;
-    if (!rowRef.current || !buscarRef.current) return;
-
-    lockWidths(); // lock en la primera interacción, no en el mount
-
-    const totalW = rowRef.current.getBoundingClientRect().width;
-    const btnW   = buscarRef.current.getBoundingClientRect().width;
-    const avail  = totalW - btnW;
-
-    const widths: [number, number, number, number] =
-      mode === 'default'
-        ? [avail / 4, avail / 4, avail / 4, avail / 4]
-        : mode === 'codigo'
-        ? [avail - 3 * ICON_ONLY_W, ICON_ONLY_W, ICON_ONLY_W, ICON_ONLY_W]
-        : [ICON_ONLY_W, (avail - ICON_ONLY_W) / 3, (avail - ICON_ONLY_W) / 3, (avail - ICON_ONLY_W) / 3];
-
-    const collapsed =
-      mode === 'default' ? [false, false, false, false]
-      : mode === 'codigo' ? [false, true,  true,  true]
-      :                     [true,  false, false, false];
-
-    /* Ancho de cada celda: power4.out = mismo impulso que las cards */
-    cellRefs.current.forEach((cell, i) => {
-      if (!cell) return;
-      // Deshabilitar flex siempre para que GSAP controle el ancho
-      gsap.set(cell, { flexGrow: 0, flexShrink: 0, flexBasis: 'auto' });
-      gsap.to(cell, { width: widths[i], duration: 0.65, ease: 'power4.out', overwrite: 'auto' });
-    });
-
-    /* Contenido que colapsa: encoge y desaparece (como card saliente) */
-    contentRefs.current.forEach((el, i) => {
-      if (!el) return;
-      if (collapsed[i]) {
-        gsap.to(el, { opacity: 0, scale: 0.85, duration: 0.2, ease: 'power2.in', overwrite: 'auto' });
-      } else {
-        gsap.to(el, { opacity: 1, scale: 1, duration: 0.4, ease: 'power3.out', delay: 0.25, overwrite: 'auto' });
-      }
-    });
-
-    /* Icono que aparece: crece y aparece (como card entrante) */
-    iconRefs.current.forEach((el, i) => {
-      if (!el) return;
-      if (collapsed[i]) {
-        gsap.to(el, { opacity: 1, scale: 1, duration: 0.3, ease: 'power3.out', delay: 0.2, overwrite: 'auto' });
-      } else {
-        gsap.to(el, { opacity: 0, scale: 0.7, duration: 0.15, ease: 'power2.in', overwrite: 'auto' });
-      }
-    });
-  }, [lockWidths]);
-
-  const handleCellClick = useCallback((clickedType: 'codigo' | 'filters') => {
-    if (typeof window !== 'undefined' && window.innerWidth < 1024) return;
-    // En modo filtros, clic sobre los filtros no hace nada (evita que el toggle
-    // regrese a 'default' y descomprima el campo código).
-    // Solo el clic sobre el icono de código puede salir del modo filtros.
-    if (filterMode === 'filters' && clickedType === 'filters') return;
-    const newMode: FilterMode = filterMode === clickedType ? 'default' : clickedType;
-    setFilterMode(newMode);
-    animateMode(newMode);
-  }, [filterMode, animateMode]);
+    if (!queActive) return;
+    const handler = (e: MouseEvent) => {
+      if (!searchWrapRef.current?.contains(e.target as Node)) deactivateQue();
+    };
+    const id = setTimeout(() => document.addEventListener('mousedown', handler), 50);
+    return () => { clearTimeout(id); document.removeEventListener('mousedown', handler); };
+  }, [queActive, deactivateQue]);
 
   /* ── Helpers de estilo ───────────────────────────────────────── */
 
-  const cellStyle = (extraStyle?: React.CSSProperties): React.CSSProperties => ({
-    position: 'relative',
-    overflow: 'hidden',
-    cursor: 'pointer',
-    ...extraStyle,
-  });
-
-  const contentStyle: React.CSSProperties = {
+  const fieldContent: React.CSSProperties = {
     display: 'flex',
     alignItems: 'center',
     gap: '12px',
     padding: '14px 20px',
     minWidth: 0,
     width: '100%',
-  };
-
-  const iconOverlayStyle: React.CSSProperties = {
-    position: 'absolute',
-    inset: 0,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    pointerEvents: 'none',
-    // opacity y transform los controla GSAP (no React) para evitar que el re-render los resetee
+    height: '52px',
   };
 
   const labelStyle: React.CSSProperties = {
@@ -499,10 +409,12 @@ export default function SearchForm({ onNavigate }: SearchFormProps) {
     whiteSpace: 'nowrap',
   };
 
+  const BORDER = '1px solid rgba(0,0,0,0.07)';
+
   /* ── Render ──────────────────────────────────────────────────── */
 
   return (
-    <div className="w-full overflow-hidden" style={{ boxShadow: '0 8px 40px rgba(0,0,0,0.35)' }}>
+    <div ref={searchWrapRef} className="w-full overflow-hidden" style={{ boxShadow: '0 8px 40px rgba(0,0,0,0.35)' }}>
 
       {/* ── Fila 1: Tabs Arrendar / Comprar ─────────────────────── */}
       <div className="flex" style={{ height: '44px' }}>
@@ -538,18 +450,35 @@ export default function SearchForm({ onNavigate }: SearchFormProps) {
         })}
       </div>
 
-      {/* ── Fila 2 mobile: filtros desplegables + CTA ─────────── */}
+      {/* ── MOBILE: filtros desplegables + CTA ───────────────────── */}
       <div className="lg:hidden">
-
-        {/* Filtros: animan con max-height cuando hay tab activo */}
         <div
           style={{
-            maxHeight: searchType ? 'min(400px, calc(100dvh - 180px))' : '0px',
+            maxHeight: searchType ? 'min(500px, calc(100dvh - 180px))' : '0px',
             overflow: searchType ? 'auto' : 'hidden',
             transition: 'max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1)',
             background: '#fff',
           }}
         >
+          {/* ¿Qué buscas? */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '14px', padding: '13px 16px', borderBottom: '1px solid rgba(0,0,0,0.06)' }}>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={RED} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+              <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            </svg>
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <p style={labelStyle}>¿Qué buscas?</p>
+              <input
+                type="text"
+                value={queString}
+                onChange={e => setQueString(e.target.value)}
+                onKeyDown={e => { if (e.key === 'Enter') handleBuscar(); }}
+                placeholder="Ej: inmueble cerca a Niquía"
+                className="search-field-input"
+                style={{ fontFamily: FONT, fontSize: '14px', fontWeight: 400, color: queString ? COLOR_VALUE : '#ccc', background: 'transparent', border: 'none', outline: 'none', width: '100%', lineHeight: 1 }}
+              />
+            </div>
+          </div>
+
           {/* Código inmueble */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '14px', padding: '13px 16px', borderBottom: '1px solid rgba(0,0,0,0.06)' }}>
             <img src="/icons/icon-code-red.gif" alt="" width={20} height={20} style={{ flexShrink: 0 }} />
@@ -603,7 +532,7 @@ export default function SearchForm({ onNavigate }: SearchFormProps) {
         {/* CTA siempre visible */}
         <button
           type="button"
-          onClick={() => onNavigate?.('propiedades')}
+          onClick={handleBuscar}
           style={{
             width: '100%',
             display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px',
@@ -621,23 +550,56 @@ export default function SearchForm({ onNavigate }: SearchFormProps) {
         </button>
       </div>
 
-      {/* ── Fila 2 desktop: filtros + botón buscar ───────────── */}
-      <div ref={rowRef} className="hidden lg:flex" style={{ background: '#fff' }}>
+      {/* ── DESKTOP: 3 filas ─────────────────────────────────────── */}
+      <div className="hidden lg:block" style={{ background: '#fff' }}>
 
-        {/* Cuatro celdas — grid en móvil, flex en desktop */}
-        <div className="flex-1 grid grid-cols-2 lg:flex lg:flex-row">
+        {/* ── Fila 2: ¿Qué buscas? (60%) + Código inmueble (40%) ── */}
+        <div style={{ display: 'flex', borderBottom: BORDER }}>
 
-          {/* ── 0: Código ── */}
+          {/* ¿Qué buscas? — 60% en reposo, 100% cuando activo */}
           <div
-            ref={el => { cellRefs.current[0] = el; }}
-            className="lg:flex-1 border-b lg:border-b-0"
-            style={cellStyle({ borderRight: '1px solid rgba(0,0,0,0.07)' })}
-            onClick={() => handleCellClick('codigo')}
+            style={{
+              width: queActive ? '100%' : '60%',
+              flexShrink: 0,
+              overflow: 'hidden',
+              borderRight: BORDER,
+              cursor: 'text',
+              transition: 'width 0.32s cubic-bezier(0.25,0.46,0.45,0.94)',
+            }}
+            onClick={activateQue}
           >
-            <div ref={el => { iconRefs.current[0] = el; }} style={iconOverlayStyle}>
-              <IconCodigo />
+            <div style={fieldContent}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={queActive ? RED : '#888'} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, transition: 'stroke 0.2s ease' }}>
+                <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+              </svg>
+              <div style={{ minWidth: 0, flex: 1 }}>
+                <p style={labelStyle}>¿Qué buscas?</p>
+                <input
+                  ref={queInputRef}
+                  type="text"
+                  value={queString}
+                  onChange={e => setQueString(e.target.value)}
+                  onKeyDown={e => { if (e.key === 'Enter') handleBuscar(); if (e.key === 'Escape') deactivateQue(); }}
+                  onFocus={activateQue}
+                  placeholder="Ej: inmueble cerca a estación del metro"
+                  className="search-field-input"
+                  style={{ fontFamily: FONT, fontSize: '14px', fontWeight: 400, color: queString ? COLOR_VALUE : '#ccc', background: 'transparent', border: 'none', outline: 'none', width: '100%', lineHeight: 1 }}
+                />
+              </div>
             </div>
-            <div ref={el => { contentRefs.current[0] = el; }} style={contentStyle}>
+          </div>
+
+          {/* Código inmueble — 40% en reposo, 0% cuando activo */}
+          <div
+            style={{
+              width: queActive ? '0%' : '40%',
+              flexShrink: 0,
+              overflow: 'hidden',
+              opacity: queActive ? 0 : 1,
+              transition: 'width 0.32s cubic-bezier(0.25,0.46,0.45,0.94), opacity 0.2s ease',
+            }}
+          >
+            <div style={fieldContent}>
               <img src="/icons/icon-code-red.gif" alt="" width={24} height={24} style={{ flexShrink: 0 }} />
               <div style={{ minWidth: 0, flex: 1 }}>
                 <p style={labelStyle}>Código inmueble</p>
@@ -647,80 +609,7 @@ export default function SearchForm({ onNavigate }: SearchFormProps) {
                   onChange={e => setCodigo(e.target.value)}
                   placeholder="Ej: 12345"
                   className="search-field-input"
-                  style={{ fontFamily: FONT, fontSize: '14px', fontWeight: 400, color: codigo ? COLOR_VALUE : '#ccc',
-                    background: 'transparent', border: 'none', outline: 'none', width: '100%', lineHeight: 1 }}
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* ── 1: Ubicación ── */}
-          <div
-            ref={el => { cellRefs.current[1] = el; }}
-            className="lg:flex-1 border-b lg:border-b-0"
-            style={cellStyle({ borderRight: '1px solid rgba(0,0,0,0.07)' })}
-            onClick={() => handleCellClick('filters')}
-          >
-            <div ref={el => { iconRefs.current[1] = el; }} style={iconOverlayStyle}>
-              <IconUbicacion />
-            </div>
-            <div ref={el => { contentRefs.current[1] = el; }} style={contentStyle}>
-              <img src="/icons/icon-location-red.gif" alt="" width={24} height={24} style={{ flexShrink: 0 }} />
-              <div style={{ minWidth: 0, flex: 1 }}>
-                <p style={labelStyle}>Ubicación</p>
-                <CustomSelect
-                  label="Ubicación" value={sector} onChange={setSector}
-                  options={SECTORES} placeholder="Seleccionar"
-                  onOpen={() => handleCellClick('filters')}
-                  searchable
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* ── 2: Tipo de propiedad ── */}
-          <div
-            ref={el => { cellRefs.current[2] = el; }}
-            className="lg:flex-1"
-            style={cellStyle({ borderRight: '1px solid rgba(0,0,0,0.07)' })}
-            onClick={() => handleCellClick('filters')}
-          >
-            <div ref={el => { iconRefs.current[2] = el; }} style={iconOverlayStyle}>
-              <IconTipo />
-            </div>
-            <div ref={el => { contentRefs.current[2] = el; }} style={contentStyle}>
-              <img src="/icons/icon-home-red.gif" alt="" width={24} height={24} style={{ flexShrink: 0 }} />
-              <div style={{ minWidth: 0, flex: 1 }}>
-                <p style={labelStyle}>Tipo de propiedad</p>
-                <CustomSelect
-                  label="Tipo" value={tipo} onChange={setTipo}
-                  options={TIPOS_INMUEBLE} placeholder="Seleccionar"
-                  onOpen={() => handleCellClick('filters')}
-                  searchable
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* ── 3: Precio ── */}
-          <div
-            ref={el => { cellRefs.current[3] = el; }}
-            className="lg:flex-1"
-            style={cellStyle()}
-            onClick={() => handleCellClick('filters')}
-          >
-            <div ref={el => { iconRefs.current[3] = el; }} style={iconOverlayStyle}>
-              <IconPrecio />
-            </div>
-            <div ref={el => { contentRefs.current[3] = el; }} style={contentStyle}>
-              <img src="/icons/icon-dollar-red.gif" alt="" width={24} height={24} style={{ flexShrink: 0, alignSelf: 'flex-start', marginTop: '2px' }} />
-              <div style={{ minWidth: 0, flex: 1 }}>
-                <p style={labelStyle}>Precio</p>
-                <PriceSelect
-                  value={precioRange}
-                  onChange={setPrecioRange}
-                  searchType={searchType}
-                  onOpen={() => handleCellClick('filters')}
+                  style={{ fontFamily: FONT, fontSize: '14px', fontWeight: 400, color: codigo ? COLOR_VALUE : '#ccc', background: 'transparent', border: 'none', outline: 'none', width: '100%', lineHeight: 1 }}
                 />
               </div>
             </div>
@@ -728,27 +617,134 @@ export default function SearchForm({ onNavigate }: SearchFormProps) {
 
         </div>
 
-        {/* ── Botón Buscar ── */}
-        <button
-          ref={buscarRef}
-          type="button"
-          onClick={() => onNavigate?.('propiedades')}
-          className="lg:px-4 xl:px-7 lg:min-w-[52px] xl:min-w-[160px]"
-          style={{
-            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
-            background: RED, color: '#fff',
-            fontFamily: FONT, fontSize: '15px', fontWeight: 500,
-            border: 'none', cursor: 'pointer',
-            flexShrink: 0,
-            transition: 'background 0.2s ease',
-          }}
-          onMouseEnter={e => (e.currentTarget.style.background = RED_HOVER)}
-          onMouseLeave={e => (e.currentTarget.style.background = RED)}
-        >
-          <img src="/icons/icon-search-white.gif" alt="" width={18} height={18} />
-          <span className="hidden xl:inline">Buscar inmueble</span>
-        </button>
+        {/* ── Fila 3: Filtros + Buscar  /  Atrás + Buscar grande ── */}
+        <div style={{ position: 'relative', height: '52px' }}>
 
+          {/* Layout normal: Ubicación | Tipo | Precio | Buscar */}
+          <div
+            style={{
+              position: 'absolute', inset: 0, display: 'flex',
+              opacity: queActive ? 0 : 1,
+              pointerEvents: queActive ? 'none' : 'auto',
+              transition: 'opacity 0.2s ease',
+            }}
+          >
+            {/* Ubicación */}
+            <div style={{ flex: 1, display: 'flex', overflow: 'hidden', borderRight: BORDER, cursor: 'pointer' }}>
+              <div style={fieldContent}>
+                <img src="/icons/icon-location-red.gif" alt="" width={24} height={24} style={{ flexShrink: 0 }} />
+                <div style={{ minWidth: 0, flex: 1 }}>
+                  <p style={labelStyle}>Ubicación</p>
+                  <CustomSelect
+                    label="Ubicación" value={sector} onChange={setSector}
+                    options={SECTORES} placeholder="Seleccionar"
+                    searchable
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Tipo de propiedad */}
+            <div style={{ flex: 1, display: 'flex', overflow: 'hidden', borderRight: BORDER, cursor: 'pointer' }}>
+              <div style={fieldContent}>
+                <img src="/icons/icon-home-red.gif" alt="" width={24} height={24} style={{ flexShrink: 0 }} />
+                <div style={{ minWidth: 0, flex: 1 }}>
+                  <p style={labelStyle}>Tipo de propiedad</p>
+                  <CustomSelect
+                    label="Tipo" value={tipo} onChange={setTipo}
+                    options={TIPOS_INMUEBLE} placeholder="Seleccionar"
+                    searchable
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Precio */}
+            <div style={{ flex: 1, display: 'flex', overflow: 'hidden', cursor: 'pointer' }}>
+              <div style={fieldContent}>
+                <img src="/icons/icon-dollar-red.gif" alt="" width={24} height={24} style={{ flexShrink: 0, alignSelf: 'flex-start', marginTop: '2px' }} />
+                <div style={{ minWidth: 0, flex: 1 }}>
+                  <p style={labelStyle}>Precio</p>
+                  <PriceSelect
+                    value={precioRange}
+                    onChange={setPrecioRange}
+                    searchType={searchType}
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Buscar inmueble */}
+            <button
+              type="button"
+              onClick={handleBuscar}
+              className="lg:px-4 xl:px-7 lg:min-w-[52px] xl:min-w-[160px]"
+              style={{
+                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
+                background: RED, color: '#fff',
+                fontFamily: FONT, fontSize: '15px', fontWeight: 500,
+                border: 'none', cursor: 'pointer',
+                flexShrink: 0,
+                transition: 'background 0.2s ease',
+              }}
+              onMouseEnter={e => (e.currentTarget.style.background = RED_HOVER)}
+              onMouseLeave={e => (e.currentTarget.style.background = RED)}
+            >
+              <img src="/icons/icon-search-white.gif" alt="" width={18} height={18} />
+              <span className="hidden xl:inline">Buscar inmueble</span>
+            </button>
+          </div>
+
+          {/* Layout queActive: Atrás (40%) | Buscar inmueble (60%) */}
+          <div
+            style={{
+              position: 'absolute', inset: 0, display: 'flex',
+              opacity: queActive ? 1 : 0,
+              pointerEvents: queActive ? 'auto' : 'none',
+              transition: 'opacity 0.28s ease 0.1s',
+            }}
+          >
+            <button
+              type="button"
+              onClick={deactivateQue}
+              style={{
+                flex: 2,
+                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px',
+                background: '#f5f5f5',
+                border: 'none', borderRight: BORDER,
+                cursor: 'pointer',
+                fontFamily: FONT, fontSize: '14px', fontWeight: 400, color: '#555',
+                transition: 'background 0.18s ease',
+              }}
+              onMouseEnter={e => (e.currentTarget.style.background = '#ebebeb')}
+              onMouseLeave={e => (e.currentTarget.style.background = '#f5f5f5')}
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="15 18 9 12 15 6"/>
+              </svg>
+              Atrás
+            </button>
+
+            <button
+              type="button"
+              onClick={handleBuscar}
+              style={{
+                flex: 3,
+                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px',
+                background: RED, color: '#fff',
+                fontFamily: FONT, fontSize: '15px', fontWeight: 600,
+                border: 'none', cursor: 'pointer',
+                transition: 'background 0.2s ease',
+              }}
+              onMouseEnter={e => (e.currentTarget.style.background = RED_HOVER)}
+              onMouseLeave={e => (e.currentTarget.style.background = RED)}
+            >
+              <img src="/icons/icon-search-white.gif" alt="" width={18} height={18} />
+              <span>Buscar inmueble</span>
+            </button>
+          </div>
+
+        </div>
       </div>
     </div>
   );

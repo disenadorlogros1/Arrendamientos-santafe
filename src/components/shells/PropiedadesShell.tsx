@@ -8,8 +8,13 @@ import { navigate } from '@/lib/navigate';
 
 export default function PropiedadesShell() {
   const [initialFilter, setInitialFilter] = useState<'Todos' | 'Arrendar' | 'Comprar'>('Todos');
+  const [initialQueString, setInitialQueString] = useState('');
 
   useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const q = params.get('q');
+    if (q) setInitialQueString(decodeURIComponent(q));
+
     const readHash = () => {
       const hash = window.location.hash.toLowerCase();
       if (hash === '#arrendar') setInitialFilter('Arrendar');
@@ -27,7 +32,7 @@ export default function PropiedadesShell() {
     <div className="min-h-screen flex flex-col">
       <Header currentPage="propiedades" onNavigate={navigate} />
       <main className="flex-1 relative" style={{ paddingTop: '86px' }}>
-        <PropiedadesPage initialFilter={initialFilter} />
+        <PropiedadesPage initialFilter={initialFilter} initialQueString={initialQueString} />
       </main>
       <Footer onNavigate={navigate} />
     </div>
