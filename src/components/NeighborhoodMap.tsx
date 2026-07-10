@@ -154,7 +154,8 @@ export default function NeighborhoodMap({ zone }: Props) {
         });
 
         hitArea.on('click', (e: any) => {
-          e.originalEvent.stopPropagation();
+          const L2 = (window as any).L;
+          L2.DomEvent.stop(e); // detiene propagación en Leaflet Y en el DOM
 
           if (activeNameRef.current === name) {
             // Mismo pin → cierra
