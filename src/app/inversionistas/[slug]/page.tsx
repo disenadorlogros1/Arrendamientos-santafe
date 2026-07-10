@@ -125,27 +125,15 @@ export default function InversionZonePage() {
           }} />
           <div style={{ maxWidth: 1120, margin: '0 auto', padding: '0 24px', position: 'relative', zIndex: 1 }}>
             <div ref={heroRef}>
-              {/* Breadcrumb */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 32 }}>
-                <img src="/icons/icon-favicon-white.gif" width={13} height={13} style={{ opacity: 0.4 }} alt="" />
-                <span style={{ fontSize: 10, fontWeight: 600, letterSpacing: '0.08em', color: 'rgba(255,255,255,0.4)' }}>
-                  Arrendamientos Santa Fe
-                </span>
-                <span style={{ color: 'rgba(255,255,255,0.2)', fontSize: 10 }}>·</span>
-                <Link href="/inversionistas" style={{ fontSize: 10, fontWeight: 500, letterSpacing: '0.06em', color: 'rgba(255,255,255,0.4)', textDecoration: 'none' }}>
-                  Zonas de inversión
-                </Link>
-              </div>
-
               {/* Badge de sector */}
-              <div style={{ display: 'inline-block', padding: '4px 12px', background: RED, color: '#fff', fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase' as const, marginBottom: 20 }}>
+              <div style={{ display: 'inline-block', padding: '4px 12px', background: RED, color: '#fff', fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase' as const, marginBottom: 12 }}>
                 {zone.sector}
               </div>
 
               <h1 style={{ fontSize: 'clamp(36px, 5vw, 64px)', fontWeight: 900, color: '#fff', lineHeight: 1.05, margin: '0 0 20px', letterSpacing: '-0.02em' }}>
                 {zone.h1Title}
               </h1>
-              <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.58)', lineHeight: 1.75, maxWidth: 640, margin: 0 }}>
+              <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.85)', lineHeight: 1.5, margin: 0 }}>
                 {zone.description}
               </p>
             </div>
@@ -155,7 +143,7 @@ export default function InversionZonePage() {
         {/* ── Stats ─────────────────────────────────────────── */}
         <section style={{ background: '#1a1a1a', padding: '0', borderBottom: '1px solid #1e1e1e' }}>
           <div style={{ maxWidth: 1120, margin: '0 auto', padding: '0 24px' }}>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 2 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr 1fr', gap: 2 }}>
               {STATS_META.map((meta) => (
                 <div key={meta.key} style={{ background: '#161616', borderTop: `3px solid ${RED}`, padding: '32px 28px 28px', boxSizing: 'border-box' as const }}>
                   <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase' as const, color: RED, marginBottom: 10 }}>
