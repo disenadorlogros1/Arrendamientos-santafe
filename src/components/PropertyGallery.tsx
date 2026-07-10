@@ -166,16 +166,15 @@ function InfoCard({ type, stats, title }: {
     const href     = `/inversionistas/${slug}`;
     return (
       <a href={href} style={baseStyle} onClick={e => e.stopPropagation()}>
-        <div style={{ flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', width: '100%' }}>
+        <div style={{ flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', width: '100%' }}>
           <div style={bigTitle}>¿Buscas una zona para invertir?</div>
           <div style={bodyStyle}>Rentabilidades, valorización y oportunidades en {zoneName} del mercado inmobiliario.</div>
         </div>
         <div style={{ height: 12 }} />
-        <a href={href} className="gallery-cta-btn" style={ctaStyle}
-          onMouseEnter={applyInkFill} onMouseLeave={applyInkFill}
-          onClick={e => e.stopPropagation()}>
+        <span className="gallery-cta-btn" style={ctaStyle}
+          onMouseEnter={applyInkFill} onMouseLeave={applyInkFill}>
           Invertir en esta zona
-        </a>
+        </span>
       </a>
     );
   }
@@ -215,11 +214,10 @@ function InfoCard({ type, stats, title }: {
           )}
         </div>
         <div style={{ height: 12 }} />
-        <a href={href} target="_blank" rel="noopener noreferrer" className="gallery-cta-btn" style={ctaStyle}
-          onMouseEnter={applyInkFill} onMouseLeave={applyInkFill}
-          onClick={e => e.stopPropagation()}>
+        <span className="gallery-cta-btn" style={ctaStyle}
+          onMouseEnter={applyInkFill} onMouseLeave={applyInkFill}>
           Hablar con un asesor
-        </a>
+        </span>
       </a>
     );
   }
@@ -228,16 +226,15 @@ function InfoCard({ type, stats, title }: {
   if (effectiveType === 2) {
     return (
       <a href="/propiedades" style={baseStyle} onClick={e => e.stopPropagation()}>
-        <div style={{ flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', width: '100%' }}>
+        <div style={{ flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', width: '100%' }}>
           <div style={bigTitle}>Propiedades similares</div>
           <div style={bodyStyle}>Encuentra otras propiedades con características parecidas en nuestra oferta.</div>
         </div>
         <div style={{ height: 12 }} />
-        <a href="/propiedades" className="gallery-cta-btn" style={ctaStyle}
-          onMouseEnter={applyInkFill} onMouseLeave={applyInkFill}
-          onClick={e => e.stopPropagation()}>
+        <span className="gallery-cta-btn" style={ctaStyle}
+          onMouseEnter={applyInkFill} onMouseLeave={applyInkFill}>
           Ver propiedades
-        </a>
+        </span>
       </a>
     );
   }
@@ -249,16 +246,15 @@ function InfoCard({ type, stats, title }: {
     const href = `https://wa.me/${WA_NUM}?text=${msg}`;
     return (
       <a href={href} target="_blank" rel="noopener noreferrer" style={baseStyle} onClick={e => e.stopPropagation()}>
-        <div style={{ flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', width: '100%' }}>
+        <div style={{ flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', width: '100%' }}>
           <div style={bigTitle}>¿Quieres conocer esta propiedad en persona?</div>
           <div style={bodyStyle}>Coordina una visita con nuestros asesores y conoce todos los detalles.</div>
         </div>
         <div style={{ height: 12 }} />
-        <a href={href} target="_blank" rel="noopener noreferrer" className="gallery-cta-btn" style={ctaStyle}
-          onMouseEnter={applyInkFill} onMouseLeave={applyInkFill}
-          onClick={e => e.stopPropagation()}>
+        <span className="gallery-cta-btn" style={ctaStyle}
+          onMouseEnter={applyInkFill} onMouseLeave={applyInkFill}>
           Agendar visita
-        </a>
+        </span>
       </a>
     );
   }
