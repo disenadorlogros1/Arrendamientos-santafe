@@ -15,6 +15,7 @@ interface Props {
   activeSector: Sector | null;
   hoveredSector: Sector | null;
   onSectorHover?: (sector: Sector | null) => void;
+  onSectorClick?: (sector: Sector) => void;
 }
 
 const RED = '#f32735';
@@ -2457,15 +2458,17 @@ const ZONE_POLYGONS: Record<string, [number, number][]> = {
 };
 
 
-export default function InversionistasLeafletMap({ activeSector, hoveredSector, onSectorHover }: Props) {
+export default function InversionistasLeafletMap({ activeSector, hoveredSector, onSectorHover, onSectorClick }: Props) {
   const containerRef     = useRef<HTMLDivElement>(null);
   const mapRef           = useRef<any>(null);
   const polygonsRef      = useRef<Record<string, { polygon: any }>>({});
   const sectorMarkersRef = useRef<Record<string, any>>({});
   const prevSectorRef    = useRef<Sector | null>(null);
   const onHoverRef       = useRef(onSectorHover);
+  const onClickRef       = useRef(onSectorClick);
   const hoverTimerRef    = useRef<any>(null);
   useEffect(() => { onHoverRef.current = onSectorHover; }, [onSectorHover]);
+  useEffect(() => { onClickRef.current = onSectorClick; }, [onSectorClick]);
 
   useEffect(() => {
     if (!document.querySelector('link[href*="leaflet"]')) {
@@ -2497,7 +2500,7 @@ export default function InversionistasLeafletMap({ activeSector, hoveredSector, 
 
         const polygon = L.polygon(coords, {
           color: '#ccc', weight: 0.5, smoothFactor: 0,
-          fillColor: '#ccc', fillOpacity: 0.05, opacity: 0.3,
+          fillColor: '#ccc', fillOpacity: 0.15, opacity: 0.5,
         }).addTo(mapRef.current);
 
         const sector = BARRIO_SECTOR[id];
@@ -2507,6 +2510,9 @@ export default function InversionistasLeafletMap({ activeSector, hoveredSector, 
         });
         polygon.on('mouseout', () => {
           hoverTimerRef.current = setTimeout(() => onHoverRef.current?.(null), 60);
+        });
+        polygon.on('click', () => {
+          if (sector) onClickRef.current?.(sector);
         });
 
         polygonsRef.current[id] = { polygon };
@@ -2519,8 +2525,8 @@ export default function InversionistasLeafletMap({ activeSector, hoveredSector, 
           className: '',
           html: `<div style="transform:translate(-50%,-50%);text-align:center;pointer-events:none;white-space:nowrap">
             <div style="font-family:'Avenir LT Std','Outfit',sans-serif;font-size:40px;font-weight:900;color:#fff;line-height:1;text-shadow:0 2px 10px rgba(0,0,0,0.4);white-space:nowrap">${stats.barrios} Barrios</div>
-            <div style="font-family:'Avenir LT Std','Outfit',sans-serif;font-size:13px;font-weight:400;color:rgba(255,255,255,0.85);margin-top:4px;white-space:nowrap">${stats.municipios} municipios</div>
-            <div style="font-family:'Avenir LT Std','Outfit',sans-serif;font-size:11px;font-weight:700;color:#fff;background:${RED};padding:3px 10px;margin-top:6px;white-space:nowrap;display:inline-block">${stats.propiedades} propiedades</div>
+            <div style="font-family:'Avenir LT Std','Outfit',sans-serif;font-size:22px;font-weight:700;color:#fff;text-shadow:0 2px 8px rgba(0,0,0,0.4);margin-top:2px;white-space:nowrap">${stats.municipios} Municipios</div>
+            <div style="font-family:'Avenir LT Std','Outfit',sans-serif;font-size:11px;font-weight:700;color:#fff;background:${RED};padding:3px 10px;margin-top:3px;white-space:nowrap;display:inline-block">${stats.propiedades} propiedades</div>
           </div>`,
           iconSize:   [0, 0],
           iconAnchor: [0, 0],
@@ -2566,7 +2572,7 @@ export default function InversionistasLeafletMap({ activeSector, hoveredSector, 
       } else if (inActive) {
         refs.polygon.setStyle({ color: RED, weight: 0, fillColor: RED, fillOpacity: 0.22, opacity: 0 });
       } else {
-        refs.polygon.setStyle({ color: '#ccc', weight: 0.4, fillColor: '#ccc', fillOpacity: 0.04, opacity: 0.25 });
+        refs.polygon.setStyle({ color: '#ccc', weight: 0.4, fillColor: '#ccc', fillOpacity: 0.12, opacity: 0.45 });
       }
     }
 

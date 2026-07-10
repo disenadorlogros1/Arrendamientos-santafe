@@ -47,7 +47,7 @@ function CountMetric({ value, accent }: { value: string; accent?: boolean }) {
     return () => observer.disconnect();
   }, [value]);
   return (
-    <div ref={divRef} style={{ fontSize: 22, fontWeight: 900, color: accent ? RED : '#1a1a1a', lineHeight: 1 }}>
+    <div ref={divRef} style={{ fontSize: 40, fontWeight: 900, color: accent ? RED : '#1a1a1a', lineHeight: 1 }}>
       {displayed}
     </div>
   );
@@ -246,6 +246,7 @@ export default function InversionistasPage() {
                 activeSector={activeSector}
                 hoveredSector={hoveredSector}
                 onSectorHover={handleMapHover}
+                onSectorClick={setActiveSector}
               />
             </div>
 
@@ -270,7 +271,7 @@ export default function InversionistasPage() {
                     overflow: 'hidden',
                     opacity: anyHov && !isHov ? 0 : 1,
                     background: '#fff',
-                    borderTop: `3px solid ${RED}`,
+                    borderTop: 'none',
                     display: 'flex',
                     flexDirection: 'column',
                     transition: 'flex 0.35s cubic-bezier(0.25,0.46,0.45,0.94), opacity 0.25s ease',
