@@ -139,31 +139,12 @@ export default function NeighborhoodMap({ zone }: Props) {
           radius: 500, color: 'transparent', weight: 0, fillOpacity: 0,
         }).addTo(mapRef.current);
 
-        /* Hover visual — pin rojo y escala, sin abrir panel */
-        hitArea.on('mouseover', () => {
-          if (activeNameRef.current === name) return; // ya activo, no sobreescribir
-          const L2 = (window as any).L;
-          pin.setIcon(L2.divIcon({ className: '', html: pinHtml(true), iconSize: [0,0], iconAnchor: [0,0] }));
-          label.setIcon(L2.divIcon({ className: '', html: labelHtml(name, true), iconSize: [0,0], iconAnchor: [0,0] }));
-        });
-        hitArea.on('mouseout', () => {
-          if (activeNameRef.current === name) return; // panel abierto, no resetear
-          const L2 = (window as any).L;
-          pin.setIcon(L2.divIcon({ className: '', html: pinHtml(false), iconSize: [0,0], iconAnchor: [0,0] }));
-          label.setIcon(L2.divIcon({ className: '', html: labelHtml(name, false), iconSize: [0,0], iconAnchor: [0,0] }));
-        });
-
-        hitArea.on('click', (e: any) => {
-          const L2 = (window as any).L;
-          L2.DomEvent.stop(e); // detiene propagación en Leaflet Y en el DOM
-
+        const openPin = (e?: any) => {
+          if (e) { const L2 = (window as any).L; L2.DomEvent.stop(e); }
           if (activeNameRef.current === name) {
-            // Mismo pin → cierra
             closePanelRef.current();
           } else {
-            // Desactiva pin anterior
             if (activeNameRef.current) deactivate(activeNameRef.current);
-            // Activa nuevo pin
             activate(name);
             activeNameRef.current = name;
             setActive({
@@ -175,7 +156,27 @@ export default function NeighborhoodMap({ zone }: Props) {
               imageIdx:    data.imageIdx,
             });
           }
+        };
+
+        /* Clic en el pin (área visible) — abre/cierra panel */
+        pin.on('click', openPin);
+
+        /* Hover visual via hitArea — área ampliada alrededor del pin */
+        hitArea.on('mouseover', () => {
+          if (activeNameRef.current === name) return;
+          const L2 = (window as any).L;
+          pin.setIcon(L2.divIcon({ className: '', html: pinHtml(true), iconSize: [0,0], iconAnchor: [0,0] }));
+          label.setIcon(L2.divIcon({ className: '', html: labelHtml(name, true), iconSize: [0,0], iconAnchor: [0,0] }));
         });
+        hitArea.on('mouseout', () => {
+          if (activeNameRef.current === name) return;
+          const L2 = (window as any).L;
+          pin.setIcon(L2.divIcon({ className: '', html: pinHtml(false), iconSize: [0,0], iconAnchor: [0,0] }));
+          label.setIcon(L2.divIcon({ className: '', html: labelHtml(name, false), iconSize: [0,0], iconAnchor: [0,0] }));
+        });
+
+        /* Clic en hitArea como fallback (por si el pin no captura) */
+        hitArea.on('click', openPin);
 
         markersRef.current[name] = { pin, label, hitArea };
       }
