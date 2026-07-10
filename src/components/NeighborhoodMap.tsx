@@ -74,15 +74,14 @@ export default function NeighborhoodMap({ zone }: Props) {
 
     const labelHtml = (label: string, isActive: boolean) =>
       `<div style="
-        padding:3px 8px;
-        background:${isActive ? RED : 'rgba(255,255,255,0.92)'};
-        border:1px solid ${isActive ? RED : 'rgba(0,0,0,0.12)'};
+        padding:2px 7px;
+        background:transparent;
         font-family:'Avenir LT Std','Outfit',sans-serif;
         font-size:9px; font-weight:700; letter-spacing:0.04em;
-        color:${isActive ? '#fff' : '#222'}; white-space:nowrap;
+        color:${isActive ? RED : '#444'}; white-space:nowrap;
         transform:translate(-50%,6px);
-        box-shadow:0 1px 6px rgba(0,0,0,0.12);
         pointer-events:none;
+        text-shadow: 0 1px 3px rgba(255,255,255,0.9), 0 0 6px rgba(255,255,255,0.7);
       ">${label}</div>`;
 
     const deactivate = (name: string) => {
@@ -139,6 +138,20 @@ export default function NeighborhoodMap({ zone }: Props) {
         const hitArea = L.circle([data.lat, data.lng], {
           radius: 500, color: 'transparent', weight: 0, fillOpacity: 0,
         }).addTo(mapRef.current);
+
+        /* Hover visual — pin rojo y escala, sin abrir panel */
+        hitArea.on('mouseover', () => {
+          if (activeNameRef.current === name) return; // ya activo, no sobreescribir
+          const L2 = (window as any).L;
+          pin.setIcon(L2.divIcon({ className: '', html: pinHtml(true), iconSize: [0,0], iconAnchor: [0,0] }));
+          label.setIcon(L2.divIcon({ className: '', html: labelHtml(name, true), iconSize: [0,0], iconAnchor: [0,0] }));
+        });
+        hitArea.on('mouseout', () => {
+          if (activeNameRef.current === name) return; // panel abierto, no resetear
+          const L2 = (window as any).L;
+          pin.setIcon(L2.divIcon({ className: '', html: pinHtml(false), iconSize: [0,0], iconAnchor: [0,0] }));
+          label.setIcon(L2.divIcon({ className: '', html: labelHtml(name, false), iconSize: [0,0], iconAnchor: [0,0] }));
+        });
 
         hitArea.on('click', (e: any) => {
           e.originalEvent.stopPropagation();
