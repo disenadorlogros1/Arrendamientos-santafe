@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { createPortal } from 'react-dom';
-import { X, ChevronLeft, ChevronRight } from 'lucide-react';
+import { X, ChevronLeft, ChevronRight, BedDouble, Bath, Maximize2, Car } from 'lucide-react';
 import { useCountAnimation } from '@/hooks/useCountAnimation';
 
 /* ─── Constants ────────────────────────────────────────────────── */
@@ -185,21 +185,31 @@ function InfoCard({ type, stats, title }: {
     const ref  = stats?.reference ?? '';
     const msg  = encodeURIComponent(`Hola, me interesa la propiedad${ref ? ` ${ref}` : ''} (${title}). ¿Podrían darme más información?`);
     const href = `https://wa.me/${WA_NUM}?text=${msg}`;
-    const attrs = [
-      stats?.bedrooms  ? `${stats.bedrooms} hab.`  : null,
-      stats?.bathrooms ? `${stats.bathrooms} baños` : null,
-      stats?.area      ? stats.area                 : null,
-      stats?.parking   ? `${stats.parking} parq.`  : null,
-    ].filter(Boolean).join('  ·  ');
+    const iconItems = [
+      stats?.bedrooms  ? { icon: <BedDouble  size={20} strokeWidth={1.4} />, value: stats.bedrooms,  label: 'hab.' }  : null,
+      stats?.bathrooms ? { icon: <Bath       size={20} strokeWidth={1.4} />, value: stats.bathrooms, label: 'baños' } : null,
+      stats?.area      ? { icon: <Maximize2  size={20} strokeWidth={1.4} />, value: stats.area,      label: 'área' }  : null,
+      stats?.parking   ? { icon: <Car        size={20} strokeWidth={1.4} />, value: stats.parking,   label: 'parq.' } : null,
+    ].filter(Boolean) as { icon: React.ReactNode; value: string | number; label: string }[];
     return (
       <a href={href} target="_blank" rel="noopener noreferrer" style={baseStyle} onClick={e => e.stopPropagation()}>
-        <div style={{ flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', width: '100%' }}>
+        <div style={{ flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', width: '100%' }}>
           {stats?.price && (
-            <div style={{ fontSize: 22, fontWeight: 900, color: '#0d0d0d', lineHeight: 1.1, marginBottom: 6 }}>
+            <div style={{ fontSize: 22, fontWeight: 900, color: '#0d0d0d', lineHeight: 1.1, marginBottom: 16, textAlign: 'center', width: '100%' }}>
               {stats.price}
             </div>
           )}
-          {attrs && <div style={bodyStyle}>{attrs}</div>}
+          {iconItems.length > 0 && (
+            <div style={{ display: 'grid', gridTemplateColumns: `repeat(${iconItems.length}, 1fr)`, gap: '4px 6px', width: '100%' }}>
+              {iconItems.map((item, i) => (
+                <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 5 }}>
+                  <span style={{ color: 'rgba(0,0,0,0.3)', display: 'flex' }}>{item.icon}</span>
+                  <span style={{ fontSize: 13, fontWeight: 800, color: '#0d0d0d', lineHeight: 1 }}>{item.value}</span>
+                  <span style={{ fontSize: 10, color: 'rgba(0,0,0,0.4)', textTransform: 'uppercase', letterSpacing: '0.07em' }}>{item.label}</span>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
         <div style={{ height: 12 }} />
         <a href={href} target="_blank" rel="noopener noreferrer" className="gallery-cta-btn" style={ctaStyle}
@@ -266,7 +276,7 @@ function InfoCard({ type, stats, title }: {
 
   return (
     <div style={baseStyle} onClick={e => e.stopPropagation()}>
-      <div style={{ flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+      <div style={{ flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', width: '100%' }}>
         <div style={bigTitle}>Envía esta propiedad</div>
         <div style={bodyStyle}>Comparte los detalles con quien quieras por WhatsApp o copia el enlace.</div>
       </div>
