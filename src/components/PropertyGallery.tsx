@@ -195,19 +195,20 @@ function InfoCard({ type, stats, title }: {
         <div style={{ flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', width: '100%' }}>
           {stats?.price && (
             <>
-              <div style={{ ...labelStyle, textAlign: 'center', marginBottom: 4 }}>Precio de la propiedad</div>
+              <div style={{ ...labelStyle, textAlign: 'center', marginBottom: 4, textTransform: 'none' }}>Precio de la propiedad</div>
               <div style={{ fontSize: 22, fontWeight: 900, color: '#0d0d0d', lineHeight: 1.1, marginBottom: 20, textAlign: 'center', width: '100%' }}>
                 {stats.price}
               </div>
             </>
           )}
           {iconItems.length > 0 && (
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '12px 8px', width: '100%' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '16px 8px', width: '100%' }}>
               {iconItems.map((item, i) => (
-                <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 5 }}>
+                <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>
                   <span style={{ color: 'rgba(0,0,0,0.3)', display: 'flex' }}>{item.icon}</span>
-                  <span style={{ fontSize: 13, fontWeight: 800, color: '#0d0d0d', lineHeight: 1 }}>{item.value}</span>
-                  <span style={{ fontSize: 10, color: 'rgba(0,0,0,0.4)', textTransform: 'uppercase', letterSpacing: '0.07em' }}>{item.label}</span>
+                  <span style={{ fontFamily: FONT, fontSize: 13, fontWeight: 700, color: '#0d0d0d', lineHeight: 1 }}>
+                    {item.value} <span style={{ fontWeight: 400, color: 'rgba(0,0,0,0.45)' }}>{item.label}</span>
+                  </span>
                 </div>
               ))}
             </div>
