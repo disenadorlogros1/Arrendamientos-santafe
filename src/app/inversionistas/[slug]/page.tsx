@@ -206,7 +206,7 @@ export default function InversionZonePage() {
             <ScrollReveal y={16}>
               <div style={{ marginBottom: 24 }}>
                 <h2 style={{ fontSize: 'clamp(26px, 3.5vw, 40px)', fontWeight: 900, color: '#1a1a1a', margin: 0, letterSpacing: '-0.01em' }}>
-                  <span style={{ fontWeight: 300, color: '#888' }}>Ventajas de </span>{zone.name}
+                  <span style={{ fontWeight: 300, color: '#888' }}>Ventajas del </span><span style={{ color: '#888' }}>{zone.name}</span>
                 </h2>
               </div>
             </ScrollReveal>
@@ -227,10 +227,7 @@ export default function InversionZonePage() {
         </section>
 
         {/* ── Mapa de barrios ───────────────────────────────── */}
-        <section style={{ background: DARK2, borderBottom: '1px solid #f5f5f5' }}>
-          <div style={{ maxWidth: 1120, margin: '0 auto', padding: '0 24px' }}>
-            <div style={{ height: 48 }} />
-          </div>
+        <section style={{ borderBottom: '1px solid #f5f5f5', isolation: 'isolate' as any }}>
           <NeighborhoodMap zone={zone} />
         </section>
 
@@ -284,11 +281,11 @@ export default function InversionZonePage() {
         {/* ── Otras zonas ───────────────────────────────────── */}
         <section style={{ background: '#fff', padding: '32px 0 72px', borderBottom: '1px solid #f5f5f5' }}>
           <div style={{ maxWidth: 1120, margin: '0 auto', padding: '0 24px' }}>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 2 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: `repeat(${otherZones.length}, 1fr)`, border: '1px solid #f0f0f0' }}>
               {otherZones.map((z, i) => (
-                <ScrollReveal key={z.id} delay={i * 0.08} y={14}>
+                <div key={z.id} style={{ borderRight: i < otherZones.length - 1 ? '1px solid #f0f0f0' : 'none' }}>
                   <OtherZoneCard zone={z} />
-                </ScrollReveal>
+                </div>
               ))}
             </div>
           </div>
@@ -298,8 +295,8 @@ export default function InversionZonePage() {
         <section style={{ background: '#f5f5f5', padding: '80px 24px' }}>
           <div style={{ maxWidth: 580, margin: '0 auto', textAlign: 'center' as const }}>
             <ScrollReveal y={16}>
-              <h2 style={{ fontSize: 'clamp(28px, 4vw, 48px)', fontWeight: 900, color: '#1a1a1a', margin: '0 0 12px', lineHeight: 1.05, letterSpacing: '-0.01em' }}>
-                ¿Listo para invertir en {zone.name}?
+              <h2 style={{ fontSize: 'clamp(28px, 4vw, 48px)', fontWeight: 900, color: '#888', margin: '0 0 12px', lineHeight: 1.05, letterSpacing: '-0.01em' }}>
+                <span style={{ fontWeight: 300 }}>¿Listo para </span>invertir en {zone.name}?
               </h2>
               <p style={{ fontSize: 15, color: '#555', margin: '0 0 40px', lineHeight: 1.65 }}>
                 Nuestros asesores te acompañan desde la búsqueda hasta la gestión del arrendamiento.
@@ -337,19 +334,25 @@ export default function InversionZonePage() {
 
 /* ── Tarjeta de otra zona ─────────────────────────────────── */
 function OtherZoneCard({ zone }: { zone: typeof investmentZones[0] }) {
+  const [btnHovered, setBtnHovered] = useState(false);
+
+  const handleBtnEnter = (e: React.MouseEvent<HTMLSpanElement>) => {
+    setBtnHovered(true);
+    applyInkFill(e);
+  };
+
   return (
     <Link
       href={`/inversionistas/${zone.slug}`}
       style={{
         display: 'flex', flexDirection: 'column', alignItems: 'center',
         background: '#fff',
-        padding: '28px 22px 24px',
+        padding: '32px 24px 28px',
         textDecoration: 'none',
         boxSizing: 'border-box' as const,
         height: '100%',
         fontFamily: FONT,
         textAlign: 'center' as const,
-        border: '1px solid #f0f0f0',
       }}
     >
       <div style={{ fontSize: 20, fontWeight: 800, color: '#1a1a1a', marginBottom: 10, lineHeight: 1.15 }}>
@@ -358,17 +361,27 @@ function OtherZoneCard({ zone }: { zone: typeof investmentZones[0] }) {
       <div style={{ fontSize: 12, color: '#888', marginBottom: 4 }}>
         <span style={{ color: RED, fontWeight: 700 }}>{zone.rentability}</span> rentabilidad
       </div>
-      <div style={{ fontSize: 12, color: '#888', marginBottom: 20 }}>
+      <div style={{ fontSize: 12, color: '#888', marginBottom: 24 }}>
         {zone.pricePerM2} / m²
       </div>
       <div style={{ marginTop: 'auto' }}>
-        <span style={{
-          display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-          padding: '9px 24px',
-          background: RED, color: '#fff',
-          fontSize: 12, fontWeight: 700, letterSpacing: '0.03em',
-          borderRadius: 999,
-        }}>
+        <span
+          style={{
+            display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+            padding: '9px 24px',
+            background: btnHovered ? RED : 'transparent',
+            color: btnHovered ? '#fff' : RED,
+            fontSize: 12, fontWeight: 700, letterSpacing: '0.03em',
+            borderRadius: 999,
+            border: `1px solid ${RED}`,
+            transition: 'background 0.22s ease, color 0.22s ease',
+            position: 'relative' as const,
+            overflow: 'hidden' as const,
+            cursor: 'pointer',
+          }}
+          onMouseEnter={handleBtnEnter}
+          onMouseLeave={() => setBtnHovered(false)}
+        >
           Ver análisis
         </span>
       </div>

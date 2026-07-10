@@ -32,7 +32,7 @@ interface Props {
   zone: InvestmentZone;
 }
 
-interface HoveredNeighborhood {
+interface ActiveNeighborhood {
   name: string;
   rentBlurb: string;
   buyBlurb: string;
@@ -49,38 +49,65 @@ const ZONE_CENTER: Record<string, { lat: number; lng: number; zoom: number }> = 
 };
 
 export default function NeighborhoodMap({ zone }: Props) {
-  const containerRef  = useRef<HTMLDivElement>(null);
-  const mapRef        = useRef<any>(null);
-  const markersRef    = useRef<Record<string, any>>({});
-  const [hovered, setHovered] = useState<HoveredNeighborhood | null>(null);
+  const containerRef     = useRef<HTMLDivElement>(null);
+  const panelRef         = useRef<HTMLDivElement>(null);
+  const mapRef           = useRef<any>(null);
+  const markersRef       = useRef<Record<string, any>>({});
+  const activeNameRef    = useRef<string | null>(null);
+  const closePanelRef    = useRef<() => void>(() => {});
+  const [active, setActive] = useState<ActiveNeighborhood | null>(null);
 
   useEffect(() => {
-    const subzones  = zone.subzones;
-    const viewConf  = ZONE_CENTER[zone.slug] ?? { lat: 6.25, lng: -75.58, zoom: 12 };
+    const subzones = zone.subzones;
+    const viewConf = ZONE_CENTER[zone.slug] ?? { lat: 6.25, lng: -75.58, zoom: 12 };
 
-    const pinHtml = (active: boolean) => {
-      const fill = active ? RED : '#222';
-      const scale = active ? 1.35 : 1;
+    const pinHtml = (isActive: boolean) => {
+      const fill  = isActive ? RED : '#222';
+      const scale = isActive ? 1.35 : 1;
       return `<div style="transform:translate(-50%,-100%) scale(${scale});transform-origin:50% 100%;transition:transform 0.18s ease;pointer-events:none;">
-        <svg width="22" height="30" viewBox="0 0 22 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg width="22" height="30" viewBox="0 0 22 30" fill="none">
           <path d="M11 0C4.925 0 0 4.925 0 11C0 19.25 11 30 11 30C11 30 22 19.25 22 11C22 4.925 17.075 0 11 0Z" fill="${fill}"/>
           <circle cx="11" cy="11" r="4.5" fill="white"/>
         </svg>
       </div>`;
     };
 
-    const labelHtml = (label: string, active: boolean) =>
+    const labelHtml = (label: string, isActive: boolean) =>
       `<div style="
         padding:3px 8px;
-        background:${active ? RED : 'rgba(255,255,255,0.92)'};
-        border:1px solid ${active ? RED : 'rgba(0,0,0,0.12)'};
+        background:${isActive ? RED : 'rgba(255,255,255,0.92)'};
+        border:1px solid ${isActive ? RED : 'rgba(0,0,0,0.12)'};
         font-family:'Avenir LT Std','Outfit',sans-serif;
         font-size:9px; font-weight:700; letter-spacing:0.04em;
-        color:${active ? '#fff' : '#222'}; white-space:nowrap;
+        color:${isActive ? '#fff' : '#222'}; white-space:nowrap;
         transform:translate(-50%,6px);
         box-shadow:0 1px 6px rgba(0,0,0,0.12);
         pointer-events:none;
       ">${label}</div>`;
+
+    const deactivate = (name: string) => {
+      const m = markersRef.current[name];
+      if (!m) return;
+      const L = (window as any).L;
+      m.pin.setIcon(L.divIcon({ className: '', html: pinHtml(false), iconSize: [0,0], iconAnchor: [0,0] }));
+      m.label.setIcon(L.divIcon({ className: '', html: labelHtml(name, false), iconSize: [0,0], iconAnchor: [0,0] }));
+    };
+
+    const activate = (name: string) => {
+      const m = markersRef.current[name];
+      if (!m) return;
+      const L = (window as any).L;
+      m.pin.setIcon(L.divIcon({ className: '', html: pinHtml(true), iconSize: [0,0], iconAnchor: [0,0] }));
+      m.label.setIcon(L.divIcon({ className: '', html: labelHtml(name, true), iconSize: [0,0], iconAnchor: [0,0] }));
+    };
+
+    closePanelRef.current = () => {
+      if (activeNameRef.current) {
+        deactivate(activeNameRef.current);
+        activeNameRef.current = null;
+      }
+      setActive(null);
+    };
 
     const init = () => {
       if (!containerRef.current || mapRef.current) return;
@@ -103,47 +130,46 @@ export default function NeighborhoodMap({ zone }: Props) {
         const data = NEIGHBORHOOD_DATA[name];
         if (!data) continue;
 
-        const pinIcon = L.divIcon({
-          className: '',
-          html: pinHtml(false),
-          iconSize:   [0, 0],
-          iconAnchor: [0, 0],
-        });
-        const pin = L.marker([data.lat, data.lng], { icon: pinIcon }).addTo(mapRef.current);
+        const pinIcon = L.divIcon({ className: '', html: pinHtml(false), iconSize: [0,0], iconAnchor: [0,0] });
+        const pin     = L.marker([data.lat, data.lng], { icon: pinIcon }).addTo(mapRef.current);
 
-        const labelIcon = L.divIcon({
-          className: '',
-          html: labelHtml(name, false),
-          iconSize:   [0, 0],
-          iconAnchor: [0, 0],
-        });
-        const label = L.marker([data.lat, data.lng], { icon: labelIcon, interactive: false }).addTo(mapRef.current);
+        const labelIcon = L.divIcon({ className: '', html: labelHtml(name, false), iconSize: [0,0], iconAnchor: [0,0] });
+        const label     = L.marker([data.lat, data.lng], { icon: labelIcon, interactive: false }).addTo(mapRef.current);
 
         const hitArea = L.circle([data.lat, data.lng], {
           radius: 500, color: 'transparent', weight: 0, fillOpacity: 0,
         }).addTo(mapRef.current);
 
-        hitArea.on('mouseover', () => {
-          pin.setIcon(L.divIcon({ className: '', html: pinHtml(true), iconSize: [0,0], iconAnchor: [0,0] }));
-          label.setIcon(L.divIcon({ className: '', html: labelHtml(name, true), iconSize: [0,0], iconAnchor: [0,0] }));
-          setHovered({
-            name:        data.name,
-            rentBlurb:   data.rentBlurb,
-            buyBlurb:    data.buyBlurb,
-            rentability: data.rentability,
-            avgPrice:    data.avgPrice,
-            imageIdx:    data.imageIdx,
-          });
-        });
+        hitArea.on('click', (e: any) => {
+          e.originalEvent.stopPropagation();
 
-        hitArea.on('mouseout', () => {
-          pin.setIcon(L.divIcon({ className: '', html: pinHtml(false), iconSize: [0,0], iconAnchor: [0,0] }));
-          label.setIcon(L.divIcon({ className: '', html: labelHtml(name, false), iconSize: [0,0], iconAnchor: [0,0] }));
-          setHovered(null);
+          if (activeNameRef.current === name) {
+            // Mismo pin → cierra
+            closePanelRef.current();
+          } else {
+            // Desactiva pin anterior
+            if (activeNameRef.current) deactivate(activeNameRef.current);
+            // Activa nuevo pin
+            activate(name);
+            activeNameRef.current = name;
+            setActive({
+              name:        data.name,
+              rentBlurb:   data.rentBlurb,
+              buyBlurb:    data.buyBlurb,
+              rentability: data.rentability,
+              avgPrice:    data.avgPrice,
+              imageIdx:    data.imageIdx,
+            });
+          }
         });
 
         markersRef.current[name] = { pin, label, hitArea };
       }
+
+      // Clic en el mapa (fuera de pins) → cierra
+      mapRef.current.on('click', () => {
+        closePanelRef.current();
+      });
     };
 
     if ((window as any).L) {
@@ -167,55 +193,95 @@ export default function NeighborhoodMap({ zone }: Props) {
         mapRef.current.remove();
         mapRef.current = null;
         markersRef.current = {};
+        activeNameRef.current = null;
       }
     };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [zone.slug]);
 
-  const imgSrc = hovered
-    ? `/images/barrios/${NAME_TO_SLUG[hovered.name] ?? 'el-poblado'}.jpg`
+  /* Clic fuera del panel (en el DOM principal) → cierra */
+  useEffect(() => {
+    if (!active) return;
+    const handler = (e: MouseEvent) => {
+      const target = e.target as Node;
+      if (
+        !panelRef.current?.contains(target) &&
+        !containerRef.current?.contains(target)
+      ) {
+        closePanelRef.current();
+      }
+    };
+    const timer = setTimeout(() => document.addEventListener('click', handler), 100);
+    return () => {
+      clearTimeout(timer);
+      document.removeEventListener('click', handler);
+    };
+  }, [active]);
+
+  const imgSrc = active
+    ? `/images/barrios/${NAME_TO_SLUG[active.name] ?? 'el-poblado'}.jpg`
     : null;
 
   return (
-    <div style={{ position: 'relative', width: '100%', height: 480, overflow: 'hidden' }}>
-      {/* Mapa — ocupa todo el contenedor */}
+    <div style={{ position: 'relative', width: '100%', height: 480, overflow: 'hidden', isolation: 'isolate' as any }}>
+      {/* Mapa full width */}
       <div ref={containerRef} style={{ width: '100%', height: '100%', background: '#f5f5f5' }} />
 
-      {/* Badge "X sectores" — top-right sobre el mapa, se oculta al hover */}
+      {/* Badge "X sectores" — se oculta cuando panel está abierto */}
       <div style={{
-        position: 'absolute', top: 16, right: 16, zIndex: 1000,
+        position: 'absolute', top: 16, right: 16, zIndex: 10,
         padding: '6px 14px',
         background: 'rgba(255,255,255,0.92)', backdropFilter: 'blur(8px)',
         border: '1px solid rgba(0,0,0,0.1)',
-        fontFamily: FONT,
-        fontSize: 10, fontWeight: 600, letterSpacing: '0.08em', color: '#888',
-        opacity: hovered ? 0 : 1,
+        fontFamily: FONT, fontSize: 10, fontWeight: 600,
+        letterSpacing: '0.08em', color: '#888',
+        opacity: active ? 0 : 1,
         transition: 'opacity 0.2s ease',
         pointerEvents: 'none',
       }}>
         {zone.subzones.length} sectores · Pasa el cursor para explorar
       </div>
 
-      {/* Panel desplegable — overlay 40% derecho */}
-      <div style={{
-        position: 'absolute', top: 0, right: 0, bottom: 0,
-        width: '40%', zIndex: 999,
-        background: '#f7f6f4',
-        borderLeft: '1px solid #ebebeb',
-        display: 'flex', flexDirection: 'column',
-        fontFamily: FONT,
-        overflow: 'hidden',
-        transform: hovered ? 'translateX(0)' : 'translateX(100%)',
-        transition: 'transform 0.32s cubic-bezier(0.4,0,0.2,1)',
-      }}>
-        {hovered && (
+      {/* Panel desplegable — overlay 40% derecho, se abre al clic, permanece fijo */}
+      <div
+        ref={panelRef}
+        style={{
+          position: 'absolute', top: 0, right: 0, bottom: 0,
+          width: '40%', zIndex: 11,
+          background: '#f7f6f4',
+          borderLeft: '1px solid #ebebeb',
+          display: 'flex', flexDirection: 'column',
+          fontFamily: FONT,
+          overflow: 'hidden',
+          transform: active ? 'translateX(0)' : 'translateX(100%)',
+          transition: 'transform 0.32s cubic-bezier(0.4,0,0.2,1)',
+        }}
+      >
+        {/* Botón × cerrar */}
+        <button
+          onClick={() => closePanelRef.current()}
+          style={{
+            position: 'absolute', top: 12, right: 12, zIndex: 2,
+            width: 28, height: 28,
+            background: 'rgba(255,255,255,0.9)', border: '1px solid rgba(0,0,0,0.1)',
+            borderRadius: '50%', cursor: 'pointer',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            fontFamily: FONT, fontSize: 14, color: '#888', lineHeight: 1,
+            padding: 0,
+          }}
+          aria-label="Cerrar"
+        >
+          ×
+        </button>
+
+        {active && (
           <>
             {/* Imagen */}
             <div style={{ height: 180, overflow: 'hidden', flexShrink: 0 }}>
               {imgSrc && (
                 <img
                   src={imgSrc}
-                  alt={hovered.name}
+                  alt={active.name}
                   style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center', display: 'block' }}
                 />
               )}
@@ -223,42 +289,35 @@ export default function NeighborhoodMap({ zone }: Props) {
 
             {/* Info */}
             <div style={{ flex: 1, padding: '20px 20px 16px', display: 'flex', flexDirection: 'column', gap: 14, overflow: 'auto' }}>
-              {/* Zona + nombre */}
               <div>
                 <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase' as const, color: RED, marginBottom: 5 }}>
                   {zone.name}
                 </div>
                 <div style={{ fontSize: 20, fontWeight: 900, color: '#1a1a1a', lineHeight: 1.1, letterSpacing: '-0.01em' }}>
-                  {hovered.name}
+                  {active.name}
                 </div>
               </div>
 
-              {/* Stats */}
               <div style={{ display: 'flex', gap: 14, alignItems: 'flex-start' }}>
                 <div>
                   <div style={{ fontSize: 9, fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase' as const, color: '#ccc', marginBottom: 3 }}>Rentabilidad</div>
-                  <div style={{ fontSize: 15, fontWeight: 900, color: RED }}>{hovered.rentability}</div>
+                  <div style={{ fontSize: 15, fontWeight: 900, color: RED }}>{active.rentability}</div>
                 </div>
                 <div style={{ width: 1, background: '#e8e8e8', alignSelf: 'stretch' }} />
                 <div>
                   <div style={{ fontSize: 9, fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase' as const, color: '#ccc', marginBottom: 3 }}>Precio m²</div>
-                  <div style={{ fontSize: 12, fontWeight: 800, color: '#1a1a1a', lineHeight: 1.3 }}>{hovered.avgPrice}</div>
+                  <div style={{ fontSize: 12, fontWeight: 800, color: '#1a1a1a', lineHeight: 1.3 }}>{active.avgPrice}</div>
                 </div>
               </div>
 
-              {/* Blurbs */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                 <div>
-                  <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: '0.09em', textTransform: 'uppercase' as const, color: RED, marginBottom: 4 }}>
-                    Arrendar
-                  </div>
-                  <p style={{ fontSize: 11, color: '#555', lineHeight: 1.6, margin: 0 }}>{hovered.rentBlurb}</p>
+                  <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: '0.09em', textTransform: 'uppercase' as const, color: RED, marginBottom: 4 }}>Arrendar</div>
+                  <p style={{ fontSize: 11, color: '#555', lineHeight: 1.6, margin: 0 }}>{active.rentBlurb}</p>
                 </div>
                 <div>
-                  <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: '0.09em', textTransform: 'uppercase' as const, color: '#aaa', marginBottom: 4 }}>
-                    Comprar
-                  </div>
-                  <p style={{ fontSize: 11, color: '#888', lineHeight: 1.6, margin: 0 }}>{hovered.buyBlurb}</p>
+                  <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: '0.09em', textTransform: 'uppercase' as const, color: '#aaa', marginBottom: 4 }}>Comprar</div>
+                  <p style={{ fontSize: 11, color: '#888', lineHeight: 1.6, margin: 0 }}>{active.buyBlurb}</p>
                 </div>
               </div>
             </div>
