@@ -171,15 +171,15 @@ function InfoCard({ type, stats, title }: {
     const href     = `/inversionistas/${slug}`;
     return (
       <a href={href} style={baseStyle} onClick={e => e.stopPropagation()}>
-        <div style={{ flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', width: '100%' }}>
+        <div style={innerWrap}>
           <div style={bigTitle}>¿Buscas una zona para invertir?</div>
           <div style={bodyStyle}>Rentabilidades, valorización y oportunidades en {zoneName} del mercado inmobiliario.</div>
+          <div style={{ height: 16 }} />
+          <span className="gallery-cta-btn" style={ctaStyle}
+            onMouseEnter={applyInkFill} onMouseLeave={applyInkFill}>
+            Invertir en esta zona
+          </span>
         </div>
-        <div style={{ height: 12 }} />
-        <span className="gallery-cta-btn" style={ctaStyle}
-          onMouseEnter={applyInkFill} onMouseLeave={applyInkFill}>
-          Invertir en esta zona
-        </span>
       </a>
     );
   }
@@ -197,7 +197,7 @@ function InfoCard({ type, stats, title }: {
     ].filter(Boolean) as { icon: React.ReactNode; value: string | number; label: string }[];
     return (
       <a href={href} target="_blank" rel="noopener noreferrer" style={baseStyle} onClick={e => e.stopPropagation()}>
-        <div style={{ flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', width: '100%' }}>
+        <div style={innerWrap}>
           {stats?.price && (
             <>
               <div style={{ ...labelStyle, textAlign: 'center', marginBottom: 4, textTransform: 'none' }}>Precio de la propiedad</div>
@@ -218,12 +218,12 @@ function InfoCard({ type, stats, title }: {
               ))}
             </div>
           )}
+          <div style={{ height: 16 }} />
+          <span className="gallery-cta-btn" style={ctaStyle}
+            onMouseEnter={applyInkFill} onMouseLeave={applyInkFill}>
+            Hablar con un asesor
+          </span>
         </div>
-        <div style={{ height: 12 }} />
-        <span className="gallery-cta-btn" style={ctaStyle}
-          onMouseEnter={applyInkFill} onMouseLeave={applyInkFill}>
-          Hablar con un asesor
-        </span>
       </a>
     );
   }
@@ -232,15 +232,15 @@ function InfoCard({ type, stats, title }: {
   if (effectiveType === 2) {
     return (
       <a href="/propiedades" style={baseStyle} onClick={e => e.stopPropagation()}>
-        <div style={{ flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', width: '100%' }}>
+        <div style={innerWrap}>
           <div style={bigTitle}>Propiedades similares</div>
           <div style={bodyStyle}>Encuentra otras propiedades con características parecidas en nuestra oferta.</div>
+          <div style={{ height: 16 }} />
+          <span className="gallery-cta-btn" style={ctaStyle}
+            onMouseEnter={applyInkFill} onMouseLeave={applyInkFill}>
+            Ver propiedades
+          </span>
         </div>
-        <div style={{ height: 12 }} />
-        <span className="gallery-cta-btn" style={ctaStyle}
-          onMouseEnter={applyInkFill} onMouseLeave={applyInkFill}>
-          Ver propiedades
-        </span>
       </a>
     );
   }
@@ -252,15 +252,15 @@ function InfoCard({ type, stats, title }: {
     const href = `https://wa.me/${WA_NUM}?text=${msg}`;
     return (
       <a href={href} target="_blank" rel="noopener noreferrer" style={baseStyle} onClick={e => e.stopPropagation()}>
-        <div style={{ flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', width: '100%' }}>
+        <div style={innerWrap}>
           <div style={bigTitle}>¿Quieres conocer esta propiedad en persona?</div>
           <div style={bodyStyle}>Coordina una visita con nuestros asesores y conoce todos los detalles.</div>
+          <div style={{ height: 16 }} />
+          <span className="gallery-cta-btn" style={ctaStyle}
+            onMouseEnter={applyInkFill} onMouseLeave={applyInkFill}>
+            Agendar visita
+          </span>
         </div>
-        <div style={{ height: 12 }} />
-        <span className="gallery-cta-btn" style={ctaStyle}
-          onMouseEnter={applyInkFill} onMouseLeave={applyInkFill}>
-          Agendar visita
-        </span>
       </a>
     );
   }
