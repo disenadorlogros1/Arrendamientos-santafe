@@ -139,7 +139,8 @@ function InfoCard({ type, stats, title }: {
   };
 
   const innerWrap: React.CSSProperties = {
-    display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 0, width: '100%',
+    display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 0,
+    width: '100%', maxWidth: 260,
   };
 
   const ctaStyle: React.CSSProperties = {
