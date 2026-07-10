@@ -177,36 +177,41 @@ export default function NeighborhoodMap({ zone }: Props) {
     : null;
 
   return (
-    <div style={{ display: 'flex', width: '100%' }}>
-      {/* Mapa */}
-      <div style={{ position: 'relative', flex: 1, height: 480, background: '#f5f5f5', minWidth: 0 }}>
-        <div ref={containerRef} style={{ width: '100%', height: '100%' }} />
+    <div style={{ position: 'relative', width: '100%', height: 480, overflow: 'hidden' }}>
+      {/* Mapa — ocupa todo el contenedor */}
+      <div ref={containerRef} style={{ width: '100%', height: '100%', background: '#f5f5f5' }} />
+
+      {/* Badge "X sectores" — top-right sobre el mapa, se oculta al hover */}
+      <div style={{
+        position: 'absolute', top: 16, right: 16, zIndex: 1000,
+        padding: '6px 14px',
+        background: 'rgba(255,255,255,0.92)', backdropFilter: 'blur(8px)',
+        border: '1px solid rgba(0,0,0,0.1)',
+        fontFamily: FONT,
+        fontSize: 10, fontWeight: 600, letterSpacing: '0.08em', color: '#888',
+        opacity: hovered ? 0 : 1,
+        transition: 'opacity 0.2s ease',
+        pointerEvents: 'none',
+      }}>
+        {zone.subzones.length} sectores · Pasa el cursor para explorar
       </div>
 
-      {/* Panel derecho */}
+      {/* Panel desplegable — overlay 40% derecho */}
       <div style={{
-        width: 280, flexShrink: 0, height: 480,
+        position: 'absolute', top: 0, right: 0, bottom: 0,
+        width: '40%', zIndex: 999,
         background: '#f7f6f4',
         borderLeft: '1px solid #ebebeb',
         display: 'flex', flexDirection: 'column',
         fontFamily: FONT,
         overflow: 'hidden',
+        transform: hovered ? 'translateX(0)' : 'translateX(100%)',
+        transition: 'transform 0.32s cubic-bezier(0.4,0,0.2,1)',
       }}>
-        {!hovered ? (
-          /* Badge de sectores — sin hover */
-          <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}>
-            <span style={{
-              fontSize: 10, fontWeight: 600, letterSpacing: '0.08em',
-              color: '#aaa', textAlign: 'center', lineHeight: 1.8,
-            }}>
-              {zone.subzones.length} sectores<br />Pasa el cursor para explorar
-            </span>
-          </div>
-        ) : (
-          /* Info del barrio — en hover */
-          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+        {hovered && (
+          <>
             {/* Imagen */}
-            <div style={{ height: 160, overflow: 'hidden', flexShrink: 0 }}>
+            <div style={{ height: 180, overflow: 'hidden', flexShrink: 0 }}>
               {imgSrc && (
                 <img
                   src={imgSrc}
@@ -257,7 +262,7 @@ export default function NeighborhoodMap({ zone }: Props) {
                 </div>
               </div>
             </div>
-          </div>
+          </>
         )}
       </div>
     </div>
