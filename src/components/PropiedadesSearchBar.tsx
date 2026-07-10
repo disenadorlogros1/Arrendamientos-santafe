@@ -211,7 +211,7 @@ function PriceSelect({
   const display  = pristine ? null : `${fmtCOP(low)} – ${fmtCOP(high)}`;
 
   const dropdown = mounted && open ? (
-    <div ref={dropdownRef} style={{ position: 'fixed', top: pos.top, left: pos.left, width: pos.width, zIndex: 9999 }}>
+    <div ref={dropdownRef} data-search-portal style={{ position: 'fixed', top: pos.top, left: pos.left, width: pos.width, zIndex: 9999 }}>
       <div className="bg-white shadow-2xl border border-gray-100" style={{ padding: '16px 20px 22px' }}>
         <PriceRangeSlider min={min} max={max} step={step} value={value} onChange={onChange} />
       </div>
@@ -285,7 +285,7 @@ function CustomSelect({
   const selectOption = (opt: string) => { onChange(opt); setOpen(false); setQuery(''); };
 
   const dropdown = mounted && open ? (
-    <div ref={dropdownRef} style={{ position: 'fixed', top: pos.top, left: pos.left, width: pos.width, zIndex: 9999 }}>
+    <div ref={dropdownRef} data-search-portal style={{ position: 'fixed', top: pos.top, left: pos.left, width: pos.width, zIndex: 9999 }}>
       <div className="bg-white shadow-2xl border border-gray-100" style={{ display: 'flex', flexDirection: 'column', maxHeight: '280px' }}>
         {/* Lista scrollable */}
         <div className="red-scrollbar" style={{ overflowY: 'auto', flex: 1 }}>
@@ -488,7 +488,7 @@ function AreaSelect({
     `${low} – ${high} m²`;
 
   const dropdown = mounted && open ? (
-    <div ref={dropdownRef} style={{ position: 'fixed', top: pos.top, left: pos.left, width: pos.width, zIndex: 9999 }}>
+    <div ref={dropdownRef} data-search-portal style={{ position: 'fixed', top: pos.top, left: pos.left, width: pos.width, zIndex: 9999 }}>
       <div className="bg-white shadow-2xl border border-gray-100" style={{ padding: '16px 20px 22px' }}>
         <AreaRangeSlider areaMin={areaMin} areaMax={areaMax} onChange={onChange} />
       </div>
@@ -627,13 +627,14 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', onApply, o
     setPrecioRange(defaultPrecioRange(initialTipo));
   }, [initialTipo]);
 
-  // Cierra búsqueda avanzada al hacer clic fuera del componente
+  // Cierra búsqueda avanzada al hacer clic fuera del componente (excepto portals de filtros)
   useEffect(() => {
     if (!showAdvanced) return;
     const handler = (e: MouseEvent) => {
-      if (wrapperRef.current && !wrapperRef.current.contains(e.target as Node)) {
-        setShowAdvanced(false);
-      }
+      const t = e.target as HTMLElement;
+      if (wrapperRef.current?.contains(t)) return;
+      if (t.closest('[data-search-portal]')) return;
+      setShowAdvanced(false);
     };
     const id = setTimeout(() => document.addEventListener('mousedown', handler), 0);
     return () => { clearTimeout(id); document.removeEventListener('mousedown', handler); };
