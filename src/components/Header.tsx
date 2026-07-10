@@ -146,7 +146,7 @@ export default function Header({ currentPage, onNavigate, isHeroPage = true, dar
   const headerBackground = 'shadow-md';
   const isDark = isHeroPage || darkHeader;
   const headerBgColor = isHeroPage ? 'rgba(45, 45, 45, 0.3)' : darkHeader ? 'rgba(18, 18, 18, 1)' : 'rgba(255, 255, 255, 1)';
-  const headerTextColor = isDark ? '#ffffff' : '#1a1a1a';
+  const headerTextColor = isDark ? '#fff' : '#1a1a1a';
   const navBgColor = isDark ? 'rgba(255, 255, 255, 0.3)' : 'rgba(255, 255, 255, 1)';
   const navBorderColor = isDark ? 'rgba(255, 255, 255, 0.3)' : 'rgba(0, 0, 0, 0.1)';
 

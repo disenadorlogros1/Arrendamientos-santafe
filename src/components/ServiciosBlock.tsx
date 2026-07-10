@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState } from 'react';
 import type { PageType } from '@/components/Header';
@@ -147,7 +147,7 @@ export default function ServiciosBlock({ onNavigate: _onNavigate }: ServiciosBlo
                     fontFamily: FONT_HEADING,
                     fontWeight: 700,
                     fontSize: 'clamp(16px, 1.2vw, 20px)',
-                    color: isRed ? '#fff' : '#232222',
+                    color: isRed ? '#fff' : '#1a1a1a',
                     margin: 0,
                     lineHeight: 1.15,
                   }}
@@ -187,7 +187,7 @@ export default function ServiciosBlock({ onNavigate: _onNavigate }: ServiciosBlo
                     paddingLeft: '20px',
                     paddingRight: '20px',
                     alignSelf: 'flex-start',
-                    background: isRed ? RED : '#232222',
+                    background: isRed ? RED : '#1a1a1a',
                     border: isRed ? '1px solid rgba(255,255,255,0.7)' : 'none',
                   }}
                 >

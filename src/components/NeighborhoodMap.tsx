@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useEffect, useRef, useState } from 'react';
 import type { InvestmentZone } from '@/data/investment-zones';
@@ -220,8 +220,8 @@ export default function NeighborhoodMap({ zone }: Props) {
       {/* Ficha inferior — se muestra al hover */}
       <div style={{
         width: '100%',
-        background: '#f7f7f7',
-        borderTop: `3px solid ${hovered ? RED : '#e8e8e8'}`,
+        background: '#f7f6f4',
+        borderTop: `3px solid ${hovered ? RED : '#f5f5f5'}`,
         overflow: 'hidden',
         maxHeight: hovered ? 260 : 0,
         transition: 'max-height 0.35s cubic-bezier(0.4,0,0.2,1), border-color 0.2s ease',
@@ -245,19 +245,19 @@ export default function NeighborhoodMap({ zone }: Props) {
                   <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: RED, marginBottom: 6, fontFamily: FONT }}>
                     {zone.name}
                   </div>
-                  <div style={{ fontSize: 22, fontWeight: 900, color: '#111', lineHeight: 1.1, fontFamily: FONT }}>
+                  <div style={{ fontSize: 22, fontWeight: 900, color: '#1a1a1a', lineHeight: 1.1, fontFamily: FONT }}>
                     {hovered.name}
                   </div>
                 </div>
                 <div style={{ display: 'flex', gap: 12, flexShrink: 0 }}>
                   <div style={{ textAlign: 'right' as const }}>
-                    <div style={{ fontSize: 9, fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#aaa', fontFamily: FONT, marginBottom: 3 }}>Rentabilidad</div>
+                    <div style={{ fontSize: 9, fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#ccc', fontFamily: FONT, marginBottom: 3 }}>Rentabilidad</div>
                     <div style={{ fontSize: 16, fontWeight: 900, color: RED, fontFamily: FONT }}>{hovered.rentability}</div>
                   </div>
-                  <div style={{ width: 1, background: '#e0e0e0' }} />
+                  <div style={{ width: 1, background: '#f5f5f5' }} />
                   <div style={{ textAlign: 'right' as const }}>
-                    <div style={{ fontSize: 9, fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#aaa', fontFamily: FONT, marginBottom: 3 }}>Precio m²</div>
-                    <div style={{ fontSize: 13, fontWeight: 800, color: '#111', fontFamily: FONT }}>{hovered.avgPrice}</div>
+                    <div style={{ fontSize: 9, fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#ccc', fontFamily: FONT, marginBottom: 3 }}>Precio m²</div>
+                    <div style={{ fontSize: 13, fontWeight: 800, color: '#1a1a1a', fontFamily: FONT }}>{hovered.avgPrice}</div>
                   </div>
                 </div>
               </div>
@@ -273,7 +273,7 @@ export default function NeighborhoodMap({ zone }: Props) {
                   </p>
                 </div>
                 <div>
-                  <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: '0.09em', textTransform: 'uppercase', color: '#bbb', marginBottom: 6, fontFamily: FONT }}>
+                  <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: '0.09em', textTransform: 'uppercase', color: '#ccc', marginBottom: 6, fontFamily: FONT }}>
                     Comprar aquí
                   </div>
                   <p style={{ fontSize: 12, color: '#888', lineHeight: 1.6, margin: 0, fontFamily: FONT }}>

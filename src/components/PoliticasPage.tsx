@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 const FONT = "'Avenir LT Std', 'Outfit', system-ui, sans-serif";
 const RED  = '#f32735';
@@ -177,7 +177,7 @@ export default function PoliticasPage() {
                   fontFamily: FONT,
                   fontWeight: 300,
                   fontSize: '14px',
-                  color: '#444',
+                  color: '#555',
                   lineHeight: 1.7,
                   margin: '0 0 10px',
                 }}>
@@ -207,7 +207,7 @@ export default function PoliticasPage() {
                   fontFamily: FONT,
                   fontWeight: 300,
                   fontSize: '14px',
-                  color: '#444',
+                  color: '#555',
                   lineHeight: 1.7,
                   margin: '10px 0 0',
                 }}>
@@ -223,7 +223,7 @@ export default function PoliticasPage() {
                       {c.href ? (
                         <a href={c.href} style={{ color: RED, textDecoration: 'none' }}>{c.value}</a>
                       ) : (
-                        <span style={{ color: '#444' }}>{c.value}</span>
+                        <span style={{ color: '#555' }}>{c.value}</span>
                       )}
                     </div>
                   ))}
@@ -236,7 +236,7 @@ export default function PoliticasPage() {
 
         {/* Pie */}
         <div style={{ borderTop: '1px solid #eee', paddingTop: '24px', marginTop: '8px' }}>
-          <p style={{ fontSize: '12px', color: '#aaa', fontWeight: 300, margin: 0 }}>
+          <p style={{ fontSize: '12px', color: '#ccc', fontWeight: 300, margin: 0 }}>
             © Arrendamientos Santa Fe E.U. · Todos los derechos reservados.
             Este documento tiene carácter informativo y no reemplaza asesoría jurídica especializada.
           </p>

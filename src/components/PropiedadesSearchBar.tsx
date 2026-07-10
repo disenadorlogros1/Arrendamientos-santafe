@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { createPortal } from 'react-dom';
@@ -34,8 +34,8 @@ const COMODIDADES = ['Amoblado', 'Piscina', 'Balcón', 'Unidad Cerrada', 'Cuarto
 /* ── Constantes ─────────────────────────────────────────────────────── */
 
 const FONT        = "'Avenir LT Std', 'Outfit', system-ui, sans-serif";
-const COLOR_LABEL = '#909090';
-const COLOR_VALUE = '#232222';
+const COLOR_LABEL = '#888';
+const COLOR_VALUE = '#1a1a1a';
 const RED         = '#f32735';
 const RED_HOVER   = '#aa182c';
 const CELL_H      = 56;
@@ -151,7 +151,7 @@ function PriceRangeSlider({
         onMouseDown={handleMouseDown}
         onTouchStart={handleTouchStart}
       >
-        <div style={{ position: 'absolute', top: '50%', left: 0, right: 0, height: '3px', transform: 'translateY(-50%)', background: '#e8e8e8', borderRadius: '2px', pointerEvents: 'none' }}>
+        <div style={{ position: 'absolute', top: '50%', left: 0, right: 0, height: '3px', transform: 'translateY(-50%)', background: '#f5f5f5', borderRadius: '2px', pointerEvents: 'none' }}>
           <div style={{ position: 'absolute', left: `${pctLow}%`, right: `${100 - pctHigh}%`, top: 0, bottom: 0, background: RED, borderRadius: '2px' }} />
         </div>
         <div style={{ position: 'absolute', left: `${pctLow}%`, top: '50%', transform: 'translate(-50%,-50%)', width: '10px', height: '10px', background: RED, borderRadius: '50%', pointerEvents: 'none', zIndex: 2 }} />
@@ -226,7 +226,7 @@ function PriceSelect({
         onClick={() => { if (!open) { updatePos(); setOpen(true); } else setOpen(false); }}
         className="w-full flex items-center bg-transparent border-none outline-none cursor-pointer text-left"
       >
-        <span style={{ fontFamily: FONT, fontSize: '14px', fontWeight: 400, color: display ? COLOR_VALUE : '#b8b8b8', lineHeight: 1, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+        <span style={{ fontFamily: FONT, fontSize: '14px', fontWeight: 400, color: display ? COLOR_VALUE : '#ccc', lineHeight: 1, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
           {display || 'Seleccionar'}
         </span>
       </button>
@@ -290,7 +290,7 @@ function CustomSelect({
         {/* Lista scrollable */}
         <div className="red-scrollbar" style={{ overflowY: 'auto', flex: 1 }}>
           {filtered.length === 0
-            ? <p style={{ fontFamily: FONT, fontSize: '13px', padding: '10px 16px', color: '#aaa' }}>Sin resultados</p>
+            ? <p style={{ fontFamily: FONT, fontSize: '13px', padding: '10px 16px', color: '#ccc' }}>Sin resultados</p>
             : filtered.map(opt => (
               <button key={opt} type="button"
                 onMouseDown={e => e.preventDefault()}
@@ -337,7 +337,7 @@ function CustomSelect({
     <div className="min-w-0 w-full">
       <button ref={buttonRef} type="button" onClick={toggle}
         className="w-full flex items-center bg-transparent border-none outline-none cursor-pointer text-left">
-        <span style={{ fontFamily: FONT, fontSize: '14px', fontWeight: 400, color: value ? COLOR_VALUE : '#b8b8b8', lineHeight: 1, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+        <span style={{ fontFamily: FONT, fontSize: '14px', fontWeight: 400, color: value ? COLOR_VALUE : '#ccc', lineHeight: 1, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
           {value || placeholder || 'Seleccionar'}
         </span>
       </button>
@@ -430,7 +430,7 @@ function AreaRangeSlider({
         onMouseDown={handleMouseDown}
         onTouchStart={handleTouchStart}
       >
-        <div style={{ position: 'absolute', top: '50%', left: 0, right: 0, height: '3px', transform: 'translateY(-50%)', background: '#e8e8e8', borderRadius: '2px', pointerEvents: 'none' }}>
+        <div style={{ position: 'absolute', top: '50%', left: 0, right: 0, height: '3px', transform: 'translateY(-50%)', background: '#f5f5f5', borderRadius: '2px', pointerEvents: 'none' }}>
           <div style={{ position: 'absolute', left: `${pctLow}%`, right: `${100 - pctHigh}%`, top: 0, bottom: 0, background: RED, borderRadius: '2px' }} />
         </div>
         <div style={{ position: 'absolute', left: `${pctLow}%`, top: '50%', transform: 'translate(-50%,-50%)', width: '10px', height: '10px', background: RED, borderRadius: '50%', pointerEvents: 'none', zIndex: 2 }} />
@@ -503,7 +503,7 @@ function AreaSelect({
         onClick={() => { if (!open) { updatePos(); setOpen(true); } else setOpen(false); }}
         className="w-full flex items-center bg-transparent border-none outline-none cursor-pointer text-left"
       >
-        <span style={{ fontFamily: FONT, fontSize: '14px', fontWeight: 400, color: display ? COLOR_VALUE : '#b8b8b8', lineHeight: 1, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+        <span style={{ fontFamily: FONT, fontSize: '14px', fontWeight: 400, color: display ? COLOR_VALUE : '#ccc', lineHeight: 1, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
           {display || 'Seleccionar'}
         </span>
       </button>
@@ -523,7 +523,7 @@ function Chip({ label, active, onClick }: { label: string; active: boolean; onCl
         padding: '3px 12px',
         border: `1px solid ${active ? RED : 'rgba(0,0,0,0.12)'}`,
         background: active ? RED : 'transparent',
-        color: active ? '#fff' : '#b8b8b8',
+        color: active ? '#fff' : '#ccc',
         fontFamily: FONT,
         fontSize: '13px',
         fontWeight: active ? 600 : 400,
@@ -697,9 +697,9 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', onApply, o
                   flex: 1,
                   height: '100%',
                   backgroundColor: active
-                    ? '#f0f0f0'
+                    ? '#f5f5f5'
                     : hoveredTab === t ? 'rgba(0,0,0,0.03)' : 'transparent',
-                  color: active ? '#1a1a1a' : '#666',
+                  color: active ? '#1a1a1a' : '#555',
                   fontFamily: FONT,
                   fontSize: '14px',
                   fontWeight: active ? 600 : 400,
@@ -773,7 +773,7 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', onApply, o
                   onBlur={() => { if (!textoBusqueda) setBusquedaActive(false); }}
                   placeholder="Ej: inmueble cerca a Niquia"
                   className="search-field-input"
-                  style={{ fontFamily: FONT, fontSize: '14px', fontWeight: 400, color: textoBusqueda ? COLOR_VALUE : '#b8b8b8', background: 'transparent', border: 'none', outline: 'none', width: '100%', lineHeight: 1 }}
+                  style={{ fontFamily: FONT, fontSize: '14px', fontWeight: 400, color: textoBusqueda ? COLOR_VALUE : '#ccc', background: 'transparent', border: 'none', outline: 'none', width: '100%', lineHeight: 1 }}
                 />
               </div>
             </div>
@@ -810,7 +810,7 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', onApply, o
                   onBlur={() => { if (!codigo) setCodigoActive(false); }}
                   placeholder="Ej: A11636"
                   className="search-field-input"
-                  style={{ fontFamily: FONT, fontSize: '14px', fontWeight: 400, color: codigo ? COLOR_VALUE : '#b8b8b8', background: 'transparent', border: 'none', outline: 'none', width: '100%', lineHeight: 1 }}
+                  style={{ fontFamily: FONT, fontSize: '14px', fontWeight: 400, color: codigo ? COLOR_VALUE : '#ccc', background: 'transparent', border: 'none', outline: 'none', width: '100%', lineHeight: 1 }}
                 />
               </div>
             </div>
@@ -845,7 +845,7 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', onApply, o
                         color: '#888',
                         transition: 'color 0.15s ease, background 0.15s ease',
                       }}
-                      onMouseEnter={e => { e.currentTarget.style.background = '#fafafa'; e.currentTarget.style.color = '#444'; }}
+                      onMouseEnter={e => { e.currentTarget.style.background = '#f7f6f4'; e.currentTarget.style.color = '#555'; }}
                       onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#888'; }}
                     >
                       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -1005,13 +1005,13 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', onApply, o
             style={{
               flex: 1,
               display: 'flex', alignItems: 'center', justifyContent: 'center',
-              background: showAdvanced ? 'rgba(0,0,0,0.04)' : '#fafafa',
+              background: showAdvanced ? 'rgba(0,0,0,0.04)' : '#f7f6f4',
               border: 'none', borderRight: DIVIDER, cursor: 'pointer',
               fontFamily: FONT, fontSize: '13px', color: showAdvanced ? COLOR_VALUE : '#888', fontWeight: 400,
               transition: 'background 0.15s ease, color 0.15s ease',
             }}
             onMouseEnter={e => { e.currentTarget.style.background = 'rgba(0,0,0,0.04)'; }}
-            onMouseLeave={e => { e.currentTarget.style.background = showAdvanced ? 'rgba(0,0,0,0.04)' : '#fafafa'; }}
+            onMouseLeave={e => { e.currentTarget.style.background = showAdvanced ? 'rgba(0,0,0,0.04)' : '#f7f6f4'; }}
           >
             Búsqueda avanzada
           </button>

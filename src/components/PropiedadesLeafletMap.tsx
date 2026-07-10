@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useEffect, useRef, useState } from 'react';
 import type { Property } from '@/data/properties';
@@ -158,7 +158,7 @@ export default function PropiedadesLeafletMap({ properties, onBoundsChange, onHo
         position: 'absolute', bottom: 16, left: '50%', transform: 'translateX(-50%)',
         background: 'rgba(255,255,255,0.92)', backdropFilter: 'blur(6px)',
         borderRadius: '20px', padding: '6px 14px',
-        fontSize: '11px', fontFamily: FONT, color: '#666',
+        fontSize: '11px', fontFamily: FONT, color: '#555',
         whiteSpace: 'nowrap', boxShadow: '0 2px 12px rgba(0,0,0,0.12)',
         pointerEvents: 'none', zIndex: 999,
       }}>

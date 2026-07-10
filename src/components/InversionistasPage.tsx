@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
@@ -47,7 +47,7 @@ function CountMetric({ value, accent }: { value: string; accent?: boolean }) {
     return () => observer.disconnect();
   }, [value]);
   return (
-    <div ref={divRef} style={{ fontSize: 22, fontWeight: 900, color: accent ? RED : '#0d0d0d', lineHeight: 1 }}>
+    <div ref={divRef} style={{ fontSize: 22, fontWeight: 900, color: accent ? RED : '#1a1a1a', lineHeight: 1 }}>
       {displayed}
     </div>
   );
@@ -84,6 +84,7 @@ export default function InversionistasPage() {
   const [hoveredSector, setHoveredSector] = useState<Sector | null>(null);
   const [titleHovered,     setTitleHovered]     = useState(false);
   const [hoveredBeneficio, setHoveredBeneficio] = useState<number | null>(null);
+  const [hoveredZoneCard,  setHoveredZoneCard]  = useState<string | null>(null);
   const subtitleRef = useRef<HTMLParagraphElement>(null);
   const ctaBtnRef   = useRef<HTMLDivElement>(null);
 
@@ -202,7 +203,7 @@ export default function InversionistasPage() {
                     onMouseLeave={() => setHoveredSector(null)}
                     style={{
                       flex:        1,
-                      background:  isActive ? '#f32735' : isHov ? '#fafafa' : '#fff',
+                      background:  isActive ? '#f32735' : isHov ? '#f7f6f4' : '#fff',
                       border:      'none',
                       padding:     '0 20px',
                       textAlign:   'left',
@@ -214,7 +215,7 @@ export default function InversionistasPage() {
                     }}
                   >
                     <div>
-                      <div style={{ fontFamily: FONT, fontWeight: 700, fontSize: '20px', color: isActive ? '#fff' : '#0d0d0d', lineHeight: 1.2 }}>
+                      <div style={{ fontFamily: FONT, fontWeight: 700, fontSize: '20px', color: isActive ? '#fff' : '#1a1a1a', lineHeight: 1.2 }}>
                         Zona {sector}
                       </div>
                       <div style={{ fontFamily: FONT, fontSize: '12px', fontWeight: 400, color: isActive ? 'rgba(255,255,255,0.65)' : '#999', marginTop: '4px' }}>
@@ -224,7 +225,7 @@ export default function InversionistasPage() {
                     {/* Flecha tipo PropertyCard */}
                     <div style={{
                       width: '34px', height: '34px', borderRadius: '50%', flexShrink: 0,
-                      background: isActive ? 'rgba(255,255,255,0.18)' : isHov ? '#f32735' : '#f0f0f0',
+                      background: isActive ? 'rgba(255,255,255,0.18)' : isHov ? '#f32735' : '#f5f5f5',
                       display: 'flex', alignItems: 'center', justifyContent: 'center',
                       transition: 'background 0.18s ease',
                     }}>
@@ -254,52 +255,65 @@ export default function InversionistasPage() {
 
         {/* Zone columns grid */}
         <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '0 clamp(20px, 4vw, 52px) 40px' }}>
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: `repeat(${visibleZones.length}, 1fr)`,
-            gap: '1px',
-            background: '#e0e0e0',
-          }}>
-            {visibleZones.map((zone) => (
-              <div key={zone.id} style={{ background: '#fff', borderTop: `3px solid ${RED}`, display: 'flex', flexDirection: 'column' }}>
-
-                {/* Nombre + métricas */}
-                <div style={{ padding: '20px 16px 16px', flexGrow: 1 }}>
-                  <h3 style={{ fontFamily: FONT, fontWeight: 700, fontSize: '17px', color: '#0d0d0d', margin: '0 0 14px 0', lineHeight: 1.25, textAlign: 'center' }}>
-                    {zone.name}
-                  </h3>
-                  <div style={{ display: 'flex', gap: '0' }}>
-                    {[
-                      { label: 'Rentabilidad', value: zone.rentability, accent: true },
-                      { label: 'Estratos',     value: zone.strata      },
-                    ].map((m, i) => (
-                      <div key={i} style={{ flex: 1, padding: '8px 0', textAlign: 'center' }}>
-                        <div style={{ fontFamily: FONT, fontSize: '12px', fontWeight: 300, color: 'rgba(0,0,0,0.55)', marginBottom: '6px' }}>
-                          {m.label}
-                        </div>
-                        <CountMetric value={m.value} accent={m.accent} />
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* CTA edge-to-edge */}
-                <Link
-                  href={`/inversionistas/${zone.slug}`}
+          <div style={{ display: 'flex', gap: '1px', background: '#f5f5f5', overflow: 'hidden' }}>
+            {visibleZones.map((zone) => {
+              const isHov    = hoveredZoneCard === zone.id;
+              const anyHov   = hoveredZoneCard !== null;
+              return (
+                <div
+                  key={zone.id}
+                  onMouseEnter={() => setHoveredZoneCard(zone.id)}
+                  onMouseLeave={() => setHoveredZoneCard(null)}
                   style={{
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    padding: '11px 16px', background: RED, color: '#fff',
-                    fontFamily: FONT, fontSize: '13px', fontWeight: 600,
-                    textDecoration: 'none', transition: 'background 0.18s', flexShrink: 0,
+                    flex: anyHov ? (isHov ? 1 : 0) : 1,
+                    minWidth: 0,
+                    overflow: 'hidden',
+                    opacity: anyHov && !isHov ? 0 : 1,
+                    background: '#fff',
+                    borderTop: `3px solid ${RED}`,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    transition: 'flex 0.35s cubic-bezier(0.25,0.46,0.45,0.94), opacity 0.25s ease',
                   }}
-                  onMouseEnter={e => (e.currentTarget.style.background = '#c41e2a')}
-                  onMouseLeave={e => (e.currentTarget.style.background = RED)}
                 >
-                  Ver más
-                </Link>
+                  {/* Nombre + métricas */}
+                  <div style={{ padding: '20px 16px 16px', flexGrow: 1, minWidth: '180px' }}>
+                    <h3 style={{ fontFamily: FONT, fontWeight: 700, fontSize: '17px', color: '#1a1a1a', margin: '0 0 14px 0', lineHeight: 1.25, textAlign: 'center', whiteSpace: 'nowrap' }}>
+                      {zone.name}
+                    </h3>
+                    <div style={{ display: 'flex', gap: '0' }}>
+                      {[
+                        { label: 'Rentabilidad', value: zone.rentability, accent: true },
+                        { label: 'Estratos',     value: zone.strata      },
+                      ].map((m, i) => (
+                        <div key={i} style={{ flex: 1, padding: '8px 0', textAlign: 'center' }}>
+                          <div style={{ fontFamily: FONT, fontSize: '12px', fontWeight: 300, color: 'rgba(0,0,0,0.55)', marginBottom: '6px', whiteSpace: 'nowrap' }}>
+                            {m.label}
+                          </div>
+                          <CountMetric value={m.value} accent={m.accent} />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
 
-              </div>
-            ))}
+                  {/* CTA edge-to-edge */}
+                  <Link
+                    href={`/inversionistas/${zone.slug}`}
+                    style={{
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      padding: '11px 16px', background: RED, color: '#fff',
+                      fontFamily: FONT, fontSize: '13px', fontWeight: 600,
+                      textDecoration: 'none', transition: 'background 0.18s', flexShrink: 0,
+                      whiteSpace: 'nowrap',
+                    }}
+                    onMouseEnter={e => (e.currentTarget.style.background = '#aa182c')}
+                    onMouseLeave={e => (e.currentTarget.style.background = RED)}
+                  >
+                    Ver más
+                  </Link>
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -334,7 +348,7 @@ export default function InversionistasPage() {
                   onMouseLeave={() => setHoveredBeneficio(null)}
                 >
                   <img src={b.icon} alt="" width={40} height={40} style={{ flexShrink: 0, display: 'block', filter: isRed ? 'brightness(0) invert(1)' : 'none' }} />
-                  <h3 style={{ fontFamily: FONT, fontWeight: 700, fontSize: 'clamp(16px, 1.2vw, 20px)', color: isRed ? '#fff' : '#232222', margin: 0, lineHeight: 1.15 }}>
+                  <h3 style={{ fontFamily: FONT, fontWeight: 700, fontSize: 'clamp(16px, 1.2vw, 20px)', color: isRed ? '#fff' : '#1a1a1a', margin: 0, lineHeight: 1.15 }}>
                     {b.title}
                   </h3>
                   <p style={{ fontFamily: FONT, fontWeight: 300, fontSize: 'clamp(12.5px, 0.9vw, 14px)', color: isRed ? 'rgba(255,255,255,0.75)' : 'rgba(0,0,0,0.55)', margin: 0, lineHeight: 1.5, flexGrow: 1 }}>
@@ -351,7 +365,7 @@ export default function InversionistasPage() {
                       fontFamily: FONT, fontWeight: 300, fontSize: 'clamp(13px, 0.95vw, 15px)',
                       textDecoration: 'none', height: '42px', paddingLeft: '20px', paddingRight: '20px',
                       alignSelf: 'flex-start',
-                      background: isRed ? '#f32735' : '#232222',
+                      background: isRed ? '#f32735' : '#1a1a1a',
                       border: isRed ? '1px solid rgba(255,255,255,0.7)' : 'none',
                     }}
                   >
@@ -365,7 +379,7 @@ export default function InversionistasPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-16 md:py-20" style={{ background: '#232222' }}>
+      <section className="py-16 md:py-20" style={{ background: '#1a1a1a' }}>
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
           <ScrollReveal y={20}>
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-8" style={{ fontFamily: FONT }}>

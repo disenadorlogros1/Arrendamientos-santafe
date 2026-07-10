@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState, useEffect, useRef, useMemo } from 'react';
 import { properties, DEFAULT_INTERIOR_GALLERY } from '@/data/properties';
@@ -146,7 +146,7 @@ function DetailRow({ icon, label, value, isRight, spanFull }: { icon: string; la
         marginBottom: 3,
         transition: 'border-color 0.18s',
       }} />
-      <span style={{ fontFamily: FONT, fontSize: 13, fontWeight: 400, color: '#666', whiteSpace: 'nowrap' }}>{value}</span>
+      <span style={{ fontFamily: FONT, fontSize: 13, fontWeight: 400, color: '#555', whiteSpace: 'nowrap' }}>{value}</span>
     </div>
   );
 }
@@ -157,7 +157,7 @@ function ZoneSection({ zone, zoneLabel }: { zone: NonNullable<ReturnType<typeof 
   const dataCardStyle = (idx: number): React.CSSProperties => ({
     padding: '24px 16px',
     flex: 1,
-    borderLeft: '1px solid #e8e8e8',
+    borderLeft: '1px solid #f5f5f5',
     display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center',
     transform: hovIdx === idx ? 'scale(1.06)' : hovIdx !== null && Math.abs(idx - hovIdx) === 1 ? 'scale(0.96)' : 'scale(1)',
     zIndex: hovIdx === idx ? 5 : 1,
@@ -169,7 +169,7 @@ function ZoneSection({ zone, zoneLabel }: { zone: NonNullable<ReturnType<typeof 
   });
 
   return (
-    <div style={{ display: 'flex', border: '1px solid #e8e8e8', overflow: 'visible' }}>
+    <div style={{ display: 'flex', border: '1px solid #f5f5f5', overflow: 'visible' }}>
       {/* Card 1 — negra, static */}
       <div style={{ background: '#1a1a1a', padding: '24px 20px', flex: '0 0 clamp(140px, 20%, 200px)', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
         <h3 style={{ fontFamily: FONT, fontSize: 'clamp(14px, 1.1vw, 17px)', fontWeight: 700, color: '#fff', margin: 0, lineHeight: 1.3 }}>
@@ -178,12 +178,12 @@ function ZoneSection({ zone, zoneLabel }: { zone: NonNullable<ReturnType<typeof 
       </div>
       {/* Card 2 — Rentabilidad */}
       <div onMouseEnter={() => setHovIdx(2)} onMouseLeave={() => setHovIdx(null)} style={dataCardStyle(2)}>
-        <span style={{ fontFamily: FONT, fontSize: 12, fontWeight: 400, color: '#aaa', marginBottom: 6 }}>Rentabilidad</span>
+        <span style={{ fontFamily: FONT, fontSize: 12, fontWeight: 400, color: '#ccc', marginBottom: 6 }}>Rentabilidad</span>
         <span style={{ fontFamily: FONT, fontSize: 'clamp(18px, 2.2vw, 26px)', fontWeight: 900, color: '#f32735', lineHeight: 1 }}>{zone.rentability}</span>
       </div>
       {/* Card 3 — Estratos */}
       <div onMouseEnter={() => setHovIdx(3)} onMouseLeave={() => setHovIdx(null)} style={dataCardStyle(3)}>
-        <span style={{ fontFamily: FONT, fontSize: 12, fontWeight: 400, color: '#aaa', marginBottom: 6 }}>Estratos</span>
+        <span style={{ fontFamily: FONT, fontSize: 12, fontWeight: 400, color: '#ccc', marginBottom: 6 }}>Estratos</span>
         <span style={{ fontFamily: FONT, fontSize: 'clamp(18px, 2.2vw, 26px)', fontWeight: 900, color: '#1a1a1a', lineHeight: 1 }}>{zone.strata}</span>
       </div>
       {/* Card 4 — Ver zona */}
@@ -348,12 +348,12 @@ export default function PropertyDetailPage() {
                       position: 'absolute', top: 12, left: 12, zIndex: 20,
                       display: 'flex', alignItems: 'center', justifyContent: 'center',
                       width: 38, height: 38, borderRadius: '50%',
-                      backgroundColor: '#e53935', border: 'none', cursor: 'pointer',
+                      backgroundColor: '#f32735', border: 'none', cursor: 'pointer',
                       boxShadow: '0 2px 8px rgba(0,0,0,0.25)',
                       transition: 'background-color 0.2s',
                     }}
-                    onMouseEnter={e => (e.currentTarget.style.backgroundColor = '#c62828')}
-                    onMouseLeave={e => (e.currentTarget.style.backgroundColor = '#e53935')}
+                    onMouseEnter={e => (e.currentTarget.style.backgroundColor = '#aa182c')}
+                    onMouseLeave={e => (e.currentTarget.style.backgroundColor = '#f32735')}
                     aria-label="Volver"
                   >
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -383,13 +383,13 @@ export default function PropertyDetailPage() {
                   </div>
 
                   <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 16 }}>
-                    <span style={{ fontFamily: FONT, fontSize: 12, fontWeight: 500, color: '#909090' }}>
+                    <span style={{ fontFamily: FONT, fontSize: 12, fontWeight: 500, color: '#888' }}>
                       {property.businessType === 'Comprar' ? 'Venta' : 'Arriendo'}
                     </span>
                     <span style={{ color: '#ccc' }}>·</span>
-                    <span style={{ fontFamily: FONT, fontSize: 12, fontWeight: 500, color: '#909090' }}>{property.type}</span>
+                    <span style={{ fontFamily: FONT, fontSize: 12, fontWeight: 500, color: '#888' }}>{property.type}</span>
                     <span style={{ color: '#ccc' }}>·</span>
-                    <span style={{ fontFamily: FONT, fontSize: 12, fontWeight: 500, color: '#909090' }}>
+                    <span style={{ fontFamily: FONT, fontSize: 12, fontWeight: 500, color: '#888' }}>
                       Código inmueble {property.reference.replace('Ref. ', '')}
                     </span>
                   </div>
@@ -399,7 +399,7 @@ export default function PropertyDetailPage() {
                     <ScrollReveal y={12} delay={0}>
                       <div style={{ marginTop: 24 }}>
                         <h2 style={{ fontFamily: FONT, fontSize: 16, fontWeight: 700, color: '#1a1a1a', marginBottom: 10 }}>Descripción</h2>
-                        <p style={{ fontFamily: FONT, fontSize: 14, fontWeight: 300, color: '#909090', lineHeight: 1.4 }}>{property.description}</p>
+                        <p style={{ fontFamily: FONT, fontSize: 14, fontWeight: 300, color: '#888', lineHeight: 1.4 }}>{property.description}</p>
                       </div>
                     </ScrollReveal>
                   )}
@@ -435,7 +435,7 @@ export default function PropertyDetailPage() {
                   {property.latitude && property.longitude && (
                     <ScrollReveal y={16} className="mt-6">
                       <h2 className="text-lg font-bold text-gray-900 mb-2">Ubicación</h2>
-                      <p style={{ fontFamily: FONT, fontSize: 13, fontWeight: 500, color: '#808080', display: 'flex', alignItems: 'center', gap: 5, margin: '0 0 12px 0' }}>
+                      <p style={{ fontFamily: FONT, fontSize: 13, fontWeight: 500, color: '#888', display: 'flex', alignItems: 'center', gap: 5, margin: '0 0 12px 0' }}>
                         <img src="/icons/icon-location-red.gif" alt="" width="14" height="14" style={{ flexShrink: 0, objectFit: 'contain' }} />
                         {property.address || property.location}
                       </p>
@@ -461,7 +461,7 @@ export default function PropertyDetailPage() {
                             className="char-pill flex items-center gap-2 px-3 py-2 bg-white border border-gray-200"
                           >
                             {getCharIcon(char)}
-                            <span style={{ fontFamily: FONT, fontSize: 13, color: '#444' }}>{char}</span>
+                            <span style={{ fontFamily: FONT, fontSize: 13, color: '#555' }}>{char}</span>
                           </div>
                         ))}
                       </div>
@@ -488,7 +488,7 @@ export default function PropertyDetailPage() {
               <div className="lg:col-span-1">
                 <div ref={formRef} style={{
                   background: '#fff',
-                  border: '1px solid #e0e0e0',
+                  border: '1px solid #f5f5f5',
                   borderRadius: 0,
                   padding: '24px 20px',
                   display: 'flex',
@@ -502,7 +502,7 @@ export default function PropertyDetailPage() {
                     <h3 style={{ fontFamily: FONT, fontSize: 'clamp(18px, 2.2vw, 26px)', fontWeight: 900, color: '#1a1a1a', textAlign: 'center', margin: 0, lineHeight: 1.15 }}>
                       ¿Te interesa esta propiedad?
                     </h3>
-                    <p style={{ fontFamily: FONT, fontSize: '13px', color: '#909090', textAlign: 'center', margin: '5px 0 0' }}>
+                    <p style={{ fontFamily: FONT, fontSize: '13px', color: '#888', textAlign: 'center', margin: '5px 0 0' }}>
                       Te responderemos de inmediato.
                     </p>
                   </div>
@@ -516,12 +516,12 @@ export default function PropertyDetailPage() {
                     rel="noopener noreferrer"
                     style={{
                       display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
-                      backgroundColor: '#e53935', color: '#fff', fontWeight: 600, fontSize: '15px',
+                      backgroundColor: '#f32735', color: '#fff', fontWeight: 600, fontSize: '15px',
                       padding: '13px 16px', borderRadius: 0, textDecoration: 'none',
                       transition: 'background-color 0.2s',
                     }}
-                    onMouseEnter={e => (e.currentTarget.style.backgroundColor = '#c62828')}
-                    onMouseLeave={e => (e.currentTarget.style.backgroundColor = '#e53935')}
+                    onMouseEnter={e => (e.currentTarget.style.backgroundColor = '#aa182c')}
+                    onMouseLeave={e => (e.currentTarget.style.backgroundColor = '#f32735')}
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="white">
                       <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
@@ -532,7 +532,7 @@ export default function PropertyDetailPage() {
 
                   {/* Compartir */}
                   <div style={{ borderTop: '1px solid #eee', paddingTop: '14px', display: 'flex', flexDirection: 'column', gap: '10px', alignItems: 'center' }}>
-                    <span style={{ fontFamily: FONT, fontSize: '13px', fontWeight: 400, color: '#909090' }}>
+                    <span style={{ fontFamily: FONT, fontSize: '13px', fontWeight: 400, color: '#888' }}>
                       Compartir propiedad
                     </span>
                     <div style={{ display: 'flex', gap: '8px', width: '100%' }}>
@@ -541,11 +541,11 @@ export default function PropertyDetailPage() {
                         onClick={() => navigator.clipboard.writeText(window.location.href)}
                         style={{
                           display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px',
-                          backgroundColor: '#f5f5f5', color: '#444', fontSize: '13px', fontWeight: 600,
-                          padding: '9px 14px', borderRadius: '999px', border: '1px solid #e0e0e0', cursor: 'pointer',
+                          backgroundColor: '#f5f5f5', color: '#555', fontSize: '13px', fontWeight: 600,
+                          padding: '9px 14px', borderRadius: '999px', border: '1px solid #f5f5f5', cursor: 'pointer',
                           flex: 1, transition: 'background-color 0.2s',
                         }}
-                        onMouseEnter={e => (e.currentTarget.style.backgroundColor = '#e8e8e8')}
+                        onMouseEnter={e => (e.currentTarget.style.backgroundColor = '#f5f5f5')}
                         onMouseLeave={e => (e.currentTarget.style.backgroundColor = '#f5f5f5')}
                       >
                         <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -560,12 +560,12 @@ export default function PropertyDetailPage() {
                         rel="noopener noreferrer"
                         style={{
                           display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px',
-                          backgroundColor: '#e53935', color: '#fff', fontSize: '13px', fontWeight: 600,
+                          backgroundColor: '#f32735', color: '#fff', fontSize: '13px', fontWeight: 600,
                           padding: '9px 14px', borderRadius: '999px', textDecoration: 'none', flex: 1,
                           transition: 'background-color 0.2s',
                         }}
-                        onMouseEnter={e => (e.currentTarget.style.backgroundColor = '#c62828')}
-                        onMouseLeave={e => (e.currentTarget.style.backgroundColor = '#e53935')}
+                        onMouseEnter={e => (e.currentTarget.style.backgroundColor = '#aa182c')}
+                        onMouseLeave={e => (e.currentTarget.style.backgroundColor = '#f32735')}
                       >
                         <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="white">
                           <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>

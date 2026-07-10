@@ -2516,8 +2516,8 @@ export default function InversionistasLeafletMap({ activeSector, hoveredSector, 
         const stats = SECTOR_STATS[sector];
         return L.divIcon({
           className: '',
-          html: `<div style="transform:translate(-50%,-50%);text-align:center;pointer-events:none">
-            <div style="font-family:'Avenir LT Std','Outfit',sans-serif;font-size:40px;font-weight:900;color:#fff;line-height:1;text-shadow:0 2px 10px rgba(0,0,0,0.4)">${stats.barrios} Barrios</div>
+          html: `<div style="transform:translate(-50%,-50%);text-align:center;pointer-events:none;white-space:nowrap">
+            <div style="font-family:'Avenir LT Std','Outfit',sans-serif;font-size:40px;font-weight:900;color:#fff;line-height:1;text-shadow:0 2px 10px rgba(0,0,0,0.4);white-space:nowrap">${stats.barrios} Barrios</div>
             <div style="font-family:'Avenir LT Std','Outfit',sans-serif;font-size:11px;font-weight:700;color:#fff;background:${RED};padding:3px 10px;margin-top:5px;white-space:nowrap;display:inline-block">${stats.propiedades} propiedades</div>
           </div>`,
           iconSize:   [0, 0],

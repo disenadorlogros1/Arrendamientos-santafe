@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { createPortal } from 'react-dom';
@@ -112,11 +112,11 @@ function InfoCard({ type, stats, title }: {
 
   const baseStyle: React.CSSProperties = {
     width: '100%', height: '100%',
-    display: 'flex', flexDirection: 'column', alignItems: 'center',
+    display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
     padding: '20px 20px 16px',
     textDecoration: 'none',
     fontFamily: FONT,
-    color: '#0d0d0d',
+    color: '#1a1a1a',
     background: '#fff',
     boxSizing: 'border-box',
     cursor: 'pointer',
@@ -126,7 +126,7 @@ function InfoCard({ type, stats, title }: {
 
   const bigTitle: React.CSSProperties = {
     fontSize: 39, fontWeight: 800, lineHeight: 1.1,
-    color: '#0d0d0d', marginBottom: 10, textAlign: 'center',
+    color: '#1a1a1a', marginBottom: 10, textAlign: 'center',
   };
 
   const labelStyle: React.CSSProperties = {
@@ -135,7 +135,11 @@ function InfoCard({ type, stats, title }: {
   };
 
   const bodyStyle: React.CSSProperties = {
-    fontSize: 13, color: 'rgba(0,0,0,0.45)', lineHeight: 1.5, flexGrow: 1, textAlign: 'center',
+    fontSize: 13, color: 'rgba(0,0,0,0.45)', lineHeight: 1.5, textAlign: 'center',
+  };
+
+  const innerWrap: React.CSSProperties = {
+    display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 0, width: '100%',
   };
 
   const ctaStyle: React.CSSProperties = {
@@ -197,7 +201,7 @@ function InfoCard({ type, stats, title }: {
           {stats?.price && (
             <>
               <div style={{ ...labelStyle, textAlign: 'center', marginBottom: 4, textTransform: 'none' }}>Precio de la propiedad</div>
-              <div style={{ fontSize: 22, fontWeight: 900, color: '#0d0d0d', lineHeight: 1.1, marginBottom: 20, textAlign: 'center', width: '100%' }}>
+              <div style={{ fontSize: 22, fontWeight: 900, color: '#1a1a1a', lineHeight: 1.1, marginBottom: 20, textAlign: 'center', width: '100%' }}>
                 {stats.price}
               </div>
             </>
@@ -207,7 +211,7 @@ function InfoCard({ type, stats, title }: {
               {iconItems.map((item, i) => (
                 <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>
                   <span style={{ color: 'rgba(0,0,0,0.3)', display: 'flex' }}>{item.icon}</span>
-                  <span style={{ fontFamily: FONT, fontSize: 13, fontWeight: 700, color: '#0d0d0d', lineHeight: 1 }}>
+                  <span style={{ fontFamily: FONT, fontSize: 13, fontWeight: 700, color: '#1a1a1a', lineHeight: 1 }}>
                     {item.value} <span style={{ fontWeight: 400, color: 'rgba(0,0,0,0.45)' }}>{item.label}</span>
                   </span>
                 </div>
@@ -497,7 +501,7 @@ function AlbumStack({ album, albumIndex, isActive, onClick }: {
         top: PHOTO_H - 18,
         right: 0,
         background: isActive ? '#fff' : 'rgba(14,14,14,0.85)',
-        color: isActive ? '#111' : '#fff',
+        color: isActive ? '#1a1a1a' : '#fff',
         fontFamily: FONT,
         fontSize: 10,
         fontWeight: 700,
@@ -754,8 +758,8 @@ function BentoGallery({ images, onClose, stats, title }: {
   /* ── Mobile ──────────────────────────────────────────────────── */
   if (isMobile) {
     return createPortal(
-      <div style={{ position: 'fixed', inset: 0, zIndex: 1000, background: '#0c0c0c', overflowY: 'auto', display: 'flex', flexDirection: 'column' }}>
-        <div style={{ position: 'sticky', top: 0, zIndex: 10, display: 'flex', justifyContent: 'flex-end', padding: '12px 16px', background: 'linear-gradient(#0c0c0c 70%, transparent)' }}>
+      <div style={{ position: 'fixed', inset: 0, zIndex: 1000, background: '#1a1a1a', overflowY: 'auto', display: 'flex', flexDirection: 'column' }}>
+        <div style={{ position: 'sticky', top: 0, zIndex: 10, display: 'flex', justifyContent: 'flex-end', padding: '12px 16px', background: 'linear-gradient(#1a1a1a 70%, transparent)' }}>
           <button onClick={onClose} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 44, height: 44, borderRadius: '50%', background: 'rgba(255,255,255,0.12)', border: 'none', cursor: 'pointer', color: '#fff' }}>
             <X size={22} strokeWidth={1.5} />
           </button>
@@ -799,7 +803,7 @@ function BentoGallery({ images, onClose, stats, title }: {
         }
       `}</style>
 
-      <div onClick={onClose} style={{ position: 'fixed', inset: 0, zIndex: 1000, background: '#0c0c0c', display: 'flex', flexDirection: 'column', cursor: 'default' }}>
+      <div onClick={onClose} style={{ position: 'fixed', inset: 0, zIndex: 1000, background: '#1a1a1a', display: 'flex', flexDirection: 'column', cursor: 'default' }}>
 
         {/* Header — clic en área negra cierra (burbujea al contenedor) */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', padding: '12px 20px', flexShrink: 0 }}>
@@ -900,7 +904,7 @@ function BentoGallery({ images, onClose, stats, title }: {
                   overflow: 'hidden',
                   borderRadius: 0,
                   cursor: 'pointer',
-                  background: '#111',
+                  background: '#1a1a1a',
                   outline: isSelected ? '2px solid rgba(255,255,255,0.65)' : '2px solid transparent',
                   outlineOffset: -2,
                   opacity,
@@ -1040,7 +1044,7 @@ function MainPreviewCell({ img, alt, onClick }: { img: string; alt: string; onCl
 
   return (
     <div
-      style={{ gridRow: '1/3', position: 'relative', overflow: 'hidden', cursor: 'pointer', background: '#111' }}
+      style={{ gridRow: '1/3', position: 'relative', overflow: 'hidden', cursor: 'pointer', background: '#1a1a1a' }}
       onClick={onClick}
       onMouseEnter={() => setHov(true)}
       onMouseLeave={() => setHov(false)}
@@ -1104,7 +1108,7 @@ function SmallPreviewCell({ img, alt, onClick, overlay, overlayCount, onHoverIn,
   const [hov, setHov] = useState(false);
   return (
     <div
-      style={{ position: 'relative', overflow: 'hidden', cursor: 'pointer', background: '#111' }}
+      style={{ position: 'relative', overflow: 'hidden', cursor: 'pointer', background: '#1a1a1a' }}
       onClick={onClick}
       onMouseEnter={() => { setHov(true);  onHoverIn();  }}
       onMouseLeave={() => { setHov(false); onHoverOut(); }}

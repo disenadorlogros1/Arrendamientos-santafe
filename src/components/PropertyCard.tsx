@@ -89,7 +89,7 @@ export default function PropertyCard({ property }: PropertyCardProps) {
           fontWeight: 900,
           fontSize: 'clamp(18px, 2.2vw, 26px)',
           lineHeight: 1.15,
-          color: '#232222',
+          color: '#1a1a1a',
           margin: '0 0 4px 0',
           letterSpacing: '-0.3px',
         }}>
@@ -98,10 +98,10 @@ export default function PropertyCard({ property }: PropertyCardProps) {
 
         {/* Ubicación y Tipo */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: '6px' }}>
-          <span style={{ fontFamily: FONT, fontSize: '12px', color: '#808080', fontWeight: 500, lineHeight: 1.3 }}>
+          <span style={{ fontFamily: FONT, fontSize: '12px', color: '#888', fontWeight: 500, lineHeight: 1.3 }}>
             {property.location}
           </span>
-          <span style={{ fontFamily: FONT, fontSize: '12px', color: '#808080', fontWeight: 500, lineHeight: 1.3, flexShrink: 0 }}>
+          <span style={{ fontFamily: FONT, fontSize: '12px', color: '#888', fontWeight: 500, lineHeight: 1.3, flexShrink: 0 }}>
             {property.type}
           </span>
         </div>
@@ -110,7 +110,7 @@ export default function PropertyCard({ property }: PropertyCardProps) {
         <div style={{ height: '2px', background: RED, margin: '3px 0 3px' }} />
 
         {/* Código de referencia */}
-        <p style={{ fontFamily: FONT, fontSize: '12px', color: '#909090', fontWeight: 400, margin: 0 }}>
+        <p style={{ fontFamily: FONT, fontSize: '12px', color: '#888', fontWeight: 400, margin: 0 }}>
           Código inmueble {property.reference.replace('Ref. ', '')}
         </p>
       </div>

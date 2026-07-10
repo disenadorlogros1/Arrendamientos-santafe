@@ -83,7 +83,7 @@ export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) 
               fontFamily: FONT_BODY,
               fontWeight: 400,
               fontSize: 'clamp(13px, 1vw, 15px)',
-              color: '#666',
+              color: '#555',
               lineHeight: 1.55,
               margin: 0,
               opacity: 0,

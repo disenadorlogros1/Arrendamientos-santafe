@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { createPortal } from 'react-dom';
@@ -102,7 +102,7 @@ function PriceRangeSlider({ min, max, step, value, onChange }: PriceRangeProps) 
         onMouseDown={handleMouseDown}
         onTouchStart={handleTouchStart}
       >
-        <div style={{ position: 'absolute', top: '50%', left: 0, right: 0, height: '3px', transform: 'translateY(-50%)', background: '#e8e8e8', borderRadius: '2px', pointerEvents: 'none' }}>
+        <div style={{ position: 'absolute', top: '50%', left: 0, right: 0, height: '3px', transform: 'translateY(-50%)', background: '#f5f5f5', borderRadius: '2px', pointerEvents: 'none' }}>
           <div style={{ position: 'absolute', left: `${pctLow}%`, right: `${100 - pctHigh}%`, top: 0, bottom: 0, background: RED, borderRadius: '2px' }} />
         </div>
         <div style={{ position: 'absolute', left: `${pctLow}%`, top: '50%', transform: 'translate(-50%,-50%)', width: '10px', height: '10px', background: RED, borderRadius: '50%', pointerEvents: 'none', zIndex: 2 }} />
@@ -184,7 +184,7 @@ function PriceSelect({
         onClick={() => { if (!open) { updatePos(); onOpen?.(); setOpen(true); } else setOpen(false); }}
         className="w-full flex items-center bg-transparent border-none outline-none cursor-pointer text-left"
       >
-        <span style={{ fontFamily: FONT, fontSize: '14px', fontWeight: 400, color: display ? COLOR_VALUE : '#b8b8b8', lineHeight: 1, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+        <span style={{ fontFamily: FONT, fontSize: '14px', fontWeight: 400, color: display ? COLOR_VALUE : '#ccc', lineHeight: 1, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
           {display || 'Seleccionar'}
         </span>
       </button>
@@ -196,8 +196,8 @@ function PriceSelect({
 /* ── Constantes ──────────────────────────────────────────────────── */
 
 const FONT        = "'Avenir LT Std', 'Outfit', system-ui, sans-serif";
-const COLOR_LABEL = '#909090';
-const COLOR_VALUE = '#232222';
+const COLOR_LABEL = '#888';
+const COLOR_VALUE = '#1a1a1a';
 const RED         = '#f32735';
 const RED_HOVER   = '#aa182c';
 const ICON_ONLY_W = 52; // ancho de celda colapsada
@@ -290,7 +290,7 @@ function CustomSelect({
     <div ref={dropdownRef} style={{ position: 'fixed', top: pos.top, left: pos.left, width: pos.width, zIndex: 9999 }}>
       <div className="bg-white shadow-2xl border border-gray-100 max-h-[240px] overflow-y-auto custom-scrollbar">
         {filtered.length === 0
-          ? <p style={{ fontFamily: FONT, fontSize: '13px', padding: '10px 16px', color: '#aaa' }}>Sin resultados</p>
+          ? <p style={{ fontFamily: FONT, fontSize: '13px', padding: '10px 16px', color: '#ccc' }}>Sin resultados</p>
           : filtered.map(opt => (
             <button key={opt} type="button"
               onMouseDown={e => e.preventDefault()}
@@ -336,7 +336,7 @@ function CustomSelect({
       <button ref={buttonRef} type="button" onClick={toggle}
         className="w-full flex items-center bg-transparent border-none outline-none cursor-pointer text-left">
         <span style={{ fontFamily: FONT, fontSize: '14px', fontWeight: 400,
-          color: value ? COLOR_VALUE : '#b8b8b8', lineHeight: 1, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+          color: value ? COLOR_VALUE : '#ccc', lineHeight: 1, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
           {value || placeholder || 'Seleccionar'}
         </span>
       </button>
@@ -561,7 +561,7 @@ export default function SearchForm({ onNavigate }: SearchFormProps) {
                 onChange={e => setCodigo(e.target.value)}
                 placeholder="Ej: 12345"
                 className="search-field-input"
-                style={{ fontFamily: FONT, fontSize: '14px', fontWeight: 400, color: codigo ? COLOR_VALUE : '#b8b8b8', background: 'transparent', border: 'none', outline: 'none', width: '100%', lineHeight: 1 }}
+                style={{ fontFamily: FONT, fontSize: '14px', fontWeight: 400, color: codigo ? COLOR_VALUE : '#ccc', background: 'transparent', border: 'none', outline: 'none', width: '100%', lineHeight: 1 }}
               />
             </div>
           </div>
@@ -647,7 +647,7 @@ export default function SearchForm({ onNavigate }: SearchFormProps) {
                   onChange={e => setCodigo(e.target.value)}
                   placeholder="Ej: 12345"
                   className="search-field-input"
-                  style={{ fontFamily: FONT, fontSize: '14px', fontWeight: 400, color: codigo ? COLOR_VALUE : '#b8b8b8',
+                  style={{ fontFamily: FONT, fontSize: '14px', fontWeight: 400, color: codigo ? COLOR_VALUE : '#ccc',
                     background: 'transparent', border: 'none', outline: 'none', width: '100%', lineHeight: 1 }}
                 />
               </div>

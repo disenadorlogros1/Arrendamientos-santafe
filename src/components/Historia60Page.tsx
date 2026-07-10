@@ -122,7 +122,7 @@ export default function Historia60Page({ onNavigate }: Props) {
     <div style={{ background: BG, minHeight: '100vh' }}>
 
       {/* ── Article Hero ─────────────────────────────────────── */}
-      <div style={{ background: '#0d0d0d', position: 'relative', overflow: 'hidden', marginTop: '-86px' }}>
+      <div style={{ background: '#1a1a1a', position: 'relative', overflow: 'hidden', marginTop: '-86px' }}>
         <span
           aria-hidden="true"
           style={{

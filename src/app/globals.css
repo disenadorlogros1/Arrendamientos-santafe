@@ -1,4 +1,4 @@
-@import "tailwindcss";
+﻿@import "tailwindcss";
 @import "tw-animate-css";
 
 /* ── Avenir LT Std — fuentes locales ──────────────────────────── */
@@ -113,7 +113,7 @@ html.lenis, html.lenis body { height: auto; }
   --color-brand-red-hover: #aa182c;
   --color-brand-red-light: #f32735;
   --color-brand-red-dark: #aa182c;
-  --color-brand-dark: #232222;
+  --color-brand-dark: #1a1a1a;
   --color-brand-dark-secondary: #333333;
   --color-brand-light: #F5F5F5;
   --color-brand-gray: #6B7280;
@@ -211,7 +211,7 @@ html.lenis, html.lenis body { height: auto; }
 
 /* Placeholder unificado para campos de búsqueda */
 .search-field-input::placeholder {
-  color: #b8b8b8 !important;
+  color: #ccc !important;
   font-size: 14px !important;
   font-weight: 400 !important;
   font-family: 'Avenir LT Std', 'Outfit', system-ui, sans-serif !important;
@@ -236,7 +236,7 @@ html.lenis, html.lenis body { height: auto; }
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #c8c8c8;
+  background: #ccc;
   border-radius: 3px;
 }
 
@@ -252,7 +252,7 @@ html.is-scrolling *::-webkit-scrollbar-thumb {
 @supports not selector(::-webkit-scrollbar) {
   * {
     scrollbar-width: thin;
-    scrollbar-color: #c8c8c8 transparent;
+    scrollbar-color: #ccc transparent;
   }
   html.is-scrolling,
   html.is-scrolling * {
@@ -263,7 +263,7 @@ html.is-scrolling *::-webkit-scrollbar-thumb {
 /* Legacy — mismos valores que el global */
 .custom-scrollbar::-webkit-scrollbar { width: 6px; }
 .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
-.custom-scrollbar::-webkit-scrollbar-thumb { background: #c8c8c8; border-radius: 3px; }
+.custom-scrollbar::-webkit-scrollbar-thumb { background: #ccc; border-radius: 3px; }
 
 /* Dropdown — siempre rojo, gana sobre .is-scrolling */
 .red-scrollbar::-webkit-scrollbar { width: 5px; }
@@ -295,7 +295,7 @@ html.is-scrolling .red-scrollbar::-webkit-scrollbar-thumb {
   position: relative;
   overflow: hidden;
   background: rgba(0, 0, 0, 0.25);
-  color: #ffffff;
+  color: #fff;
 }
 
 /* Relleno rojo que se expande desde el punto de entrada */
@@ -372,7 +372,7 @@ html.is-scrolling .red-scrollbar::-webkit-scrollbar-thumb {
 }
 
 .nav-ink-btn:hover > span {
-  color: #ffffff !important;
+  color: #fff !important;
   font-weight: 700;
 }
 
@@ -457,7 +457,7 @@ html.is-scrolling .red-scrollbar::-webkit-scrollbar-thumb {
 .btn-red-outline {
   position: relative;
   overflow: hidden;
-  background: #ffffff;
+  background: #fff;
   color: #f32735;
   border: 1px solid #f32735 !important;
   font-family: 'Avenir LT Std', 'Outfit', system-ui, sans-serif;
@@ -480,7 +480,7 @@ html.is-scrolling .red-scrollbar::-webkit-scrollbar-thumb {
   z-index: 0;
 }
 .btn-red-outline:hover::before { transform: translate(-50%, -50%) scale(1); }
-.btn-red-outline:hover { color: #ffffff; }
+.btn-red-outline:hover { color: #fff; }
 .btn-red-outline > span { position: relative; z-index: 1; }
 
 /* Video hero overlay */
@@ -578,7 +578,7 @@ select option {
 
 /* ── UserLocation: blanco sobre video/oscuro (default), rojo sólo cuando .on-light ── */
 .user-location-text {
-  color: #ffffff;
+  color: #fff;
   text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
 }
 .user-location-text.on-light {
