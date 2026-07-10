@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useEffect, useRef, useState } from 'react';
 import type { InvestmentZone } from '@/data/investment-zones';
@@ -95,7 +95,6 @@ export default function NeighborhoodMap({ zone }: Props) {
         touchZoom:          true,
       }).setView([viewConf.lat, viewConf.lng], viewConf.zoom);
 
-      // Mapa claro CartoDB Positron
       L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
         maxZoom: 19,
       }).addTo(mapRef.current);
@@ -104,7 +103,6 @@ export default function NeighborhoodMap({ zone }: Props) {
         const data = NEIGHBORHOOD_DATA[name];
         if (!data) continue;
 
-        // Pin de ubicación
         const pinIcon = L.divIcon({
           className: '',
           html: pinHtml(false),
@@ -113,7 +111,6 @@ export default function NeighborhoodMap({ zone }: Props) {
         });
         const pin = L.marker([data.lat, data.lng], { icon: pinIcon }).addTo(mapRef.current);
 
-        // Etiqueta de nombre debajo del pin
         const labelIcon = L.divIcon({
           className: '',
           html: labelHtml(name, false),
@@ -122,7 +119,6 @@ export default function NeighborhoodMap({ zone }: Props) {
         });
         const label = L.marker([data.lat, data.lng], { icon: labelIcon, interactive: false }).addTo(mapRef.current);
 
-        // Área de hover invisible
         const hitArea = L.circle([data.lat, data.lng], {
           radius: 500, color: 'transparent', weight: 0, fillOpacity: 0,
         }).addTo(mapRef.current);
@@ -153,7 +149,6 @@ export default function NeighborhoodMap({ zone }: Props) {
     if ((window as any).L) {
       init();
     } else {
-      // Cargar CSS de Leaflet
       if (!document.querySelector('link[data-leaflet]')) {
         const link  = document.createElement('link');
         link.rel    = 'stylesheet';
@@ -182,103 +177,83 @@ export default function NeighborhoodMap({ zone }: Props) {
     : null;
 
   return (
-    <div style={{ position: 'relative', width: '100%' }}>
+    <div style={{ display: 'flex', width: '100%' }}>
       {/* Mapa */}
-      <div style={{ position: 'relative', width: '100%', height: 480, background: '#f5f5f5' }}>
+      <div style={{ position: 'relative', flex: 1, height: 480, background: '#f5f5f5', minWidth: 0 }}>
         <div ref={containerRef} style={{ width: '100%', height: '100%' }} />
-
-        {/* Overlay label superior */}
-        <div style={{
-          position: 'absolute', top: 16, left: 16, zIndex: 1000,
-          display: 'flex', alignItems: 'center', gap: 8,
-          padding: '6px 12px',
-          background: 'rgba(255,255,255,0.92)', backdropFilter: 'blur(8px)',
-          border: '1px solid rgba(0,0,0,0.1)',
-          fontFamily: FONT,
-        }}>
-          <img src="/icons/icon-favicon-red.gif" width={11} height={11} style={{ opacity: 0.7 }} alt="" />
-          <span style={{ fontSize: 10, fontWeight: 600, letterSpacing: '0.08em', color: '#888' }}>
-            {zone.subzones.length} sectores · Pasa el cursor para explorar
-          </span>
-        </div>
-
-        {/* Nombre del barrio mientras hover */}
-        {hovered && (
-          <div style={{
-            position: 'absolute', top: 16, right: 16, zIndex: 1000,
-            padding: '6px 14px',
-            background: RED,
-            fontFamily: FONT, fontSize: 11, fontWeight: 800,
-            letterSpacing: '0.06em', textTransform: 'uppercase',
-            color: '#fff',
-          }}>
-            {hovered.name}
-          </div>
-        )}
       </div>
 
-      {/* Ficha inferior — se muestra al hover */}
+      {/* Panel derecho */}
       <div style={{
-        width: '100%',
+        width: 280, flexShrink: 0, height: 480,
         background: '#f7f6f4',
-        borderTop: `3px solid ${hovered ? RED : '#f5f5f5'}`,
+        borderLeft: '1px solid #ebebeb',
+        display: 'flex', flexDirection: 'column',
+        fontFamily: FONT,
         overflow: 'hidden',
-        maxHeight: hovered ? 260 : 0,
-        transition: 'max-height 0.35s cubic-bezier(0.4,0,0.2,1), border-color 0.2s ease',
       }}>
-        {hovered && imgSrc && (
-          <div style={{ display: 'flex', height: 220, boxSizing: 'border-box' }}>
+        {!hovered ? (
+          /* Badge de sectores — sin hover */
+          <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}>
+            <span style={{
+              fontSize: 10, fontWeight: 600, letterSpacing: '0.08em',
+              color: '#aaa', textAlign: 'center', lineHeight: 1.8,
+            }}>
+              {zone.subzones.length} sectores<br />Pasa el cursor para explorar
+            </span>
+          </div>
+        ) : (
+          /* Info del barrio — en hover */
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
             {/* Imagen */}
-            <div style={{ width: 200, flexShrink: 0, overflow: 'hidden' }}>
-              <img
-                src={imgSrc}
-                alt={hovered.name}
-                style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center' }}
-              />
+            <div style={{ height: 160, overflow: 'hidden', flexShrink: 0 }}>
+              {imgSrc && (
+                <img
+                  src={imgSrc}
+                  alt={hovered.name}
+                  style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center', display: 'block' }}
+                />
+              )}
             </div>
 
             {/* Info */}
-            <div style={{ flex: 1, padding: '24px 28px', display: 'flex', flexDirection: 'column', gap: 0, overflow: 'hidden' }}>
-              {/* Nombre + stats en línea */}
-              <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 16, gap: 16 }}>
-                <div>
-                  <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: RED, marginBottom: 6, fontFamily: FONT }}>
-                    {zone.name}
-                  </div>
-                  <div style={{ fontSize: 22, fontWeight: 900, color: '#1a1a1a', lineHeight: 1.1, fontFamily: FONT }}>
-                    {hovered.name}
-                  </div>
+            <div style={{ flex: 1, padding: '20px 20px 16px', display: 'flex', flexDirection: 'column', gap: 14, overflow: 'auto' }}>
+              {/* Zona + nombre */}
+              <div>
+                <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase' as const, color: RED, marginBottom: 5 }}>
+                  {zone.name}
                 </div>
-                <div style={{ display: 'flex', gap: 12, flexShrink: 0 }}>
-                  <div style={{ textAlign: 'right' as const }}>
-                    <div style={{ fontSize: 9, fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#ccc', fontFamily: FONT, marginBottom: 3 }}>Rentabilidad</div>
-                    <div style={{ fontSize: 16, fontWeight: 900, color: RED, fontFamily: FONT }}>{hovered.rentability}</div>
-                  </div>
-                  <div style={{ width: 1, background: '#f5f5f5' }} />
-                  <div style={{ textAlign: 'right' as const }}>
-                    <div style={{ fontSize: 9, fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#ccc', fontFamily: FONT, marginBottom: 3 }}>Precio m²</div>
-                    <div style={{ fontSize: 13, fontWeight: 800, color: '#1a1a1a', fontFamily: FONT }}>{hovered.avgPrice}</div>
-                  </div>
+                <div style={{ fontSize: 20, fontWeight: 900, color: '#1a1a1a', lineHeight: 1.1, letterSpacing: '-0.01em' }}>
+                  {hovered.name}
                 </div>
               </div>
 
-              {/* Blurbs arrendar / comprar */}
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, flex: 1 }}>
+              {/* Stats */}
+              <div style={{ display: 'flex', gap: 14, alignItems: 'flex-start' }}>
                 <div>
-                  <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: '0.09em', textTransform: 'uppercase', color: RED, marginBottom: 6, fontFamily: FONT }}>
-                    Arrendar aquí
+                  <div style={{ fontSize: 9, fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase' as const, color: '#ccc', marginBottom: 3 }}>Rentabilidad</div>
+                  <div style={{ fontSize: 15, fontWeight: 900, color: RED }}>{hovered.rentability}</div>
+                </div>
+                <div style={{ width: 1, background: '#e8e8e8', alignSelf: 'stretch' }} />
+                <div>
+                  <div style={{ fontSize: 9, fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase' as const, color: '#ccc', marginBottom: 3 }}>Precio m²</div>
+                  <div style={{ fontSize: 12, fontWeight: 800, color: '#1a1a1a', lineHeight: 1.3 }}>{hovered.avgPrice}</div>
+                </div>
+              </div>
+
+              {/* Blurbs */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                <div>
+                  <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: '0.09em', textTransform: 'uppercase' as const, color: RED, marginBottom: 4 }}>
+                    Arrendar
                   </div>
-                  <p style={{ fontSize: 12, color: '#555', lineHeight: 1.6, margin: 0, fontFamily: FONT }}>
-                    {hovered.rentBlurb}
-                  </p>
+                  <p style={{ fontSize: 11, color: '#555', lineHeight: 1.6, margin: 0 }}>{hovered.rentBlurb}</p>
                 </div>
                 <div>
-                  <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: '0.09em', textTransform: 'uppercase', color: '#ccc', marginBottom: 6, fontFamily: FONT }}>
-                    Comprar aquí
+                  <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: '0.09em', textTransform: 'uppercase' as const, color: '#aaa', marginBottom: 4 }}>
+                    Comprar
                   </div>
-                  <p style={{ fontSize: 12, color: '#888', lineHeight: 1.6, margin: 0, fontFamily: FONT }}>
-                    {hovered.buyBlurb}
-                  </p>
+                  <p style={{ fontSize: 11, color: '#888', lineHeight: 1.6, margin: 0 }}>{hovered.buyBlurb}</p>
                 </div>
               </div>
             </div>

@@ -1,6 +1,6 @@
 ﻿'use client';
 
-import { useState, useMemo, useRef, useEffect } from 'react';
+import { useState, useMemo, useRef, useEffect, useCallback } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import Header from '@/components/Header';
@@ -49,6 +49,47 @@ const ZONE_INK_CSS = `
   }
   .zone-btn { position:relative; overflow:hidden; }
 `;
+
+/* ── Animated stat value — cuenta desde 0 al entrar en viewport ── */
+function AnimatedStatValue({ value, style }: { value: string; style?: React.CSSProperties }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [display, setDisplay] = useState(value);
+  const startedRef = useRef(false);
+
+  const animate = useCallback(() => {
+    if (startedRef.current) return;
+    startedRef.current = true;
+    let startTime: number | null = null;
+    const duration = 1600;
+    const step = (ts: number) => {
+      if (!startTime) startTime = ts;
+      const p = Math.min((ts - startTime) / duration, 1);
+      const eased = 1 - Math.pow(1 - p, 3);
+      if (p >= 1) { setDisplay(value); return; }
+      const animated = value.replace(/\d[\d,]*/g, match => {
+        const num = parseInt(match.replace(/,/g, ''), 10);
+        const cur = Math.floor(num * eased);
+        return match.includes(',') ? cur.toLocaleString('en-US') : String(cur);
+      });
+      setDisplay(animated);
+      requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  }, [value]);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      entries => { if (entries[0].isIntersecting) animate(); },
+      { threshold: 0.5 }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, [animate]);
+
+  return <div ref={ref} style={style}>{display}</div>;
+}
 
 const STATS_META = [
   { key: 'rentability' as const, label: 'Rentabilidad anual',  icon: '/icons/icon-rent-white.gif' },
@@ -133,7 +174,7 @@ export default function InversionZonePage() {
               <h1 style={{ fontSize: 'clamp(36px, 5vw, 64px)', fontWeight: 900, color: '#fff', lineHeight: 1.05, margin: '0 0 20px', letterSpacing: '-0.02em' }}>
                 {zone.h1Title}
               </h1>
-              <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.85)', lineHeight: 1.5, margin: 0 }}>
+              <p style={{ fontSize: 16, fontWeight: 300, color: 'rgba(255,255,255,0.85)', lineHeight: 1.5, margin: 0 }}>
                 {zone.description}
               </p>
             </div>
@@ -145,13 +186,14 @@ export default function InversionZonePage() {
           <div style={{ maxWidth: 1120, margin: '0 auto', padding: '0 24px' }}>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr 1fr', gap: 2 }}>
               {STATS_META.map((meta) => (
-                <div key={meta.key} style={{ background: '#161616', borderTop: `3px solid ${RED}`, padding: '32px 28px 28px', boxSizing: 'border-box' as const }}>
-                  <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase' as const, color: RED, marginBottom: 10 }}>
+                <div key={meta.key} style={{ background: '#161616', padding: '32px 28px 28px', boxSizing: 'border-box' as const }}>
+                  <div style={{ fontSize: 10, fontWeight: 400, letterSpacing: '0.04em', color: RED, marginBottom: 10 }}>
                     {meta.label}
                   </div>
-                  <div style={{ fontSize: 26, fontWeight: 900, color: '#fff', lineHeight: 1.1, letterSpacing: '-0.01em' }}>
-                    {zone[meta.key]}
-                  </div>
+                  <AnimatedStatValue
+                    value={zone[meta.key]}
+                    style={{ fontSize: 39, fontWeight: 900, color: '#fff', lineHeight: 1.05, letterSpacing: '-0.02em' }}
+                  />
                 </div>
               ))}
             </div>
@@ -163,9 +205,6 @@ export default function InversionZonePage() {
           <div style={{ maxWidth: 1120, margin: '0 auto', padding: '0 24px' }}>
             <ScrollReveal y={16}>
               <div style={{ marginBottom: 48 }}>
-                <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase' as const, color: RED, marginBottom: 12 }}>
-                  Por qué invertir aquí
-                </div>
                 <h2 style={{ fontSize: 'clamp(26px, 3.5vw, 40px)', fontWeight: 900, color: '#1a1a1a', margin: 0, letterSpacing: '-0.01em' }}>
                   Ventajas de {zone.name}
                 </h2>
@@ -175,8 +214,8 @@ export default function InversionZonePage() {
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 2 }}>
               {zone.advantages.map((adv, i) => (
                 <ScrollReveal key={i} delay={i * 0.07} y={14}>
-                  <div style={{ background: DARK3, borderLeft: `3px solid ${RED}`, padding: '24px 24px 24px 22px', boxSizing: 'border-box' as const, height: '100%' }}>
-                    <div style={{ fontSize: 11, fontWeight: 800, color: RED, marginBottom: 10, letterSpacing: '0.04em' }}>
+                  <div style={{ background: DARK3, padding: '24px 24px 24px 22px', boxSizing: 'border-box' as const, height: '100%', display: 'flex', alignItems: 'flex-start', gap: 20 }}>
+                    <div style={{ fontSize: 36, fontWeight: 900, color: RED, lineHeight: 1, letterSpacing: '-0.02em', flexShrink: 0, paddingTop: 2 }}>
                       {String(i + 1).padStart(2, '0')}
                     </div>
                     <p style={{ fontSize: 14, color: '#555', lineHeight: 1.65, margin: 0 }}>{adv}</p>
@@ -190,16 +229,7 @@ export default function InversionZonePage() {
         {/* ── Mapa de barrios ───────────────────────────────── */}
         <section style={{ background: DARK2, borderBottom: '1px solid #f5f5f5' }}>
           <div style={{ maxWidth: 1120, margin: '0 auto', padding: '0 24px' }}>
-            <ScrollReveal y={16}>
-              <div style={{ paddingTop: 64, paddingBottom: 36 }}>
-                <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase' as const, color: RED, marginBottom: 12 }}>
-                  Cobertura
-                </div>
-                <h2 style={{ fontSize: 'clamp(22px, 3vw, 34px)', fontWeight: 900, color: '#1a1a1a', margin: 0 }}>
-                  Sectores y barrios de {zone.name}
-                </h2>
-              </div>
-            </ScrollReveal>
+            <div style={{ height: 48 }} />
           </div>
           <NeighborhoodMap zone={zone} />
           <div style={{ height: 64 }} />
@@ -255,18 +285,7 @@ export default function InversionZonePage() {
         {/* ── Otras zonas ───────────────────────────────────── */}
         <section style={{ background: DARK2, padding: '72px 0', borderBottom: '1px solid #f5f5f5' }}>
           <div style={{ maxWidth: 1120, margin: '0 auto', padding: '0 24px' }}>
-            <ScrollReveal y={16}>
-              <div style={{ marginBottom: 48 }}>
-                <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase' as const, color: RED, marginBottom: 12 }}>
-                  Explorar
-                </div>
-                <h2 style={{ fontSize: 'clamp(22px, 3vw, 34px)', fontWeight: 900, color: '#1a1a1a', margin: 0 }}>
-                  Otras zonas de inversión
-                </h2>
-              </div>
-            </ScrollReveal>
-
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: 2 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 2 }}>
               {otherZones.map((z, i) => (
                 <ScrollReveal key={z.id} delay={i * 0.08} y={14}>
                   <OtherZoneCard zone={z} />
@@ -277,19 +296,13 @@ export default function InversionZonePage() {
         </section>
 
         {/* ── CTA final ─────────────────────────────────────── */}
-        <section style={{ background: RED, padding: '80px 24px' }}>
+        <section style={{ background: '#ccc', padding: '80px 24px' }}>
           <div style={{ maxWidth: 580, margin: '0 auto', textAlign: 'center' as const }}>
             <ScrollReveal y={16}>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, marginBottom: 24 }}>
-                <img src="/icons/icon-favicon-white.gif" width={14} height={14} style={{ opacity: 0.7 }} alt="" />
-                <span style={{ fontSize: 10, fontWeight: 600, letterSpacing: '0.08em', color: 'rgba(255,255,255,0.55)' }}>
-                  Arrendamientos Santa Fe
-                </span>
-              </div>
-              <h2 style={{ fontSize: 'clamp(28px, 4vw, 48px)', fontWeight: 900, color: '#fff', margin: '0 0 12px', lineHeight: 1.05, letterSpacing: '-0.01em' }}>
+              <h2 style={{ fontSize: 'clamp(28px, 4vw, 48px)', fontWeight: 900, color: '#1a1a1a', margin: '0 0 12px', lineHeight: 1.05, letterSpacing: '-0.01em' }}>
                 ¿Listo para invertir en {zone.name}?
               </h2>
-              <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.72)', margin: '0 0 40px', lineHeight: 1.65 }}>
+              <p style={{ fontSize: 15, color: '#555', margin: '0 0 40px', lineHeight: 1.65 }}>
                 Nuestros asesores te acompañan desde la búsqueda hasta la gestión del arrendamiento.
               </p>
               <a
@@ -300,7 +313,7 @@ export default function InversionZonePage() {
                 style={{
                   display: 'inline-flex', alignItems: 'center', gap: 10,
                   padding: '14px 36px',
-                  background: '#fff', color: RED,
+                  background: RED, color: '#fff',
                   fontSize: 14, fontWeight: 800, letterSpacing: '0.02em',
                   textDecoration: 'none', fontFamily: FONT,
                   position: 'relative', overflow: 'hidden',
