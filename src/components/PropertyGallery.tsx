@@ -281,12 +281,11 @@ function InfoCard({ type, stats, title }: {
 
   return (
     <div style={baseStyle} onClick={e => e.stopPropagation()}>
-      <div style={{ flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', width: '100%' }}>
+      <div style={innerWrap}>
         <div style={bigTitle}>Envía esta propiedad</div>
         <div style={bodyStyle}>Comparte los detalles con quien quieras por WhatsApp o copia el enlace.</div>
-      </div>
-      <div style={{ height: 12 }} />
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 8, width: '100%' }}>
+        <div style={{ height: 16 }} />
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 8, width: '100%' }}>
         <a href={waShareHref} target="_blank" rel="noopener noreferrer"
           className="gallery-cta-btn" style={ctaStyle}
           onMouseEnter={applyInkFill} onMouseLeave={applyInkFill}
@@ -301,6 +300,7 @@ function InfoCard({ type, stats, title }: {
         >
           {copied ? '¡Enlace copiado!' : 'Copiar enlace'}
         </button>
+        </div>
       </div>
     </div>
   );
