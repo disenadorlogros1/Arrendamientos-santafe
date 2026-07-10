@@ -61,11 +61,13 @@ export default function NeighborhoodMap({ zone }: Props) {
     const subzones = zone.subzones;
     const viewConf = ZONE_CENTER[zone.slug] ?? { lat: 6.25, lng: -75.58, zoom: 12 };
 
+    const PIN_W = 22, PIN_H = 30;
     const pinHtml = (isActive: boolean) => {
       const fill  = isActive ? RED : '#222';
       const scale = isActive ? 1.35 : 1;
-      return `<div style="transform:translate(-50%,-100%) scale(${scale});transform-origin:50% 100%;transition:transform 0.18s ease;pointer-events:none;">
-        <svg width="22" height="30" viewBox="0 0 22 30" fill="none">
+      // Sin translate (iconAnchor lo posiciona). Sin pointer-events:none (necesita recibir clics).
+      return `<div style="width:${PIN_W}px;height:${PIN_H}px;transform:scale(${scale});transform-origin:50% 100%;transition:transform 0.18s ease;cursor:pointer;">
+        <svg width="${PIN_W}" height="${PIN_H}" viewBox="0 0 22 30" fill="none">
           <path d="M11 0C4.925 0 0 4.925 0 11C0 19.25 11 30 11 30C11 30 22 19.25 22 11C22 4.925 17.075 0 11 0Z" fill="${fill}"/>
           <circle cx="11" cy="11" r="4.5" fill="white"/>
         </svg>
@@ -88,7 +90,7 @@ export default function NeighborhoodMap({ zone }: Props) {
       const m = markersRef.current[name];
       if (!m) return;
       const L = (window as any).L;
-      m.pin.setIcon(L.divIcon({ className: '', html: pinHtml(false), iconSize: [0,0], iconAnchor: [0,0] }));
+      m.pin.setIcon(L.divIcon({ className: '', html: pinHtml(false), iconSize: [PIN_W, PIN_H], iconAnchor: [PIN_W/2, PIN_H] }));
       m.label.setIcon(L.divIcon({ className: '', html: labelHtml(name, false), iconSize: [0,0], iconAnchor: [0,0] }));
     };
 
@@ -96,7 +98,7 @@ export default function NeighborhoodMap({ zone }: Props) {
       const m = markersRef.current[name];
       if (!m) return;
       const L = (window as any).L;
-      m.pin.setIcon(L.divIcon({ className: '', html: pinHtml(true), iconSize: [0,0], iconAnchor: [0,0] }));
+      m.pin.setIcon(L.divIcon({ className: '', html: pinHtml(true), iconSize: [PIN_W, PIN_H], iconAnchor: [PIN_W/2, PIN_H] }));
       m.label.setIcon(L.divIcon({ className: '', html: labelHtml(name, true), iconSize: [0,0], iconAnchor: [0,0] }));
     };
 
@@ -129,14 +131,16 @@ export default function NeighborhoodMap({ zone }: Props) {
         const data = NEIGHBORHOOD_DATA[name];
         if (!data) continue;
 
-        const pinIcon = L.divIcon({ className: '', html: pinHtml(false), iconSize: [0,0], iconAnchor: [0,0] });
+        // Pin con iconSize real → el marker container tiene área de clic
+        const pinIcon = L.divIcon({ className: '', html: pinHtml(false), iconSize: [PIN_W, PIN_H], iconAnchor: [PIN_W/2, PIN_H] });
         const pin     = L.marker([data.lat, data.lng], { icon: pinIcon }).addTo(mapRef.current);
 
         const labelIcon = L.divIcon({ className: '', html: labelHtml(name, false), iconSize: [0,0], iconAnchor: [0,0] });
         const label     = L.marker([data.lat, data.lng], { icon: labelIcon, interactive: false }).addTo(mapRef.current);
 
+        // fillColor opaco necesario para que pointer-events:visiblePainted funcione en SVG
         const hitArea = L.circle([data.lat, data.lng], {
-          radius: 500, color: 'transparent', weight: 0, fillOpacity: 0.001,
+          radius: 500, color: 'transparent', weight: 0, fillColor: '#000', fillOpacity: 0.001,
         }).addTo(mapRef.current);
 
         const openPin = (e?: any) => {
@@ -158,21 +162,24 @@ export default function NeighborhoodMap({ zone }: Props) {
           }
         };
 
-        /* Hover visual via hitArea — área ampliada alrededor del pin */
+        /* Clic en el pin (marker con iconSize real) */
+        pin.on('click', openPin);
+
+        /* Hover via hitArea — área ampliada de 500m de radio */
         hitArea.on('mouseover', () => {
           if (activeNameRef.current === name) return;
           const L2 = (window as any).L;
-          pin.setIcon(L2.divIcon({ className: '', html: pinHtml(true), iconSize: [0,0], iconAnchor: [0,0] }));
+          pin.setIcon(L2.divIcon({ className: '', html: pinHtml(true), iconSize: [PIN_W, PIN_H], iconAnchor: [PIN_W/2, PIN_H] }));
           label.setIcon(L2.divIcon({ className: '', html: labelHtml(name, true), iconSize: [0,0], iconAnchor: [0,0] }));
         });
         hitArea.on('mouseout', () => {
           if (activeNameRef.current === name) return;
           const L2 = (window as any).L;
-          pin.setIcon(L2.divIcon({ className: '', html: pinHtml(false), iconSize: [0,0], iconAnchor: [0,0] }));
+          pin.setIcon(L2.divIcon({ className: '', html: pinHtml(false), iconSize: [PIN_W, PIN_H], iconAnchor: [PIN_W/2, PIN_H] }));
           label.setIcon(L2.divIcon({ className: '', html: labelHtml(name, false), iconSize: [0,0], iconAnchor: [0,0] }));
         });
 
-        /* Clic en hitArea (única fuente de clic — pin tiene pointer-events:none) */
+        /* Clic en hitArea como respaldo (área ampliada de 500m) */
         hitArea.on('click', openPin);
 
         markersRef.current[name] = { pin, label, hitArea };
