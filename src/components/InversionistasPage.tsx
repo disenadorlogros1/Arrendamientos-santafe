@@ -192,9 +192,9 @@ export default function InversionistasPage() {
             {/* LEFT: 4 sector cards */}
             <div style={{ width: '300px', flexShrink: 0, display: 'flex', flexDirection: 'column', gap: '8px' }}>
               {SECTORS.map(sector => {
-                const zone     = getZonesBySector(sector)[0];
-                const isActive = activeSector === sector;
-                const isHov    = hoveredSector === sector;
+                const zone         = getZonesBySector(sector)[0];
+                const effectiveSec = hoveredSector ?? activeSector;
+                const isHighlighted = effectiveSec === sector;
                 return (
                   <button
                     key={sector}
@@ -203,7 +203,7 @@ export default function InversionistasPage() {
                     onMouseLeave={() => setHoveredSector(null)}
                     style={{
                       flex:        1,
-                      background:  isActive ? '#f32735' : isHov ? '#f7f6f4' : '#fff',
+                      background:  isHighlighted ? '#e8e8e8' : '#fff',
                       border:      'none',
                       padding:     '0 20px',
                       textAlign:   'left',
@@ -215,23 +215,23 @@ export default function InversionistasPage() {
                     }}
                   >
                     <div>
-                      <div style={{ fontFamily: FONT, fontWeight: 700, fontSize: '20px', color: isActive ? '#fff' : '#1a1a1a', lineHeight: 1.2 }}>
+                      <div style={{ fontFamily: FONT, fontWeight: 700, fontSize: '20px', color: '#1a1a1a', lineHeight: 1.2 }}>
                         Zona {sector}
                       </div>
-                      <div style={{ fontFamily: FONT, fontSize: '12px', fontWeight: 400, color: isActive ? 'rgba(255,255,255,0.65)' : '#999', marginTop: '4px' }}>
+                      <div style={{ fontFamily: FONT, fontSize: '12px', fontWeight: 400, color: isHighlighted ? '#555' : '#999', marginTop: '4px' }}>
                         {SECTOR_SUBTITLES[sector]}
                       </div>
                     </div>
                     {/* Flecha tipo PropertyCard */}
                     <div style={{
                       width: '34px', height: '34px', borderRadius: '50%', flexShrink: 0,
-                      background: isActive ? 'rgba(255,255,255,0.18)' : isHov ? '#f32735' : '#f5f5f5',
+                      background: isHighlighted ? '#f32735' : '#f5f5f5',
                       display: 'flex', alignItems: 'center', justifyContent: 'center',
                       transition: 'background 0.18s ease',
                     }}>
                       <svg width="13" height="13" viewBox="0 0 14 14" fill="none">
                         <path d="M2.5 11.5L11.5 2.5M11.5 2.5H5M11.5 2.5V9"
-                          stroke={isActive || isHov ? '#fff' : '#888'}
+                          stroke={isHighlighted ? '#fff' : '#888'}
                           strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
                       </svg>
                     </div>
