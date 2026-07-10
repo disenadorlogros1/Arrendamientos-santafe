@@ -204,9 +204,9 @@ export default function InversionZonePage() {
         <section style={{ background: '#fff', padding: '72px 0', borderBottom: '1px solid #f5f5f5' }}>
           <div style={{ maxWidth: 1120, margin: '0 auto', padding: '0 24px' }}>
             <ScrollReveal y={16}>
-              <div style={{ marginBottom: 48 }}>
+              <div style={{ marginBottom: 24 }}>
                 <h2 style={{ fontSize: 'clamp(26px, 3.5vw, 40px)', fontWeight: 900, color: '#1a1a1a', margin: 0, letterSpacing: '-0.01em' }}>
-                  Ventajas de {zone.name}
+                  <span style={{ fontWeight: 300, color: '#888' }}>Ventajas de </span>{zone.name}
                 </h2>
               </div>
             </ScrollReveal>
@@ -218,7 +218,7 @@ export default function InversionZonePage() {
                     <div style={{ fontSize: 36, fontWeight: 900, color: RED, lineHeight: 1, letterSpacing: '-0.02em', flexShrink: 0, paddingTop: 2 }}>
                       {String(i + 1).padStart(2, '0')}
                     </div>
-                    <p style={{ fontSize: 14, color: '#555', lineHeight: 1.65, margin: 0 }}>{adv}</p>
+                    <p style={{ fontSize: 14, color: '#555', lineHeight: 1.4, margin: 0 }}>{adv}</p>
                   </div>
                 </ScrollReveal>
               ))}
@@ -232,7 +232,6 @@ export default function InversionZonePage() {
             <div style={{ height: 48 }} />
           </div>
           <NeighborhoodMap zone={zone} />
-          <div style={{ height: 64 }} />
         </section>
 
         {/* ── Propiedades relacionadas ──────────────────────── */}
@@ -283,7 +282,7 @@ export default function InversionZonePage() {
         )}
 
         {/* ── Otras zonas ───────────────────────────────────── */}
-        <section style={{ background: DARK2, padding: '72px 0', borderBottom: '1px solid #f5f5f5' }}>
+        <section style={{ background: '#fff', padding: '32px 0 72px', borderBottom: '1px solid #f5f5f5' }}>
           <div style={{ maxWidth: 1120, margin: '0 auto', padding: '0 24px' }}>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 2 }}>
               {otherZones.map((z, i) => (
@@ -296,7 +295,7 @@ export default function InversionZonePage() {
         </section>
 
         {/* ── CTA final ─────────────────────────────────────── */}
-        <section style={{ background: '#ccc', padding: '80px 24px' }}>
+        <section style={{ background: '#f5f5f5', padding: '80px 24px' }}>
           <div style={{ maxWidth: 580, margin: '0 auto', textAlign: 'center' as const }}>
             <ScrollReveal y={16}>
               <h2 style={{ fontSize: 'clamp(28px, 4vw, 48px)', fontWeight: 900, color: '#1a1a1a', margin: '0 0 12px', lineHeight: 1.05, letterSpacing: '-0.01em' }}>
@@ -316,12 +315,13 @@ export default function InversionZonePage() {
                   background: RED, color: '#fff',
                   fontSize: 14, fontWeight: 800, letterSpacing: '0.02em',
                   textDecoration: 'none', fontFamily: FONT,
+                  borderRadius: 999,
                   position: 'relative', overflow: 'hidden',
                 }}
                 onMouseEnter={applyInkFill}
                 onMouseLeave={applyInkFill}
               >
-                <img src="/icons/icon-whatsapp-red.gif" width={18} height={18} alt="" />
+                <img src="/icons/icon-whatsapp-white.gif" width={18} height={18} alt="" />
                 Solicitar asesoría
               </a>
             </ScrollReveal>
@@ -337,41 +337,40 @@ export default function InversionZonePage() {
 
 /* ── Tarjeta de otra zona ─────────────────────────────────── */
 function OtherZoneCard({ zone }: { zone: typeof investmentZones[0] }) {
-  const [hovered, setHovered] = useState(false);
   return (
     <Link
       href={`/inversionistas/${zone.slug}`}
       style={{
-        display: 'block',
-        background: hovered ? '#ececec' : DARK3,
-        borderTop: `3px solid ${hovered ? RED : '#f5f5f5'}`,
-        padding: '24px 22px 22px',
+        display: 'flex', flexDirection: 'column', alignItems: 'center',
+        background: '#fff',
+        padding: '28px 22px 24px',
         textDecoration: 'none',
-        transition: 'background 0.18s, border-color 0.18s',
         boxSizing: 'border-box' as const,
         height: '100%',
         fontFamily: FONT,
+        textAlign: 'center' as const,
+        border: '1px solid #f0f0f0',
       }}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
     >
-      <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.09em', textTransform: 'uppercase' as const, color: hovered ? RED : '#ccc', marginBottom: 10, transition: 'color 0.18s' }}>
-        {zone.sector}
-      </div>
-      <div style={{ fontSize: 20, fontWeight: 800, color: '#1a1a1a', marginBottom: 14, lineHeight: 1.15 }}>
+      <div style={{ fontSize: 20, fontWeight: 800, color: '#1a1a1a', marginBottom: 10, lineHeight: 1.15 }}>
         {zone.name}
       </div>
       <div style={{ fontSize: 12, color: '#888', marginBottom: 4 }}>
         <span style={{ color: RED, fontWeight: 700 }}>{zone.rentability}</span> rentabilidad
       </div>
-      <div style={{ fontSize: 12, color: '#888' }}>
+      <div style={{ fontSize: 12, color: '#888', marginBottom: 20 }}>
         {zone.pricePerM2} / m²
       </div>
-      <div style={{ marginTop: 20, display: 'flex', alignItems: 'center', gap: 6, color: hovered ? RED : '#ccc', fontSize: 12, fontWeight: 600, transition: 'color 0.18s' }}>
-        Ver análisis
-        <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-          <path d="M2 6h8M7 3l3 3-3 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-        </svg>
+      <div style={{ marginTop: 'auto' }}>
+        <span style={{
+          display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+          padding: '9px 24px',
+          background: RED, color: '#fff',
+          fontSize: 12, fontWeight: 700, letterSpacing: '0.03em',
+          borderRadius: 999,
+        }}>
+          Ver análisis
+        </span>
       </div>
     </Link>
   );
