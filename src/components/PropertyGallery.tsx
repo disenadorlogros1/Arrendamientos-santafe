@@ -195,12 +195,15 @@ function InfoCard({ type, stats, title }: {
       <a href={href} target="_blank" rel="noopener noreferrer" style={baseStyle} onClick={e => e.stopPropagation()}>
         <div style={{ flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', width: '100%' }}>
           {stats?.price && (
-            <div style={{ fontSize: 22, fontWeight: 900, color: '#0d0d0d', lineHeight: 1.1, marginBottom: 16, textAlign: 'center', width: '100%' }}>
-              {stats.price}
-            </div>
+            <>
+              <div style={{ ...labelStyle, textAlign: 'center', marginBottom: 4 }}>Precio de la propiedad</div>
+              <div style={{ fontSize: 22, fontWeight: 900, color: '#0d0d0d', lineHeight: 1.1, marginBottom: 20, textAlign: 'center', width: '100%' }}>
+                {stats.price}
+              </div>
+            </>
           )}
           {iconItems.length > 0 && (
-            <div style={{ display: 'grid', gridTemplateColumns: `repeat(${iconItems.length}, 1fr)`, gap: '4px 6px', width: '100%' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '12px 8px', width: '100%' }}>
               {iconItems.map((item, i) => (
                 <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 5 }}>
                   <span style={{ color: 'rgba(0,0,0,0.3)', display: 'flex' }}>{item.icon}</span>
