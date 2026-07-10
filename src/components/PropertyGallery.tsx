@@ -135,7 +135,7 @@ function InfoCard({ type, stats, title }: {
   };
 
   const bodyStyle: React.CSSProperties = {
-    fontSize: 17, color: 'rgba(0,0,0,0.45)', lineHeight: 1.5, flexGrow: 1, textAlign: 'center',
+    fontSize: 13, color: 'rgba(0,0,0,0.45)', lineHeight: 1.5, flexGrow: 1, textAlign: 'center',
   };
 
   const ctaStyle: React.CSSProperties = {
@@ -143,10 +143,10 @@ function InfoCard({ type, stats, title }: {
     width: '100%',
     padding: '10px 18px',
     background: 'transparent',
-    color: '#0d0d0d',
+    color: RED,
     fontSize: 12, fontWeight: 700,
     borderRadius: 999,
-    border: '1px solid rgba(0,0,0,0.3)',
+    border: `1px solid ${RED}`,
     textDecoration: 'none',
     letterSpacing: '0.03em',
     cursor: 'pointer',
@@ -154,7 +154,7 @@ function InfoCard({ type, stats, title }: {
     boxSizing: 'border-box' as const,
     position: 'relative',
     overflow: 'hidden',
-    transition: 'background 0.2s ease, border-color 0.2s ease',
+    transition: 'background 0.2s ease, border-color 0.2s ease, color 0.2s ease',
   };
 
   const effectiveType = (type === 0 && !stats?.zone) ? 2 : type;
@@ -166,7 +166,7 @@ function InfoCard({ type, stats, title }: {
     const href     = `/inversionistas/${slug}`;
     return (
       <a href={href} style={baseStyle} onClick={e => e.stopPropagation()}>
-        <div style={{ flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+        <div style={{ flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', width: '100%' }}>
           <div style={bigTitle}>¿Buscas una zona para invertir?</div>
           <div style={bodyStyle}>Rentabilidades, valorización y oportunidades en {zoneName} del mercado inmobiliario.</div>
         </div>
@@ -193,7 +193,7 @@ function InfoCard({ type, stats, title }: {
     ].filter(Boolean).join('  ·  ');
     return (
       <a href={href} target="_blank" rel="noopener noreferrer" style={baseStyle} onClick={e => e.stopPropagation()}>
-        <div style={{ flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+        <div style={{ flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', width: '100%' }}>
           {stats?.price && (
             <div style={{ fontSize: 22, fontWeight: 900, color: '#0d0d0d', lineHeight: 1.1, marginBottom: 6 }}>
               {stats.price}
@@ -215,7 +215,7 @@ function InfoCard({ type, stats, title }: {
   if (effectiveType === 2) {
     return (
       <a href="/propiedades" style={baseStyle} onClick={e => e.stopPropagation()}>
-        <div style={{ flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+        <div style={{ flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', width: '100%' }}>
           <div style={bigTitle}>Propiedades similares</div>
           <div style={bodyStyle}>Encuentra otras propiedades con características parecidas en nuestra oferta.</div>
         </div>
@@ -236,7 +236,7 @@ function InfoCard({ type, stats, title }: {
     const href = `https://wa.me/${WA_NUM}?text=${msg}`;
     return (
       <a href={href} target="_blank" rel="noopener noreferrer" style={baseStyle} onClick={e => e.stopPropagation()}>
-        <div style={{ flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+        <div style={{ flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', width: '100%' }}>
           <div style={bigTitle}>¿Quieres conocer esta propiedad en persona?</div>
           <div style={bodyStyle}>Coordina una visita con nuestros asesores y conoce todos los detalles.</div>
         </div>
@@ -271,7 +271,7 @@ function InfoCard({ type, stats, title }: {
         <div style={bodyStyle}>Comparte los detalles con quien quieras por WhatsApp o copia el enlace.</div>
       </div>
       <div style={{ height: 12 }} />
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 8, width: '100%' }}>
         <a href={waShareHref} target="_blank" rel="noopener noreferrer"
           className="gallery-cta-btn" style={ctaStyle}
           onMouseEnter={applyInkFill} onMouseLeave={applyInkFill}
@@ -280,7 +280,7 @@ function InfoCard({ type, stats, title }: {
         </a>
         <button
           className="gallery-cta-btn"
-          style={{ ...ctaStyle, background: copied ? RED : 'transparent' }}
+          style={{ ...ctaStyle, background: copied ? RED : 'transparent', color: copied ? '#fff' : RED }}
           onMouseEnter={applyInkFill} onMouseLeave={applyInkFill}
           onClick={handleCopy}
         >
