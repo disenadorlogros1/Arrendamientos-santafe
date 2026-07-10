@@ -2519,7 +2519,8 @@ export default function InversionistasLeafletMap({ activeSector, hoveredSector, 
           className: '',
           html: `<div style="transform:translate(-50%,-50%);text-align:center;pointer-events:none;white-space:nowrap">
             <div style="font-family:'Avenir LT Std','Outfit',sans-serif;font-size:40px;font-weight:900;color:#fff;line-height:1;text-shadow:0 2px 10px rgba(0,0,0,0.4);white-space:nowrap">${stats.barrios} Barrios</div>
-            <div style="font-family:'Avenir LT Std','Outfit',sans-serif;font-size:11px;font-weight:700;color:#fff;background:${RED};padding:3px 10px;margin-top:5px;white-space:nowrap;display:inline-block">${stats.propiedades} propiedades</div>
+            <div style="font-family:'Avenir LT Std','Outfit',sans-serif;font-size:13px;font-weight:400;color:rgba(255,255,255,0.85);margin-top:4px;white-space:nowrap">${stats.municipios} municipios</div>
+            <div style="font-family:'Avenir LT Std','Outfit',sans-serif;font-size:11px;font-weight:700;color:#fff;background:${RED};padding:3px 10px;margin-top:6px;white-space:nowrap;display:inline-block">${stats.propiedades} propiedades</div>
           </div>`,
           iconSize:   [0, 0],
           iconAnchor: [0, 0],
