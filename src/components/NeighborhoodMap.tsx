@@ -136,7 +136,7 @@ export default function NeighborhoodMap({ zone }: Props) {
         const label     = L.marker([data.lat, data.lng], { icon: labelIcon, interactive: false }).addTo(mapRef.current);
 
         const hitArea = L.circle([data.lat, data.lng], {
-          radius: 500, color: 'transparent', weight: 0, fillOpacity: 0,
+          radius: 500, color: 'transparent', weight: 0, fillOpacity: 0.001,
         }).addTo(mapRef.current);
 
         const openPin = (e?: any) => {
@@ -158,9 +158,6 @@ export default function NeighborhoodMap({ zone }: Props) {
           }
         };
 
-        /* Clic en el pin (área visible) — abre/cierra panel */
-        pin.on('click', openPin);
-
         /* Hover visual via hitArea — área ampliada alrededor del pin */
         hitArea.on('mouseover', () => {
           if (activeNameRef.current === name) return;
@@ -175,7 +172,7 @@ export default function NeighborhoodMap({ zone }: Props) {
           label.setIcon(L2.divIcon({ className: '', html: labelHtml(name, false), iconSize: [0,0], iconAnchor: [0,0] }));
         });
 
-        /* Clic en hitArea como fallback (por si el pin no captura) */
+        /* Clic en hitArea (única fuente de clic — pin tiene pointer-events:none) */
         hitArea.on('click', openPin);
 
         markersRef.current[name] = { pin, label, hitArea };
