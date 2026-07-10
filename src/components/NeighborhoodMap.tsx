@@ -251,7 +251,7 @@ export default function NeighborhoodMap({ zone }: Props) {
         transition: 'opacity 0.2s ease',
         pointerEvents: 'none',
       }}>
-        {zone.subzones.length} sectores · Pasa el cursor para explorar
+        {zone.subzones.length} sectores · Haz clic en un pin para explorar
       </div>
 
       {/* Panel desplegable — overlay 40% derecho, se abre al clic, permanece fijo */}
