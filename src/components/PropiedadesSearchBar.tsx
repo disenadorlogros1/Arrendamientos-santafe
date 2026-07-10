@@ -443,6 +443,75 @@ function AreaRangeSlider({
   );
 }
 
+/* ── AreaSelect — dropdown portal (igual que PriceSelect) ────────────── */
+
+function AreaSelect({
+  areaMin, areaMax, onChange,
+}: { areaMin: string; areaMax: string; onChange: (min: string, max: string) => void }) {
+  const [open, setOpen]       = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const buttonRef             = useRef<HTMLButtonElement>(null);
+  const dropdownRef           = useRef<HTMLDivElement>(null);
+  const [pos, setPos]         = useState({ top: 0, left: 0, width: 0 });
+
+  useEffect(() => { setMounted(true); }, []);
+
+  const updatePos = useCallback(() => {
+    if (buttonRef.current) {
+      const r = buttonRef.current.getBoundingClientRect();
+      setPos({ top: r.bottom + 2, left: r.left, width: Math.max(r.width, 260) });
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!open || !mounted) return;
+    const handler = (e: MouseEvent) => {
+      const t = e.target as Node;
+      if (!dropdownRef.current?.contains(t) && !buttonRef.current?.contains(t)) setOpen(false);
+    };
+    const id = setTimeout(() => document.addEventListener('mousedown', handler), 0);
+    return () => { clearTimeout(id); document.removeEventListener('mousedown', handler); };
+  }, [open, mounted]);
+
+  useEffect(() => {
+    if (!open) return;
+    window.addEventListener('scroll', updatePos, { passive: true });
+    return () => window.removeEventListener('scroll', updatePos);
+  }, [open, updatePos]);
+
+  const low  = areaMin ? Number(areaMin) : AREA_SLIDER_MIN;
+  const high = areaMax ? Number(areaMax) : AREA_SLIDER_MAX;
+  const pristine = low === AREA_SLIDER_MIN && high === AREA_SLIDER_MAX;
+  const display = pristine ? null :
+    low === AREA_SLIDER_MIN  ? `Hasta ${high} m²` :
+    high === AREA_SLIDER_MAX ? `Desde ${low} m²` :
+    `${low} – ${high} m²`;
+
+  const dropdown = mounted && open ? (
+    <div ref={dropdownRef} style={{ position: 'fixed', top: pos.top, left: pos.left, width: pos.width, zIndex: 9999 }}>
+      <div className="bg-white shadow-2xl border border-gray-100" style={{ padding: '16px 20px 22px' }}>
+        <AreaRangeSlider areaMin={areaMin} areaMax={areaMax} onChange={onChange} />
+      </div>
+    </div>
+  ) : null;
+
+  return (
+    <div className="min-w-0 w-full">
+      <button
+        ref={buttonRef}
+        type="button"
+        onClick={() => { if (!open) { updatePos(); setOpen(true); } else setOpen(false); }}
+        className="w-full flex items-center bg-transparent border-none outline-none cursor-pointer text-left"
+      >
+        <span style={{ fontFamily: FONT, fontSize: '14px', fontWeight: 400, color: display ? COLOR_VALUE : '#b8b8b8', lineHeight: 1, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+          {display || 'Seleccionar'}
+        </span>
+      </button>
+      {dropdown && createPortal(dropdown, document.body)}
+    </div>
+  );
+}
+
 /* ── Chip ───────────────────────────────────────────────────────────── */
 
 function Chip({ label, active, onClick }: { label: string; active: boolean; onClick: () => void }) {
@@ -517,6 +586,24 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', onApply, o
   const [sector,        setSector]        = useState('');
   const [tipoPropiedad, setTipoPropiedad] = useState('');
 
+  const [showAdvanced, setShowAdvanced] = useState(false);
+
+  const busquedaInputRef = useRef<HTMLInputElement>(null);
+  const codigoInputRef   = useRef<HTMLInputElement>(null);
+  const wrapperRef       = useRef<HTMLDivElement>(null);
+
+  const activateBusqueda = useCallback(() => {
+    setBusquedaActive(true);
+    setCodigoActive(false);
+    setTimeout(() => busquedaInputRef.current?.focus(), 0);
+  }, []);
+
+  const activateCodigo = useCallback(() => {
+    setCodigoActive(true);
+    setBusquedaActive(false);
+    setTimeout(() => codigoInputRef.current?.focus(), 0);
+  }, []);
+
   const busquedaCollapsed = busquedaActive || textoBusqueda.length > 0;
   const codigoCollapsed   = codigoActive   || codigo.length > 0;
   const col1Collapsed   = codigoActive   || (codigoCollapsed  && !busquedaCollapsed);
@@ -526,8 +613,6 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', onApply, o
     t === 'Comprar' ? [30_000_000, 500_000_000] : t === 'Arrendar' ? [0, 15_000_000] : [0, 500_000_000];
 
   const [precioRange, setPrecioRange] = useState<[number, number]>(defaultPrecioRange(initialTipo));
-  const [showAdvanced,  setShowAdvanced]  = useState(false);
-  const wrapperRef = useRef<HTMLDivElement>(null);
 
   const [habitaciones, setHabitaciones] = useState<number | null>(null);
   const [banos,        setBanos]        = useState<number | null>(null);
@@ -655,7 +740,7 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', onApply, o
           {/* Col 1: Búsqueda libre tipo Google */}
           <div
             style={{ position: 'relative', borderRight: DIVIDER, borderBottom: DIVIDER, overflow: 'hidden', cursor: 'text' }}
-            onClick={() => { setBusquedaActive(true); setShowAdvanced(false); }}
+            onClick={activateBusqueda}
           >
             {/* Icon overlay — visible cuando está colapsado */}
             <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: col1Collapsed ? 1 : 0, transition: 'opacity 0.2s ease', pointerEvents: 'none' }}>
@@ -682,7 +767,8 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', onApply, o
                       areaMin, areaMax, estrato, comodidades,
                     });
                   }}
-                  onFocus={() => { setBusquedaActive(true); setShowAdvanced(false); }}
+                  ref={busquedaInputRef}
+                  onFocus={activateBusqueda}
                   onBlur={() => { if (!textoBusqueda) setBusquedaActive(false); }}
                   placeholder="Ej: inmueble cerca a Niquia"
                   className="search-field-input"
@@ -695,7 +781,7 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', onApply, o
           {/* Col 2: Código inmueble */}
           <div
             style={{ position: 'relative', borderRight: DIVIDER, borderBottom: DIVIDER, overflow: 'hidden', cursor: 'text' }}
-            onClick={() => { setCodigoActive(true); setShowAdvanced(false); }}
+            onClick={activateCodigo}
           >
             {/* Icon overlay — visible cuando está colapsado */}
             <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: col2Collapsed ? 1 : 0, transition: 'opacity 0.2s ease', pointerEvents: 'none' }}>
@@ -718,7 +804,8 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', onApply, o
                       areaMin, areaMax, estrato, comodidades,
                     });
                   }}
-                  onFocus={() => { setCodigoActive(true); setShowAdvanced(false); }}
+                  ref={codigoInputRef}
+                  onFocus={activateCodigo}
                   onBlur={() => { if (!codigo) setCodigoActive(false); }}
                   placeholder="Ej: A11636"
                   className="search-field-input"
@@ -855,7 +942,7 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', onApply, o
                   <img src="/icons/icon-area-red.gif" alt="" width={24} height={24} style={{ flexShrink: 0, marginTop: '2px' }} />
                   <div style={{ minWidth: 0, flex: 1 }}>
                     <p style={labelStyle}>Área (m²)</p>
-                    <AreaRangeSlider
+                    <AreaSelect
                       areaMin={areaMin}
                       areaMax={areaMax}
                       onChange={(min, max) => {
