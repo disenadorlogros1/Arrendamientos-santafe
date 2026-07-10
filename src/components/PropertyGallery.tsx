@@ -144,6 +144,7 @@ function InfoCard({ type, stats, title }: {
     padding: '10px 18px',
     background: 'transparent',
     color: RED,
+    fontFamily: FONT,
     fontSize: 12, fontWeight: 700,
     borderRadius: 999,
     border: `1px solid ${RED}`,
