@@ -443,7 +443,7 @@ export default function PropiedadesPage({ initialFilter = 'Todos', initialQueStr
             }}
           >
             Ver{' '}
-            <span style={{ fontWeight: 700, color: '#f32735' }}>propiedades</span>
+            <span style={{ fontWeight: 700, color: '#fff' }}>propiedades</span>
           </h1>
           <p
             ref={subtitleRef}
@@ -451,7 +451,7 @@ export default function PropiedadesPage({ initialFilter = 'Todos', initialQueStr
               fontFamily: FONT_BODY,
               fontWeight: 300,
               fontSize: 'clamp(13px, 1.1vw, 16px)',
-              color: 'rgba(255,255,255,0.55)',
+              color: '#fff',
               lineHeight: 1.55,
               margin: 0,
               maxWidth: '560px',

@@ -73,6 +73,7 @@ const navItems: NavItem[] = [
   { label: 'Servicios', children: [
     { label: 'Solicitud de arrendamiento', href: SOLICITUD_ARRENDAMIENTO_URL },
     { label: 'Reportar reparación', href: REPARACIONES_URL },
+    { label: 'Consigna tu inmueble', page: 'consignacion' },
   ]},
   { label: 'Nosotros', page: 'nosotros' as const, children: [
     { label: 'Quiénes somos', page: 'nosotros' },
@@ -182,7 +183,7 @@ export default function Header({ currentPage, onNavigate, isHeroPage = true, dar
                         onMouseEnter={e => { setHoveredNav(item.label); if (!isActive) applyInkFill(e); }}
                         onMouseLeave={e => { setHoveredNav(null); if (!isActive) applyInkFill(e); }}
                         className={isActive ? 'w-full px-2 py-2 rounded-full' : 'nav-ink-btn w-full px-2 py-2 rounded-full'}
-                        style={{ fontFamily: "'Avenir LT Std', 'Outfit', system-ui, sans-serif", fontWeight: (isActive || hoveredNav === item.label) ? 700 : 300, fontSize: '15px', color: isActive ? '#fff' : headerTextColor, background: isActive ? '#f32735' : 'transparent', transition: 'background 0.2s ease, color 0.2s ease' }}
+                        style={{ fontFamily: "'Avenir LT Std', 'Outfit', system-ui, sans-serif", fontWeight: (isActive || hoveredNav === item.label) ? 700 : 300, fontSize: '15px', color: isActive ? '#1a1a1a' : headerTextColor, background: isActive ? '#f5f5f5' : 'transparent', transition: 'background 0.2s ease, color 0.2s ease' }}
                       >
                         <span style={{ fontWeight: 'inherit' }}>{item.label}</span>
                       </button>
@@ -217,7 +218,7 @@ export default function Header({ currentPage, onNavigate, isHeroPage = true, dar
                       onMouseEnter={e => { setHoveredNav(item.label); if (!isActive) applyInkFill(e); }}
                       onMouseLeave={e => { setHoveredNav(null); if (!isActive) applyInkFill(e); }}
                       className={isActive ? 'flex-1 px-2 py-2 rounded-full' : 'nav-ink-btn flex-1 px-2 py-2 rounded-full'}
-                      style={{ fontFamily: "'Avenir LT Std', 'Outfit', system-ui, sans-serif", fontWeight: (isActive || hoveredNav === item.label) ? 700 : 300, fontSize: '15px', color: isActive ? '#fff' : headerTextColor, background: isActive ? '#f32735' : 'transparent', transition: 'background 0.2s ease, color 0.2s ease' }}>
+                      style={{ fontFamily: "'Avenir LT Std', 'Outfit', system-ui, sans-serif", fontWeight: (isActive || hoveredNav === item.label) ? 700 : 300, fontSize: '15px', color: isActive ? '#1a1a1a' : headerTextColor, background: isActive ? '#f5f5f5' : 'transparent', transition: 'background 0.2s ease, color 0.2s ease' }}>
                       <span style={{ fontWeight: 'inherit' }}>{item.label}</span>
                     </button>
                   );
@@ -264,7 +265,7 @@ export default function Header({ currentPage, onNavigate, isHeroPage = true, dar
                     <div key={item.label}>
                       <button
                         onClick={() => { if (item.children) setExpandedMobile(expandedMobile === item.label ? null : item.label); else if (item.page) handleNav(item.page); }}
-                        className={`w-full text-left px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 ${currentPage === item.page ? 'bg-brand-red text-white' : 'text-white/70 hover:bg-white/10 hover:text-white'}`}
+                        className={`w-full text-left px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 ${currentPage === item.page ? 'bg-[#f5f5f5] text-[#1a1a1a]' : 'text-white/70 hover:bg-white/10 hover:text-white'}`}
                         style={{ fontFamily: "'Avenir LT Std', 'Outfit', system-ui, sans-serif", fontWeight: currentPage === item.page ? 700 : 300 }}>
                         {item.label}
                       </button>
