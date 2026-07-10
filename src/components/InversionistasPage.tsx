@@ -21,6 +21,37 @@ function applyInkFill(e: React.MouseEvent<HTMLElement>) {
 import InversionistasLeafletMap from '@/components/InversionistasLeafletMap';
 
 const FONT = "'Avenir LT Std', 'Outfit', system-ui, sans-serif";
+const RED  = '#f32735';
+
+function CountMetric({ value, accent }: { value: string; accent?: boolean }) {
+  const [displayed, setDisplayed] = useState(value.match(/\d/)?.[0] ?? '0');
+  const started = useRef(false);
+  const divRef  = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const el = divRef.current;
+    if (!el) return;
+    const nums = value.match(/\d+/g) ?? [];
+    const max  = parseInt(nums[nums.length - 1] ?? '0', 10);
+    const observer = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting && !started.current) {
+        started.current = true;
+        let cur = 0;
+        const tick = setInterval(() => {
+          cur += Math.max(1, Math.ceil(max / 25));
+          if (cur >= max) { setDisplayed(value); clearInterval(tick); }
+          else            { setDisplayed(String(cur)); }
+        }, 40);
+      }
+    }, { threshold: 0.5 });
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [value]);
+  return (
+    <div ref={divRef} style={{ fontSize: 22, fontWeight: 900, color: accent ? RED : '#0d0d0d', lineHeight: 1 }}>
+      {displayed}
+    </div>
+  );
+}
 
 const beneficios = [
   { icon: '/icons/icon-home-red.gif',        title: 'Trayectoria comprobada',    description: 'Desde 1966, con más de 2.000 inmuebles en gestión activa entre arrendamiento y venta en Antioquia.' },
@@ -230,41 +261,39 @@ export default function InversionistasPage() {
             background: '#e0e0e0',
           }}>
             {visibleZones.map((zone) => (
-              <div key={zone.id} style={{ background: '#fff', borderTop: '3px solid #f32735', padding: '20px 16px 0', display: 'flex', flexDirection: 'column' }}>
+              <div key={zone.id} style={{ background: '#fff', borderTop: `3px solid ${RED}`, display: 'flex', flexDirection: 'column' }}>
 
-                {/* Nombre zona */}
-                <h3 style={{ fontFamily: FONT, fontWeight: 700, fontSize: '17px', color: '#0d0d0d', margin: '0 0 12px 0', lineHeight: 1.25, textAlign: 'center' }}>
-                  {zone.name}
-                </h3>
-
-                {/* Métricas en fila */}
-                <div style={{ display: 'flex', gap: '0', borderTop: '1px solid #f0f0f0', borderBottom: '1px solid #f0f0f0', flex: 1 }}>
-                  {[
-                    { label: 'Rentabilidad', value: zone.rentability, accent: true },
-                    { label: 'Estratos',     value: zone.strata      },
-                  ].map((m, i) => (
-                    <div key={i} style={{ flex: 1, padding: '8px 0', textAlign: 'center' }}>
-                      <div style={{ fontFamily: FONT, fontSize: '9px', fontWeight: 600, color: '#aaa', letterSpacing: '0.4px', marginBottom: '2px' }}>
-                        {m.label}
+                {/* Nombre + métricas */}
+                <div style={{ padding: '20px 16px 16px', flexGrow: 1 }}>
+                  <h3 style={{ fontFamily: FONT, fontWeight: 700, fontSize: '17px', color: '#0d0d0d', margin: '0 0 14px 0', lineHeight: 1.25, textAlign: 'center' }}>
+                    {zone.name}
+                  </h3>
+                  <div style={{ display: 'flex', gap: '0' }}>
+                    {[
+                      { label: 'Rentabilidad', value: zone.rentability, accent: true },
+                      { label: 'Estratos',     value: zone.strata      },
+                    ].map((m, i) => (
+                      <div key={i} style={{ flex: 1, padding: '8px 0', textAlign: 'center' }}>
+                        <div style={{ fontFamily: FONT, fontSize: '12px', fontWeight: 300, color: 'rgba(0,0,0,0.55)', marginBottom: '6px' }}>
+                          {m.label}
+                        </div>
+                        <CountMetric value={m.value} accent={m.accent} />
                       </div>
-                      <div style={{ fontFamily: FONT, fontSize: '15px', fontWeight: 700, color: m.accent ? '#f32735' : '#0d0d0d' }}>
-                        {m.value}
-                      </div>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
 
-                {/* CTA full width */}
+                {/* CTA edge-to-edge */}
                 <Link
                   href={`/inversionistas/${zone.slug}`}
                   style={{
-                    marginTop: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
-                    padding: '11px 16px', background: '#f32735', color: '#fff',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    padding: '11px 16px', background: RED, color: '#fff',
                     fontFamily: FONT, fontSize: '13px', fontWeight: 600,
-                    textDecoration: 'none', transition: 'background 0.18s',
+                    textDecoration: 'none', transition: 'background 0.18s', flexShrink: 0,
                   }}
                   onMouseEnter={e => (e.currentTarget.style.background = '#c41e2a')}
-                  onMouseLeave={e => (e.currentTarget.style.background = '#f32735')}
+                  onMouseLeave={e => (e.currentTarget.style.background = RED)}
                 >
                   Ver más
                 </Link>
@@ -336,7 +365,7 @@ export default function InversionistasPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-16 md:py-20 bg-brand-red">
+      <section className="py-16 md:py-20" style={{ background: '#232222' }}>
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
           <ScrollReveal y={20}>
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-8" style={{ fontFamily: FONT }}>

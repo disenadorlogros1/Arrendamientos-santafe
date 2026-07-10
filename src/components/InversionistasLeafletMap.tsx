@@ -2512,14 +2512,13 @@ export default function InversionistasLeafletMap({ activeSector, hoveredSector, 
       }
 
       // Marcadores de estadísticas por sector
-      const makeSectorIcon = (sector: Sector, isActive: boolean) => {
+      const makeSectorIcon = (sector: Sector, _isActive: boolean) => {
         const stats = SECTOR_STATS[sector];
-        const col   = isActive ? RED : '#888';
         return L.divIcon({
           className: '',
           html: `<div style="transform:translate(-50%,-50%);text-align:center;pointer-events:none">
-            <div style="font-family:'Avenir LT Std','Outfit',sans-serif;font-size:36px;font-weight:900;color:${col};line-height:1;text-shadow:0 1px 6px rgba(255,255,255,1),0 1px 3px rgba(255,255,255,0.9)">${stats.barrios}</div>
-            <div style="font-family:'Avenir LT Std','Outfit',sans-serif;font-size:10px;font-weight:500;color:#fff;background:${isActive ? col : '#aaa'};padding:2px 8px;margin-top:3px;white-space:nowrap">${stats.propiedades} propiedades</div>
+            <div style="font-family:'Avenir LT Std','Outfit',sans-serif;font-size:40px;font-weight:900;color:#fff;line-height:1;text-shadow:0 2px 10px rgba(0,0,0,0.4)">${stats.barrios} Barrios</div>
+            <div style="font-family:'Avenir LT Std','Outfit',sans-serif;font-size:11px;font-weight:700;color:#fff;background:${RED};padding:3px 10px;margin-top:5px;white-space:nowrap;display:inline-block">${stats.propiedades} propiedades</div>
           </div>`,
           iconSize:   [0, 0],
           iconAnchor: [0, 0],
@@ -2561,10 +2560,9 @@ export default function InversionistasLeafletMap({ activeSector, hoveredSector, 
       const isHov    = hoveredSector !== null && sector === hoveredSector;
 
       if (isHov) {
-        // border = fill → barrios del sector se ven como una sola mancha sin divisiones internas
-        refs.polygon.setStyle({ color: RED, weight: 0.5, fillColor: RED, fillOpacity: 0.28, opacity: 0.28 });
+        refs.polygon.setStyle({ color: RED, weight: 0, fillColor: RED, fillOpacity: 0.35, opacity: 0 });
       } else if (inActive) {
-        refs.polygon.setStyle({ color: RED, weight: 0.5, fillColor: RED, fillOpacity: 0.18, opacity: 0.85 });
+        refs.polygon.setStyle({ color: RED, weight: 0, fillColor: RED, fillOpacity: 0.22, opacity: 0 });
       } else {
         refs.polygon.setStyle({ color: '#ccc', weight: 0.4, fillColor: '#ccc', fillOpacity: 0.04, opacity: 0.25 });
       }
