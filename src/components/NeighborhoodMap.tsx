@@ -185,10 +185,9 @@ export default function NeighborhoodMap({ zone }: Props) {
         markersRef.current[name] = { pin, label, hitArea };
       }
 
-      // Clic en el mapa (fuera de pins) → cierra
-      mapRef.current.on('click', () => {
-        closePanelRef.current();
-      });
+      // No usamos map.on('click') porque dispara en el mismo tick que pin.on('click')
+      // cerrando el panel antes de que React lo renderice.
+      // El document click listener (useEffect inferior, 100ms delay) maneja el cierre.
     };
 
     if ((window as any).L) {
