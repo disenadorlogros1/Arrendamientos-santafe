@@ -183,7 +183,7 @@ export default function Header({ currentPage, onNavigate, isHeroPage = true, dar
                         onMouseEnter={e => { setHoveredNav(item.label); if (!isActive) applyInkFill(e); }}
                         onMouseLeave={e => { setHoveredNav(null); if (!isActive) applyInkFill(e); }}
                         className={isActive ? 'w-full px-2 py-2 rounded-full' : 'nav-ink-btn w-full px-2 py-2 rounded-full'}
-                        style={{ fontFamily: "'Avenir LT Std', 'Outfit', system-ui, sans-serif", fontWeight: (isActive || hoveredNav === item.label) ? 700 : 300, fontSize: '15px', color: isActive ? '#f32735' : headerTextColor, background: isActive ? 'rgba(245,245,245,0.5)' : 'transparent', transition: 'background 0.2s ease, color 0.2s ease' }}
+                        style={{ fontFamily: "'Avenir LT Std', 'Outfit', system-ui, sans-serif", fontWeight: (isActive || hoveredNav === item.label) ? 700 : 300, fontSize: '15px', color: isActive ? '#ffffff' : headerTextColor, background: isActive ? 'rgba(245,245,245,0.5)' : 'transparent', transition: 'background 0.2s ease, color 0.2s ease' }}
                       >
                         <span style={{ fontWeight: 'inherit' }}>{item.label}</span>
                       </button>
@@ -218,7 +218,7 @@ export default function Header({ currentPage, onNavigate, isHeroPage = true, dar
                       onMouseEnter={e => { setHoveredNav(item.label); if (!isActive) applyInkFill(e); }}
                       onMouseLeave={e => { setHoveredNav(null); if (!isActive) applyInkFill(e); }}
                       className={isActive ? 'flex-1 px-2 py-2 rounded-full' : 'nav-ink-btn flex-1 px-2 py-2 rounded-full'}
-                      style={{ fontFamily: "'Avenir LT Std', 'Outfit', system-ui, sans-serif", fontWeight: (isActive || hoveredNav === item.label) ? 700 : 300, fontSize: '15px', color: isActive ? '#f32735' : headerTextColor, background: isActive ? 'rgba(245,245,245,0.5)' : 'transparent', transition: 'background 0.2s ease, color 0.2s ease' }}>
+                      style={{ fontFamily: "'Avenir LT Std', 'Outfit', system-ui, sans-serif", fontWeight: (isActive || hoveredNav === item.label) ? 700 : 300, fontSize: '15px', color: isActive ? '#ffffff' : headerTextColor, background: isActive ? 'rgba(245,245,245,0.5)' : 'transparent', transition: 'background 0.2s ease, color 0.2s ease' }}>
                       <span style={{ fontWeight: 'inherit' }}>{item.label}</span>
                     </button>
                   );
