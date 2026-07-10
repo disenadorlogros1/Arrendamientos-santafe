@@ -47,11 +47,12 @@ const BARRIO_SECTOR: Record<string, Sector> = {
 };
 
 // Estadísticas por sector — actualizar con datos reales
-const SECTOR_STATS: Record<Sector, { barrios: number; propiedades: number }> = {
-  Norte:     { barrios: 9,  propiedades: 12 },
-  Sur:       { barrios: 8,  propiedades: 18 },
-  Oriente:   { barrios: 11, propiedades: 8  },
-  Occidente: { barrios: 11, propiedades: 24 },
+// municipios = zonas que NO son barrios/comunas/corregimientos de Medellín
+const SECTOR_STATS: Record<Sector, { barrios: number; propiedades: number; municipios: number }> = {
+  Norte:     { barrios: 9,  propiedades: 12, municipios: 4 }, // Bello, Copacabana, Barbosa, Girardota
+  Sur:       { barrios: 8,  propiedades: 18, municipios: 6 }, // Envigado, Sabaneta, Itagüí, La Estrella, Caldas, Amagá
+  Oriente:   { barrios: 11, propiedades: 8,  municipios: 6 }, // Rionegro, Guarne, La Ceja, Marinilla, El Carmen de Viboral, Guatapé
+  Occidente: { barrios: 11, propiedades: 24, municipios: 4 }, // San Jerónimo, Santa Fe de Antioquia, Sopetrán, San Pedro de los Milagros
 };
 
 // Posición visual central de cada sector para el marcador de estadísticas
