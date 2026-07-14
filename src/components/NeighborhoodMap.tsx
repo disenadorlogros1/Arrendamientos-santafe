@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import type { InvestmentZone } from '@/data/investment-zones';
-import { NEIGHBORHOOD_DATA, BARRIO_IMAGES } from '@/data/neighborhood-data';
+import { NEIGHBORHOOD_DATA } from '@/data/neighborhood-data';
 
 const FONT = "'Avenir LT Std', 'Outfit', system-ui, sans-serif";
 const RED  = '#f32735';
@@ -28,17 +28,11 @@ const NAME_TO_SLUG: Record<string, string> = {
   'San Javier': 'san-javier', 'Naranjal': 'naranjal',
 };
 
-interface Props {
-  zone: InvestmentZone;
-}
+interface Props { zone: InvestmentZone; }
 
 interface ActiveNeighborhood {
-  name: string;
-  rentBlurb: string;
-  buyBlurb: string;
-  rentability: string;
-  avgPrice: string;
-  imageIdx: number;
+  name: string; rentBlurb: string; buyBlurb: string;
+  rentability: string; avgPrice: string; imageIdx: number;
 }
 
 const ZONE_CENTER: Record<string, { lat: number; lng: number; zoom: number }> = {
@@ -49,14 +43,17 @@ const ZONE_CENTER: Record<string, { lat: number; lng: number; zoom: number }> = 
 };
 
 export default function NeighborhoodMap({ zone }: Props) {
-  const containerRef   = useRef<HTMLDivElement>(null);
-  const panelRef       = useRef<HTMLDivElement>(null);
-  const mapRef         = useRef<any>(null);
-  const markersRef     = useRef<Record<string, any>>({});
-  const activeNameRef  = useRef<string | null>(null);
-  const closeTimerRef  = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const closePanelRef  = useRef<() => void>(() => {});
+  const containerRef  = useRef<HTMLDivElement>(null);
+  const panelRef      = useRef<HTMLDivElement>(null);
+  const mapRef        = useRef<any>(null);
+  const activeNameRef = useRef<string | null>(null);
+  const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const markersRef    = useRef<Record<string, { pin: any; label: any; el: HTMLElement | null }>>({});
   const [active, setActive] = useState<ActiveNeighborhood | null>(null);
+
+  // --- helpers (stable refs so Leaflet closures always see latest) ----
+  const activateRef = useRef<(name: string) => void>(() => {});
+  const deactivateRef = useRef<(name: string) => void>(() => {});
 
   useEffect(() => {
     const subzones = zone.subzones;
@@ -67,7 +64,7 @@ export default function NeighborhoodMap({ zone }: Props) {
     const pinHtml = (isActive: boolean) => {
       const fill  = isActive ? RED : '#222';
       const scale = isActive ? 1.35 : 1;
-      return `<div style="width:${PIN_W}px;height:${PIN_H}px;transform:scale(${scale});transform-origin:50% 100%;transition:transform 0.18s ease;cursor:pointer;">
+      return `<div style="width:${PIN_W}px;height:${PIN_H}px;transform:scale(${scale});transform-origin:50% 100%;transition:transform 0.18s ease;">
         <svg width="${PIN_W}" height="${PIN_H}" viewBox="0 0 22 30" fill="none">
           <path d="M11 0C4.925 0 0 4.925 0 11C0 19.25 11 30 11 30C11 30 22 19.25 22 11C22 4.925 17.075 0 11 0Z" fill="${fill}"/>
           <circle cx="11" cy="11" r="4.5" fill="white"/>
@@ -76,24 +73,18 @@ export default function NeighborhoodMap({ zone }: Props) {
     };
 
     const labelHtml = (label: string, isActive: boolean) =>
-      `<div style="
-        padding:2px 7px;background:transparent;
-        font-family:'Avenir LT Std','Outfit',sans-serif;
-        font-size:9px;font-weight:700;letter-spacing:0.04em;
-        color:${isActive ? RED : '#444'};white-space:nowrap;
-        transform:translate(-50%,6px);pointer-events:none;
-        text-shadow:0 1px 3px rgba(255,255,255,0.9),0 0 6px rgba(255,255,255,0.7);
-      ">${label}</div>`;
+      `<div style="padding:2px 7px;font-family:'Avenir LT Std','Outfit',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.04em;color:${isActive ? RED : '#444'};white-space:nowrap;transform:translate(-50%,6px);pointer-events:none;text-shadow:0 1px 3px rgba(255,255,255,0.9),0 0 6px rgba(255,255,255,0.7);">${label}</div>`;
 
-    const deactivate = (name: string) => {
+    deactivateRef.current = (name: string) => {
       const m = markersRef.current[name];
       if (!m) return;
       const L2 = (window as any).L;
       m.pin.setIcon(L2.divIcon({ className: '', html: pinHtml(false), iconSize: [PIN_W, PIN_H], iconAnchor: [PIN_W/2, PIN_H] }));
       m.label.setIcon(L2.divIcon({ className: '', html: labelHtml(name, false), iconSize: [0,0], iconAnchor: [0,0] }));
+      if (m.el) m.el.style.cursor = 'pointer';
     };
 
-    const activate = (name: string) => {
+    activateRef.current = (name: string) => {
       const m = markersRef.current[name];
       if (!m) return;
       const L2 = (window as any).L;
@@ -101,17 +92,16 @@ export default function NeighborhoodMap({ zone }: Props) {
       m.label.setIcon(L2.divIcon({ className: '', html: labelHtml(name, true), iconSize: [0,0], iconAnchor: [0,0] }));
     };
 
-    closePanelRef.current = () => {
-      if (closeTimerRef.current) { clearTimeout(closeTimerRef.current); closeTimerRef.current = null; }
-      if (activeNameRef.current) { deactivate(activeNameRef.current); activeNameRef.current = null; }
-      setActive(null);
-    };
-
     const scheduleClose = () => {
       if (closeTimerRef.current) clearTimeout(closeTimerRef.current);
       closeTimerRef.current = setTimeout(() => {
         closeTimerRef.current = null;
-        closePanelRef.current();
+        // deactivate current
+        if (activeNameRef.current) {
+          deactivateRef.current(activeNameRef.current);
+          activeNameRef.current = null;
+        }
+        setActive(null);
       }, 200);
     };
 
@@ -137,40 +127,39 @@ export default function NeighborhoodMap({ zone }: Props) {
         if (!data) continue;
 
         const pinIcon = L.divIcon({ className: '', html: pinHtml(false), iconSize: [PIN_W, PIN_H], iconAnchor: [PIN_W/2, PIN_H] });
-        const pin     = L.marker([data.lat, data.lng], { icon: pinIcon }).addTo(mapRef.current);
+        const pin = L.marker([data.lat, data.lng], { icon: pinIcon }).addTo(mapRef.current);
 
         const labelIcon = L.divIcon({ className: '', html: labelHtml(name, false), iconSize: [0,0], iconAnchor: [0,0] });
-        const label     = L.marker([data.lat, data.lng], { icon: labelIcon, interactive: false }).addTo(mapRef.current);
+        const label = L.marker([data.lat, data.lng], { icon: labelIcon, interactive: false }).addTo(mapRef.current);
 
-        const hitArea = L.circle([data.lat, data.lng], {
-          radius: 500, color: 'transparent', weight: 0, fillColor: '#000', fillOpacity: 0.001,
-        }).addTo(mapRef.current);
+        // Guardar ref para poder actualizar el ícono después
+        markersRef.current[name] = { pin, label, el: null };
 
-        const openNeighborhood = () => {
-          cancelClose();
-          if (activeNameRef.current === name) return; // ya mostrando este
-          if (activeNameRef.current) deactivate(activeNameRef.current);
-          activate(name);
-          activeNameRef.current = name;
-          setActive({
-            name:        data.name,
-            rentBlurb:   data.rentBlurb,
-            buyBlurb:    data.buyBlurb,
-            rentability: data.rentability,
-            avgPrice:    data.avgPrice,
-            imageIdx:    data.imageIdx,
+        // Usar eventos DOM nativos directamente en el elemento del marker
+        // (más confiable que Leaflet's mouseover que tiene interferencia con el SVG hitArea)
+        const el = pin.getElement() as HTMLElement | null;
+        if (el) {
+          markersRef.current[name].el = el;
+          el.style.cursor = 'pointer';
+
+          el.addEventListener('mouseenter', () => {
+            cancelClose();
+            if (activeNameRef.current === name) return;
+            if (activeNameRef.current) deactivateRef.current(activeNameRef.current);
+            activateRef.current(name);
+            activeNameRef.current = name;
+            setActive({
+              name:        data.name,
+              rentBlurb:   data.rentBlurb,
+              buyBlurb:    data.buyBlurb,
+              rentability: data.rentability,
+              avgPrice:    data.avgPrice,
+              imageIdx:    data.imageIdx,
+            });
           });
-        };
 
-        /* Hover sobre hitArea o pin → abre panel */
-        hitArea.on('mouseover', openNeighborhood);
-        pin.on('mouseover', openNeighborhood);
-
-        /* Mouse sale del área → programa cierre (el panel puede cancelarlo) */
-        hitArea.on('mouseout', scheduleClose);
-        pin.on('mouseout', scheduleClose);
-
-        markersRef.current[name] = { pin, label, hitArea };
+          el.addEventListener('mouseleave', scheduleClose);
+        }
       }
     };
 
@@ -179,13 +168,13 @@ export default function NeighborhoodMap({ zone }: Props) {
     } else {
       if (!document.querySelector('link[data-leaflet]')) {
         const link = document.createElement('link');
-        link.rel   = 'stylesheet';
-        link.href  = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css';
+        link.rel = 'stylesheet';
+        link.href = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css';
         link.setAttribute('data-leaflet', '1');
         document.head.appendChild(link);
       }
-      const script  = document.createElement('script');
-      script.src    = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js';
+      const script = document.createElement('script');
+      script.src = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js';
       script.onload = init;
       document.head.appendChild(script);
     }
@@ -208,7 +197,6 @@ export default function NeighborhoodMap({ zone }: Props) {
 
   return (
     <div style={{ position: 'relative', width: '100%', height: 480, overflow: 'hidden', isolation: 'isolate' as any }}>
-      {/* Mapa */}
       <div ref={containerRef} style={{ width: '100%', height: '100%', background: '#f5f5f5' }} />
 
       {/* Badge */}
@@ -226,7 +214,7 @@ export default function NeighborhoodMap({ zone }: Props) {
         {zone.subzones.length} sectores · Pasa el cursor para explorar
       </div>
 
-      {/* Panel lateral — abre al hover, se mantiene mientras el mouse esté sobre él */}
+      {/* Panel lateral */}
       <div
         ref={panelRef}
         onMouseEnter={() => {
@@ -236,7 +224,8 @@ export default function NeighborhoodMap({ zone }: Props) {
           if (closeTimerRef.current) clearTimeout(closeTimerRef.current);
           closeTimerRef.current = setTimeout(() => {
             closeTimerRef.current = null;
-            closePanelRef.current();
+            if (activeNameRef.current) { deactivateRef.current(activeNameRef.current); activeNameRef.current = null; }
+            setActive(null);
           }, 200);
         }}
         style={{
@@ -245,41 +234,36 @@ export default function NeighborhoodMap({ zone }: Props) {
           background: '#f7f6f4',
           borderLeft: '1px solid #ebebeb',
           display: 'flex', flexDirection: 'column',
-          fontFamily: FONT,
-          overflow: 'hidden',
+          fontFamily: FONT, overflow: 'hidden',
           transform: active ? 'translateX(0)' : 'translateX(100%)',
           transition: 'transform 0.28s cubic-bezier(0.4,0,0.2,1)',
         }}
       >
-        {/* Botón × cerrar */}
         <button
-          onClick={() => closePanelRef.current()}
+          onClick={() => {
+            if (closeTimerRef.current) { clearTimeout(closeTimerRef.current); closeTimerRef.current = null; }
+            if (activeNameRef.current) { deactivateRef.current(activeNameRef.current); activeNameRef.current = null; }
+            setActive(null);
+          }}
           style={{
             position: 'absolute', top: 12, right: 12, zIndex: 2,
             width: 28, height: 28,
             background: 'rgba(255,255,255,0.9)', border: '1px solid rgba(0,0,0,0.1)',
             borderRadius: '50%', cursor: 'pointer',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontFamily: FONT, fontSize: 14, color: '#888', lineHeight: 1,
-            padding: 0,
+            fontFamily: FONT, fontSize: 14, color: '#888', lineHeight: 1, padding: 0,
           }}
           aria-label="Cerrar"
-        >
-          ×
-        </button>
+        >×</button>
 
         {active && (
           <>
             <div style={{ height: 180, overflow: 'hidden', flexShrink: 0 }}>
               {imgSrc && (
-                <img
-                  src={imgSrc}
-                  alt={active.name}
-                  style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center', display: 'block' }}
-                />
+                <img src={imgSrc} alt={active.name}
+                  style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center', display: 'block' }} />
               )}
             </div>
-
             <div style={{ flex: 1, padding: '20px 20px 16px', display: 'flex', flexDirection: 'column', gap: 14, overflow: 'auto' }}>
               <div>
                 <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase' as const, color: RED, marginBottom: 5 }}>
@@ -289,7 +273,6 @@ export default function NeighborhoodMap({ zone }: Props) {
                   {active.name}
                 </div>
               </div>
-
               <div style={{ display: 'flex', gap: 14, alignItems: 'flex-start' }}>
                 <div>
                   <div style={{ fontSize: 9, fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase' as const, color: '#ccc', marginBottom: 3 }}>Rentabilidad</div>
@@ -301,7 +284,6 @@ export default function NeighborhoodMap({ zone }: Props) {
                   <div style={{ fontSize: 12, fontWeight: 800, color: '#1a1a1a', lineHeight: 1.3 }}>{active.avgPrice}</div>
                 </div>
               </div>
-
               <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                 <div>
                   <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: '0.09em', textTransform: 'uppercase' as const, color: RED, marginBottom: 4 }}>Arrendar</div>
