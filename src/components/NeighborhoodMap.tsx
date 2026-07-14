@@ -157,7 +157,7 @@ export default function NeighborhoodMap({ zone }: Props) {
 
   return (
     <div style={{ position: 'relative', width: '100%', height: 480, overflow: 'hidden', isolation: 'isolate' as any }}>
-      <div ref={containerRef} style={{ width: '100%', height: '100%', background: '#f5f5f5' }} />
+      <div ref={containerRef} style={{ width: '100%', height: '100%', background: '#f5f5f5', position: 'relative', zIndex: 0 }} />
 
       {/* Badge */}
       <div style={{
@@ -181,7 +181,7 @@ export default function NeighborhoodMap({ zone }: Props) {
         onMouseLeave={scheduleClose}
         style={{
           position: 'absolute', top: 0, right: 0, bottom: 0,
-          width: '40%', zIndex: 11,
+          width: '40%', zIndex: 1000,
           background: '#f7f6f4',
           borderLeft: '1px solid #ebebeb',
           display: 'flex', flexDirection: 'column',
