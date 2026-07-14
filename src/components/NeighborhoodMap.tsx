@@ -132,34 +132,27 @@ export default function NeighborhoodMap({ zone }: Props) {
         const labelIcon = L.divIcon({ className: '', html: labelHtml(name, false), iconSize: [0,0], iconAnchor: [0,0] });
         const label = L.marker([data.lat, data.lng], { icon: labelIcon, interactive: false }).addTo(mapRef.current);
 
-        // Guardar ref para poder actualizar el ícono después
         markersRef.current[name] = { pin, label, el: null };
 
-        // Usar eventos DOM nativos directamente en el elemento del marker
-        // (más confiable que Leaflet's mouseover que tiene interferencia con el SVG hitArea)
-        const el = pin.getElement() as HTMLElement | null;
-        if (el) {
-          markersRef.current[name].el = el;
-          el.style.cursor = 'pointer';
-
-          el.addEventListener('mouseenter', () => {
-            cancelClose();
-            if (activeNameRef.current === name) return;
-            if (activeNameRef.current) deactivateRef.current(activeNameRef.current);
-            activateRef.current(name);
-            activeNameRef.current = name;
-            setActive({
-              name:        data.name,
-              rentBlurb:   data.rentBlurb,
-              buyBlurb:    data.buyBlurb,
-              rentability: data.rentability,
-              avgPrice:    data.avgPrice,
-              imageIdx:    data.imageIdx,
-            });
+        // Eventos en el layer de Leaflet — sobreviven a setIcon() porque están en el
+        // objeto layer, no en el elemento DOM que setIcon() reemplaza.
+        pin.on('mouseover', () => {
+          cancelClose();
+          if (activeNameRef.current === name) return;
+          if (activeNameRef.current) deactivateRef.current(activeNameRef.current);
+          activateRef.current(name);
+          activeNameRef.current = name;
+          setActive({
+            name:        data.name,
+            rentBlurb:   data.rentBlurb,
+            buyBlurb:    data.buyBlurb,
+            rentability: data.rentability,
+            avgPrice:    data.avgPrice,
+            imageIdx:    data.imageIdx,
           });
+        });
 
-          el.addEventListener('mouseleave', scheduleClose);
-        }
+        pin.on('mouseout', scheduleClose);
       }
     };
 
