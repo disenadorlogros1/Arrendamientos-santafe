@@ -47,6 +47,7 @@ export default function NeighborhoodMap({ zone }: Props) {
   const panelRef      = useRef<HTMLDivElement>(null);
   const mapRef        = useRef<any>(null);
   const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const activePinRef  = useRef<SVGPathElement | null>(null);
   const [active, setActive] = useState<ActiveNeighborhood | null>(null);
 
   const cancelClose = () => {
@@ -57,6 +58,7 @@ export default function NeighborhoodMap({ zone }: Props) {
     cancelClose();
     closeTimerRef.current = setTimeout(() => {
       closeTimerRef.current = null;
+      if (activePinRef.current) { activePinRef.current.setAttribute('fill', '#222'); activePinRef.current = null; }
       if (panelRef.current) panelRef.current.style.transform = 'translateX(100%)';
       setActive(null);
     }, 250);
@@ -112,6 +114,11 @@ export default function NeighborhoodMap({ zone }: Props) {
           el.style.cursor = 'pointer';
           el.style.pointerEvents = 'auto';
           el.addEventListener('mouseenter', () => {
+            // Reset pin anterior
+            if (activePinRef.current) activePinRef.current.setAttribute('fill', '#222');
+            // Activar pin actual
+            const path = el.querySelector('path') as SVGPathElement | null;
+            if (path) { path.setAttribute('fill', RED); activePinRef.current = path; }
             cancelClose();
             openPanel();
             setActive({
@@ -191,7 +198,7 @@ export default function NeighborhoodMap({ zone }: Props) {
         }}
       >
         <button
-          onClick={() => { cancelClose(); if (panelRef.current) panelRef.current.style.transform = 'translateX(100%)'; setActive(null); }}
+          onClick={() => { cancelClose(); if (activePinRef.current) { activePinRef.current.setAttribute('fill', '#222'); activePinRef.current = null; } if (panelRef.current) panelRef.current.style.transform = 'translateX(100%)'; setActive(null); }}
           style={{
             position: 'absolute', top: 12, right: 12, zIndex: 2,
             width: 28, height: 28,
