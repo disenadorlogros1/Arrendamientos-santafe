@@ -46,14 +46,8 @@ export default function NeighborhoodMap({ zone }: Props) {
   const containerRef  = useRef<HTMLDivElement>(null);
   const panelRef      = useRef<HTMLDivElement>(null);
   const mapRef        = useRef<any>(null);
-  const activeNameRef = useRef<string | null>(null);
   const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const markersRef    = useRef<Record<string, { pin: any; label: any; el: HTMLElement | null }>>({});
   const [active, setActive] = useState<ActiveNeighborhood | null>(null);
-
-  // --- helpers (stable refs so Leaflet closures always see latest) ----
-  const activateRef = useRef<(name: string) => void>(() => {});
-  const deactivateRef = useRef<(name: string) => void>(() => {});
 
   useEffect(() => {
     const subzones = zone.subzones;
@@ -62,7 +56,7 @@ export default function NeighborhoodMap({ zone }: Props) {
     const PIN_W = 22, PIN_H = 30;
 
     const pinHtml = (isActive: boolean) => {
-      const fill  = isActive ? RED : '#222';
+      const fill = isActive ? RED : '#222';
       const scale = isActive ? 1.35 : 1;
       return `<div style="width:${PIN_W}px;height:${PIN_H}px;transform:scale(${scale});transform-origin:50% 100%;transition:transform 0.18s ease;">
         <svg width="${PIN_W}" height="${PIN_H}" viewBox="0 0 22 30" fill="none">
@@ -75,38 +69,16 @@ export default function NeighborhoodMap({ zone }: Props) {
     const labelHtml = (label: string, isActive: boolean) =>
       `<div style="padding:2px 7px;font-family:'Avenir LT Std','Outfit',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.04em;color:${isActive ? RED : '#444'};white-space:nowrap;transform:translate(-50%,6px);pointer-events:none;text-shadow:0 1px 3px rgba(255,255,255,0.9),0 0 6px rgba(255,255,255,0.7);">${label}</div>`;
 
-    deactivateRef.current = (name: string) => {
-      const m = markersRef.current[name];
-      if (!m) return;
-      const L2 = (window as any).L;
-      m.pin.setIcon(L2.divIcon({ className: '', html: pinHtml(false), iconSize: [PIN_W, PIN_H], iconAnchor: [PIN_W/2, PIN_H] }));
-      m.label.setIcon(L2.divIcon({ className: '', html: labelHtml(name, false), iconSize: [0,0], iconAnchor: [0,0] }));
-      if (m.el) m.el.style.cursor = 'pointer';
-    };
-
-    activateRef.current = (name: string) => {
-      const m = markersRef.current[name];
-      if (!m) return;
-      const L2 = (window as any).L;
-      m.pin.setIcon(L2.divIcon({ className: '', html: pinHtml(true), iconSize: [PIN_W, PIN_H], iconAnchor: [PIN_W/2, PIN_H] }));
-      m.label.setIcon(L2.divIcon({ className: '', html: labelHtml(name, true), iconSize: [0,0], iconAnchor: [0,0] }));
+    const cancelClose = () => {
+      if (closeTimerRef.current) { clearTimeout(closeTimerRef.current); closeTimerRef.current = null; }
     };
 
     const scheduleClose = () => {
-      if (closeTimerRef.current) clearTimeout(closeTimerRef.current);
+      cancelClose();
       closeTimerRef.current = setTimeout(() => {
         closeTimerRef.current = null;
-        // deactivate current
-        if (activeNameRef.current) {
-          deactivateRef.current(activeNameRef.current);
-          activeNameRef.current = null;
-        }
         setActive(null);
-      }, 200);
-    };
-
-    const cancelClose = () => {
-      if (closeTimerRef.current) { clearTimeout(closeTimerRef.current); closeTimerRef.current = null; }
+      }, 250);
     };
 
     const init = () => {
@@ -130,18 +102,11 @@ export default function NeighborhoodMap({ zone }: Props) {
         const pin = L.marker([data.lat, data.lng], { icon: pinIcon }).addTo(mapRef.current);
 
         const labelIcon = L.divIcon({ className: '', html: labelHtml(name, false), iconSize: [0,0], iconAnchor: [0,0] });
-        const label = L.marker([data.lat, data.lng], { icon: labelIcon, interactive: false }).addTo(mapRef.current);
+        L.marker([data.lat, data.lng], { icon: labelIcon, interactive: false }).addTo(mapRef.current);
 
-        markersRef.current[name] = { pin, label, el: null };
-
-        // Eventos en el layer de Leaflet — sobreviven a setIcon() porque están en el
-        // objeto layer, no en el elemento DOM que setIcon() reemplaza.
+        // Solo abrir panel — sin setIcon() en el handler para evitar mouseout falsos
         pin.on('mouseover', () => {
           cancelClose();
-          if (activeNameRef.current === name) return;
-          if (activeNameRef.current) deactivateRef.current(activeNameRef.current);
-          activateRef.current(name);
-          activeNameRef.current = name;
           setActive({
             name:        data.name,
             rentBlurb:   data.rentBlurb,
@@ -173,13 +138,8 @@ export default function NeighborhoodMap({ zone }: Props) {
     }
 
     return () => {
-      if (closeTimerRef.current) { clearTimeout(closeTimerRef.current); closeTimerRef.current = null; }
-      if (mapRef.current) {
-        mapRef.current.remove();
-        mapRef.current = null;
-        markersRef.current = {};
-        activeNameRef.current = null;
-      }
+      cancelClose();
+      if (mapRef.current) { mapRef.current.remove(); mapRef.current = null; }
     };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [zone.slug]);
@@ -204,23 +164,14 @@ export default function NeighborhoodMap({ zone }: Props) {
         transition: 'opacity 0.2s ease',
         pointerEvents: 'none',
       }}>
-        {zone.subzones.length} sectores · Pasa el cursor para explorar
+        {zone.subzones.length} sectores · Pasa el cursor sobre un pin
       </div>
 
       {/* Panel lateral */}
       <div
         ref={panelRef}
-        onMouseEnter={() => {
-          if (closeTimerRef.current) { clearTimeout(closeTimerRef.current); closeTimerRef.current = null; }
-        }}
-        onMouseLeave={() => {
-          if (closeTimerRef.current) clearTimeout(closeTimerRef.current);
-          closeTimerRef.current = setTimeout(() => {
-            closeTimerRef.current = null;
-            if (activeNameRef.current) { deactivateRef.current(activeNameRef.current); activeNameRef.current = null; }
-            setActive(null);
-          }, 200);
-        }}
+        onMouseEnter={cancelClose}
+        onMouseLeave={scheduleClose}
         style={{
           position: 'absolute', top: 0, right: 0, bottom: 0,
           width: '40%', zIndex: 11,
@@ -233,11 +184,7 @@ export default function NeighborhoodMap({ zone }: Props) {
         }}
       >
         <button
-          onClick={() => {
-            if (closeTimerRef.current) { clearTimeout(closeTimerRef.current); closeTimerRef.current = null; }
-            if (activeNameRef.current) { deactivateRef.current(activeNameRef.current); activeNameRef.current = null; }
-            setActive(null);
-          }}
+          onClick={() => { cancelClose(); setActive(null); }}
           style={{
             position: 'absolute', top: 12, right: 12, zIndex: 2,
             width: 28, height: 28,
