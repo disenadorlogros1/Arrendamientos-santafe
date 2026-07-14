@@ -49,37 +49,34 @@ export default function NeighborhoodMap({ zone }: Props) {
   const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [active, setActive] = useState<ActiveNeighborhood | null>(null);
 
+  const cancelClose = () => {
+    if (closeTimerRef.current) { clearTimeout(closeTimerRef.current); closeTimerRef.current = null; }
+  };
+
+  const scheduleClose = () => {
+    cancelClose();
+    closeTimerRef.current = setTimeout(() => {
+      closeTimerRef.current = null;
+      setActive(null);
+    }, 250);
+  };
+
   useEffect(() => {
     const subzones = zone.subzones;
     const viewConf = ZONE_CENTER[zone.slug] ?? { lat: 6.25, lng: -75.58, zoom: 12 };
 
     const PIN_W = 22, PIN_H = 30;
 
-    const pinHtml = (isActive: boolean) => {
-      const fill = isActive ? RED : '#222';
-      const scale = isActive ? 1.35 : 1;
-      return `<div style="width:${PIN_W}px;height:${PIN_H}px;transform:scale(${scale});transform-origin:50% 100%;transition:transform 0.18s ease;">
+    const pinHtml = () =>
+      `<div style="width:${PIN_W}px;height:${PIN_H}px;">
         <svg width="${PIN_W}" height="${PIN_H}" viewBox="0 0 22 30" fill="none">
-          <path d="M11 0C4.925 0 0 4.925 0 11C0 19.25 11 30 11 30C11 30 22 19.25 22 11C22 4.925 17.075 0 11 0Z" fill="${fill}"/>
+          <path d="M11 0C4.925 0 0 4.925 0 11C0 19.25 11 30 11 30C11 30 22 19.25 22 11C22 4.925 17.075 0 11 0Z" fill="#222"/>
           <circle cx="11" cy="11" r="4.5" fill="white"/>
         </svg>
       </div>`;
-    };
 
-    const labelHtml = (label: string, isActive: boolean) =>
-      `<div style="padding:2px 7px;font-family:'Avenir LT Std','Outfit',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.04em;color:${isActive ? RED : '#444'};white-space:nowrap;transform:translate(-50%,6px);pointer-events:none;text-shadow:0 1px 3px rgba(255,255,255,0.9),0 0 6px rgba(255,255,255,0.7);">${label}</div>`;
-
-    const cancelClose = () => {
-      if (closeTimerRef.current) { clearTimeout(closeTimerRef.current); closeTimerRef.current = null; }
-    };
-
-    const scheduleClose = () => {
-      cancelClose();
-      closeTimerRef.current = setTimeout(() => {
-        closeTimerRef.current = null;
-        setActive(null);
-      }, 250);
-    };
+    const labelHtml = (label: string) =>
+      `<div style="padding:2px 7px;font-family:'Avenir LT Std','Outfit',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.04em;color:#444;white-space:nowrap;transform:translate(-50%,6px);pointer-events:none;text-shadow:0 1px 3px rgba(255,255,255,0.9),0 0 6px rgba(255,255,255,0.7);">${label}</div>`;
 
     const init = () => {
       if (!containerRef.current || mapRef.current) return;
@@ -98,10 +95,10 @@ export default function NeighborhoodMap({ zone }: Props) {
         const data = NEIGHBORHOOD_DATA[name];
         if (!data) continue;
 
-        const pinIcon = L.divIcon({ className: '', html: pinHtml(false), iconSize: [PIN_W, PIN_H], iconAnchor: [PIN_W/2, PIN_H] });
+        const pinIcon = L.divIcon({ className: '', html: pinHtml(), iconSize: [PIN_W, PIN_H], iconAnchor: [PIN_W/2, PIN_H] });
         const pin = L.marker([data.lat, data.lng], { icon: pinIcon }).addTo(mapRef.current);
 
-        const labelIcon = L.divIcon({ className: '', html: labelHtml(name, false), iconSize: [0,0], iconAnchor: [0,0] });
+        const labelIcon = L.divIcon({ className: '', html: labelHtml(name), iconSize: [0,0], iconAnchor: [0,0] });
         L.marker([data.lat, data.lng], { icon: labelIcon, interactive: false }).addTo(mapRef.current);
 
         // Solo abrir panel — sin setIcon() en el handler para evitar mouseout falsos
