@@ -57,8 +57,13 @@ export default function NeighborhoodMap({ zone }: Props) {
     cancelClose();
     closeTimerRef.current = setTimeout(() => {
       closeTimerRef.current = null;
+      if (panelRef.current) panelRef.current.style.transform = 'translateX(100%)';
       setActive(null);
     }, 250);
+  };
+
+  const openPanel = () => {
+    if (panelRef.current) panelRef.current.style.transform = 'translateX(0)';
   };
 
   useEffect(() => {
@@ -101,20 +106,25 @@ export default function NeighborhoodMap({ zone }: Props) {
         const labelIcon = L.divIcon({ className: '', html: labelHtml(name), iconSize: [0,0], iconAnchor: [0,0] });
         L.marker([data.lat, data.lng], { icon: labelIcon, interactive: false }).addTo(mapRef.current);
 
-        // Solo abrir panel — sin setIcon() en el handler para evitar mouseout falsos
-        pin.on('mouseover', () => {
-          cancelClose();
-          setActive({
-            name:        data.name,
-            rentBlurb:   data.rentBlurb,
-            buyBlurb:    data.buyBlurb,
-            rentability: data.rentability,
-            avgPrice:    data.avgPrice,
-            imageIdx:    data.imageIdx,
+        // Usar DOM nativo en vez de pin.on() — más fiable en divIcon sin setIcon()
+        const el = pin.getElement();
+        if (el) {
+          el.style.cursor = 'pointer';
+          el.style.pointerEvents = 'auto';
+          el.addEventListener('mouseenter', () => {
+            cancelClose();
+            openPanel();
+            setActive({
+              name:        data.name,
+              rentBlurb:   data.rentBlurb,
+              buyBlurb:    data.buyBlurb,
+              rentability: data.rentability,
+              avgPrice:    data.avgPrice,
+              imageIdx:    data.imageIdx,
+            });
           });
-        });
-
-        pin.on('mouseout', scheduleClose);
+          el.addEventListener('mouseleave', scheduleClose);
+        }
       }
     };
 
@@ -176,12 +186,12 @@ export default function NeighborhoodMap({ zone }: Props) {
           borderLeft: '1px solid #ebebeb',
           display: 'flex', flexDirection: 'column',
           fontFamily: FONT, overflow: 'hidden',
-          transform: active ? 'translateX(0)' : 'translateX(100%)',
+          transform: 'translateX(100%)',
           transition: 'transform 0.28s cubic-bezier(0.4,0,0.2,1)',
         }}
       >
         <button
-          onClick={() => { cancelClose(); setActive(null); }}
+          onClick={() => { cancelClose(); if (panelRef.current) panelRef.current.style.transform = 'translateX(100%)'; setActive(null); }}
           style={{
             position: 'absolute', top: 12, right: 12, zIndex: 2,
             width: 28, height: 28,
