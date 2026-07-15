@@ -318,7 +318,7 @@ export default function InversionistasPage() {
                           <div style={{ fontFamily: FONT, fontSize: '12px', fontWeight: 700, color: 'rgba(0,0,0,0.55)', marginBottom: '4px' }}>
                             Barrios y sectores
                           </div>
-                          <div style={{ fontFamily: FONT, fontSize: '11px', color: '#555', lineHeight: 1.5 }}>
+                          <div style={{ fontFamily: FONT, fontSize: '11px', color: '#555', lineHeight: 1.1 }}>
                             {zone.subzones.join(' · ')}
                             {zone.subzones.length > 4 && (
                               <> · <Link href={`/inversionistas/${zone.slug}`} style={{ fontFamily: FONT, fontSize: '11px', color: '#555', fontWeight: 700, textDecoration: 'none' }}>+ ver todos</Link></>
@@ -327,7 +327,7 @@ export default function InversionistasPage() {
                           <div style={{ fontFamily: FONT, fontSize: '12px', fontWeight: 700, color: 'rgba(0,0,0,0.55)', margin: '8px 0 4px' }}>
                             Municipios
                           </div>
-                          <div style={{ fontFamily: FONT, fontSize: '11px', color: '#555', lineHeight: 1.5 }}>
+                          <div style={{ fontFamily: FONT, fontSize: '11px', color: '#555', lineHeight: 1.1 }}>
                             {zone.municipiosNames.join(' · ')}
                           </div>
                         </div>

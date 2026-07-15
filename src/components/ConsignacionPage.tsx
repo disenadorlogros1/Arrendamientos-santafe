@@ -25,19 +25,16 @@ function applyInkFill(e: React.MouseEvent<HTMLElement>) {
 const pasos = [
   {
     number: '01',
-    icon: '/icons/icon-consult-red.gif',
     title: 'Déjanos tus datos',
     description: 'Cuéntanos sobre tu inmueble. Te contactamos para comenzar el proceso sin ningún costo de promoción.',
   },
   {
     number: '02',
-    icon: '/icons/icon-schedule-red.gif',
     title: 'Asesoría completa',
     description: 'Nuestro equipo te brinda una asesoría personalizada con estudio de mercado y avalúo comercial incluido.',
   },
   {
     number: '03',
-    icon: '/icons/icon-home-red.gif',
     title: 'Nos encargamos del resto',
     description: 'Promoción, selección del arrendatario, contratos y administración. Tú solo recibes el pago puntual.',
   },
@@ -67,8 +64,9 @@ interface ConsignacionPageProps {
 
 export default function ConsignacionPage({ onNavigate }: ConsignacionPageProps = {}) {
   const { ref: titleRef, titleAnimating } = useSplitTextAnimation('.consignacion-title-split', 0, false);
-  const subtitleRef = useRef<HTMLParagraphElement>(null);
-  const ctaBtnRef   = useRef<HTMLDivElement>(null);
+  const subtitleRef    = useRef<HTMLParagraphElement>(null);
+  const ctaBtnRef      = useRef<HTMLDivElement>(null);
+  const [titleHovered, setTitleHovered] = useState(false);
   const [hoveredPaso,  setHoveredPaso]  = useState<number | null>(null);
   const [hoveredRazon, setHoveredRazon] = useState<number | null>(null);
 
@@ -109,9 +107,29 @@ export default function ConsignacionPage({ onNavigate }: ConsignacionPageProps =
           <h1
             className="consignacion-title-split leading-tight text-white text-center"
             style={{ fontFamily: FONT, fontWeight: 300, lineHeight: '1.2', fontSize: 'clamp(28px, 4vw, 52px)' }}
+            onMouseEnter={() => setTitleHovered(true)}
+            onMouseLeave={() => setTitleHovered(false)}
           >
-            Ten la tranquilidad de dejar tu inmueble en{' '}
-            <span style={{ fontWeight: 700 }}>buenas manos</span>
+            <span style={{ display: 'block', fontWeight: 300 }}>Ten la tranquilidad de dejar tu inmueble en</span>
+            <span style={{ display: 'inline-block', fontWeight: 700, position: 'relative', overflow: 'hidden' }}>
+              <span style={{ position: 'relative', zIndex: 2 }}>buenas manos</span>
+              <span
+                aria-hidden="true"
+                style={{
+                  position: 'absolute',
+                  top: '62%',
+                  left: 0,
+                  width: '100%',
+                  height: '13%',
+                  backgroundColor: RED,
+                  transform: `translateY(-50%) scaleX(${titleHovered ? 1 : 0})`,
+                  transformOrigin: 'left center',
+                  zIndex: 1,
+                  transition: 'transform 0.234s ease',
+                  pointerEvents: 'none',
+                }}
+              />
+            </span>
           </h1>
 
           <p
@@ -142,7 +160,7 @@ export default function ConsignacionPage({ onNavigate }: ConsignacionPageProps =
         </div>
       </section>
 
-      {/* Proceso — 3 cards */}
+      {/* Proceso — 3 cards horizontales */}
       <section style={{ background: '#f7f6f4' }} className="w-full">
         <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '52px clamp(20px, 4vw, 52px) 28px', textAlign: 'center' }}>
           <ScrollReveal y={20}>
@@ -155,7 +173,7 @@ export default function ConsignacionPage({ onNavigate }: ConsignacionPageProps =
           </ScrollReveal>
         </div>
 
-        <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '0 clamp(20px, 4vw, 52px) 52px' }}>
+        <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '0 clamp(20px, 4vw, 52px) 0' }}>
           <div className="grid grid-cols-1 sm:grid-cols-3" style={{ gap: 0 }}>
             {pasos.map((paso, idx) => {
               const isHov = hoveredPaso === idx;
@@ -163,12 +181,15 @@ export default function ConsignacionPage({ onNavigate }: ConsignacionPageProps =
               return (
                 <div
                   key={paso.number}
-                  className="flex flex-col"
                   style={{
-                    gap: 14, padding: '32px 20px 20px',
+                    padding: '28px 24px 32px',
                     background: '#fff',
                     cursor: 'default',
-                    transform: isHov ? 'scale(1.08)' : isAdj ? 'scale(0.96)' : 'scale(1)',
+                    display: 'flex',
+                    flexDirection: 'row',
+                    alignItems: 'flex-start',
+                    gap: 20,
+                    transform: isHov ? 'scale(1.05)' : isAdj ? 'scale(0.97)' : 'scale(1)',
                     zIndex: isHov ? 10 : 1, position: 'relative',
                     transition: 'transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.3s ease',
                     boxShadow: isHov ? '0 8px 32px rgba(0,0,0,0.18)' : 'none',
@@ -176,39 +197,24 @@ export default function ConsignacionPage({ onNavigate }: ConsignacionPageProps =
                   onMouseEnter={() => setHoveredPaso(idx)}
                   onMouseLeave={() => setHoveredPaso(null)}
                 >
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                    <span style={{ fontFamily: FONT, fontWeight: 900, fontSize: 36, color: RED, lineHeight: 1 }}>{paso.number}</span>
-                    <img src={paso.icon} alt="" width={36} height={36} style={{ flexShrink: 0 }} />
+                  <span style={{ fontFamily: FONT, fontWeight: 900, fontSize: 'clamp(34px, 2.8vw, 48px)', color: RED, lineHeight: 1, flexShrink: 0 }}>
+                    {paso.number}
+                  </span>
+                  <div style={{ paddingTop: 4 }}>
+                    <h3 style={{ fontFamily: FONT, fontWeight: 700, fontSize: 'clamp(15px, 1.1vw, 18px)', color: '#1a1a1a', margin: '0 0 8px 0', lineHeight: 1.2 }}>
+                      {paso.title}
+                    </h3>
+                    <p style={{ fontFamily: FONT, fontWeight: 300, fontSize: 'clamp(12.5px, 0.9vw, 14px)', color: 'rgba(0,0,0,0.55)', margin: 0, lineHeight: 1.6 }}>
+                      {paso.description}
+                    </p>
                   </div>
-                  <h3 style={{ fontFamily: FONT, fontWeight: 700, fontSize: 'clamp(16px, 1.2vw, 20px)', color: '#1a1a1a', margin: 0, lineHeight: 1.15 }}>
-                    {paso.title}
-                  </h3>
-                  <p style={{ fontFamily: FONT, fontWeight: 300, fontSize: 'clamp(12.5px, 0.9vw, 14px)', color: 'rgba(0,0,0,0.55)', margin: 0, lineHeight: 1.5, flexGrow: 1 }}>
-                    {paso.description}
-                  </p>
-                  <a
-                    href={WHATSAPP_URL}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    onMouseEnter={applyInkFill}
-                    onMouseLeave={applyInkFill}
-                    className="cta-btn-outline-red inline-flex items-center justify-center"
-                    style={{
-                      fontFamily: FONT, fontWeight: 300, fontSize: 'clamp(13px, 0.95vw, 15px)',
-                      textDecoration: 'none', height: 44,
-                      marginLeft: -20, marginRight: -20, marginBottom: -20,
-                      background: '#ffffff', borderRadius: 0,
-                    }}
-                  >
-                    <span>Empezar ahora</span>
-                  </a>
                 </div>
               );
             })}
           </div>
         </div>
 
-        <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '16px clamp(20px, 4vw, 52px) 40px', textAlign: 'center' }}>
+        <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '10px clamp(20px, 4vw, 52px) 40px', textAlign: 'center' }}>
           <p style={{ fontFamily: FONT, fontSize: 13, color: '#888', margin: 0 }}>
             *Al continuar estoy aceptando la{' '}
             <button
@@ -223,7 +229,7 @@ export default function ConsignacionPage({ onNavigate }: ConsignacionPageProps =
         </div>
       </section>
 
-      {/* ¿Por qué escogernos? — 3 cards edge-to-edge */}
+      {/* ¿Por qué escogernos? — 3 cards centradas, sin CTA */}
       <section style={{ background: '#fff' }} className="w-full">
         <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '52px clamp(20px, 4vw, 52px) 28px', textAlign: 'center' }}>
           <ScrollReveal y={20}>
@@ -241,11 +247,15 @@ export default function ConsignacionPage({ onNavigate }: ConsignacionPageProps =
               return (
                 <div
                   key={r.title}
-                  className="flex flex-col"
                   style={{
-                    gap: 14, padding: '24px 20px 20px',
+                    padding: '32px 24px 36px',
                     background: '#f5f5f5',
                     cursor: 'default',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    textAlign: 'center',
+                    gap: 14,
                     transform: isHov ? 'scale(1.08)' : isAdj ? 'scale(0.96)' : 'scale(1)',
                     zIndex: isHov ? 10 : 1, position: 'relative',
                     transition: 'transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.3s ease',
@@ -254,29 +264,13 @@ export default function ConsignacionPage({ onNavigate }: ConsignacionPageProps =
                   onMouseEnter={() => setHoveredRazon(idx)}
                   onMouseLeave={() => setHoveredRazon(null)}
                 >
-                  <img src={r.icon} alt="" width={40} height={40} style={{ flexShrink: 0, display: 'block' }} />
-                  <h3 style={{ fontFamily: FONT, fontWeight: 700, fontSize: 'clamp(16px, 1.2vw, 20px)', color: '#1a1a1a', margin: 0, lineHeight: 1.15 }}>
+                  <img src={r.icon} alt="" width={44} height={44} style={{ flexShrink: 0, display: 'block' }} />
+                  <h3 style={{ fontFamily: FONT, fontWeight: 700, fontSize: 'clamp(17px, 1.3vw, 22px)', color: '#1a1a1a', margin: 0, lineHeight: 1.15 }}>
                     {r.title}
                   </h3>
-                  <p style={{ fontFamily: FONT, fontWeight: 300, fontSize: 'clamp(12.5px, 0.9vw, 14px)', color: 'rgba(0,0,0,0.55)', margin: 0, lineHeight: 1.5, flexGrow: 1 }}>
+                  <p style={{ fontFamily: FONT, fontWeight: 300, fontSize: 'clamp(13px, 0.95vw, 15px)', color: 'rgba(0,0,0,0.55)', margin: 0, lineHeight: 1.6 }}>
                     {r.description}
                   </p>
-                  <a
-                    href={WHATSAPP_URL}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    onMouseEnter={applyInkFill}
-                    onMouseLeave={applyInkFill}
-                    className="cta-btn-outline-red inline-flex items-center justify-center"
-                    style={{
-                      fontFamily: FONT, fontWeight: 300, fontSize: 'clamp(13px, 0.95vw, 15px)',
-                      textDecoration: 'none', height: 44,
-                      marginLeft: -20, marginRight: -20, marginBottom: -20,
-                      background: '#f5f5f5', borderRadius: 0,
-                    }}
-                  >
-                    <span>Hablar con un asesor</span>
-                  </a>
                 </div>
               );
             })}
@@ -292,7 +286,7 @@ export default function ConsignacionPage({ onNavigate }: ConsignacionPageProps =
               className="text-3xl md:text-4xl font-bold mb-8"
               style={{ fontFamily: FONT, color: '#555' }}
             >
-              ¿Listo para arrendar tu inmueble?
+              ¿Listo para arrendar o vender tu inmueble?
             </h2>
 
             <a
