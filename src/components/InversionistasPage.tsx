@@ -371,17 +371,16 @@ export default function InversionistasPage() {
                     href={WHATSAPP_URL}
                     target="_blank"
                     rel="noopener noreferrer"
-                    onMouseEnter={isRed ? (e => { (e.currentTarget as HTMLElement).style.background = '#aa182c'; }) : applyInkFill}
-                    onMouseLeave={isRed ? (e => { (e.currentTarget as HTMLElement).style.background = '#f32735'; }) : applyInkFill}
-                    className={isRed ? 'inline-flex items-center justify-center' : 'cta-btn-light inline-flex items-center justify-center'}
+                    onMouseEnter={isRed ? undefined : applyInkFill}
+                    onMouseLeave={isRed ? undefined : applyInkFill}
+                    className={`${isRed ? '' : 'cta-btn-outline-red'} inline-flex items-center justify-center`}
                     style={{
                       fontFamily: FONT, fontWeight: 300, fontSize: 'clamp(13px, 0.95vw, 15px)',
                       textDecoration: 'none', height: '44px',
                       marginLeft: '-20px', marginRight: '-20px', marginBottom: '-20px',
-                      background: isRed ? '#f32735' : '#ccc',
-                      color: isRed ? '#fff' : undefined,
+                      background: isRed ? '#f32735' : '#ffffff',
+                      color: isRed ? '#ffffff' : undefined,
                       borderRadius: 0,
-                      transition: isRed ? 'background 0.2s ease' : undefined,
                     }}
                   >
                     <span>Hablar con un asesor</span>
