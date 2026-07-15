@@ -182,10 +182,12 @@ export default function InversionistasPage() {
           <div ref={ctaBtnRef} className="mt-8 text-center" style={{ opacity: 0 }}>
             <a
               href="#zonas"
-              className="inline-flex items-center h-12 px-8 bg-brand-red hover:bg-white hover:text-brand-red text-white font-semibold rounded-none transition-all duration-300"
-              style={{ fontFamily: FONT }}
+              onMouseEnter={applyInkFill}
+              onMouseLeave={applyInkFill}
+              className="hero-btn-fill inline-flex items-center justify-center h-12 px-8 rounded-full"
+              style={{ fontFamily: FONT, fontWeight: 600, fontSize: 14, textDecoration: 'none' }}
             >
-              Explora el mapa de zonas
+              <span>Explora el mapa</span>
             </a>
           </div>
         </div>

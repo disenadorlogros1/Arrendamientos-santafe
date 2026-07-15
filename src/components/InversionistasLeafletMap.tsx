@@ -23,7 +23,7 @@ const RED = '#f32735';
 
 const SECTOR_VIEW: Record<Sector, { center: [number, number]; zoom: number }> = {
   Norte:     { center: [6.36,  -75.57], zoom: 10 },
-  Sur:       { center: [6.13,  -75.61], zoom: 11 },
+  Sur:       { center: [6.08,  -75.57], zoom: 10 },
   Oriente:   { center: [6.16,  -75.49], zoom: 10 },
   Occidente: { center: [6.29,  -75.63], zoom: 10 },
 };
@@ -2553,10 +2553,10 @@ export default function InversionistasLeafletMap({ activeSector, hoveredSector, 
         const stats = SECTOR_STATS[sector];
         return L.divIcon({
           className: '',
-          html: `<div style="transform:translate(-50%,-50%);text-align:center;pointer-events:none;white-space:nowrap">
-            <div style="font-family:'Avenir LT Std','Outfit',sans-serif;font-size:40px;font-weight:900;color:#fff;line-height:1;text-shadow:0 2px 10px rgba(0,0,0,0.4);white-space:nowrap">${stats.barrios} Barrios</div>
-            <div style="font-family:'Avenir LT Std','Outfit',sans-serif;font-size:22px;font-weight:700;color:#fff;text-shadow:0 2px 8px rgba(0,0,0,0.4);margin-top:1px;white-space:nowrap">${stats.municipios} Municipios</div>
-            <div style="font-family:'Avenir LT Std','Outfit',sans-serif;font-size:11px;font-weight:700;color:#fff;background:${RED};padding:3px 10px;margin-top:2px;white-space:nowrap;display:inline-block">${stats.propiedades} propiedades</div>
+          html: `<div style="transform:translate(-50%,-50%);text-align:center;pointer-events:none;white-space:nowrap;line-height:1">
+            <div style="font-family:'Avenir LT Std','Outfit',sans-serif;font-size:40px;font-weight:900;color:#fff;line-height:0.9;text-shadow:0 2px 10px rgba(0,0,0,0.4);white-space:nowrap">${stats.barrios} Barrios</div>
+            <div style="font-family:'Avenir LT Std','Outfit',sans-serif;font-size:22px;font-weight:700;color:#fff;line-height:0.9;text-shadow:0 2px 8px rgba(0,0,0,0.4);margin-top:0;white-space:nowrap">${stats.municipios} Municipios</div>
+            <div style="font-family:'Avenir LT Std','Outfit',sans-serif;font-size:11px;font-weight:700;color:#fff;background:${RED};padding:3px 10px;margin-top:1px;white-space:nowrap;display:inline-block">${stats.propiedades} propiedades</div>
           </div>`,
           iconSize:   [0, 0],
           iconAnchor: [0, 0],
