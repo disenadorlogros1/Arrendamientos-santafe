@@ -199,10 +199,10 @@ export default function InversionistasPage() {
 
         {/* 2-col block */}
         <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '40px clamp(20px, 4vw, 52px) 0' }}>
-          <div style={{ display: 'flex', gap: '16px', alignItems: 'stretch', minHeight: '520px' }}>
+          <div style={{ display: 'flex', gap: '0', alignItems: 'stretch', minHeight: '520px' }}>
 
             {/* LEFT: 4 sector cards */}
-            <div style={{ width: '300px', flexShrink: 0, display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            <div style={{ width: '300px', flexShrink: 0, display: 'flex', flexDirection: 'column', gap: '0' }}>
               {SECTORS.map(sector => {
                 const zone         = getZonesBySector(sector)[0];
                 const effectiveSec = hoveredSector ?? activeSector;

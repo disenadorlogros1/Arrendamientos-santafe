@@ -110,7 +110,7 @@ export default function ConsignacionPage({ onNavigate }: ConsignacionPageProps =
             onMouseEnter={() => setTitleHovered(true)}
             onMouseLeave={() => setTitleHovered(false)}
           >
-            <span style={{ display: 'block', fontWeight: 300 }}>Ten la tranquilidad de dejar tu inmueble en</span>
+            Ten la tranquilidad de dejar tu inmueble en{' '}
             <span style={{ display: 'inline-block', fontWeight: 700, position: 'relative', overflow: 'hidden' }}>
               <span style={{ position: 'relative', zIndex: 2 }}>buenas manos</span>
               <span
