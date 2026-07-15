@@ -84,6 +84,7 @@ export default function InversionistasPage() {
   const [hoveredSector, setHoveredSector] = useState<Sector | null>(null);
   const [titleHovered,     setTitleHovered]     = useState(false);
   const [hoveredBeneficio, setHoveredBeneficio] = useState<number | null>(null);
+  const [redIdx] = useState(() => Math.floor(Math.random() * beneficios.length));
   const [hoveredZoneCard,  setHoveredZoneCard]  = useState<string | null>(null);
   const subtitleRef = useRef<HTMLParagraphElement>(null);
   const ctaBtnRef   = useRef<HTMLDivElement>(null);
@@ -338,7 +339,7 @@ export default function InversionistasPage() {
         <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '0 clamp(20px, 4vw, 52px) 52px' }}>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4" style={{ gap: '0', overflow: 'visible' }}>
             {beneficios.map((b, idx) => {
-              const isRed = idx === 0;
+              const isRed = idx === redIdx;
               const isHov = hoveredBeneficio === idx;
               const isAdj = hoveredBeneficio !== null && Math.abs(idx - hoveredBeneficio) === 1;
               return (
@@ -370,13 +371,12 @@ export default function InversionistasPage() {
                     rel="noopener noreferrer"
                     onMouseEnter={applyInkFill}
                     onMouseLeave={applyInkFill}
-                    className="hero-btn-fill inline-flex items-center justify-center"
+                    className="cta-btn-light inline-flex items-center justify-center"
                     style={{
                       fontFamily: FONT, fontWeight: 300, fontSize: 'clamp(13px, 0.95vw, 15px)',
                       textDecoration: 'none', height: '44px',
                       marginLeft: '-20px', marginRight: '-20px', marginBottom: '-20px',
-                      background: isRed ? '#f32735' : '#1a1a1a',
-                      border: isRed ? '1px solid rgba(255,255,255,0.7)' : 'none',
+                      background: '#ccc',
                       borderRadius: 0,
                     }}
                   >
@@ -393,7 +393,7 @@ export default function InversionistasPage() {
       <section className="py-16 md:py-20" style={{ background: '#ccc' }}>
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
           <ScrollReveal y={20}>
-            <h2 className="text-3xl md:text-4xl font-bold mb-8" style={{ fontFamily: FONT, color: '#1a1a1a' }}>
+            <h2 className="text-3xl md:text-4xl font-bold mb-8" style={{ fontFamily: FONT, color: '#555' }}>
               ¿Listo para invertir?
             </h2>
 

@@ -344,7 +344,7 @@ html.is-scrolling .red-scrollbar::-webkit-scrollbar-thumb {
   position: relative;
   overflow: hidden;
   background: #ffffff;
-  color: #888;
+  color: #555;
   transition: color 0.25s ease 0.12s;
 }
 .cta-btn-light::before {
