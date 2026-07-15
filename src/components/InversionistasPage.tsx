@@ -420,7 +420,7 @@ export default function InversionistasPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-16 md:py-20" style={{ background: '#ccc' }}>
+      <section className="py-16 md:py-20" style={{ background: '#f7f6f4' }}>
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
           <ScrollReveal y={20}>
             <h2 className="text-3xl md:text-4xl font-bold mb-8" style={{ fontFamily: FONT, color: '#555' }}>

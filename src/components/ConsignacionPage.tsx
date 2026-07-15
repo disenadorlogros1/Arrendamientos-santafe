@@ -284,7 +284,7 @@ export default function ConsignacionPage({ onNavigate }: ConsignacionPageProps =
       </section>
 
       {/* CTA final — niebla */}
-      <section className="py-16 md:py-20" style={{ background: '#ccc' }}>
+      <section className="py-16 md:py-20" style={{ background: '#f7f6f4' }}>
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
           <ScrollReveal y={20}>
             <h2
