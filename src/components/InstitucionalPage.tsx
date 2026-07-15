@@ -68,6 +68,9 @@ interface InstitucionalPageProps {
 }
 
 export default function InstitucionalPage({ onNavigate }: InstitucionalPageProps = {}) {
+  const [hoveredCifra,  setHoveredCifra]  = useState<number | null>(null);
+  const [hoveredRazon,  setHoveredRazon]  = useState<number | null>(null);
+
   return (
     <div className="min-h-screen" style={{ background: '#fff' }}>
 
@@ -112,7 +115,7 @@ export default function InstitucionalPage({ onNavigate }: InstitucionalPageProps
               style={{
                 fontFamily: FONT, fontWeight: 300,
                 fontSize: 'clamp(24px, 2.8vw, 46px)',
-                color: '#555', lineHeight: 1.2, margin: '0 0 16px',
+                color: '#555', lineHeight: 1.05, margin: '0 0 16px',
                 textAlign: 'center',
               }}
             >
@@ -139,22 +142,27 @@ export default function InstitucionalPage({ onNavigate }: InstitucionalPageProps
               gridTemplateColumns: 'repeat(3, 1fr)',
               gridAutoRows: '1fr',
               marginTop: 52,
-              borderTop: '1px solid #ebebeb',
-              borderLeft: '1px solid #ebebeb',
+              gap: 'clamp(10px, 1.2vw, 16px)',
             }}
           >
             {cifras.map((cifra, i) => (
               <ScrollReveal key={i} y={12} delay={i * 0.07} style={{ height: '100%' }}>
                 <div
+                  onMouseEnter={() => setHoveredCifra(i)}
+                  onMouseLeave={() => setHoveredCifra(null)}
                   style={{
                     padding: 'clamp(32px, 3.5vw, 48px) clamp(20px, 2.5vw, 36px)',
-                    borderRight: '1px solid #ebebeb',
-                    borderBottom: '1px solid #ebebeb',
+                    background: '#f5f5f5',
                     display: 'flex',
                     gap: 'clamp(14px, 1.8vw, 24px)',
                     alignItems: 'center',
                     height: '100%',
                     boxSizing: 'border-box',
+                    transform: hoveredCifra === i ? 'scale(1.04)' : 'scale(1)',
+                    transition: 'transform 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+                    cursor: 'default',
+                    zIndex: hoveredCifra === i ? 1 : 0,
+                    position: 'relative',
                   }}
                 >
                   {/* Número de serie */}
@@ -200,7 +208,7 @@ export default function InstitucionalPage({ onNavigate }: InstitucionalPageProps
 
       {/* ── Por qué confiar ── */}
       <section style={{ background: '#fff' }}>
-        <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '64px clamp(20px, 4vw, 52px) 56px' }}>
+        <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '32px clamp(20px, 4vw, 52px) 56px' }}>
 
           <ScrollReveal y={20}>
             <h2
@@ -223,19 +231,24 @@ export default function InstitucionalPage({ onNavigate }: InstitucionalPageProps
               gridTemplateColumns: 'repeat(3, 1fr)',
               gridAutoRows: '1fr',
               marginTop: 40,
-              borderTop: '1px solid #e0ddd9',
-              borderLeft: '1px solid #e0ddd9',
+              gap: 'clamp(10px, 1.2vw, 16px)',
             }}
           >
             {razones.map((razon, i) => (
               <ScrollReveal key={i} y={12} delay={i * 0.09} style={{ height: '100%' }}>
                 <div
+                  onMouseEnter={() => setHoveredRazon(i)}
+                  onMouseLeave={() => setHoveredRazon(null)}
                   style={{
                     padding: 'clamp(24px, 3vw, 40px) clamp(20px, 2.5vw, 36px)',
-                    borderRight: '1px solid #e0ddd9',
-                    borderBottom: '1px solid #e0ddd9',
+                    background: '#f5f5f5',
                     height: '100%',
                     boxSizing: 'border-box',
+                    transform: hoveredRazon === i ? 'scale(1.04)' : 'scale(1)',
+                    transition: 'transform 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+                    cursor: 'default',
+                    zIndex: hoveredRazon === i ? 1 : 0,
+                    position: 'relative',
                   }}
                 >
                   <span
