@@ -101,6 +101,7 @@ export default function InversionZonePage() {
   const params = useParams();
   const slug   = params.slug as string;
   const [currentPage, setCurrentPage] = useState<PageType>('inversionistas');
+  const [ctaHovered, setCtaHovered]   = useState(false);
   const heroRef = useRef<HTMLDivElement>(null);
 
   const zone = getZoneBySlug(slug);
@@ -292,10 +293,10 @@ export default function InversionZonePage() {
         </section>
 
         {/* ── CTA final ─────────────────────────────────────── */}
-        <section style={{ background: '#f5f5f5', padding: '80px 24px' }}>
+        <section style={{ background: '#f7f6f4', padding: '80px 24px' }}>
           <div style={{ maxWidth: 580, margin: '0 auto', textAlign: 'center' as const }}>
             <ScrollReveal y={16}>
-              <h2 style={{ fontSize: 'clamp(28px, 4vw, 48px)', fontWeight: 900, color: '#888', margin: '0 0 12px', lineHeight: 1.05, letterSpacing: '-0.01em' }}>
+              <h2 style={{ fontSize: 'clamp(28px, 4vw, 48px)', fontWeight: 900, color: '#555', margin: '0 0 12px', lineHeight: 1.05, letterSpacing: '-0.01em' }}>
                 <span style={{ fontWeight: 300 }}>¿Listo para </span>invertir en {zone.name}?
               </h2>
               <p style={{ fontSize: 15, color: '#555', margin: '0 0 40px', lineHeight: 1.65 }}>
@@ -305,20 +306,25 @@ export default function InversionZonePage() {
                 href={WHATSAPP_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="zone-btn"
                 style={{
                   display: 'inline-flex', alignItems: 'center', gap: 10,
                   padding: '14px 36px',
-                  background: RED, color: '#fff',
+                  background: ctaHovered ? RED : '#f7f6f4',
+                  color: ctaHovered ? '#fff' : RED,
+                  border: `1.5px solid ${RED}`,
                   fontSize: 14, fontWeight: 800, letterSpacing: '0.02em',
                   textDecoration: 'none', fontFamily: FONT,
                   borderRadius: 999,
-                  position: 'relative', overflow: 'hidden',
+                  transition: 'background 0.22s ease, color 0.22s ease',
+                  cursor: 'pointer',
                 }}
-                onMouseEnter={applyInkFill}
-                onMouseLeave={applyInkFill}
+                onMouseEnter={() => setCtaHovered(true)}
+                onMouseLeave={() => setCtaHovered(false)}
               >
-                <img src="/icons/icon-whatsapp-white.gif" width={18} height={18} alt="" />
+                <img
+                  src={ctaHovered ? '/icons/icon-whatsapp-white.gif' : '/icons/icon-whatsapp-red.gif'}
+                  width={18} height={18} alt=""
+                />
                 Solicitar asesoría
               </a>
             </ScrollReveal>

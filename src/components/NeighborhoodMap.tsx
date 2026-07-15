@@ -230,21 +230,21 @@ export default function NeighborhoodMap({ zone }: Props) {
               <div style={{ display: 'flex', gap: 14, alignItems: 'flex-start' }}>
                 <div>
                   <div style={{ fontSize: 9, fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase' as const, color: '#ccc', marginBottom: 3 }}>Rentabilidad</div>
-                  <div style={{ fontSize: 15, fontWeight: 900, color: RED }}>{active.rentability}</div>
+                  <div style={{ fontSize: 22, fontWeight: 900, color: RED }}>{active.rentability}</div>
                 </div>
                 <div style={{ width: 1, background: '#e8e8e8', alignSelf: 'stretch' }} />
                 <div>
                   <div style={{ fontSize: 9, fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase' as const, color: '#ccc', marginBottom: 3 }}>Precio m²</div>
-                  <div style={{ fontSize: 12, fontWeight: 800, color: '#1a1a1a', lineHeight: 1.3 }}>{active.avgPrice}</div>
+                  <div style={{ fontSize: 18, fontWeight: 800, color: '#1a1a1a', lineHeight: 1.3 }}>{active.avgPrice}</div>
                 </div>
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                 <div>
-                  <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: '0.09em', textTransform: 'uppercase' as const, color: RED, marginBottom: 4 }}>Arrendar</div>
+                  <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: '0.09em', color: '#1a1a1a', marginBottom: 4 }}>Arrendar</div>
                   <p style={{ fontSize: 11, color: '#555', lineHeight: 1.6, margin: 0 }}>{active.rentBlurb}</p>
                 </div>
                 <div>
-                  <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: '0.09em', textTransform: 'uppercase' as const, color: '#aaa', marginBottom: 4 }}>Comprar</div>
+                  <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: '0.09em', color: '#1a1a1a', marginBottom: 4 }}>Comprar</div>
                   <p style={{ fontSize: 11, color: '#888', lineHeight: 1.6, margin: 0 }}>{active.buyBlurb}</p>
                 </div>
               </div>
