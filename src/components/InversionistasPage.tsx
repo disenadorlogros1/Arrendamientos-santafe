@@ -366,13 +366,14 @@ export default function InversionistasPage() {
                     rel="noopener noreferrer"
                     onMouseEnter={applyInkFill}
                     onMouseLeave={applyInkFill}
-                    className="hero-btn-fill inline-flex items-center justify-center rounded-full"
+                    className="hero-btn-fill inline-flex items-center justify-center"
                     style={{
                       fontFamily: FONT, fontWeight: 300, fontSize: 'clamp(13px, 0.95vw, 15px)',
-                      textDecoration: 'none', height: '42px', paddingLeft: '20px', paddingRight: '20px',
-                      alignSelf: 'stretch',
+                      textDecoration: 'none', height: '44px',
+                      marginLeft: '-20px', marginRight: '-20px', marginBottom: '-20px',
                       background: isRed ? '#f32735' : '#1a1a1a',
                       border: isRed ? '1px solid rgba(255,255,255,0.7)' : 'none',
+                      borderRadius: 0,
                     }}
                   >
                     <span>Hablar con un asesor</span>
