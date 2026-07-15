@@ -23,7 +23,7 @@ import InversionistasLeafletMap from '@/components/InversionistasLeafletMap';
 const FONT = "'Avenir LT Std', 'Outfit', system-ui, sans-serif";
 const RED  = '#f32735';
 
-function CountMetric({ value, accent }: { value: string; accent?: boolean }) {
+function CountMetric({ value, accent, active = false }: { value: string; accent?: boolean; active?: boolean }) {
   const [displayed, setDisplayed] = useState(value.match(/\d/)?.[0] ?? '0');
   const started = useRef(false);
   const divRef  = useRef<HTMLDivElement>(null);
@@ -47,7 +47,7 @@ function CountMetric({ value, accent }: { value: string; accent?: boolean }) {
     return () => observer.disconnect();
   }, [value]);
   return (
-    <div ref={divRef} style={{ fontSize: 40, fontWeight: 900, color: accent ? RED : '#1a1a1a', lineHeight: 1 }}>
+    <div ref={divRef} style={{ fontSize: 40, fontWeight: 900, color: active ? (accent ? RED : '#1a1a1a') : '#ccc', lineHeight: 1, transition: 'color 0.2s ease' }}>
       {displayed}
     </div>
   );
@@ -296,7 +296,7 @@ export default function InversionistasPage() {
                           <div style={{ fontFamily: FONT, fontSize: '12px', fontWeight: 300, color: 'rgba(0,0,0,0.55)', marginBottom: '6px', whiteSpace: 'nowrap' }}>
                             {m.label}
                           </div>
-                          <CountMetric value={m.value} accent={m.accent} />
+                          <CountMetric value={m.value} accent={m.accent} active={isHov} />
                         </div>
                       ))}
                     </div>

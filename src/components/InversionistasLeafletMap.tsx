@@ -2470,7 +2470,12 @@ function computeSectorCentroids(): Record<Sector, [number, number]> {
     Object.entries(acc).map(([s, { lat, lng, n }]) => [s, [lat / n, lng / n]])
   ) as Record<Sector, [number, number]>;
 }
-const SECTOR_CENTROID = computeSectorCentroids();
+const SECTOR_CENTROID: Record<Sector, [number, number]> = {
+  ...computeSectorCentroids(),
+  // Occidente tiene polígonos muy dispersos (Santa Fe de Antioquia, Sopetrán, San Jerónimo
+  // al noroeste), lo que jala el centroide lejos del cluster urbano real (Laureles/Belén/Robledo)
+  Occidente: [6.245, -75.608],
+};
 
 export default function InversionistasLeafletMap({ activeSector, hoveredSector, onSectorHover, onSectorClick, onZoneNavigate }: Props) {
   const containerRef     = useRef<HTMLDivElement>(null);
@@ -2587,9 +2592,9 @@ export default function InversionistasLeafletMap({ activeSector, hoveredSector, 
       const isHov    = hoveredSector !== null && sector === hoveredSector;
 
       if (isHov) {
-        refs.polygon.setStyle({ color: RED, weight: 2, fillColor: RED, fillOpacity: 0.38, opacity: 1 });
+        refs.polygon.setStyle({ color: 'transparent', weight: 0, fillColor: RED, fillOpacity: 0.42, opacity: 0 });
       } else if (inActive) {
-        refs.polygon.setStyle({ color: RED, weight: 2, fillColor: RED, fillOpacity: 0.25, opacity: 1 });
+        refs.polygon.setStyle({ color: 'transparent', weight: 0, fillColor: RED, fillOpacity: 0.27, opacity: 0 });
       } else {
         refs.polygon.setStyle({ color: '#bbb', weight: 0.5, fillColor: '#bbb', fillOpacity: 0.12, opacity: 0.5 });
       }
