@@ -117,7 +117,7 @@ export default function InstitucionalPage({ onNavigate }: InstitucionalPageProps
               }}
             >
               Somos una inmobiliaria antioqueña<br />
-              con 60 años de trayectoria.
+              con <span style={{ fontWeight: 700 }}>60 años de trayectoria.</span>
             </h2>
             <p
               style={{
@@ -147,12 +147,12 @@ export default function InstitucionalPage({ onNavigate }: InstitucionalPageProps
               <ScrollReveal key={i} y={12} delay={i * 0.07} style={{ height: '100%' }}>
                 <div
                   style={{
-                    padding: 'clamp(24px, 3vw, 40px) clamp(20px, 2.5vw, 36px)',
+                    padding: 'clamp(32px, 3.5vw, 48px) clamp(20px, 2.5vw, 36px)',
                     borderRight: '1px solid #ebebeb',
                     borderBottom: '1px solid #ebebeb',
                     display: 'flex',
                     gap: 'clamp(14px, 1.8vw, 24px)',
-                    alignItems: 'flex-start',
+                    alignItems: 'center',
                     height: '100%',
                     boxSizing: 'border-box',
                   }}
@@ -163,7 +163,6 @@ export default function InstitucionalPage({ onNavigate }: InstitucionalPageProps
                       fontFamily: FONT, fontWeight: 900,
                       fontSize: 'clamp(36px, 3.2vw, 52px)',
                       color: RED, lineHeight: 1, flexShrink: 0,
-                      marginTop: 2,
                     }}
                   >
                     0{i + 1}
@@ -171,26 +170,16 @@ export default function InstitucionalPage({ onNavigate }: InstitucionalPageProps
 
                   {/* Contenido */}
                   {cifra.type === 'count' ? (
-                    <div>
-                      <div
-                        style={{
-                          fontFamily: FONT, fontWeight: 900,
-                          fontSize: 'clamp(38px, 3.5vw, 58px)',
-                          color: '#1a1a1a', lineHeight: 1,
-                        }}
-                      >
-                        <CountUp to={cifra.num} prefix={cifra.prefix} />
-                      </div>
-                      <p
-                        style={{
-                          fontFamily: FONT, fontWeight: 300,
-                          fontSize: 'clamp(13px, 1vw, 16px)',
-                          color: '#888', marginTop: 6, lineHeight: 1.55, margin: '6px 0 0',
-                        }}
-                      >
-                        {cifra.label}
-                      </p>
-                    </div>
+                    <p
+                      style={{
+                        fontFamily: FONT, fontWeight: 300,
+                        fontSize: 'clamp(13px, 1vw, 16px)',
+                        color: '#555', lineHeight: 1.55, margin: 0,
+                      }}
+                    >
+                      <span style={{ fontWeight: 700 }}><CountUp to={cifra.num} prefix={cifra.prefix} /></span>
+                      {' '}{cifra.label}
+                    </p>
                   ) : (
                     <p
                       style={{
@@ -210,7 +199,7 @@ export default function InstitucionalPage({ onNavigate }: InstitucionalPageProps
       </section>
 
       {/* ── Por qué confiar ── */}
-      <section style={{ background: '#f7f6f4' }}>
+      <section style={{ background: '#fff' }}>
         <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '64px clamp(20px, 4vw, 52px) 56px' }}>
 
           <ScrollReveal y={20}>
