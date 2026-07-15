@@ -2482,11 +2482,12 @@ export default function InversionistasLeafletMap({ activeSector, hoveredSector, 
   const mapRef           = useRef<any>(null);
   const polygonsRef      = useRef<Record<string, { polygon: any }>>({});
   const sectorMarkersRef = useRef<Record<string, any>>({});
-  const prevSectorRef    = useRef<Sector | null>(null);
-  const onHoverRef       = useRef(onSectorHover);
-  const onClickRef       = useRef(onSectorClick);
-  const onNavigateRef    = useRef(onZoneNavigate);
-  const hoverTimerRef    = useRef<any>(null);
+  const prevSectorRef      = useRef<Sector | null>(null);
+  const onHoverRef         = useRef(onSectorHover);
+  const onClickRef         = useRef(onSectorClick);
+  const onNavigateRef      = useRef(onZoneNavigate);
+  const hoverTimerRef      = useRef<any>(null);
+  const userInteractedRef  = useRef(false);
   useEffect(() => { onHoverRef.current = onSectorHover; }, [onSectorHover]);
   useEffect(() => { onClickRef.current = onSectorClick; }, [onSectorClick]);
   useEffect(() => { onNavigateRef.current = onZoneNavigate; }, [onZoneNavigate]);
@@ -2515,6 +2516,11 @@ export default function InversionistasLeafletMap({ activeSector, hoveredSector, 
       L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
         maxZoom: 19,
       }).addTo(mapRef.current);
+
+      // Cuando el usuario hace zoom o pan manual, desactivar auto-fly
+      mapRef.current.on('dragstart zoomstart', () => {
+        userInteractedRef.current = true;
+      });
 
       for (const [id, coords] of Object.entries(ZONE_POLYGONS)) {
         if (coords.length < 3) continue;
@@ -2614,11 +2620,11 @@ export default function InversionistasLeafletMap({ activeSector, hoveredSector, 
     const targetSector = hoveredSector ?? activeSector;
     if (targetSector !== prevSectorRef.current) {
       prevSectorRef.current = targetSector;
-      if (targetSector) {
+      // Solo fly automático si el usuario no ha hecho zoom/pan manual
+      // Nunca volver al overview automáticamente (quita el snap-back)
+      if (targetSector && !userInteractedRef.current) {
         const v = SECTOR_VIEW[targetSector];
         map.flyTo(v.center, v.zoom, { duration: 0.7, easeLinearity: 0.5 });
-      } else {
-        map.flyTo([6.25, -75.58], 9, { duration: 0.7, easeLinearity: 0.5 });
       }
     }
   }, [activeSector, hoveredSector]);

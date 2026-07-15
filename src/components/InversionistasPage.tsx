@@ -95,6 +95,10 @@ export default function InversionistasPage() {
     setActiveSector(sector);
   };
 
+  const handleSectorClick = (sector: Sector) => {
+    setActiveSector(sector);
+  };
+
   const handleMapHover = (sector: Sector | null) => {
     setHoveredSector(sector);
   };
@@ -326,12 +330,12 @@ export default function InversionistasPage() {
 
       {/* Benefits Section — mismo estilo que ServiciosBlock del home */}
       <section style={{ background: '#fff' }} className="w-full">
-        <div className="px-6 sm:px-10 lg:px-14" style={{ paddingTop: '28px', paddingBottom: '28px', textAlign: 'center' }}>
+        <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '28px clamp(20px, 4vw, 52px)', textAlign: 'center' }}>
           <h2 style={{ fontFamily: FONT, fontWeight: 300, fontSize: 'clamp(26px, 2.6vw, 46px)', color: '#555', lineHeight: 1.2, margin: 0 }}>
             ¿Por qué <span style={{ fontWeight: 700 }}>invertir con nosotros?</span>
           </h2>
         </div>
-        <div className="px-6 sm:px-10 lg:px-14" style={{ paddingBottom: '52px', overflow: 'visible' }}>
+        <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '0 clamp(20px, 4vw, 52px) 52px' }}>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4" style={{ gap: '0', overflow: 'visible' }}>
             {beneficios.map((b, idx) => {
               const isRed = idx === 0;
