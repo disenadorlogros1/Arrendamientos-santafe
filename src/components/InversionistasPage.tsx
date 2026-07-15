@@ -315,17 +315,19 @@ export default function InversionistasPage() {
                           flex: 1.4, padding: '8px 0 8px 14px', borderLeft: '1px solid #f0f0f0',
                           overflow: 'hidden', minWidth: 0,
                         }}>
-                          <div style={{ fontFamily: FONT, fontSize: '12px', fontWeight: 700, color: 'rgba(0,0,0,0.55)', marginBottom: '6px', whiteSpace: 'nowrap' }}>
+                          <div style={{ fontFamily: FONT, fontSize: '12px', fontWeight: 700, color: 'rgba(0,0,0,0.55)', marginBottom: '4px' }}>
                             Barrios y sectores
                           </div>
-                          <div style={{ fontFamily: FONT, fontSize: '11px', color: '#555', lineHeight: 1.5, overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
+                          <div style={{ fontFamily: FONT, fontSize: '11px', color: '#555', lineHeight: 1.5 }}>
                             {zone.subzones.join(' · ')}
                             {zone.subzones.length > 4 && (
                               <> · <Link href={`/inversionistas/${zone.slug}`} style={{ fontFamily: FONT, fontSize: '11px', color: '#555', fontWeight: 700, textDecoration: 'none' }}>+ ver todos</Link></>
                             )}
                           </div>
-                          <div style={{ fontFamily: FONT, fontSize: '11px', color: '#888', marginTop: '6px', lineHeight: 1.4, overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
-                            <span style={{ fontWeight: 700, color: '#555' }}>Municipios: </span>
+                          <div style={{ fontFamily: FONT, fontSize: '12px', fontWeight: 700, color: 'rgba(0,0,0,0.55)', margin: '8px 0 4px' }}>
+                            Municipios
+                          </div>
+                          <div style={{ fontFamily: FONT, fontSize: '11px', color: '#555', lineHeight: 1.5 }}>
                             {zone.municipiosNames.join(' · ')}
                           </div>
                         </div>
