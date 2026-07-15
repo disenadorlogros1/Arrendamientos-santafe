@@ -116,8 +116,8 @@ export default function InstitucionalPage({ onNavigate }: InstitucionalPageProps
                 textAlign: 'center',
               }}
             >
-              Somos una inmobiliaria antioqueña con{' '}
-              <span style={{ fontWeight: 700 }}>60 años de trayectoria</span>
+              Somos una inmobiliaria antioqueña<br />
+              con 60 años de trayectoria.
             </h2>
             <p
               style={{
@@ -132,18 +132,19 @@ export default function InstitucionalPage({ onNavigate }: InstitucionalPageProps
             </p>
           </ScrollReveal>
 
-          {/* Grid cifras 2×2 */}
+          {/* Grid cifras 3×1 */}
           <div
             style={{
               display: 'grid',
               gridTemplateColumns: 'repeat(3, 1fr)',
+              gridAutoRows: '1fr',
               marginTop: 52,
               borderTop: '1px solid #ebebeb',
               borderLeft: '1px solid #ebebeb',
             }}
           >
             {cifras.map((cifra, i) => (
-              <ScrollReveal key={i} y={12} delay={i * 0.07}>
+              <ScrollReveal key={i} y={12} delay={i * 0.07} style={{ height: '100%' }}>
                 <div
                   style={{
                     padding: 'clamp(24px, 3vw, 40px) clamp(20px, 2.5vw, 36px)',
@@ -152,13 +153,15 @@ export default function InstitucionalPage({ onNavigate }: InstitucionalPageProps
                     display: 'flex',
                     gap: 'clamp(14px, 1.8vw, 24px)',
                     alignItems: 'flex-start',
+                    height: '100%',
+                    boxSizing: 'border-box',
                   }}
                 >
                   {/* Número de serie */}
                   <span
                     style={{
                       fontFamily: FONT, fontWeight: 900,
-                      fontSize: 'clamp(22px, 2vw, 32px)',
+                      fontSize: 'clamp(36px, 3.2vw, 52px)',
                       color: RED, lineHeight: 1, flexShrink: 0,
                       marginTop: 2,
                     }}
@@ -181,8 +184,8 @@ export default function InstitucionalPage({ onNavigate }: InstitucionalPageProps
                       <p
                         style={{
                           fontFamily: FONT, fontWeight: 300,
-                          fontSize: 'clamp(13px, 0.95vw, 15px)',
-                          color: '#888', marginTop: 6, lineHeight: 1.45,
+                          fontSize: 'clamp(13px, 1vw, 16px)',
+                          color: '#888', marginTop: 6, lineHeight: 1.55, margin: '6px 0 0',
                         }}
                       >
                         {cifra.label}
@@ -216,10 +219,11 @@ export default function InstitucionalPage({ onNavigate }: InstitucionalPageProps
                 fontFamily: FONT, fontWeight: 300,
                 fontSize: 'clamp(24px, 2.8vw, 46px)',
                 color: '#555', lineHeight: 1.2, margin: 0,
+                textAlign: 'center',
               }}
             >
-              Por qué confiar en{' '}
-              <span style={{ fontWeight: 700 }}>Santa Fe</span>
+              ¿Por qué confiar en{' '}
+              <span style={{ fontWeight: 700 }}>arrendamientos Santa Fe</span>?
             </h2>
           </ScrollReveal>
 
@@ -228,24 +232,27 @@ export default function InstitucionalPage({ onNavigate }: InstitucionalPageProps
             style={{
               display: 'grid',
               gridTemplateColumns: 'repeat(3, 1fr)',
+              gridAutoRows: '1fr',
               marginTop: 40,
               borderTop: '1px solid #e0ddd9',
               borderLeft: '1px solid #e0ddd9',
             }}
           >
             {razones.map((razon, i) => (
-              <ScrollReveal key={i} y={12} delay={i * 0.09}>
+              <ScrollReveal key={i} y={12} delay={i * 0.09} style={{ height: '100%' }}>
                 <div
                   style={{
                     padding: 'clamp(24px, 3vw, 40px) clamp(20px, 2.5vw, 36px)',
                     borderRight: '1px solid #e0ddd9',
                     borderBottom: '1px solid #e0ddd9',
+                    height: '100%',
+                    boxSizing: 'border-box',
                   }}
                 >
                   <span
                     style={{
                       fontFamily: FONT, fontWeight: 900,
-                      fontSize: 'clamp(22px, 2vw, 32px)',
+                      fontSize: 'clamp(36px, 3.2vw, 52px)',
                       color: RED, lineHeight: 1, display: 'block',
                       marginBottom: 16,
                     }}
@@ -265,7 +272,7 @@ export default function InstitucionalPage({ onNavigate }: InstitucionalPageProps
                   <p
                     style={{
                       fontFamily: FONT, fontWeight: 300,
-                      fontSize: 'clamp(13px, 0.95vw, 15px)',
+                      fontSize: 'clamp(13px, 1vw, 16px)',
                       color: '#888', lineHeight: 1.6, margin: 0,
                     }}
                   >

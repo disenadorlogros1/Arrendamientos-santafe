@@ -15,6 +15,7 @@ interface ScrollRevealProps {
   /** Cuándo empieza el trigger, e.g. 'top 90%' (default: 'top 88%') */
   start?: string;
   className?: string;
+  style?: React.CSSProperties;
 }
 
 export default function ScrollReveal({
@@ -23,6 +24,7 @@ export default function ScrollReveal({
   y = 60,
   start = 'top 88%',
   className = '',
+  style,
 }: ScrollRevealProps) {
   const ref = useRef<HTMLDivElement>(null);
 
@@ -54,7 +56,7 @@ export default function ScrollReveal({
   }, [delay, y, start]);
 
   return (
-    <div ref={ref} className={`w-full ${className}`}>
+    <div ref={ref} className={`w-full ${className}`} style={style}>
       {children}
     </div>
   );
