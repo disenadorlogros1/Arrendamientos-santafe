@@ -385,22 +385,24 @@ export default function InversionistasPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-16 md:py-20" style={{ background: '#1a1a1a' }}>
+      <section className="py-16 md:py-20" style={{ background: '#ccc' }}>
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
           <ScrollReveal y={20}>
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-8" style={{ fontFamily: FONT }}>
-              ¿Listo para comenzar tu inversión?
+            <h2 className="text-3xl md:text-4xl font-bold mb-8" style={{ fontFamily: FONT, color: '#1a1a1a' }}>
+              ¿Listo para invertir?
             </h2>
 
             <a
               href={WHATSAPP_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 h-12 px-8 bg-white text-brand-red font-semibold rounded-full hover:bg-gray-100 transition-all duration-300 transform hover:scale-105"
-              style={{ fontFamily: FONT }}
+              onMouseEnter={applyInkFill}
+              onMouseLeave={applyInkFill}
+              className="cta-btn-light inline-flex items-center gap-2 h-12 px-8 rounded-full"
+              style={{ fontFamily: FONT, fontWeight: 600, fontSize: 14, textDecoration: 'none' }}
             >
               <span>Solicitar asesoría</span>
-              <img src="/icons/icon-whatsapp-red.gif" alt="WhatsApp" className="w-5 h-5" />
+              <img src="/icons/icon-whatsapp-red.gif" alt="WhatsApp" className="w-5 h-5" style={{ position: 'relative', zIndex: 1 }} />
             </a>
           </ScrollReveal>
         </div>
