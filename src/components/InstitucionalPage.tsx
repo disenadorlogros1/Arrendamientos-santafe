@@ -85,8 +85,8 @@ export default function InstitucionalPage({ onNavigate }: InstitucionalPageProps
           <h1
             style={{
               fontFamily: FONT, fontWeight: 300,
-              fontSize: 'clamp(32px, 4.5vw, 60px)',
-              color: '#fff', lineHeight: 1.05, margin: 0,
+              fontSize: 'clamp(26px, 3.4vw, 48px)',
+              color: '#fff', lineHeight: 1.18, margin: '0 0 14px 0',
             }}
           >
             Sobre <span style={{ fontWeight: 700 }}>nosotros</span>
@@ -94,12 +94,12 @@ export default function InstitucionalPage({ onNavigate }: InstitucionalPageProps
           <p
             style={{
               fontFamily: FONT, fontWeight: 300,
-              fontSize: 'clamp(14px, 1vw, 17px)',
-              color: 'rgba(255,255,255,0.55)',
-              marginTop: 14, maxWidth: '42rem', lineHeight: 1.55,
+              fontSize: 'clamp(13px, 1.1vw, 16px)',
+              color: '#fff',
+              margin: 0, maxWidth: '560px', lineHeight: 1.55,
             }}
           >
-            Desde 1966, una inmobiliaria antioqueña que acompaña cada decisión con experiencia, cercanía y criterio.
+            Inmobiliaria antioqueña con más de 60 años de trayectoria.
           </p>
         </div>
       </section>
