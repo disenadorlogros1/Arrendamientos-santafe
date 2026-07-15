@@ -86,6 +86,7 @@ export default function InversionistasPage() {
   const [hoveredBeneficio, setHoveredBeneficio] = useState<number | null>(null);
   const [redIdx] = useState(() => Math.floor(Math.random() * beneficios.length));
   const [hoveredZoneCard,  setHoveredZoneCard]  = useState<string | null>(null);
+  const [ctaHovered,       setCtaHovered]       = useState(false);
   const subtitleRef = useRef<HTMLParagraphElement>(null);
   const ctaBtnRef   = useRef<HTMLDivElement>(null);
 
@@ -431,13 +432,25 @@ export default function InversionistasPage() {
               href={WHATSAPP_URL}
               target="_blank"
               rel="noopener noreferrer"
-              onMouseEnter={applyInkFill}
-              onMouseLeave={applyInkFill}
-              className="cta-btn-light inline-flex items-center gap-2 h-12 px-8 rounded-full"
-              style={{ fontFamily: FONT, fontWeight: 600, fontSize: 14, textDecoration: 'none' }}
+              onMouseEnter={() => setCtaHovered(true)}
+              onMouseLeave={() => setCtaHovered(false)}
+              style={{
+                display: 'inline-flex', alignItems: 'center', gap: 8,
+                height: 48, padding: '0 32px',
+                background: ctaHovered ? RED : '#f7f6f4',
+                color: ctaHovered ? '#fff' : RED,
+                border: `1.5px solid ${RED}`,
+                borderRadius: 999,
+                fontFamily: FONT, fontWeight: 600, fontSize: 14,
+                textDecoration: 'none', cursor: 'pointer',
+                transition: 'background 0.22s ease, color 0.22s ease',
+              }}
             >
               <span>Solicitar asesoría</span>
-              <img src="/icons/icon-whatsapp-red.gif" alt="WhatsApp" className="w-5 h-5" style={{ position: 'relative', zIndex: 1 }} />
+              <img
+                src={ctaHovered ? '/icons/icon-whatsapp-white.gif' : '/icons/icon-whatsapp-red.gif'}
+                alt="WhatsApp" width={20} height={20}
+              />
             </a>
           </ScrollReveal>
         </div>
