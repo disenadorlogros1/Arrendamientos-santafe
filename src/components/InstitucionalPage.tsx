@@ -77,13 +77,11 @@ export default function InstitucionalPage({ onNavigate }: InstitucionalPageProps
         style={{
           background: '#1a1a1a',
           marginTop: '-86px',
-          paddingTop: '86px',
-          minHeight: '300px',
-          display: 'flex',
-          alignItems: 'flex-end',
+          paddingTop: 'calc(86px + clamp(32px, 5vw, 56px))',
+          paddingBottom: 'clamp(24px, 3vw, 40px)',
         }}
       >
-        <div style={{ maxWidth: '1400px', margin: '0 auto', width: '100%', padding: 'clamp(40px, 5vw, 72px) clamp(20px, 4vw, 52px)' }}>
+        <div style={{ maxWidth: '1400px', margin: '0 auto', width: '100%', padding: '0 clamp(20px, 4vw, 60px)' }}>
           <h1
             style={{
               fontFamily: FONT, fontWeight: 300,

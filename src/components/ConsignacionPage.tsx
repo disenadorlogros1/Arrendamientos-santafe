@@ -69,6 +69,7 @@ export default function ConsignacionPage({ onNavigate }: ConsignacionPageProps =
   const [titleHovered, setTitleHovered] = useState(false);
   const [hoveredPaso,  setHoveredPaso]  = useState<number | null>(null);
   const [hoveredRazon, setHoveredRazon] = useState<number | null>(null);
+  const [ctaHovered,   setCtaHovered]   = useState(false);
 
   useEffect(() => {
     if (!titleAnimating) return;
@@ -162,12 +163,12 @@ export default function ConsignacionPage({ onNavigate }: ConsignacionPageProps =
 
       {/* Proceso — 3 cards horizontales */}
       <section style={{ background: '#ffffff' }} className="w-full">
-        <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '52px clamp(20px, 4vw, 52px) 14px', textAlign: 'center' }}>
+        <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '52px clamp(20px, 4vw, 52px) 8px', textAlign: 'center' }}>
           <ScrollReveal y={20}>
             <h2 style={{ fontFamily: FONT, fontWeight: 300, fontSize: 'clamp(26px, 2.6vw, 46px)', color: '#555', lineHeight: 1.2, margin: 0 }}>
               Consigna tu inmueble <span style={{ fontWeight: 700 }}>en 3 pasos</span>
             </h2>
-            <p style={{ fontFamily: FONT, fontWeight: 300, fontSize: 'clamp(14px, 1vw, 16px)', color: '#888', marginTop: 6, lineHeight: 1.5 }}>
+            <p style={{ fontFamily: FONT, fontWeight: 300, fontSize: 'clamp(14px, 1vw, 16px)', color: '#888', marginTop: 2, lineHeight: 1.5 }}>
               Sin costo de promoción. Arriéndalo o véndelo en el menor tiempo posible.
             </p>
           </ScrollReveal>
@@ -182,12 +183,12 @@ export default function ConsignacionPage({ onNavigate }: ConsignacionPageProps =
                 <div
                   key={paso.number}
                   style={{
-                    padding: '28px 24px 32px',
+                    padding: '28px 24px',
                     background: '#f5f5f5',
                     cursor: 'default',
                     display: 'flex',
                     flexDirection: 'row',
-                    alignItems: 'flex-start',
+                    alignItems: 'center',
                     gap: 20,
                     height: '100%',
                     minHeight: 220,
@@ -233,7 +234,7 @@ export default function ConsignacionPage({ onNavigate }: ConsignacionPageProps =
 
       {/* ¿Por qué escogernos? — 3 cards centradas, sin CTA */}
       <section style={{ background: '#ffffff' }} className="w-full">
-        <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '24px clamp(20px, 4vw, 52px) 28px', textAlign: 'center' }}>
+        <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '12px clamp(20px, 4vw, 52px) 28px', textAlign: 'center' }}>
           <ScrollReveal y={20}>
             <h2 style={{ fontFamily: FONT, fontWeight: 300, fontSize: 'clamp(26px, 2.6vw, 46px)', color: '#555', lineHeight: 1.2, margin: 0 }}>
               ¿Por qué <span style={{ fontWeight: 700 }}>escogernos?</span>
@@ -296,13 +297,25 @@ export default function ConsignacionPage({ onNavigate }: ConsignacionPageProps =
               href={WHATSAPP_URL}
               target="_blank"
               rel="noopener noreferrer"
-              onMouseEnter={applyInkFill}
-              onMouseLeave={applyInkFill}
-              className="cta-btn-light inline-flex items-center gap-2 h-12 px-8 rounded-full"
-              style={{ fontFamily: FONT, fontWeight: 600, fontSize: 14, textDecoration: 'none', background: '#f5f5f5' }}
+              onMouseEnter={() => setCtaHovered(true)}
+              onMouseLeave={() => setCtaHovered(false)}
+              style={{
+                display: 'inline-flex', alignItems: 'center', gap: 8,
+                height: 48, padding: '0 32px',
+                background: ctaHovered ? RED : '#f7f6f4',
+                color: ctaHovered ? '#fff' : RED,
+                border: `1.5px solid ${RED}`,
+                borderRadius: 999,
+                fontFamily: FONT, fontWeight: 600, fontSize: 14,
+                textDecoration: 'none', cursor: 'pointer',
+                transition: 'background 0.22s ease, color 0.22s ease',
+              }}
             >
               <span>Solicitar asesoría</span>
-              <img src="/icons/icon-whatsapp-red.gif" alt="WhatsApp" className="w-5 h-5" style={{ position: 'relative', zIndex: 1 }} />
+              <img
+                src={ctaHovered ? '/icons/icon-whatsapp-white.gif' : '/icons/icon-whatsapp-red.gif'}
+                alt="WhatsApp" width={20} height={20}
+              />
             </a>
           </ScrollReveal>
         </div>
