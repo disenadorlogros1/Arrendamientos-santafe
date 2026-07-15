@@ -94,16 +94,13 @@ export default function BlogPage({
   useEffect(() => {
     const el = gridRef.current;
     if (!el) return;
-    const items = el.querySelectorAll('.blog-article-item');
+    const items = Array.from(el.querySelectorAll<HTMLElement>('.blog-article-item'));
     const ctx = gsap.context(() => {
-      gsap.from(items, {
-        opacity: 0,
-        y: 16,
-        duration: 0.4,
-        stagger: 0.07,
-        delay: 0.1,
-        ease: 'power2.out',
-      });
+      gsap.fromTo(
+        items,
+        { opacity: 0, y: 16 },
+        { opacity: 1, y: 0, duration: 0.38, stagger: 0.07, delay: 0.05, ease: 'power2.out', clearProps: 'all' },
+      );
     }, el);
     return () => ctx.revert();
   }, []);

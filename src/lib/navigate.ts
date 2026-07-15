@@ -6,6 +6,8 @@ export function navigate(page: PageType, filter?: string) {
     window.location.href = `/propiedades${suffix}`;
   } else if (page === 'blog') {
     window.location.href = '/blog';
+  } else if (page === 'historia-60') {
+    window.location.href = '/blog/historia-60';
   } else if (page === 'inversionistas') {
     window.location.href = '/inversionistas';
   } else if (page === 'consignacion') {
