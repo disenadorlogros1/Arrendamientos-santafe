@@ -111,10 +111,8 @@ export default function ConsignacionPage({ onNavigate }: ConsignacionPageProps =
             onMouseLeave={() => setTitleHovered(false)}
           >
             <span style={{ display: 'block', fontWeight: 300 }}>Ten la tranquilidad de dejar tu</span>
-            <span style={{ display: 'block', fontWeight: 300 }}>
-              inmueble en{' '}
-              <span style={{ display: 'inline-block', fontWeight: 700, position: 'relative', overflow: 'hidden' }}>
-              <span style={{ position: 'relative', zIndex: 2 }}>buenas manos</span>
+            <span style={{ display: 'inline-block', fontWeight: 700, position: 'relative', overflow: 'hidden' }}>
+              <span style={{ position: 'relative', zIndex: 2 }}>inmueble en buenas manos</span>
               <span
                 aria-hidden="true"
                 style={{
@@ -122,7 +120,7 @@ export default function ConsignacionPage({ onNavigate }: ConsignacionPageProps =
                   top: '62%',
                   left: 0,
                   width: '100%',
-                  height: '13%',
+                  height: '10%',
                   backgroundColor: RED,
                   transform: `translateY(-50%) scaleX(${titleHovered ? 1 : 0})`,
                   transformOrigin: 'left center',
@@ -131,7 +129,6 @@ export default function ConsignacionPage({ onNavigate }: ConsignacionPageProps =
                   pointerEvents: 'none',
                 }}
               />
-              </span>
             </span>
           </h1>
 
@@ -193,6 +190,7 @@ export default function ConsignacionPage({ onNavigate }: ConsignacionPageProps =
                     alignItems: 'flex-start',
                     gap: 20,
                     height: '100%',
+                    minHeight: 220,
                     transform: isHov ? 'scale(1.05)' : isAdj ? 'scale(0.97)' : 'scale(1)',
                     zIndex: isHov ? 10 : 1, position: 'relative',
                     transition: 'transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.3s ease',
