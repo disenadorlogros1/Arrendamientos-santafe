@@ -182,10 +182,11 @@ export default function InversionistasPage() {
           <div ref={ctaBtnRef} className="mt-8 text-center" style={{ opacity: 0 }}>
             <a
               href="#zonas"
+              onClick={e => { e.preventDefault(); document.getElementById('zonas')?.scrollIntoView({ behavior: 'smooth' }); }}
               onMouseEnter={applyInkFill}
               onMouseLeave={applyInkFill}
               className="hero-btn-fill inline-flex items-center justify-center h-12 px-8 rounded-full"
-              style={{ fontFamily: FONT, fontWeight: 600, fontSize: 14, textDecoration: 'none' }}
+              style={{ fontFamily: FONT, fontWeight: 600, fontSize: 14, textDecoration: 'none', cursor: 'pointer' }}
             >
               <span>Explora el mapa</span>
             </a>
