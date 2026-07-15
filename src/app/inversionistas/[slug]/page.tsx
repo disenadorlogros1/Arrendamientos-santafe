@@ -338,13 +338,14 @@ export default function InversionZonePage() {
 
 /* ── Tarjeta de otra zona ─────────────────────────────────── */
 function OtherZoneCard({ zone }: { zone: typeof investmentZones[0] }) {
-  const [hovered, setHovered] = useState(false);
+  const [hovered,    setHovered]    = useState(false);
+  const [btnHovered, setBtnHovered] = useState(false);
 
   return (
     <div
       style={{
         display: 'flex', flexDirection: 'column',
-        background: '#f5f5f5',
+        background: '#ffffff',
         height: '100%', fontFamily: FONT,
         cursor: 'default', position: 'relative',
         transform: hovered ? 'scale(1.06)' : 'scale(1)',
@@ -355,26 +356,29 @@ function OtherZoneCard({ zone }: { zone: typeof investmentZones[0] }) {
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
-      <div style={{ padding: '28px 24px 24px', flexGrow: 1, display: 'flex', flexDirection: 'column', gap: 10 }}>
-        <img src="/icons/icon-location-red.gif" alt="" width={40} height={40} style={{ display: 'block', flexShrink: 0 }} />
+      <div style={{ padding: '28px 24px 24px', flexGrow: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', gap: 8 }}>
         <div style={{ fontSize: 'clamp(16px, 1.2vw, 20px)', fontWeight: 700, color: '#1a1a1a', lineHeight: 1.15 }}>
           {zone.name}
         </div>
-        <div style={{ fontSize: 'clamp(12px, 0.9vw, 14px)', fontWeight: 300, color: 'rgba(0,0,0,0.55)', lineHeight: 1.5 }}>
-          <span style={{ color: RED, fontWeight: 700 }}>{zone.rentability}</span> rentabilidad · {zone.pricePerM2} / m²
+        <div style={{ fontSize: 'clamp(12px, 0.9vw, 14px)', fontWeight: 400, color: '#555', lineHeight: 1.6 }}>
+          <div>{zone.rentability} rentabilidad</div>
+          <div>{zone.pricePerM2} / m²</div>
         </div>
       </div>
       <Link
         href={`/inversionistas/${zone.slug}`}
         style={{
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          padding: '11px 16px', background: RED, color: '#fff',
+          padding: '11px 16px',
+          background: btnHovered ? RED : '#ffffff',
+          color: btnHovered ? '#fff' : RED,
+          border: `1.5px solid ${RED}`,
           fontFamily: FONT, fontSize: 13, fontWeight: 600,
           textDecoration: 'none', flexShrink: 0,
-          transition: 'background 0.18s',
+          transition: 'background 0.22s ease, color 0.22s ease',
         }}
-        onMouseEnter={e => (e.currentTarget.style.background = '#aa182c')}
-        onMouseLeave={e => (e.currentTarget.style.background = RED)}
+        onMouseEnter={() => setBtnHovered(true)}
+        onMouseLeave={() => setBtnHovered(false)}
       >
         Ver análisis
       </Link>
