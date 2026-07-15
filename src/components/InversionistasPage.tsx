@@ -273,8 +273,9 @@ export default function InversionistasPage() {
             {visibleZones.map((zone) => {
               const isCardHov  = hoveredZoneCard === zone.id;
               const isMapHov   = hoveredSector !== null && zone.slug === hoveredSector.toLowerCase();
-              const isHov      = isCardHov || isMapHov;
-              const anyExpanded = hoveredZoneCard !== null || hoveredSector !== null;
+              const isActive   = zone.sector === activeSector;
+              const isHov      = isCardHov || isMapHov || isActive;
+              const anyExpanded = hoveredZoneCard !== null || hoveredSector !== null || activeSector !== null;
               return (
                 <div
                   key={zone.id}
