@@ -16,6 +16,7 @@ interface Props {
   hoveredSector: Sector | null;
   onSectorHover?: (sector: Sector | null) => void;
   onSectorClick?: (sector: Sector) => void;
+  onZoneNavigate?: (sector: Sector) => void;
 }
 
 const RED = '#f32735';
@@ -56,13 +57,24 @@ const SECTOR_STATS: Record<Sector, { barrios: number; propiedades: number; munic
   Occidente: { barrios: 11, propiedades: 24, municipios: 4 }, // San Jerónimo, Santa Fe de Antioquia, Sopetrán, San Pedro de los Milagros
 };
 
-// Posición visual central de cada sector para el marcador de estadísticas
-const SECTOR_LABEL_POS: Record<Sector, [number, number]> = {
-  Norte:     [6.34, -75.56],
-  Sur:       [6.15, -75.61],
-  Oriente:   [6.18, -75.49],
-  Occidente: [6.28, -75.64],
-};
+// Centroide geográfico real calculado desde los polígonos de cada sector
+function computeSectorCentroids(): Record<Sector, [number, number]> {
+  const acc: Record<string, { lat: number; lng: number; n: number }> = {};
+  for (const [id, coords] of Object.entries(ZONE_POLYGONS)) {
+    const sector = BARRIO_SECTOR[id];
+    if (!sector || coords.length === 0) continue;
+    if (!acc[sector]) acc[sector] = { lat: 0, lng: 0, n: 0 };
+    for (const [lat, lng] of coords) {
+      acc[sector].lat += lat;
+      acc[sector].lng += lng;
+      acc[sector].n++;
+    }
+  }
+  return Object.fromEntries(
+    Object.entries(acc).map(([s, { lat, lng, n }]) => [s, [lat / n, lng / n]])
+  ) as Record<Sector, [number, number]>;
+}
+const SECTOR_CENTROID = computeSectorCentroids();
 
 // Polígonos reales OSM — nominatim.openstreetmap.org/lookup (threshold=0.0005, alta resolución)
 const ZONE_POLYGONS: Record<string, [number, number][]> = {
@@ -2458,7 +2470,7 @@ const ZONE_POLYGONS: Record<string, [number, number][]> = {
 };
 
 
-export default function InversionistasLeafletMap({ activeSector, hoveredSector, onSectorHover, onSectorClick }: Props) {
+export default function InversionistasLeafletMap({ activeSector, hoveredSector, onSectorHover, onSectorClick, onZoneNavigate }: Props) {
   const containerRef     = useRef<HTMLDivElement>(null);
   const mapRef           = useRef<any>(null);
   const polygonsRef      = useRef<Record<string, { polygon: any }>>({});
@@ -2466,9 +2478,11 @@ export default function InversionistasLeafletMap({ activeSector, hoveredSector, 
   const prevSectorRef    = useRef<Sector | null>(null);
   const onHoverRef       = useRef(onSectorHover);
   const onClickRef       = useRef(onSectorClick);
+  const onNavigateRef    = useRef(onZoneNavigate);
   const hoverTimerRef    = useRef<any>(null);
   useEffect(() => { onHoverRef.current = onSectorHover; }, [onSectorHover]);
   useEffect(() => { onClickRef.current = onSectorClick; }, [onSectorClick]);
+  useEffect(() => { onNavigateRef.current = onZoneNavigate; }, [onZoneNavigate]);
 
   useEffect(() => {
     if (!document.querySelector('link[href*="leaflet"]')) {
@@ -2512,7 +2526,10 @@ export default function InversionistasLeafletMap({ activeSector, hoveredSector, 
           hoverTimerRef.current = setTimeout(() => onHoverRef.current?.(null), 60);
         });
         polygon.on('click', () => {
-          if (sector) onClickRef.current?.(sector);
+          if (sector) {
+            onClickRef.current?.(sector);
+            onNavigateRef.current?.(sector);
+          }
         });
 
         polygonsRef.current[id] = { polygon };
@@ -2533,8 +2550,8 @@ export default function InversionistasLeafletMap({ activeSector, hoveredSector, 
         });
       };
 
-      for (const s of Object.keys(SECTOR_LABEL_POS) as Sector[]) {
-        const pos    = SECTOR_LABEL_POS[s];
+      for (const s of Object.keys(SECTOR_CENTROID) as Sector[]) {
+        const pos    = SECTOR_CENTROID[s];
         const marker = L.marker(pos, {
           icon:        makeSectorIcon(s, false),
           interactive: false,
@@ -2568,11 +2585,11 @@ export default function InversionistasLeafletMap({ activeSector, hoveredSector, 
       const isHov    = hoveredSector !== null && sector === hoveredSector;
 
       if (isHov) {
-        refs.polygon.setStyle({ color: RED, weight: 0, fillColor: RED, fillOpacity: 0.35, opacity: 0 });
+        refs.polygon.setStyle({ color: RED, weight: 2, fillColor: RED, fillOpacity: 0.38, opacity: 1 });
       } else if (inActive) {
-        refs.polygon.setStyle({ color: RED, weight: 0, fillColor: RED, fillOpacity: 0.22, opacity: 0 });
+        refs.polygon.setStyle({ color: RED, weight: 2, fillColor: RED, fillOpacity: 0.25, opacity: 1 });
       } else {
-        refs.polygon.setStyle({ color: '#ccc', weight: 0.4, fillColor: '#ccc', fillOpacity: 0.12, opacity: 0.45 });
+        refs.polygon.setStyle({ color: '#bbb', weight: 0.5, fillColor: '#bbb', fillOpacity: 0.12, opacity: 0.5 });
       }
     }
 
@@ -2580,7 +2597,11 @@ export default function InversionistasLeafletMap({ activeSector, hoveredSector, 
     for (const [s, ref] of Object.entries(sectorMarkersRef.current)) {
       const isVisible = effectiveSector !== null && s === effectiveSector;
       ref.marker.setOpacity(isVisible ? 1 : 0);
-      if (isVisible) ref.marker.setIcon(ref.makeSectorIcon(s as Sector, true));
+      if (isVisible) {
+        const centroid = SECTOR_CENTROID[s as Sector];
+        if (centroid) ref.marker.setLatLng(centroid);
+        ref.marker.setIcon(ref.makeSectorIcon(s as Sector, true));
+      }
     }
 
     const targetSector = hoveredSector ?? activeSector;

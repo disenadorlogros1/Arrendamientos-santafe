@@ -99,6 +99,10 @@ export default function InversionistasPage() {
     setHoveredSector(sector);
   };
 
+  const handleZoneNavigate = (sector: Sector) => {
+    router.push('/inversionistas/' + sector.toLowerCase());
+  };
+
   useEffect(() => {
     if (!titleAnimating) return;
     if (subtitleRef.current) {
@@ -247,6 +251,7 @@ export default function InversionistasPage() {
                 hoveredSector={hoveredSector}
                 onSectorHover={handleMapHover}
                 onSectorClick={setActiveSector}
+                onZoneNavigate={handleZoneNavigate}
               />
             </div>
 
