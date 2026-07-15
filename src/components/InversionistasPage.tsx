@@ -271,21 +271,21 @@ export default function InversionistasPage() {
         <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '0 clamp(20px, 4vw, 52px) 40px' }}>
           <div style={{ display: 'flex', gap: '1px', background: '#f5f5f5', overflow: 'hidden' }}>
             {visibleZones.map((zone) => {
-              const isCardHov = hoveredZoneCard === zone.id;
-              const isMapHov  = hoveredSector !== null && zone.slug === hoveredSector.toLowerCase();
-              const isHov     = isCardHov || isMapHov;
-              const anyCardHov = hoveredZoneCard !== null;
+              const isCardHov  = hoveredZoneCard === zone.id;
+              const isMapHov   = hoveredSector !== null && zone.slug === hoveredSector.toLowerCase();
+              const isHov      = isCardHov || isMapHov;
+              const anyExpanded = hoveredZoneCard !== null || hoveredSector !== null;
               return (
                 <div
                   key={zone.id}
                   onMouseEnter={() => setHoveredZoneCard(zone.id)}
                   onMouseLeave={() => setHoveredZoneCard(null)}
                   style={{
-                    flex: anyCardHov ? (isCardHov ? 1 : 0) : 1,
+                    flex: anyExpanded ? (isHov ? 1 : 0) : 1,
                     minWidth: 0,
                     overflow: 'hidden',
-                    opacity: anyCardHov && !isCardHov ? 0 : 1,
-                    background: isMapHov && !isCardHov ? '#fafafa' : '#fff',
+                    opacity: anyExpanded && !isHov ? 0 : 1,
+                    background: '#fff',
                     borderTop: 'none',
                     display: 'flex',
                     flexDirection: 'column',
