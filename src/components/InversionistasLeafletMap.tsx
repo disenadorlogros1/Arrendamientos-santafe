@@ -2472,9 +2472,9 @@ function computeSectorCentroids(): Record<Sector, [number, number]> {
 }
 const SECTOR_CENTROID: Record<Sector, [number, number]> = {
   ...computeSectorCentroids(),
-  // Occidente tiene polígonos muy dispersos (Santa Fe de Antioquia, Sopetrán, San Jerónimo
-  // al noroeste), lo que jala el centroide lejos del cluster urbano real (Laureles/Belén/Robledo)
-  Occidente: [6.245, -75.608],
+  // Occidente: centrado visualmente entre el cluster noroeste (Santa Fe / Sopetrán / San Jerónimo)
+  // y los barrios urbanos (Laureles / Belén / Robledo)
+  Occidente: [6.38, -75.67],
 };
 
 export default function InversionistasLeafletMap({ activeSector, hoveredSector, onSectorHover, onSectorClick, onZoneNavigate }: Props) {
@@ -2555,8 +2555,8 @@ export default function InversionistasLeafletMap({ activeSector, hoveredSector, 
           className: '',
           html: `<div style="transform:translate(-50%,-50%);text-align:center;pointer-events:none;white-space:nowrap">
             <div style="font-family:'Avenir LT Std','Outfit',sans-serif;font-size:40px;font-weight:900;color:#fff;line-height:1;text-shadow:0 2px 10px rgba(0,0,0,0.4);white-space:nowrap">${stats.barrios} Barrios</div>
-            <div style="font-family:'Avenir LT Std','Outfit',sans-serif;font-size:22px;font-weight:700;color:#fff;text-shadow:0 2px 8px rgba(0,0,0,0.4);margin-top:2px;white-space:nowrap">${stats.municipios} Municipios</div>
-            <div style="font-family:'Avenir LT Std','Outfit',sans-serif;font-size:11px;font-weight:700;color:#fff;background:${RED};padding:3px 10px;margin-top:3px;white-space:nowrap;display:inline-block">${stats.propiedades} propiedades</div>
+            <div style="font-family:'Avenir LT Std','Outfit',sans-serif;font-size:22px;font-weight:700;color:#fff;text-shadow:0 2px 8px rgba(0,0,0,0.4);margin-top:1px;white-space:nowrap">${stats.municipios} Municipios</div>
+            <div style="font-family:'Avenir LT Std','Outfit',sans-serif;font-size:11px;font-weight:700;color:#fff;background:${RED};padding:3px 10px;margin-top:2px;white-space:nowrap;display:inline-block">${stats.propiedades} propiedades</div>
           </div>`,
           iconSize:   [0, 0],
           iconAnchor: [0, 0],
