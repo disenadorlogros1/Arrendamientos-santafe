@@ -294,7 +294,7 @@ export default function InversionistasPage() {
                     <h3 style={{ fontFamily: FONT, fontWeight: 700, fontSize: '17px', color: '#1a1a1a', margin: '0 0 14px 0', lineHeight: 1.25, textAlign: 'center', whiteSpace: 'nowrap' }}>
                       {zone.name}
                     </h3>
-                    <div style={{ display: 'flex', gap: '0' }}>
+                    <div style={{ display: 'flex', gap: '0', alignItems: 'flex-start' }}>
                       {[
                         { label: 'Rentabilidad', value: zone.rentability, accent: true },
                         { label: 'Estratos',     value: zone.strata      },
@@ -303,9 +303,30 @@ export default function InversionistasPage() {
                           <div style={{ fontFamily: FONT, fontSize: '12px', fontWeight: 300, color: 'rgba(0,0,0,0.55)', marginBottom: '6px', whiteSpace: 'nowrap' }}>
                             {m.label}
                           </div>
-                          <CountMetric value={m.value} accent={m.accent} active={isHov} />
+                          <CountMetric value={m.value} accent={m.accent} active={isHov || zone.sector === activeSector} />
                         </div>
                       ))}
+                      {/* Tercera columna: barrios y municipios */}
+                      <div style={{
+                        flex: 1.4, padding: '8px 0 8px 14px', borderLeft: '1px solid #f0f0f0',
+                        overflow: 'hidden', minWidth: 0,
+                      }}>
+                        <div style={{ fontFamily: FONT, fontSize: '12px', fontWeight: 300, color: 'rgba(0,0,0,0.55)', marginBottom: '6px', whiteSpace: 'nowrap' }}>
+                          Barrios y sectores
+                        </div>
+                        <div style={{ fontFamily: FONT, fontSize: '11px', color: '#555', lineHeight: 1.5, overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
+                          {zone.subzones.join(' · ')}
+                        </div>
+                        {zone.subzones.length > 4 && (
+                          <Link href={`/inversionistas/${zone.slug}`} style={{ fontFamily: FONT, fontSize: '11px', color: RED, fontWeight: 700, textDecoration: 'none', display: 'inline-block', marginTop: '2px' }}>
+                            + ver todos
+                          </Link>
+                        )}
+                        <div style={{ fontFamily: FONT, fontSize: '11px', color: '#888', marginTop: '6px', lineHeight: 1.4, overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
+                          <span style={{ fontWeight: 600, color: '#555' }}>Municipios: </span>
+                          {zone.municipiosNames.join(' · ')}
+                        </div>
+                      </div>
                     </div>
                   </div>
 

@@ -9,6 +9,7 @@ export interface InvestmentZone {
   pricePerM2: string;
   strata: string;
   subzones: string[];
+  municipiosNames: string[];
   advantages: string[];
   description: string;
   seoTitle: string;
@@ -32,6 +33,7 @@ export const investmentZones: InvestmentZone[] = [
       'Popular', 'Santa Cruz', 'Tricentenario', 'Campo Valdés',
       'Doce de Octubre', 'Caribe', 'Prado', 'Boyacá',
     ],
+    municipiosNames: ['Bello', 'Copacabana', 'Barbosa', 'Girardota'],
     advantages: [
       'Mayor rentabilidad en arrendamiento del área metropolitana: hasta 8% anual',
       'Precios de entrada más accesibles — desde $2,500,000 por m²',
@@ -68,6 +70,7 @@ export const investmentZones: InvestmentZone[] = [
       'Envigado', 'Sabaneta', 'Itagüí', 'La Estrella', 'Caldas',
       'Guayabal', 'San Antonio de Prado', 'Belencito',
     ],
+    municipiosNames: ['Envigado', 'Sabaneta', 'Itagüí', 'La Estrella', 'Caldas', 'Amagá'],
     advantages: [
       'Zona con mayor crecimiento en valorización de los últimos 10 años',
       'Alternativa competitiva a El Poblado con precios entre 30-60% más bajos',
@@ -105,6 +108,7 @@ export const investmentZones: InvestmentZone[] = [
       'Rionegro', 'Llanogrande', 'Guarne', 'La Ceja', 'Retiro',
       'Marinilla', 'Santa Elena',
     ],
+    municipiosNames: ['Rionegro', 'Guarne', 'La Ceja', 'Marinilla', 'El Carmen de Viboral', 'Guatapé'],
     advantages: [
       'El Poblado: mercado inmobiliario de mayor demanda turística e internacional de Colombia',
       'Rionegro y Llanogrande: crecimiento impulsado por el Aeropuerto José María Córdova',
@@ -142,6 +146,7 @@ export const investmentZones: InvestmentZone[] = [
       'Castellana', 'Conquistadores', 'Belén', 'Campo Amor', 'Belencito',
       'Robledo', 'San Cristóbal', 'Calasanz', 'San Javier', 'Naranjal',
     ],
+    municipiosNames: ['Santa Fe de Antioquia', 'Sopetrán', 'San Jerónimo', 'San Pedro de los Milagros'],
     advantages: [
       'Mejor relación precio-rentabilidad de Medellín: 5-7% con precios moderados',
       'Laureles y Estadio: demanda consolidada de profesionales y familias jóvenes',

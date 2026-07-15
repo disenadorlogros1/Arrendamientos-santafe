@@ -2598,9 +2598,9 @@ export default function InversionistasLeafletMap({ activeSector, hoveredSector, 
       const isHov    = hoveredSector !== null && sector === hoveredSector;
 
       if (isHov) {
-        refs.polygon.setStyle({ color: 'transparent', weight: 0, fillColor: RED, fillOpacity: 0.42, opacity: 0 });
+        refs.polygon.setStyle({ color: 'transparent', weight: 0, fillColor: RED, fillOpacity: 0.20, opacity: 0 });
       } else if (inActive) {
-        refs.polygon.setStyle({ color: 'transparent', weight: 0, fillColor: RED, fillOpacity: 0.27, opacity: 0 });
+        refs.polygon.setStyle({ color: 'transparent', weight: 0, fillColor: RED, fillOpacity: 0.12, opacity: 0 });
       } else {
         refs.polygon.setStyle({ color: '#bbb', weight: 0.5, fillColor: '#bbb', fillOpacity: 0.12, opacity: 0.5 });
       }
