@@ -57,24 +57,6 @@ const SECTOR_STATS: Record<Sector, { barrios: number; propiedades: number; munic
   Occidente: { barrios: 11, propiedades: 24, municipios: 4 }, // San Jerónimo, Santa Fe de Antioquia, Sopetrán, San Pedro de los Milagros
 };
 
-// Centroide geográfico real calculado desde los polígonos de cada sector
-function computeSectorCentroids(): Record<Sector, [number, number]> {
-  const acc: Record<string, { lat: number; lng: number; n: number }> = {};
-  for (const [id, coords] of Object.entries(ZONE_POLYGONS)) {
-    const sector = BARRIO_SECTOR[id];
-    if (!sector || coords.length === 0) continue;
-    if (!acc[sector]) acc[sector] = { lat: 0, lng: 0, n: 0 };
-    for (const [lat, lng] of coords) {
-      acc[sector].lat += lat;
-      acc[sector].lng += lng;
-      acc[sector].n++;
-    }
-  }
-  return Object.fromEntries(
-    Object.entries(acc).map(([s, { lat, lng, n }]) => [s, [lat / n, lng / n]])
-  ) as Record<Sector, [number, number]>;
-}
-const SECTOR_CENTROID = computeSectorCentroids();
 
 // Polígonos reales OSM — nominatim.openstreetmap.org/lookup (threshold=0.0005, alta resolución)
 const ZONE_POLYGONS: Record<string, [number, number][]> = {
@@ -2469,6 +2451,26 @@ const ZONE_POLYGONS: Record<string, [number, number][]> = {
   ],
 };
 
+
+// Centroide geográfico real calculado desde los polígonos de cada sector
+// Debe ir DESPUÉS de ZONE_POLYGONS y BARRIO_SECTOR para evitar TDZ
+function computeSectorCentroids(): Record<Sector, [number, number]> {
+  const acc: Record<string, { lat: number; lng: number; n: number }> = {};
+  for (const [id, coords] of Object.entries(ZONE_POLYGONS)) {
+    const sector = BARRIO_SECTOR[id];
+    if (!sector || coords.length === 0) continue;
+    if (!acc[sector]) acc[sector] = { lat: 0, lng: 0, n: 0 };
+    for (const [lat, lng] of coords) {
+      acc[sector].lat += lat;
+      acc[sector].lng += lng;
+      acc[sector].n++;
+    }
+  }
+  return Object.fromEntries(
+    Object.entries(acc).map(([s, { lat, lng, n }]) => [s, [lat / n, lng / n]])
+  ) as Record<Sector, [number, number]>;
+}
+const SECTOR_CENTROID = computeSectorCentroids();
 
 export default function InversionistasLeafletMap({ activeSector, hoveredSector, onSectorHover, onSectorClick, onZoneNavigate }: Props) {
   const containerRef     = useRef<HTMLDivElement>(null);
