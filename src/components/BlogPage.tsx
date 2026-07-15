@@ -98,11 +98,11 @@ export default function BlogPage({
     const ctx = gsap.context(() => {
       gsap.from(items, {
         opacity: 0,
-        y: 20,
+        y: 16,
         duration: 0.4,
-        stagger: 0.06,
+        stagger: 0.07,
+        delay: 0.1,
         ease: 'power2.out',
-        scrollTrigger: { trigger: el, start: 'top 88%', once: true },
       });
     }, el);
     return () => ctx.revert();
