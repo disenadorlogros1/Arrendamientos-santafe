@@ -40,7 +40,6 @@ const cifras: Array<
   | { type: 'count'; num: number; prefix: string; suffix: string; label: string }
   | { type: 'text'; text: string }
 > = [
-  { type: 'count', num: 60,  prefix: '',  suffix: '',        label: 'años de experiencia en el mercado inmobiliario'      },
   { type: 'count', num: 200, prefix: '+', suffix: '',        label: 'colaboradores acompañando procesos inmobiliarios'     },
   { type: 'text',  text: 'Miles de clientes han confiado en nuestra gestión a lo largo de seis décadas.'                  },
   { type: 'text',  text: 'Presencia en Antioquia con conocimiento local y acompañamiento cercano en cada proceso.'         },
@@ -114,6 +113,7 @@ export default function InstitucionalPage({ onNavigate }: InstitucionalPageProps
                 fontFamily: FONT, fontWeight: 300,
                 fontSize: 'clamp(24px, 2.8vw, 46px)',
                 color: '#555', lineHeight: 1.2, margin: '0 0 16px',
+                textAlign: 'center',
               }}
             >
               Somos una inmobiliaria antioqueña con{' '}
@@ -123,7 +123,8 @@ export default function InstitucionalPage({ onNavigate }: InstitucionalPageProps
               style={{
                 fontFamily: FONT, fontWeight: 300,
                 fontSize: 'clamp(14px, 1vw, 16px)',
-                color: '#888', lineHeight: 1.65, maxWidth: '54rem', margin: 0,
+                color: '#888', lineHeight: 1.65, maxWidth: '54rem', margin: '0 auto',
+                textAlign: 'center',
               }}
             >
               Desde 1966 acompañamos a personas, familias, propietarios, empresas e inversionistas
@@ -135,7 +136,7 @@ export default function InstitucionalPage({ onNavigate }: InstitucionalPageProps
           <div
             style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(2, 1fr)',
+              gridTemplateColumns: 'repeat(3, 1fr)',
               marginTop: 52,
               borderTop: '1px solid #ebebeb',
               borderLeft: '1px solid #ebebeb',
