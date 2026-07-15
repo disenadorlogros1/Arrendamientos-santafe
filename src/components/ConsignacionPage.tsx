@@ -110,8 +110,10 @@ export default function ConsignacionPage({ onNavigate }: ConsignacionPageProps =
             onMouseEnter={() => setTitleHovered(true)}
             onMouseLeave={() => setTitleHovered(false)}
           >
-            Ten la tranquilidad de dejar tu inmueble en{' '}
-            <span style={{ display: 'inline-block', fontWeight: 700, position: 'relative', overflow: 'hidden' }}>
+            <span style={{ display: 'block', fontWeight: 300 }}>Ten la tranquilidad de dejar tu</span>
+            <span style={{ display: 'block', fontWeight: 300 }}>
+              inmueble en{' '}
+              <span style={{ display: 'inline-block', fontWeight: 700, position: 'relative', overflow: 'hidden' }}>
               <span style={{ position: 'relative', zIndex: 2 }}>buenas manos</span>
               <span
                 aria-hidden="true"
@@ -129,6 +131,7 @@ export default function ConsignacionPage({ onNavigate }: ConsignacionPageProps =
                   pointerEvents: 'none',
                 }}
               />
+              </span>
             </span>
           </h1>
 
@@ -174,7 +177,7 @@ export default function ConsignacionPage({ onNavigate }: ConsignacionPageProps =
         </div>
 
         <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '0 clamp(20px, 4vw, 52px) 0' }}>
-          <div className="grid grid-cols-1 sm:grid-cols-3" style={{ gap: 0 }}>
+          <div className="grid grid-cols-1 sm:grid-cols-3" style={{ gap: 0, alignItems: 'stretch' }}>
             {pasos.map((paso, idx) => {
               const isHov = hoveredPaso === idx;
               const isAdj = hoveredPaso !== null && Math.abs(idx - hoveredPaso) === 1;
@@ -189,6 +192,7 @@ export default function ConsignacionPage({ onNavigate }: ConsignacionPageProps =
                     flexDirection: 'row',
                     alignItems: 'flex-start',
                     gap: 20,
+                    height: '100%',
                     transform: isHov ? 'scale(1.05)' : isAdj ? 'scale(0.97)' : 'scale(1)',
                     zIndex: isHov ? 10 : 1, position: 'relative',
                     transition: 'transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.3s ease',
@@ -231,7 +235,7 @@ export default function ConsignacionPage({ onNavigate }: ConsignacionPageProps =
 
       {/* ¿Por qué escogernos? — 3 cards centradas, sin CTA */}
       <section style={{ background: '#ffffff' }} className="w-full">
-        <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '52px clamp(20px, 4vw, 52px) 28px', textAlign: 'center' }}>
+        <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '24px clamp(20px, 4vw, 52px) 28px', textAlign: 'center' }}>
           <ScrollReveal y={20}>
             <h2 style={{ fontFamily: FONT, fontWeight: 300, fontSize: 'clamp(26px, 2.6vw, 46px)', color: '#555', lineHeight: 1.2, margin: 0 }}>
               ¿Por qué <span style={{ fontWeight: 700 }}>escogernos?</span>
@@ -240,7 +244,7 @@ export default function ConsignacionPage({ onNavigate }: ConsignacionPageProps =
         </div>
 
         <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '0 clamp(20px, 4vw, 52px) 52px' }}>
-          <div className="grid grid-cols-1 sm:grid-cols-3" style={{ gap: 0 }}>
+          <div className="grid grid-cols-1 sm:grid-cols-3" style={{ gap: 0, alignItems: 'stretch' }}>
             {razones.map((r, idx) => {
               const isHov = hoveredRazon === idx;
               const isAdj = hoveredRazon !== null && Math.abs(idx - hoveredRazon) === 1;
@@ -252,6 +256,7 @@ export default function ConsignacionPage({ onNavigate }: ConsignacionPageProps =
                     background: '#f5f5f5',
                     cursor: 'default',
                     display: 'flex',
+                    height: '100%',
                     flexDirection: 'column',
                     alignItems: 'center',
                     textAlign: 'center',
