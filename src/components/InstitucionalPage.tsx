@@ -1,60 +1,66 @@
 'use client';
 
-import { useRef, useEffect } from 'react';
-import gsap from 'gsap';
-import {
-  MapPin,
-  Phone,
-  Mail,
-  MessageCircle,
-  Clock,
-  Heart,
-  Target,
-  Users,
-} from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import TrayectoriaBlock from '@/components/TrayectoriaBlock';
+import { useRef, useEffect, useState } from 'react';
 import ScrollReveal from '@/components/ScrollReveal';
+import TrayectoriaBlock from '@/components/TrayectoriaBlock';
 import type { PageType } from '@/components/Header';
 
-const team = [
-  {
-    name: 'María Fernanda López',
-    role: 'Directora General',
-    image: 'https://picsum.photos/seed/team1/400/400',
-  },
-  {
-    name: 'Carlos Andrés Gómez',
-    role: 'Asesor Comercial',
-    image: 'https://picsum.photos/seed/team2/400/400',
-  },
-  {
-    name: 'Laura Patricia Martínez',
-    role: 'Asesora Legal',
-    image: 'https://picsum.photos/seed/team3/400/400',
-  },
-  {
-    name: 'Juan Sebastián Ramírez',
-    role: 'Coordinador de Ventas',
-    image: 'https://picsum.photos/seed/team4/400/400',
-  },
+const FONT = "'Avenir LT Std', 'Outfit', system-ui, sans-serif";
+const RED  = '#f32735';
+
+/* ── CountUp ── */
+function CountUp({ to, prefix = '', suffix = '' }: { to: number; prefix?: string; suffix?: string }) {
+  const [count, setCount] = useState(0);
+  const started = useRef(false);
+  const ref     = useRef<HTMLSpanElement>(null);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting && !started.current) {
+        started.current = true;
+        let cur = 0;
+        const tick = setInterval(() => {
+          cur += Math.max(1, Math.ceil(to / 30));
+          if (cur >= to) { setCount(to); clearInterval(tick); }
+          else            { setCount(cur); }
+        }, 40);
+      }
+    }, { threshold: 0.5 });
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, [to]);
+
+  return <span ref={ref}>{prefix}{count}{suffix}</span>;
+}
+
+/* ── Data ── */
+const cifras: Array<
+  | { type: 'count'; num: number; prefix: string; suffix: string; label: string }
+  | { type: 'text'; text: string }
+> = [
+  { type: 'count', num: 60,  prefix: '',  suffix: '',        label: 'años de experiencia en el mercado inmobiliario'      },
+  { type: 'count', num: 200, prefix: '+', suffix: '',        label: 'colaboradores acompañando procesos inmobiliarios'     },
+  { type: 'text',  text: 'Miles de clientes han confiado en nuestra gestión a lo largo de seis décadas.'                  },
+  { type: 'text',  text: 'Presencia en Antioquia con conocimiento local y acompañamiento cercano en cada proceso.'         },
 ];
 
-const values = [
+const razones = [
   {
-    icon: Heart,
-    title: 'Respaldo y experiencia',
-    description: '60 años de trayectoria respaldan nuestra forma de acompañar decisiones inmobiliarias.',
+    title: 'Experiencia que da criterio',
+    description:
+      'Seis décadas en el mercado nos han permitido entender mejor los sectores, los ciclos y las necesidades de propietarios, arrendatarios, compradores e inversionistas.',
   },
   {
-    icon: Target,
-    title: 'Procesos claros',
-    description: 'Información transparente y acompañamiento en cada etapa del proceso.',
+    title: 'Acompañamiento cercano',
+    description:
+      'Escuchamos, orientamos y acompañamos cada proceso con una atención humana, clara y responsable.',
   },
   {
-    icon: Users,
-    title: 'Conocimiento del mercado',
-    description: 'Entendemos las dinámicas inmobiliarias de Antioquia desde sus territorios.',
+    title: 'Procesos claros y respaldo',
+    description:
+      'Trabajamos con información organizada, canales definidos y procedimientos que buscan generar tranquilidad en cada etapa.',
   },
 ];
 
@@ -63,130 +69,137 @@ interface InstitucionalPageProps {
 }
 
 export default function InstitucionalPage({ onNavigate }: InstitucionalPageProps = {}) {
-  const headerRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (headerRef.current) {
-      gsap.from(headerRef.current, { opacity: 0, y: 20, duration: 0.5, ease: 'power2.out' });
-    }
-  }, []);
-
   return (
-    <div className="min-h-screen bg-white">
-      {/* Page Header */}
-      <div className="bg-brand-dark pb-12 md:pb-16" style={{ marginTop: '-86px', paddingTop: 'calc(86px + 48px)' }}>
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div ref={headerRef}>
-            <h1 className="text-3xl sm:text-4xl font-bold text-white">
-              Sobre nosotros · 60 años
-            </h1>
-            <p className="mt-2 text-white/70 max-w-2xl">
-              Desde 1966 acompañamos a personas, familias y propietarios en
-              decisiones inmobiliarias clave en Antioquia.
-            </p>
-          </div>
+    <div className="min-h-screen" style={{ background: '#fff' }}>
+
+      {/* ── Hero ── */}
+      <section
+        style={{
+          background: '#1a1a1a',
+          marginTop: '-86px',
+          paddingTop: '86px',
+          minHeight: '300px',
+          display: 'flex',
+          alignItems: 'flex-end',
+        }}
+      >
+        <div style={{ maxWidth: '1400px', margin: '0 auto', width: '100%', padding: 'clamp(40px, 5vw, 72px) clamp(20px, 4vw, 52px)' }}>
+          <h1
+            style={{
+              fontFamily: FONT, fontWeight: 300,
+              fontSize: 'clamp(32px, 4.5vw, 60px)',
+              color: '#fff', lineHeight: 1.05, margin: 0,
+            }}
+          >
+            Sobre <span style={{ fontWeight: 700 }}>nosotros</span>
+          </h1>
+          <p
+            style={{
+              fontFamily: FONT, fontWeight: 300,
+              fontSize: 'clamp(14px, 1vw, 17px)',
+              color: 'rgba(255,255,255,0.55)',
+              marginTop: 14, maxWidth: '42rem', lineHeight: 1.55,
+            }}
+          >
+            Desde 1966, una inmobiliaria antioqueña que acompaña cada decisión con experiencia, cercanía y criterio.
+          </p>
         </div>
-      </div>
+      </section>
 
-      {/* About */}
-      <section className="py-12 md:py-20">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <ScrollReveal y={20}>
-              <div className="flex items-center gap-2 mb-4">
-                <img src="/logo-rojo.png" alt="Arrendamientos Santa Fe" className="h-6 w-auto object-contain" />
-                <h2 className="text-sm font-medium text-brand-red uppercase tracking-wider">
-                  Sobre nosotros
-                </h2>
-              </div>
-              <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">
-                60 años de experiencia inmobiliaria en Antioquia
-              </h3>
-              <p className="text-brand-gray leading-relaxed mb-4">
-                Desde 1966, Arrendamientos Santa Fe ha acompañado a personas,
-                familias y propietarios en decisiones inmobiliarias clave.
-              </p>
-              <p className="text-brand-gray leading-relaxed mb-4">
-                Nuestra experiencia nos ha permitido crecer junto a Antioquia,
-                entendiendo sus territorios, sus dinámicas y las necesidades de
-                quienes buscan arrendar, vender, comprar o invertir con
-                confianza.
-              </p>
-              <p className="text-brand-gray leading-relaxed">
-                Hoy contamos con tres sedes en Medellín, Envigado y Rionegro,
-                desde donde acompañamos a nuestros clientes con respaldo,
-                procesos claros y criterio inmobiliario.
-              </p>
-            </ScrollReveal>
+      {/* ── Quiénes somos ── */}
+      <section style={{ background: '#fff' }}>
+        <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '64px clamp(20px, 4vw, 52px) 56px' }}>
 
-            <ScrollReveal y={20} delay={0.1}>
-              <div className="relative">
+          <ScrollReveal y={20}>
+            <h2
+              style={{
+                fontFamily: FONT, fontWeight: 300,
+                fontSize: 'clamp(24px, 2.8vw, 46px)',
+                color: '#555', lineHeight: 1.2, margin: '0 0 16px',
+              }}
+            >
+              Somos una inmobiliaria antioqueña con{' '}
+              <span style={{ fontWeight: 700 }}>60 años de trayectoria</span>
+            </h2>
+            <p
+              style={{
+                fontFamily: FONT, fontWeight: 300,
+                fontSize: 'clamp(14px, 1vw, 16px)',
+                color: '#888', lineHeight: 1.65, maxWidth: '54rem', margin: 0,
+              }}
+            >
+              Desde 1966 acompañamos a personas, familias, propietarios, empresas e inversionistas
+              en decisiones de arrendamiento, venta, compra, administración y consignación de inmuebles.
+            </p>
+          </ScrollReveal>
+
+          {/* Grid cifras 2×2 */}
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(2, 1fr)',
+              marginTop: 52,
+              borderTop: '1px solid #ebebeb',
+              borderLeft: '1px solid #ebebeb',
+            }}
+          >
+            {cifras.map((cifra, i) => (
+              <ScrollReveal key={i} y={12} delay={i * 0.07}>
                 <div
-                  className="aspect-[4/3] rounded-2xl bg-cover bg-center"
                   style={{
-                    backgroundImage:
-                      'url(https://picsum.photos/seed/medellin-city/800/600)',
+                    padding: 'clamp(24px, 3vw, 40px) clamp(20px, 2.5vw, 36px)',
+                    borderRight: '1px solid #ebebeb',
+                    borderBottom: '1px solid #ebebeb',
+                    display: 'flex',
+                    gap: 'clamp(14px, 1.8vw, 24px)',
+                    alignItems: 'flex-start',
                   }}
-                />
-                <div className="absolute inset-0 rounded-2xl bg-gradient-to-t from-black/20 to-transparent" />
-                <div className="absolute bottom-6 left-6 bg-white rounded-xl p-4 shadow-lg">
-                  <p className="text-2xl font-bold text-brand-red">60</p>
-                  <p className="text-xs text-brand-gray">Años desde 1966</p>
-                </div>
-              </div>
-            </ScrollReveal>
-          </div>
-        </div>
-      </section>
+                >
+                  {/* Número de serie */}
+                  <span
+                    style={{
+                      fontFamily: FONT, fontWeight: 900,
+                      fontSize: 'clamp(22px, 2vw, 32px)',
+                      color: RED, lineHeight: 1, flexShrink: 0,
+                      marginTop: 2,
+                    }}
+                  >
+                    0{i + 1}
+                  </span>
 
-      {/* Values */}
-      <section className="py-12 md:py-16 bg-brand-light">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <ScrollReveal y={20} className="text-center mb-12">
-            <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">
-              Nuestros <span className="text-brand-red">valores</span>
-            </h2>
-          </ScrollReveal>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {values.map((value, i) => (
-              <ScrollReveal key={value.title} delay={i * 0.1} y={30}>
-                <div className="text-center bg-white p-8 rounded-xl shadow-sm">
-                  <div className="w-14 h-14 bg-brand-red/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                    <value.icon className="h-7 w-7 text-brand-red" />
-                  </div>
-                  <h3 className="font-semibold text-gray-900 mb-2">{value.title}</h3>
-                  <p className="text-sm text-brand-gray leading-relaxed">{value.description}</p>
-                </div>
-              </ScrollReveal>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Team */}
-      <section className="py-12 md:py-20">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <ScrollReveal y={20} className="text-center mb-12">
-            <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">
-              Nuestro <span className="text-brand-red">equipo</span>
-            </h2>
-            <p className="mt-3 text-brand-gray max-w-2xl mx-auto">
-              Un equipo con conocimiento del mercado inmobiliario en Antioquia,
-              listo para acompañarte con criterio y claridad.
-            </p>
-          </ScrollReveal>
-
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
-            {team.map((member, i) => (
-              <ScrollReveal key={member.name} delay={i * 0.1} y={30}>
-                <div className="text-center">
-                  <div
-                    className="aspect-square rounded-2xl bg-cover bg-center mb-3 mx-auto w-full max-w-[200px]"
-                    style={{ backgroundImage: `url(${member.image})` }}
-                  />
-                  <h4 className="font-semibold text-gray-900 text-sm sm:text-base">{member.name}</h4>
-                  <p className="text-xs sm:text-sm text-brand-gray">{member.role}</p>
+                  {/* Contenido */}
+                  {cifra.type === 'count' ? (
+                    <div>
+                      <div
+                        style={{
+                          fontFamily: FONT, fontWeight: 900,
+                          fontSize: 'clamp(38px, 3.5vw, 58px)',
+                          color: '#1a1a1a', lineHeight: 1,
+                        }}
+                      >
+                        <CountUp to={cifra.num} prefix={cifra.prefix} />
+                      </div>
+                      <p
+                        style={{
+                          fontFamily: FONT, fontWeight: 300,
+                          fontSize: 'clamp(13px, 0.95vw, 15px)',
+                          color: '#888', marginTop: 6, lineHeight: 1.45,
+                        }}
+                      >
+                        {cifra.label}
+                      </p>
+                    </div>
+                  ) : (
+                    <p
+                      style={{
+                        fontFamily: FONT, fontWeight: 300,
+                        fontSize: 'clamp(13px, 1vw, 16px)',
+                        color: '#555', lineHeight: 1.55, margin: 0,
+                      }}
+                    >
+                      {cifra.text}
+                    </p>
+                  )}
                 </div>
               </ScrollReveal>
             ))}
@@ -194,61 +207,81 @@ export default function InstitucionalPage({ onNavigate }: InstitucionalPageProps
         </div>
       </section>
 
-      {/* Timeline Section */}
+      {/* ── Por qué confiar ── */}
+      <section style={{ background: '#f7f6f4' }}>
+        <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '64px clamp(20px, 4vw, 52px) 56px' }}>
+
+          <ScrollReveal y={20}>
+            <h2
+              style={{
+                fontFamily: FONT, fontWeight: 300,
+                fontSize: 'clamp(24px, 2.8vw, 46px)',
+                color: '#555', lineHeight: 1.2, margin: 0,
+              }}
+            >
+              Por qué confiar en{' '}
+              <span style={{ fontWeight: 700 }}>Santa Fe</span>
+            </h2>
+          </ScrollReveal>
+
+          {/* Grid razones 3×1 */}
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(3, 1fr)',
+              marginTop: 40,
+              borderTop: '1px solid #e0ddd9',
+              borderLeft: '1px solid #e0ddd9',
+            }}
+          >
+            {razones.map((razon, i) => (
+              <ScrollReveal key={i} y={12} delay={i * 0.09}>
+                <div
+                  style={{
+                    padding: 'clamp(24px, 3vw, 40px) clamp(20px, 2.5vw, 36px)',
+                    borderRight: '1px solid #e0ddd9',
+                    borderBottom: '1px solid #e0ddd9',
+                  }}
+                >
+                  <span
+                    style={{
+                      fontFamily: FONT, fontWeight: 900,
+                      fontSize: 'clamp(22px, 2vw, 32px)',
+                      color: RED, lineHeight: 1, display: 'block',
+                      marginBottom: 16,
+                    }}
+                  >
+                    0{i + 1}
+                  </span>
+                  <h3
+                    style={{
+                      fontFamily: FONT, fontWeight: 700,
+                      fontSize: 'clamp(15px, 1.2vw, 19px)',
+                      color: '#1a1a1a', lineHeight: 1.25,
+                      margin: '0 0 10px',
+                    }}
+                  >
+                    {razon.title}
+                  </h3>
+                  <p
+                    style={{
+                      fontFamily: FONT, fontWeight: 300,
+                      fontSize: 'clamp(13px, 0.95vw, 15px)',
+                      color: '#888', lineHeight: 1.6, margin: 0,
+                    }}
+                  >
+                    {razon.description}
+                  </p>
+                </div>
+              </ScrollReveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Banner 60 años ── */}
       {onNavigate && <TrayectoriaBlock onNavigate={onNavigate} />}
 
-      {/* Contact */}
-      <section className="py-12 md:py-16 bg-brand-dark">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <ScrollReveal y={20} className="text-center mb-10">
-            <h2 className="text-2xl sm:text-3xl font-bold text-white">
-              Contáctanos
-            </h2>
-            <p className="mt-3 text-white/60 max-w-xl mx-auto">
-              Estamos disponibles para atenderte y resolver todas tus dudas.
-            </p>
-          </ScrollReveal>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div className="bg-white/5 rounded-xl p-5 text-center border border-white/10">
-              <MapPin className="h-6 w-6 text-brand-red mx-auto mb-2" />
-              <p className="text-sm text-white font-medium">Sedes</p>
-              <p className="text-xs text-white/60 mt-1">Medellín · Envigado · Rionegro</p>
-            </div>
-            <div className="bg-white/5 rounded-xl p-5 text-center border border-white/10">
-              <Phone className="h-6 w-6 text-brand-red mx-auto mb-2" />
-              <p className="text-sm text-white font-medium">Teléfono</p>
-              <p className="text-xs text-white/60 mt-1">(604) 448 4015</p>
-            </div>
-            <div className="bg-white/5 rounded-xl p-5 text-center border border-white/10">
-              <Mail className="h-6 w-6 text-brand-red mx-auto mb-2" />
-              <p className="text-sm text-white font-medium">Email</p>
-              <p className="text-xs text-white/60 mt-1 break-all">santafe@arrendamientossantafe.com</p>
-            </div>
-            <div className="bg-white/5 rounded-xl p-5 text-center border border-white/10">
-              <Clock className="h-6 w-6 text-brand-red mx-auto mb-2" />
-              <p className="text-sm text-white font-medium">Horario</p>
-              <p className="text-xs text-white/50 mt-1">Lun - Sáb: 8am - 6pm</p>
-            </div>
-          </div>
-
-          <div className="text-center mt-8">
-            <Button
-              asChild
-              className="bg-white text-brand-dark hover:bg-white/90 rounded-full px-8 py-3 font-semibold"
-            >
-              <a
-                href="https://wa.me/573006557529?text=Hola%2C%20quisiera%20m%C3%A1s%20informaci%C3%B3n%20sobre%20Arrendamientos%20Santa%20Fe."
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <MessageCircle className="h-4 w-4 mr-2" />
-                WhatsApp
-              </a>
-            </Button>
-          </div>
-        </div>
-      </section>
     </div>
   );
 }
