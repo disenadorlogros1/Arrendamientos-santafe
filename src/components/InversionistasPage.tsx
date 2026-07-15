@@ -370,7 +370,7 @@ export default function InversionistasPage() {
                     style={{
                       fontFamily: FONT, fontWeight: 300, fontSize: 'clamp(13px, 0.95vw, 15px)',
                       textDecoration: 'none', height: '42px', paddingLeft: '20px', paddingRight: '20px',
-                      alignSelf: 'flex-start',
+                      alignSelf: 'stretch',
                       background: isRed ? '#f32735' : '#1a1a1a',
                       border: isRed ? '1px solid rgba(255,255,255,0.7)' : 'none',
                     }}

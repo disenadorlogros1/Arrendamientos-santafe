@@ -339,20 +339,19 @@ html.is-scrolling .red-scrollbar::-webkit-scrollbar-thumb {
   z-index: 1;
 }
 
-/* CTA light variant: travertino/blanco → ink oscuro al hover */
+/* CTA light variant: travertino/blanco → ink rojo al hover */
 .cta-btn-light {
   position: relative;
   overflow: hidden;
   background: #ffffff;
   color: #888;
-  border: 1px solid #999;
   transition: color 0.25s ease 0.12s;
 }
 .cta-btn-light::before {
   content: '';
   position: absolute;
   border-radius: 50%;
-  background: #1a1a1a;
+  background: #f32735;
   width: var(--size, 300px);
   height: var(--size, 300px);
   left: var(--x, 50%);
@@ -367,7 +366,6 @@ html.is-scrolling .red-scrollbar::-webkit-scrollbar-thumb {
 }
 .cta-btn-light:hover {
   color: #fff;
-  border-color: transparent;
 }
 .cta-btn-light > span,
 .cta-btn-light > img {
