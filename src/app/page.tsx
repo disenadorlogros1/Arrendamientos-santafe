@@ -110,15 +110,23 @@ export default function Home() {
     const { page, filter } = pageFromHash(hash);
     setCurrentPage(page);
     setPropiedadesFilter(filter);
+    if (page === 'blog-article') {
+      const savedId = history.state?.articleId;
+      if (savedId) setArticleId(savedId);
+    }
   }, []);
 
   // Browser back/forward
   useEffect(() => {
-    const onPopState = () => {
+    const onPopState = (e: PopStateEvent) => {
       const hash = window.location.hash.slice(1);
       const { page, filter } = pageFromHash(hash);
       setCurrentPage(page);
       setPropiedadesFilter(filter);
+      if (page === 'blog-article') {
+        const savedId = e.state?.articleId;
+        if (savedId) setArticleId(savedId);
+      }
     };
     window.addEventListener('popstate', onPopState);
     return () => window.removeEventListener('popstate', onPopState);
