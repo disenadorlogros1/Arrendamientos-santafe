@@ -15,38 +15,54 @@ const FONT_HEADING = "'Avenir LT Std', 'Outfit', system-ui, sans-serif";
 const FONT_BODY    = "'Avenir LT Std', 'Outfit', system-ui, sans-serif";
 const RED          = '#f32735';
 
-/* Wrapper fixed que mide su propia altura y reserva espacio con un spacer */
+/* Wrapper que empieza en flujo normal y se fija cuando el scroll lo sacaría de pantalla.
+   Esto evita que tape la sección hero oscura al cargar la página. */
 function SearchBarFixed({ children, collapsed }: { children: React.ReactNode; collapsed?: boolean }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const [height, setHeight] = useState(0);
+  const barRef      = useRef<HTMLDivElement>(null);
+  const sentinelRef = useRef<HTMLDivElement>(null);
+  const [isFixed, setIsFixed] = useState(false);
+  const [height, setHeight]   = useState(0);
 
+  // Mide la altura real de la barra para el spacer
   useEffect(() => {
-    const el = ref.current;
+    const el = barRef.current;
     if (!el) return;
-    const ro = new ResizeObserver(entries => {
-      setHeight(entries[0].contentRect.height);
-    });
+    const ro = new ResizeObserver(e => setHeight(e[0].contentRect.height));
     ro.observe(el);
     return () => ro.disconnect();
   }, []);
 
+  // Se fija cuando el sentinel sale del viewport (descontando el site-header de 86px)
+  useEffect(() => {
+    const sentinel = sentinelRef.current;
+    if (!sentinel) return;
+    const obs = new IntersectionObserver(
+      ([entry]) => setIsFixed(!entry.isIntersecting),
+      { rootMargin: '-86px 0px 0px 0px' }
+    );
+    obs.observe(sentinel);
+    return () => obs.disconnect();
+  }, []);
+
   return (
     <>
+      {/* Sentinel: marca el punto donde la barra debe empezar a fijarse */}
+      <div ref={sentinelRef} style={{ height: 1, pointerEvents: 'none' }} aria-hidden />
       <div
-        ref={ref}
+        ref={barRef}
         style={{
-          position: 'fixed',
-          top: '86px',
-          left: 0,
-          right: 0,
-          zIndex: 40,
+          position: isFixed ? 'fixed' : 'relative',
+          top:       isFixed ? '86px' : 'auto',
+          left:      isFixed ? 0 : 'auto',
+          right:     isFixed ? 0 : 'auto',
+          zIndex:    isFixed ? 40 : 'auto',
           backgroundColor: '#f7f6f4',
         }}
       >
         {children}
       </div>
-      {/* Spacer para que el contenido no quede oculto detrás del buscador fijo */}
-      <div style={{ height: height || 0 }} aria-hidden />
+      {/* Spacer activo solo cuando está fijo, para que el contenido no salte */}
+      {isFixed && <div style={{ height }} aria-hidden />}
     </>
   );
 }
