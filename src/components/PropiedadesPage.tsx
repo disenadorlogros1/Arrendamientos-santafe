@@ -15,59 +15,13 @@ const FONT_HEADING = "'Avenir LT Std', 'Outfit', system-ui, sans-serif";
 const FONT_BODY    = "'Avenir LT Std', 'Outfit', system-ui, sans-serif";
 const RED          = '#f32735';
 
-/* Wrapper que empieza en flujo normal y se fija cuando el scroll lo sacaría de pantalla.
-   Usa window scroll + getBoundingClientRect porque Lenis smooth scroll no es compatible
-   con IntersectionObserver (Lenis anima el scroll en su propio raf loop). */
+/* Sticky wrapper para el buscador. Lenis 1.x usa scroll nativo (window.scrollTo),
+   por lo que position:sticky funciona sin workarounds adicionales. */
 function SearchBarFixed({ children, collapsed }: { children: React.ReactNode; collapsed?: boolean }) {
-  const barRef      = useRef<HTMLDivElement>(null);
-  const sentinelRef = useRef<HTMLDivElement>(null);
-  const [isFixed, setIsFixed] = useState(false);
-  const [height, setHeight]   = useState(0);
-
-  // Mide la altura real de la barra para el spacer
-  useEffect(() => {
-    const el = barRef.current;
-    if (!el) return;
-    const ro = new ResizeObserver(e => setHeight(e[0].contentRect.height));
-    ro.observe(el);
-    return () => ro.disconnect();
-  }, []);
-
-  // Se fija cuando el sentinel cruza el borde inferior del site-header (86px).
-  // Usa el GSAP ticker (ya corre en sync con Lenis) para leer getBoundingClientRect
-  // en cada frame — más confiable que window scroll events con Lenis.
-  useEffect(() => {
-    const HEADER_H = 86;
-    const tick = () => {
-      const sentinel = sentinelRef.current;
-      if (!sentinel) return;
-      const past = sentinel.getBoundingClientRect().top < HEADER_H;
-      setIsFixed(prev => prev !== past ? past : prev);
-    };
-    gsap.ticker.add(tick);
-    return () => gsap.ticker.remove(tick);
-  }, []);
-
   return (
-    <>
-      {/* Sentinel: punto en el flujo donde la barra debe empezar a fijarse */}
-      <div ref={sentinelRef} style={{ height: 1, pointerEvents: 'none' }} aria-hidden />
-      <div
-        ref={barRef}
-        style={{
-          position: isFixed ? 'fixed' : 'relative',
-          top:       isFixed ? '86px' : 'auto',
-          left:      isFixed ? 0 : 'auto',
-          right:     isFixed ? 0 : 'auto',
-          zIndex:    isFixed ? 40 : 'auto',
-          backgroundColor: '#f7f6f4',
-        }}
-      >
-        {children}
-      </div>
-      {/* Spacer activo solo cuando está fijo, para que el contenido no salte */}
-      {isFixed && <div style={{ height }} aria-hidden />}
-    </>
+    <div style={{ position: 'sticky', top: '86px', zIndex: 40, backgroundColor: '#f7f6f4' }}>
+      {children}
+    </div>
   );
 }
 
