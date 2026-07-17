@@ -16,46 +16,31 @@ const FONT_BODY    = "'Avenir LT Std', 'Outfit', system-ui, sans-serif";
 const RED          = '#f32735';
 
 /* Fija el buscador usando translateY sincronizado con el ticker de GSAP/Lenis.
-   No usa position:fixed para evitar problemas de containing block con transforms
-   de ancestros (animaciones GSAP, Lenis, etc.). */
+   No usa position:fixed. El buscador permanece en el flujo normal y el transform
+   contrarresta el scroll para que visualmente no se mueva. */
 function SearchBarFixed({ children }: { children: React.ReactNode }) {
-  const barRef   = useRef<HTMLDivElement>(null);
-  const spacerRef = useRef<HTMLDivElement>(null);
+  const barRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const el     = barRef.current;
-    const spacer = spacerRef.current;
-    if (!el || !spacer) return;
+    const el = barRef.current;
+    if (!el) return;
 
-    // Sincroniza la altura del spacer con el buscador
-    const ro = new ResizeObserver(([entry]) => {
-      spacer.style.height = entry.contentRect.height + 'px';
-    });
-    ro.observe(el);
-
-    // Contrarresta el scroll cada frame junto con Lenis
     const tick = () => {
       el.style.transform = `translateY(${window.scrollY}px)`;
     };
     gsap.ticker.add(tick);
     tick();
 
-    return () => {
-      gsap.ticker.remove(tick);
-      ro.disconnect();
-    };
+    return () => gsap.ticker.remove(tick);
   }, []);
 
   return (
-    <>
-      <div ref={spacerRef} aria-hidden style={{ width: '100%' }} />
-      <div
-        ref={barRef}
-        style={{ backgroundColor: '#f7f6f4', position: 'relative', zIndex: 40 }}
-      >
-        {children}
-      </div>
-    </>
+    <div
+      ref={barRef}
+      style={{ backgroundColor: '#f7f6f4', position: 'relative', zIndex: 40 }}
+    >
+      {children}
+    </div>
   );
 }
 
