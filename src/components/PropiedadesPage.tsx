@@ -15,36 +15,50 @@ const FONT_HEADING = "'Avenir LT Std', 'Outfit', system-ui, sans-serif";
 const FONT_BODY    = "'Avenir LT Std', 'Outfit', system-ui, sans-serif";
 const RED          = '#f32735';
 
-/* position:fixed funciona correctamente porque page.tsx no aplica
-   la animación page-fade-in a la página de propiedades. */
+/* En flujo normal bajo la sección hero; se fija al scrollear.
+   Funciona porque propiedades no usa page-fade-in (sin containing block). */
 function SearchBarFixed({ children, collapsed }: { children: React.ReactNode; collapsed?: boolean }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const [height, setHeight] = useState(0);
+  const barRef      = useRef<HTMLDivElement>(null);
+  const sentinelRef = useRef<HTMLDivElement>(null);
+  const [isFixed, setIsFixed] = useState(false);
+  const [height, setHeight]   = useState(0);
 
   useEffect(() => {
-    const el = ref.current;
+    const el = barRef.current;
     if (!el) return;
     const ro = new ResizeObserver(e => setHeight(e[0].contentRect.height));
     ro.observe(el);
     return () => ro.disconnect();
   }, []);
 
+  useEffect(() => {
+    const check = () => {
+      const s = sentinelRef.current;
+      if (!s) return;
+      setIsFixed(s.getBoundingClientRect().top < 86);
+    };
+    check();
+    window.addEventListener('scroll', check, { passive: true });
+    return () => window.removeEventListener('scroll', check);
+  }, []);
+
   return (
     <>
+      <div ref={sentinelRef} style={{ height: 1, pointerEvents: 'none' }} aria-hidden />
       <div
-        ref={ref}
+        ref={barRef}
         style={{
-          position: 'fixed',
-          top: '86px',
-          left: 0,
-          right: 0,
-          zIndex: 40,
+          position: isFixed ? 'fixed' : 'relative',
+          top:   isFixed ? '86px' : 'auto',
+          left:  isFixed ? 0 : 'auto',
+          right: isFixed ? 0 : 'auto',
+          zIndex: isFixed ? 40 : 'auto',
           backgroundColor: '#f7f6f4',
         }}
       >
         {children}
       </div>
-      <div style={{ height }} aria-hidden />
+      {isFixed && <div style={{ height }} aria-hidden />}
     </>
   );
 }
