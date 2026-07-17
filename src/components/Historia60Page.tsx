@@ -1,6 +1,6 @@
 ﻿'use client';
 
-import { Fragment, useRef, useEffect } from 'react';
+import React, { Fragment, useRef, useEffect } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import ScrollReveal from '@/components/ScrollReveal';
@@ -68,11 +68,25 @@ const CONNECTOR_H = 32;
 const DOT_SIZE    = 10;
 const LINE_TOP    = CONNECTOR_H + DOT_SIZE / 2;
 
+// Parallax depth factors [xPx, yPx, gaspDuration] — from back (a2) to front (c4)
+const PARALLAX_LAYERS = [
+  { x: 8,  y: 5,  dur: 0.85 }, // a2 z:4 — más atrás, más lento
+  { x: 16, y: 10, dur: 0.62 }, // a1 z:6
+  { x: 24, y: 15, dur: 0.42 }, // c2 z:8
+  { x: 34, y: 21, dur: 0.26 }, // c4 z:10 — más cerca, respuesta instantánea
+];
+
 export default function Historia60Page({ onNavigate }: Props) {
   const titleRef = useRef<HTMLHeadingElement>(null);
   const metaRef  = useRef<HTMLDivElement>(null);
   const lineRef  = useRef<HTMLDivElement>(null);
   const dotsRef  = useRef<HTMLDivElement>(null);
+
+  // Parallax refs
+  const parallaxPanelRef = useRef<HTMLDivElement>(null);
+  const parallaxImgsRef  = useRef<(HTMLImageElement | null)[]>([]);
+  const pxSetters        = useRef<((v: number) => void)[]>([]);
+  const pySetters        = useRef<((v: number) => void)[]>([]);
 
   useEffect(() => {
     const targets = [titleRef.current, metaRef.current];
@@ -117,6 +131,35 @@ export default function Historia60Page({ onNavigate }: Props) {
     });
     return () => ctx.revert();
   }, []);
+
+  // Inicializar quickTo setters una vez que los imgs están en el DOM
+  useEffect(() => {
+    PARALLAX_LAYERS.forEach((p, i) => {
+      const img = parallaxImgsRef.current[i];
+      if (!img) return;
+      gsap.set(img, { scale: 1.08, transformOrigin: 'center center' });
+      pxSetters.current[i] = gsap.quickTo(img, 'x', { duration: p.dur, ease: 'power3.out' });
+      pySetters.current[i] = gsap.quickTo(img, 'y', { duration: p.dur, ease: 'power3.out' });
+    });
+  }, []);
+
+  const handleParallaxMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = parallaxPanelRef.current?.getBoundingClientRect();
+    if (!rect) return;
+    const dx = (e.clientX - rect.left) / rect.width  - 0.5; // -0.5..0.5
+    const dy = (e.clientY - rect.top)  / rect.height - 0.5;
+    PARALLAX_LAYERS.forEach((p, i) => {
+      pxSetters.current[i]?.(dx * p.x * 2);
+      pySetters.current[i]?.(dy * p.y * 2);
+    });
+  };
+
+  const handleParallaxLeave = () => {
+    PARALLAX_LAYERS.forEach((_p, i) => {
+      pxSetters.current[i]?.(0);
+      pySetters.current[i]?.(0);
+    });
+  };
 
   return (
     <div style={{ background: BG, minHeight: '100vh' }}>
@@ -170,10 +213,16 @@ export default function Historia60Page({ onNavigate }: Props) {
       </div>
 
       {/* ── Panel 1966 — composición por capas ─────────────────── */}
-      <div style={{ position: 'relative', width: '100%', aspectRatio: '1920/1080', overflow: 'hidden', background: '#ffffff' }}>
+      <div
+        ref={parallaxPanelRef}
+        onMouseMove={handleParallaxMove}
+        onMouseLeave={handleParallaxLeave}
+        style={{ position: 'relative', width: '100%', aspectRatio: '1920/1080', overflow: 'hidden', background: '#ffffff', cursor: 'crosshair' }}
+      >
 
         {/* a2 — 1966 Capa B (z:4) */}
         <img
+          ref={el => { parallaxImgsRef.current[0] = el; }}
           src="/images/Linea%20de%20tiempo/1966_capa_1b.png"
           alt="" aria-hidden="true"
           style={{ position: 'absolute', top: 0, left: 0, width: '100%', display: 'block', zIndex: 4, pointerEvents: 'none' }}
@@ -181,6 +230,7 @@ export default function Historia60Page({ onNavigate }: Props) {
 
         {/* a1 — 1966 Capa A (z:6) */}
         <img
+          ref={el => { parallaxImgsRef.current[1] = el; }}
           src="/images/Linea%20de%20tiempo/1966_capa_1a.png"
           alt="" aria-hidden="true"
           style={{ position: 'absolute', top: 0, left: 0, width: '100%', display: 'block', zIndex: 6, pointerEvents: 'none' }}
@@ -188,6 +238,7 @@ export default function Historia60Page({ onNavigate }: Props) {
 
         {/* c2 — Panorama BW (z:8) */}
         <img
+          ref={el => { parallaxImgsRef.current[2] = el; }}
           src="/images/Linea%20de%20tiempo/1966_capa_3.png"
           alt="" aria-hidden="true"
           style={{ position: 'absolute', top: 0, left: 0, width: '100%', display: 'block', zIndex: 8, pointerEvents: 'none' }}
@@ -195,6 +246,7 @@ export default function Historia60Page({ onNavigate }: Props) {
 
         {/* c4 — Fragmentos / fotos (z:10) */}
         <img
+          ref={el => { parallaxImgsRef.current[3] = el; }}
           src="/images/Linea%20de%20tiempo/1966_capa_4.png"
           alt="" aria-hidden="true"
           style={{ position: 'absolute', top: 0, left: 0, width: '100%', display: 'block', zIndex: 10, pointerEvents: 'none' }}

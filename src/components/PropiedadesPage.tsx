@@ -15,41 +15,43 @@ const FONT_HEADING = "'Avenir LT Std', 'Outfit', system-ui, sans-serif";
 const FONT_BODY    = "'Avenir LT Std', 'Outfit', system-ui, sans-serif";
 const RED          = '#f32735';
 
-/* Mide la posición natural del buscador al cargar (scroll=0) y lo fija
-   permanentemente ahí. El buscador queda debajo de la sección negra y
-   no se mueve aunque el usuario haga scroll. */
-function SearchBarFixed({ children, collapsed }: { children: React.ReactNode; collapsed?: boolean }) {
-  const barRef = useRef<HTMLDivElement>(null);
-  const [fixedTop, setFixedTop] = useState<number | null>(null);
-  const [height, setHeight]     = useState(0);
+/* Fija el buscador usando translateY sincronizado con el ticker de GSAP/Lenis.
+   No usa position:fixed para evitar problemas de containing block con transforms
+   de ancestros (animaciones GSAP, Lenis, etc.). */
+function SearchBarFixed({ children }: { children: React.ReactNode }) {
+  const barRef   = useRef<HTMLDivElement>(null);
+  const spacerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const el = barRef.current;
-    if (!el) return;
-    // Captura la posición real del buscador antes de fijarlo
-    setFixedTop(el.getBoundingClientRect().top);
-    const ro = new ResizeObserver(e => setHeight(e[0].contentRect.height));
-    ro.observe(el);
-    return () => ro.disconnect();
-  }, []);
+    const el     = barRef.current;
+    const spacer = spacerRef.current;
+    if (!el || !spacer) return;
 
-  const isFixed = fixedTop !== null;
+    // Sincroniza la altura del spacer con el buscador
+    const ro = new ResizeObserver(([entry]) => {
+      spacer.style.height = entry.contentRect.height + 'px';
+    });
+    ro.observe(el);
+
+    // Contrarresta el scroll cada frame junto con Lenis
+    const tick = () => {
+      el.style.transform = `translateY(${window.scrollY}px)`;
+    };
+    gsap.ticker.add(tick);
+    tick();
+
+    return () => {
+      gsap.ticker.remove(tick);
+      ro.disconnect();
+    };
+  }, []);
 
   return (
     <>
-      {isFixed && <div style={{ height }} aria-hidden />}
+      <div ref={spacerRef} aria-hidden style={{ width: '100%' }} />
       <div
         ref={barRef}
-        style={isFixed ? {
-          position: 'fixed',
-          top: `${fixedTop}px`,
-          left: 0,
-          right: 0,
-          zIndex: 40,
-          backgroundColor: '#f7f6f4',
-        } : {
-          backgroundColor: '#f7f6f4',
-        }}
+        style={{ backgroundColor: '#f7f6f4', position: 'relative', zIndex: 40 }}
       >
         {children}
       </div>
@@ -505,8 +507,8 @@ export default function PropiedadesPage({ initialFilter = 'Todos', initialQueStr
         </div>
       </div>
 
-      {/* Search Bar — fixed so Lenis smooth scroll doesn't break sticky */}
-      <SearchBarFixed collapsed={showMap}>
+      {/* Search Bar — fijado con translateY+ticker para evitar problemas de position:fixed */}
+      <SearchBarFixed>
         <PropiedadesSearchBar
           initialTipo={initialFilter || 'Todos'}
           initialTextoBusqueda={initialQueString}
