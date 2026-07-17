@@ -172,13 +172,6 @@ export default function Historia60Page({ onNavigate }: Props) {
       {/* ── Panel 1966 — composición por capas ─────────────────── */}
       <div style={{ position: 'relative', width: '100%', aspectRatio: '1920/1080', overflow: 'hidden', background: '#ffffff' }}>
 
-        {/* c3 — Escena de calle (z:2) */}
-        <img
-          src="/images/Linea%20de%20tiempo/1966_capa_3.png"
-          alt="" aria-hidden="true"
-          style={{ position: 'absolute', top: 0, left: 0, width: '100%', display: 'block', zIndex: 2, pointerEvents: 'none' }}
-        />
-
         {/* a2 — 1966 Capa B (z:4) */}
         <img
           src="/images/Linea%20de%20tiempo/1966_capa_1b.png"
@@ -191,6 +184,13 @@ export default function Historia60Page({ onNavigate }: Props) {
           src="/images/Linea%20de%20tiempo/1966_capa_1a.png"
           alt="" aria-hidden="true"
           style={{ position: 'absolute', top: 0, left: 0, width: '100%', display: 'block', zIndex: 6, pointerEvents: 'none' }}
+        />
+
+        {/* c2 — Panorama BW (z:8) */}
+        <img
+          src="/images/Linea%20de%20tiempo/1966_capa_3.png"
+          alt="" aria-hidden="true"
+          style={{ position: 'absolute', top: 0, left: 0, width: '100%', display: 'block', zIndex: 8, pointerEvents: 'none' }}
         />
 
         {/* c4 — Fragmentos / fotos (z:10) */}
