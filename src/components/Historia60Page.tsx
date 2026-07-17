@@ -82,11 +82,17 @@ export default function Historia60Page({ onNavigate }: Props) {
   const lineRef  = useRef<HTMLDivElement>(null);
   const dotsRef  = useRef<HTMLDivElement>(null);
 
-  // Parallax refs
+  // Parallax refs — Panel 1966
   const parallaxPanelRef = useRef<HTMLDivElement>(null);
   const parallaxImgsRef  = useRef<(HTMLImageElement | null)[]>([]);
   const pxSetters        = useRef<((v: number) => void)[]>([]);
   const pySetters        = useRef<((v: number) => void)[]>([]);
+
+  // Parallax refs — Panel 1974
+  const panel74Ref    = useRef<HTMLDivElement>(null);
+  const imgs74Ref     = useRef<(HTMLImageElement | null)[]>([]);
+  const px74Setters   = useRef<((v: number) => void)[]>([]);
+  const py74Setters   = useRef<((v: number) => void)[]>([]);
 
   useEffect(() => {
     const targets = [titleRef.current, metaRef.current];
@@ -158,6 +164,40 @@ export default function Historia60Page({ onNavigate }: Props) {
     PARALLAX_LAYERS.forEach((_p, i) => {
       pxSetters.current[i]?.(0);
       pySetters.current[i]?.(0);
+    });
+  };
+
+  // Panel 1974 — 2 capas: fondo(z:2) y fecha(z:4)
+  const P74 = [
+    { x: 10, y: 6,  dur: 0.75 }, // fondo — más atrás
+    { x: 22, y: 14, dur: 0.32 }, // fecha — más al frente
+  ];
+
+  useEffect(() => {
+    P74.forEach((p, i) => {
+      const img = imgs74Ref.current[i];
+      if(!img) return;
+      gsap.set(img, { scale: 1.08, transformOrigin: 'center center' });
+      px74Setters.current[i] = gsap.quickTo(img, 'x', { duration: p.dur, ease: 'power3.out' });
+      py74Setters.current[i] = gsap.quickTo(img, 'y', { duration: p.dur, ease: 'power3.out' });
+    });
+  }, []);
+
+  const handle74Move = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = panel74Ref.current?.getBoundingClientRect();
+    if(!rect) return;
+    const dx = (e.clientX - rect.left) / rect.width  - 0.5;
+    const dy = (e.clientY - rect.top)  / rect.height - 0.5;
+    P74.forEach((p, i) => {
+      px74Setters.current[i]?.(dx * p.x * 2);
+      py74Setters.current[i]?.(dy * p.y * 2);
+    });
+  };
+
+  const handle74Leave = () => {
+    P74.forEach((_p, i) => {
+      px74Setters.current[i]?.(0);
+      py74Setters.current[i]?.(0);
     });
   };
 
@@ -285,6 +325,67 @@ export default function Historia60Page({ onNavigate }: Props) {
             fontWeight: 300, color: '#555', lineHeight: 1.7, margin: 0,
           }}>
             Arrendamientos Santa Fe nace en Medellín con una visión de servicio, confianza y acompañamiento inmobiliario.
+          </p>
+        </div>
+      </div>
+      </div>
+
+      {/* ── Panel 1974 — fecha + fondo ───────────────────────── */}
+      <div style={{ display: 'flex', justifyContent: 'center', padding: '0 clamp(16px, 4vw, 48px) clamp(32px, 5vw, 64px)' }}>
+      <div
+        ref={panel74Ref}
+        onMouseMove={handle74Move}
+        onMouseLeave={handle74Leave}
+        style={{ position: 'relative', width: '100%', maxWidth: 1100, aspectRatio: '1920/1080', overflow: 'hidden', background: '#ffffff', cursor: 'crosshair' }}
+      >
+        {/* fondo74 — imagen de fondo (z:2) */}
+        <img
+          ref={el => { imgs74Ref.current[0] = el; }}
+          src="/images/Linea%20de%20tiempo/1974_fondo.png"
+          alt="" aria-hidden="true"
+          style={{ position: 'absolute', top: 0, left: 0, width: '100%', display: 'block', zIndex: 2, pointerEvents: 'none' }}
+        />
+
+        {/* fecha74 — tipografía 1974 (z:4) */}
+        <img
+          ref={el => { imgs74Ref.current[1] = el; }}
+          src="/images/Linea%20de%20tiempo/1974_fecha.png"
+          alt="" aria-hidden="true"
+          style={{ position: 'absolute', top: 0, left: 0, width: '100%', display: 'block', zIndex: 4, pointerEvents: 'none' }}
+        />
+
+        {/* Barra roja lateral */}
+        <div style={{ position: 'absolute', left: 0, top: '20%', bottom: '20%', width: 3, background: RED, zIndex: 20 }} />
+
+        {/* Contador */}
+        <div style={{
+          position: 'absolute', top: 28, right: 32, zIndex: 20,
+          fontFamily: FONT_BODY, fontSize: 11, letterSpacing: '0.1em', color: 'rgba(0,0,0,0.2)',
+        }}>
+          <strong style={{ color: 'rgba(0,0,0,0.45)', fontWeight: 700 }}>02</strong> / 06
+        </div>
+
+        {/* Texto del evento */}
+        <div style={{
+          position: 'absolute', bottom: 'clamp(28px,5vh,56px)', left: 'clamp(28px,4.5vw,64px)',
+          zIndex: 20, maxWidth: 'min(380px, 44%)',
+        }}>
+          <span style={{
+            fontFamily: FONT_HEAVY, fontSize: 10, fontWeight: 700,
+            color: RED, letterSpacing: '0.18em', textTransform: 'uppercase',
+            display: 'block', marginBottom: 10,
+          }}>1974</span>
+          <h3 style={{
+            fontFamily: FONT_HEADING, fontSize: 'clamp(20px, 2.6vw, 32px)',
+            fontWeight: 700, color: DARK, lineHeight: 1.15, margin: '0 0 12px 0',
+          }}>
+            {events[1].title}
+          </h3>
+          <p style={{
+            fontFamily: FONT_BODY, fontSize: 'clamp(12px, 1.05vw, 15px)',
+            fontWeight: 300, color: '#555', lineHeight: 1.7, margin: 0,
+          }}>
+            {events[1].body}
           </p>
         </div>
       </div>
