@@ -170,54 +170,44 @@ export default function Historia60Page({ onNavigate }: Props) {
       </div>
 
       {/* ── Panel 1966 — composición por capas ─────────────────── */}
-      <div style={{ position: 'relative', width: '100%', height: 'clamp(520px, 92vh, 900px)', overflow: 'hidden', background: '#060504' }}>
+      <div style={{ position: 'relative', width: '100%', height: 'clamp(520px, 92vh, 900px)', overflow: 'hidden', background: '#fff' }}>
 
-        {/* Capa 3 — escena de calle Medellín: base del panel */}
+        {/* Capa 3 — escena de calle: fondo del panel */}
         <img
           src="/images/Linea%20de%20tiempo/1966_capa_3.png"
           alt="" aria-hidden="true"
-          style={{ position: 'absolute', bottom: 0, left: 0, width: '100%', display: 'block', zIndex: 2, pointerEvents: 'none' }}
+          style={{ position: 'absolute', top: 0, left: 0, width: '100%', display: 'block', zIndex: 2, pointerEvents: 'none' }}
         />
 
-        {/* Capa 4 — fragmentos: primera sede + escenas de época */}
-        <img
-          src="/images/Linea%20de%20tiempo/1966_capa_4.png"
-          alt="" aria-hidden="true"
-          style={{ position: 'absolute', top: 0, left: 0, width: '100%', display: 'block', zIndex: 4, pointerEvents: 'none' }}
-        />
-
-        {/* Viñeta radial — oscurece bordes sin tocar el centro */}
+        {/* Capa 2 — "1966" con panorama B&W dentro de las letras (encima de la escena, debajo de los fragmentos) */}
         <div style={{
-          position: 'absolute', inset: 0, zIndex: 6, pointerEvents: 'none',
-          background: 'radial-gradient(ellipse 90% 90% at 50% 50%, transparent 20%, rgba(0,0,0,0.55) 100%)',
-        }} />
-        {/* Viñeta vertical — refuerza techo y piso */}
-        <div style={{
-          position: 'absolute', inset: 0, zIndex: 7, pointerEvents: 'none',
-          background: 'linear-gradient(to bottom, rgba(0,0,0,0.45) 0%, transparent 30%, transparent 52%, rgba(0,0,0,0.78) 100%)',
-        }} />
-
-        {/* Capa 2 — "1966" con panorama de Medellín dentro de las letras */}
-        <div style={{
-          position: 'absolute', inset: 0, zIndex: 10,
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          position: 'absolute', inset: 0, zIndex: 4,
+          display: 'flex', alignItems: 'flex-start', justifyContent: 'center',
           pointerEvents: 'none',
         }}>
           <span style={{
             fontFamily: FONT_HEAVY,
-            fontSize: 'clamp(200px, 34vw, 520px)',
+            fontSize: 'clamp(200px, 38vw, 600px)',
             fontWeight: 900,
             letterSpacing: '-0.048em',
-            lineHeight: 1,
-            backgroundImage: "url('/images/Linea%20de%20tiempo/1966_capa_2_color.png')",
+            lineHeight: 0.88,
+            backgroundImage: "url('/images/Linea%20de%20tiempo/1966_capa_2_sincolor.png')",
             backgroundSize: 'cover',
             backgroundPosition: 'center 42%',
             WebkitBackgroundClip: 'text',
             backgroundClip: 'text',
             color: 'transparent',
             userSelect: 'none',
+            display: 'block',
           }}>1966</span>
         </div>
+
+        {/* Capa 4 — fragmentos encima del año: primera sede + escenas de época */}
+        <img
+          src="/images/Linea%20de%20tiempo/1966_capa_4.png"
+          alt="" aria-hidden="true"
+          style={{ position: 'absolute', top: 0, left: 0, width: '100%', display: 'block', zIndex: 8, pointerEvents: 'none' }}
+        />
 
         {/* Barra roja lateral */}
         <div style={{ position: 'absolute', left: 0, top: '20%', bottom: '20%', width: 3, background: RED, zIndex: 20 }} />
@@ -225,9 +215,9 @@ export default function Historia60Page({ onNavigate }: Props) {
         {/* Contador */}
         <div style={{
           position: 'absolute', top: 28, right: 32, zIndex: 20,
-          fontFamily: FONT_BODY, fontSize: 11, letterSpacing: '0.1em', color: 'rgba(255,255,255,0.2)',
+          fontFamily: FONT_BODY, fontSize: 11, letterSpacing: '0.1em', color: 'rgba(0,0,0,0.2)',
         }}>
-          <strong style={{ color: 'rgba(255,255,255,0.6)', fontWeight: 700 }}>01</strong> / 06
+          <strong style={{ color: 'rgba(0,0,0,0.45)', fontWeight: 700 }}>01</strong> / 06
         </div>
 
         {/* Texto del evento */}
@@ -242,13 +232,13 @@ export default function Historia60Page({ onNavigate }: Props) {
           }}>1966</span>
           <h3 style={{
             fontFamily: FONT_HEADING, fontSize: 'clamp(20px, 2.6vw, 32px)',
-            fontWeight: 700, color: '#fff', lineHeight: 1.15, margin: '0 0 12px 0',
+            fontWeight: 700, color: DARK, lineHeight: 1.15, margin: '0 0 12px 0',
           }}>
             Donde todo comenzó
           </h3>
           <p style={{
             fontFamily: FONT_BODY, fontSize: 'clamp(12px, 1.05vw, 15px)',
-            fontWeight: 300, color: 'rgba(255,255,255,0.5)', lineHeight: 1.7, margin: 0,
+            fontWeight: 300, color: '#555', lineHeight: 1.7, margin: 0,
           }}>
             Arrendamientos Santa Fe nace en Medellín con una visión de servicio, confianza y acompañamiento inmobiliario.
           </p>
