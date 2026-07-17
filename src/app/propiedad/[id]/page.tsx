@@ -170,12 +170,12 @@ function ZoneSection({ zone, zoneLabel }: { zone: NonNullable<ReturnType<typeof 
         </h3>
         <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 4, alignItems: 'center' }}>
-            <span style={{ fontFamily: FONT, fontSize: 10, fontWeight: 600, color: '#bbb', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Rentabilidad</span>
+            <span style={{ fontFamily: FONT, fontSize: 10, fontWeight: 600, color: '#bbb', letterSpacing: '0.04em' }}>Rentabilidad</span>
             <span style={{ fontFamily: FONT, fontSize: 'clamp(18px, 2.2vw, 24px)', fontWeight: 900, color: '#555', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{zone.rentability}</span>
           </div>
           <div style={{ width: 1, height: 34, background: '#e8e8e8', flexShrink: 0 }} />
           <div style={{ display: 'flex', flexDirection: 'column', gap: 4, alignItems: 'center' }}>
-            <span style={{ fontFamily: FONT, fontSize: 10, fontWeight: 600, color: '#bbb', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Estratos</span>
+            <span style={{ fontFamily: FONT, fontSize: 10, fontWeight: 600, color: '#bbb', letterSpacing: '0.04em' }}>Estratos</span>
             <span style={{ fontFamily: FONT, fontSize: 'clamp(18px, 2.2vw, 24px)', fontWeight: 900, color: '#555', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{zone.strata}</span>
           </div>
         </div>
@@ -198,14 +198,10 @@ function ZoneSection({ zone, zoneLabel }: { zone: NonNullable<ReturnType<typeof 
         onMouseLeave={() => setHovCta(false)}
       >
         <span style={{
-          display: 'flex', alignItems: 'center', gap: 10,
-          fontFamily: FONT, fontSize: 'clamp(18px, 2.2vw, 24px)',
-          fontWeight: 900, color: '#fff', lineHeight: 1, whiteSpace: 'nowrap',
+          fontFamily: FONT, fontSize: 'clamp(27px, 3.3vw, 36px)',
+          fontWeight: 900, color: '#fff', lineHeight: 1,
         }}>
           Ver zona
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M5 12h14"/><path d="M12 5l7 7-7 7"/>
-          </svg>
         </span>
         <span style={{
           fontFamily: FONT, fontSize: 11, fontWeight: 400,
