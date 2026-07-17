@@ -203,12 +203,6 @@ function ZoneSection({ zone, zoneLabel }: { zone: NonNullable<ReturnType<typeof 
         }}>
           Ver zona
         </span>
-        <span style={{
-          fontFamily: FONT, fontSize: 11, fontWeight: 400,
-          color: 'rgba(255,255,255,0.65)', textAlign: 'center', lineHeight: 1.45,
-        }}>
-          Análisis completo<br/>de inversión
-        </span>
       </Link>
     </div>
   );
@@ -475,9 +469,8 @@ export default function PropertyDetailPage() {
                   {(() => {
                     const investmentZoneSlug = getInvestmentZoneForLocation(property.location);
                     const investmentZone = investmentZoneSlug ? getZoneBySlug(investmentZoneSlug) : null;
-                    if (!investmentZone) return null;
-                    const isCompra = property.businessType === 'Comprar';
-                    const zoneLabel = isCompra ? '¿Por qué invertir en esta zona?' : '¿Por qué arrendar en esta zona?';
+                    if (!investmentZone || property.businessType !== 'Comprar') return null;
+                    const zoneLabel = '¿Por qué invertir en esta zona?';
                     return (
                       <ScrollReveal y={16} className="mt-6">
                         <ZoneSection zone={investmentZone} zoneLabel={zoneLabel} />
