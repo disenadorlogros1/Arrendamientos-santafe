@@ -165,7 +165,7 @@ function ZoneSection({ zone, zoneLabel }: { zone: NonNullable<ReturnType<typeof 
         justifyContent: 'center', alignItems: 'center',
         textAlign: 'center', gap: 18,
       }}>
-        <h3 style={{ fontFamily: FONT, fontSize: 'clamp(14px, 1.2vw, 17px)', fontWeight: 700, color: '#555', margin: 0, lineHeight: 1.3 }}>
+        <h3 style={{ fontFamily: FONT, fontSize: 'clamp(24px, 3vw, 32px)', fontWeight: 700, color: '#555', margin: 0, lineHeight: 1.2 }}>
           {zoneLabel}
         </h3>
         <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
@@ -198,7 +198,7 @@ function ZoneSection({ zone, zoneLabel }: { zone: NonNullable<ReturnType<typeof 
         onMouseLeave={() => setHovCta(false)}
       >
         <span style={{
-          fontFamily: FONT, fontSize: 'clamp(27px, 3.3vw, 36px)',
+          fontFamily: FONT, fontSize: 'clamp(24px, 3vw, 32px)',
           fontWeight: 900, color: '#fff', lineHeight: 1,
         }}>
           Ver zona
@@ -434,8 +434,8 @@ export default function PropertyDetailPage() {
                     </div>
                   </div>
 
-                  {/* Mapa */}
-                  {property.latitude && property.longitude && (
+                  {/* Mapa — solo en propiedades de arriendo */}
+                  {property.businessType !== 'Comprar' && property.latitude && property.longitude && (
                     <ScrollReveal y={16} className="mt-6">
                       <h2 className="text-lg font-bold text-gray-900 mb-2">Ubicación</h2>
                       <p style={{ fontFamily: FONT, fontSize: 13, fontWeight: 500, color: '#888', display: 'flex', alignItems: 'center', gap: 5, margin: '0 0 12px 0' }}>
