@@ -15,34 +15,6 @@ const FONT_HEADING = "'Avenir LT Std', 'Outfit', system-ui, sans-serif";
 const FONT_BODY    = "'Avenir LT Std', 'Outfit', system-ui, sans-serif";
 const RED          = '#f32735';
 
-/* Fija el buscador usando translateY sincronizado con el ticker de GSAP/Lenis.
-   No usa position:fixed. El buscador permanece en el flujo normal y el transform
-   contrarresta el scroll para que visualmente no se mueva. */
-function SearchBarFixed({ children }: { children: React.ReactNode }) {
-  const barRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const el = barRef.current;
-    if (!el) return;
-
-    const tick = () => {
-      el.style.transform = `translateY(${window.scrollY}px)`;
-    };
-    gsap.ticker.add(tick);
-    tick();
-
-    return () => gsap.ticker.remove(tick);
-  }, []);
-
-  return (
-    <div
-      ref={barRef}
-      style={{ backgroundColor: '#f7f6f4', position: 'relative', zIndex: 40 }}
-    >
-      {children}
-    </div>
-  );
-}
 
 function applyInkFill(e: React.MouseEvent<HTMLElement>) {
   const el = e.currentTarget;
@@ -492,8 +464,8 @@ export default function PropiedadesPage({ initialFilter = 'Todos', initialQueStr
         </div>
       </div>
 
-      {/* Search Bar — fijado con translateY+ticker para evitar problemas de position:fixed */}
-      <SearchBarFixed>
+      {/* Search Bar — sticky justo bajo el header */}
+      <div style={{ position: 'sticky', top: '86px', zIndex: 40, backgroundColor: '#f7f6f4' }}>
         <PropiedadesSearchBar
           initialTipo={initialFilter || 'Todos'}
           initialTextoBusqueda={initialQueString}
@@ -501,7 +473,7 @@ export default function PropiedadesPage({ initialFilter = 'Todos', initialQueStr
           onShowMap={() => setShowMap(true)}
           collapsed={showMap}
         />
-      </SearchBarFixed>
+      </div>
 
       {/* Map panel — solo desktop */}
       {showMap && (
