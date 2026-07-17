@@ -33,17 +33,19 @@ function SearchBarFixed({ children, collapsed }: { children: React.ReactNode; co
     return () => ro.disconnect();
   }, []);
 
-  // Se fija cuando el sentinel cruza el borde inferior del site-header (86px)
+  // Se fija cuando el sentinel cruza el borde inferior del site-header (86px).
+  // Usa el GSAP ticker (ya corre en sync con Lenis) para leer getBoundingClientRect
+  // en cada frame — más confiable que window scroll events con Lenis.
   useEffect(() => {
     const HEADER_H = 86;
-    const check = () => {
+    const tick = () => {
       const sentinel = sentinelRef.current;
       if (!sentinel) return;
-      setIsFixed(sentinel.getBoundingClientRect().top < HEADER_H);
+      const past = sentinel.getBoundingClientRect().top < HEADER_H;
+      setIsFixed(prev => prev !== past ? past : prev);
     };
-    check();
-    window.addEventListener('scroll', check, { passive: true });
-    return () => window.removeEventListener('scroll', check);
+    gsap.ticker.add(tick);
+    return () => gsap.ticker.remove(tick);
   }, []);
 
   return (
