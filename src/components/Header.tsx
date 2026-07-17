@@ -150,6 +150,9 @@ export default function Header({ currentPage, onNavigate, isHeroPage = true, dar
   const headerTextColor = isDark ? '#fff' : '#1a1a1a';
   const navBgColor = isDark ? 'rgba(255, 255, 255, 0.3)' : 'rgba(255, 255, 255, 1)';
   const navBorderColor = isDark ? 'rgba(255, 255, 255, 0.3)' : 'rgba(0, 0, 0, 0.1)';
+  // Active pill: dark headers use translucent white; light headers use Carbón so text is visible
+  const activePillBg   = isDark ? 'rgba(245,245,245,0.3)' : '#1a1a1a';
+  const activePillText = '#ffffff';
 
   return (
     <header className={`fixed top-0 left-0 right-0 transition-all duration-300 ${headerBackground}`}
@@ -183,7 +186,7 @@ export default function Header({ currentPage, onNavigate, isHeroPage = true, dar
                         onMouseEnter={e => { setHoveredNav(item.label); if (!isActive) applyInkFill(e); }}
                         onMouseLeave={e => { setHoveredNav(null); if (!isActive) applyInkFill(e); }}
                         className={isActive ? 'w-full px-2 py-2 rounded-full' : 'nav-ink-btn w-full px-2 py-2 rounded-full'}
-                        style={{ fontFamily: "'Avenir LT Std', 'Outfit', system-ui, sans-serif", fontWeight: (isActive || hoveredNav === item.label) ? 700 : 300, fontSize: '15px', color: isActive ? '#ffffff' : headerTextColor, background: isActive ? 'rgba(245,245,245,0.3)' : 'transparent', transition: 'background 0.2s ease, color 0.2s ease' }}
+                        style={{ fontFamily: "'Avenir LT Std', 'Outfit', system-ui, sans-serif", fontWeight: (isActive || hoveredNav === item.label) ? 700 : 300, fontSize: '15px', color: isActive ? activePillText : headerTextColor, background: isActive ? activePillBg : 'transparent', transition: 'background 0.2s ease, color 0.2s ease' }}
                       >
                         <span style={{ fontWeight: 'inherit' }}>{item.label}</span>
                       </button>
@@ -218,7 +221,7 @@ export default function Header({ currentPage, onNavigate, isHeroPage = true, dar
                       onMouseEnter={e => { setHoveredNav(item.label); if (!isActive) applyInkFill(e); }}
                       onMouseLeave={e => { setHoveredNav(null); if (!isActive) applyInkFill(e); }}
                       className={isActive ? 'flex-1 px-2 py-2 rounded-full' : 'nav-ink-btn flex-1 px-2 py-2 rounded-full'}
-                      style={{ fontFamily: "'Avenir LT Std', 'Outfit', system-ui, sans-serif", fontWeight: (isActive || hoveredNav === item.label) ? 700 : 300, fontSize: '15px', color: isActive ? '#ffffff' : headerTextColor, background: isActive ? 'rgba(245,245,245,0.3)' : 'transparent', transition: 'background 0.2s ease, color 0.2s ease' }}>
+                      style={{ fontFamily: "'Avenir LT Std', 'Outfit', system-ui, sans-serif", fontWeight: (isActive || hoveredNav === item.label) ? 700 : 300, fontSize: '15px', color: isActive ? activePillText : headerTextColor, background: isActive ? activePillBg : 'transparent', transition: 'background 0.2s ease, color 0.2s ease' }}>
                       <span style={{ fontWeight: 'inherit' }}>{item.label}</span>
                     </button>
                   );
