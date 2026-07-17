@@ -172,42 +172,32 @@ export default function Historia60Page({ onNavigate }: Props) {
       {/* ── Panel 1966 — composición por capas ─────────────────── */}
       <div style={{ position: 'relative', width: '100%', aspectRatio: '1920/1080', overflow: 'hidden', background: '#ffffff' }}>
 
-        {/* Capa 3 — escena de calle: fondo del panel */}
+        {/* c3 — Escena de calle (z:2) */}
         <img
           src="/images/Linea%20de%20tiempo/1966_capa_3.png"
           alt="" aria-hidden="true"
           style={{ position: 'absolute', top: 0, left: 0, width: '100%', display: 'block', zIndex: 2, pointerEvents: 'none' }}
         />
 
-        {/* "1966" — texto sólido semi-transparente sobre la escena */}
-        <div style={{
-          position: 'absolute',
-          top: 0, left: 0, right: 0,
-          zIndex: 4,
-          display: 'flex',
-          justifyContent: 'center',
-          overflow: 'visible',
-          pointerEvents: 'none',
-        }}>
-          <span style={{
-            fontFamily: FONT_HEAVY,
-            fontSize: 'clamp(200px, 47vw, 720px)',
-            fontWeight: 900,
-            letterSpacing: '-0.050em',
-            lineHeight: 1,
-            whiteSpace: 'nowrap',
-            display: 'inline-block',
-            flexShrink: 0,
-            color: 'rgba(202, 202, 202, 0.75)',
-            userSelect: 'none',
-          }}>1966</span>
-        </div>
+        {/* a2 — 1966 Capa B (z:4) */}
+        <img
+          src="/images/Linea%20de%20tiempo/1966_capa_1b.png"
+          alt="" aria-hidden="true"
+          style={{ position: 'absolute', top: 0, left: 0, width: '100%', display: 'block', zIndex: 4, pointerEvents: 'none' }}
+        />
 
-        {/* Capa 4 — fragmentos encima del año: primera sede + escenas de época */}
+        {/* a1 — 1966 Capa A (z:6) */}
+        <img
+          src="/images/Linea%20de%20tiempo/1966_capa_1a.png"
+          alt="" aria-hidden="true"
+          style={{ position: 'absolute', top: 0, left: 0, width: '100%', display: 'block', zIndex: 6, pointerEvents: 'none' }}
+        />
+
+        {/* c4 — Fragmentos / fotos (z:10) */}
         <img
           src="/images/Linea%20de%20tiempo/1966_capa_4.png"
           alt="" aria-hidden="true"
-          style={{ position: 'absolute', top: 0, left: 0, width: '100%', display: 'block', zIndex: 8, pointerEvents: 'none' }}
+          style={{ position: 'absolute', top: 0, left: 0, width: '100%', display: 'block', zIndex: 10, pointerEvents: 'none' }}
         />
 
         {/* Barra roja lateral */}
