@@ -152,61 +152,68 @@ function DetailRow({ icon, label, value, isRight, spanFull }: { icon: string; la
 }
 
 function ZoneSection({ zone, zoneLabel }: { zone: NonNullable<ReturnType<typeof getZoneBySlug>>; zoneLabel: string }) {
-  const [hovIdx, setHovIdx] = useState<number | null>(null);
-
-  const dataCardStyle = (idx: number): React.CSSProperties => ({
-    padding: '24px 16px',
-    flex: 1,
-    borderLeft: '1px solid #f5f5f5',
-    display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center',
-    transform: hovIdx === idx ? 'scale(1.06)' : hovIdx !== null && Math.abs(idx - hovIdx) === 1 ? 'scale(0.96)' : 'scale(1)',
-    zIndex: hovIdx === idx ? 5 : 1,
-    position: 'relative',
-    transition: 'transform 0.28s cubic-bezier(0.25,0.46,0.45,0.94), box-shadow 0.28s ease',
-    boxShadow: hovIdx === idx ? '0 6px 24px rgba(0,0,0,0.14)' : 'none',
-    cursor: 'default',
-    background: '#fff',
-  });
+  const [hovCta, setHovCta] = useState(false);
 
   return (
-    <div style={{ display: 'flex', border: '1px solid #f5f5f5', overflow: 'visible' }}>
-      {/* Card 1 — negra, static */}
-      <div style={{ background: '#1a1a1a', padding: '24px 20px', flex: '0 0 clamp(140px, 20%, 200px)', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-        <h3 style={{ fontFamily: FONT, fontSize: 'clamp(14px, 1.1vw, 17px)', fontWeight: 700, color: '#fff', margin: 0, lineHeight: 1.3 }}>
+    <div style={{ display: 'flex', border: '1px solid #f0f0f0', overflow: 'hidden' }}>
+      {/* Bloque izquierdo — info centrada, color concreto */}
+      <div style={{
+        flex: 1,
+        background: '#fff',
+        padding: '28px 24px',
+        display: 'flex', flexDirection: 'column',
+        justifyContent: 'center', alignItems: 'center',
+        textAlign: 'center', gap: 18,
+      }}>
+        <h3 style={{ fontFamily: FONT, fontSize: 'clamp(14px, 1.2vw, 17px)', fontWeight: 700, color: '#555', margin: 0, lineHeight: 1.3 }}>
           {zoneLabel}
         </h3>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 4, alignItems: 'center' }}>
+            <span style={{ fontFamily: FONT, fontSize: 10, fontWeight: 600, color: '#bbb', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Rentabilidad</span>
+            <span style={{ fontFamily: FONT, fontSize: 'clamp(18px, 2.2vw, 24px)', fontWeight: 900, color: '#555', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{zone.rentability}</span>
+          </div>
+          <div style={{ width: 1, height: 34, background: '#e8e8e8', flexShrink: 0 }} />
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 4, alignItems: 'center' }}>
+            <span style={{ fontFamily: FONT, fontSize: 10, fontWeight: 600, color: '#bbb', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Estratos</span>
+            <span style={{ fontFamily: FONT, fontSize: 'clamp(18px, 2.2vw, 24px)', fontWeight: 900, color: '#555', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{zone.strata}</span>
+          </div>
+        </div>
       </div>
-      {/* Card 2 — Rentabilidad */}
-      <div onMouseEnter={() => setHovIdx(2)} onMouseLeave={() => setHovIdx(null)} style={dataCardStyle(2)}>
-        <span style={{ fontFamily: FONT, fontSize: 12, fontWeight: 400, color: '#ccc', marginBottom: 6 }}>Rentabilidad</span>
-        <span style={{ fontFamily: FONT, fontSize: 'clamp(18px, 2.2vw, 26px)', fontWeight: 900, color: '#f32735', lineHeight: 1 }}>{zone.rentability}</span>
-      </div>
-      {/* Card 3 — Estratos */}
-      <div onMouseEnter={() => setHovIdx(3)} onMouseLeave={() => setHovIdx(null)} style={dataCardStyle(3)}>
-        <span style={{ fontFamily: FONT, fontSize: 12, fontWeight: 400, color: '#ccc', marginBottom: 6 }}>Estratos</span>
-        <span style={{ fontFamily: FONT, fontSize: 'clamp(18px, 2.2vw, 26px)', fontWeight: 900, color: '#1a1a1a', lineHeight: 1 }}>{zone.strata}</span>
-      </div>
-      {/* Card 4 — Ver zona */}
-      <div
-        onMouseEnter={() => setHovIdx(4)}
-        onMouseLeave={() => setHovIdx(null)}
-        style={{ ...dataCardStyle(4), flex: '0 0 clamp(90px, 12%, 130px)', padding: 0 }}
+
+      {/* Bloque CTA — rojo dominante */}
+      <Link
+        href={`/inversionistas/${zone.slug}`}
+        style={{
+          flexShrink: 0,
+          width: 'clamp(160px, 32%, 240px)',
+          background: hovCta ? '#aa182c' : '#f32735',
+          display: 'flex', flexDirection: 'column',
+          alignItems: 'center', justifyContent: 'center',
+          gap: 8, padding: '28px 20px',
+          textDecoration: 'none',
+          transition: 'background 0.2s',
+        }}
+        onMouseEnter={() => setHovCta(true)}
+        onMouseLeave={() => setHovCta(false)}
       >
-        <Link
-          href={`/inversionistas/${zone.slug}`}
-          style={{
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            width: '100%', height: '100%', minHeight: 80,
-            padding: '16px 12px', textDecoration: 'none',
-            background: hovIdx === 4 ? '#1a1a1a' : '#fff',
-            transition: 'background 0.22s ease',
-          }}
-          onMouseEnter={() => setHovIdx(4)}
-          onMouseLeave={() => setHovIdx(null)}
-        >
-          <span style={{ fontFamily: FONT, fontSize: 12, fontWeight: 700, color: hovIdx === 4 ? '#fff' : '#1a1a1a', transition: 'color 0.22s', textAlign: 'center', lineHeight: 1.3 }}>Ver zona</span>
-        </Link>
-      </div>
+        <span style={{
+          display: 'flex', alignItems: 'center', gap: 10,
+          fontFamily: FONT, fontSize: 'clamp(18px, 2.2vw, 24px)',
+          fontWeight: 900, color: '#fff', lineHeight: 1, whiteSpace: 'nowrap',
+        }}>
+          Ver zona
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M5 12h14"/><path d="M12 5l7 7-7 7"/>
+          </svg>
+        </span>
+        <span style={{
+          fontFamily: FONT, fontSize: 11, fontWeight: 400,
+          color: 'rgba(255,255,255,0.65)', textAlign: 'center', lineHeight: 1.45,
+        }}>
+          Análisis completo<br/>de inversión
+        </span>
+      </Link>
     </div>
   );
 }
