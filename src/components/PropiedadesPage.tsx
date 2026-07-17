@@ -16,7 +16,8 @@ const FONT_BODY    = "'Avenir LT Std', 'Outfit', system-ui, sans-serif";
 const RED          = '#f32735';
 
 /* Wrapper que empieza en flujo normal y se fija cuando el scroll lo sacaría de pantalla.
-   Esto evita que tape la sección hero oscura al cargar la página. */
+   Usa window scroll + getBoundingClientRect porque Lenis smooth scroll no es compatible
+   con IntersectionObserver (Lenis anima el scroll en su propio raf loop). */
 function SearchBarFixed({ children, collapsed }: { children: React.ReactNode; collapsed?: boolean }) {
   const barRef      = useRef<HTMLDivElement>(null);
   const sentinelRef = useRef<HTMLDivElement>(null);
@@ -32,21 +33,22 @@ function SearchBarFixed({ children, collapsed }: { children: React.ReactNode; co
     return () => ro.disconnect();
   }, []);
 
-  // Se fija cuando el sentinel sale del viewport (descontando el site-header de 86px)
+  // Se fija cuando el sentinel cruza el borde inferior del site-header (86px)
   useEffect(() => {
-    const sentinel = sentinelRef.current;
-    if (!sentinel) return;
-    const obs = new IntersectionObserver(
-      ([entry]) => setIsFixed(!entry.isIntersecting),
-      { rootMargin: '-86px 0px 0px 0px' }
-    );
-    obs.observe(sentinel);
-    return () => obs.disconnect();
+    const HEADER_H = 86;
+    const check = () => {
+      const sentinel = sentinelRef.current;
+      if (!sentinel) return;
+      setIsFixed(sentinel.getBoundingClientRect().top < HEADER_H);
+    };
+    check();
+    window.addEventListener('scroll', check, { passive: true });
+    return () => window.removeEventListener('scroll', check);
   }, []);
 
   return (
     <>
-      {/* Sentinel: marca el punto donde la barra debe empezar a fijarse */}
+      {/* Sentinel: punto en el flujo donde la barra debe empezar a fijarse */}
       <div ref={sentinelRef} style={{ height: 1, pointerEvents: 'none' }} aria-hidden />
       <div
         ref={barRef}
