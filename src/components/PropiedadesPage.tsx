@@ -15,50 +15,44 @@ const FONT_HEADING = "'Avenir LT Std', 'Outfit', system-ui, sans-serif";
 const FONT_BODY    = "'Avenir LT Std', 'Outfit', system-ui, sans-serif";
 const RED          = '#f32735';
 
-/* En flujo normal bajo la sección hero; se fija al scrollear.
-   Funciona porque propiedades no usa page-fade-in (sin containing block). */
+/* Mide la posición natural del buscador al cargar (scroll=0) y lo fija
+   permanentemente ahí. El buscador queda debajo de la sección negra y
+   no se mueve aunque el usuario haga scroll. */
 function SearchBarFixed({ children, collapsed }: { children: React.ReactNode; collapsed?: boolean }) {
-  const barRef      = useRef<HTMLDivElement>(null);
-  const sentinelRef = useRef<HTMLDivElement>(null);
-  const [isFixed, setIsFixed] = useState(false);
-  const [height, setHeight]   = useState(0);
+  const barRef = useRef<HTMLDivElement>(null);
+  const [fixedTop, setFixedTop] = useState<number | null>(null);
+  const [height, setHeight]     = useState(0);
 
   useEffect(() => {
     const el = barRef.current;
     if (!el) return;
+    // Captura la posición real del buscador antes de fijarlo
+    setFixedTop(el.getBoundingClientRect().top);
     const ro = new ResizeObserver(e => setHeight(e[0].contentRect.height));
     ro.observe(el);
     return () => ro.disconnect();
   }, []);
 
-  useEffect(() => {
-    const check = () => {
-      const s = sentinelRef.current;
-      if (!s) return;
-      setIsFixed(s.getBoundingClientRect().top < 86);
-    };
-    check();
-    window.addEventListener('scroll', check, { passive: true });
-    return () => window.removeEventListener('scroll', check);
-  }, []);
+  const isFixed = fixedTop !== null;
 
   return (
     <>
-      <div ref={sentinelRef} style={{ height: 1, pointerEvents: 'none' }} aria-hidden />
+      {isFixed && <div style={{ height }} aria-hidden />}
       <div
         ref={barRef}
-        style={{
-          position: isFixed ? 'fixed' : 'relative',
-          top:   isFixed ? '86px' : 'auto',
-          left:  isFixed ? 0 : 'auto',
-          right: isFixed ? 0 : 'auto',
-          zIndex: isFixed ? 40 : 'auto',
+        style={isFixed ? {
+          position: 'fixed',
+          top: `${fixedTop}px`,
+          left: 0,
+          right: 0,
+          zIndex: 40,
+          backgroundColor: '#f7f6f4',
+        } : {
           backgroundColor: '#f7f6f4',
         }}
       >
         {children}
       </div>
-      {isFixed && <div style={{ height }} aria-hidden />}
     </>
   );
 }
