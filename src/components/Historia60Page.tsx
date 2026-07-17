@@ -179,26 +179,33 @@ export default function Historia60Page({ onNavigate }: Props) {
           style={{ position: 'absolute', top: 0, left: 0, width: '100%', display: 'block', zIndex: 2, pointerEvents: 'none' }}
         />
 
-        {/* Capa 2 — "1966" con panorama B&W dentro de las letras (encima de la escena, debajo de los fragmentos) */}
+        {/* Capa 2 — "1966" con panorama B&W dentro de las letras */}
         <div style={{
-          position: 'absolute', inset: 0, zIndex: 4,
-          display: 'flex', alignItems: 'flex-start', justifyContent: 'center',
+          position: 'absolute',
+          top: 0, left: 0, right: 0,
+          zIndex: 4,
+          display: 'flex',
+          justifyContent: 'center',
+          overflow: 'visible',
           pointerEvents: 'none',
         }}>
           <span style={{
             fontFamily: FONT_HEAVY,
-            fontSize: 'clamp(200px, 38vw, 600px)',
+            fontSize: 'clamp(200px, 46vw, 720px)',
             fontWeight: 900,
-            letterSpacing: '-0.048em',
-            lineHeight: 0.88,
+            letterSpacing: '-0.05em',
+            lineHeight: 1,
+            whiteSpace: 'nowrap',
+            display: 'inline-block',
+            flexShrink: 0,
             backgroundImage: "url('/images/Linea%20de%20tiempo/1966_capa_2_sincolor.png')",
             backgroundSize: 'cover',
-            backgroundPosition: 'center 42%',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
             WebkitBackgroundClip: 'text',
             backgroundClip: 'text',
             color: 'transparent',
             userSelect: 'none',
-            display: 'block',
           }}>1966</span>
         </div>
 
