@@ -16,6 +16,31 @@ const FONT_BODY    = "'Avenir LT Std', 'Outfit', system-ui, sans-serif";
 const RED          = '#f32735';
 
 
+/* Mide la posición natural del buscador (desde el tope del documento, independiente
+   del scroll actual) y la usa como valor de top en position:sticky. Así el buscador
+   queda pegado exactamente donde estaba al cargar, no junto al header. */
+function SearchBarSticky({ children }: { children: React.ReactNode }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [top, setTop] = useState(250); // default razonable mientras carga
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    // getBoundingClientRect().top + scrollY = posición absoluta en el documento
+    // = posición en viewport cuando scroll=0, independiente de cuando se mide
+    setTop(Math.round(el.getBoundingClientRect().top + window.scrollY));
+  }, []);
+
+  return (
+    <div
+      ref={ref}
+      style={{ position: 'sticky', top: `${top}px`, zIndex: 40, backgroundColor: '#f7f6f4' }}
+    >
+      {children}
+    </div>
+  );
+}
+
 function applyInkFill(e: React.MouseEvent<HTMLElement>) {
   const el = e.currentTarget;
   const rect = el.getBoundingClientRect();
@@ -464,8 +489,8 @@ export default function PropiedadesPage({ initialFilter = 'Todos', initialQueStr
         </div>
       </div>
 
-      {/* Search Bar — sticky justo bajo el header */}
-      <div style={{ position: 'sticky', top: '86px', zIndex: 40, backgroundColor: '#f7f6f4' }}>
+      {/* Search Bar — sticky en su posición natural (debajo de la sección oscura) */}
+      <SearchBarSticky>
         <PropiedadesSearchBar
           initialTipo={initialFilter || 'Todos'}
           initialTextoBusqueda={initialQueString}
@@ -473,7 +498,7 @@ export default function PropiedadesPage({ initialFilter = 'Todos', initialQueStr
           onShowMap={() => setShowMap(true)}
           collapsed={showMap}
         />
-      </div>
+      </SearchBarSticky>
 
       {/* Map panel — solo desktop */}
       {showMap && (
