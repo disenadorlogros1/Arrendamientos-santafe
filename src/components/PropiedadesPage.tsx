@@ -15,13 +15,38 @@ const FONT_HEADING = "'Avenir LT Std', 'Outfit', system-ui, sans-serif";
 const FONT_BODY    = "'Avenir LT Std', 'Outfit', system-ui, sans-serif";
 const RED          = '#f32735';
 
-/* Sticky wrapper para el buscador. Lenis 1.x usa scroll nativo (window.scrollTo),
-   por lo que position:sticky funciona sin workarounds adicionales. */
+/* Buscador fijo debajo del site-header. position:fixed con spacer dinámico.
+   El transform de page-fade-in fue eliminado (globals.css) así que fixed
+   queda relativo al viewport correctamente. */
 function SearchBarFixed({ children, collapsed }: { children: React.ReactNode; collapsed?: boolean }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [height, setHeight] = useState(0);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const ro = new ResizeObserver(e => setHeight(e[0].contentRect.height));
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
   return (
-    <div style={{ position: 'sticky', top: '86px', zIndex: 40, backgroundColor: '#f7f6f4' }}>
-      {children}
-    </div>
+    <>
+      <div
+        ref={ref}
+        style={{
+          position: 'fixed',
+          top: '86px',
+          left: 0,
+          right: 0,
+          zIndex: 40,
+          backgroundColor: '#f7f6f4',
+        }}
+      >
+        {children}
+      </div>
+      <div style={{ height }} aria-hidden />
+    </>
   );
 }
 
