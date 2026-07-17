@@ -213,11 +213,12 @@ export default function Historia60Page({ onNavigate }: Props) {
       </div>
 
       {/* ── Panel 1966 — composición por capas ─────────────────── */}
+      <div style={{ display: 'flex', justifyContent: 'center', padding: '0 clamp(16px, 4vw, 48px) clamp(32px, 5vw, 64px)' }}>
       <div
         ref={parallaxPanelRef}
         onMouseMove={handleParallaxMove}
         onMouseLeave={handleParallaxLeave}
-        style={{ position: 'relative', width: '100%', aspectRatio: '1920/1080', overflow: 'hidden', background: '#ffffff', cursor: 'crosshair' }}
+        style={{ position: 'relative', width: '100%', maxWidth: 1100, aspectRatio: '1920/1080', overflow: 'hidden', background: '#ffffff', cursor: 'crosshair' }}
       >
 
         {/* a2 — 1966 Capa B (z:4) */}
@@ -286,6 +287,7 @@ export default function Historia60Page({ onNavigate }: Props) {
             Arrendamientos Santa Fe nace en Medellín con una visión de servicio, confianza y acompañamiento inmobiliario.
           </p>
         </div>
+      </div>
       </div>
 
       {/* ── Timeline Section (eventos 2–6) ────────────────────── */}
