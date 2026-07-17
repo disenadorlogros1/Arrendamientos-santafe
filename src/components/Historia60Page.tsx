@@ -169,7 +169,75 @@ export default function Historia60Page({ onNavigate }: Props) {
         </div>
       </div>
 
-      {/* ── Timeline Section ──────────────────────────────────── */}
+      {/* ── Panel 1966 — composición por capas ─────────────────── */}
+      <div style={{ position: 'relative', width: '100%', height: 'clamp(480px, 88vh, 820px)', overflow: 'hidden', background: '#060504' }}>
+
+        {/* Vignette */}
+        <div style={{
+          position: 'absolute', inset: 0, zIndex: 15, pointerEvents: 'none',
+          background: 'radial-gradient(ellipse 110% 110% at 50% 50%, transparent 10%, rgba(0,0,0,0.48) 100%)',
+        }} />
+        <div style={{
+          position: 'absolute', inset: 0, zIndex: 16, pointerEvents: 'none',
+          background: 'linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, transparent 35%, transparent 55%, rgba(0,0,0,0.72) 100%)',
+        }} />
+
+        {/* Capa 2 — "1966" con panorama de Medellín dentro */}
+        <div style={{ position: 'absolute', inset: 0, zIndex: 2, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <span style={{
+            fontFamily: FONT_HEAVY,
+            fontSize: 'clamp(150px, 27vw, 380px)',
+            fontWeight: 900,
+            letterSpacing: '-0.045em',
+            lineHeight: 1,
+            backgroundImage: "url('/images/Linea%20de%20tiempo/1966_capa_2_color.png')",
+            backgroundSize: 'cover',
+            backgroundPosition: 'center 38%',
+            WebkitBackgroundClip: 'text',
+            backgroundClip: 'text',
+            color: 'transparent',
+            userSelect: 'none',
+            pointerEvents: 'none',
+          }}>1966</span>
+        </div>
+
+        {/* Capa 3 — escena de calle Medellín, rompe el año */}
+        <img
+          src="/images/Linea%20de%20tiempo/1966_capa_3.png"
+          alt=""
+          aria-hidden="true"
+          style={{ position: 'absolute', bottom: 0, left: 0, width: '100%', display: 'block', zIndex: 10, pointerEvents: 'none' }}
+        />
+
+        {/* Capa 4 — fragmentos: primera sede Santa Fe + escenas de época */}
+        <img
+          src="/images/Linea%20de%20tiempo/1966_capa_4.png"
+          alt=""
+          aria-hidden="true"
+          style={{ position: 'absolute', top: 0, left: 0, width: '100%', display: 'block', zIndex: 12, pointerEvents: 'none' }}
+        />
+
+        {/* Barra roja */}
+        <div style={{ position: 'absolute', left: 0, top: '18%', bottom: '18%', width: 3, background: RED, zIndex: 30 }} />
+
+        {/* Contador */}
+        <div style={{ position: 'absolute', top: 28, right: 32, zIndex: 30, fontFamily: FONT_BODY, fontSize: 11, letterSpacing: '0.1em', color: 'rgba(255,255,255,0.2)' }}>
+          <strong style={{ color: 'rgba(255,255,255,0.6)', fontWeight: 700 }}>01</strong> / 06
+        </div>
+
+        {/* Texto del evento */}
+        <div style={{ position: 'absolute', bottom: 'clamp(24px,4vh,48px)', left: 'clamp(24px,4vw,56px)', zIndex: 30, maxWidth: 'min(360px, 42%)' }}>
+          <span style={{ fontFamily: FONT_HEAVY, fontSize: 10, fontWeight: 700, color: RED, letterSpacing: '0.16em', textTransform: 'uppercase', display: 'block', marginBottom: 8 }}>1966</span>
+          <h3 style={{ fontFamily: FONT_HEADING, fontSize: 'clamp(18px, 2.4vw, 28px)', fontWeight: 700, color: '#fff', lineHeight: 1.2, margin: '0 0 10px 0' }}>
+            Donde todo comenzó
+          </h3>
+          <p style={{ fontFamily: FONT_BODY, fontSize: 'clamp(12px, 1vw, 14px)', fontWeight: 300, color: 'rgba(255,255,255,0.5)', lineHeight: 1.65, margin: 0 }}>
+            Arrendamientos Santa Fe nace en Medellín con una visión de servicio, confianza y acompañamiento inmobiliario.
+          </p>
+        </div>
+      </div>
+
+      {/* ── Timeline Section (eventos 2–6) ────────────────────── */}
       <div style={{ padding: '20px 0' }}>
 
         {/* ── Desktop (lg+) ── */}
@@ -177,7 +245,7 @@ export default function Historia60Page({ onNavigate }: Props) {
           className="hidden lg:grid"
           style={{
             gridTemplateRows: 'auto auto auto',
-            gridTemplateColumns: 'repeat(6, 1fr)',
+            gridTemplateColumns: 'repeat(5, 1fr)',
             columnGap: '14px',
             padding: '0 clamp(32px, 4vw, 72px)',
           }}
@@ -198,8 +266,8 @@ export default function Historia60Page({ onNavigate }: Props) {
             />
           </div>
 
-          {events.map((event, i) => {
-            const lineDelay = (i / (events.length - 1)) * 1.1;
+          {events.slice(1).map((event, i) => {
+            const lineDelay = (i / (events.length - 2)) * 1.1;
             const imgDelay  = lineDelay;
             const textDelay = lineDelay + 0.20;
             const isLast    = event.year === '2026';
@@ -293,11 +361,11 @@ export default function Historia60Page({ onNavigate }: Props) {
             width: '2px', background: 'rgba(0,0,0,0.1)',
           }} />
 
-          {events.map((event, i) => {
+          {events.slice(1).map((event, i) => {
             const isLast = event.year === '2026';
             return (
               <ScrollReveal key={event.year} y={14} delay={i * 0.07} start="top 85%">
-                <div style={{ display: 'flex', gap: '20px', paddingBottom: i < events.length - 1 ? '36px' : 0 }}>
+                <div style={{ display: 'flex', gap: '20px', paddingBottom: i < events.length - 2 ? '36px' : 0 }}>
                   <div style={{ width: '40px', flexShrink: 0, paddingTop: '6px', position: 'relative' }}>
                     <div style={{
                       width: `${DOT_SIZE}px`, height: `${DOT_SIZE}px`,
