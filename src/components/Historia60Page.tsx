@@ -170,68 +170,86 @@ export default function Historia60Page({ onNavigate }: Props) {
       </div>
 
       {/* ── Panel 1966 — composición por capas ─────────────────── */}
-      <div style={{ position: 'relative', width: '100%', height: 'clamp(480px, 88vh, 820px)', overflow: 'hidden', background: '#060504' }}>
+      <div style={{ position: 'relative', width: '100%', height: 'clamp(520px, 92vh, 900px)', overflow: 'hidden', background: '#060504' }}>
 
-        {/* Vignette */}
+        {/* Capa 3 — escena de calle Medellín: base del panel */}
+        <img
+          src="/images/Linea%20de%20tiempo/1966_capa_3.png"
+          alt="" aria-hidden="true"
+          style={{ position: 'absolute', bottom: 0, left: 0, width: '100%', display: 'block', zIndex: 2, pointerEvents: 'none' }}
+        />
+
+        {/* Capa 4 — fragmentos: primera sede + escenas de época */}
+        <img
+          src="/images/Linea%20de%20tiempo/1966_capa_4.png"
+          alt="" aria-hidden="true"
+          style={{ position: 'absolute', top: 0, left: 0, width: '100%', display: 'block', zIndex: 4, pointerEvents: 'none' }}
+        />
+
+        {/* Viñeta radial — oscurece bordes sin tocar el centro */}
         <div style={{
-          position: 'absolute', inset: 0, zIndex: 15, pointerEvents: 'none',
-          background: 'radial-gradient(ellipse 110% 110% at 50% 50%, transparent 10%, rgba(0,0,0,0.48) 100%)',
+          position: 'absolute', inset: 0, zIndex: 6, pointerEvents: 'none',
+          background: 'radial-gradient(ellipse 90% 90% at 50% 50%, transparent 20%, rgba(0,0,0,0.55) 100%)',
         }} />
+        {/* Viñeta vertical — refuerza techo y piso */}
         <div style={{
-          position: 'absolute', inset: 0, zIndex: 16, pointerEvents: 'none',
-          background: 'linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, transparent 35%, transparent 55%, rgba(0,0,0,0.72) 100%)',
+          position: 'absolute', inset: 0, zIndex: 7, pointerEvents: 'none',
+          background: 'linear-gradient(to bottom, rgba(0,0,0,0.45) 0%, transparent 30%, transparent 52%, rgba(0,0,0,0.78) 100%)',
         }} />
 
-        {/* Capa 2 — "1966" con panorama de Medellín dentro */}
-        <div style={{ position: 'absolute', inset: 0, zIndex: 2, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        {/* Capa 2 — "1966" con panorama de Medellín dentro de las letras */}
+        <div style={{
+          position: 'absolute', inset: 0, zIndex: 10,
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          pointerEvents: 'none',
+        }}>
           <span style={{
             fontFamily: FONT_HEAVY,
-            fontSize: 'clamp(150px, 27vw, 380px)',
+            fontSize: 'clamp(200px, 34vw, 520px)',
             fontWeight: 900,
-            letterSpacing: '-0.045em',
+            letterSpacing: '-0.048em',
             lineHeight: 1,
             backgroundImage: "url('/images/Linea%20de%20tiempo/1966_capa_2_color.png')",
             backgroundSize: 'cover',
-            backgroundPosition: 'center 38%',
+            backgroundPosition: 'center 42%',
             WebkitBackgroundClip: 'text',
             backgroundClip: 'text',
             color: 'transparent',
             userSelect: 'none',
-            pointerEvents: 'none',
           }}>1966</span>
         </div>
 
-        {/* Capa 3 — escena de calle Medellín, rompe el año */}
-        <img
-          src="/images/Linea%20de%20tiempo/1966_capa_3.png"
-          alt=""
-          aria-hidden="true"
-          style={{ position: 'absolute', bottom: 0, left: 0, width: '100%', display: 'block', zIndex: 10, pointerEvents: 'none' }}
-        />
-
-        {/* Capa 4 — fragmentos: primera sede Santa Fe + escenas de época */}
-        <img
-          src="/images/Linea%20de%20tiempo/1966_capa_4.png"
-          alt=""
-          aria-hidden="true"
-          style={{ position: 'absolute', top: 0, left: 0, width: '100%', display: 'block', zIndex: 12, pointerEvents: 'none' }}
-        />
-
-        {/* Barra roja */}
-        <div style={{ position: 'absolute', left: 0, top: '18%', bottom: '18%', width: 3, background: RED, zIndex: 30 }} />
+        {/* Barra roja lateral */}
+        <div style={{ position: 'absolute', left: 0, top: '20%', bottom: '20%', width: 3, background: RED, zIndex: 20 }} />
 
         {/* Contador */}
-        <div style={{ position: 'absolute', top: 28, right: 32, zIndex: 30, fontFamily: FONT_BODY, fontSize: 11, letterSpacing: '0.1em', color: 'rgba(255,255,255,0.2)' }}>
+        <div style={{
+          position: 'absolute', top: 28, right: 32, zIndex: 20,
+          fontFamily: FONT_BODY, fontSize: 11, letterSpacing: '0.1em', color: 'rgba(255,255,255,0.2)',
+        }}>
           <strong style={{ color: 'rgba(255,255,255,0.6)', fontWeight: 700 }}>01</strong> / 06
         </div>
 
         {/* Texto del evento */}
-        <div style={{ position: 'absolute', bottom: 'clamp(24px,4vh,48px)', left: 'clamp(24px,4vw,56px)', zIndex: 30, maxWidth: 'min(360px, 42%)' }}>
-          <span style={{ fontFamily: FONT_HEAVY, fontSize: 10, fontWeight: 700, color: RED, letterSpacing: '0.16em', textTransform: 'uppercase', display: 'block', marginBottom: 8 }}>1966</span>
-          <h3 style={{ fontFamily: FONT_HEADING, fontSize: 'clamp(18px, 2.4vw, 28px)', fontWeight: 700, color: '#fff', lineHeight: 1.2, margin: '0 0 10px 0' }}>
+        <div style={{
+          position: 'absolute', bottom: 'clamp(28px,5vh,56px)', left: 'clamp(28px,4.5vw,64px)',
+          zIndex: 20, maxWidth: 'min(380px, 44%)',
+        }}>
+          <span style={{
+            fontFamily: FONT_HEAVY, fontSize: 10, fontWeight: 700,
+            color: RED, letterSpacing: '0.18em', textTransform: 'uppercase',
+            display: 'block', marginBottom: 10,
+          }}>1966</span>
+          <h3 style={{
+            fontFamily: FONT_HEADING, fontSize: 'clamp(20px, 2.6vw, 32px)',
+            fontWeight: 700, color: '#fff', lineHeight: 1.15, margin: '0 0 12px 0',
+          }}>
             Donde todo comenzó
           </h3>
-          <p style={{ fontFamily: FONT_BODY, fontSize: 'clamp(12px, 1vw, 14px)', fontWeight: 300, color: 'rgba(255,255,255,0.5)', lineHeight: 1.65, margin: 0 }}>
+          <p style={{
+            fontFamily: FONT_BODY, fontSize: 'clamp(12px, 1.05vw, 15px)',
+            fontWeight: 300, color: 'rgba(255,255,255,0.5)', lineHeight: 1.7, margin: 0,
+          }}>
             Arrendamientos Santa Fe nace en Medellín con una visión de servicio, confianza y acompañamiento inmobiliario.
           </p>
         </div>
