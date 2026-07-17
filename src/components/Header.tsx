@@ -142,29 +142,23 @@ export default function Header({ currentPage, onNavigate, isHeroPage = true, dar
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  // Scroll-aware: translúcido Carbón 40% en el top, sólido al hacer scroll
-  // darkHeader=true mantiene el header oscuro incluso al hacer scroll (inversionistas)
-  const isDark = !scrolled || darkHeader;
-  const headerBgColor = !scrolled
-    ? 'rgba(26, 26, 26, 0.4)'
-    : darkHeader ? 'rgba(18, 18, 18, 1)' : 'rgba(255, 255, 255, 1)';
-  const headerTextColor  = isDark ? '#fff' : '#1a1a1a';
-  const navBgColor       = isDark ? 'rgba(255, 255, 255, 0.25)' : 'rgba(255, 255, 255, 1)';
-  const navBorderColor   = isDark ? 'rgba(255, 255, 255, 0.25)' : 'rgba(0, 0, 0, 0.1)';
-  const activePillBg     = isDark ? 'rgba(245,245,245,0.3)' : '#1a1a1a';
-  const activePillText   = '#ffffff';
-  const headerShadow     = scrolled ? 'shadow-md' : '';
+  // Header siempre translúcido — Carbón 40% en todas las páginas
+  const isDark = true;
+  const headerTextColor = '#fff';
+  const navBgColor      = 'rgba(255, 255, 255, 0.25)';
+  const navBorderColor  = 'rgba(255, 255, 255, 0.25)';
+  const activePillBg    = 'rgba(245,245,245,0.3)';
+  const activePillText  = '#ffffff';
 
   return (
-    <header className={`fixed top-0 left-0 right-0 transition-all duration-300 ${headerShadow}`}
+    <header className="fixed top-0 left-0 right-0"
       style={{
         zIndex: 50,
-        backgroundColor: headerBgColor,
-        backdropFilter: !scrolled ? 'blur(8px)' : 'none',
-        WebkitBackdropFilter: !scrolled ? 'blur(8px)' : 'none',
+        backgroundColor: 'rgba(26, 26, 26, 0.4)',
+        backdropFilter: 'blur(8px)',
+        WebkitBackdropFilter: 'blur(8px)',
         backfaceVisibility: 'hidden',
         height: '86px',
-        transition: 'background-color 0.3s ease, backdrop-filter 0.3s ease, box-shadow 0.3s ease',
       }}>
 
       {/* ── Desktop lg: flex-1 nav | Desktop xl+: nav absoluta centrada como buscador ── */}
