@@ -15,6 +15,42 @@ const FONT_HEADING = "'Avenir LT Std', 'Outfit', system-ui, sans-serif";
 const FONT_BODY    = "'Avenir LT Std', 'Outfit', system-ui, sans-serif";
 const RED          = '#f32735';
 
+/* Wrapper fixed que mide su propia altura y reserva espacio con un spacer */
+function SearchBarFixed({ children, collapsed }: { children: React.ReactNode; collapsed?: boolean }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [height, setHeight] = useState(0);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const ro = new ResizeObserver(entries => {
+      setHeight(entries[0].contentRect.height);
+    });
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
+  return (
+    <>
+      <div
+        ref={ref}
+        style={{
+          position: 'fixed',
+          top: '86px',
+          left: 0,
+          right: 0,
+          zIndex: 40,
+          backgroundColor: '#f7f6f4',
+        }}
+      >
+        {children}
+      </div>
+      {/* Spacer para que el contenido no quede oculto detrás del buscador fijo */}
+      <div style={{ height: height || 0 }} aria-hidden />
+    </>
+  );
+}
+
 function applyInkFill(e: React.MouseEvent<HTMLElement>) {
   const el = e.currentTarget;
   const rect = el.getBoundingClientRect();
@@ -463,8 +499,8 @@ export default function PropiedadesPage({ initialFilter = 'Todos', initialQueStr
         </div>
       </div>
 
-      {/* Search Bar */}
-      <div style={{ position: 'sticky', top: '86px', zIndex: 40, backgroundColor: '#f7f6f4' }}>
+      {/* Search Bar — fixed so Lenis smooth scroll doesn't break sticky */}
+      <SearchBarFixed collapsed={showMap}>
         <PropiedadesSearchBar
           initialTipo={initialFilter || 'Todos'}
           initialTextoBusqueda={initialQueString}
@@ -472,7 +508,7 @@ export default function PropiedadesPage({ initialFilter = 'Todos', initialQueStr
           onShowMap={() => setShowMap(true)}
           collapsed={showMap}
         />
-      </div>
+      </SearchBarFixed>
 
       {/* Map panel — solo desktop */}
       {showMap && (
