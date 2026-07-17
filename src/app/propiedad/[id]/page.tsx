@@ -61,6 +61,70 @@ function getSimilar(current: import('@/data/properties').Property, filter: Simil
   return base.slice(0, 12);
 }
 
+const DIR_TRANSFORMS: Record<string, string> = {
+  top:    'translateY(-100%)',
+  bottom: 'translateY(100%)',
+  left:   'translateX(-100%)',
+  right:  'translateX(100%)',
+};
+
+function getMouseEntryDir(e: React.MouseEvent<HTMLButtonElement>): string {
+  const r = e.currentTarget.getBoundingClientRect();
+  const x = e.clientX - r.left;
+  const y = e.clientY - r.top;
+  const dists: Record<string, number> = { top: y, bottom: r.height - y, left: x, right: r.width - x };
+  return Object.entries(dists).sort(([, a], [, b]) => a - b)[0][0];
+}
+
+function FillButton({ active, onClick, children }: { active: boolean; onClick: () => void; children: React.ReactNode }) {
+  const fillRef = useRef<HTMLSpanElement>(null);
+
+  const handleEnter = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const fill = fillRef.current;
+    if (!fill) return;
+    fill.style.transition = 'none';
+    fill.style.transform = DIR_TRANSFORMS[getMouseEntryDir(e)];
+    fill.getBoundingClientRect(); // force reflow
+    fill.style.transition = 'transform 0.28s ease';
+    fill.style.transform = 'translate(0,0)';
+  };
+
+  const handleLeave = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const fill = fillRef.current;
+    if (!fill) return;
+    fill.style.transition = 'transform 0.28s ease';
+    fill.style.transform = DIR_TRANSFORMS[getMouseEntryDir(e)];
+  };
+
+  return (
+    <button
+      onClick={onClick}
+      onMouseEnter={handleEnter}
+      onMouseLeave={handleLeave}
+      style={{
+        position: 'relative', overflow: 'hidden',
+        fontFamily: FONT, fontSize: 12, fontWeight: 700,
+        padding: '6px 10px',
+        border: `1px solid ${active ? '#f32735' : 'rgba(255,255,255,0.6)'}`,
+        background: active ? '#f32735' : '#1a1a1a',
+        color: '#fff',
+        borderRadius: 0, cursor: 'pointer', textAlign: 'left',
+      }}
+    >
+      <span
+        ref={fillRef}
+        style={{
+          position: 'absolute', inset: 0,
+          background: '#f32735',
+          transform: 'translateX(-100%)',
+          pointerEvents: 'none',
+        }}
+      />
+      <span style={{ position: 'relative', zIndex: 1 }}>{children}</span>
+    </button>
+  );
+}
+
 function SimilarSection({ current }: { current: import('@/data/properties').Property }) {
   const [filter, setFilter] = useState<SimilarFilter>('precio');
   const similar = useMemo(() => getSimilar(current, filter), [current, filter]);
@@ -85,25 +149,13 @@ function SimilarSection({ current }: { current: import('@/data/properties').Prop
         overflow: 'hidden',
       }}>
         <h2 style={{ fontFamily: FONT, fontSize: 'clamp(14px, 1.2vw, 18px)', fontWeight: 900, color: '#fff', margin: 0, lineHeight: 1.25 }}>
-          Propiedades <span style={{ fontWeight: 300 }}>similares</span>
+          Propiedades similares
         </h2>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
           {FILTERS.map(f => (
-            <button
-              key={f.key}
-              onClick={() => setFilter(f.key)}
-              style={{
-                fontFamily: FONT, fontSize: 12, fontWeight: filter === f.key ? 700 : 400,
-                padding: '6px 10px', border: '1px solid',
-                borderColor: filter === f.key ? '#f32735' : 'rgba(255,255,255,0.2)',
-                backgroundColor: filter === f.key ? '#f32735' : 'transparent',
-                color: filter === f.key ? '#fff' : 'rgba(255,255,255,0.65)',
-                borderRadius: 0, cursor: 'pointer', transition: 'all 0.15s',
-                textAlign: 'left',
-              }}
-            >
+            <FillButton key={f.key} active={filter === f.key} onClick={() => setFilter(f.key)}>
               {f.label}
-            </button>
+            </FillButton>
           ))}
         </div>
       </div>
