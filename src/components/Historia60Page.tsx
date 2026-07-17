@@ -179,7 +179,7 @@ export default function Historia60Page({ onNavigate }: Props) {
           style={{ position: 'absolute', top: 0, left: 0, width: '100%', display: 'block', zIndex: 2, pointerEvents: 'none' }}
         />
 
-        {/* Capa 2 — "1966" con panorama B&W dentro de las letras */}
+        {/* "1966" — texto sólido semi-transparente sobre la escena */}
         <div style={{
           position: 'absolute',
           top: 0, left: 0, right: 0,
@@ -198,13 +198,7 @@ export default function Historia60Page({ onNavigate }: Props) {
             whiteSpace: 'nowrap',
             display: 'inline-block',
             flexShrink: 0,
-            backgroundImage: "url('/images/Linea%20de%20tiempo/1966_capa_2_sincolor.png')",
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            backgroundRepeat: 'no-repeat',
-            WebkitBackgroundClip: 'text',
-            backgroundClip: 'text',
-            color: 'transparent',
+            color: 'rgba(200, 200, 200, 0.75)',
             userSelect: 'none',
           }}>1966</span>
         </div>
