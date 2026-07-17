@@ -141,7 +141,7 @@ export default function Home() {
       <Header currentPage={currentPage} onNavigate={handleNavigate} isHeroPage={true} />
 
       <main className="flex-1 relative" style={{ paddingTop: currentPage === 'home' ? 0 : '86px' }}>
-        <div key={currentPage} className="page-fade-in">
+        <div key={currentPage} className={currentPage === 'propiedades' ? '' : 'page-fade-in'}>
           {currentPage === 'home' && <HomePage onNavigate={handleNavigate} />}
           {currentPage === 'propiedades' && <PropiedadesPage initialFilter={propiedadesFilter} />}
           {currentPage === 'consignacion' && <ConsignacionPage onNavigate={handleNavigate} />}

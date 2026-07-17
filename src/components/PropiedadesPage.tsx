@@ -1,7 +1,7 @@
 ﻿'use client';
 
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
-import { flushSync, createPortal } from 'react-dom';
+import { flushSync } from 'react-dom';
 import gsap from 'gsap';
 import PropertyCard from './PropertyCard';
 import InfiniteCarousel from './InfiniteCarousel';
@@ -15,14 +15,11 @@ const FONT_HEADING = "'Avenir LT Std', 'Outfit', system-ui, sans-serif";
 const FONT_BODY    = "'Avenir LT Std', 'Outfit', system-ui, sans-serif";
 const RED          = '#f32735';
 
-/* Portal al <body> — garantiza que position:fixed sea relativo al viewport
-   sin importar qué transforms/opacity tengan los ancestros en el árbol React. */
+/* position:fixed funciona correctamente porque page.tsx no aplica
+   la animación page-fade-in a la página de propiedades. */
 function SearchBarFixed({ children, collapsed }: { children: React.ReactNode; collapsed?: boolean }) {
   const ref = useRef<HTMLDivElement>(null);
   const [height, setHeight] = useState(0);
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => { setMounted(true); }, []);
 
   useEffect(() => {
     const el = ref.current;
@@ -30,29 +27,24 @@ function SearchBarFixed({ children, collapsed }: { children: React.ReactNode; co
     const ro = new ResizeObserver(e => setHeight(e[0].contentRect.height));
     ro.observe(el);
     return () => ro.disconnect();
-  }, [mounted]);
+  }, []);
 
   return (
     <>
-      {/* Spacer en el flujo normal para que las cards no queden tapadas */}
+      <div
+        ref={ref}
+        style={{
+          position: 'fixed',
+          top: '86px',
+          left: 0,
+          right: 0,
+          zIndex: 40,
+          backgroundColor: '#f7f6f4',
+        }}
+      >
+        {children}
+      </div>
       <div style={{ height }} aria-hidden />
-      {/* Buscador renderizado en <body> vía Portal */}
-      {mounted && createPortal(
-        <div
-          ref={ref}
-          style={{
-            position: 'fixed',
-            top: '86px',
-            left: 0,
-            right: 0,
-            zIndex: 40,
-            backgroundColor: '#f7f6f4',
-          }}
-        >
-          {children}
-        </div>,
-        document.body
-      )}
     </>
   );
 }
