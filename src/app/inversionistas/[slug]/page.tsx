@@ -172,8 +172,9 @@ export default function InversionZonePage() {
                 {zone.sector}
               </div>
 
-              <h1 style={{ fontSize: 'clamp(36px, 5vw, 64px)', fontWeight: 900, color: '#fff', lineHeight: 1.05, margin: '0 0 20px', letterSpacing: '-0.02em' }}>
-                {zone.h1Title}
+              <h1 style={{ fontSize: 'clamp(36px, 5vw, 64px)', fontWeight: 300, color: '#fff', lineHeight: 1.05, margin: '0 0 20px', letterSpacing: '-0.02em' }}>
+                Invertir en{' '}
+                <span style={{ fontWeight: 700 }}>{zone.h1Title.replace('Invertir en ', '')}</span>
               </h1>
               <p style={{ fontSize: 16, fontWeight: 300, color: 'rgba(255,255,255,0.85)', lineHeight: 1.5, margin: 0 }}>
                 {zone.description}

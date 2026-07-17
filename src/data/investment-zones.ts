@@ -47,7 +47,7 @@ export const investmentZones: InvestmentZone[] = [
     seoTitle: 'Invertir en Norte de Medellín | Rentabilidad hasta 8% Inmobiliaria',
     seoDescription:
       'Invierte en el norte de Medellín con rentabilidades de 5-8% anual. Bello, Copacabana, Aranjuez y Castilla: precios accesibles y alta demanda de arrendamiento en el área metropolitana.',
-    h1Title: 'Invertir en Norte de Medellín',
+    h1Title: 'Invertir en Norte de Antioquia',
     keywords: [
       'invertir norte medellín',
       'rentabilidad inmobiliaria norte medellín',
@@ -84,7 +84,7 @@ export const investmentZones: InvestmentZone[] = [
     seoTitle: 'Invertir en Sur de Medellín | Envigado, Sabaneta, Itagüí',
     seoDescription:
       'Invierte en el sur de Medellín con rentabilidades de 4-7%. Envigado, Sabaneta e Itagüí: la zona de mayor crecimiento en valorización con precios competitivos en el área metropolitana.',
-    h1Title: 'Invertir en Sur de Medellín',
+    h1Title: 'Invertir en Sur de Antioquia',
     keywords: [
       'invertir sur medellín',
       'rentabilidad inmobiliaria envigado sabaneta',
@@ -122,7 +122,7 @@ export const investmentZones: InvestmentZone[] = [
     seoTitle: 'Invertir en Oriente de Medellín | El Poblado, Rionegro, Llanogrande',
     seoDescription:
       'Invierte en el oriente de Medellín con rentabilidades de 4-6%. El Poblado, Rionegro y Llanogrande: el mercado inmobiliario premium de Antioquia con alta demanda nacional e internacional.',
-    h1Title: 'Invertir en Oriente de Medellín',
+    h1Title: 'Invertir en Oriente de Antioquia',
     keywords: [
       'invertir oriente medellín',
       'rentabilidad inmobiliaria el poblado',
@@ -160,7 +160,7 @@ export const investmentZones: InvestmentZone[] = [
     seoTitle: 'Invertir en Occidente de Medellín | Laureles, Belén, Florida Nueva',
     seoDescription:
       'Invierte en el occidente de Medellín con rentabilidades de 5-7%. Laureles, Belén y Florida Nueva: la mejor relación precio-rentabilidad con demanda estable de arrendamiento en Medellín.',
-    h1Title: 'Invertir en Occidente de Medellín',
+    h1Title: 'Invertir en Occidente de Antioquia',
     keywords: [
       'invertir occidente medellín',
       'rentabilidad inmobiliaria laureles belén',
