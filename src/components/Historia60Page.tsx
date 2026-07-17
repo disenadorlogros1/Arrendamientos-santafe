@@ -170,7 +170,7 @@ export default function Historia60Page({ onNavigate }: Props) {
       </div>
 
       {/* ── Panel 1966 — composición por capas ─────────────────── */}
-      <div style={{ position: 'relative', width: '100%', height: 'clamp(520px, 92vh, 900px)', overflow: 'hidden', background: '#fff' }}>
+      <div style={{ position: 'relative', width: '100%', aspectRatio: '1920/1080', overflow: 'hidden', background: '#ffffff' }}>
 
         {/* Capa 3 — escena de calle: fondo del panel */}
         <img
@@ -191,14 +191,14 @@ export default function Historia60Page({ onNavigate }: Props) {
         }}>
           <span style={{
             fontFamily: FONT_HEAVY,
-            fontSize: 'clamp(200px, 46vw, 720px)',
+            fontSize: 'clamp(200px, 47vw, 720px)',
             fontWeight: 900,
-            letterSpacing: '-0.05em',
+            letterSpacing: '-0.050em',
             lineHeight: 1,
             whiteSpace: 'nowrap',
             display: 'inline-block',
             flexShrink: 0,
-            color: 'rgba(200, 200, 200, 0.75)',
+            color: 'rgba(202, 202, 202, 0.75)',
             userSelect: 'none',
           }}>1966</span>
         </div>
