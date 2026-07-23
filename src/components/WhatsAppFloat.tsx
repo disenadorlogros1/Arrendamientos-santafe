@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { CreditCard } from 'lucide-react';
 
 const WHATSAPP_URL =
   'https://wa.me/573006557529?text=Hola%2C%20quisiera%20hablar%20con%20un%20asesor%20de%20Arrendamientos%20Santa%20Fe.';
@@ -29,7 +28,7 @@ export default function WhatsAppFloat() {
         aria-label="Pagar en línea por PSE"
         title="Pagar en línea"
       >
-        <CreditCard className="h-6 w-6 text-white" />
+        <img src="/icons/icon-credit-card-white.gif" className="h-6 w-6" alt="" aria-hidden="true" />
         <span className="pointer-events-none absolute right-full mr-3 px-3 py-1.5 bg-brand-dark text-white text-xs font-semibold rounded-md opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap shadow-lg">
           Pagar en línea
         </span>

@@ -1,16 +1,25 @@
 'use client';
 
-import {
-  Search,
-  Tag,
-  Key,
-  CreditCard,
-  FileText,
-  Wrench,
-  Calculator,
-  MessageCircle,
-} from 'lucide-react';
+import React from 'react';
+import { Tag, Key, FileText, Wrench, Calculator } from 'lucide-react';
 import type { PageType } from '@/components/Header';
+
+// GIF icon components — double image for hover red→white transition
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const SearchGif = (_: any) => (
+  <><img src="/icons/icon-search-red.gif"       className="w-5 h-5 block group-hover:hidden" alt="" aria-hidden />
+    <img src="/icons/icon-search-white.gif"      className="w-5 h-5 hidden group-hover:block" alt="" aria-hidden /></>
+);
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const CreditCardGif = (_: any) => (
+  <><img src="/icons/icon-credit-card-red.gif"  className="w-5 h-5 block group-hover:hidden" alt="" aria-hidden />
+    <img src="/icons/icon-credit-card-white.gif" className="w-5 h-5 hidden group-hover:block" alt="" aria-hidden /></>
+);
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const WhatsAppGif = (_: any) => (
+  <><img src="/icons/icon-whatsapp-red.gif"     className="w-5 h-5 block group-hover:hidden" alt="" aria-hidden />
+    <img src="/icons/icon-whatsapp-white.gif"    className="w-5 h-5 hidden group-hover:block" alt="" aria-hidden /></>
+);
 
 interface QuickAccessGridProps {
   onNavigate: (page: PageType) => void;
@@ -25,7 +34,8 @@ const ASESOR_URL =
   'https://wa.me/573006557529?text=Hola%2C%20quisiera%20hablar%20con%20un%20asesor%20de%20Arrendamientos%20Santa%20Fe.';
 
 interface AccessItem {
-  icon: typeof Search;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  icon: React.ComponentType<any>;
   label: string;
   description: string;
   type: 'nav' | 'link';
@@ -36,7 +46,7 @@ interface AccessItem {
 export default function QuickAccessGrid({ onNavigate }: QuickAccessGridProps) {
   const items: AccessItem[] = [
     {
-      icon: Search,
+      icon: SearchGif,
       label: 'Buscar en arriendo',
       description: 'Inmuebles disponibles para arrendar',
       type: 'nav',
@@ -57,7 +67,7 @@ export default function QuickAccessGrid({ onNavigate }: QuickAccessGridProps) {
       page: 'consignacion',
     },
     {
-      icon: CreditCard,
+      icon: CreditCardGif,
       label: 'Pagar en línea',
       description: 'Pago seguro a través de PSE',
       type: 'link',
@@ -85,7 +95,7 @@ export default function QuickAccessGrid({ onNavigate }: QuickAccessGridProps) {
       page: 'hipotecas',
     },
     {
-      icon: MessageCircle,
+      icon: WhatsAppGif,
       label: 'Hablar con un asesor',
       description: 'Te orientamos por WhatsApp',
       type: 'link',

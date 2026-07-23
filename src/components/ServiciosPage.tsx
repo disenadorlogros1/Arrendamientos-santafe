@@ -2,21 +2,19 @@
 
 import { useRef, useEffect } from 'react';
 import gsap from 'gsap';
-import {
-  Home,
-  TrendingUp,
-  Key,
-  ClipboardList,
-  BadgeCheck,
-  Calculator,
-  MessageCircle,
-} from 'lucide-react';
+import { TrendingUp, Key, ClipboardList, BadgeCheck, Calculator } from 'lucide-react';
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const HomeGif = (_: any) => (
+  <><img src="/icons/icon-home-red.gif"   className="h-7 w-7 block group-hover:hidden" alt="" aria-hidden />
+    <img src="/icons/icon-home-white.gif"  className="h-7 w-7 hidden group-hover:block" alt="" aria-hidden /></>
+);
 import { Button } from '@/components/ui/button';
 import ScrollReveal from '@/components/ScrollReveal';
 
 const services = [
   {
-    icon: Home,
+    icon: HomeGif,
     title: 'Arrendamientos',
     description:
       'Encuentra tu próximo hogar o local. Te acompañamos desde la búsqueda hasta la firma.',
@@ -167,7 +165,7 @@ export default function ServiciosPage() {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <MessageCircle className="h-4 w-4 mr-2" />
+                <img src="/icons/icon-whatsapp-red.gif" className="h-4 w-4 mr-2" alt="" aria-hidden="true" />
                 Escribir por WhatsApp
               </a>
             </Button>

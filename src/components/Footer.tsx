@@ -1,6 +1,6 @@
 'use client';
 
-import { MessageCircle, Phone, Mail, MapPin, Clock, CreditCard, FileText, Wrench } from 'lucide-react';
+import { Phone, Mail, Clock, FileText, Wrench } from 'lucide-react';
 import type { PageType } from '@/components/Header';
 
 interface FooterProps {
@@ -71,21 +71,21 @@ export default function Footer({ onNavigate }: FooterProps = {}) {
             </h4>
             <ul className="space-y-3 text-sm text-white/60">
               <li className="flex items-start gap-2">
-                <MapPin className="h-4 w-4 mt-0.5 text-brand-red shrink-0" />
+                <img src="/icons/icon-location-red.gif" className="h-4 w-4 mt-0.5 shrink-0" alt="" aria-hidden="true" />
                 <a href={MAPS_MEDELLIN} target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
                   <strong className="text-white/80 block">Medellín</strong>
                   Calle 44 San Juan #71-34
                 </a>
               </li>
               <li className="flex items-start gap-2">
-                <MapPin className="h-4 w-4 mt-0.5 text-brand-red shrink-0" />
+                <img src="/icons/icon-location-red.gif" className="h-4 w-4 mt-0.5 shrink-0" alt="" aria-hidden="true" />
                 <a href={MAPS_ENVIGADO} target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
                   <strong className="text-white/80 block">Envigado</strong>
                   Centro Comercial Metrosur
                 </a>
               </li>
               <li className="flex items-start gap-2">
-                <MapPin className="h-4 w-4 mt-0.5 text-brand-red shrink-0" />
+                <img src="/icons/icon-location-red.gif" className="h-4 w-4 mt-0.5 shrink-0" alt="" aria-hidden="true" />
                 <a href={MAPS_RIONEGRO} target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
                   <strong className="text-white/80 block">Rionegro</strong>
                   Parque Comercial Río del Este
@@ -107,7 +107,7 @@ export default function Footer({ onNavigate }: FooterProps = {}) {
                   rel="noopener noreferrer"
                   className="flex items-center gap-2 text-sm text-white/60 hover:text-white transition-colors"
                 >
-                  <CreditCard className="h-4 w-4 text-brand-red shrink-0" />
+                  <img src="/icons/icon-credit-card-red.gif" className="h-4 w-4 shrink-0" alt="" aria-hidden="true" />
                   Pagar en línea (PSE)
                 </a>
               </li>
@@ -140,7 +140,7 @@ export default function Footer({ onNavigate }: FooterProps = {}) {
                   rel="noopener noreferrer"
                   className="flex items-center gap-2 text-sm text-white/60 hover:text-white transition-colors"
                 >
-                  <MessageCircle className="h-4 w-4 text-brand-red shrink-0" />
+                  <img src="/icons/icon-whatsapp-red.gif" className="h-4 w-4 shrink-0" alt="" aria-hidden="true" />
                   Hablar con un asesor
                 </a>
               </li>
@@ -169,7 +169,7 @@ export default function Footer({ onNavigate }: FooterProps = {}) {
                   rel="noopener noreferrer"
                   className="flex items-center gap-2 text-sm text-white/60 hover:text-white transition-colors"
                 >
-                  <MessageCircle className="h-4 w-4 text-brand-red shrink-0" />
+                  <img src="/icons/icon-whatsapp-red.gif" className="h-4 w-4 shrink-0" alt="" aria-hidden="true" />
                   (+57) 300 655 7529
                 </a>
               </li>
