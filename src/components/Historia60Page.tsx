@@ -192,13 +192,12 @@ export default function Historia60Page({ onNavigate }: Props) {
           onMouseLeave={() => resetParallax(activeRef.current)}
           style={{
             position: 'sticky', top: 0, width: '100%', height: '100vh',
-            display: 'flex', flexDirection: 'column', overflow: 'hidden',
-            background: DARK,
+            overflow: 'hidden', background: DARK,
           }}
         >
 
-          {/* ── Panels ─────────────────────────────────────────── */}
-          <div style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
+          {/* ── Panels — full 100vh ─────────────────────────────── */}
+          <div style={{ display: 'flex', width: '100%', height: '100%' }}>
             {EVENTS.map((evt, pi) => (
               <div
                 key={evt.year}
@@ -280,11 +279,11 @@ export default function Historia60Page({ onNavigate }: Props) {
             ))}
           </div>
 
-          {/* ── Timeline bar ─────────────────────────────────────── */}
+          {/* ── Timeline bar — overlays the bottom of the panels ─── */}
           <div style={{
-            height: 80, flexShrink: 0,
-            background: '#fff',
-            position: 'relative',
+            position: 'absolute', bottom: 0, left: 0, right: 0,
+            height: 80, zIndex: 40,
+            background: 'rgba(255,255,255,0.96)',
             display: 'flex',
           }}>
             {/* Black connecting line */}
