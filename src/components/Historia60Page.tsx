@@ -12,6 +12,7 @@ interface Props { onNavigate: (page: PageType) => void; }
 const FONT  = "'Avenir LT Std', 'Outfit', system-ui, sans-serif";
 const RED   = '#f32735';
 const DARK  = '#1a1a1a';
+const FOG   = '#aab0ba'; // inactive year color
 const N     = 6;    // total panels
 const CW    = 0;    // collapsed width — 0 = panels completely hidden when inactive
 const PANEL_H = 619; // panel height in px (matches previous 1100×16/9 ratio)
@@ -108,7 +109,7 @@ export default function Historia60Page({ onNavigate }: Props) {
       // Initial text / dot / year
       textRefs.current.forEach((el, i) => { if (el) gsap.set(el, { opacity: i === 0 ? 1 : 0, y: i === 0 ? 0 : 12 }); });
       dotRefs.current.forEach((d, i)   => { if (d)  gsap.set(d,  { scale: i === 0 ? 1.8 : 1 }); });
-      yearRefs.current.forEach((s, i)  => { if (s)  gsap.set(s,  { opacity: i === 0 ? 1 : 0.35 }); });
+      yearRefs.current.forEach((s, i)  => { if (s)  gsap.set(s,  { color: i === 0 ? RED : FOG, fontSize: i === 0 ? 13 : 10, fontWeight: i === 0 ? 700 : 300 }); });
 
       if (reduced) return;
 
@@ -142,8 +143,8 @@ export default function Historia60Page({ onNavigate }: Props) {
           .fromTo(textRefs.current[ic + 1],  { opacity: 0, y: 12 }, { opacity: 1, y: 0,   ease: 'none' }, 0)
           .fromTo(dotRefs.current[ic],       { scale: 1.8 }, { scale: 1,   ease: 'none' }, 0)
           .fromTo(dotRefs.current[ic + 1],   { scale: 1   }, { scale: 1.8, ease: 'none' }, 0)
-          .fromTo(yearRefs.current[ic],      { opacity: 1    }, { opacity: 0.35, ease: 'none' }, 0)
-          .fromTo(yearRefs.current[ic + 1],  { opacity: 0.35 }, { opacity: 1,    ease: 'none' }, 0);
+          .fromTo(yearRefs.current[ic],     { color: RED, fontSize: 13, fontWeight: 700 }, { color: FOG, fontSize: 10, fontWeight: 300, ease: 'none' }, 0)
+          .fromTo(yearRefs.current[ic + 1], { color: FOG, fontSize: 10, fontWeight: 300 }, { color: RED, fontSize: 13, fontWeight: 700, ease: 'none' }, 0);
       }
     }, wrapperRef);
 
@@ -293,11 +294,13 @@ export default function Historia60Page({ onNavigate }: Props) {
             display: 'flex',
             boxSizing: 'border-box',
           }}>
-            {/* Connecting line */}
+            {/* Connecting line — from first dot to last dot */}
             <div style={{
               position: 'absolute',
-              top: '50%', left: 0, right: 0,
-              height: 2, background: DARK,
+              top: '50%',
+              left: `calc(100% / ${N * 2})`,
+              right: `calc(100% / ${N * 2})`,
+              height: 1, background: FOG,
               transform: 'translateY(-50%)',
               zIndex: 1,
             }} />
@@ -316,10 +319,10 @@ export default function Historia60Page({ onNavigate }: Props) {
                 <span
                   ref={el => { yearRefs.current[pi] = el; }}
                   style={{
-                    fontFamily: FONT, fontWeight: 900,
+                    fontFamily: FONT, fontWeight: 300,
                     fontSize: 10, letterSpacing: '0.1em',
-                    color: DARK, whiteSpace: 'nowrap',
-                    userSelect: 'none',
+                    color: FOG, whiteSpace: 'nowrap',
+                    userSelect: 'none', transition: 'none',
                   }}
                 >
                   {evt.year}
