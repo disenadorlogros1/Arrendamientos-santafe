@@ -198,11 +198,10 @@ export default function Historia60Page({ onNavigate }: Props) {
       <div ref={wrapperRef} style={{ height: `${N * 100}vh`, background: '#fff' }}>
         <div
           style={{
-            position: 'sticky', top: 0, width: '100%', height: '100vh',
+            position: 'sticky', top: 86, width: '100%', height: 'calc(100vh - 86px)',
             background: '#fff',
             display: 'flex', flexDirection: 'column',
-            alignItems: 'center', justifyContent: 'flex-start',
-            paddingTop: 0,
+            alignItems: 'center', justifyContent: 'center',
             gap: 16,
           }}
         >
@@ -214,7 +213,7 @@ export default function Historia60Page({ onNavigate }: Props) {
             ref={panelContainerRef}
             style={{
               width: '100%',
-              height: PANEL_H,
+              height: `min(${PANEL_H}px, calc(100vh - 170px))`,
               overflow: 'hidden',
               display: 'flex',
               position: 'relative',
