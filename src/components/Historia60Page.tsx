@@ -58,7 +58,7 @@ export default function Historia60Page({ onNavigate }: Props) {
       evt.layers.forEach((layer, li) => {
         const img = imgRefs.current[pi]?.[li];
         if (!img) return;
-        gsap.set(img, { scale: 1.08, transformOrigin: 'center center' });
+        // No scale — objectFit:contain shows the full image; dark panel bg absorbs edge moves
         pxSets.current[pi][li] = gsap.quickTo(img, 'x', { duration: layer.dur, ease: 'power3.out' });
         pySets.current[pi][li] = gsap.quickTo(img, 'y', { duration: layer.dur, ease: 'power3.out' });
       });
@@ -224,7 +224,7 @@ export default function Historia60Page({ onNavigate }: Props) {
                     style={{
                       position: 'absolute', top: 0, left: 0,
                       width: '100%', height: '100%',
-                      objectFit: 'cover', display: 'block',
+                      objectFit: 'contain', display: 'block',
                       zIndex: layer.z, pointerEvents: 'none',
                     }}
                   />
