@@ -44,8 +44,9 @@ const EVENTS = [
 ];
 
 export default function Historia60Page({ onNavigate }: Props) {
-  const wrapperRef       = useRef<HTMLDivElement>(null);
-  const panelContainerRef = useRef<HTMLDivElement>(null); // the 16:9 constrained box
+  const wrapperRef        = useRef<HTMLDivElement>(null);
+  const heroTitleRef      = useRef<HTMLHeadingElement>(null);
+  const panelContainerRef = useRef<HTMLDivElement>(null);
   const panelRefs        = useRef<(HTMLDivElement | null)[]>(Array(N).fill(null));
   const textRefs         = useRef<(HTMLDivElement | null)[]>(Array(N).fill(null));
   const dotRefs          = useRef<(HTMLDivElement | null)[]>(Array(N).fill(null));
@@ -111,6 +112,14 @@ export default function Historia60Page({ onNavigate }: Props) {
 
       if (reduced) return;
 
+      // Offset so the first transition starts exactly when the h1 title
+      // disappears behind the 86px header as the user scrolls.
+      const HEADER_H = 86;
+      const scrollY  = window.scrollY;
+      const titleBottom  = (heroTitleRef.current?.getBoundingClientRect().bottom  ?? 0) + scrollY;
+      const wrapperTopPx = (wrapperRef.current?.getBoundingClientRect().top       ?? 0) + scrollY;
+      const startOffset  = Math.round(wrapperTopPx - titleBottom + HEADER_H);
+
       for (let i = 0; i < N - 1; i++) {
         const ic      = i;
         const EW_cur  = CW_total - ic * CW;
@@ -119,8 +128,8 @@ export default function Historia60Page({ onNavigate }: Props) {
         const tl = gsap.timeline({
           scrollTrigger: {
             trigger: wrapperRef.current,
-            start: `top+=${ic * window.innerHeight} top`,
-            end:   `top+=${(ic + 1) * window.innerHeight} top`,
+            start: `top+=${ic * window.innerHeight} top+=${startOffset}`,
+            end:   `top+=${(ic + 1) * window.innerHeight} top+=${startOffset}`,
             scrub: 1.2,
             onEnter:     () => { activeRef.current = ic + 1; resetParallax(ic); },
             onLeaveBack: () => { activeRef.current = ic;     resetParallax(ic + 1); },
@@ -171,7 +180,7 @@ export default function Historia60Page({ onNavigate }: Props) {
           >
             ← Blog
           </button>
-          <h1 style={{
+          <h1 ref={heroTitleRef} style={{
             fontFamily: FONT, fontWeight: 700,
             fontSize: 'clamp(28px,4vw,52px)',
             color: '#fff', lineHeight: 1.15, margin: '0 0 16px',
