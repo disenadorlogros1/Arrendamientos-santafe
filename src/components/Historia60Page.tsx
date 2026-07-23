@@ -17,7 +17,7 @@ const FONT_HEADING = "'Avenir LT Std', 'Outfit', system-ui, sans-serif";
 const FONT_HEAVY   = "'Avenir LT Std', 'Outfit', system-ui, sans-serif";
 const RED  = '#f32735';
 const DARK = '#1a1a1a';
-const BG   = '#f7f6f4';
+const BG   = '#ffffff';
 
 const events = [
   {
@@ -295,36 +295,20 @@ export default function Historia60Page({ onNavigate }: Props) {
           style={{ position: 'absolute', top: 0, left: 0, width: '100%', display: 'block', zIndex: 10, pointerEvents: 'none' }}
         />
 
-        {/* Barra roja lateral */}
-        <div style={{ position: 'absolute', left: 0, top: '20%', bottom: '20%', width: 3, background: RED, zIndex: 20 }} />
-
-        {/* Contador */}
-        <div style={{
-          position: 'absolute', top: 28, right: 32, zIndex: 20,
-          fontFamily: FONT_BODY, fontSize: 11, letterSpacing: '0.1em', color: 'rgba(0,0,0,0.2)',
-        }}>
-          <strong style={{ color: 'rgba(0,0,0,0.45)', fontWeight: 700 }}>01</strong> / 06
-        </div>
-
         {/* Texto del evento */}
         <div style={{
           position: 'absolute', bottom: 'clamp(28px,5vh,56px)', left: 'clamp(28px,4.5vw,64px)',
           zIndex: 20, maxWidth: 'min(380px, 44%)',
         }}>
-          <span style={{
-            fontFamily: FONT_HEAVY, fontSize: 10, fontWeight: 700,
-            color: RED, letterSpacing: '0.18em', textTransform: 'uppercase',
-            display: 'block', marginBottom: 10,
-          }}>1966</span>
           <h3 style={{
             fontFamily: FONT_HEADING, fontSize: 'clamp(20px, 2.6vw, 32px)',
-            fontWeight: 700, color: DARK, lineHeight: 1.15, margin: '0 0 12px 0',
+            fontWeight: 700, color: '#ffffff', lineHeight: 1.15, margin: '0 0 12px 0',
           }}>
             Donde todo comenzó
           </h3>
           <p style={{
             fontFamily: FONT_BODY, fontSize: 'clamp(12px, 1.05vw, 15px)',
-            fontWeight: 300, color: '#555', lineHeight: 1.7, margin: 0,
+            fontWeight: 300, color: 'rgba(255,255,255,0.8)', lineHeight: 1.7, margin: 0,
           }}>
             Arrendamientos Santa Fe nace en Medellín con una visión de servicio, confianza y acompañamiento inmobiliario.
           </p>
@@ -372,36 +356,20 @@ export default function Historia60Page({ onNavigate }: Props) {
           style={{ position: 'absolute', top: 0, left: 0, width: '100%', display: 'block', zIndex: 8, pointerEvents: 'none' }}
         />
 
-        {/* Barra roja lateral */}
-        <div style={{ position: 'absolute', left: 0, top: '20%', bottom: '20%', width: 3, background: RED, zIndex: 20 }} />
-
-        {/* Contador */}
-        <div style={{
-          position: 'absolute', top: 28, right: 32, zIndex: 20,
-          fontFamily: FONT_BODY, fontSize: 11, letterSpacing: '0.1em', color: 'rgba(0,0,0,0.2)',
-        }}>
-          <strong style={{ color: 'rgba(0,0,0,0.45)', fontWeight: 700 }}>02</strong> / 06
-        </div>
-
         {/* Texto del evento */}
         <div style={{
           position: 'absolute', bottom: 'clamp(28px,5vh,56px)', left: 'clamp(28px,4.5vw,64px)',
           zIndex: 20, maxWidth: 'min(380px, 44%)',
         }}>
-          <span style={{
-            fontFamily: FONT_HEAVY, fontSize: 10, fontWeight: 700,
-            color: RED, letterSpacing: '0.18em', textTransform: 'uppercase',
-            display: 'block', marginBottom: 10,
-          }}>1974</span>
           <h3 style={{
             fontFamily: FONT_HEADING, fontSize: 'clamp(20px, 2.6vw, 32px)',
-            fontWeight: 700, color: DARK, lineHeight: 1.15, margin: '0 0 12px 0',
+            fontWeight: 700, color: '#ffffff', lineHeight: 1.15, margin: '0 0 12px 0',
           }}>
             {events[1].title}
           </h3>
           <p style={{
             fontFamily: FONT_BODY, fontSize: 'clamp(12px, 1.05vw, 15px)',
-            fontWeight: 300, color: '#555', lineHeight: 1.7, margin: 0,
+            fontWeight: 300, color: 'rgba(255,255,255,0.8)', lineHeight: 1.7, margin: 0,
           }}>
             {events[1].body}
           </p>
