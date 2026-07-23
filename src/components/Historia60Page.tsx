@@ -9,47 +9,49 @@ gsap.registerPlugin(ScrollTrigger);
 
 interface Props { onNavigate: (page: PageType) => void; }
 
-const FONT = "'Avenir LT Std', 'Outfit', system-ui, sans-serif";
-const RED  = '#f32735';
-const DARK = '#1a1a1a';
-const N    = 6;   // total panels
-const CW   = 80;  // collapsed panel width (px)
+const FONT  = "'Avenir LT Std', 'Outfit', system-ui, sans-serif";
+const RED   = '#f32735';
+const DARK  = '#1a1a1a';
+const N     = 6;   // total panels
+const CW    = 64;  // collapsed panel width (px)
+const MAX_W = 1100; // max container width
 
 type LayerCfg = { src: string; z: number; px: number; py: number; dur: number };
 
 const L66: LayerCfg[] = [
-  { src: '/images/Linea%20de%20tiempo/1966_capa_1b.png', z: 2, px: 8,  py: 5,  dur: 0.85 },
-  { src: '/images/Linea%20de%20tiempo/1966_capa_1a.png', z: 4, px: 16, py: 10, dur: 0.62 },
-  { src: '/images/Linea%20de%20tiempo/1966_capa_3.png',  z: 6, px: 24, py: 15, dur: 0.42 },
-  { src: '/images/Linea%20de%20tiempo/1966_capa_4.png',  z: 8, px: 34, py: 21, dur: 0.26 },
+  { src: '/images/Linea%20de%20tiempo/1966_capa_1b.png', z: 2, px: 6,  py: 4,  dur: 0.85 },
+  { src: '/images/Linea%20de%20tiempo/1966_capa_1a.png', z: 4, px: 12, py: 8,  dur: 0.62 },
+  { src: '/images/Linea%20de%20tiempo/1966_capa_3.png',  z: 6, px: 18, py: 11, dur: 0.42 },
+  { src: '/images/Linea%20de%20tiempo/1966_capa_4.png',  z: 8, px: 24, py: 15, dur: 0.26 },
 ];
 
 const L74: LayerCfg[] = [
-  { src: '/images/Linea%20de%20tiempo/1974_capa_1b.png', z: 2, px: 8,  py: 5,  dur: 0.85 },
-  { src: '/images/Linea%20de%20tiempo/1974_capa_1a.png', z: 4, px: 15, py: 10, dur: 0.62 },
-  { src: '/images/Linea%20de%20tiempo/1974-capa-3.png',  z: 6, px: 22, py: 14, dur: 0.42 },
-  { src: '/images/Linea%20de%20tiempo/1974-capa-4.png',  z: 8, px: 30, py: 19, dur: 0.26 },
+  { src: '/images/Linea%20de%20tiempo/1974_capa_1b.png', z: 2, px: 6,  py: 4,  dur: 0.85 },
+  { src: '/images/Linea%20de%20tiempo/1974_capa_1a.png', z: 4, px: 12, py: 8,  dur: 0.62 },
+  { src: '/images/Linea%20de%20tiempo/1974-capa-3.png',  z: 6, px: 16, py: 10, dur: 0.42 },
+  { src: '/images/Linea%20de%20tiempo/1974-capa-4.png',  z: 8, px: 22, py: 14, dur: 0.26 },
 ];
 
 const EVENTS = [
-  { year: '1966', title: 'Donde todo comenzó',                    body: 'Arrendamientos Santa Fe nace en Medellín con una visión de servicio, confianza y acompañamiento inmobiliario.',                                                                              layers: L66 },
-  { year: '1974', title: 'Primeros cimientos',                    body: 'La empresa fortalece su presencia y consolida una operación más cercana para propietarios y clientes.',                                                                                       layers: L74 },
-  { year: '2006', title: 'Reconocimiento y consolidación',        body: 'Cuatro décadas de trabajo reflejan una trayectoria construida con compromiso, seriedad y respaldo.',                                                                                         layers: L66 },
-  { year: '2017', title: 'Más cerca de nuestros clientes',        body: 'Con la apertura de la sede en Envigado, Santa Fe amplía su presencia y fortalece su cercanía con nuevas zonas del Valle de Aburrá.',                                                         layers: L74 },
-  { year: '2018', title: 'Evolución de marca',                    body: 'Arrendamientos Santa Fe renueva su imagen para proyectar una empresa más actual, cercana y coherente con su evolución.',                                                                      layers: L66 },
-  { year: '2026', title: '60 años acompañando nuevas decisiones', body: 'Santa Fe celebra seis décadas de historia con una nueva etapa: la apertura de su sede en Rionegro, reafirmando su compromiso de estar más cerca de quienes toman decisiones inmobiliarias.',  layers: L74 },
+  { year: '1966', title: 'Donde todo comenzó',                    body: 'Arrendamientos Santa Fe nace en Medellín con una visión de servicio, confianza y acompañamiento inmobiliario.',                                                                             layers: L66 },
+  { year: '1974', title: 'Primeros cimientos',                    body: 'La empresa fortalece su presencia y consolida una operación más cercana para propietarios y clientes.',                                                                                      layers: L74 },
+  { year: '2006', title: 'Reconocimiento y consolidación',        body: 'Cuatro décadas de trabajo reflejan una trayectoria construida con compromiso, seriedad y respaldo.',                                                                                        layers: L66 },
+  { year: '2017', title: 'Más cerca de nuestros clientes',        body: 'Con la apertura de la sede en Envigado, Santa Fe amplía su presencia y fortalece su cercanía con nuevas zonas del Valle de Aburrá.',                                                        layers: L74 },
+  { year: '2018', title: 'Evolución de marca',                    body: 'Arrendamientos Santa Fe renueva su imagen para proyectar una empresa más actual, cercana y coherente con su evolución.',                                                                     layers: L66 },
+  { year: '2026', title: '60 años acompañando nuevas decisiones', body: 'Santa Fe celebra seis décadas de historia con una nueva etapa: la apertura de su sede en Rionegro, reafirmando su compromiso de estar más cerca de quienes toman decisiones inmobiliarias.', layers: L74 },
 ];
 
 export default function Historia60Page({ onNavigate }: Props) {
-  const wrapperRef = useRef<HTMLDivElement>(null);
-  const panelRefs  = useRef<(HTMLDivElement | null)[]>(Array(N).fill(null));
-  const textRefs   = useRef<(HTMLDivElement | null)[]>(Array(N).fill(null));
-  const dotRefs    = useRef<(HTMLDivElement | null)[]>(Array(N).fill(null));
-  const yearRefs   = useRef<(HTMLSpanElement | null)[]>(Array(N).fill(null));
+  const wrapperRef       = useRef<HTMLDivElement>(null);
+  const panelContainerRef = useRef<HTMLDivElement>(null); // the 16:9 constrained box
+  const panelRefs        = useRef<(HTMLDivElement | null)[]>(Array(N).fill(null));
+  const textRefs         = useRef<(HTMLDivElement | null)[]>(Array(N).fill(null));
+  const dotRefs          = useRef<(HTMLDivElement | null)[]>(Array(N).fill(null));
+  const yearRefs         = useRef<(HTMLSpanElement | null)[]>(Array(N).fill(null));
 
-  const imgRefs = useRef<(HTMLImageElement | null)[][]>(EVENTS.map(() => Array(4).fill(null)));
-  const pxSets  = useRef<((v: number) => void)[][]>(EVENTS.map(() => []));
-  const pySets  = useRef<((v: number) => void)[][]>(EVENTS.map(() => []));
+  const imgRefs  = useRef<(HTMLImageElement | null)[][]>(EVENTS.map(() => Array(4).fill(null)));
+  const pxSets   = useRef<((v: number) => void)[][]>(EVENTS.map(() => []));
+  const pySets   = useRef<((v: number) => void)[][]>(EVENTS.map(() => []));
   const activeRef = useRef(0);
 
   // ── Parallax quickTo setup ────────────────────────────────────
@@ -58,7 +60,6 @@ export default function Historia60Page({ onNavigate }: Props) {
       evt.layers.forEach((layer, li) => {
         const img = imgRefs.current[pi]?.[li];
         if (!img) return;
-        // No scale — objectFit:contain shows the full image; dark panel bg absorbs edge moves
         pxSets.current[pi][li] = gsap.quickTo(img, 'x', { duration: layer.dur, ease: 'power3.out' });
         pySets.current[pi][li] = gsap.quickTo(img, 'y', { duration: layer.dur, ease: 'power3.out' });
       });
@@ -90,50 +91,48 @@ export default function Historia60Page({ onNavigate }: Props) {
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     const ctx = gsap.context(() => {
-      const IW = window.innerWidth;
+      const container = panelContainerRef.current;
+      if (!container) return;
+      // Use the actual rendered container width (respects maxWidth + viewport)
+      const CW_total = container.getBoundingClientRect().width;
 
-      // Panel 0 = full viewport; future panels = 0 (hidden)
-      gsap.set(panelRefs.current[0], { width: IW });
+      // Panel 0 = full container; future panels = 0
+      gsap.set(panelRefs.current[0], { width: CW_total });
       for (let k = 1; k < N; k++) {
         if (panelRefs.current[k]) gsap.set(panelRefs.current[k], { width: 0 });
       }
 
-      // Initial text / dot / year state
-      textRefs.current.forEach((el, i) => { if (el) gsap.set(el, { opacity: i === 0 ? 1 : 0, y: i === 0 ? 0 : 16 }); });
+      // Initial text / dot / year
+      textRefs.current.forEach((el, i) => { if (el) gsap.set(el, { opacity: i === 0 ? 1 : 0, y: i === 0 ? 0 : 12 }); });
       dotRefs.current.forEach((d, i)   => { if (d)  gsap.set(d,  { scale: i === 0 ? 1.8 : 1 }); });
-      yearRefs.current.forEach((s, i)  => { if (s)  gsap.set(s,  { opacity: i === 0 ? 1 : 0.4 }); });
+      yearRefs.current.forEach((s, i)  => { if (s)  gsap.set(s,  { opacity: i === 0 ? 1 : 0.35 }); });
 
       if (reduced) return;
 
       for (let i = 0; i < N - 1; i++) {
-        const ic = i;
-        const EW_cur  = IW - ic * CW;       // expanded width when panel ic is active
-        const EW_next = IW - (ic + 1) * CW; // expanded width when panel ic+1 is active
+        const ic      = i;
+        const EW_cur  = CW_total - ic * CW;
+        const EW_next = CW_total - (ic + 1) * CW;
 
         const tl = gsap.timeline({
           scrollTrigger: {
             trigger: wrapperRef.current,
             start: `top+=${ic * window.innerHeight} top`,
             end:   `top+=${(ic + 1) * window.innerHeight} top`,
-            scrub: 1.4,
+            scrub: 1.2,
             onEnter:     () => { activeRef.current = ic + 1; resetParallax(ic); },
             onLeaveBack: () => { activeRef.current = ic;     resetParallax(ic + 1); },
           },
         });
 
-        // Panel widths: current shrinks to CW, next grows from 0
         tl.fromTo(panelRefs.current[ic],     { width: EW_cur  }, { width: CW,      ease: 'none' }, 0)
-          .fromTo(panelRefs.current[ic + 1], { width: 0       }, { width: EW_next, ease: 'none' }, 0);
-
-        // Text
-        tl.fromTo(textRefs.current[ic],     { opacity: 1, y: 0  }, { opacity: 0, y: -12, ease: 'none' }, 0)
-          .fromTo(textRefs.current[ic + 1], { opacity: 0, y: 16 }, { opacity: 1, y: 0,   ease: 'none' }, 0);
-
-        // Dot + year label
-        tl.fromTo(dotRefs.current[ic],     { scale: 1.8 }, { scale: 1,   ease: 'none' }, 0)
-          .fromTo(dotRefs.current[ic + 1], { scale: 1   }, { scale: 1.8, ease: 'none' }, 0)
-          .fromTo(yearRefs.current[ic],    { opacity: 1   }, { opacity: 0.4, ease: 'none' }, 0)
-          .fromTo(yearRefs.current[ic + 1],{ opacity: 0.4 }, { opacity: 1,   ease: 'none' }, 0);
+          .fromTo(panelRefs.current[ic + 1], { width: 0       }, { width: EW_next, ease: 'none' }, 0)
+          .fromTo(textRefs.current[ic],      { opacity: 1, y: 0  }, { opacity: 0, y: -10, ease: 'none' }, 0)
+          .fromTo(textRefs.current[ic + 1],  { opacity: 0, y: 12 }, { opacity: 1, y: 0,   ease: 'none' }, 0)
+          .fromTo(dotRefs.current[ic],       { scale: 1.8 }, { scale: 1,   ease: 'none' }, 0)
+          .fromTo(dotRefs.current[ic + 1],   { scale: 1   }, { scale: 1.8, ease: 'none' }, 0)
+          .fromTo(yearRefs.current[ic],      { opacity: 1    }, { opacity: 0.35, ease: 'none' }, 0)
+          .fromTo(yearRefs.current[ic + 1],  { opacity: 0.35 }, { opacity: 1,    ease: 'none' }, 0);
       }
     }, wrapperRef);
 
@@ -157,7 +156,6 @@ export default function Historia60Page({ onNavigate }: Props) {
           color: 'rgba(255,255,255,0.04)', lineHeight: 1,
           userSelect: 'none', pointerEvents: 'none',
         }}>60</span>
-
         <div style={{ maxWidth: 680, position: 'relative', zIndex: 1 }}>
           <button
             onClick={() => onNavigate('blog')}
@@ -186,18 +184,33 @@ export default function Historia60Page({ onNavigate }: Props) {
       </div>
 
       {/* ── Horizontal scroll experience ──────────────────────── */}
-      <div ref={wrapperRef} style={{ height: `${N * 100}vh` }}>
+      <div ref={wrapperRef} style={{ height: `${N * 100}vh`, background: '#fff' }}>
         <div
-          onMouseMove={handleMouseMove}
-          onMouseLeave={() => resetParallax(activeRef.current)}
           style={{
             position: 'sticky', top: 0, width: '100%', height: '100vh',
-            overflow: 'hidden', background: DARK,
+            background: '#fff',
+            display: 'flex', flexDirection: 'column',
+            alignItems: 'center', justifyContent: 'center',
+            gap: 20,
           }}
         >
 
-          {/* ── Panels — full 100vh ─────────────────────────────── */}
-          <div style={{ display: 'flex', width: '100%', height: '100%' }}>
+          {/* ── Panels — constrained to MAX_W, 16:9 ratio ──────── */}
+          <div
+            onMouseMove={handleMouseMove}
+            onMouseLeave={() => resetParallax(activeRef.current)}
+            ref={panelContainerRef}
+            style={{
+              width: '100%',
+              maxWidth: MAX_W,
+              // Height derived from aspect ratio — always shows full image
+              aspectRatio: '16/9',
+              overflow: 'hidden',
+              display: 'flex',
+              position: 'relative',
+              boxShadow: '0 8px 48px rgba(0,0,0,0.18)',
+            }}
+          >
             {EVENTS.map((evt, pi) => (
               <div
                 key={evt.year}
@@ -208,12 +221,11 @@ export default function Historia60Page({ onNavigate }: Props) {
                   overflow: 'hidden',
                   flexShrink: 0,
                   background: '#0a0a0a',
-                  // panel 0 starts full-width via CSS; GSAP sets pixel value after mount
-                  width: pi === 0 ? '100vw' : 0,
+                  width: pi === 0 ? '100%' : 0,
                   borderRight: pi < N - 1 ? '1px solid rgba(255,255,255,0.06)' : 'none',
                 }}
               >
-                {/* Parallax image layers */}
+                {/* Parallax image layers — contain: show full 1920×1080 canvas */}
                 {evt.layers.map((layer, li) => (
                   <img
                     key={li}
@@ -224,13 +236,14 @@ export default function Historia60Page({ onNavigate }: Props) {
                     style={{
                       position: 'absolute', top: 0, left: 0,
                       width: '100%', height: '100%',
-                      objectFit: 'contain', display: 'block',
+                      objectFit: 'contain',
+                      display: 'block',
                       zIndex: layer.z, pointerEvents: 'none',
                     }}
                   />
                 ))}
 
-                {/* Collapsed year strip (visible in 80px past-panel state) */}
+                {/* Collapsed year strip */}
                 <div style={{
                   position: 'absolute', top: 0, left: 0,
                   width: CW, height: '100%',
@@ -238,7 +251,7 @@ export default function Historia60Page({ onNavigate }: Props) {
                   zIndex: 25, pointerEvents: 'none',
                 }}>
                   <span style={{
-                    fontFamily: FONT, fontWeight: 900, fontSize: 9,
+                    fontFamily: FONT, fontWeight: 900, fontSize: 8,
                     letterSpacing: '0.22em', color: 'rgba(255,255,255,0.4)',
                     writingMode: 'vertical-rl', transform: 'rotate(180deg)',
                     userSelect: 'none',
@@ -252,25 +265,25 @@ export default function Historia60Page({ onNavigate }: Props) {
                   ref={el => { textRefs.current[pi] = el; }}
                   style={{
                     position: 'absolute',
-                    bottom: 'clamp(28px,5vh,60px)',
-                    left: CW + 28,
+                    bottom: 'clamp(16px,3vh,32px)',
+                    left: CW + 20,
                     zIndex: 20,
-                    maxWidth: 420,
+                    maxWidth: 340,
                     pointerEvents: 'none',
                   }}
                 >
                   <h3 style={{
                     fontFamily: FONT, fontWeight: 700,
-                    fontSize: 'clamp(22px,2.6vw,38px)',
-                    color: '#fff', lineHeight: 1.15, margin: '0 0 14px',
+                    fontSize: 'clamp(16px,1.8vw,26px)',
+                    color: '#fff', lineHeight: 1.2, margin: '0 0 8px',
                   }}>
                     {evt.title}
                   </h3>
                   <p style={{
                     fontFamily: FONT, fontWeight: 300,
-                    fontSize: 'clamp(12px,1vw,15px)',
-                    color: 'rgba(255,255,255,0.72)',
-                    lineHeight: 1.75, margin: 0,
+                    fontSize: 'clamp(11px,0.8vw,13px)',
+                    color: 'rgba(255,255,255,0.75)',
+                    lineHeight: 1.7, margin: 0,
                   }}>
                     {evt.body}
                   </p>
@@ -279,14 +292,15 @@ export default function Historia60Page({ onNavigate }: Props) {
             ))}
           </div>
 
-          {/* ── Timeline bar — overlays the bottom of the panels ─── */}
+          {/* ── Timeline bar ─────────────────────────────────────── */}
           <div style={{
-            position: 'absolute', bottom: 0, left: 0, right: 0,
-            height: 80, zIndex: 40,
-            background: 'rgba(255,255,255,0.96)',
+            width: '100%',
+            maxWidth: MAX_W,
+            position: 'relative',
+            height: 52,
             display: 'flex',
           }}>
-            {/* Black connecting line */}
+            {/* Connecting line */}
             <div style={{
               position: 'absolute',
               top: '50%', left: 0, right: 0,
@@ -295,27 +309,22 @@ export default function Historia60Page({ onNavigate }: Props) {
               zIndex: 1,
             }} />
 
-            {/* 6 equally-spaced items — always all visible */}
+            {/* Dots + years */}
             {EVENTS.map((evt, pi) => (
               <div
                 key={evt.year}
                 style={{
-                  flex: 1,
-                  height: '100%',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: 7,
-                  zIndex: 2,
-                  position: 'relative',
+                  flex: 1, height: '100%',
+                  display: 'flex', flexDirection: 'column',
+                  alignItems: 'center', justifyContent: 'center',
+                  gap: 6, zIndex: 2, position: 'relative',
                 }}
               >
                 <span
                   ref={el => { yearRefs.current[pi] = el; }}
                   style={{
                     fontFamily: FONT, fontWeight: 900,
-                    fontSize: 11, letterSpacing: '0.1em',
+                    fontSize: 10, letterSpacing: '0.1em',
                     color: DARK, whiteSpace: 'nowrap',
                     userSelect: 'none',
                   }}
@@ -325,10 +334,9 @@ export default function Historia60Page({ onNavigate }: Props) {
                 <div
                   ref={el => { dotRefs.current[pi] = el; }}
                   style={{
-                    width: 10, height: 10,
+                    width: 8, height: 8,
                     borderRadius: '50%',
-                    background: RED,
-                    flexShrink: 0,
+                    background: RED, flexShrink: 0,
                   }}
                 />
               </div>
