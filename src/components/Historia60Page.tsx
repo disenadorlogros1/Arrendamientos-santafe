@@ -167,13 +167,12 @@ export default function Historia60Page({ onNavigate }: Props) {
     });
   };
 
-  // Panel 1974 — 5 capas (back → front)
+  // Panel 1974 — 4 capas (back → front)
   const P74 = [
-    { x: 6,  y: 4,  dur: 0.90 }, // fondo74  z:2  — más atrás
-    { x: 12, y: 8,  dur: 0.70 }, // layer13  z:4
-    { x: 18, y: 12, dur: 0.50 }, // layer14  z:6
-    { x: 26, y: 16, dur: 0.36 }, // layer15  z:8
-    { x: 34, y: 21, dur: 0.24 }, // layer16  z:10 — más al frente
+    { x: 8,  y: 5,  dur: 0.85 }, // 1974_capa_1b  z:2 — más atrás
+    { x: 15, y: 10, dur: 0.62 }, // 1974_capa_1a  z:4
+    { x: 22, y: 14, dur: 0.42 }, // 1974-capa-3   z:6
+    { x: 30, y: 19, dur: 0.26 }, // 1974-capa-4   z:8 — más al frente
   ];
 
   useEffect(() => {
@@ -341,43 +340,36 @@ export default function Historia60Page({ onNavigate }: Props) {
         onMouseLeave={handle74Leave}
         style={{ position: 'relative', width: '100%', maxWidth: 1100, aspectRatio: '1920/1080', overflow: 'hidden', background: '#ffffff', cursor: 'crosshair' }}
       >
-        {/* fondo74 — sin archivo aún (z:2) */}
+        {/* 1974_capa_1b — z:2 (más atrás) */}
         <img
           ref={el => { imgs74Ref.current[0] = el; }}
+          src="/images/Linea%20de%20tiempo/1974_capa_1b.png"
           alt="" aria-hidden="true"
-          style={{ position: 'absolute', top: 0, left: 0, width: '100%', display: 'none', zIndex: 2, pointerEvents: 'none' }}
+          style={{ position: 'absolute', top: 0, left: 0, width: '100%', display: 'block', zIndex: 2, pointerEvents: 'none' }}
         />
 
-        {/* layer13 — panorama BW (z:4) */}
+        {/* 1974_capa_1a — z:4 */}
         <img
           ref={el => { imgs74Ref.current[1] = el; }}
-          src="/images/Linea%20de%20tiempo/1974-capa-3.png"
+          src="/images/Linea%20de%20tiempo/1974_capa_1a.png"
           alt="" aria-hidden="true"
           style={{ position: 'absolute', top: 0, left: 0, width: '100%', display: 'block', zIndex: 4, pointerEvents: 'none' }}
         />
 
-        {/* layer14 — 1974 capa A gris (z:6) */}
+        {/* 1974-capa-3 — z:6 */}
         <img
           ref={el => { imgs74Ref.current[2] = el; }}
-          src="/images/Linea%20de%20tiempo/1974_capa_1a.png"
+          src="/images/Linea%20de%20tiempo/1974-capa-3.png"
           alt="" aria-hidden="true"
           style={{ position: 'absolute', top: 0, left: 0, width: '100%', display: 'block', zIndex: 6, pointerEvents: 'none' }}
         />
 
-        {/* layer15 — 1974 capa B rojo (z:8) */}
+        {/* 1974-capa-4 — z:8 (más al frente) */}
         <img
           ref={el => { imgs74Ref.current[3] = el; }}
-          src="/images/Linea%20de%20tiempo/1974_capa_1b.png"
-          alt="" aria-hidden="true"
-          style={{ position: 'absolute', top: 0, left: 0, width: '100%', display: 'block', zIndex: 8, pointerEvents: 'none' }}
-        />
-
-        {/* layer16 — fragmentos / fotos (z:10) */}
-        <img
-          ref={el => { imgs74Ref.current[4] = el; }}
           src="/images/Linea%20de%20tiempo/1974-capa-4.png"
           alt="" aria-hidden="true"
-          style={{ position: 'absolute', top: 0, left: 0, width: '100%', display: 'block', zIndex: 10, pointerEvents: 'none' }}
+          style={{ position: 'absolute', top: 0, left: 0, width: '100%', display: 'block', zIndex: 8, pointerEvents: 'none' }}
         />
 
         {/* Barra roja lateral */}
