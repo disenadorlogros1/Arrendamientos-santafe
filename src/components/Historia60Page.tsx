@@ -19,17 +19,17 @@ const PANEL_H = 619; // panel height in px (matches previous 1100×16/9 ratio)
 type LayerCfg = { src: string; z: number; px: number; py: number; dur: number };
 
 const L66: LayerCfg[] = [
-  { src: '/images/Linea%20de%20tiempo/1966_capa_1b.webp', z: 2, px: 6,  py: 4,  dur: 0.85 },
-  { src: '/images/Linea%20de%20tiempo/1966_capa_1a.webp', z: 4, px: 12, py: 8,  dur: 0.62 },
-  { src: '/images/Linea%20de%20tiempo/1966_capa_3.webp',  z: 6, px: 18, py: 11, dur: 0.42 },
-  { src: '/images/Linea%20de%20tiempo/1966_capa_4.webp',  z: 8, px: 24, py: 15, dur: 0.26 },
+  { src: '/images/Linea%20de%20tiempo/1966_capa_1b.webp', z: 2, px: 6,  py: 0, dur: 0.85 },
+  { src: '/images/Linea%20de%20tiempo/1966_capa_1a.webp', z: 4, px: 12, py: 0, dur: 0.62 },
+  { src: '/images/Linea%20de%20tiempo/1966_capa_3.webp',  z: 6, px: 18, py: 0, dur: 0.42 },
+  { src: '/images/Linea%20de%20tiempo/1966_capa_4.webp',  z: 8, px: 24, py: 0, dur: 0.26 },
 ];
 
 const L74: LayerCfg[] = [
-  { src: '/images/Linea%20de%20tiempo/1974_capa_1b.webp', z: 2, px: 6,  py: 4,  dur: 0.85 },
-  { src: '/images/Linea%20de%20tiempo/1974_capa_1a.webp', z: 4, px: 12, py: 8,  dur: 0.62 },
-  { src: '/images/Linea%20de%20tiempo/1974-capa-3.webp',  z: 6, px: 16, py: 10, dur: 0.42 },
-  { src: '/images/Linea%20de%20tiempo/1974-capa-4.webp',  z: 8, px: 22, py: 14, dur: 0.26 },
+  { src: '/images/Linea%20de%20tiempo/1974_capa_1b.webp', z: 2, px: 6,  py: 0, dur: 0.85 },
+  { src: '/images/Linea%20de%20tiempo/1974_capa_1a.webp', z: 4, px: 12, py: 0, dur: 0.62 },
+  { src: '/images/Linea%20de%20tiempo/1974-capa-3.webp',  z: 6, px: 18, py: 0, dur: 0.42 },
+  { src: '/images/Linea%20de%20tiempo/1974-capa-4.webp',  z: 8, px: 24, py: 0, dur: 0.26 },
 ];
 
 const EVENTS = [
@@ -232,8 +232,8 @@ export default function Historia60Page({ onNavigate }: Props) {
                     alt=""
                     aria-hidden="true"
                     style={{
-                      position: 'absolute', top: 0, left: 0,
-                      width: '100%', height: '100%',
+                      position: 'absolute', top: 0, left: '-30px',
+                      width: 'calc(100% + 60px)', height: '100%',
                       objectFit: 'cover',
                       display: 'block',
                       zIndex: layer.z, pointerEvents: 'none',
