@@ -146,7 +146,7 @@ export default function Historia60Page({ onNavigate }: Props) {
       {/* ── Article hero ──────────────────────────────────────── */}
       <div style={{
         background: DARK, position: 'relative', overflow: 'hidden',
-        marginTop: '-86px', paddingTop: 120, paddingBottom: 64,
+        marginTop: '-86px', paddingTop: 120, paddingBottom: 32,
         paddingLeft: 'clamp(24px,6vw,96px)', paddingRight: 'clamp(24px,6vw,96px)',
       }}>
         <span aria-hidden="true" style={{
@@ -191,7 +191,7 @@ export default function Historia60Page({ onNavigate }: Props) {
             background: '#fff',
             display: 'flex', flexDirection: 'column',
             alignItems: 'center', justifyContent: 'flex-start',
-            paddingTop: 86,  // header height — panel starts right below the nav
+            paddingTop: 0,
             gap: 16,
           }}
         >
