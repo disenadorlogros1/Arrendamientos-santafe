@@ -9,7 +9,7 @@ interface FooterProps {
 
 const MAPS_MEDELLIN  = 'https://www.google.com/maps/search/?api=1&query=Calle+44+San+Juan+%2371-34+Medell%C3%ADn+Colombia';
 const MAPS_ENVIGADO  = 'https://www.google.com/maps/search/?api=1&query=Centro+Comercial+Metrosur+Envigado+Colombia';
-const MAPS_RIONEGRO  = 'https://www.google.com/maps/search/?api=1&query=Parque+Comercial+R%C3%ADo+del+Este+Rionegro+Colombia';
+const MAPS_RIONEGRO  = 'https://www.google.com/maps/place/Arrendamientos+Santa+Fe+(Sede+Oriente)/@6.1510685,-75.3909208,17z/data=!3m1!4b1!4m6!3m5!1s0x8e469f8d247f8ce7:0xc523feec61704f93!8m2!3d6.1510685!4d-75.3909208!16s%2Fg%2F11zct5lk41?entry=ttu&g_ep=EgoyMDI2MDcyMC4wIKXMDSoASAFQAw%3D%3D';
 const PSE_URL = 'https://www.psepagos.co/PSEHostingUI/ShowTicketOffice.aspx?ID=9011';
 const SOLICITUD_ARRENDAMIENTO_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSfAg9SMibueBBUy-Pe1rQuO1Rz7U4z7z9uq91pv-gp-0-dCgQ/viewform';
 const REPARACIONES_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSdwCAaLU5ApyfAvf-yEEgj-fMQmnBRIh4614LhDIWtKhBDzyQ/viewform';
