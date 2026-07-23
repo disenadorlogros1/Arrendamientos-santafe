@@ -190,8 +190,9 @@ export default function Historia60Page({ onNavigate }: Props) {
             position: 'sticky', top: 0, width: '100%', height: '100vh',
             background: '#fff',
             display: 'flex', flexDirection: 'column',
-            alignItems: 'center', justifyContent: 'center',
-            gap: 20,
+            alignItems: 'center', justifyContent: 'flex-start',
+            paddingTop: 86,  // header height — panel starts right below the nav
+            gap: 16,
           }}
         >
 
