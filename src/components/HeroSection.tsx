@@ -180,7 +180,7 @@ export default function HeroSection({ onNavigate, searchFormSlot }: HeroSectionP
             className="relative w-full flex items-center justify-center gap-2 pb-5 pt-3"
             style={{ zIndex: 10 }}
           >
-            <img src="/icons/icon-location-white.gif" alt="" width={14} height={14} style={{ opacity: 0.75 }} />
+            <img src="/icons/icon-location-white.svg" alt="" width={14} height={14} style={{ opacity: 0.75 }} />
             <span style={{
               fontFamily: FONT_BODY,
               fontSize: '13px',

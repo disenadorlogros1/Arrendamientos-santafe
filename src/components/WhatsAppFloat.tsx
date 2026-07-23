@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState, useEffect } from 'react';
 
@@ -28,7 +28,7 @@ export default function WhatsAppFloat() {
         aria-label="Pagar en línea por PSE"
         title="Pagar en línea"
       >
-        <img src="/icons/icon-credit-card-white.gif" className="h-6 w-6" alt="" aria-hidden="true" />
+        <img src="/icons/icon-credit-card-white.svg" className="h-6 w-6" alt="" aria-hidden="true" />
         <span className="pointer-events-none absolute right-full mr-3 px-3 py-1.5 bg-brand-dark text-white text-xs font-semibold rounded-md opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap shadow-lg">
           Pagar en línea
         </span>

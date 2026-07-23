@@ -460,20 +460,20 @@ export default function PropertyDetailPage() {
                     </ScrollReveal>
                     <div ref={detailsRef} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', columnGap: 24, rowGap: 0 }}>
                       {[
-                        { icon: '/icons/icon-home-red.gif',      label: 'Tipo de inmueble',  value: property.type,                     show: true },
-                        { icon: '/icons/icon-area-gray.gif',     label: 'Área construida',   value: property.size,                     show: true },
-                        { icon: '/icons/icon-bed-gray.gif',      label: 'Habitaciones',      value: String(property.bedrooms),         show: property.bedrooms > 0 },
-                        { icon: '/icons/icon-bathroom-gray.gif', label: 'Baños',             value: String(property.bathrooms),        show: property.bathrooms > 0 },
-                        { icon: '/icons/icon-home-red.gif',      label: 'Estrato',           value: `Estrato ${property.stratum}`,     show: !!property.stratum },
-                        { icon: '/icons/icon-home-red.gif',      label: 'Parqueaderos',      value: String(property.parking),          show: (property.parking ?? 0) > 0 },
-                        { icon: '/icons/icon-home-red.gif',      label: 'Garajes',           value: String(property.garage),           show: (property.garage ?? 0) > 0 },
-                        { icon: '/icons/icon-home-red.gif',      label: 'Estado',            value: property.estado ?? '',             show: !!property.estado },
-                        { icon: '/icons/icon-home-red.gif',      label: 'Antigüedad',        value: property.antiguedad ?? '',         show: !!property.antiguedad },
-                        { icon: '/icons/icon-home-red.gif',      label: 'Piso N°',           value: String(property.pisoNumero),       show: property.pisoNumero !== undefined },
-                        { icon: '/icons/icon-home-red.gif',      label: 'Administración',    value: property.administracion ?? '',     show: !!property.administracion },
-                        { icon: '/icons/icon-home-red.gif',      label: 'Acepta mascotas',   value: property.petFriendly ? 'Sí' : 'No', show: property.petFriendly !== undefined },
-                        { icon: '/icons/icon-home-red.gif',      label: 'Contrato mínimo',   value: property.contratoMinimo ?? '',     show: !!property.contratoMinimo },
-                        { icon: '/icons/icon-home-red.gif',      label: 'Amoblado',          value: property.furnished ? 'Sí' : 'No', show: property.furnished !== undefined },
+                        { icon: '/icons/icon-home-red.svg',      label: 'Tipo de inmueble',  value: property.type,                     show: true },
+                        { icon: '/icons/icon-area-gray.svg',     label: 'Área construida',   value: property.size,                     show: true },
+                        { icon: '/icons/icon-bed-gray.svg',      label: 'Habitaciones',      value: String(property.bedrooms),         show: property.bedrooms > 0 },
+                        { icon: '/icons/icon-bathroom-gray.svg', label: 'Baños',             value: String(property.bathrooms),        show: property.bathrooms > 0 },
+                        { icon: '/icons/icon-home-red.svg',      label: 'Estrato',           value: `Estrato ${property.stratum}`,     show: !!property.stratum },
+                        { icon: '/icons/icon-home-red.svg',      label: 'Parqueaderos',      value: String(property.parking),          show: (property.parking ?? 0) > 0 },
+                        { icon: '/icons/icon-home-red.svg',      label: 'Garajes',           value: String(property.garage),           show: (property.garage ?? 0) > 0 },
+                        { icon: '/icons/icon-home-red.svg',      label: 'Estado',            value: property.estado ?? '',             show: !!property.estado },
+                        { icon: '/icons/icon-home-red.svg',      label: 'Antigüedad',        value: property.antiguedad ?? '',         show: !!property.antiguedad },
+                        { icon: '/icons/icon-home-red.svg',      label: 'Piso N°',           value: String(property.pisoNumero),       show: property.pisoNumero !== undefined },
+                        { icon: '/icons/icon-home-red.svg',      label: 'Administración',    value: property.administracion ?? '',     show: !!property.administracion },
+                        { icon: '/icons/icon-home-red.svg',      label: 'Acepta mascotas',   value: property.petFriendly ? 'Sí' : 'No', show: property.petFriendly !== undefined },
+                        { icon: '/icons/icon-home-red.svg',      label: 'Contrato mínimo',   value: property.contratoMinimo ?? '',     show: !!property.contratoMinimo },
+                        { icon: '/icons/icon-home-red.svg',      label: 'Amoblado',          value: property.furnished ? 'Sí' : 'No', show: property.furnished !== undefined },
                       ].filter(r => r.show).map((row, i, arr) => (
                         <DetailRow key={row.label} icon={row.icon} label={row.label} value={row.value} isRight={i % 2 === 1} spanFull={i === arr.length - 1 && arr.length % 2 === 1} />
                       ))}
@@ -485,7 +485,7 @@ export default function PropertyDetailPage() {
                     <ScrollReveal y={16} className="mt-6">
                       <h2 className="text-lg font-bold text-gray-900 mb-2">Ubicación</h2>
                       <p style={{ fontFamily: FONT, fontSize: 13, fontWeight: 500, color: '#888', display: 'flex', alignItems: 'center', gap: 5, margin: '0 0 12px 0' }}>
-                        <img src="/icons/icon-location-red.gif" alt="" width="14" height="14" style={{ flexShrink: 0, objectFit: 'contain' }} />
+                        <img src="/icons/icon-location-red.svg" alt="" width="14" height="14" style={{ flexShrink: 0, objectFit: 'contain' }} />
                         {property.address || property.location}
                       </p>
                       <MapComponent

@@ -1,24 +1,32 @@
-'use client';
+﻿'use client';
 
 import React from 'react';
-import { Tag, Key, FileText, Wrench, Calculator } from 'lucide-react';
+import { Tag, Key, Calculator } from 'lucide-react';
 import type { PageType } from '@/components/Header';
 
 // GIF icon components — double image for hover red→white transition
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const SearchGif = (_: any) => (
-  <><img src="/icons/icon-search-red.gif"       className="w-5 h-5 block group-hover:hidden" alt="" aria-hidden />
-    <img src="/icons/icon-search-white.gif"      className="w-5 h-5 hidden group-hover:block" alt="" aria-hidden /></>
+  <><img src="/icons/icon-search-red.svg"       className="w-5 h-5 block group-hover:hidden" alt="" aria-hidden />
+    <img src="/icons/icon-search-white.svg"      className="w-5 h-5 hidden group-hover:block" alt="" aria-hidden /></>
 );
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const CreditCardGif = (_: any) => (
-  <><img src="/icons/icon-credit-card-red.gif"  className="w-5 h-5 block group-hover:hidden" alt="" aria-hidden />
-    <img src="/icons/icon-credit-card-white.gif" className="w-5 h-5 hidden group-hover:block" alt="" aria-hidden /></>
+  <><img src="/icons/icon-credit-card-red.svg"  className="w-5 h-5 block group-hover:hidden" alt="" aria-hidden />
+    <img src="/icons/icon-credit-card-white.svg" className="w-5 h-5 hidden group-hover:block" alt="" aria-hidden /></>
 );
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const WhatsAppGif = (_: any) => (
-  <><img src="/icons/icon-whatsapp-red.gif"     className="w-5 h-5 block group-hover:hidden" alt="" aria-hidden />
-    <img src="/icons/icon-whatsapp-white.gif"    className="w-5 h-5 hidden group-hover:block" alt="" aria-hidden /></>
+  <><img src="/icons/icon-whatsapp-red.svg"     className="w-5 h-5 block group-hover:hidden" alt="" aria-hidden />
+    <img src="/icons/icon-whatsapp-white.svg"    className="w-5 h-5 hidden group-hover:block" alt="" aria-hidden /></>
+);
+const FileTextSvg = (_: any) => (
+  <><img src="/icons/icon-FileText-red.svg"  className="w-5 h-5 block group-hover:hidden" alt="" aria-hidden />
+    <img src="/icons/icon-FileText-white.svg" className="w-5 h-5 hidden group-hover:block" alt="" aria-hidden /></>
+);
+const WrenchSvg = (_: any) => (
+  <><img src="/icons/icon-wrench-red.svg"  className="w-5 h-5 block group-hover:hidden" alt="" aria-hidden />
+    <img src="/icons/icon-wrench-white.svg" className="w-5 h-5 hidden group-hover:block" alt="" aria-hidden /></>
 );
 
 interface QuickAccessGridProps {
@@ -74,14 +82,14 @@ export default function QuickAccessGrid({ onNavigate }: QuickAccessGridProps) {
       href: PSE_URL,
     },
     {
-      icon: FileText,
+      icon: FileTextSvg,
       label: 'Solicitar arrendamiento',
       description: 'Inicia tu proceso de solicitud',
       type: 'link',
       href: SOLICITUD_URL,
     },
     {
-      icon: Wrench,
+      icon: WrenchSvg,
       label: 'Reportar reparación',
       description: 'Comunícate con el área de mantenimiento',
       type: 'link',

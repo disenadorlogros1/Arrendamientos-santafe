@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+﻿import type { Metadata } from "next";
 import { Outfit } from "next/font/google";
 import { Geist_Mono } from "next/font/google";
 import "./globals.css";
@@ -43,8 +43,8 @@ export const metadata: Metadata = {
   authors: [{ name: "Arrendamientos Santa Fe" }],
   icons: {
     icon: [
-      { url: "/icons/icon-favicon-red.gif", media: "(prefers-color-scheme: light)", type: "image/gif" },
-      { url: "/icons/icon-favicon-white.gif", media: "(prefers-color-scheme: dark)", type: "image/gif" },
+      { url: "/icons/icon-favicon-red.svg", media: "(prefers-color-scheme: light)", type: "image/svg+xml" },
+      { url: "/icons/icon-favicon-white.svg", media: "(prefers-color-scheme: dark)", type: "image/svg+xml" },
     ],
   },
   openGraph: {

@@ -1,6 +1,5 @@
-'use client';
+﻿'use client';
 
-import { Phone, Mail, Clock, FileText, Wrench } from 'lucide-react';
 import type { PageType } from '@/components/Header';
 
 interface FooterProps {
@@ -71,21 +70,21 @@ export default function Footer({ onNavigate }: FooterProps = {}) {
             </h4>
             <ul className="space-y-3 text-sm text-white/60">
               <li className="flex items-start gap-2">
-                <img src="/icons/icon-location-red.gif" className="h-4 w-4 mt-0.5 shrink-0" alt="" aria-hidden="true" />
+                <img src="/icons/icon-location-red.svg" className="h-4 w-4 mt-0.5 shrink-0" alt="" aria-hidden="true" />
                 <a href={MAPS_MEDELLIN} target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
                   <strong className="text-white/80 block">Medellín</strong>
                   Calle 44 San Juan #71-34
                 </a>
               </li>
               <li className="flex items-start gap-2">
-                <img src="/icons/icon-location-red.gif" className="h-4 w-4 mt-0.5 shrink-0" alt="" aria-hidden="true" />
+                <img src="/icons/icon-location-red.svg" className="h-4 w-4 mt-0.5 shrink-0" alt="" aria-hidden="true" />
                 <a href={MAPS_ENVIGADO} target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
                   <strong className="text-white/80 block">Envigado</strong>
                   Centro Comercial Metrosur
                 </a>
               </li>
               <li className="flex items-start gap-2">
-                <img src="/icons/icon-location-red.gif" className="h-4 w-4 mt-0.5 shrink-0" alt="" aria-hidden="true" />
+                <img src="/icons/icon-location-red.svg" className="h-4 w-4 mt-0.5 shrink-0" alt="" aria-hidden="true" />
                 <a href={MAPS_RIONEGRO} target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
                   <strong className="text-white/80 block">Rionegro</strong>
                   Parque Comercial Río del Este
@@ -107,7 +106,7 @@ export default function Footer({ onNavigate }: FooterProps = {}) {
                   rel="noopener noreferrer"
                   className="flex items-center gap-2 text-sm text-white/60 hover:text-white transition-colors"
                 >
-                  <img src="/icons/icon-credit-card-red.gif" className="h-4 w-4 shrink-0" alt="" aria-hidden="true" />
+                  <img src="/icons/icon-credit-card-red.svg" className="h-4 w-4 shrink-0" alt="" aria-hidden="true" />
                   Pagar en línea (PSE)
                 </a>
               </li>
@@ -118,7 +117,7 @@ export default function Footer({ onNavigate }: FooterProps = {}) {
                   rel="noopener noreferrer"
                   className="flex items-center gap-2 text-sm text-white/60 hover:text-white transition-colors"
                 >
-                  <FileText className="h-4 w-4 text-brand-red shrink-0" />
+                  <img src="/icons/icon-FileText-red.svg" className="h-4 w-4 shrink-0" alt="" aria-hidden="true" />
                   Solicitud de arrendamiento
                 </a>
               </li>
@@ -129,7 +128,7 @@ export default function Footer({ onNavigate }: FooterProps = {}) {
                   rel="noopener noreferrer"
                   className="flex items-center gap-2 text-sm text-white/60 hover:text-white transition-colors"
                 >
-                  <Wrench className="h-4 w-4 text-brand-red shrink-0" />
+                  <img src="/icons/icon-wrench-red.svg" className="h-4 w-4 shrink-0" alt="" aria-hidden="true" />
                   Reportar una reparación
                 </a>
               </li>
@@ -140,7 +139,7 @@ export default function Footer({ onNavigate }: FooterProps = {}) {
                   rel="noopener noreferrer"
                   className="flex items-center gap-2 text-sm text-white/60 hover:text-white transition-colors"
                 >
-                  <img src="/icons/icon-whatsapp-red.gif" className="h-4 w-4 shrink-0" alt="" aria-hidden="true" />
+                  <img src="/icons/icon-whatsapp-red.svg" className="h-4 w-4 shrink-0" alt="" aria-hidden="true" />
                   Hablar con un asesor
                 </a>
               </li>
@@ -158,7 +157,7 @@ export default function Footer({ onNavigate }: FooterProps = {}) {
                   href="tel:+5746044484015"
                   className="flex items-center gap-2 text-sm text-white/60 hover:text-white transition-colors"
                 >
-                  <Phone className="h-4 w-4 text-brand-red shrink-0" />
+                  <img src="/icons/icon-phone-red.svg" className="h-4 w-4 shrink-0" alt="" aria-hidden="true" />
                   (604) 448 4015
                 </a>
               </li>
@@ -169,7 +168,7 @@ export default function Footer({ onNavigate }: FooterProps = {}) {
                   rel="noopener noreferrer"
                   className="flex items-center gap-2 text-sm text-white/60 hover:text-white transition-colors"
                 >
-                  <img src="/icons/icon-whatsapp-red.gif" className="h-4 w-4 shrink-0" alt="" aria-hidden="true" />
+                  <img src="/icons/icon-whatsapp-red.svg" className="h-4 w-4 shrink-0" alt="" aria-hidden="true" />
                   (+57) 300 655 7529
                 </a>
               </li>
@@ -178,7 +177,7 @@ export default function Footer({ onNavigate }: FooterProps = {}) {
                   href="mailto:santafe@arrendamientossantafe.com"
                   className="flex items-start gap-2 text-sm text-white/60 hover:text-white transition-colors"
                 >
-                  <Mail className="h-4 w-4 text-brand-red shrink-0 mt-[2px]" />
+                  <img src="/icons/icon-mail-red.svg" className="h-4 w-4 shrink-0 mt-[2px]" alt="" aria-hidden="true" />
                   <span style={{ whiteSpace: 'nowrap' }}>santafe@arrendamientossantafe.com</span>
                 </a>
               </li>
@@ -191,7 +190,7 @@ export default function Footer({ onNavigate }: FooterProps = {}) {
               Horarios
             </h4>
             <div className="flex items-start gap-2 text-sm text-white/60">
-              <Clock className="h-4 w-4 mt-0.5 text-brand-red shrink-0" />
+              <img src="/icons/icon-clock-red.svg" className="h-4 w-4 mt-0.5 shrink-0" alt="" aria-hidden="true" />
               <span>
                 <span className="block font-medium text-white/80 whitespace-nowrap">Lunes a viernes:</span>
                 <span className="block whitespace-nowrap">8:00 a.m. – 12:00 m.</span>

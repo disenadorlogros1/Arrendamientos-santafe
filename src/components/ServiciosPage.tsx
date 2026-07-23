@@ -1,16 +1,16 @@
-'use client';
+﻿'use client';
 
 import { useRef, useEffect } from 'react';
 import gsap from 'gsap';
 import { TrendingUp, Key, ClipboardList, BadgeCheck, Calculator } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import ScrollReveal from '@/components/ScrollReveal';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const HomeGif = (_: any) => (
-  <><img src="/icons/icon-home-red.gif"   className="h-7 w-7 block group-hover:hidden" alt="" aria-hidden />
-    <img src="/icons/icon-home-white.gif"  className="h-7 w-7 hidden group-hover:block" alt="" aria-hidden /></>
+  <><img src="/icons/icon-home-red.svg"   className="h-7 w-7 block group-hover:hidden" alt="" aria-hidden />
+    <img src="/icons/icon-home-white.svg"  className="h-7 w-7 hidden group-hover:block" alt="" aria-hidden /></>
 );
-import { Button } from '@/components/ui/button';
-import ScrollReveal from '@/components/ScrollReveal';
 
 const services = [
   {
@@ -165,7 +165,7 @@ export default function ServiciosPage() {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <img src="/icons/icon-whatsapp-red.gif" className="h-4 w-4 mr-2" alt="" aria-hidden="true" />
+                <img src="/icons/icon-whatsapp-red.svg" className="h-4 w-4 mr-2" alt="" aria-hidden="true" />
                 Escribir por WhatsApp
               </a>
             </Button>

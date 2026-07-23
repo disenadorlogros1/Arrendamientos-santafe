@@ -20,19 +20,19 @@ const PANEL_H = 619; // panel height in px (matches previous 1100×16/9 ratio)
 type LayerCfg = { src: string; z: number; px: number; py: number; dur: number };
 
 const L66: LayerCfg[] = [
-  { src: '/images/Linea%20de%20tiempo/1966-Fondo.webp',            z: 2,  px: 4,  py: 0, dur: 0.85 },
-  { src: '/images/Linea%20de%20tiempo/1966-fecha-1.webp',          z: 4,  px: 10, py: 0, dur: 0.70 },
-  { src: '/images/Linea%20de%20tiempo/1966-fecha-2.webp',          z: 6,  px: 16, py: 0, dur: 0.55 },
-  { src: '/images/Linea%20de%20tiempo/1966-recorte-superior.webp', z: 8,  px: 22, py: 0, dur: 0.40 },
-  { src: '/images/Linea%20de%20tiempo/1966-superior.webp',         z: 10, px: 28, py: 0, dur: 0.26 },
+  { src: '/images/Linea%20de%20tiempo/1966-Fondo.webp',            z: 2,  px: 5,  py: 0, dur: 0.85 },
+  { src: '/images/Linea%20de%20tiempo/1966-fecha-1.webp',          z: 4,  px: 12, py: 0, dur: 0.70 },
+  { src: '/images/Linea%20de%20tiempo/1966-fecha-2.webp',          z: 6,  px: 19, py: 0, dur: 0.55 },
+  { src: '/images/Linea%20de%20tiempo/1966-recorte-superior.webp', z: 8,  px: 26, py: 0, dur: 0.40 },
+  { src: '/images/Linea%20de%20tiempo/1966-superior.webp',         z: 10, px: 34, py: 0, dur: 0.26 },
 ];
 
 const L74: LayerCfg[] = [
-  { src: '/images/Linea%20de%20tiempo/1974-Fondo.webp',            z: 2,  px: 4,  py: 0, dur: 0.85 },
-  { src: '/images/Linea%20de%20tiempo/1974-fecha-1.webp',          z: 4,  px: 10, py: 0, dur: 0.70 },
-  { src: '/images/Linea%20de%20tiempo/1974-fecha-2.webp',          z: 6,  px: 16, py: 0, dur: 0.55 },
-  { src: '/images/Linea%20de%20tiempo/1974-recorte-superior.webp', z: 8,  px: 22, py: 0, dur: 0.40 },
-  { src: '/images/Linea%20de%20tiempo/1974-superior.webp',         z: 10, px: 28, py: 0, dur: 0.26 },
+  { src: '/images/Linea%20de%20tiempo/1974-Fondo.webp',            z: 2,  px: 5,  py: 0, dur: 0.85 },
+  { src: '/images/Linea%20de%20tiempo/1974-fecha-1.webp',          z: 4,  px: 12, py: 0, dur: 0.70 },
+  { src: '/images/Linea%20de%20tiempo/1974-fecha-2.webp',          z: 6,  px: 19, py: 0, dur: 0.55 },
+  { src: '/images/Linea%20de%20tiempo/1974-recorte-superior.webp', z: 8,  px: 26, py: 0, dur: 0.40 },
+  { src: '/images/Linea%20de%20tiempo/1974-superior.webp',         z: 10, px: 34, py: 0, dur: 0.26 },
 ];
 
 const EVENTS = [
@@ -233,6 +233,7 @@ export default function Historia60Page({ onNavigate }: Props) {
                   position: 'relative',
                   height: '100%',
                   overflow: 'hidden',
+                  clipPath: 'inset(0)',
                   flexShrink: 0,
                   background: '#ffffff',
                   width: pi === 0 ? '100%' : 0,
@@ -247,8 +248,8 @@ export default function Historia60Page({ onNavigate }: Props) {
                     alt=""
                     aria-hidden="true"
                     style={{
-                      position: 'absolute', top: 0, left: '-30px',
-                      width: 'calc(100% + 60px)', height: '100%',
+                      position: 'absolute', top: 0, left: '-40px',
+                      width: 'calc(100% + 80px)', height: '100%',
                       objectFit: 'cover',
                       display: 'block',
                       zIndex: layer.z, pointerEvents: 'none',
@@ -291,12 +292,9 @@ export default function Historia60Page({ onNavigate }: Props) {
           {/* ── Timeline bar ─────────────────────────────────────── */}
           <div style={{
             width: '100%',
-            paddingLeft: 'clamp(24px,4vw,64px)',
-            paddingRight: 'clamp(24px,4vw,64px)',
             position: 'relative',
             height: 52,
             display: 'flex',
-            boxSizing: 'border-box',
           }}>
             {/* Connecting line — from first dot to last dot */}
             <div style={{

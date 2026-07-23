@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { createPortal } from 'react-dom';
-import { X, ChevronLeft, ChevronRight, Maximize2, Car } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Maximize2 } from 'lucide-react';
 import { useCountAnimation } from '@/hooks/useCountAnimation';
 
 /* ─── Constants ────────────────────────────────────────────────── */
@@ -191,10 +191,10 @@ function InfoCard({ type, stats, title }: {
     const msg  = encodeURIComponent(`Hola, me interesa la propiedad${ref ? ` ${ref}` : ''} (${title}). ¿Podrían darme más información?`);
     const href = `https://wa.me/${WA_NUM}?text=${msg}`;
     const iconItems = [
-      stats?.bedrooms  ? { icon: <img src="/icons/icon-bed-gray.gif"      style={{ width: 20, height: 20 }} alt="" aria-hidden />, value: stats.bedrooms,  label: 'hab.' }  : null,
-      stats?.bathrooms ? { icon: <img src="/icons/icon-bathroom-gray.gif" style={{ width: 20, height: 20 }} alt="" aria-hidden />, value: stats.bathrooms, label: 'baños' } : null,
+      stats?.bedrooms  ? { icon: <img src="/icons/icon-bed-gray.svg"      style={{ width: 20, height: 20 }} alt="" aria-hidden />, value: stats.bedrooms,  label: 'hab.' }  : null,
+      stats?.bathrooms ? { icon: <img src="/icons/icon-bathroom-gray.svg" style={{ width: 20, height: 20 }} alt="" aria-hidden />, value: stats.bathrooms, label: 'baños' } : null,
       stats?.area      ? { icon: <Maximize2  size={20} strokeWidth={1.4} />, value: stats.area,      label: 'área' }  : null,
-      stats?.parking   ? { icon: <Car        size={20} strokeWidth={1.4} />, value: stats.parking,   label: 'parq.' } : null,
+      stats?.parking   ? { icon: <img src="/icons/icon-parking-gray.svg" style={{ width: 20, height: 20 }} alt="" aria-hidden />, value: stats.parking,   label: 'parq.' } : null,
     ].filter(Boolean) as { icon: React.ReactNode; value: string | number; label: string }[];
     return (
       <a href={href} target="_blank" rel="noopener noreferrer" style={baseStyle} onClick={e => e.stopPropagation()}>
@@ -762,7 +762,7 @@ function BentoGallery({ images, onClose, stats, title }: {
       <div style={{ position: 'fixed', inset: 0, zIndex: 1000, background: '#1a1a1a', overflowY: 'auto', display: 'flex', flexDirection: 'column' }}>
         <div style={{ position: 'sticky', top: 0, zIndex: 10, display: 'flex', justifyContent: 'flex-end', padding: '12px 16px', background: 'linear-gradient(#1a1a1a 70%, transparent)' }}>
           <button onClick={onClose} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 44, height: 44, borderRadius: '50%', background: 'rgba(255,255,255,0.12)', border: 'none', cursor: 'pointer', color: '#fff' }}>
-            <img src="/icons/icon-close-white.gif" style={{ width: 22, height: 22 }} alt="" aria-hidden />
+            <img src="/icons/icon-close-white.svg" style={{ width: 22, height: 22 }} alt="" aria-hidden />
           </button>
         </div>
         {/* Álbumes en mobile */}
@@ -814,7 +814,7 @@ function BentoGallery({ images, onClose, stats, title }: {
             onMouseLeave={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.1)')}
             style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 44, height: 44, borderRadius: '50%', background: 'rgba(255,255,255,0.1)', border: 'none', cursor: 'pointer', color: '#fff', transition: `background 0.2s ${EASE}` }}
           >
-            <img src="/icons/icon-close-white.gif" style={{ width: 22, height: 22 }} alt="" aria-hidden />
+            <img src="/icons/icon-close-white.svg" style={{ width: 22, height: 22 }} alt="" aria-hidden />
           </button>
         </div>
 

@@ -54,10 +54,10 @@ function CountMetric({ value, accent, active = false }: { value: string; accent?
 }
 
 const beneficios = [
-  { icon: '/icons/icon-home-red.gif',        title: 'Trayectoria comprobada',    description: 'Desde 1966, con más de 2.000 inmuebles en gestión activa entre arrendamiento y venta en Antioquia.' },
-  { icon: '/icons/icon-area-red.gif',         title: 'Análisis de mercado',       description: 'Acceso a estudios y reportes detallados del mercado inmobiliario por zona, estrato y tipo de inmueble.' },
-  { icon: '/icons/icon-credit-card-red.gif',  title: 'Servicios integrales',      description: 'Arrendamiento, venta, avalúos e hipotecas, todo en un solo lugar con un equipo dedicado.' },
-  { icon: '/icons/icon-location-red.gif',     title: 'Ubicaciones estratégicas',  description: 'Propiedades en las mejores zonas del Valle de Aburrá y municipios aledaños con alto potencial.' },
+  { icon: '/icons/icon-home-red.svg',        title: 'Trayectoria comprobada',    description: 'Desde 1966, con más de 2.000 inmuebles en gestión activa entre arrendamiento y venta en Antioquia.' },
+  { icon: '/icons/icon-area-red.svg',         title: 'Análisis de mercado',       description: 'Acceso a estudios y reportes detallados del mercado inmobiliario por zona, estrato y tipo de inmueble.' },
+  { icon: '/icons/icon-credit-card-red.svg',  title: 'Servicios integrales',      description: 'Arrendamiento, venta, avalúos e hipotecas, todo en un solo lugar con un equipo dedicado.' },
+  { icon: '/icons/icon-location-red.svg',     title: 'Ubicaciones estratégicas',  description: 'Propiedades en las mejores zonas del Valle de Aburrá y municipios aledaños con alto potencial.' },
 ];
 
 const SECTOR_COLORS: Record<Sector, { bg: string; border: string; text: string }> = {
@@ -448,7 +448,7 @@ export default function InversionistasPage() {
             >
               <span>Solicitar asesoría</span>
               <img
-                src={ctaHovered ? '/icons/icon-whatsapp-white.gif' : '/icons/icon-whatsapp-red.gif'}
+                src={ctaHovered ? '/icons/icon-whatsapp-white.svg' : '/icons/icon-whatsapp-red.svg'}
                 alt="WhatsApp" width={20} height={20}
               />
             </a>

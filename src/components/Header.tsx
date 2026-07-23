@@ -41,7 +41,7 @@ function MobileWhatsAppButton() {
         isRed ? 'bg-brand-red shadow-[0_0_20px_rgba(243,39,53,0.6)]' : 'bg-white shadow-[0_0_12px_rgba(255,255,255,0.3)]'
       }`}
       style={{ color: isRed ? 'white' : '#aa182c' }}>
-      <img src={isRed ? "/icons/icon-whatsapp-white.gif" : "/icons/icon-whatsapp-red.gif"} alt="WhatsApp" className="w-5 h-5" />
+      <img src={isRed ? "/icons/icon-whatsapp-white.svg" : "/icons/icon-whatsapp-red.svg"} alt="WhatsApp" className="w-5 h-5" />
     </a>
   );
 }
@@ -58,7 +58,7 @@ function MobilePSEButton() {
         isRed ? 'bg-brand-red shadow-[0_0_20px_rgba(243,39,53,0.6)]' : 'bg-white shadow-[0_0_12px_rgba(255,255,255,0.3)]'
       }`}
       style={{ color: isRed ? 'white' : '#aa182c' }}>
-      <img src={isRed ? "/icons/icon-credit-card-white.gif" : "/icons/icon-credit-card-red.gif"} alt="Pagar" className="w-5.5 h-5.5" />
+      <img src={isRed ? "/icons/icon-credit-card-white.svg" : "/icons/icon-credit-card-red.svg"} alt="Pagar" className="w-5.5 h-5.5" />
     </a>
   );
 }
@@ -93,7 +93,7 @@ function WhatsAppButton() {
         isRed ? 'bg-brand-red shadow-[0_0_20px_rgba(243,39,53,0.6)]' : 'bg-white shadow-[0_0_12px_rgba(255,255,255,0.3)]'
       }`}
       style={{ color: isRed ? 'white' : '#aa182c' }}>
-      <img src={isRed ? "/icons/icon-whatsapp-white.gif" : "/icons/icon-whatsapp-red.gif"} alt="WhatsApp" className="w-5 h-5" />
+      <img src={isRed ? "/icons/icon-whatsapp-white.svg" : "/icons/icon-whatsapp-red.svg"} alt="WhatsApp" className="w-5 h-5" />
       <span>WhatsApp</span>
     </a>
   );
@@ -116,7 +116,7 @@ function PSEButton() {
       style={{ color: isRed ? 'white' : '#aa182c' }}
       aria-label="Pagar en línea por PSE"
     >
-      <img src={isRed ? "/icons/icon-credit-card-white.gif" : "/icons/icon-credit-card-red.gif"} alt="Pagar" className="w-[21px] h-[21px]" />
+      <img src={isRed ? "/icons/icon-credit-card-white.svg" : "/icons/icon-credit-card-red.svg"} alt="Pagar" className="w-[21px] h-[21px]" />
       <span>Pagar en línea</span>
     </a>
   );
@@ -254,7 +254,7 @@ export default function Header({ currentPage, onNavigate, isHeroPage = true, dar
           <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
             <SheetTrigger asChild>
               <button className="p-1.5 hover:bg-white/10 rounded-full transition-colors" style={{ color: headerTextColor }} aria-label="Abrir menú">
-                <img src={isDark ? "/icons/icon-menu-white.gif" : "/icons/icon-menu-black.gif"} alt="Menú" className="h-5 w-5" />
+                <img src={isDark ? "/icons/icon-menu-white.svg" : "/icons/icon-menu-black.svg"} alt="Menú" className="h-5 w-5" />
               </button>
             </SheetTrigger>
             <SheetContent side="right" className="w-[min(90vw,320px)] bg-brand-dark border-brand-dark-secondary p-0">
@@ -263,7 +263,7 @@ export default function Header({ currentPage, onNavigate, isHeroPage = true, dar
                 <div className="flex items-center justify-between p-4 border-b border-white/10">
                   <img src="/icons/icon-santa-fe-logo.png" alt="Arrendamientos Santa Fe" className="h-8 w-auto object-contain" />
                   <button onClick={() => setMobileOpen(false)} className="text-white/60 hover:text-white" aria-label="Cerrar menú">
-                    <img src="/icons/icon-close-white.gif" alt="Cerrar" className="h-5 w-5" />
+                    <img src="/icons/icon-close-white.svg" alt="Cerrar" className="h-5 w-5" />
                   </button>
                 </div>
                 <nav className="flex flex-col p-3 gap-0.5 flex-1 overflow-y-auto">

@@ -787,10 +787,10 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', initialTex
           >
             {/* Icon overlay — visible cuando está colapsado */}
             <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: col2Collapsed ? 1 : 0, transition: 'opacity 0.2s ease', pointerEvents: 'none' }}>
-              <img src="/icons/icon-code-red.gif" alt="" width={22} height={22} style={{ filter: 'grayscale(0.3) opacity(0.7)' }} />
+              <img src="/icons/icon-code-red.svg" alt="" width={22} height={22} style={{ filter: 'grayscale(0.3) opacity(0.7)' }} />
             </div>
             <div style={{ ...contentStyle, opacity: col2Collapsed ? 0 : 1, transition: 'opacity 0.15s ease' }}>
-              <img src="/icons/icon-code-red.gif" alt="" width={24} height={24} style={{ flexShrink: 0 }} />
+              <img src="/icons/icon-code-red.svg" alt="" width={24} height={24} style={{ flexShrink: 0 }} />
               <div style={{ minWidth: 0, flex: 1 }}>
                 <p style={labelStyle}>Código inmueble</p>
                 <input
@@ -821,10 +821,10 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', initialTex
           <div style={{ position: 'relative', borderRight: DIVIDER, borderBottom: DIVIDER, overflow: 'hidden' }}>
             {/* Icon overlay — visible cuando está colapsado */}
             <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: col345Collapsed ? 1 : 0, transition: 'opacity 0.2s ease', pointerEvents: 'none' }}>
-              <img src="/icons/icon-location-red.gif" alt="" width={22} height={22} style={{ filter: 'grayscale(0.3) opacity(0.7)' }} />
+              <img src="/icons/icon-location-red.svg" alt="" width={22} height={22} style={{ filter: 'grayscale(0.3) opacity(0.7)' }} />
             </div>
             <div style={{ ...contentStyle, opacity: col345Collapsed ? 0 : 1, transition: 'opacity 0.15s ease' }}>
-              <img src="/icons/icon-location-red.gif" alt="" width={24} height={24} style={{ flexShrink: 0 }} />
+              <img src="/icons/icon-location-red.svg" alt="" width={24} height={24} style={{ flexShrink: 0 }} />
               <div style={{ minWidth: 0, flex: 1 }}>
                 <p style={labelStyle}>Ubicación / Mapa</p>
                 <CustomSelect
@@ -865,10 +865,10 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', initialTex
           {/* Col 3: Tipo de propiedad */}
           <div style={{ position: 'relative', borderRight: DIVIDER, borderBottom: DIVIDER, overflow: 'hidden' }}>
             <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: col345Collapsed ? 1 : 0, transition: 'opacity 0.2s ease', pointerEvents: 'none' }}>
-              <img src="/icons/icon-home-red.gif" alt="" width={22} height={22} style={{ filter: 'grayscale(0.3) opacity(0.7)' }} />
+              <img src="/icons/icon-home-red.svg" alt="" width={22} height={22} style={{ filter: 'grayscale(0.3) opacity(0.7)' }} />
             </div>
             <div style={{ ...contentStyle, opacity: col345Collapsed ? 0 : 1, transition: 'opacity 0.15s ease' }}>
-              <img src="/icons/icon-home-red.gif" alt="" width={24} height={24} style={{ flexShrink: 0 }} />
+              <img src="/icons/icon-home-red.svg" alt="" width={24} height={24} style={{ flexShrink: 0 }} />
               <div style={{ minWidth: 0, flex: 1 }}>
                 <p style={labelStyle}>Tipo de propiedad</p>
                 <CustomSelect value={tipoPropiedad} onChange={setTipoPropiedad} options={TIPOS_INMUEBLE} placeholder="Seleccionar" searchable />
@@ -879,10 +879,10 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', initialTex
           {/* Col 4: Precio */}
           <div style={{ position: 'relative', borderBottom: DIVIDER, overflow: 'hidden' }}>
             <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: col345Collapsed ? 1 : 0, transition: 'opacity 0.2s ease', pointerEvents: 'none' }}>
-              <img src="/icons/icon-dollar-red.gif" alt="" width={22} height={22} style={{ filter: 'grayscale(0.3) opacity(0.7)' }} />
+              <img src="/icons/icon-dollar-red.svg" alt="" width={22} height={22} style={{ filter: 'grayscale(0.3) opacity(0.7)' }} />
             </div>
             <div style={{ ...contentStyle, opacity: col345Collapsed ? 0 : 1, transition: 'opacity 0.15s ease' }}>
-              <img src="/icons/icon-dollar-red.gif" alt="" width={24} height={24} style={{ flexShrink: 0, alignSelf: 'flex-start', marginTop: '2px' }} />
+              <img src="/icons/icon-dollar-red.svg" alt="" width={24} height={24} style={{ flexShrink: 0, alignSelf: 'flex-start', marginTop: '2px' }} />
               <div style={{ minWidth: 0, flex: 1 }}>
                 <p style={labelStyle}>Precio</p>
                 <PriceSelect value={precioRange} onChange={setPrecioRange} searchType={searchType} />
@@ -897,7 +897,7 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', initialTex
               {/* Col 1: Habitaciones */}
               <div style={{ borderRight: DIVIDER, borderBottom: DIVIDER }}>
                 <div style={advContentStyle}>
-                  <img src="/icons/icon-bed-red.gif" alt="" width={24} height={24} style={{ flexShrink: 0, marginTop: '2px' }} />
+                  <img src="/icons/icon-bed-red.svg" alt="" width={24} height={24} style={{ flexShrink: 0, marginTop: '2px' }} />
                   <div style={{ minWidth: 0, flex: 1 }}>
                     <p style={labelStyle}>Habitaciones</p>
                     <div style={{ display: 'flex', gap: '5px', marginTop: '4px', flexWrap: 'wrap' }}>
@@ -912,7 +912,7 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', initialTex
               {/* Col 2: Baños */}
               <div style={{ borderRight: DIVIDER, borderBottom: DIVIDER }}>
                 <div style={advContentStyle}>
-                  <img src="/icons/icon-bathroom-red.gif" alt="" width={24} height={24} style={{ flexShrink: 0, marginTop: '2px' }} />
+                  <img src="/icons/icon-bathroom-red.svg" alt="" width={24} height={24} style={{ flexShrink: 0, marginTop: '2px' }} />
                   <div style={{ minWidth: 0, flex: 1 }}>
                     <p style={labelStyle}>Baños</p>
                     <div style={{ display: 'flex', gap: '5px', marginTop: '4px', flexWrap: 'wrap' }}>
@@ -927,7 +927,7 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', initialTex
               {/* Col 3: Parqueadero */}
               <div style={{ borderRight: DIVIDER, borderBottom: DIVIDER }}>
                 <div style={advContentStyle}>
-                  <img src="/icons/icon-sliders-red.gif" alt="" width={24} height={24} style={{ flexShrink: 0, marginTop: '2px' }} />
+                  <img src="/icons/icon-sliders-red.svg" alt="" width={24} height={24} style={{ flexShrink: 0, marginTop: '2px' }} />
                   <div style={{ minWidth: 0, flex: 1 }}>
                     <p style={labelStyle}>Parqueadero</p>
                     <div style={{ display: 'flex', gap: '5px', marginTop: '4px', flexWrap: 'nowrap' }}>
@@ -941,7 +941,7 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', initialTex
               {/* Col 4: Área */}
               <div style={{ borderBottom: DIVIDER }}>
                 <div style={advContentStyle}>
-                  <img src="/icons/icon-area-red.gif" alt="" width={24} height={24} style={{ flexShrink: 0, marginTop: '2px' }} />
+                  <img src="/icons/icon-area-red.svg" alt="" width={24} height={24} style={{ flexShrink: 0, marginTop: '2px' }} />
                   <div style={{ minWidth: 0, flex: 1 }}>
                     <p style={labelStyle}>Área (m²)</p>
                     <AreaSelect
@@ -965,7 +965,7 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', initialTex
               {/* Col 1: Estrato */}
               <div style={{ borderRight: DIVIDER }}>
                 <div style={advContentStyle}>
-                  <img src="/icons/icon-code-red.gif" alt="" width={24} height={24} style={{ flexShrink: 0, marginTop: '2px' }} />
+                  <img src="/icons/icon-code-red.svg" alt="" width={24} height={24} style={{ flexShrink: 0, marginTop: '2px' }} />
                   <div style={{ minWidth: 0, flex: 1 }}>
                     <p style={labelStyle}>Estrato</p>
                     <div style={{ display: 'flex', gap: '4px', marginTop: '4px', flexWrap: 'nowrap' }}>
@@ -980,7 +980,7 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', initialTex
               {/* Col 2-4: Comodidades */}
               <div style={{ gridColumn: 'span 3' }}>
                 <div style={advContentStyle}>
-                  <img src="/icons/icon-favorite-red.gif" alt="" width={24} height={24} style={{ flexShrink: 0, marginTop: '2px' }} />
+                  <img src="/icons/icon-favorite-red.svg" alt="" width={24} height={24} style={{ flexShrink: 0, marginTop: '2px' }} />
                   <div style={{ minWidth: 0, flex: 1 }}>
                     <p style={labelStyle}>Comodidades</p>
                     <div style={{ display: 'flex', gap: '5px', marginTop: '4px', flexWrap: 'wrap' }}>
@@ -1031,7 +1031,7 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', initialTex
             onMouseEnter={e => (e.currentTarget.style.background = RED_HOVER)}
             onMouseLeave={e => (e.currentTarget.style.background = RED)}
           >
-            <img src="/icons/icon-search-white.gif" alt="" width={16} height={16} />
+            <img src="/icons/icon-search-white.svg" alt="" width={16} height={16} />
             Buscar inmueble
           </button>
 

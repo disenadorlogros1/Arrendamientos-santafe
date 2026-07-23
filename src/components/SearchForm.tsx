@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { createPortal } from 'react-dom';
@@ -511,7 +511,7 @@ export default function SearchForm({ onNavigate }: SearchFormProps) {
           </div>
           {/* Código */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '14px', padding: '13px 16px', borderBottom: '1px solid rgba(0,0,0,0.06)' }}>
-            <img src="/icons/icon-code-red.gif" alt="" width={20} height={20} style={{ flexShrink: 0 }} />
+            <img src="/icons/icon-code-red.svg" alt="" width={20} height={20} style={{ flexShrink: 0 }} />
             <div style={{ flex: 1, minWidth: 0 }}>
               <p style={labelStyle}>Código inmueble</p>
               <input type="text" value={codigo} onChange={e => setCodigo(e.target.value)}
@@ -521,7 +521,7 @@ export default function SearchForm({ onNavigate }: SearchFormProps) {
           </div>
           {/* Ubicación */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '14px', padding: '13px 16px', borderBottom: '1px solid rgba(0,0,0,0.06)' }}>
-            <img src="/icons/icon-location-red.gif" alt="" width={20} height={20} style={{ flexShrink: 0 }} />
+            <img src="/icons/icon-location-red.svg" alt="" width={20} height={20} style={{ flexShrink: 0 }} />
             <div style={{ flex: 1, minWidth: 0 }}>
               <p style={labelStyle}>Ubicación</p>
               <CustomSelect label="Ubicación" value={sector} onChange={setSector} options={SECTORES} placeholder="Seleccionar" />
@@ -529,7 +529,7 @@ export default function SearchForm({ onNavigate }: SearchFormProps) {
           </div>
           {/* Tipo */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '14px', padding: '13px 16px', borderBottom: '1px solid rgba(0,0,0,0.06)' }}>
-            <img src="/icons/icon-home-red.gif" alt="" width={20} height={20} style={{ flexShrink: 0 }} />
+            <img src="/icons/icon-home-red.svg" alt="" width={20} height={20} style={{ flexShrink: 0 }} />
             <div style={{ flex: 1, minWidth: 0 }}>
               <p style={labelStyle}>Tipo de propiedad</p>
               <CustomSelect label="Tipo" value={tipo} onChange={setTipo} options={TIPOS_INMUEBLE} placeholder="Seleccionar" />
@@ -538,7 +538,7 @@ export default function SearchForm({ onNavigate }: SearchFormProps) {
           {/* Precio */}
           <div style={{ padding: '13px 16px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginBottom: '8px' }}>
-              <img src="/icons/icon-dollar-red.gif" alt="" width={20} height={20} style={{ flexShrink: 0 }} />
+              <img src="/icons/icon-dollar-red.svg" alt="" width={20} height={20} style={{ flexShrink: 0 }} />
               <p style={labelStyle}>Precio</p>
             </div>
             <PriceRangeSlider
@@ -554,7 +554,7 @@ export default function SearchForm({ onNavigate }: SearchFormProps) {
           onMouseEnter={e => (e.currentTarget.style.background = RED_HOVER)}
           onMouseLeave={e => (e.currentTarget.style.background = RED)}
         >
-          <img src="/icons/icon-search-white.gif" alt="" width={18} height={18} />
+          <img src="/icons/icon-search-white.svg" alt="" width={18} height={18} />
           <span>Buscar inmueble</span>
         </button>
       </div>
@@ -616,7 +616,7 @@ export default function SearchForm({ onNavigate }: SearchFormProps) {
             onClick={activateCodigo}
           >
             <div style={fieldContent}>
-              <img src="/icons/icon-code-red.gif" alt="" width={24} height={24} style={{ flexShrink: 0 }} />
+              <img src="/icons/icon-code-red.svg" alt="" width={24} height={24} style={{ flexShrink: 0 }} />
               <div style={{ minWidth: 0, flex: 1 }}>
                 <p style={labelStyle}>Código inmueble</p>
                 <input
@@ -647,7 +647,7 @@ export default function SearchForm({ onNavigate }: SearchFormProps) {
             {/* Ubicación */}
             <div style={{ flex: 1, display: 'flex', overflow: 'hidden', borderRight: BORDER }}>
               <div style={fieldContent}>
-                <img src="/icons/icon-location-red.gif" alt="" width={24} height={24} style={{ flexShrink: 0 }} />
+                <img src="/icons/icon-location-red.svg" alt="" width={24} height={24} style={{ flexShrink: 0 }} />
                 <div style={{ minWidth: 0, flex: 1 }}>
                   <p style={labelStyle}>Ubicación</p>
                   <CustomSelect label="Ubicación" value={sector} onChange={setSector} options={SECTORES} placeholder="Seleccionar" searchable />
@@ -657,7 +657,7 @@ export default function SearchForm({ onNavigate }: SearchFormProps) {
             {/* Tipo */}
             <div style={{ flex: 1, display: 'flex', overflow: 'hidden', borderRight: BORDER }}>
               <div style={fieldContent}>
-                <img src="/icons/icon-home-red.gif" alt="" width={24} height={24} style={{ flexShrink: 0 }} />
+                <img src="/icons/icon-home-red.svg" alt="" width={24} height={24} style={{ flexShrink: 0 }} />
                 <div style={{ minWidth: 0, flex: 1 }}>
                   <p style={labelStyle}>Tipo de propiedad</p>
                   <CustomSelect label="Tipo" value={tipo} onChange={setTipo} options={TIPOS_INMUEBLE} placeholder="Seleccionar" searchable />
@@ -667,7 +667,7 @@ export default function SearchForm({ onNavigate }: SearchFormProps) {
             {/* Precio */}
             <div ref={precioRef} style={{ flex: 1, display: 'flex', overflow: 'hidden' }}>
               <div style={fieldContent}>
-                <img src="/icons/icon-dollar-red.gif" alt="" width={24} height={24} style={{ flexShrink: 0, alignSelf: 'flex-start', marginTop: '2px' }} />
+                <img src="/icons/icon-dollar-red.svg" alt="" width={24} height={24} style={{ flexShrink: 0, alignSelf: 'flex-start', marginTop: '2px' }} />
                 <div style={{ minWidth: 0, flex: 1 }}>
                   <p style={labelStyle}>Precio</p>
                   <PriceSelect value={precioRange} onChange={setPrecioRange} searchType={searchType} />
@@ -681,7 +681,7 @@ export default function SearchForm({ onNavigate }: SearchFormProps) {
               onMouseEnter={e => (e.currentTarget.style.background = RED_HOVER)}
               onMouseLeave={e => (e.currentTarget.style.background = RED)}
             >
-              <img src="/icons/icon-search-white.gif" alt="" width={18} height={18} />
+              <img src="/icons/icon-search-white.svg" alt="" width={18} height={18} />
               <span className="hidden xl:inline">Buscar inmueble</span>
             </button>
           </div>
@@ -705,7 +705,7 @@ export default function SearchForm({ onNavigate }: SearchFormProps) {
               onMouseEnter={e => (e.currentTarget.style.background = RED_HOVER)}
               onMouseLeave={e => (e.currentTarget.style.background = RED)}
             >
-              <img src="/icons/icon-search-white.gif" alt="" width={18} height={18} />
+              <img src="/icons/icon-search-white.svg" alt="" width={18} height={18} />
               <span>Buscar inmueble</span>
             </button>
           </div>

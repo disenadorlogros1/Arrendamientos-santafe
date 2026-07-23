@@ -30,7 +30,7 @@ function applyInkFill(e: React.MouseEvent<HTMLElement>) {
 
 const servicios = [
   {
-    icon: '/icons/icon-home-red.gif',
+    icon: '/icons/icon-home-red.svg',
     title: 'Arrendamientos',
     description:
       'Sabemos que encontrar el inmueble indicado no es solo buscar, es encontrar el lugar donde vas a vivir o trabajar. Estamos aquí para que ese proceso sea fácil, seguro y a tu medida.',
@@ -38,7 +38,7 @@ const servicios = [
       'Hola, estoy buscando un inmueble para arrendar y me gustaría recibir asesoría. ¿Me pueden ayudar?',
   },
   {
-    icon: '/icons/icon-credit-card-red.gif',
+    icon: '/icons/icon-credit-card-red.svg',
     title: 'Ventas',
     description:
       'Comprar un inmueble es una de las decisiones más importantes de tu vida. Te acompañamos con el conocimiento del mercado y la experiencia para que elijas con seguridad.',
@@ -46,7 +46,7 @@ const servicios = [
       'Hola, estoy interesado/a en comprar un inmueble y quisiera recibir orientación. ¿Me pueden ayudar?',
   },
   {
-    icon: '/icons/icon-consult-red.gif',
+    icon: '/icons/icon-consult-red.svg',
     title: 'Consignación',
     description:
       'Tu propiedad merece estar en buenas manos. Nos encargamos de encontrar el cliente adecuado con la seriedad y el respaldo de 60 años en el mercado inmobiliario antioqueño.',
@@ -54,7 +54,7 @@ const servicios = [
       'Hola, tengo un inmueble disponible y me interesa consignarlo con Arrendamientos Santa Fe. ¿Me pueden dar más información sobre el proceso?',
   },
   {
-    icon: '/icons/icon-area-red.gif',
+    icon: '/icons/icon-area-red.svg',
     title: 'Avalúos',
     description:
       'Conocer el valor real de tu inmueble es el primer paso para tomar buenas decisiones. Te damos una valoración técnica, honesta y ajustada al mercado actual.',
@@ -62,7 +62,7 @@ const servicios = [
       'Hola, quisiera solicitar un avalúo comercial para mi inmueble. ¿Me pueden indicar cómo funciona el proceso?',
   },
   {
-    icon: '/icons/icon-dollar-red.gif',
+    icon: '/icons/icon-dollar-red.svg',
     title: 'Hipotecas',
     description:
       '¿Necesitas dinero? Préstamos en hipoteca al 1.5% de interés, pagos anticipados sin penalización y abonos a capital desde $1.000.000',

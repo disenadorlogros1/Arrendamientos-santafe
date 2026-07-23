@@ -12,7 +12,7 @@ const MARKER_HTML = `
       <path d="M20 2 C10.6 2 3 9.6 3 19 C3 29.8 20 48 20 48 C20 48 37 29.8 37 19 C37 9.6 29.4 2 20 2Z"
             fill="#f32735"/>
     </svg>
-    <img src="/icons/icon-favicon-white.gif"
+    <img src="/icons/icon-favicon-white.svg"
       style="position:absolute;top:50%;left:50%;transform:translate(-50%,-62%);width:14px;height:14px;object-fit:contain;pointer-events:none"/>
   </div>
 `;

@@ -94,7 +94,7 @@ function AnimatedStatValue({ value, style }: { value: string; style?: React.CSSP
 const STATS_META = [
   { key: 'rentability' as const, label: 'Rentabilidad anual',  icon: '/icons/icon-rent-white.gif' },
   { key: 'pricePerM2'  as const, label: 'Precio por m²',       icon: '/icons/icon-price-white.gif' },
-  { key: 'strata'      as const, label: 'Estratos',             icon: '/icons/icon-location-white.gif' },
+  { key: 'strata'      as const, label: 'Estratos',             icon: '/icons/icon-location-white.svg' },
 ];
 
 export default function InversionZonePage() {
@@ -321,7 +321,7 @@ export default function InversionZonePage() {
                 onMouseLeave={() => setCtaHovered(false)}
               >
                 <img
-                  src={ctaHovered ? '/icons/icon-whatsapp-white.gif' : '/icons/icon-whatsapp-red.gif'}
+                  src={ctaHovered ? '/icons/icon-whatsapp-white.svg' : '/icons/icon-whatsapp-red.svg'}
                   width={18} height={18} alt=""
                 />
                 Solicitar asesoría

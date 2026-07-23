@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useRef, useEffect, useState } from 'react';
 import gsap from 'gsap';
@@ -42,17 +42,17 @@ const pasos = [
 
 const razones = [
   {
-    icon: '/icons/icon-schedule-red.gif',
+    icon: '/icons/icon-schedule-red.svg',
     title: 'Experiencia',
     description: 'Contamos con más de 55 años de trayectoria, siendo una de las empresas pioneras del sector inmobiliario en Antioquia.',
   },
   {
-    icon: '/icons/icon-favorite-red.gif',
+    icon: '/icons/icon-favorite-red.svg',
     title: 'Confiabilidad',
     description: 'Administramos tu inmueble y nos aseguramos de que sea arrendado o comprado por la persona indicada.',
   },
   {
-    icon: '/icons/icon-dollar-red.gif',
+    icon: '/icons/icon-dollar-red.svg',
     title: 'Respaldo',
     description: 'Garantizamos el pago del canon de arrendamiento y servicios públicos básicos.',
   },
@@ -155,7 +155,7 @@ export default function ConsignacionPage({ onNavigate }: ConsignacionPageProps =
               style={{ fontFamily: FONT, fontWeight: 600, fontSize: 14, textDecoration: 'none', cursor: 'pointer' }}
             >
               <span>Empecemos ahora mismo</span>
-              <img src="/icons/icon-whatsapp-white.gif" alt="WhatsApp" width={20} height={20} style={{ position: 'relative', zIndex: 1 }} />
+              <img src="/icons/icon-whatsapp-white.svg" alt="WhatsApp" width={20} height={20} style={{ position: 'relative', zIndex: 1 }} />
             </a>
           </div>
         </div>
@@ -313,7 +313,7 @@ export default function ConsignacionPage({ onNavigate }: ConsignacionPageProps =
             >
               <span>Solicitar asesoría</span>
               <img
-                src={ctaHovered ? '/icons/icon-whatsapp-white.gif' : '/icons/icon-whatsapp-red.gif'}
+                src={ctaHovered ? '/icons/icon-whatsapp-white.svg' : '/icons/icon-whatsapp-red.svg'}
                 alt="WhatsApp" width={20} height={20}
               />
             </a>

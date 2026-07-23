@@ -2,7 +2,11 @@
 
 import { useState, useRef, useEffect } from 'react';
 import gsap from 'gsap';
-import { Calculator, Percent, FileText, Handshake, MessageCircle, Info } from 'lucide-react';
+import { Calculator, Percent, Handshake, Info } from 'lucide-react';
+
+const FileTextSvg = () => <img src="/icons/icon-FileText-red.svg" className="h-7 w-7" alt="" aria-hidden />;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const FileTextSvgWrap = FileTextSvg as any;
 import { Button } from '@/components/ui/button';
 import ScrollReveal from '@/components/ScrollReveal';
 
@@ -44,7 +48,7 @@ export default function HipotecasPage() {
       description: 'Información clara sobre tasas de interés y alternativas disponibles en el mercado.',
     },
     {
-      icon: FileText,
+      icon: FileTextSvgWrap,
       title: 'Acompañamiento en el proceso',
       description: 'Te orientamos sobre los documentos, requisitos y etapas del crédito hipotecario.',
     },
@@ -226,7 +230,7 @@ export default function HipotecasPage() {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <MessageCircle className="h-4 w-4 mr-2" />
+                <img src="/icons/icon-whatsapp-red.svg" className="h-4 w-4 mr-2" alt="" aria-hidden="true" />
                 Asesoría por WhatsApp
               </a>
             </Button>
