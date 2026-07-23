@@ -243,30 +243,13 @@ export default function Historia60Page({ onNavigate }: Props) {
                   />
                 ))}
 
-                {/* Collapsed year strip */}
-                <div style={{
-                  position: 'absolute', top: 0, left: 0,
-                  width: CW, height: '100%',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  zIndex: 25, pointerEvents: 'none',
-                }}>
-                  <span style={{
-                    fontFamily: FONT, fontWeight: 900, fontSize: 8,
-                    letterSpacing: '0.22em', color: 'rgba(255,255,255,0.4)',
-                    writingMode: 'vertical-rl', transform: 'rotate(180deg)',
-                    userSelect: 'none',
-                  }}>
-                    {evt.year}
-                  </span>
-                </div>
-
                 {/* Text overlay */}
                 <div
                   ref={el => { textRefs.current[pi] = el; }}
                   style={{
                     position: 'absolute',
                     bottom: 'clamp(16px,3vh,32px)',
-                    left: CW + 20,
+                    left: 28,
                     zIndex: 20,
                     maxWidth: 340,
                     pointerEvents: 'none',
