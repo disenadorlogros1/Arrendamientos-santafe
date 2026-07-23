@@ -234,7 +234,7 @@ export default function Historia60Page({ onNavigate }: Props) {
                     style={{
                       position: 'absolute', top: 0, left: 0,
                       width: '100%', height: '100%',
-                      objectFit: 'contain',
+                      objectFit: 'cover',
                       display: 'block',
                       zIndex: layer.z, pointerEvents: 'none',
                     }}
