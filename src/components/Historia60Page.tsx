@@ -19,17 +19,19 @@ const PANEL_H = 619; // panel height in px (matches previous 1100×16/9 ratio)
 type LayerCfg = { src: string; z: number; px: number; py: number; dur: number };
 
 const L66: LayerCfg[] = [
-  { src: '/images/Linea%20de%20tiempo/1966_capa_1b.webp', z: 2, px: 6,  py: 0, dur: 0.85 },
-  { src: '/images/Linea%20de%20tiempo/1966_capa_1a.webp', z: 4, px: 12, py: 0, dur: 0.62 },
-  { src: '/images/Linea%20de%20tiempo/1966_capa_3.webp',  z: 6, px: 18, py: 0, dur: 0.42 },
-  { src: '/images/Linea%20de%20tiempo/1966_capa_4.webp',  z: 8, px: 24, py: 0, dur: 0.26 },
+  { src: '/images/Linea%20de%20tiempo/1966-Fondo.webp',            z: 2,  px: 4,  py: 0, dur: 0.85 },
+  { src: '/images/Linea%20de%20tiempo/1966-fecha-1.webp',          z: 4,  px: 10, py: 0, dur: 0.70 },
+  { src: '/images/Linea%20de%20tiempo/1966-fecha-2.webp',          z: 6,  px: 16, py: 0, dur: 0.55 },
+  { src: '/images/Linea%20de%20tiempo/1966-recorte-superior.webp', z: 8,  px: 22, py: 0, dur: 0.40 },
+  { src: '/images/Linea%20de%20tiempo/1966-superior.webp',         z: 10, px: 28, py: 0, dur: 0.26 },
 ];
 
 const L74: LayerCfg[] = [
-  { src: '/images/Linea%20de%20tiempo/1974_capa_1b.webp', z: 2, px: 6,  py: 0, dur: 0.85 },
-  { src: '/images/Linea%20de%20tiempo/1974_capa_1a.webp', z: 4, px: 12, py: 0, dur: 0.62 },
-  { src: '/images/Linea%20de%20tiempo/1974-capa-3.webp',  z: 6, px: 18, py: 0, dur: 0.42 },
-  { src: '/images/Linea%20de%20tiempo/1974-capa-4.webp',  z: 8, px: 24, py: 0, dur: 0.26 },
+  { src: '/images/Linea%20de%20tiempo/1974-Fondo.webp',            z: 2,  px: 4,  py: 0, dur: 0.85 },
+  { src: '/images/Linea%20de%20tiempo/1974-fecha-1.webp',          z: 4,  px: 10, py: 0, dur: 0.70 },
+  { src: '/images/Linea%20de%20tiempo/1974-fecha-2.webp',          z: 6,  px: 16, py: 0, dur: 0.55 },
+  { src: '/images/Linea%20de%20tiempo/1974-recorte-superior.webp', z: 8,  px: 22, py: 0, dur: 0.40 },
+  { src: '/images/Linea%20de%20tiempo/1974-superior.webp',         z: 10, px: 28, py: 0, dur: 0.26 },
 ];
 
 const EVENTS = [
