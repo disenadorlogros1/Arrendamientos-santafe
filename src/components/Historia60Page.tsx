@@ -126,14 +126,21 @@ export default function Historia60Page({ onNavigate }: Props) {
         const EW_cur  = CW_total - ic * CW;
         const EW_next = CW_total - (ic + 1) * CW;
 
+        const activateYear = (idx: number) => {
+          gsap.to(yearRefs.current[idx], { color: RED, fontSize: 13, fontWeight: 700, duration: 0.25, ease: 'power2.out' });
+        };
+        const deactivateYear = (idx: number) => {
+          gsap.to(yearRefs.current[idx], { color: FOG, fontSize: 10, fontWeight: 300, duration: 0.25, ease: 'power2.out' });
+        };
+
         const tl = gsap.timeline({
           scrollTrigger: {
             trigger: wrapperRef.current,
             start: `top+=${ic * window.innerHeight} top+=${startOffset}`,
             end:   `top+=${(ic + 1) * window.innerHeight} top+=${startOffset}`,
             scrub: 1.2,
-            onEnter:     () => { activeRef.current = ic + 1; resetParallax(ic); },
-            onLeaveBack: () => { activeRef.current = ic;     resetParallax(ic + 1); },
+            onEnter:     () => { activeRef.current = ic + 1; resetParallax(ic);     deactivateYear(ic);     activateYear(ic + 1); },
+            onLeaveBack: () => { activeRef.current = ic;     resetParallax(ic + 1); deactivateYear(ic + 1); activateYear(ic);     },
           },
         });
 
@@ -142,9 +149,7 @@ export default function Historia60Page({ onNavigate }: Props) {
           .fromTo(textRefs.current[ic],      { opacity: 1, y: 0  }, { opacity: 0, y: -10, ease: 'none' }, 0)
           .fromTo(textRefs.current[ic + 1],  { opacity: 0, y: 12 }, { opacity: 1, y: 0,   ease: 'none' }, 0)
           .fromTo(dotRefs.current[ic],       { scale: 1.8 }, { scale: 1,   ease: 'none' }, 0)
-          .fromTo(dotRefs.current[ic + 1],   { scale: 1   }, { scale: 1.8, ease: 'none' }, 0)
-          .fromTo(yearRefs.current[ic],     { color: RED, fontSize: 13, fontWeight: 700 }, { color: FOG, fontSize: 10, fontWeight: 300, ease: 'none' }, 0)
-          .fromTo(yearRefs.current[ic + 1], { color: FOG, fontSize: 10, fontWeight: 300 }, { color: RED, fontSize: 13, fontWeight: 700, ease: 'none' }, 0);
+          .fromTo(dotRefs.current[ic + 1],   { scale: 1   }, { scale: 1.8, ease: 'none' }, 0);
       }
     }, wrapperRef);
 
@@ -308,27 +313,30 @@ export default function Historia60Page({ onNavigate }: Props) {
             {EVENTS.map((evt, pi) => (
               <div
                 key={evt.year}
-                style={{
-                  flex: 1, height: '100%',
-                  display: 'flex', flexDirection: 'column',
-                  alignItems: 'center', justifyContent: 'center',
-                  gap: 6, zIndex: 2, position: 'relative',
-                }}
+                style={{ flex: 1, height: '100%', position: 'relative', zIndex: 2 }}
               >
+                {/* Year label — above the line */}
                 <span
                   ref={el => { yearRefs.current[pi] = el; }}
                   style={{
+                    position: 'absolute',
+                    bottom: 'calc(50% + 10px)',
+                    left: '50%', transform: 'translateX(-50%)',
                     fontFamily: FONT, fontWeight: 300,
                     fontSize: 10, letterSpacing: '0.1em',
                     color: FOG, whiteSpace: 'nowrap',
-                    userSelect: 'none', transition: 'none',
+                    userSelect: 'none',
                   }}
                 >
                   {evt.year}
                 </span>
+                {/* Dot — sitting on the line */}
                 <div
                   ref={el => { dotRefs.current[pi] = el; }}
                   style={{
+                    position: 'absolute',
+                    top: '50%', left: '50%',
+                    transform: 'translate(-50%, -50%)',
                     width: 8, height: 8,
                     borderRadius: '50%',
                     background: RED, flexShrink: 0,
