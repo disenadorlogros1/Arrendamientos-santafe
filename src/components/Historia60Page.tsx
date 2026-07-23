@@ -218,7 +218,6 @@ export default function Historia60Page({ onNavigate }: Props) {
               overflow: 'hidden',
               display: 'flex',
               position: 'relative',
-              boxShadow: '0 8px 48px rgba(0,0,0,0.18)',
             }}
           >
             {EVENTS.map((evt, pi) => (
