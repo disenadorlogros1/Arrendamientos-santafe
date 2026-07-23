@@ -12,8 +12,8 @@ interface Props { onNavigate: (page: PageType) => void; }
 const FONT  = "'Avenir LT Std', 'Outfit', system-ui, sans-serif";
 const RED   = '#f32735';
 const DARK  = '#1a1a1a';
-const N     = 6;   // total panels
-const CW    = 64;  // collapsed panel width (px)
+const N     = 6;    // total panels
+const CW    = 0;    // collapsed width — 0 = panels completely hidden when inactive
 const MAX_W = 1100; // max container width
 
 type LayerCfg = { src: string; z: number; px: number; py: number; dur: number };
@@ -221,9 +221,8 @@ export default function Historia60Page({ onNavigate }: Props) {
                   height: '100%',
                   overflow: 'hidden',
                   flexShrink: 0,
-                  background: '#0a0a0a',
+                  background: '#ffffff',
                   width: pi === 0 ? '100%' : 0,
-                  borderRight: pi < N - 1 ? '1px solid rgba(255,255,255,0.06)' : 'none',
                 }}
               >
                 {/* Parallax image layers — contain: show full 1920×1080 canvas */}
