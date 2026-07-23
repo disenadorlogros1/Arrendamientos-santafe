@@ -14,22 +14,22 @@ const RED   = '#f32735';
 const DARK  = '#1a1a1a';
 const N     = 6;    // total panels
 const CW    = 0;    // collapsed width — 0 = panels completely hidden when inactive
-const MAX_W = 1100; // max container width
+const PANEL_H = 619; // panel height in px (matches previous 1100×16/9 ratio)
 
 type LayerCfg = { src: string; z: number; px: number; py: number; dur: number };
 
 const L66: LayerCfg[] = [
-  { src: '/images/Linea%20de%20tiempo/1966_capa_1b.png', z: 2, px: 6,  py: 4,  dur: 0.85 },
-  { src: '/images/Linea%20de%20tiempo/1966_capa_1a.png', z: 4, px: 12, py: 8,  dur: 0.62 },
-  { src: '/images/Linea%20de%20tiempo/1966_capa_3.png',  z: 6, px: 18, py: 11, dur: 0.42 },
-  { src: '/images/Linea%20de%20tiempo/1966_capa_4.png',  z: 8, px: 24, py: 15, dur: 0.26 },
+  { src: '/images/Linea%20de%20tiempo/1966_capa_1b.webp', z: 2, px: 6,  py: 4,  dur: 0.85 },
+  { src: '/images/Linea%20de%20tiempo/1966_capa_1a.webp', z: 4, px: 12, py: 8,  dur: 0.62 },
+  { src: '/images/Linea%20de%20tiempo/1966_capa_3.webp',  z: 6, px: 18, py: 11, dur: 0.42 },
+  { src: '/images/Linea%20de%20tiempo/1966_capa_4.webp',  z: 8, px: 24, py: 15, dur: 0.26 },
 ];
 
 const L74: LayerCfg[] = [
-  { src: '/images/Linea%20de%20tiempo/1974_capa_1b.png', z: 2, px: 6,  py: 4,  dur: 0.85 },
-  { src: '/images/Linea%20de%20tiempo/1974_capa_1a.png', z: 4, px: 12, py: 8,  dur: 0.62 },
-  { src: '/images/Linea%20de%20tiempo/1974-capa-3.png',  z: 6, px: 16, py: 10, dur: 0.42 },
-  { src: '/images/Linea%20de%20tiempo/1974-capa-4.png',  z: 8, px: 22, py: 14, dur: 0.26 },
+  { src: '/images/Linea%20de%20tiempo/1974_capa_1b.webp', z: 2, px: 6,  py: 4,  dur: 0.85 },
+  { src: '/images/Linea%20de%20tiempo/1974_capa_1a.webp', z: 4, px: 12, py: 8,  dur: 0.62 },
+  { src: '/images/Linea%20de%20tiempo/1974-capa-3.webp',  z: 6, px: 16, py: 10, dur: 0.42 },
+  { src: '/images/Linea%20de%20tiempo/1974-capa-4.webp',  z: 8, px: 22, py: 14, dur: 0.26 },
 ];
 
 const EVENTS = [
@@ -196,16 +196,14 @@ export default function Historia60Page({ onNavigate }: Props) {
           }}
         >
 
-          {/* ── Panels — constrained to MAX_W, 16:9 ratio ──────── */}
+          {/* ── Panels — full viewport width, fixed height ──────── */}
           <div
             onMouseMove={handleMouseMove}
             onMouseLeave={() => resetParallax(activeRef.current)}
             ref={panelContainerRef}
             style={{
               width: '100%',
-              maxWidth: MAX_W,
-              // Height derived from aspect ratio — always shows full image
-              aspectRatio: '16/9',
+              height: PANEL_H,
               overflow: 'hidden',
               display: 'flex',
               position: 'relative',
@@ -278,10 +276,12 @@ export default function Historia60Page({ onNavigate }: Props) {
           {/* ── Timeline bar ─────────────────────────────────────── */}
           <div style={{
             width: '100%',
-            maxWidth: MAX_W,
+            paddingLeft: 'clamp(24px,4vw,64px)',
+            paddingRight: 'clamp(24px,4vw,64px)',
             position: 'relative',
             height: 52,
             display: 'flex',
+            boxSizing: 'border-box',
           }}>
             {/* Connecting line */}
             <div style={{
