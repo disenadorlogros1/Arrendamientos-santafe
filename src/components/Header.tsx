@@ -41,7 +41,7 @@ function MobileWhatsAppButton() {
         isRed ? 'bg-brand-red shadow-[0_0_20px_rgba(243,39,53,0.6)]' : 'bg-white shadow-[0_0_12px_rgba(255,255,255,0.3)]'
       }`}
       style={{ color: isRed ? 'white' : '#aa182c' }}>
-      <img src={isRed ? "/icons/icon-whatsapp-white.svg" : "/icons/icon-whatsapp-red.svg"} alt="WhatsApp" className="w-5 h-5" />
+      <img src={isRed ? "/icons/icon-whatsapp-white.svg" : "/icons/icon-whatsapp-red-dark.svg"} alt="WhatsApp" className="w-5 h-5" />
     </a>
   );
 }
@@ -58,7 +58,7 @@ function MobilePSEButton() {
         isRed ? 'bg-brand-red shadow-[0_0_20px_rgba(243,39,53,0.6)]' : 'bg-white shadow-[0_0_12px_rgba(255,255,255,0.3)]'
       }`}
       style={{ color: isRed ? 'white' : '#aa182c' }}>
-      <img src={isRed ? "/icons/icon-credit-card-white.svg" : "/icons/icon-credit-card-red.svg"} alt="Pagar" className="w-5.5 h-5.5" />
+      <img src={isRed ? "/icons/icon-credit-card-white.svg" : "/icons/icon-credit-card-red-dark.svg"} alt="Pagar" className="w-5.5 h-5.5" />
     </a>
   );
 }
@@ -93,7 +93,7 @@ function WhatsAppButton() {
         isRed ? 'bg-brand-red shadow-[0_0_20px_rgba(243,39,53,0.6)]' : 'bg-white shadow-[0_0_12px_rgba(255,255,255,0.3)]'
       }`}
       style={{ color: isRed ? 'white' : '#aa182c' }}>
-      <img src={isRed ? "/icons/icon-whatsapp-white.svg" : "/icons/icon-whatsapp-red.svg"} alt="WhatsApp" className="w-5 h-5" />
+      <img src={isRed ? "/icons/icon-whatsapp-white.svg" : "/icons/icon-whatsapp-red-dark.svg"} alt="WhatsApp" className="w-5 h-5" />
       <span>WhatsApp</span>
     </a>
   );
@@ -116,7 +116,7 @@ function PSEButton() {
       style={{ color: isRed ? 'white' : '#aa182c' }}
       aria-label="Pagar en línea por PSE"
     >
-      <img src={isRed ? "/icons/icon-credit-card-white.svg" : "/icons/icon-credit-card-red.svg"} alt="Pagar" className="w-[21px] h-[21px]" />
+      <img src={isRed ? "/icons/icon-credit-card-white.svg" : "/icons/icon-credit-card-red-dark.svg"} alt="Pagar" className="w-[21px] h-[21px]" />
       <span>Pagar en línea</span>
     </a>
   );
