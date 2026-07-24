@@ -53,19 +53,25 @@ export default function Historia60Page({ onNavigate }: Props) {
   const dotRefs          = useRef<(HTMLDivElement | null)[]>(Array(N).fill(null));
   const yearRefs         = useRef<(HTMLSpanElement | null)[]>(Array(N).fill(null));
 
-  const imgRefs  = useRef<(HTMLImageElement | null)[][]>(EVENTS.map(() => Array(4).fill(null)));
-  const pxSets   = useRef<((v: number) => void)[][]>(EVENTS.map(() => []));
-  const pySets   = useRef<((v: number) => void)[][]>(EVENTS.map(() => []));
-  const activeRef = useRef(0);
+  const imgRefs    = useRef<(HTMLImageElement | null)[][]>(EVENTS.map(e => Array(e.layers.length).fill(null)));
+  const proxyRefs  = useRef<{ x: number }[][]>(EVENTS.map(e => e.layers.map(() => ({ x: 0 }))));
+  const pxSets     = useRef<((v: number) => void)[][]>(EVENTS.map(() => []));
+  const activeRef  = useRef(0);
 
-  // ── Parallax quickTo setup ────────────────────────────────────
+  // ── Parallax via objectPosition (no overflow issues) ─────────
   useEffect(() => {
     EVENTS.forEach((evt, pi) => {
       evt.layers.forEach((layer, li) => {
-        const img = imgRefs.current[pi]?.[li];
-        if (!img) return;
-        pxSets.current[pi][li] = gsap.quickTo(img, 'x', { duration: layer.dur, ease: 'power3.out' });
-        pySets.current[pi][li] = gsap.quickTo(img, 'y', { duration: layer.dur, ease: 'power3.out' });
+        const img   = imgRefs.current[pi]?.[li];
+        const proxy = proxyRefs.current[pi]?.[li];
+        if (!img || !proxy) return;
+        pxSets.current[pi][li] = gsap.quickTo(proxy, 'x', {
+          duration: layer.dur,
+          ease: 'power3.out',
+          onUpdate: () => {
+            img.style.objectPosition = `calc(50% + ${proxy.x}px) 50%`;
+          },
+        });
       });
     });
   }, []);
@@ -73,7 +79,6 @@ export default function Historia60Page({ onNavigate }: Props) {
   const resetParallax = (pi: number) => {
     EVENTS[pi]?.layers.forEach((_l, li) => {
       pxSets.current[pi][li]?.(0);
-      pySets.current[pi][li]?.(0);
     });
   };
 
@@ -82,11 +87,9 @@ export default function Historia60Page({ onNavigate }: Props) {
     const panel = panelRefs.current[pi];
     if (!panel) return;
     const rect = panel.getBoundingClientRect();
-    const dx = (e.clientX - rect.left) / rect.width  - 0.5;
-    const dy = (e.clientY - rect.top)  / rect.height - 0.5;
+    const dx = (e.clientX - rect.left) / rect.width - 0.5;
     EVENTS[pi].layers.forEach((l, li) => {
       pxSets.current[pi][li]?.(dx * l.px * 2);
-      pySets.current[pi][li]?.(dy * l.py * 2);
     });
   };
 
@@ -248,9 +251,10 @@ export default function Historia60Page({ onNavigate }: Props) {
                     alt=""
                     aria-hidden="true"
                     style={{
-                      position: 'absolute', top: 0, left: '-40px',
-                      width: 'calc(100% + 80px)', height: '100%',
+                      position: 'absolute', top: 0, left: 0,
+                      width: '100%', height: '100%',
                       objectFit: 'cover',
+                      objectPosition: '50% 50%',
                       display: 'block',
                       zIndex: layer.z, pointerEvents: 'none',
                     }}
