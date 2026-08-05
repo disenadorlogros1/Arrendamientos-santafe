@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Iconos" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #f5f5f5;
+      }
+    </style>
+  </defs>
+  <path class="cls-1" d="M782.79,217.54v-64.44h-80v64.44h-325.89v-64.44h-80v64.44H101.08v749.36h877.54V217.54h-195.82ZM296.9,297.54v69.19h80v-69.19h325.89v69.19h80v-69.19h115.82v124.13H181.08v-124.13h115.82ZM181.08,886.9v-385.23h717.54v385.23H181.08Z"/>
+  <rect class="cls-1" x="247.89" y="559.34" width="143.52" height="80"/>
+  <rect class="cls-1" x="247.89" y="718.37" width="143.52" height="80"/>
+  <rect class="cls-1" x="468.09" y="559.34" width="143.52" height="80"/>
+  <rect class="cls-1" x="468.09" y="718.37" width="143.52" height="80"/>
+  <rect class="cls-1" x="688.28" y="559.34" width="143.52" height="80"/>
+  <rect class="cls-1" x="688.28" y="718.37" width="143.52" height="80"/>
+</svg>

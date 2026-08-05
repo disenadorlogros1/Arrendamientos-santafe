@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Iconos" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: none;
+        stroke: #888;
+        stroke-miterlimit: 10;
+        stroke-width: 80px;
+      }
+    </style>
+  </defs>
+  <rect class="cls-1" x="209.55" y="168.53" width="128.84" height="742.95"/>
+  <rect class="cls-1" x="80.7" y="327.56" width="128.84" height="424.88"/>
+  <rect class="cls-1" x="741.61" y="168.53" width="128.84" height="742.95" transform="translate(1612.0677 1080) rotate(-180)"/>
+  <rect class="cls-1" x="870.45" y="327.56" width="128.84" height="424.88" transform="translate(1869.7515 1080) rotate(-180)"/>
+  <line class="cls-1" x1="337.05" y1="540" x2="733.45" y2="540"/>
+</svg>

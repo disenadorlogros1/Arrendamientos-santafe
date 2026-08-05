@@ -15,7 +15,7 @@ import InfiniteCarousel from '@/components/InfiniteCarousel';
 import { getInvestmentZoneForLocation } from '@/data/properties';
 import { getZoneBySlug } from '@/data/investment-zones';
 import type { PageType } from '@/components/Header';
-import { Check, Car, Trees, Wrench, Users, DoorOpen, ShoppingBag, Waves, Shield, Wind, ChefHat, Sun, Dumbbell, PawPrint, Tv, Wifi } from 'lucide-react';
+import { Check, Car, Trees, Wrench, Users, DoorOpen, ShoppingBag, Waves, Shield, Wind, ChefHat, Sun, Dumbbell, PawPrint, Wifi, Zap, Droplets, Flame } from 'lucide-react';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -274,8 +274,10 @@ const CHAR_ICONS: Array<{ keys: string[]; icon: React.ReactNode }> = [
   { keys: ['balcón', 'balcon'],                                   icon: <Sun     size={15} className="text-brand-red" /> },
   { keys: ['gimnasio', 'gym'],                                    icon: <Dumbbell size={15} className="text-brand-red" /> },
   { keys: ['mascotas'],                                           icon: <PawPrint size={15} className="text-brand-red" /> },
-  { keys: ['tv', 'televisión', 'television'],                     icon: <Tv      size={15} className="text-brand-red" /> },
-  { keys: ['wifi', 'internet'],                                   icon: <Wifi    size={15} className="text-brand-red" /> },
+  { keys: ['wifi', 'internet'],                                   icon: <Wifi      size={15} className="text-brand-red" /> },
+  { keys: ['energía', 'energia', 'eléctrica', 'electrica', 'luz'], icon: <Zap      size={15} className="text-brand-red" /> },
+  { keys: ['agua', 'acueducto'],                                  icon: <Droplets  size={15} className="text-brand-red" /> },
+  { keys: ['gas', 'gas natural', 'gas domiciliario'],             icon: <Flame     size={15} className="text-brand-red" /> },
 ];
 
 function getCharIcon(char: string): React.ReactNode {
