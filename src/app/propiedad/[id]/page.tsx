@@ -15,7 +15,9 @@ import InfiniteCarousel from '@/components/InfiniteCarousel';
 import { getInvestmentZoneForLocation } from '@/data/properties';
 import { getZoneBySlug } from '@/data/investment-zones';
 import type { PageType } from '@/components/Header';
-import { Check, Car, Trees, Wrench, Users, DoorOpen, ShoppingBag, Waves, Shield, Wind, ChefHat, Sun, Dumbbell, PawPrint, Wifi, Zap, Droplets, Flame } from 'lucide-react';
+import { Check, ShoppingBag, Wifi, Zap, Droplets, Flame } from 'lucide-react';
+const S = (src: string) => <img src={src} style={{ width: 15, height: 15 }} alt="" aria-hidden />;
+
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -261,19 +263,20 @@ function ZoneSection({ zone, zoneLabel }: { zone: NonNullable<ReturnType<typeof 
 }
 
 const CHAR_ICONS: Array<{ keys: string[]; icon: React.ReactNode }> = [
-  { keys: ['patio', 'jardín', 'jardin', 'terraza', 'zona verde'], icon: <Trees size={15} className="text-brand-red" /> },
-  { keys: ['parqueo', 'parqueadero', 'garage', 'garaje'],         icon: <Car   size={15} className="text-brand-red" /> },
-  { keys: ['zona de servicios', 'servicios', 'lavadero'],         icon: <Wrench size={15} className="text-brand-red" /> },
-  { keys: ['familiar', 'familia'],                                icon: <Users  size={15} className="text-brand-red" /> },
-  { keys: ['acceso', 'entrada'],                                  icon: <DoorOpen size={15} className="text-brand-red" /> },
+  { keys: ['patio', 'jardín', 'jardin', 'terraza', 'zona verde'], icon: S('/icons/icon-trees-red.svg')        },
+  { keys: ['parqueo', 'parqueadero', 'garage', 'garaje'],         icon: S('/icons/icon-parking-red.svg')      },
+  { keys: ['zona de servicios', 'servicios', 'lavadero'],         icon: S('/icons/icon-wrench-red.svg')       },
+  { keys: ['familiar', 'familia', 'salón comunal', 'salon comunal'], icon: S('/icons/icon-communityhall-red.svg') },
+  { keys: ['acceso', 'entrada'],                                  icon: S('/icons/icon-dooropen-red.svg')     },
   { keys: ['comercial'],                                          icon: <ShoppingBag size={15} className="text-brand-red" /> },
-  { keys: ['piscina', 'jacuzzi'],                                 icon: <Waves   size={15} className="text-brand-red" /> },
-  { keys: ['seguridad', 'vigilancia', 'portería', 'porteria'],    icon: <Shield  size={15} className="text-brand-red" /> },
-  { keys: ['aire', 'ventilación', 'ventilacion'],                 icon: <Wind    size={15} className="text-brand-red" /> },
-  { keys: ['cocina'],                                             icon: <ChefHat size={15} className="text-brand-red" /> },
-  { keys: ['balcón', 'balcon'],                                   icon: <Sun     size={15} className="text-brand-red" /> },
-  { keys: ['gimnasio', 'gym'],                                    icon: <Dumbbell size={15} className="text-brand-red" /> },
-  { keys: ['mascotas'],                                           icon: <PawPrint size={15} className="text-brand-red" /> },
+  { keys: ['piscina', 'jacuzzi'],                                 icon: S('/icons/icon-pool-red.svg')         },
+  { keys: ['seguridad', 'vigilancia', 'portería', 'porteria'],    icon: S('/icons/icon-shield-red.svg')       },
+  { keys: ['aire', 'ventilación', 'ventilacion'],                 icon: S('/icons/icon-wind-red.svg')         },
+  { keys: ['cocina'],                                             icon: S('/icons/icon-kitchen-red.svg')      },
+  { keys: ['balcón', 'balcon'],                                   icon: S('/icons/icon-balcony-red.svg')      },
+  { keys: ['gimnasio', 'gym'],                                    icon: S('/icons/icon-gym-red.svg')          },
+  { keys: ['mascotas'],                                           icon: S('/icons/icon-pet-friendly-red.svg') },
+  { keys: ['disponible', 'disponibilidad'],                       icon: S('/icons/icon-calendar-red.svg')     },
   { keys: ['wifi', 'internet'],                                   icon: <Wifi      size={15} className="text-brand-red" /> },
   { keys: ['energía', 'energia', 'eléctrica', 'electrica', 'luz'], icon: <Zap      size={15} className="text-brand-red" /> },
   { keys: ['agua', 'acueducto'],                                  icon: <Droplets  size={15} className="text-brand-red" /> },
