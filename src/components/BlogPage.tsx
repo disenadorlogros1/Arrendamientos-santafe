@@ -3,7 +3,7 @@
 import { useRef, useEffect } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { Calendar, ArrowRight } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import type { PageType } from '@/components/Header';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -183,7 +183,7 @@ export default function BlogPage({
               </p>
               <div className="flex items-center justify-between pt-4 border-t border-gray-100 text-xs text-gray-500">
                 <div className="flex items-center gap-1">
-                  <Calendar className="w-4 h-4" />
+                  <img src="/icons/icon-calendar-gray.svg" className="w-4 h-4" alt="" aria-hidden />
                   Junio 17, 2026
                 </div>
                 <span>5 min de lectura</span>
@@ -224,7 +224,7 @@ export default function BlogPage({
 
                 <div className="flex items-center justify-between pt-4 border-t border-gray-100 text-xs text-gray-500">
                   <div className="flex items-center gap-1">
-                    <Calendar className="w-4 h-4" />
+                    <img src="/icons/icon-calendar-gray.svg" className="w-4 h-4" alt="" aria-hidden />
                     {post.date}
                   </div>
                   <span>{post.readTime} de lectura</span>

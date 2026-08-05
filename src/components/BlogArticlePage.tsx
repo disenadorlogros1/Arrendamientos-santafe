@@ -2,7 +2,6 @@
 
 import { useRef, useEffect } from 'react';
 import gsap from 'gsap';
-import { Calendar } from 'lucide-react';
 import { allArticles } from '@/data/blogArticles';
 import ScrollReveal from '@/components/ScrollReveal';
 import type { PageType } from '@/components/Header';
@@ -100,7 +99,7 @@ export default function BlogArticlePage({ articleId, onNavigate }: Props) {
             style={{ display: 'flex', gap: '16px', alignItems: 'center', opacity: 0 }}
           >
             <span style={{ display: 'flex', alignItems: 'center', gap: '5px', fontFamily: FONT_BODY, fontSize: '12px', color: 'rgba(255,255,255,0.45)' }}>
-              <Calendar size={12} />
+              <img src="/icons/icon-calendar-white.svg" style={{ width: 12, height: 12 }} alt="" aria-hidden />
               {article.date}
             </span>
             <span style={{ width: '1px', height: '10px', background: 'rgba(255,255,255,0.2)' }} />
