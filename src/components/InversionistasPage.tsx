@@ -87,8 +87,61 @@ export default function InversionistasPage() {
   const [redIdx] = useState(() => Math.floor(Math.random() * beneficios.length));
   const [hoveredZoneCard,  setHoveredZoneCard]  = useState<string | null>(null);
   const [ctaHovered,       setCtaHovered]       = useState(false);
-  const subtitleRef = useRef<HTMLParagraphElement>(null);
-  const ctaBtnRef   = useRef<HTMLDivElement>(null);
+  const subtitleRef      = useRef<HTMLParagraphElement>(null);
+  const ctaBtnRef        = useRef<HTMLDivElement>(null);
+  const benTrackRef      = useRef<HTMLDivElement>(null);
+  const benPosRef        = useRef(0);
+  const benRafRef        = useRef<number>(0);
+  const benPausedRef     = useRef(false);
+  const benAnimatingRef  = useRef(false);
+
+  useEffect(() => {
+    const track = benTrackRef.current;
+    if (!track) return;
+    const SPEED = 0.3;
+    const step = () => {
+      if (!benPausedRef.current && !benAnimatingRef.current) {
+        benPosRef.current -= SPEED;
+        const card = track.firstElementChild as HTMLElement;
+        const pitch = card ? card.offsetWidth + 10 : 1;
+        const halfWidth = pitch * beneficios.length;
+        if (Math.abs(benPosRef.current) >= halfWidth) benPosRef.current += halfWidth;
+        track.style.transform = `translateX(${benPosRef.current}px)`;
+      }
+      benRafRef.current = requestAnimationFrame(step);
+    };
+    benRafRef.current = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(benRafRef.current);
+  }, []);
+
+  const benScrollBy = (dir: 'prev' | 'next') => {
+    const track = benTrackRef.current;
+    if (!track || benAnimatingRef.current) return;
+    const card = track.firstElementChild as HTMLElement;
+    const pitch = card ? card.offsetWidth + 10 : window.innerWidth / 2;
+    const halfWidth = pitch * beneficios.length;
+    if (dir === 'prev') {
+      if (benPosRef.current > -(pitch + 1)) {
+        benPosRef.current -= halfWidth;
+        track.style.transition = 'none';
+        track.style.transform = `translateX(${benPosRef.current}px)`;
+        track.getBoundingClientRect();
+      }
+      benPosRef.current += pitch;
+    } else {
+      benPosRef.current -= pitch;
+    }
+    benAnimatingRef.current = true;
+    track.style.transition = 'transform 0.35s cubic-bezier(0.25,0.46,0.45,0.94)';
+    track.style.transform = `translateX(${benPosRef.current}px)`;
+    setTimeout(() => {
+      if (track) {
+        track.style.transition = '';
+        if (benPosRef.current < -halfWidth) benPosRef.current += halfWidth;
+      }
+      benAnimatingRef.current = false;
+    }, 360);
+  };
 
   const visibleZones = activeSector ? getZonesBySector(activeSector) : investmentZones;
 
@@ -359,15 +412,106 @@ export default function InversionistasPage() {
         </div>
       </section>
 
-      {/* Benefits Section — mismo estilo que ServiciosBlock del home */}
+      {/* Benefits Section */}
       <section style={{ background: '#fff' }} className="w-full">
         <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '28px clamp(20px, 4vw, 52px)', textAlign: 'center' }}>
           <h2 style={{ fontFamily: FONT, fontWeight: 300, fontSize: 'clamp(26px, 2.6vw, 46px)', color: '#555', lineHeight: 1.2, margin: 0 }}>
             ¿Por qué <span style={{ fontWeight: 700 }}>invertir con nosotros?</span>
           </h2>
         </div>
-        <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '0 clamp(20px, 4vw, 52px) 52px' }}>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4" style={{ gap: '0', overflow: 'visible' }}>
+
+        {/* ── CARRUSEL mobile/tablet ── */}
+        <style>{`
+          .beneficio-card {
+            width: calc(50vw - 10px);
+            flex-shrink: 0;
+            margin-right: 10px;
+          }
+          @media (min-width: 640px) {
+            .beneficio-card { width: calc(33.333vw - 10px); }
+          }
+        `}</style>
+
+        <div className="lg:hidden" style={{ paddingBottom: '24px' }}>
+          <div
+            className="relative overflow-hidden"
+            onMouseEnter={() => { benPausedRef.current = true; }}
+            onMouseLeave={() => { benPausedRef.current = false; }}
+          >
+            {/* Flecha izquierda */}
+            <button
+              onClick={() => benScrollBy('prev')}
+              aria-label="Anterior"
+              style={{
+                position: 'absolute', left: 0, top: 0, bottom: 0, zIndex: 10,
+                width: 44,
+                background: 'linear-gradient(to right, rgba(255,255,255,1) 45%, transparent)',
+                border: 'none', cursor: 'pointer',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+              }}
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="15 18 9 12 15 6" />
+              </svg>
+            </button>
+
+            {/* Track */}
+            <div ref={benTrackRef} className="flex" style={{ width: 'max-content' }}>
+              {[...beneficios, ...beneficios].map((b, idx) => (
+                <a
+                  key={idx}
+                  href={WHATSAPP_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="beneficio-card"
+                  style={{
+                    background: '#f5f5f5',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    textAlign: 'center',
+                    gap: '10px',
+                    padding: '20px 12px 16px',
+                    textDecoration: 'none',
+                  }}
+                >
+                  <img src={b.icon} alt="" width={36} height={36} />
+                  <span style={{ fontFamily: FONT, fontWeight: 700, fontSize: '14px', color: '#1a1a1a', lineHeight: 1.2 }}>
+                    {b.title}
+                  </span>
+                  <span style={{
+                    fontFamily: FONT, fontWeight: 500, fontSize: '12px',
+                    color: '#fff', background: '#1a1a1a', borderRadius: '99px',
+                    padding: '6px 10px', lineHeight: 1.3, marginTop: 'auto',
+                  }}>
+                    Hablar con un asesor
+                  </span>
+                </a>
+              ))}
+            </div>
+
+            {/* Flecha derecha */}
+            <button
+              onClick={() => benScrollBy('next')}
+              aria-label="Siguiente"
+              style={{
+                position: 'absolute', right: 0, top: 0, bottom: 0, zIndex: 10,
+                width: 44,
+                background: 'linear-gradient(to left, rgba(255,255,255,1) 45%, transparent)',
+                border: 'none', cursor: 'pointer',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+              }}
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="9 18 15 12 9 6" />
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        {/* ── DESKTOP (lg+): grid ── */}
+        <div className="hidden lg:block" style={{ maxWidth: '1400px', margin: '0 auto', padding: '0 clamp(20px, 4vw, 52px) 52px' }}>
+          <div className="grid lg:grid-cols-4" style={{ gap: '0', overflow: 'visible' }}>
             {beneficios.map((b, idx) => {
               const isRed = idx === redIdx;
               const isHov = hoveredBeneficio === idx;

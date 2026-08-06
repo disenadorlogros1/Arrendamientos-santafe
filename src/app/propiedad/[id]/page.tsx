@@ -129,7 +129,15 @@ function FillButton({ active, onClick, children }: { active: boolean; onClick: (
 
 function SimilarSection({ current }: { current: import('@/data/properties').Property }) {
   const [filter, setFilter] = useState<SimilarFilter>('precio');
+  const [isMobile, setIsMobile] = useState(false);
   const similar = useMemo(() => getSimilar(current, filter), [current, filter]);
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 1024);
+    check();
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
+  }, []);
 
   const FILTERS: { key: SimilarFilter; label: string }[] = [
     { key: 'precio',    label: 'Precio'    },
@@ -138,9 +146,35 @@ function SimilarSection({ current }: { current: import('@/data/properties').Prop
 
   if (similar.length === 0) return null;
 
+  if (isMobile) {
+    return (
+      <div style={{ marginTop: 32 }}>
+        {/* Bloque negro — cabecera superior ancho completo */}
+        <div style={{
+          background: '#1a1a1a',
+          padding: '16px 20px',
+          display: 'flex', flexDirection: 'column', gap: 10,
+        }}>
+          <h2 style={{ fontFamily: FONT, fontSize: 16, fontWeight: 900, color: '#fff', margin: 0, lineHeight: 1.25 }}>
+            Propiedades similares
+          </h2>
+          <div style={{ display: 'flex', gap: 6 }}>
+            {FILTERS.map(f => (
+              <FillButton key={f.key} active={filter === f.key} onClick={() => setFilter(f.key)}>
+                {f.label}
+              </FillButton>
+            ))}
+          </div>
+        </div>
+        {/* Carrusel horizontal */}
+        <InfiniteCarousel properties={similar} maxVisible={3} />
+      </div>
+    );
+  }
+
   return (
     <div style={{ marginTop: 32, display: 'flex', alignItems: 'stretch' }}>
-      {/* Card negra estática */}
+      {/* Card negra estática — lateral en desktop */}
       <div style={{
         flexShrink: 0, width: 'clamp(140px, 16%, 200px)',
         background: '#1a1a1a',
