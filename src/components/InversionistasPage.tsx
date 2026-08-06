@@ -93,6 +93,7 @@ export default function InversionistasPage() {
   const benPosRef        = useRef(0);
   const benRafRef        = useRef<number>(0);
   const benPausedRef     = useRef(false);
+  const benAnimatingRef  = useRef(false);
   const benDirectionRef  = useRef<1 | -1>(-1); // -1 = forward (left), 1 = backward (right)
 
   useEffect(() => {
@@ -100,7 +101,7 @@ export default function InversionistasPage() {
     if (!track) return;
     const SPEED = 0.15;
     const step = () => {
-      if (!benPausedRef.current) {
+      if (!benPausedRef.current && !benAnimatingRef.current) {
         benPosRef.current += SPEED * benDirectionRef.current;
         const card = track.firstElementChild as HTMLElement;
         const pitch = card ? card.offsetWidth + 10 : 1;
@@ -117,7 +118,7 @@ export default function InversionistasPage() {
 
   const benScrollBy = (dir: 'prev' | 'next') => {
     const track = benTrackRef.current;
-    if (!track) return;
+    if (!track || benAnimatingRef.current) return;
     // Cambiar dirección del auto-scroll y avanzar una card
     benDirectionRef.current = dir === 'prev' ? 1 : -1;
     const card = track.firstElementChild as HTMLElement;
@@ -134,6 +135,7 @@ export default function InversionistasPage() {
     } else {
       benPosRef.current -= pitch;
     }
+    benAnimatingRef.current = true;
     track.style.transition = 'transform 0.35s cubic-bezier(0.25,0.46,0.45,0.94)';
     track.style.transform = `translateX(${benPosRef.current}px)`;
     setTimeout(() => {
@@ -142,6 +144,7 @@ export default function InversionistasPage() {
         if (benPosRef.current <= -halfWidth) benPosRef.current += halfWidth;
         if (benPosRef.current > 0)           benPosRef.current -= halfWidth;
       }
+      benAnimatingRef.current = false;
     }, 360);
   };
 
@@ -562,8 +565,8 @@ export default function InversionistasPage() {
         <div className="lg:hidden" style={{ paddingBottom: '24px' }}>
           <div
             className="relative overflow-hidden"
-            onMouseEnter={() => { benPausedRef.current = true; }}
-            onMouseLeave={() => { benPausedRef.current = false; }}
+            onPointerEnter={(e) => { if (e.pointerType === 'mouse') benPausedRef.current = true; }}
+            onPointerLeave={(e) => { if (e.pointerType === 'mouse') benPausedRef.current = false; }}
           >
             {/* Flecha izquierda */}
             <button

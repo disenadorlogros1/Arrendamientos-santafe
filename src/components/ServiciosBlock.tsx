@@ -170,8 +170,8 @@ export default function ServiciosBlock({ onNavigate: _onNavigate }: ServiciosBlo
       <div className="lg:hidden" style={{ paddingBottom: '24px' }}>
         <div
           className="relative overflow-hidden"
-          onMouseEnter={() => { pausedRef.current = true; }}
-          onMouseLeave={() => { pausedRef.current = false; }}
+          onPointerEnter={(e) => { if (e.pointerType === 'mouse') pausedRef.current = true; }}
+          onPointerLeave={(e) => { if (e.pointerType === 'mouse') pausedRef.current = false; }}
         >
           {/* Flecha izquierda */}
           <button
