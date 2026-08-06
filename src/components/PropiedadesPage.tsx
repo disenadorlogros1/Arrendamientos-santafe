@@ -1,7 +1,7 @@
 ﻿'use client';
 
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
-import { flushSync } from 'react-dom';
+import { flushSync, createPortal } from 'react-dom';
 import gsap from 'gsap';
 import PropertyCard from './PropertyCard';
 import InfiniteCarousel from './InfiniteCarousel';
@@ -342,6 +342,7 @@ export default function PropiedadesPage({ initialFilter = 'Todos', initialQueStr
   const leftPanelRef = useRef<HTMLDivElement>(null);
 
   const [showMap, setShowMap] = useState(false);
+  const [showMobileMap, setShowMobileMap] = useState(false);
   const [mapExpanded, setMapExpanded] = useState(false);
   const [visibleInMap, setVisibleInMap] = useState<import('@/data/properties').Property[]>([]);
   const [hoveredMapProperty, setHoveredMapProperty] = useState<import('@/data/properties').Property | null>(null);
@@ -429,6 +430,7 @@ export default function PropiedadesPage({ initialFilter = 'Todos', initialQueStr
   }, [filtered.length, appliedFilters]);
 
   return (
+    <>
     <div className="min-h-screen" style={{ background: '#f7f6f4' }}>
       {/* Page Header */}
       <div style={{ background: '#1a1a1a', marginTop: '-86px', paddingTop: 'calc(86px + clamp(32px, 5vw, 56px))', paddingBottom: 'clamp(24px, 3vw, 40px)' }}>
@@ -471,7 +473,13 @@ export default function PropiedadesPage({ initialFilter = 'Todos', initialQueStr
           initialTipo={initialFilter || 'Todos'}
           initialTextoBusqueda={initialQueString}
           onApply={setAppliedFilters}
-          onShowMap={() => setShowMap(true)}
+          onShowMap={() => {
+            if (typeof window !== 'undefined' && window.innerWidth < 1024) {
+              setShowMobileMap(true);
+            } else {
+              setShowMap(true);
+            }
+          }}
           collapsed={showMap}
         />
       </div>
@@ -780,5 +788,41 @@ export default function PropiedadesPage({ initialFilter = 'Todos', initialQueStr
         </div>
       </div>
     </div>
+
+    {/* ── Mobile map overlay ─────────────────────────────────── */}
+    {showMobileMap && createPortal(
+      <div className="lg:hidden" style={{ position: 'fixed', inset: 0, zIndex: 9999, background: '#fff', display: 'flex', flexDirection: 'column' }}>
+
+        {/* Header */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 20px', borderBottom: '1px solid rgba(0,0,0,0.09)', flexShrink: 0 }}>
+          <span style={{ fontFamily: FONT_BODY, fontSize: '14px', color: '#555' }}>
+            {filtered.length} {filtered.length === 1 ? 'propiedad' : 'propiedades'}
+          </span>
+          <button
+            type="button"
+            onClick={() => setShowMobileMap(false)}
+            style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'none', border: 'none', cursor: 'pointer', fontFamily: FONT_BODY, fontSize: '14px', color: '#555', padding: '4px 0' }}
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+            Cerrar mapa
+          </button>
+        </div>
+
+        {/* Mapa full-screen */}
+        <div style={{ flex: 1, position: 'relative' }}>
+          <PropiedadesLeafletMap
+            properties={filtered}
+            onBoundsChange={setVisibleInMap}
+            onHoverProperty={setHoveredMapProperty}
+            onClickProperty={p => { window.location.href = `/propiedad/${p.id}`; }}
+          />
+        </div>
+
+      </div>,
+      document.body
+    )}
+    </>
   );
 }
