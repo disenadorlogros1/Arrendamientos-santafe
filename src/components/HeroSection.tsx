@@ -36,6 +36,14 @@ export default function HeroSection({ onNavigate, searchFormSlot }: HeroSectionP
   const { ref: titleRef, titleAnimating } = useSplitTextAnimation('.hero-title-split', 0, false, true);
   const subtitleRef = useRef<HTMLParagraphElement>(null);
   const [titleHovered, setTitleHovered] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 640);
+    check();
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
+  }, []);
 
 
   useEffect(() => {
@@ -84,7 +92,7 @@ export default function HeroSection({ onNavigate, searchFormSlot }: HeroSectionP
                 style={{
                   fontFamily: FONT_HEADING,
                   fontWeight: 700,
-                  lineHeight: 1.15,
+                  lineHeight: 1.0,
                   margin: 0,
                   textAlign: 'center',
                   color: '#fff',
@@ -92,7 +100,7 @@ export default function HeroSection({ onNavigate, searchFormSlot }: HeroSectionP
                   display: 'flex',
                   flexDirection: 'column',
                   alignItems: 'center',
-                  gap: 'clamp(6px, 1.2vw, 14px)',
+                  gap: isMobile ? '2px' : 'clamp(6px, 1.2vw, 14px)',
                 }}
                 onMouseEnter={() => setTitleHovered(true)}
                 onMouseLeave={() => setTitleHovered(false)}
@@ -102,10 +110,9 @@ export default function HeroSection({ onNavigate, searchFormSlot }: HeroSectionP
                   <span style={{ position: 'relative', zIndex: 2 }}>
                     conectando personas
                   </span>
-                  {/* Slash diagonal — aparece en hover, detrás del texto */}
+                  {/* Línea roja — siempre visible en mobile, aparece en hover en desktop */}
                   <span
                     aria-hidden="true"
-                    className="hidden sm:block"
                     style={{
                       position: 'absolute',
                       top: '62%',
@@ -113,10 +120,10 @@ export default function HeroSection({ onNavigate, searchFormSlot }: HeroSectionP
                       width: '100%',
                       height: '13%',
                       backgroundColor: RED,
-                      transform: `translateY(-50%) scaleX(${titleHovered ? 1 : 0})`,
+                      transform: `translateY(-50%) scaleX(${(isMobile || titleHovered) ? 1 : 0})`,
                       transformOrigin: 'left center',
                       zIndex: 1,
-                      transition: 'transform 0.234s ease',
+                      transition: isMobile ? 'none' : 'transform 0.234s ease',
                       pointerEvents: 'none',
                     }}
                   />
@@ -139,14 +146,14 @@ export default function HeroSection({ onNavigate, searchFormSlot }: HeroSectionP
                 con el lugar donde vivir, trabajar y crecer.
               </p>
 
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-2 mt-7 w-full sm:w-auto">
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-2 mt-7">
                 <button
                   type="button"
                   onClick={() => onNavigate?.('propiedades')}
                   onMouseEnter={applyInkFill}
                   onMouseLeave={applyInkFill}
-                  className="hero-btn-fill w-full sm:w-auto inline-flex items-center justify-center h-[42px] px-6 rounded-full"
-                  style={{ fontFamily: "'Avenir LT Std', 'Outfit', system-ui, sans-serif", fontWeight: 300, fontSize: '15px' }}
+                  className="hero-btn-fill inline-flex items-center justify-center h-[42px] px-8 rounded-full"
+                  style={{ fontFamily: "'Avenir LT Std', 'Outfit', system-ui, sans-serif", fontWeight: 300, fontSize: '15px', minWidth: '200px', maxWidth: '280px', width: '100%' }}
                 >
                   <span>Ver propiedades disponibles</span>
                 </button>
@@ -157,8 +164,8 @@ export default function HeroSection({ onNavigate, searchFormSlot }: HeroSectionP
                   rel="noopener noreferrer"
                   onMouseEnter={applyInkFill}
                   onMouseLeave={applyInkFill}
-                  className="hero-btn-fill w-full sm:w-auto inline-flex items-center justify-center h-[42px] px-6 rounded-full"
-                  style={{ fontFamily: "'Avenir LT Std', 'Outfit', system-ui, sans-serif", fontWeight: 300, fontSize: '15px', textDecoration: 'none' }}
+                  className="hero-btn-fill inline-flex items-center justify-center h-[42px] px-8 rounded-full"
+                  style={{ fontFamily: "'Avenir LT Std', 'Outfit', system-ui, sans-serif", fontWeight: 300, fontSize: '15px', minWidth: '200px', maxWidth: '280px', width: '100%', textDecoration: 'none' }}
                 >
                   <span>Hablar con un asesor</span>
                 </a>
