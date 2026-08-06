@@ -578,7 +578,7 @@ export default function PropertyDetailPage() {
                       display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
                       backgroundColor: '#f32735', color: '#fff', fontWeight: 600, fontSize: '15px',
                       padding: '13px 16px', borderRadius: 0, textDecoration: 'none',
-                      transition: 'background-color 0.2s',
+                      transition: 'background-color 0.2s', width: '100%',
                     }}
                     onMouseEnter={e => (e.currentTarget.style.backgroundColor = '#aa182c')}
                     onMouseLeave={e => (e.currentTarget.style.backgroundColor = '#f32735')}
