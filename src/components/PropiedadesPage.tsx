@@ -681,12 +681,6 @@ export default function PropiedadesPage({ initialFilter = 'Todos', initialQueStr
         <div className="lg:hidden mb-8">
           {showMobileMap ? (
             <>
-              {/* Conteo */}
-              <div style={{ padding: '10px clamp(16px, 3vw, 48px)', marginBottom: 8, borderBottom: '1px solid rgba(0,0,0,0.08)' }}>
-                <p style={{ fontFamily: FONT_BODY, fontSize: '13px', color: '#999', margin: 0 }}>
-                  {filtered.length} {filtered.length === 1 ? 'propiedad' : 'propiedades'}
-                </p>
-              </div>
               {/* Mapa — isolation contiene z-indices internos de Leaflet */}
               <div style={{ height: '62dvh', position: 'relative', overflow: 'hidden', isolation: 'isolate' } as React.CSSProperties}>
                 <PropiedadesLeafletMap
