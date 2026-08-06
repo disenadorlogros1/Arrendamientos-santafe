@@ -98,38 +98,38 @@ export default function ServiciosBlock({ onNavigate: _onNavigate }: ServiciosBlo
         </h2>
       </div>
 
-      {/* ── MOBILE: carrusel horizontal — 3 tarjetas visibles ── */}
+      {/* ── MOBILE: carrusel infinito auto-scroll ── */}
+      <style>{`
+        @keyframes servicios-scroll {
+          from { transform: translateX(0); }
+          to   { transform: translateX(-50%); }
+        }
+        .servicios-track {
+          animation: servicios-scroll 14s linear infinite;
+        }
+        .servicios-track:hover {
+          animation-play-state: paused;
+        }
+      `}</style>
       <div
-        className="sm:hidden"
-        style={{
-          overflowX: 'auto',
-          overflowY: 'visible',
-          scrollSnapType: 'x mandatory',
-          WebkitOverflowScrolling: 'touch' as React.CSSProperties['WebkitOverflowScrolling'],
-          paddingLeft: '16px',
-          paddingRight: '16px',
-          paddingBottom: '24px',
-          msOverflowStyle: 'none',
-          scrollbarWidth: 'none',
-        } as React.CSSProperties}
+        className="sm:hidden overflow-hidden"
+        style={{ paddingBottom: '24px' }}
       >
-        <div className="flex gap-2" style={{ width: 'max-content' }}>
-          {servicios.map((s, idx) => {
-            const url   = `https://wa.me/${PHONE}?text=${encodeURIComponent(s.waMsg)}`;
-            const isRed = idx === redIdx;
+        {/* Duplicamos los items para el loop infinito — cada item tiene marginRight fijo */}
+        <div className="servicios-track flex" style={{ width: 'max-content' }}>
+          {[...servicios, ...servicios].map((s, idx) => {
+            const url = `https://wa.me/${PHONE}?text=${encodeURIComponent(s.waMsg)}`;
             return (
               <a
-                key={s.title}
+                key={idx}
                 href={url}
                 target="_blank"
                 rel="noopener noreferrer"
                 style={{
-                  width: 'calc((100vw - 48px) / 3)',
-                  minWidth: '100px',
-                  maxWidth: '130px',
+                  width: '130px',
                   flexShrink: 0,
-                  scrollSnapAlign: 'start',
-                  background: isRed ? RED : '#f5f5f5',
+                  marginRight: '10px',
+                  background: '#f5f5f5',
                   display: 'flex',
                   flexDirection: 'column',
                   alignItems: 'center',
@@ -139,18 +139,12 @@ export default function ServiciosBlock({ onNavigate: _onNavigate }: ServiciosBlo
                   textDecoration: 'none',
                 }}
               >
-                <img
-                  src={s.icon}
-                  alt=""
-                  width={32}
-                  height={32}
-                  style={{ filter: isRed ? 'brightness(0) invert(1)' : 'none' }}
-                />
+                <img src={s.icon} alt="" width={32} height={32} />
                 <span style={{
                   fontFamily: FONT_HEADING,
                   fontWeight: 700,
                   fontSize: '13px',
-                  color: isRed ? '#fff' : '#1a1a1a',
+                  color: '#1a1a1a',
                   lineHeight: 1.2,
                 }}>
                   {s.title}
@@ -160,7 +154,7 @@ export default function ServiciosBlock({ onNavigate: _onNavigate }: ServiciosBlo
                   fontWeight: 500,
                   fontSize: '11px',
                   color: '#fff',
-                  background: isRed ? 'rgba(255,255,255,0.25)' : '#1a1a1a',
+                  background: '#1a1a1a',
                   borderRadius: '99px',
                   padding: '5px 8px',
                   lineHeight: 1.3,

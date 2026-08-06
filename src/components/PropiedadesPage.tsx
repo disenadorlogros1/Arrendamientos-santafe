@@ -1,7 +1,7 @@
 ﻿'use client';
 
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
-import { flushSync, createPortal } from 'react-dom';
+import { flushSync } from 'react-dom';
 import gsap from 'gsap';
 import PropertyCard from './PropertyCard';
 import InfiniteCarousel from './InfiniteCarousel';
@@ -674,9 +674,42 @@ export default function PropiedadesPage({ initialFilter = 'Todos', initialQueStr
           </div>
         )}
 
-        {/* Mobile Carousel */}
-        <div className="lg:hidden mb-8" style={{ padding: '0 clamp(16px, 3vw, 48px)' }}>
-          <InfiniteCarousel properties={filtered} />
+        {/* Mobile: Carousel ↔ Mapa */}
+        <div className="lg:hidden mb-8">
+          {showMobileMap ? (
+            <>
+              {/* Barra modo lista */}
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px clamp(16px, 3vw, 48px)', marginBottom: 8, borderBottom: '1px solid rgba(0,0,0,0.08)' }}>
+                <p style={{ fontFamily: FONT_BODY, fontSize: '13px', color: '#999', margin: 0 }}>
+                  {filtered.length} {filtered.length === 1 ? 'propiedad' : 'propiedades'}
+                </p>
+                <button
+                  type="button"
+                  onClick={() => setShowMobileMap(false)}
+                  style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'none', border: 'none', cursor: 'pointer', fontFamily: FONT_BODY, fontSize: '13px', fontWeight: 500, color: '#555', padding: '4px 0' }}
+                >
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/>
+                    <line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/>
+                  </svg>
+                  Modo lista
+                </button>
+              </div>
+              {/* Mapa */}
+              <div style={{ height: '62dvh', position: 'relative' }}>
+                <PropiedadesLeafletMap
+                  properties={filtered}
+                  onBoundsChange={setVisibleInMap}
+                  onHoverProperty={setHoveredMapProperty}
+                  onClickProperty={p => { window.location.href = `/propiedad/${p.id}`; }}
+                />
+              </div>
+            </>
+          ) : (
+            <div style={{ padding: '0 clamp(16px, 3vw, 48px)' }}>
+              <InfiniteCarousel properties={filtered} />
+            </div>
+          )}
         </div>
 
         {/* Desktop layout — se oculta mientras el mapa está abierto */}
@@ -789,40 +822,6 @@ export default function PropiedadesPage({ initialFilter = 'Todos', initialQueStr
       </div>
     </div>
 
-    {/* ── Mobile map overlay ─────────────────────────────────── */}
-    {showMobileMap && createPortal(
-      <div className="lg:hidden" style={{ position: 'fixed', inset: 0, zIndex: 9999, background: '#fff', display: 'flex', flexDirection: 'column' }}>
-
-        {/* Header */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 20px', borderBottom: '1px solid rgba(0,0,0,0.09)', flexShrink: 0 }}>
-          <span style={{ fontFamily: FONT_BODY, fontSize: '14px', color: '#555' }}>
-            {filtered.length} {filtered.length === 1 ? 'propiedad' : 'propiedades'}
-          </span>
-          <button
-            type="button"
-            onClick={() => setShowMobileMap(false)}
-            style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'none', border: 'none', cursor: 'pointer', fontFamily: FONT_BODY, fontSize: '14px', color: '#555', padding: '4px 0' }}
-          >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
-            </svg>
-            Cerrar mapa
-          </button>
-        </div>
-
-        {/* Mapa full-screen */}
-        <div style={{ flex: 1, position: 'relative' }}>
-          <PropiedadesLeafletMap
-            properties={filtered}
-            onBoundsChange={setVisibleInMap}
-            onHoverProperty={setHoveredMapProperty}
-            onClickProperty={p => { window.location.href = `/propiedad/${p.id}`; }}
-          />
-        </div>
-
-      </div>,
-      document.body
-    )}
     </>
   );
 }
