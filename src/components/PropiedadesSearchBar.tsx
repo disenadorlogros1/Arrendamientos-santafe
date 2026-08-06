@@ -1288,7 +1288,7 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', initialTex
               {/* Estrato */}
               <div style={{ padding: '14px 20px', borderBottom: DIVIDER }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 10 }}>
-                  <img src="/icons/icon-code-red.svg" width={20} height={20} alt="" aria-hidden style={{ flexShrink: 0 }} />
+                  <img src={fi('icon-code', false, estrato.length > 0)} width={20} height={20} alt="" aria-hidden style={{ flexShrink: 0 }} />
                   <p style={labelStyle}>Estrato</p>
                 </div>
                 <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
@@ -1299,7 +1299,7 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', initialTex
               {/* Comodidades */}
               <div style={{ padding: '14px 20px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 10 }}>
-                  <img src="/icons/icon-favorite-red.svg" width={20} height={20} alt="" aria-hidden style={{ flexShrink: 0 }} />
+                  <img src={fi('icon-favorite', false, comodidades.length > 0)} width={20} height={20} alt="" aria-hidden style={{ flexShrink: 0 }} />
                   <p style={labelStyle}>Comodidades</p>
                 </div>
                 <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
