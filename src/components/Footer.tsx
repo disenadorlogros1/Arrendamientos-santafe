@@ -90,8 +90,8 @@ export default function Footer({ onNavigate }: FooterProps = {}) {
             </ul>
           </div>
 
-          {/* Accesos rápidos / operativos */}
-          <div>
+          {/* Accesos rápidos — mobile: order-1 */}
+          <div className="order-1 sm:order-3">
             <h4 className="font-semibold text-sm uppercase tracking-wider mb-4 text-white/80">
               Accesos rápidos
             </h4>
