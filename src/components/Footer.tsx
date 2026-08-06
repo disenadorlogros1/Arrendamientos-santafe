@@ -22,14 +22,14 @@ export default function Footer({ onNavigate }: FooterProps = {}) {
     <footer className="relative bg-brand-dark text-white" style={{ zIndex: 5 }}>
       <div className="mx-auto max-w-[88rem] px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
-          {/* Marca */}
-          <div className="space-y-4">
+          {/* Marca — mobile: order-5 (último), solo redes; desktop: order-1 con logo+desc */}
+          <div className="space-y-4 order-5 sm:order-1">
             <img
               src="/icons/Logotipo_Logoblanco.svg"
               alt="Arrendamientos Santa Fe"
-              className="h-10 w-auto object-contain"
+              className="hidden sm:block h-10 w-auto object-contain"
             />
-            <p className="text-white/60 text-sm leading-relaxed">
+            <p className="hidden sm:block text-white/60 text-sm leading-relaxed">
               Una empresa antioqueña con historia. Para quienes buscan, para quienes confían.
             </p>
             <div className="flex gap-3">
@@ -63,8 +63,8 @@ export default function Footer({ onNavigate }: FooterProps = {}) {
             </div>
           </div>
 
-          {/* Sedes */}
-          <div>
+          {/* Sedes — mobile: order-4 */}
+          <div className="order-4 sm:order-2">
             <h4 className="font-semibold text-sm uppercase tracking-wider mb-4 text-white/80">
               Nuestras sedes
             </h4>
