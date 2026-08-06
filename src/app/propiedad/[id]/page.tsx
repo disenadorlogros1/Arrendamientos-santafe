@@ -554,11 +554,11 @@ export default function PropertyDetailPage() {
                       <ScrollReveal y={10}>
                         <h2 className="text-lg font-bold text-gray-900 mb-4">Características incluidas</h2>
                       </ScrollReveal>
-                      <div ref={charsRef} className="flex flex-wrap gap-3">
+                      <div ref={charsRef} className="grid grid-cols-2 gap-2 lg:flex lg:flex-wrap lg:gap-3">
                         {property.characteristics.map((char, idx) => (
                           <div
                             key={idx}
-                            className="char-pill flex items-center gap-2 px-3 py-2 bg-white border border-gray-200"
+                            className="char-pill flex items-center gap-2 px-3 py-2 bg-white border border-gray-200 w-full lg:w-auto"
                           >
                             {getCharIcon(char)}
                             <span style={{ fontFamily: FONT, fontSize: 13, color: '#555' }}>{char}</span>
