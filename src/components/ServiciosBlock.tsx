@@ -99,7 +99,7 @@ export default function ServiciosBlock({ onNavigate: _onNavigate }: ServiciosBlo
       </div>
 
       {/* Grid de servicios — cards juntas, bordes rectos */}
-      <div className="px-6 sm:px-10 lg:px-14" style={{ paddingBottom: '52px', overflow: 'visible' }}>
+      <div className="sm:px-10 lg:px-14 px-0" style={{ paddingBottom: '52px', overflow: 'visible' }}>
         <div
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5"
           style={{ gap: '0', background: 'transparent', overflow: 'visible' }}
@@ -115,10 +115,9 @@ export default function ServiciosBlock({ onNavigate: _onNavigate }: ServiciosBlo
             return (
               <div
                 key={s.title}
-                className="flex flex-col"
+                className="sm:flex-col flex-row sm:gap-[14px] gap-0 sm:p-[24px_20px_20px]"
                 style={{
-                  gap: '14px',
-                  padding: '24px 20px 20px',
+                  display: 'flex',
                   borderRadius: 0,
                   background: isRed ? RED : '#fff',
                   cursor: 'default',
@@ -134,21 +133,61 @@ export default function ServiciosBlock({ onNavigate: _onNavigate }: ServiciosBlo
                 onTouchEnd={() => setTouchIdx(null)}
                 onTouchCancel={() => setTouchIdx(null)}
               >
-                {/* Ícono */}
+                {/* ── MOBILE: fila compacta ── */}
+                <div className="flex sm:hidden w-full items-center gap-3 px-4 py-3"
+                  style={{ borderBottom: `1px solid ${isRed ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.07)'}` }}
+                >
+                  <img
+                    src={s.icon}
+                    alt=""
+                    width={32}
+                    height={32}
+                    style={{ flexShrink: 0, filter: isRed ? 'brightness(0) invert(1)' : 'none' }}
+                  />
+                  <span style={{
+                    fontFamily: FONT_HEADING,
+                    fontWeight: 700,
+                    fontSize: '15px',
+                    color: isRed ? '#fff' : '#1a1a1a',
+                    flex: 1,
+                    lineHeight: 1.2,
+                  }}>
+                    {s.title}
+                  </span>
+                  <a
+                    href={url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{
+                      fontFamily: FONT_BODY,
+                      fontWeight: 500,
+                      fontSize: '12px',
+                      textDecoration: 'none',
+                      color: isRed ? '#fff' : '#fff',
+                      background: isRed ? 'rgba(255,255,255,0.2)' : '#1a1a1a',
+                      border: isRed ? '1px solid rgba(255,255,255,0.5)' : 'none',
+                      borderRadius: '99px',
+                      padding: '7px 14px',
+                      whiteSpace: 'nowrap',
+                      flexShrink: 0,
+                    }}
+                  >
+                    Hablar con un asesor
+                  </a>
+                </div>
+
+                {/* ── DESKTOP: columna con descripción ── */}
                 <img
                   src={s.icon}
                   alt=""
                   width={40}
                   height={40}
-                  style={{
-                    flexShrink: 0,
-                    display: 'block',
-                    filter: isRed ? 'brightness(0) invert(1)' : 'none',
-                  }}
+                  className="hidden sm:block"
+                  style={{ flexShrink: 0, filter: isRed ? 'brightness(0) invert(1)' : 'none' }}
                 />
 
-                {/* Título */}
                 <h3
+                  className="hidden sm:block"
                   style={{
                     fontFamily: FONT_HEADING,
                     fontWeight: 700,
@@ -161,8 +200,8 @@ export default function ServiciosBlock({ onNavigate: _onNavigate }: ServiciosBlo
                   {s.title}
                 </h3>
 
-                {/* Descripción */}
                 <p
+                  className="hidden sm:block"
                   style={{
                     fontFamily: FONT_BODY,
                     fontWeight: 300,
@@ -176,14 +215,13 @@ export default function ServiciosBlock({ onNavigate: _onNavigate }: ServiciosBlo
                   {s.description}
                 </p>
 
-                {/* CTA WhatsApp */}
                 <a
                   href={url}
                   target="_blank"
                   rel="noopener noreferrer"
                   onMouseEnter={applyInkFill}
                   onMouseLeave={applyInkFill}
-                  className="hero-btn-fill inline-flex items-center justify-center rounded-full"
+                  className="hero-btn-fill hidden sm:inline-flex items-center justify-center rounded-full"
                   style={{
                     fontFamily: FONT_BODY,
                     fontWeight: 300,
