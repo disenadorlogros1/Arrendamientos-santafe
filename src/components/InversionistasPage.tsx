@@ -603,10 +603,13 @@ export default function InversionistasPage() {
                   <span style={{ fontFamily: FONT, fontWeight: 700, fontSize: '14px', color: '#1a1a1a', lineHeight: 1.2 }}>
                     {b.title}
                   </span>
+                  <span style={{ fontFamily: FONT, fontWeight: 300, fontSize: '11px', color: 'rgba(0,0,0,0.55)', lineHeight: 1.45, flexGrow: 1 }}>
+                    {b.description}
+                  </span>
                   <span style={{
                     fontFamily: FONT, fontWeight: 500, fontSize: '12px',
                     color: '#fff', background: '#1a1a1a', borderRadius: '99px',
-                    padding: '6px 10px', lineHeight: 1.3, marginTop: 'auto',
+                    padding: '6px 10px', lineHeight: 1.3,
                   }}>
                     Hablar con un asesor
                   </span>
