@@ -1239,7 +1239,7 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', initialTex
               {/* Precio */}
               <div style={{ padding: '14px 20px', borderBottom: DIVIDER }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 10 }}>
-                  <img src="/icons/icon-dollar-red.svg" width={20} height={20} alt="" aria-hidden style={{ flexShrink: 0 }} />
+                  <img src={fi('icon-dollar', false, precioRange[0] > 0 || precioRange[1] < (tipo === 'Comprar' ? 500_000_000 : 15_000_000))} width={20} height={20} alt="" aria-hidden style={{ flexShrink: 0 }} />
                   <p style={labelStyle}>Precio</p>
                 </div>
                 <PriceRangeSlider
@@ -1254,7 +1254,7 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', initialTex
               {/* Habitaciones */}
               <div style={{ padding: '14px 20px', borderBottom: DIVIDER }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 10 }}>
-                  <img src="/icons/icon-bed-red.svg" width={20} height={20} alt="" aria-hidden style={{ flexShrink: 0 }} />
+                  <img src={fi('icon-bed', false, habitaciones !== null)} width={20} height={20} alt="" aria-hidden style={{ flexShrink: 0 }} />
                   <p style={labelStyle}>Habitaciones</p>
                 </div>
                 <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
