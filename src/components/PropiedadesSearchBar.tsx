@@ -747,10 +747,10 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', initialTex
           transition: 'max-height 0.45s cubic-bezier(0.4,0,0.2,1)',
         }}>
 
-          {/* ── MOBILE: Filtros apilados (< lg) ──────────────────── */}
+          {/* ── MOBILE: Vista inicial simplificada (< lg) ──────────── */}
           <div className="lg:hidden">
 
-            {/* Búsqueda libre */}
+            {/* ¿Qué buscas? */}
             <div style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '13px 16px', borderBottom: DIVIDER }}>
               <img src="/icons/icon-search-red.svg" width={20} height={20} alt="" aria-hidden style={{ flexShrink: 0 }} />
               <div style={{ flex: 1, minWidth: 0 }}>
@@ -766,133 +766,33 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', initialTex
               </div>
             </div>
 
-            {/* Código */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '13px 16px', borderBottom: DIVIDER }}>
-              <img src="/icons/icon-code-red.svg" width={20} height={20} alt="" aria-hidden style={{ flexShrink: 0 }} />
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <p style={labelStyle}>Código inmueble</p>
-                <input type="text" value={codigo}
-                  onChange={e => {
-                    const v = e.target.value; setCodigo(v);
-                    onApply({ tipo, textoBusqueda, codigo: v, sector, tipoPropiedad, precioMin: precioRange[0], precioMax: precioRange[1], habitaciones, banos, parqueadero, areaMin, areaMax, estrato, comodidades });
-                  }}
-                  placeholder="Ej: A11636"
-                  style={{ fontFamily: FONT, fontSize: '14px', fontWeight: 400, color: codigo ? COLOR_VALUE : '#ccc', background: 'transparent', border: 'none', outline: 'none', width: '100%', lineHeight: 1 }} />
-              </div>
+            {/* Más filtros | Ver en mapa */}
+            <div style={{ display: 'flex', height: '48px', borderBottom: DIVIDER }}>
+              <button
+                type="button"
+                onClick={openSheet}
+                style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, background: '#f7f6f4', border: 'none', borderRight: DIVIDER, cursor: 'pointer', fontFamily: FONT, fontSize: '13px', color: activeFilterCount > 0 ? COLOR_VALUE : '#888', fontWeight: activeFilterCount > 0 ? 500 : 400, transition: 'background 0.15s ease' }}
+                onTouchStart={e => { (e.currentTarget as HTMLButtonElement).style.background = 'rgba(0,0,0,0.06)'; }}
+                onTouchEnd={e => { (e.currentTarget as HTMLButtonElement).style.background = '#f7f6f4'; }}
+              >
+                <img src="/icons/icon-sliders-red.svg" width={14} height={14} alt="" style={{ opacity: activeFilterCount > 0 ? 1 : 0.5 }} />
+                Más filtros{activeFilterCount > 0 ? ` (${activeFilterCount})` : ''}
+              </button>
+              <button
+                type="button"
+                onClick={onShowMap}
+                style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, background: '#f7f6f4', border: 'none', cursor: 'pointer', fontFamily: FONT, fontSize: '13px', color: '#888', fontWeight: 400, transition: 'background 0.15s ease' }}
+                onTouchStart={e => { (e.currentTarget as HTMLButtonElement).style.background = 'rgba(0,0,0,0.06)'; }}
+                onTouchEnd={e => { (e.currentTarget as HTMLButtonElement).style.background = '#f7f6f4'; }}
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ color: '#888' }}>
+                  <polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/><line x1="9" y1="3" x2="9" y2="18"/><line x1="15" y1="6" x2="15" y2="21"/>
+                </svg>
+                Ver en mapa
+              </button>
             </div>
 
-            {/* Ubicación — native select */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '13px 16px', borderBottom: DIVIDER }}>
-              <img src="/icons/icon-location-red.svg" width={20} height={20} alt="" aria-hidden style={{ flexShrink: 0 }} />
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <p style={labelStyle}>Ubicación</p>
-                <select value={sector}
-                  onChange={e => {
-                    const v = e.target.value; setSector(v);
-                    onApply({ tipo, textoBusqueda, codigo, sector: v, tipoPropiedad, precioMin: precioRange[0], precioMax: precioRange[1], habitaciones, banos, parqueadero, areaMin, areaMax, estrato, comodidades });
-                  }}
-                  style={{ fontFamily: FONT, fontSize: '14px', fontWeight: 400, color: sector ? COLOR_VALUE : '#aaa', background: 'transparent', border: 'none', outline: 'none', width: '100%', lineHeight: 1, appearance: 'none', WebkitAppearance: 'none', padding: 0 }}>
-                  <option value="">Seleccionar</option>
-                  {SECTORES.map(s => <option key={s} value={s}>{s}</option>)}
-                </select>
-              </div>
-            </div>
-
-            {/* Tipo de propiedad — native select */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '13px 16px', borderBottom: DIVIDER }}>
-              <img src="/icons/icon-home-red.svg" width={20} height={20} alt="" aria-hidden style={{ flexShrink: 0 }} />
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <p style={labelStyle}>Tipo de propiedad</p>
-                <select value={tipoPropiedad}
-                  onChange={e => {
-                    const v = e.target.value; setTipoPropiedad(v);
-                    onApply({ tipo, textoBusqueda, codigo, sector, tipoPropiedad: v, precioMin: precioRange[0], precioMax: precioRange[1], habitaciones, banos, parqueadero, areaMin, areaMax, estrato, comodidades });
-                  }}
-                  style={{ fontFamily: FONT, fontSize: '14px', fontWeight: 400, color: tipoPropiedad ? COLOR_VALUE : '#aaa', background: 'transparent', border: 'none', outline: 'none', width: '100%', lineHeight: 1, appearance: 'none', WebkitAppearance: 'none', padding: 0 }}>
-                  <option value="">Seleccionar</option>
-                  {TIPOS_INMUEBLE.map(t => <option key={t} value={t}>{t}</option>)}
-                </select>
-              </div>
-            </div>
-
-            {/* Precio — inline slider */}
-            <div style={{ padding: '13px 16px', borderBottom: DIVIDER }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 8 }}>
-                <img src="/icons/icon-dollar-red.svg" width={20} height={20} alt="" aria-hidden style={{ flexShrink: 0 }} />
-                <p style={labelStyle}>Precio</p>
-              </div>
-              <PriceRangeSlider
-                min={tipo === 'Comprar' ? 30_000_000 : 0}
-                max={tipo === 'Comprar' ? 500_000_000 : 15_000_000}
-                step={tipo === 'Comprar' ? 5_000_000 : 250_000}
-                value={precioRange}
-                onChange={setPrecioRange}
-              />
-            </div>
-
-            {/* Toggle búsqueda avanzada */}
-            <button type="button" onClick={() => setShowAdvanced(v => !v)}
-              style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: '13px 16px', background: showAdvanced ? 'rgba(0,0,0,0.04)' : '#f7f6f4', border: 'none', borderBottom: DIVIDER, cursor: 'pointer', fontFamily: FONT, fontSize: '13px', color: showAdvanced ? COLOR_VALUE : '#888', fontWeight: 400, transition: 'background 0.15s ease' }}>
-              Búsqueda avanzada {showAdvanced ? '▴' : '▾'}
-            </button>
-
-            {/* Avanzados — mobile */}
-            {showAdvanced && (
-              <>
-                <div style={{ padding: '12px 16px', borderBottom: DIVIDER }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 8 }}>
-                    <img src="/icons/icon-bed-red.svg" width={18} height={18} alt="" aria-hidden style={{ flexShrink: 0 }} />
-                    <p style={labelStyle}>Habitaciones</p>
-                  </div>
-                  <div style={{ display: 'flex', gap: 5, flexWrap: 'wrap' }}>
-                    {[1,2,3,4,5].map(n => <Chip key={n} label={n === 5 ? '5+' : String(n)} active={habitaciones === n} onClick={() => setHabitaciones(habitaciones === n ? null : n)} />)}
-                  </div>
-                </div>
-                <div style={{ padding: '12px 16px', borderBottom: DIVIDER }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 8 }}>
-                    <img src="/icons/icon-bathroom-red.svg" width={18} height={18} alt="" aria-hidden style={{ flexShrink: 0 }} />
-                    <p style={labelStyle}>Baños</p>
-                  </div>
-                  <div style={{ display: 'flex', gap: 5, flexWrap: 'wrap' }}>
-                    {[1,2,3,4].map(n => <Chip key={n} label={n === 4 ? '4+' : String(n)} active={banos === n} onClick={() => setBanos(banos === n ? null : n)} />)}
-                  </div>
-                </div>
-                <div style={{ padding: '12px 16px', borderBottom: DIVIDER }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 8 }}>
-                    <img src="/icons/icon-parking-red.svg" width={18} height={18} alt="" aria-hidden style={{ flexShrink: 0 }} />
-                    <p style={labelStyle}>Parqueadero</p>
-                  </div>
-                  <div style={{ display: 'flex', gap: 5, flexWrap: 'wrap' }}>
-                    <Chip label="Con parqueadero" active={parqueadero === 'con'} onClick={() => setParqueadero(parqueadero === 'con' ? null : 'con')} />
-                    <Chip label="Sin parqueadero" active={parqueadero === 'sin'} onClick={() => setParqueadero(parqueadero === 'sin' ? null : 'sin')} />
-                  </div>
-                </div>
-                <div style={{ padding: '12px 16px', borderBottom: DIVIDER }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 8 }}>
-                    <img src="/icons/icon-code-red.svg" width={18} height={18} alt="" aria-hidden style={{ flexShrink: 0 }} />
-                    <p style={labelStyle}>Estrato</p>
-                  </div>
-                  <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap' }}>
-                    {ESTRATOS.map(e => <Chip key={e} label={e} active={estrato.includes(e)} onClick={() => toggleEstrato(e)} />)}
-                  </div>
-                </div>
-                <div style={{ padding: '12px 16px', borderBottom: DIVIDER }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 8 }}>
-                    <img src="/icons/icon-favorite-red.svg" width={18} height={18} alt="" aria-hidden style={{ flexShrink: 0 }} />
-                    <p style={labelStyle}>Comodidades</p>
-                  </div>
-                  <div style={{ display: 'flex', gap: 5, flexWrap: 'wrap' }}>
-                    {COMODIDADES.map(c => <Chip key={c} label={c} active={comodidades.includes(c)} onClick={() => toggleComodidad(c)} />)}
-                  </div>
-                </div>
-                <button type="button" onClick={handleClear}
-                  style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, padding: '13px 16px', background: 'transparent', border: 'none', borderBottom: DIVIDER, cursor: 'pointer', fontFamily: FONT, fontSize: '13px', color: '#aaa', fontWeight: 400 }}>
-                  Limpiar filtros
-                </button>
-              </>
-            )}
-
-            {/* CTA móvil */}
+            {/* CTA */}
             <button type="button" onClick={handleApply}
               style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, background: RED, color: '#fff', fontFamily: FONT, fontSize: '15px', fontWeight: 600, border: 'none', cursor: 'pointer', padding: '16px 0', transition: 'background 0.2s ease' }}
               onMouseEnter={e => (e.currentTarget.style.background = RED_HOVER)}
