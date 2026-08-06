@@ -481,6 +481,8 @@ export default function PropiedadesPage({ initialFilter = 'Todos', initialQueStr
               setShowMap(true);
             }
           }}
+          onShowList={() => setShowMobileMap(false)}
+          mapActive={showMobileMap}
           collapsed={showMap}
         />
       </div>
@@ -679,31 +681,39 @@ export default function PropiedadesPage({ initialFilter = 'Todos', initialQueStr
         <div className="lg:hidden mb-8">
           {showMobileMap ? (
             <>
-              {/* Barra modo lista */}
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px clamp(16px, 3vw, 48px)', marginBottom: 8, borderBottom: '1px solid rgba(0,0,0,0.08)' }}>
+              {/* Conteo */}
+              <div style={{ padding: '10px clamp(16px, 3vw, 48px)', marginBottom: 8, borderBottom: '1px solid rgba(0,0,0,0.08)' }}>
                 <p style={{ fontFamily: FONT_BODY, fontSize: '13px', color: '#999', margin: 0 }}>
                   {filtered.length} {filtered.length === 1 ? 'propiedad' : 'propiedades'}
                 </p>
-                <button
-                  type="button"
-                  onClick={() => setShowMobileMap(false)}
-                  style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'none', border: 'none', cursor: 'pointer', fontFamily: FONT_BODY, fontSize: '13px', fontWeight: 500, color: '#555', padding: '4px 0' }}
-                >
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/>
-                    <line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/>
-                  </svg>
-                  Modo lista
-                </button>
               </div>
-              {/* Mapa */}
-              <div style={{ height: '62dvh', position: 'relative' }}>
+              {/* Mapa — isolation contiene z-indices internos de Leaflet */}
+              <div style={{ height: '62dvh', position: 'relative', overflow: 'hidden', isolation: 'isolate' } as React.CSSProperties}>
                 <PropiedadesLeafletMap
                   properties={filtered}
                   onBoundsChange={setVisibleInMap}
                   onHoverProperty={setHoveredMapProperty}
-                  onClickProperty={p => { window.location.href = `/propiedad/${p.id}`; }}
+                  onClickProperty={p => { setSelectedPinProperty(p); }}
                 />
+                {/* Popup card al seleccionar pin */}
+                {selectedPinProperty && (
+                  <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, zIndex: 1000, padding: '0 12px 12px' }}>
+                    <div style={{ position: 'relative', background: '#fff', boxShadow: '0 -4px 28px rgba(0,0,0,0.22)' }}>
+                      <button
+                        type="button"
+                        onClick={() => setSelectedPinProperty(null)}
+                        style={{ position: 'absolute', top: 8, right: 8, zIndex: 2, background: 'rgba(0,0,0,0.55)', border: 'none', borderRadius: '50%', width: 28, height: 28, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                      >
+                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round">
+                          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                        </svg>
+                      </button>
+                      <div onClick={() => { window.location.href = `/propiedad/${selectedPinProperty.id}`; }} style={{ cursor: 'pointer' }}>
+                        <PropertyCard property={selectedPinProperty} />
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
             </>
           ) : (

@@ -575,6 +575,7 @@ interface Props {
   initialTextoBusqueda?: string;
   onApply: (f: PropSearchFilters) => void;
   onShowMap?: () => void;
+  onShowList?: () => void;
   mapActive?: boolean;
   collapsed?: boolean;
 }
@@ -582,7 +583,7 @@ interface Props {
 const fi = (base: string, focused: boolean, filled: boolean) =>
   filled ? `/icons/${base}-red.svg` : focused ? `/icons/${base}-red-dark.svg` : `/icons/${base}-gray.svg`;
 
-export default function PropiedadesSearchBar({ initialTipo = 'Todos', initialTextoBusqueda = '', onApply, onShowMap, mapActive = false, collapsed = false }: Props) {
+export default function PropiedadesSearchBar({ initialTipo = 'Todos', initialTextoBusqueda = '', onApply, onShowMap, onShowList, mapActive = false, collapsed = false }: Props) {
   const [tipo,           setTipo]          = useState<'Todos' | 'Arrendar' | 'Comprar'>(initialTipo);
   const [textoBusqueda,  setTextoBusqueda] = useState(initialTextoBusqueda);
   const [busquedaActive, setBusquedaActive] = useState(false);
@@ -794,15 +795,27 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', initialTex
               </button>
               <button
                 type="button"
-                onClick={onShowMap}
-                style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, background: '#f7f6f4', border: 'none', cursor: 'pointer', fontFamily: FONT, fontSize: '13px', color: '#888', fontWeight: 400, transition: 'background 0.15s ease' }}
+                onClick={mapActive ? onShowList : onShowMap}
+                style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, background: '#f7f6f4', border: 'none', cursor: 'pointer', fontFamily: FONT, fontSize: '13px', color: mapActive ? COLOR_VALUE : '#888', fontWeight: mapActive ? 500 : 400, transition: 'background 0.15s ease' }}
                 onTouchStart={e => { (e.currentTarget as HTMLButtonElement).style.background = 'rgba(0,0,0,0.06)'; }}
                 onTouchEnd={e => { (e.currentTarget as HTMLButtonElement).style.background = '#f7f6f4'; }}
               >
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={mapActive ? '#f32735' : '#888'} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/><line x1="9" y1="3" x2="9" y2="18"/><line x1="15" y1="6" x2="15" y2="21"/>
-                </svg>
-                Ver en mapa
+                {mapActive ? (
+                  <>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={COLOR_VALUE} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/>
+                      <line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/>
+                    </svg>
+                    Modo lista
+                  </>
+                ) : (
+                  <>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#888" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/><line x1="9" y1="3" x2="9" y2="18"/><line x1="15" y1="6" x2="15" y2="21"/>
+                    </svg>
+                    Ver en mapa
+                  </>
+                )}
               </button>
             </div>
 
