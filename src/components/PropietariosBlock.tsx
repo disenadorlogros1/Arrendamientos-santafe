@@ -182,16 +182,16 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
         <div
           className="lg:hidden w-full"
           style={{
-            height: '220px',
-            backgroundImage: 'url(/images/banner_propietarios_1.png)',
+            height: '200px',
+            backgroundImage: 'url(/images/banner_propietarios_2.png)',
             backgroundSize: 'cover',
-            backgroundPosition: 'center top',
+            backgroundPosition: 'center center',
           }}
         />
 
         {/* ── COLUMNA IZQUIERDA ─────────────────────────────────── */}
         <div
-          className="flex flex-col justify-center gap-4 px-6 py-6 sm:px-14 sm:py-12 lg:py-0 lg:pl-16 lg:pr-14 lg:flex-shrink-0 lg:flex-grow-0"
+          className="flex flex-col justify-center gap-4 px-6 py-4 sm:px-14 sm:py-12 lg:py-0 lg:pl-16 lg:pr-14 lg:flex-shrink-0 lg:flex-grow-0"
           style={{ flexBasis: '672px' }}
         >
           <h2
