@@ -251,8 +251,121 @@ export default function InversionistasPage() {
       {/* Investment Zones Section — 2 columnas: tarjetas + mapa */}
       <section id="zonas" style={{ background: '#f7f6f4', paddingBottom: '48px', isolation: 'isolate', position: 'relative', zIndex: 0 }}>
 
+        {/* ── MOBILE: mapa full-width + grid 2×2 + panel de detalle ── */}
+        <div className="lg:hidden">
+          {/* Mapa full width */}
+          <div style={{ height: '210px', width: '100%', overflow: 'hidden' }}>
+            <InversionistasLeafletMap
+              activeSector={activeSector}
+              hoveredSector={hoveredSector}
+              onSectorHover={handleMapHover}
+              onSectorClick={setActiveSector}
+              onZoneNavigate={handleZoneNavigate}
+            />
+          </div>
+
+          {/* Grid 2×2 de sectores */}
+          <div style={{ padding: '14px 12px 0' }}>
+            <p style={{ fontFamily: FONT, fontSize: '9px', fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: '#999', marginBottom: '8px', paddingLeft: 2 }}>
+              Zonas de inversión
+            </p>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '7px' }}>
+              {SECTORS.map(sector => {
+                const isActive = activeSector === sector;
+                const sectorZones = getZonesBySector(sector);
+                return (
+                  <button
+                    key={sector}
+                    onClick={() => setActiveSector(isActive ? null : sector)}
+                    style={{
+                      background: isActive ? '#fff' : '#ebebeb',
+                      borderRadius: '12px',
+                      padding: '11px 12px',
+                      border: 'none',
+                      borderLeft: isActive ? '3px solid #f32735' : '3px solid transparent',
+                      textAlign: 'left',
+                      cursor: 'pointer',
+                      boxShadow: isActive ? '0 2px 14px rgba(0,0,0,0.09)' : 'none',
+                      transition: 'background 0.18s, box-shadow 0.18s',
+                    }}
+                  >
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                      <span style={{ fontFamily: FONT, fontSize: '13px', fontWeight: 700, color: '#1a1a1a' }}>
+                        {sector}
+                      </span>
+                      {isActive && (
+                        <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#f32735', display: 'block', marginTop: 3, flexShrink: 0 }} />
+                      )}
+                    </div>
+                    <span style={{ fontFamily: FONT, fontSize: '10px', color: '#999', display: 'block', marginTop: 2 }}>
+                      {SECTOR_SUBTITLES[sector]}
+                    </span>
+                    <span style={{ fontFamily: FONT, fontSize: '10px', fontWeight: 600, color: '#f32735', display: 'block', marginTop: 6 }}>
+                      {sectorZones.length} zona{sectorZones.length !== 1 ? 's' : ''}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Panel de detalle — solo cuando hay sector activo */}
+          {activeSector && (() => {
+            const sectorZones = getZonesBySector(activeSector);
+            const firstZone   = sectorZones[0];
+            const allSubzones = sectorZones.flatMap(z => z.subzones).slice(0, 6);
+            return (
+              <div style={{ margin: '10px 12px 16px', background: '#ebebeb', borderRadius: '14px', padding: '14px' }}>
+                <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '12px' }}>
+                  <div>
+                    <div style={{ fontFamily: FONT, fontSize: '15px', fontWeight: 700, color: '#1a1a1a' }}>Zona {activeSector}</div>
+                    <div style={{ fontFamily: FONT, fontSize: '11px', color: '#999', marginTop: 2 }}>{SECTOR_SUBTITLES[activeSector]}</div>
+                  </div>
+                  <span style={{ background: '#f32735', color: '#fff', fontSize: '10px', fontWeight: 700, padding: '3px 8px', borderRadius: '99px', flexShrink: 0, marginLeft: 8, marginTop: 2 }}>
+                    {sectorZones.length} zona{sectorZones.length !== 1 ? 's' : ''}
+                  </span>
+                </div>
+
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '7px', marginBottom: '12px' }}>
+                  <div style={{ background: '#fff', borderRadius: '10px', padding: '10px 12px' }}>
+                    <div style={{ fontFamily: FONT, fontSize: '22px', fontWeight: 800, color: '#f32735', lineHeight: 1 }}>{firstZone.rentability}</div>
+                    <div style={{ fontFamily: FONT, fontSize: '9px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', color: '#999', marginTop: 4 }}>Rentabilidad</div>
+                  </div>
+                  <div style={{ background: '#fff', borderRadius: '10px', padding: '10px 12px' }}>
+                    <div style={{ fontFamily: FONT, fontSize: '22px', fontWeight: 800, color: '#f32735', lineHeight: 1 }}>{firstZone.strata}</div>
+                    <div style={{ fontFamily: FONT, fontSize: '9px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', color: '#999', marginTop: 4 }}>Estratos</div>
+                  </div>
+                </div>
+
+                <div style={{ marginBottom: '12px' }}>
+                  <div style={{ fontFamily: FONT, fontSize: '9px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', color: '#999', marginBottom: 6 }}>Barrios y sectores</div>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '5px' }}>
+                    {allSubzones.map(b => (
+                      <span key={b} style={{ background: '#fff', borderRadius: '99px', padding: '3px 9px', fontSize: '11px', fontWeight: 500, color: '#1a1a1a' }}>{b}</span>
+                    ))}
+                  </div>
+                </div>
+
+                <Link
+                  href={`/inversionistas/${firstZone.slug}`}
+                  style={{
+                    display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
+                    width: '100%', background: '#f32735', color: '#fff',
+                    borderRadius: '10px', padding: '12px',
+                    fontFamily: FONT, fontSize: '13px', fontWeight: 700,
+                    textDecoration: 'none',
+                  }}
+                >
+                  Ver propiedades
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </Link>
+              </div>
+            );
+          })()}
+        </div>
+
         {/* 2-col block */}
-        <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '40px clamp(20px, 4vw, 52px) 0' }}>
+        <div className="hidden lg:block" style={{ maxWidth: '1400px', margin: '0 auto', padding: '40px clamp(20px, 4vw, 52px) 0' }}>
           <div style={{ display: 'flex', gap: '0', alignItems: 'stretch', minHeight: '520px' }}>
 
             {/* LEFT: 4 sector cards */}
@@ -321,8 +434,8 @@ export default function InversionistasPage() {
 
         </div>
 
-        {/* Zone columns grid */}
-        <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '0 clamp(20px, 4vw, 52px) 40px' }}>
+        {/* Zone columns grid — desktop only */}
+        <div className="hidden lg:block" style={{ maxWidth: '1400px', margin: '0 auto', padding: '0 clamp(20px, 4vw, 52px) 40px' }}>
           <div style={{ display: 'flex', gap: '1px', background: '#f5f5f5', overflow: 'hidden' }}>
             {visibleZones.map((zone) => {
               const isCardHov  = hoveredZoneCard === zone.id;
