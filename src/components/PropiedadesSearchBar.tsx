@@ -1119,34 +1119,32 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', initialTex
 
       </div>
 
-      {/* ── Bottom sheet "Más filtros" — portal to body ─────────── */}
+      {/* ── Modal "Más filtros" — portal to body ─────────────────── */}
       {showFiltersSheet && sheetMounted && createPortal(
-        <div style={{ position: 'fixed', inset: 0, zIndex: 9990 }}>
+        <div style={{ position: 'fixed', inset: 0, zIndex: 9990, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
 
           {/* Backdrop */}
           <div
             onClick={closeSheet}
-            style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.52)', transition: 'opacity 0.35s ease', opacity: sheetOpen ? 1 : 0 }}
+            style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.52)', transition: 'opacity 0.25s ease', opacity: sheetOpen ? 1 : 0 }}
           />
 
-          {/* Sheet */}
+          {/* Modal */}
           <div style={{
-            position: 'absolute', bottom: 0, left: 0, right: 0,
+            position: 'relative',
             background: '#fff',
-            borderRadius: '20px 20px 0 0',
-            maxHeight: '90dvh',
+            borderRadius: 0,
+            width: '100%',
+            maxWidth: '440px',
+            maxHeight: '85dvh',
             display: 'flex', flexDirection: 'column',
-            transform: sheetOpen ? 'translateY(0)' : 'translateY(100%)',
-            transition: 'transform 0.35s cubic-bezier(0.4, 0, 0.2, 1)',
+            opacity: sheetOpen ? 1 : 0,
+            transform: sheetOpen ? 'scale(1)' : 'scale(0.96)',
+            transition: 'opacity 0.25s ease, transform 0.25s ease',
           }}>
 
-            {/* Handle */}
-            <div style={{ display: 'flex', justifyContent: 'center', paddingTop: 12, paddingBottom: 2 }}>
-              <div style={{ width: 40, height: 4, background: '#e0e0e0', borderRadius: 2 }} />
-            </div>
-
             {/* Header */}
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 20px 14px', borderBottom: DIVIDER }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 20px', borderBottom: DIVIDER }}>
               <span style={{ fontFamily: FONT, fontSize: '16px', fontWeight: 600, color: COLOR_VALUE }}>Filtros</span>
               <button type="button" onClick={closeSheet}
                 style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 4, display: 'flex', alignItems: 'center', justifyContent: 'center', lineHeight: 1 }}>

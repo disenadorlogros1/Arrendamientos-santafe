@@ -271,7 +271,7 @@ export default function Header({ currentPage, onNavigate, isHeroPage = true, dar
                     <div key={item.label}>
                       <button
                         onClick={() => { if (item.children) setExpandedMobile(expandedMobile === item.label ? null : item.label); else if (item.page) handleNav(item.page); }}
-                        className={`w-full text-left px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 ${currentPage === item.page ? 'bg-[#f5f5f5] text-[#1a1a1a]' : 'text-white/70 hover:bg-white/10 hover:text-white'}`}
+                        className={`w-full text-left px-4 py-3 text-sm font-medium transition-all duration-200 ${currentPage === item.page ? 'bg-[#f5f5f5] text-[#1a1a1a]' : 'text-white/70 hover:bg-white/10 hover:text-white'}`}
                         style={{ fontFamily: "'Avenir LT Std', 'Outfit', system-ui, sans-serif", fontWeight: currentPage === item.page ? 700 : 300 }}>
                         {item.label}
                       </button>
@@ -284,14 +284,14 @@ export default function Header({ currentPage, onNavigate, isHeroPage = true, dar
                                 href={sub.href}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="block w-full text-left px-4 py-3 rounded-lg text-sm text-white/50 hover:text-white hover:bg-white/5 transition-all duration-200"
+                                className="block w-full text-left px-4 py-3 text-sm text-white/50 hover:text-white hover:bg-white/5 transition-all duration-200"
                                 style={{ fontFamily: "'Avenir LT Std', 'Outfit', system-ui, sans-serif", fontWeight: 300 }}
                               >
                                 {sub.label}
                               </a>
                             ) : (
                               <button key={sub.label} onClick={() => { if (sub.page) handleNav(sub.page, sub.filter); }}
-                                className="w-full text-left px-4 py-1.5 rounded-lg text-sm text-white/50 hover:text-white hover:bg-white/5 transition-all duration-200"
+                                className="w-full text-left px-4 py-1.5 text-sm text-white/50 hover:text-white hover:bg-white/5 transition-all duration-200"
                                 style={{ fontFamily: "'Avenir LT Std', 'Outfit', system-ui, sans-serif", fontWeight: 300 }}>
                                 {sub.label}
                               </button>
