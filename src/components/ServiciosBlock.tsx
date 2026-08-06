@@ -98,10 +98,86 @@ export default function ServiciosBlock({ onNavigate: _onNavigate }: ServiciosBlo
         </h2>
       </div>
 
-      {/* Grid de servicios — cards juntas, bordes rectos */}
-      <div className="sm:px-10 lg:px-14 px-0" style={{ paddingBottom: '52px', overflow: 'visible' }}>
+      {/* ── MOBILE: carrusel horizontal — 3 tarjetas visibles ── */}
+      <div
+        className="sm:hidden"
+        style={{
+          overflowX: 'auto',
+          overflowY: 'visible',
+          scrollSnapType: 'x mandatory',
+          WebkitOverflowScrolling: 'touch' as React.CSSProperties['WebkitOverflowScrolling'],
+          paddingLeft: '16px',
+          paddingRight: '16px',
+          paddingBottom: '24px',
+          msOverflowStyle: 'none',
+          scrollbarWidth: 'none',
+        } as React.CSSProperties}
+      >
+        <div className="flex gap-2" style={{ width: 'max-content' }}>
+          {servicios.map((s, idx) => {
+            const url   = `https://wa.me/${PHONE}?text=${encodeURIComponent(s.waMsg)}`;
+            const isRed = idx === redIdx;
+            return (
+              <a
+                key={s.title}
+                href={url}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  width: 'calc((100vw - 48px) / 3)',
+                  minWidth: '100px',
+                  maxWidth: '130px',
+                  flexShrink: 0,
+                  scrollSnapAlign: 'start',
+                  background: isRed ? RED : '#f5f5f5',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  textAlign: 'center',
+                  gap: '8px',
+                  padding: '16px 10px 14px',
+                  textDecoration: 'none',
+                }}
+              >
+                <img
+                  src={s.icon}
+                  alt=""
+                  width={32}
+                  height={32}
+                  style={{ filter: isRed ? 'brightness(0) invert(1)' : 'none' }}
+                />
+                <span style={{
+                  fontFamily: FONT_HEADING,
+                  fontWeight: 700,
+                  fontSize: '13px',
+                  color: isRed ? '#fff' : '#1a1a1a',
+                  lineHeight: 1.2,
+                }}>
+                  {s.title}
+                </span>
+                <span style={{
+                  fontFamily: FONT_BODY,
+                  fontWeight: 500,
+                  fontSize: '11px',
+                  color: '#fff',
+                  background: isRed ? 'rgba(255,255,255,0.25)' : '#1a1a1a',
+                  borderRadius: '99px',
+                  padding: '5px 8px',
+                  lineHeight: 1.3,
+                  marginTop: 'auto',
+                }}>
+                  Hablar con un asesor
+                </span>
+              </a>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* ── DESKTOP (sm+): grid con descripción ── */}
+      <div className="hidden sm:block sm:px-10 lg:px-14" style={{ paddingBottom: '52px', overflow: 'visible' }}>
         <div
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5"
+          className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5"
           style={{ gap: '0', background: 'transparent', overflow: 'visible' }}
         >
           {servicios.map((s, idx) => {
@@ -115,9 +191,10 @@ export default function ServiciosBlock({ onNavigate: _onNavigate }: ServiciosBlo
             return (
               <div
                 key={s.title}
-                className="sm:flex-col flex-row sm:gap-[14px] gap-0 sm:p-[24px_20px_20px]"
+                className="flex flex-col"
                 style={{
-                  display: 'flex',
+                  gap: '14px',
+                  padding: '24px 20px 20px',
                   borderRadius: 0,
                   background: isRed ? RED : '#fff',
                   cursor: 'default',
@@ -133,61 +210,15 @@ export default function ServiciosBlock({ onNavigate: _onNavigate }: ServiciosBlo
                 onTouchEnd={() => setTouchIdx(null)}
                 onTouchCancel={() => setTouchIdx(null)}
               >
-                {/* ── MOBILE: fila compacta ── */}
-                <div className="flex sm:hidden w-full items-center gap-3 px-4 py-3"
-                  style={{ borderBottom: `1px solid ${isRed ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.07)'}` }}
-                >
-                  <img
-                    src={s.icon}
-                    alt=""
-                    width={32}
-                    height={32}
-                    style={{ flexShrink: 0, filter: isRed ? 'brightness(0) invert(1)' : 'none' }}
-                  />
-                  <span style={{
-                    fontFamily: FONT_HEADING,
-                    fontWeight: 700,
-                    fontSize: '15px',
-                    color: isRed ? '#fff' : '#1a1a1a',
-                    flex: 1,
-                    lineHeight: 1.2,
-                  }}>
-                    {s.title}
-                  </span>
-                  <a
-                    href={url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    style={{
-                      fontFamily: FONT_BODY,
-                      fontWeight: 500,
-                      fontSize: '12px',
-                      textDecoration: 'none',
-                      color: isRed ? '#fff' : '#fff',
-                      background: isRed ? 'rgba(255,255,255,0.2)' : '#1a1a1a',
-                      border: isRed ? '1px solid rgba(255,255,255,0.5)' : 'none',
-                      borderRadius: '99px',
-                      padding: '7px 14px',
-                      whiteSpace: 'nowrap',
-                      flexShrink: 0,
-                    }}
-                  >
-                    Hablar con un asesor
-                  </a>
-                </div>
-
-                {/* ── DESKTOP: columna con descripción ── */}
                 <img
                   src={s.icon}
                   alt=""
                   width={40}
                   height={40}
-                  className="hidden sm:block"
                   style={{ flexShrink: 0, filter: isRed ? 'brightness(0) invert(1)' : 'none' }}
                 />
 
                 <h3
-                  className="hidden sm:block"
                   style={{
                     fontFamily: FONT_HEADING,
                     fontWeight: 700,
@@ -201,7 +232,6 @@ export default function ServiciosBlock({ onNavigate: _onNavigate }: ServiciosBlo
                 </h3>
 
                 <p
-                  className="hidden sm:block"
                   style={{
                     fontFamily: FONT_BODY,
                     fontWeight: 300,
@@ -221,7 +251,7 @@ export default function ServiciosBlock({ onNavigate: _onNavigate }: ServiciosBlo
                   rel="noopener noreferrer"
                   onMouseEnter={applyInkFill}
                   onMouseLeave={applyInkFill}
-                  className="hero-btn-fill hidden sm:inline-flex items-center justify-center rounded-full"
+                  className="hero-btn-fill inline-flex items-center justify-center rounded-full"
                   style={{
                     fontFamily: FONT_BODY,
                     fontWeight: 300,
