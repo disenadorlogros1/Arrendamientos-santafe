@@ -2548,15 +2548,31 @@ export default function InversionistasLeafletMap({ activeSector, hoveredSector, 
         polygonsRef.current[id] = { polygon };
       }
 
+      // Colorear polígonos con rojo sutil desde el inicio
+      for (const entry of Object.values(polygonsRef.current)) {
+        entry.polygon.setStyle({ color: 'transparent', weight: 0, fillColor: RED, fillOpacity: 0.10, opacity: 0 });
+      }
+
       // Marcadores de estadísticas por sector
-      const makeSectorIcon = (sector: Sector, _isActive: boolean) => {
+      const makeSectorIcon = (sector: Sector, isActive: boolean) => {
         const stats = SECTOR_STATS[sector];
+        if (isActive) {
+          return L.divIcon({
+            className: '',
+            html: `<div style="transform:translate(-50%,-50%);text-align:center;pointer-events:none;white-space:nowrap;line-height:1">
+              <div style="font-family:'Avenir LT Std','Outfit',sans-serif;font-size:40px;font-weight:900;color:#fff;line-height:0.9;text-shadow:0 2px 10px rgba(0,0,0,0.4);white-space:nowrap">${stats.barrios} Barrios</div>
+              <div style="font-family:'Avenir LT Std','Outfit',sans-serif;font-size:22px;font-weight:700;color:#fff;line-height:0.9;text-shadow:0 2px 8px rgba(0,0,0,0.4);margin-top:0;white-space:nowrap">${stats.municipios} Municipios</div>
+              <div style="font-family:'Avenir LT Std','Outfit',sans-serif;font-size:11px;font-weight:700;color:#fff;background:${RED};padding:3px 10px;margin-top:1px;white-space:nowrap;display:inline-block">${stats.propiedades} propiedades</div>
+            </div>`,
+            iconSize:   [0, 0],
+            iconAnchor: [0, 0],
+          });
+        }
+        // Estado por defecto — compacto, siempre visible
         return L.divIcon({
           className: '',
           html: `<div style="transform:translate(-50%,-50%);text-align:center;pointer-events:none;white-space:nowrap;line-height:1">
-            <div style="font-family:'Avenir LT Std','Outfit',sans-serif;font-size:40px;font-weight:900;color:#fff;line-height:0.9;text-shadow:0 2px 10px rgba(0,0,0,0.4);white-space:nowrap">${stats.barrios} Barrios</div>
-            <div style="font-family:'Avenir LT Std','Outfit',sans-serif;font-size:22px;font-weight:700;color:#fff;line-height:0.9;text-shadow:0 2px 8px rgba(0,0,0,0.4);margin-top:0;white-space:nowrap">${stats.municipios} Municipios</div>
-            <div style="font-family:'Avenir LT Std','Outfit',sans-serif;font-size:11px;font-weight:700;color:#fff;background:${RED};padding:3px 10px;margin-top:1px;white-space:nowrap;display:inline-block">${stats.propiedades} propiedades</div>
+            <div style="font-family:'Avenir LT Std','Outfit',sans-serif;font-size:13px;font-weight:800;color:#1a1a1a;background:rgba(255,255,255,0.88);padding:4px 9px 3px;border-radius:99px;white-space:nowrap;box-shadow:0 1px 6px rgba(0,0,0,0.14)">${sector}&nbsp;<span style="color:${RED}">${stats.barrios}B</span></div>
           </div>`,
           iconSize:   [0, 0],
           iconAnchor: [0, 0],
@@ -2570,7 +2586,7 @@ export default function InversionistasLeafletMap({ activeSector, hoveredSector, 
           interactive: false,
           zIndexOffset: 1000,
         }).addTo(mapRef.current);
-        marker.setOpacity(0);
+        marker.setOpacity(1); // siempre visible
         sectorMarkersRef.current[s] = { marker, makeSectorIcon };
       }
     };
@@ -2606,15 +2622,11 @@ export default function InversionistasLeafletMap({ activeSector, hoveredSector, 
       }
     }
 
-    // Actualizar marcadores de sector — solo visible cuando hay sector activo/hover
+    // Actualizar marcadores de sector — siempre visibles, destacados cuando activo
     for (const [s, ref] of Object.entries(sectorMarkersRef.current)) {
-      const isVisible = effectiveSector !== null && s === effectiveSector;
-      ref.marker.setOpacity(isVisible ? 1 : 0);
-      if (isVisible) {
-        const centroid = SECTOR_CENTROID[s as Sector];
-        if (centroid) ref.marker.setLatLng(centroid);
-        ref.marker.setIcon(ref.makeSectorIcon(s as Sector, true));
-      }
+      const isActive = effectiveSector !== null && s === effectiveSector;
+      ref.marker.setOpacity(1);
+      ref.marker.setIcon(ref.makeSectorIcon(s as Sector, isActive));
     }
 
     const targetSector = hoveredSector ?? activeSector;
