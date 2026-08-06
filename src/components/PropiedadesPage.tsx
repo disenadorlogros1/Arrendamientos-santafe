@@ -691,20 +691,55 @@ export default function PropiedadesPage({ initialFilter = 'Todos', initialQueStr
                 />
                 {/* Popup card al seleccionar pin */}
                 {selectedPinProperty && (
-                  <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, zIndex: 1000, padding: '0 12px 12px' }}>
-                    <div style={{ position: 'relative', background: '#fff', boxShadow: '0 -4px 28px rgba(0,0,0,0.22)' }}>
+                  <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, zIndex: 1000 }}>
+                    {/* Chip compacto — altura fija, mapa visible detrás */}
+                    <div
+                      style={{
+                        position: 'relative',
+                        display: 'flex',
+                        height: 84,
+                        background: '#fff',
+                        borderTop: '3px solid #f32735',
+                        boxShadow: '0 -4px 20px rgba(0,0,0,0.18)',
+                        cursor: 'pointer',
+                        overflow: 'hidden',
+                      }}
+                      onClick={() => { window.location.href = `/propiedad/${selectedPinProperty.id}`; }}
+                    >
+                      {/* Thumbnail */}
+                      <img
+                        src={selectedPinProperty.image}
+                        alt=""
+                        style={{ width: 84, height: 84, objectFit: 'cover', flexShrink: 0 }}
+                      />
+                      {/* Info */}
+                      <div style={{ flex: 1, minWidth: 0, padding: '10px 12px', display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 4 }}>
+                        <span style={{ fontFamily: FONT_BODY, fontSize: 15, fontWeight: 900, color: '#1a1a1a', lineHeight: 1 }}>
+                          {selectedPinProperty.price}
+                        </span>
+                        <span style={{ fontFamily: FONT_BODY, fontSize: 12, color: '#888', lineHeight: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                          {selectedPinProperty.location.split(',')[0]} · {selectedPinProperty.type}
+                        </span>
+                        <span style={{ fontFamily: FONT_BODY, fontSize: 11, color: '#bbb', lineHeight: 1 }}>
+                          {selectedPinProperty.reference.replace('Ref. ', '')}
+                        </span>
+                      </div>
+                      {/* Flecha */}
+                      <div style={{ flexShrink: 0, display: 'flex', alignItems: 'center', paddingRight: 14 }}>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#f32735" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M5 12h14M12 5l7 7-7 7" />
+                        </svg>
+                      </div>
+                      {/* × cerrar */}
                       <button
                         type="button"
-                        onClick={() => setSelectedPinProperty(null)}
-                        style={{ position: 'absolute', top: 8, right: 8, zIndex: 2, background: 'rgba(0,0,0,0.55)', border: 'none', borderRadius: '50%', width: 28, height: 28, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                        onClick={e => { e.stopPropagation(); setSelectedPinProperty(null); }}
+                        style={{ position: 'absolute', top: 6, right: 6, background: 'rgba(0,0,0,0.4)', border: 'none', borderRadius: '50%', width: 22, height: 22, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 2 }}
                       >
-                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round">
+                        <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round">
                           <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
                         </svg>
                       </button>
-                      <div onClick={() => { window.location.href = `/propiedad/${selectedPinProperty.id}`; }} style={{ cursor: 'pointer' }}>
-                        <PropertyCard property={selectedPinProperty} />
-                      </div>
                     </div>
                   </div>
                 )}
