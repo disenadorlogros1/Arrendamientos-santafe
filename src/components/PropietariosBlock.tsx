@@ -179,19 +179,17 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
       <div className="flex flex-col lg:flex-row lg:h-[460px]">
 
         {/* ── BANNER MOBILE — solo visible en < lg ─────────────── */}
-        <div
-          className="lg:hidden w-full"
-          style={{
-            height: '200px',
-            backgroundImage: 'url(/images/banner_propietarios_2.png)',
-            backgroundSize: 'cover',
-            backgroundPosition: 'center center',
-          }}
+        <img
+          src="/images/banner_propietarios_2.png"
+          alt=""
+          aria-hidden
+          className="lg:hidden w-full object-cover"
+          style={{ height: '260px', objectPosition: 'center center' }}
         />
 
         {/* ── COLUMNA IZQUIERDA ─────────────────────────────────── */}
         <div
-          className="flex flex-col justify-center gap-4 px-6 py-4 sm:px-14 sm:py-12 lg:py-0 lg:pl-16 lg:pr-14 lg:flex-shrink-0 lg:flex-grow-0"
+          className="flex flex-col justify-start gap-4 px-6 pt-5 pb-5 sm:px-14 sm:py-12 lg:justify-center lg:py-0 lg:pl-16 lg:pr-14 lg:flex-shrink-0 lg:flex-grow-0"
           style={{ flexBasis: '672px' }}
         >
           <h2
