@@ -183,14 +183,19 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
           src="/images/banner_propietarios_2.png"
           alt=""
           aria-hidden
-          className="lg:hidden w-full object-cover"
-          style={{ height: '260px', objectPosition: 'center center' }}
+          className="lg:hidden w-full"
+          style={{
+            display: 'block',
+            width: '100%',
+            height: 'auto',
+            objectFit: 'contain',
+            backgroundColor: '#000',
+          }}
         />
 
         {/* ── COLUMNA IZQUIERDA ─────────────────────────────────── */}
         <div
-          className="flex flex-col justify-start gap-4 px-6 pt-5 pb-5 sm:px-14 sm:py-12 lg:justify-center lg:py-0 lg:pl-16 lg:pr-14 lg:flex-shrink-0 lg:flex-grow-0"
-          style={{ flexBasis: '672px' }}
+          className="flex flex-col justify-start gap-4 px-6 pt-5 pb-5 sm:px-14 sm:py-12 lg:justify-center lg:py-0 lg:pl-16 lg:pr-14 lg:flex-shrink-0 lg:flex-grow-0 lg:basis-[672px]"
         >
           <h2
             ref={titleRef}
