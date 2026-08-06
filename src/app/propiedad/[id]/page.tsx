@@ -507,8 +507,8 @@ export default function PropertyDetailPage() {
                     </ScrollReveal>
                     <div ref={detailsRef} className="grid grid-cols-1 sm:grid-cols-2" style={{ columnGap: 24, rowGap: 0 }}>
                       {[
-                        { icon: '/icons/icon-home-red.svg',      label: 'Tipo de inmueble',  value: property.type,                     show: true },
-                        { icon: '/icons/icon-area-gray.svg',     label: 'Área construida',   value: property.size,                     show: true },
+                        { icon: '/icons/icon-home-red.svg',      label: 'Tipo de inmueble',  value: property.type,                     show: !!property.type },
+                        { icon: '/icons/icon-area-gray.svg',     label: 'Área construida',   value: property.size,                     show: !!property.size },
                         { icon: '/icons/icon-bed-gray.svg',      label: 'Habitaciones',      value: String(property.bedrooms),         show: property.bedrooms > 0 },
                         { icon: '/icons/icon-bathroom-gray.svg', label: 'Baños',             value: String(property.bathrooms),        show: property.bathrooms > 0 },
                         { icon: '/icons/icon-home-red.svg',      label: 'Estrato',           value: `Estrato ${property.stratum}`,     show: !!property.stratum },
