@@ -143,8 +143,8 @@ export default function Footer({ onNavigate }: FooterProps = {}) {
             </ul>
           </div>
 
-          {/* Contacto */}
-          <div>
+          {/* Contacto — mobile: order-2 */}
+          <div className="order-2 sm:order-4">
             <h4 className="font-semibold text-sm uppercase tracking-wider mb-4 text-white/80">
               Contacto
             </h4>
@@ -181,8 +181,8 @@ export default function Footer({ onNavigate }: FooterProps = {}) {
             </ul>
           </div>
 
-          {/* Horarios */}
-          <div>
+          {/* Horarios — mobile: order-3 */}
+          <div className="order-3 sm:order-5">
             <h4 className="font-semibold text-sm uppercase tracking-wider mb-4 text-white/80">
               Horarios
             </h4>
