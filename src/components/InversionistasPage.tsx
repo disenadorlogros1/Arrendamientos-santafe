@@ -254,7 +254,7 @@ export default function InversionistasPage() {
         {/* ── MOBILE: mapa full-width + grid 2×2 + panel de detalle ── */}
         <div className="lg:hidden">
           {/* Mapa full width — misma altura que "ver mapa" en Propiedades */}
-          <div style={{ height: '62dvh', width: '100%', overflow: 'hidden', position: 'relative', isolation: 'isolate' } as React.CSSProperties}>
+          <div style={{ height: '62dvh', width: '100%', overflow: 'hidden', position: 'relative' }}>
             <InversionistasLeafletMap
               activeSector={activeSector}
               hoveredSector={hoveredSector}
