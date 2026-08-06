@@ -98,24 +98,35 @@ export default function ServiciosBlock({ onNavigate: _onNavigate }: ServiciosBlo
         </h2>
       </div>
 
-      {/* ── MOBILE: carrusel infinito auto-scroll ── */}
+      {/* ── CARRUSEL: mobile (2 tarjetas) y tablet (3 tarjetas) ── */}
       <style>{`
         @keyframes servicios-scroll {
           from { transform: translateX(0); }
           to   { transform: translateX(-50%); }
         }
         .servicios-track {
-          animation: servicios-scroll 14s linear infinite;
+          animation: servicios-scroll 25s linear infinite;
         }
         .servicios-track:hover {
           animation-play-state: paused;
         }
+        /* 2 tarjetas por pantalla en mobile */
+        .servicio-card {
+          width: calc(50vw - 10px);
+          flex-shrink: 0;
+          margin-right: 10px;
+        }
+        /* 3 tarjetas por pantalla en tablet (sm+) */
+        @media (min-width: 640px) {
+          .servicio-card {
+            width: calc(33.333vw - 10px);
+          }
+        }
       `}</style>
       <div
-        className="sm:hidden overflow-hidden"
+        className="lg:hidden overflow-hidden"
         style={{ paddingBottom: '24px' }}
       >
-        {/* Duplicamos los items para el loop infinito — cada item tiene marginRight fijo */}
         <div className="servicios-track flex" style={{ width: 'max-content' }}>
           {[...servicios, ...servicios].map((s, idx) => {
             const url = `https://wa.me/${PHONE}?text=${encodeURIComponent(s.waMsg)}`;
@@ -125,25 +136,23 @@ export default function ServiciosBlock({ onNavigate: _onNavigate }: ServiciosBlo
                 href={url}
                 target="_blank"
                 rel="noopener noreferrer"
+                className="servicio-card"
                 style={{
-                  width: '130px',
-                  flexShrink: 0,
-                  marginRight: '10px',
                   background: '#f5f5f5',
                   display: 'flex',
                   flexDirection: 'column',
                   alignItems: 'center',
                   textAlign: 'center',
-                  gap: '8px',
-                  padding: '16px 10px 14px',
+                  gap: '10px',
+                  padding: '20px 12px 16px',
                   textDecoration: 'none',
                 }}
               >
-                <img src={s.icon} alt="" width={32} height={32} />
+                <img src={s.icon} alt="" width={36} height={36} />
                 <span style={{
                   fontFamily: FONT_HEADING,
                   fontWeight: 700,
-                  fontSize: '13px',
+                  fontSize: '14px',
                   color: '#1a1a1a',
                   lineHeight: 1.2,
                 }}>
@@ -152,11 +161,11 @@ export default function ServiciosBlock({ onNavigate: _onNavigate }: ServiciosBlo
                 <span style={{
                   fontFamily: FONT_BODY,
                   fontWeight: 500,
-                  fontSize: '11px',
+                  fontSize: '12px',
                   color: '#fff',
                   background: '#1a1a1a',
                   borderRadius: '99px',
-                  padding: '5px 8px',
+                  padding: '6px 10px',
                   lineHeight: 1.3,
                   marginTop: 'auto',
                 }}>
@@ -168,10 +177,10 @@ export default function ServiciosBlock({ onNavigate: _onNavigate }: ServiciosBlo
         </div>
       </div>
 
-      {/* ── DESKTOP (sm+): grid con descripción ── */}
-      <div className="hidden sm:block sm:px-10 lg:px-14" style={{ paddingBottom: '52px', overflow: 'visible' }}>
+      {/* ── DESKTOP (lg+): grid con descripción ── */}
+      <div className="hidden lg:block lg:px-14" style={{ paddingBottom: '52px', overflow: 'visible' }}>
         <div
-          className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5"
+          className="grid lg:grid-cols-3 xl:grid-cols-5"
           style={{ gap: '0', background: 'transparent', overflow: 'visible' }}
         >
           {servicios.map((s, idx) => {
