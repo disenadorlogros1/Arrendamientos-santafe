@@ -165,7 +165,7 @@ export default function Header({ currentPage, onNavigate, isHeroPage = true, dar
       <div className="hidden lg:flex items-center h-full px-4 lg:px-8 gap-4 xl:gap-0 xl:relative">
         {/* Logo — flujo normal izquierda; z-10 solo en xl donde la nav es absoluta */}
         <button onClick={() => handleNav('home')} className="shrink-0 xl:relative xl:z-10">
-          <img src={isDark ? "/icons/icon-santa-fe-logo.png" : "/icons/icon-santa-fe-logo-red.png"} alt="Arrendamientos Santa Fe" className="h-10 md:h-11 w-auto object-contain" />
+          <img src="/icons/Logotipo_Logoblanco.svg" alt="Arrendamientos Santa Fe" className="h-10 md:h-11 w-auto object-contain" />
         </button>
 
         {/* Nav — flex-1 en lg (sin solapamiento); absoluta centrada en xl+ */}

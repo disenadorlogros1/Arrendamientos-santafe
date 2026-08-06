@@ -110,7 +110,8 @@ function FillButton({ active, onClick, children }: { active: boolean; onClick: (
         border: `1px solid ${active ? '#f32735' : 'rgba(255,255,255,0.6)'}`,
         background: active ? '#f32735' : '#1a1a1a',
         color: '#fff',
-        borderRadius: 0, cursor: 'pointer', textAlign: 'left',
+        borderRadius: 0, cursor: 'pointer', textAlign: 'center',
+        width: '100%',
       }}
     >
       <span
@@ -155,19 +156,23 @@ function SimilarSection({ current }: { current: import('@/data/properties').Prop
           padding: '16px 20px',
           display: 'flex', flexDirection: 'column', gap: 10,
         }}>
-          <h2 style={{ fontFamily: FONT, fontSize: 16, fontWeight: 900, color: '#fff', margin: 0, lineHeight: 1.25 }}>
+          <h2 style={{ fontFamily: FONT, fontSize: 16, fontWeight: 900, color: '#fff', margin: 0, lineHeight: 1.25, textAlign: 'center' }}>
             Propiedades similares
           </h2>
           <div style={{ display: 'flex', gap: 6 }}>
             {FILTERS.map(f => (
-              <FillButton key={f.key} active={filter === f.key} onClick={() => setFilter(f.key)}>
-                {f.label}
-              </FillButton>
+              <div key={f.key} style={{ flex: 1 }}>
+                <FillButton active={filter === f.key} onClick={() => setFilter(f.key)}>
+                  {f.label}
+                </FillButton>
+              </div>
             ))}
           </div>
         </div>
-        {/* Carrusel horizontal */}
-        <InfiniteCarousel properties={similar} maxVisible={3} />
+        {/* Espacio + carrusel horizontal */}
+        <div style={{ marginTop: 16 }}>
+          <InfiniteCarousel properties={similar} maxVisible={3} />
+        </div>
       </div>
     );
   }
@@ -612,7 +617,8 @@ export default function PropertyDetailPage() {
                       display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
                       backgroundColor: '#f32735', color: '#fff', fontWeight: 600, fontSize: '15px',
                       padding: '13px 16px', borderRadius: 0, textDecoration: 'none',
-                      transition: 'background-color 0.2s', width: '100%',
+                      transition: 'background-color 0.2s', width: 'calc(100% + 40px)',
+                      marginLeft: '-20px', marginRight: '-20px',
                     }}
                     onMouseEnter={e => (e.currentTarget.style.backgroundColor = '#aa182c')}
                     onMouseLeave={e => (e.currentTarget.style.backgroundColor = '#f32735')}
