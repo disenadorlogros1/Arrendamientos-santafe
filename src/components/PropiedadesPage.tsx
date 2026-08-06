@@ -693,7 +693,7 @@ export default function PropiedadesPage({ initialFilter = 'Todos', initialQueStr
                 {/* Chip flotante junto al pin seleccionado */}
                 {selectedPinProperty && (() => {
                   const CARD_W = 250;
-                  const CARD_H = 84;
+                  const CARD_H = 110;
                   const PAD = 10;
                   const mapW = mobileMapRef.current?.offsetWidth ?? 375;
                   const mapH = mobileMapRef.current?.offsetHeight ?? 400;
@@ -712,7 +712,7 @@ export default function PropiedadesPage({ initialFilter = 'Todos', initialQueStr
                   return (
                     <div style={{ position: 'absolute', left, top, width: CARD_W, zIndex: 1000 }}>
                       <div
-                        style={{ display: 'flex', height: CARD_H, background: '#fff', borderTop: '3px solid #f32735', boxShadow: '0 4px 20px rgba(0,0,0,0.22)', cursor: 'pointer', overflow: 'hidden', position: 'relative' }}
+                        style={{ display: 'flex', height: CARD_H, background: '#fff', borderTop: '3px solid #f32735', boxShadow: '0 4px 20px rgba(0,0,0,0.22)', cursor: 'pointer', overflow: 'hidden', position: 'relative', alignItems: 'stretch' }}
                         onClick={() => { window.location.href = `/propiedad/${selectedPinProperty.property.id}`; }}
                       >
                         {/* Thumbnail */}
