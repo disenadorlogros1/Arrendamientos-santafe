@@ -21,7 +21,7 @@ interface Props {
   properties: Property[];
   onBoundsChange?: (visible: Property[]) => void;
   onHoverProperty?: (prop: Property | null) => void;
-  onClickProperty?: (prop: Property) => void;
+  onClickProperty?: (prop: Property, pixelPos: { x: number; y: number }) => void;
 }
 
 export default function PropiedadesLeafletMap({ properties, onBoundsChange, onHoverProperty, onClickProperty }: Props) {
@@ -136,10 +136,11 @@ export default function PropiedadesLeafletMap({ properties, onBoundsChange, onHo
           }, 30);
         });
 
-        // Clic: abre la ficha de la propiedad
+        // Clic: abre la ficha de la propiedad con posición en píxeles del pin
         marker.on('click', () => {
           if (clickRef.current) {
-            clickRef.current(p);
+            const pt = mapRef.current.latLngToContainerPoint([p.latitude!, p.longitude!]);
+            clickRef.current(p, { x: pt.x, y: pt.y });
           } else {
             window.location.href = `/propiedad/${p.id}`;
           }

@@ -93,19 +93,20 @@ export default function InversionistasPage() {
   const benPosRef        = useRef(0);
   const benRafRef        = useRef<number>(0);
   const benPausedRef     = useRef(false);
-  const benAnimatingRef  = useRef(false);
+  const benDirectionRef  = useRef<1 | -1>(-1); // -1 = forward (left), 1 = backward (right)
 
   useEffect(() => {
     const track = benTrackRef.current;
     if (!track) return;
     const SPEED = 0.15;
     const step = () => {
-      if (!benPausedRef.current && !benAnimatingRef.current) {
-        benPosRef.current -= SPEED;
+      if (!benPausedRef.current) {
+        benPosRef.current += SPEED * benDirectionRef.current;
         const card = track.firstElementChild as HTMLElement;
         const pitch = card ? card.offsetWidth + 10 : 1;
         const halfWidth = pitch * beneficios.length;
-        if (Math.abs(benPosRef.current) >= halfWidth) benPosRef.current += halfWidth;
+        if (benPosRef.current <= -halfWidth) benPosRef.current += halfWidth;
+        if (benPosRef.current > 0)           benPosRef.current -= halfWidth;
         track.style.transform = `translateX(${benPosRef.current}px)`;
       }
       benRafRef.current = requestAnimationFrame(step);
@@ -116,7 +117,9 @@ export default function InversionistasPage() {
 
   const benScrollBy = (dir: 'prev' | 'next') => {
     const track = benTrackRef.current;
-    if (!track || benAnimatingRef.current) return;
+    if (!track) return;
+    // Cambiar dirección del auto-scroll y avanzar una card
+    benDirectionRef.current = dir === 'prev' ? 1 : -1;
     const card = track.firstElementChild as HTMLElement;
     const pitch = card ? card.offsetWidth + 10 : window.innerWidth / 2;
     const halfWidth = pitch * beneficios.length;
@@ -131,15 +134,14 @@ export default function InversionistasPage() {
     } else {
       benPosRef.current -= pitch;
     }
-    benAnimatingRef.current = true;
     track.style.transition = 'transform 0.35s cubic-bezier(0.25,0.46,0.45,0.94)';
     track.style.transform = `translateX(${benPosRef.current}px)`;
     setTimeout(() => {
       if (track) {
         track.style.transition = '';
-        if (benPosRef.current < -halfWidth) benPosRef.current += halfWidth;
+        if (benPosRef.current <= -halfWidth) benPosRef.current += halfWidth;
+        if (benPosRef.current > 0)           benPosRef.current -= halfWidth;
       }
-      benAnimatingRef.current = false;
     }, 360);
   };
 
@@ -194,16 +196,16 @@ export default function InversionistasPage() {
         <div className="relative z-10 text-center px-4 sm:px-6 lg:px-8 max-w-4xl" ref={titleRef}>
           <h1
             className="inversionistas-title-split leading-tight text-white text-center"
-            style={{ fontFamily: FONT, fontWeight: 300, lineHeight: '1.0', fontSize: 'clamp(28px, 4vw, 52px)' }}
+            style={{ fontFamily: FONT, fontWeight: 300, lineHeight: '1.05', fontSize: 'clamp(28px, 4vw, 52px)' }}
             onMouseEnter={() => setTitleHovered(true)}
             onMouseLeave={() => setTitleHovered(false)}
           >
             <span style={{ display: 'block', fontWeight: 300 }}>
-              Invierte con la experiencia de
+              Invierte con la experiencia
             </span>
             <span style={{ display: 'inline-block', fontWeight: 900, color: '#fff', marginTop: '0px', position: 'relative', overflow: 'hidden' }}>
               <span style={{ position: 'relative', zIndex: 2 }}>
-                60 años en el mercado inmobiliario
+                de 60 años en el mercado inmobiliario
               </span>
               <span
                 aria-hidden="true"
@@ -253,6 +255,8 @@ export default function InversionistasPage() {
 
         {/* ── MOBILE: mapa full-width + grid 2×2 + panel de detalle ── */}
         <div className="lg:hidden">
+          {/* Espacio entre hero banner y mapa */}
+          <div style={{ height: '16px', background: '#f7f6f4' }} />
           {/* Mapa full width — misma altura que "ver mapa" en Propiedades */}
           <div style={{ height: '62dvh', width: '100%', overflow: 'hidden', position: 'relative' }}>
             <InversionistasLeafletMap
@@ -266,9 +270,6 @@ export default function InversionistasPage() {
 
           {/* Grid 2×2 de sectores */}
           <div style={{ padding: '14px 12px 0' }}>
-            <p style={{ fontFamily: FONT, fontSize: '9px', fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: '#999', marginBottom: '8px', paddingLeft: 2 }}>
-              Zonas de inversión
-            </p>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '7px' }}>
               {SECTORS.map(sector => {
                 const isActive = activeSector === sector;
@@ -282,11 +283,11 @@ export default function InversionistasPage() {
                       borderRadius: '12px',
                       padding: '11px 12px',
                       border: 'none',
-                      borderLeft: isActive ? '3px solid #f32735' : '3px solid transparent',
                       textAlign: 'left',
                       cursor: 'pointer',
-                      boxShadow: isActive ? '0 2px 14px rgba(0,0,0,0.09)' : 'none',
+                      boxShadow: isActive ? '0 2px 12px rgba(0,0,0,0.08)' : 'none',
                       transition: 'background 0.18s, box-shadow 0.18s',
+                      position: 'relative',
                     }}
                   >
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
@@ -539,8 +540,10 @@ export default function InversionistasPage() {
       {/* Benefits Section */}
       <section style={{ background: '#fff' }} className="w-full">
         <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '28px clamp(20px, 4vw, 52px)', textAlign: 'center' }}>
-          <h2 style={{ fontFamily: FONT, fontWeight: 300, fontSize: 'clamp(26px, 2.6vw, 46px)', color: '#555', lineHeight: 1.2, margin: 0 }}>
-            ¿Por qué <span style={{ fontWeight: 700 }}>invertir con nosotros?</span>
+          <h2 style={{ fontFamily: FONT, fontWeight: 300, fontSize: 'clamp(26px, 2.6vw, 46px)', color: '#555', lineHeight: 1.1, margin: 0 }}>
+            ¿Por qué <span style={{ fontWeight: 700 }}>invertir</span>
+            <br />
+            <span style={{ fontWeight: 700 }}>con nosotros?</span>
           </h2>
         </div>
 
