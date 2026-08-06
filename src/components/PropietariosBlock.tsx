@@ -112,6 +112,15 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
 
   // Scroll-driven clip-path reveal
   useEffect(() => {
+    const isDesktop = window.innerWidth >= 1024;
+
+    if (!isDesktop) {
+      // En mobile las imágenes se muestran directamente sin animación de clip
+      gsap.set([clipARef.current, clipBRef.current, clipCRef.current], { clipPath: 'none' });
+      gsap.set([gradARef.current, gradBRef.current, gradCRef.current], { opacity: 1 });
+      return;
+    }
+
     // Initial states
     gsap.set(clipARef.current, { clipPath: 'inset(0 0 0 100%)' });
     gsap.set(clipBRef.current, { clipPath: 'inset(0 0 100% 0)' });
