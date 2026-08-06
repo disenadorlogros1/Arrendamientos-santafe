@@ -575,10 +575,14 @@ interface Props {
   initialTextoBusqueda?: string;
   onApply: (f: PropSearchFilters) => void;
   onShowMap?: () => void;
+  mapActive?: boolean;
   collapsed?: boolean;
 }
 
-export default function PropiedadesSearchBar({ initialTipo = 'Todos', initialTextoBusqueda = '', onApply, onShowMap, collapsed = false }: Props) {
+const fi = (base: string, focused: boolean, filled: boolean) =>
+  filled ? `/icons/${base}-red.svg` : focused ? `/icons/${base}-red-dark.svg` : `/icons/${base}-gray.svg`;
+
+export default function PropiedadesSearchBar({ initialTipo = 'Todos', initialTextoBusqueda = '', onApply, onShowMap, mapActive = false, collapsed = false }: Props) {
   const [tipo,           setTipo]          = useState<'Todos' | 'Arrendar' | 'Comprar'>(initialTipo);
   const [textoBusqueda,  setTextoBusqueda] = useState(initialTextoBusqueda);
   const [busquedaActive, setBusquedaActive] = useState(false);
@@ -666,6 +670,10 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', initialTex
   const [showFiltersSheet, setShowFiltersSheet] = useState(false);
   const [sheetOpen, setSheetOpen] = useState(false);
   const [sheetMounted, setSheetMounted] = useState(false);
+  const [searchFocused,  setSearchFocused]  = useState(false);
+  const [codigoFocused,  setCodigoFocused]  = useState(false);
+  const [sectorFocused,  setSectorFocused]  = useState(false);
+  const [tipoFocused,    setTipoFocused]    = useState(false);
 
   useEffect(() => { setSheetMounted(true); }, []);
 
