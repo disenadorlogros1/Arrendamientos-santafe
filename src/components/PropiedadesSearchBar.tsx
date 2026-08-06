@@ -760,7 +760,7 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', initialTex
 
             {/* ¿Qué buscas? */}
             <div style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '13px 16px', borderBottom: DIVIDER }}>
-              <img src="/icons/icon-search-red.svg" width={20} height={20} alt="" aria-hidden style={{ flexShrink: 0 }} />
+              <img src={fi('icon-search', searchFocused, !!textoBusqueda)} width={20} height={20} alt="" aria-hidden style={{ flexShrink: 0 }} />
               <div style={{ flex: 1, minWidth: 0 }}>
                 <p style={labelStyle}>¿Qué buscas?</p>
                 <input type="text" value={textoBusqueda}
@@ -768,6 +768,8 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', initialTex
                     const v = e.target.value; setTextoBusqueda(v);
                     onApply({ tipo, textoBusqueda: v, codigo, sector, tipoPropiedad, precioMin: precioRange[0], precioMax: precioRange[1], habitaciones, banos, parqueadero, areaMin, areaMax, estrato, comodidades });
                   }}
+                  onFocus={() => setSearchFocused(true)}
+                  onBlur={() => setSearchFocused(false)}
                   onKeyDown={e => { if (e.key === 'Enter') handleApply(); }}
                   placeholder="Ej: apartamento cerca al metro"
                   style={{ fontFamily: FONT, fontSize: '14px', fontWeight: 400, color: textoBusqueda ? COLOR_VALUE : '#ccc', background: 'transparent', border: 'none', outline: 'none', width: '100%', lineHeight: 1 }} />
@@ -783,7 +785,11 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', initialTex
                 onTouchStart={e => { (e.currentTarget as HTMLButtonElement).style.background = 'rgba(0,0,0,0.06)'; }}
                 onTouchEnd={e => { (e.currentTarget as HTMLButtonElement).style.background = '#f7f6f4'; }}
               >
-                <img src="/icons/icon-sliders-red.svg" width={14} height={14} alt="" style={{ opacity: activeFilterCount > 0 ? 1 : 0.5 }} />
+                <img src={
+                  activeFilterCount > 0 ? '/icons/icon-sliders-red.svg' :
+                  showFiltersSheet ? '/icons/icon-sliders-red-dark.svg' :
+                  '/icons/icon-sliders-gray.svg'
+                } width={14} height={14} alt="" />
                 Más filtros{activeFilterCount > 0 ? ` (${activeFilterCount})` : ''}
               </button>
               <button
@@ -793,7 +799,7 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', initialTex
                 onTouchStart={e => { (e.currentTarget as HTMLButtonElement).style.background = 'rgba(0,0,0,0.06)'; }}
                 onTouchEnd={e => { (e.currentTarget as HTMLButtonElement).style.background = '#f7f6f4'; }}
               >
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ color: '#888' }}>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={mapActive ? '#f32735' : '#888'} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/><line x1="9" y1="3" x2="9" y2="18"/><line x1="15" y1="6" x2="15" y2="21"/>
                 </svg>
                 Ver en mapa
@@ -1167,7 +1173,7 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', initialTex
 
               {/* Código */}
               <div style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '14px 20px', borderBottom: DIVIDER }}>
-                <img src="/icons/icon-code-red.svg" width={20} height={20} alt="" aria-hidden style={{ flexShrink: 0 }} />
+                <img src={fi('icon-code', codigoFocused, !!codigo)} width={20} height={20} alt="" aria-hidden style={{ flexShrink: 0 }} />
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <p style={labelStyle}>Código inmueble</p>
                   <input type="text" value={codigo}
@@ -1175,6 +1181,8 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', initialTex
                       const v = e.target.value; setCodigo(v);
                       onApply({ tipo, textoBusqueda, codigo: v, sector, tipoPropiedad, precioMin: precioRange[0], precioMax: precioRange[1], habitaciones, banos, parqueadero, areaMin, areaMax, estrato, comodidades });
                     }}
+                    onFocus={() => setCodigoFocused(true)}
+                    onBlur={() => setCodigoFocused(false)}
                     placeholder="Ej: A11636"
                     style={{ fontFamily: FONT, fontSize: '14px', fontWeight: 400, color: codigo ? COLOR_VALUE : '#ccc', background: 'transparent', border: 'none', outline: 'none', width: '100%', lineHeight: 1 }} />
                 </div>
@@ -1183,7 +1191,7 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', initialTex
               {/* Ubicación — fila styled + native select invisible encima */}
               <div style={{ position: 'relative', borderBottom: DIVIDER }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '14px 20px' }}>
-                  <img src="/icons/icon-location-red.svg" width={20} height={20} alt="" aria-hidden style={{ flexShrink: 0 }} />
+                  <img src={fi('icon-location', sectorFocused, !!sector)} width={20} height={20} alt="" aria-hidden style={{ flexShrink: 0 }} />
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <p style={labelStyle}>Ubicación</p>
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -1196,6 +1204,8 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', initialTex
                     const v = e.target.value; setSector(v);
                     onApply({ tipo, textoBusqueda, codigo, sector: v, tipoPropiedad, precioMin: precioRange[0], precioMax: precioRange[1], habitaciones, banos, parqueadero, areaMin, areaMax, estrato, comodidades });
                   }}
+                  onFocus={() => setSectorFocused(true)}
+                  onBlur={() => setSectorFocused(false)}
                   style={{ position: 'absolute', inset: 0, opacity: 0, width: '100%', height: '100%', cursor: 'pointer' }}>
                   <option value="">Seleccionar</option>
                   {SECTORES.map(s => <option key={s} value={s}>{s}</option>)}
@@ -1205,7 +1215,7 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', initialTex
               {/* Tipo de propiedad — mismo patrón */}
               <div style={{ position: 'relative', borderBottom: DIVIDER }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '14px 20px' }}>
-                  <img src="/icons/icon-home-red.svg" width={20} height={20} alt="" aria-hidden style={{ flexShrink: 0 }} />
+                  <img src={fi('icon-home', tipoFocused, !!tipoPropiedad)} width={20} height={20} alt="" aria-hidden style={{ flexShrink: 0 }} />
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <p style={labelStyle}>Tipo de propiedad</p>
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -1218,6 +1228,8 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', initialTex
                     const v = e.target.value; setTipoPropiedad(v);
                     onApply({ tipo, textoBusqueda, codigo, sector, tipoPropiedad: v, precioMin: precioRange[0], precioMax: precioRange[1], habitaciones, banos, parqueadero, areaMin, areaMax, estrato, comodidades });
                   }}
+                  onFocus={() => setTipoFocused(true)}
+                  onBlur={() => setTipoFocused(false)}
                   style={{ position: 'absolute', inset: 0, opacity: 0, width: '100%', height: '100%', cursor: 'pointer' }}>
                   <option value="">Seleccionar</option>
                   {TIPOS_INMUEBLE.map(t => <option key={t} value={t}>{t}</option>)}
