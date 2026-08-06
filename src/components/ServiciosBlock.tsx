@@ -1,6 +1,6 @@
 ﻿'use client';
 
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import type { PageType } from '@/components/Header';
 
 interface ServiciosBlockProps {
@@ -76,6 +76,63 @@ export default function ServiciosBlock({ onNavigate: _onNavigate }: ServiciosBlo
   const [touchIdx, setTouchIdx]     = useState<number | null>(null);
   const [redIdx] = useState(() => Math.floor(Math.random() * servicios.length));
 
+  const trackRef     = useRef<HTMLDivElement>(null);
+  const posRef       = useRef(0);
+  const rafRef       = useRef<number>(0);
+  const pausedRef    = useRef(false);
+  const animatingRef = useRef(false);
+
+  useEffect(() => {
+    const track = trackRef.current;
+    if (!track) return;
+    const SPEED = 0.5;
+    const step = () => {
+      if (!pausedRef.current && !animatingRef.current) {
+        posRef.current -= SPEED;
+        const card = track.firstElementChild as HTMLElement;
+        const pitch = card ? card.offsetWidth + 10 : 1;
+        const halfWidth = pitch * servicios.length;
+        if (Math.abs(posRef.current) >= halfWidth) posRef.current += halfWidth;
+        track.style.transform = `translateX(${posRef.current}px)`;
+      }
+      rafRef.current = requestAnimationFrame(step);
+    };
+    rafRef.current = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(rafRef.current);
+  }, []);
+
+  const scrollBy = (dir: 'prev' | 'next') => {
+    const track = trackRef.current;
+    if (!track || animatingRef.current) return;
+    const card = track.firstElementChild as HTMLElement;
+    const pitch = card ? card.offsetWidth + 10 : window.innerWidth / 2;
+    const halfWidth = pitch * servicios.length;
+
+    if (dir === 'prev') {
+      if (posRef.current > -(pitch + 1)) {
+        posRef.current -= halfWidth;
+        track.style.transition = 'none';
+        track.style.transform = `translateX(${posRef.current}px)`;
+        track.getBoundingClientRect();
+      }
+      posRef.current += pitch;
+    } else {
+      posRef.current -= pitch;
+    }
+
+    animatingRef.current = true;
+    track.style.transition = 'transform 0.35s cubic-bezier(0.25,0.46,0.45,0.94)';
+    track.style.transform = `translateX(${posRef.current}px)`;
+
+    setTimeout(() => {
+      if (track) {
+        track.style.transition = '';
+        if (posRef.current < -halfWidth) posRef.current += halfWidth;
+      }
+      animatingRef.current = false;
+    }, 360);
+  };
+
   return (
     <section style={{ background: '#fff' }} className="w-full">
 
@@ -100,80 +157,93 @@ export default function ServiciosBlock({ onNavigate: _onNavigate }: ServiciosBlo
 
       {/* ── CARRUSEL: mobile (2 tarjetas) y tablet (3 tarjetas) ── */}
       <style>{`
-        @keyframes servicios-scroll {
-          from { transform: translateX(0); }
-          to   { transform: translateX(-50%); }
-        }
-        .servicios-track {
-          animation: servicios-scroll 25s linear infinite;
-        }
-        .servicios-track:hover {
-          animation-play-state: paused;
-        }
-        /* 2 tarjetas por pantalla en mobile */
         .servicio-card {
           width: calc(50vw - 10px);
           flex-shrink: 0;
           margin-right: 10px;
         }
-        /* 3 tarjetas por pantalla en tablet (sm+) */
         @media (min-width: 640px) {
-          .servicio-card {
-            width: calc(33.333vw - 10px);
-          }
+          .servicio-card { width: calc(33.333vw - 10px); }
         }
       `}</style>
-      <div
-        className="lg:hidden overflow-hidden"
-        style={{ paddingBottom: '24px' }}
-      >
-        <div className="servicios-track flex" style={{ width: 'max-content' }}>
-          {[...servicios, ...servicios].map((s, idx) => {
-            const url = `https://wa.me/${PHONE}?text=${encodeURIComponent(s.waMsg)}`;
-            return (
-              <a
-                key={idx}
-                href={url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="servicio-card"
-                style={{
-                  background: '#f5f5f5',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  textAlign: 'center',
-                  gap: '10px',
-                  padding: '20px 12px 16px',
-                  textDecoration: 'none',
-                }}
-              >
-                <img src={s.icon} alt="" width={36} height={36} />
-                <span style={{
-                  fontFamily: FONT_HEADING,
-                  fontWeight: 700,
-                  fontSize: '14px',
-                  color: '#1a1a1a',
-                  lineHeight: 1.2,
-                }}>
-                  {s.title}
-                </span>
-                <span style={{
-                  fontFamily: FONT_BODY,
-                  fontWeight: 500,
-                  fontSize: '12px',
-                  color: '#fff',
-                  background: '#1a1a1a',
-                  borderRadius: '99px',
-                  padding: '6px 10px',
-                  lineHeight: 1.3,
-                  marginTop: 'auto',
-                }}>
-                  Hablar con un asesor
-                </span>
-              </a>
-            );
-          })}
+
+      <div className="lg:hidden" style={{ paddingBottom: '24px' }}>
+        <div
+          className="relative overflow-hidden"
+          onMouseEnter={() => { pausedRef.current = true; }}
+          onMouseLeave={() => { pausedRef.current = false; }}
+        >
+          {/* Flecha izquierda */}
+          <button
+            onClick={() => scrollBy('prev')}
+            aria-label="Anterior"
+            style={{
+              position: 'absolute', left: 0, top: 0, bottom: 0, zIndex: 10,
+              width: 44,
+              background: 'linear-gradient(to right, rgba(255,255,255,1) 45%, transparent)',
+              border: 'none', cursor: 'pointer',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+            }}
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <polyline points="15 18 9 12 15 6" />
+            </svg>
+          </button>
+
+          {/* Track */}
+          <div ref={trackRef} className="flex" style={{ width: 'max-content' }}>
+            {[...servicios, ...servicios].map((s, idx) => {
+              const url = `https://wa.me/${PHONE}?text=${encodeURIComponent(s.waMsg)}`;
+              return (
+                <a
+                  key={idx}
+                  href={url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="servicio-card"
+                  style={{
+                    background: '#f5f5f5',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    textAlign: 'center',
+                    gap: '10px',
+                    padding: '20px 12px 16px',
+                    textDecoration: 'none',
+                  }}
+                >
+                  <img src={s.icon} alt="" width={36} height={36} />
+                  <span style={{ fontFamily: FONT_HEADING, fontWeight: 700, fontSize: '14px', color: '#1a1a1a', lineHeight: 1.2 }}>
+                    {s.title}
+                  </span>
+                  <span style={{
+                    fontFamily: FONT_BODY, fontWeight: 500, fontSize: '12px',
+                    color: '#fff', background: '#1a1a1a', borderRadius: '99px',
+                    padding: '6px 10px', lineHeight: 1.3, marginTop: 'auto',
+                  }}>
+                    Hablar con un asesor
+                  </span>
+                </a>
+              );
+            })}
+          </div>
+
+          {/* Flecha derecha */}
+          <button
+            onClick={() => scrollBy('next')}
+            aria-label="Siguiente"
+            style={{
+              position: 'absolute', right: 0, top: 0, bottom: 0, zIndex: 10,
+              width: 44,
+              background: 'linear-gradient(to left, rgba(255,255,255,1) 45%, transparent)',
+              border: 'none', cursor: 'pointer',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+            }}
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <polyline points="9 18 15 12 9 6" />
+            </svg>
+          </button>
         </div>
       </div>
 

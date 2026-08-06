@@ -206,10 +206,18 @@ function DetailRow({ icon, label, value, isRight, spanFull }: { icon: string; la
 
 function ZoneSection({ zone, zoneLabel }: { zone: NonNullable<ReturnType<typeof getZoneBySlug>>; zoneLabel: string }) {
   const [hovCta, setHovCta] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 640);
+    check();
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
+  }, []);
 
   return (
-    <div style={{ display: 'flex', border: '1px solid #f0f0f0', overflow: 'hidden' }}>
-      {/* Bloque izquierdo — info centrada, color concreto */}
+    <div style={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', border: '1px solid #f0f0f0', overflow: 'hidden' }}>
+      {/* Bloque info */}
       <div style={{
         flex: 1,
         background: '#fff',
@@ -234,16 +242,16 @@ function ZoneSection({ zone, zoneLabel }: { zone: NonNullable<ReturnType<typeof 
         </div>
       </div>
 
-      {/* Bloque CTA — rojo dominante */}
+      {/* Bloque CTA — rojo, ancho completo en mobile */}
       <Link
         href={`/inversionistas/${zone.slug}`}
         style={{
           flexShrink: 0,
-          width: 'clamp(160px, 32%, 240px)',
+          width: isMobile ? '100%' : 'clamp(160px, 32%, 240px)',
           background: hovCta ? '#aa182c' : '#f32735',
-          display: 'flex', flexDirection: 'column',
+          display: 'flex', flexDirection: 'row',
           alignItems: 'center', justifyContent: 'center',
-          gap: 8, padding: '28px 20px',
+          gap: 8, padding: isMobile ? '18px 24px' : '28px 20px',
           textDecoration: 'none',
           transition: 'background 0.2s',
         }}
@@ -251,11 +259,14 @@ function ZoneSection({ zone, zoneLabel }: { zone: NonNullable<ReturnType<typeof 
         onMouseLeave={() => setHovCta(false)}
       >
         <span style={{
-          fontFamily: FONT, fontSize: 'clamp(24px, 3vw, 32px)',
+          fontFamily: FONT, fontSize: isMobile ? '20px' : 'clamp(24px, 3vw, 32px)',
           fontWeight: 900, color: '#fff', lineHeight: 1,
         }}>
           Ver zona
         </span>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M5 12h14M12 5l7 7-7 7" />
+        </svg>
       </Link>
     </div>
   );
