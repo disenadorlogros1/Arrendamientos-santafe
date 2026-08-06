@@ -25,7 +25,7 @@ export default function Footer({ onNavigate }: FooterProps = {}) {
           {/* Marca */}
           <div className="space-y-4">
             <img
-              src="/icons/icon-santa-fe-logo.png"
+              src="/logo.svg"
               alt="Arrendamientos Santa Fe"
               className="h-10 w-auto object-contain"
             />

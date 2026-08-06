@@ -477,7 +477,7 @@ export default function PropertyDetailPage() {
                         { icon: '/icons/icon-dollar-red.svg',    label: 'Administración',    value: property.administracion ?? '',     show: !!property.administracion },
                         { icon: '/icons/icon-home-red.svg',      label: 'Acepta mascotas',   value: property.petFriendly ? 'Sí' : 'No', show: property.petFriendly !== undefined },
                         { icon: '/icons/icon-FileText-red.svg',  label: 'Contrato mínimo',   value: property.contratoMinimo ?? '',     show: !!property.contratoMinimo },
-                        { icon: '/icons/icon-home-red.svg',      label: 'Amoblado',          value: property.furnished ? 'Sí' : 'No', show: property.furnished !== undefined },
+                        { icon: '/icons/icon-sofa-red.svg',      label: 'Amoblado',          value: property.furnished ? 'Sí' : 'No', show: property.furnished !== undefined },
                       ].filter(r => r.show).map((row, i, arr) => (
                         <DetailRow key={row.label} icon={row.icon} label={row.label} value={row.value} isRight={i % 2 === 1} spanFull={i === arr.length - 1 && arr.length % 2 === 1} />
                       ))}
