@@ -346,7 +346,8 @@ export default function PropiedadesPage({ initialFilter = 'Todos', initialQueStr
   const [mapExpanded, setMapExpanded] = useState(false);
   const [visibleInMap, setVisibleInMap] = useState<import('@/data/properties').Property[]>([]);
   const [hoveredMapProperty, setHoveredMapProperty] = useState<import('@/data/properties').Property | null>(null);
-  const [selectedPinProperty, setSelectedPinProperty] = useState<import('@/data/properties').Property | null>(null);
+  const [selectedPinProperty, setSelectedPinProperty] = useState<{ property: import('@/data/properties').Property; x: number; y: number } | null>(null);
+  const mobileMapRef = useRef<HTMLDivElement>(null);
 
   // Animación de entrada por slot — alterna qué card se reemplaza
   const [replacedSlot, setReplacedSlot] = useState<0 | 1>(1);
@@ -682,67 +683,72 @@ export default function PropiedadesPage({ initialFilter = 'Todos', initialQueStr
           {showMobileMap ? (
             <>
               {/* Mapa — isolation contiene z-indices internos de Leaflet */}
-              <div style={{ height: '62dvh', position: 'relative', overflow: 'hidden', isolation: 'isolate' } as React.CSSProperties}>
+              <div ref={mobileMapRef} style={{ height: '62dvh', position: 'relative', overflow: 'hidden', isolation: 'isolate' } as React.CSSProperties}>
                 <PropiedadesLeafletMap
                   properties={filtered}
                   onBoundsChange={setVisibleInMap}
                   onHoverProperty={setHoveredMapProperty}
-                  onClickProperty={p => { setSelectedPinProperty(p); }}
+                  onClickProperty={(p, pos) => setSelectedPinProperty({ property: p, x: pos.x, y: pos.y })}
                 />
-                {/* Popup card al seleccionar pin */}
-                {selectedPinProperty && (
-                  <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, zIndex: 1000 }}>
-                    {/* Chip compacto — altura fija, mapa visible detrás */}
-                    <div
-                      style={{
-                        position: 'relative',
-                        display: 'flex',
-                        height: 84,
-                        background: '#fff',
-                        borderTop: '3px solid #f32735',
-                        boxShadow: '0 -4px 20px rgba(0,0,0,0.18)',
-                        cursor: 'pointer',
-                        overflow: 'hidden',
-                      }}
-                      onClick={() => { window.location.href = `/propiedad/${selectedPinProperty.id}`; }}
-                    >
-                      {/* Thumbnail */}
-                      <img
-                        src={selectedPinProperty.image}
-                        alt=""
-                        style={{ width: 84, height: 84, objectFit: 'cover', flexShrink: 0 }}
-                      />
-                      {/* Info */}
-                      <div style={{ flex: 1, minWidth: 0, padding: '10px 12px', display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 4 }}>
-                        <span style={{ fontFamily: FONT_BODY, fontSize: 15, fontWeight: 900, color: '#1a1a1a', lineHeight: 1 }}>
-                          {selectedPinProperty.price}
-                        </span>
-                        <span style={{ fontFamily: FONT_BODY, fontSize: 12, color: '#888', lineHeight: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                          {selectedPinProperty.location.split(',')[0]} · {selectedPinProperty.type}
-                        </span>
-                        <span style={{ fontFamily: FONT_BODY, fontSize: 11, color: '#bbb', lineHeight: 1 }}>
-                          {selectedPinProperty.reference.replace('Ref. ', '')}
-                        </span>
-                      </div>
-                      {/* Flecha */}
-                      <div style={{ flexShrink: 0, display: 'flex', alignItems: 'center', paddingRight: 14 }}>
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#f32735" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                          <path d="M5 12h14M12 5l7 7-7 7" />
-                        </svg>
-                      </div>
-                      {/* × cerrar */}
-                      <button
-                        type="button"
-                        onClick={e => { e.stopPropagation(); setSelectedPinProperty(null); }}
-                        style={{ position: 'absolute', top: 6, right: 6, background: 'rgba(0,0,0,0.4)', border: 'none', borderRadius: '50%', width: 22, height: 22, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 2 }}
+                {/* Chip flotante junto al pin seleccionado */}
+                {selectedPinProperty && (() => {
+                  const CARD_W = 250;
+                  const CARD_H = 84;
+                  const PAD = 10;
+                  const mapW = mobileMapRef.current?.offsetWidth ?? 375;
+                  const mapH = mobileMapRef.current?.offsetHeight ?? 400;
+                  const { x: pinX, y: pinY } = selectedPinProperty;
+
+                  // Horizontal: derecha del pin; si se sale, a la izquierda
+                  let left = pinX + 22;
+                  if (left + CARD_W > mapW - PAD) left = pinX - CARD_W - 22;
+                  left = Math.max(PAD, Math.min(left, mapW - CARD_W - PAD));
+
+                  // Vertical: arriba del pin (sobre el icono de 50px); si no cabe, debajo
+                  let top = pinY - 50 - CARD_H - 8;
+                  if (top < PAD) top = pinY + 8;
+                  top = Math.min(top, mapH - CARD_H - PAD);
+
+                  return (
+                    <div style={{ position: 'absolute', left, top, width: CARD_W, zIndex: 1000 }}>
+                      <div
+                        style={{ display: 'flex', height: CARD_H, background: '#fff', borderTop: '3px solid #f32735', boxShadow: '0 4px 20px rgba(0,0,0,0.22)', cursor: 'pointer', overflow: 'hidden', position: 'relative' }}
+                        onClick={() => { window.location.href = `/propiedad/${selectedPinProperty.property.id}`; }}
                       >
-                        <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round">
-                          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
-                        </svg>
-                      </button>
+                        {/* Thumbnail */}
+                        <img src={selectedPinProperty.property.image} alt="" style={{ width: 84, height: 84, objectFit: 'cover', flexShrink: 0 }} />
+                        {/* Info */}
+                        <div style={{ flex: 1, minWidth: 0, padding: '10px 10px', display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 4 }}>
+                          <span style={{ fontFamily: FONT_BODY, fontSize: 14, fontWeight: 900, color: '#1a1a1a', lineHeight: 1 }}>
+                            {selectedPinProperty.property.price}
+                          </span>
+                          <span style={{ fontFamily: FONT_BODY, fontSize: 11, color: '#888', lineHeight: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                            {selectedPinProperty.property.location.split(',')[0]} · {selectedPinProperty.property.type}
+                          </span>
+                          <span style={{ fontFamily: FONT_BODY, fontSize: 10, color: '#bbb', lineHeight: 1 }}>
+                            {selectedPinProperty.property.reference.replace('Ref. ', '')}
+                          </span>
+                        </div>
+                        {/* Flecha */}
+                        <div style={{ flexShrink: 0, display: 'flex', alignItems: 'center', paddingRight: 10 }}>
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f32735" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M5 12h14M12 5l7 7-7 7" />
+                          </svg>
+                        </div>
+                        {/* × cerrar */}
+                        <button
+                          type="button"
+                          onClick={e => { e.stopPropagation(); setSelectedPinProperty(null); }}
+                          style={{ position: 'absolute', top: 5, right: 5, background: 'rgba(0,0,0,0.4)', border: 'none', borderRadius: '50%', width: 20, height: 20, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 2 }}
+                        >
+                          <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round">
+                            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                          </svg>
+                        </button>
+                      </div>
                     </div>
-                  </div>
-                )}
+                  );
+                })()}
               </div>
             </>
           ) : (
