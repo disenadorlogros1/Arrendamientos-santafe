@@ -98,7 +98,7 @@ export default function InversionistasPage() {
   useEffect(() => {
     const track = benTrackRef.current;
     if (!track) return;
-    const SPEED = 0.3;
+    const SPEED = 0.15;
     const step = () => {
       if (!benPausedRef.current && !benAnimatingRef.current) {
         benPosRef.current -= SPEED;
@@ -253,8 +253,8 @@ export default function InversionistasPage() {
 
         {/* ── MOBILE: mapa full-width + grid 2×2 + panel de detalle ── */}
         <div className="lg:hidden">
-          {/* Mapa full width */}
-          <div style={{ height: '210px', width: '100%', overflow: 'hidden' }}>
+          {/* Mapa full width — misma altura que "ver mapa" en Propiedades */}
+          <div style={{ height: '62dvh', width: '100%', overflow: 'hidden', position: 'relative', isolation: 'isolate' } as React.CSSProperties}>
             <InversionistasLeafletMap
               activeSector={activeSector}
               hoveredSector={hoveredSector}
@@ -300,9 +300,20 @@ export default function InversionistasPage() {
                     <span style={{ fontFamily: FONT, fontSize: '10px', color: '#999', display: 'block', marginTop: 2 }}>
                       {SECTOR_SUBTITLES[sector]}
                     </span>
-                    <span style={{ fontFamily: FONT, fontSize: '10px', fontWeight: 600, color: '#f32735', display: 'block', marginTop: 6 }}>
-                      {sectorZones.length} zona{sectorZones.length !== 1 ? 's' : ''}
-                    </span>
+                    {/* Datos de rentabilidad y estratos */}
+                    {sectorZones[0] && (
+                      <div style={{ display: 'flex', gap: '10px', marginTop: '8px' }}>
+                        <div>
+                          <div style={{ fontFamily: FONT, fontSize: '13px', fontWeight: 800, color: '#f32735', lineHeight: 1 }}>{sectorZones[0].rentability}</div>
+                          <div style={{ fontFamily: FONT, fontSize: '9px', color: '#999', marginTop: 1 }}>Rentabilidad</div>
+                        </div>
+                        <div style={{ width: 1, background: '#ddd', flexShrink: 0 }} />
+                        <div>
+                          <div style={{ fontFamily: FONT, fontSize: '13px', fontWeight: 800, color: '#1a1a1a', lineHeight: 1 }}>{sectorZones[0].strata}</div>
+                          <div style={{ fontFamily: FONT, fontSize: '9px', color: '#999', marginTop: 1 }}>Estratos</div>
+                        </div>
+                      </div>
+                    )}
                   </button>
                 );
               })}
