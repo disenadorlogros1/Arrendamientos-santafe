@@ -178,6 +178,17 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
 
       <div className="flex flex-col lg:flex-row lg:h-[460px]">
 
+        {/* ── BANNER MOBILE — solo visible en < lg ─────────────── */}
+        <div
+          className="lg:hidden w-full"
+          style={{
+            height: '220px',
+            backgroundImage: 'url(/images/banner_propietarios_1.png)',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center top',
+          }}
+        />
+
         {/* ── COLUMNA IZQUIERDA ─────────────────────────────────── */}
         <div
           className="flex flex-col justify-center gap-5 px-8 py-10 sm:px-14 sm:py-12 lg:py-0 lg:pl-16 lg:pr-14 lg:flex-shrink-0 lg:flex-grow-0"
@@ -209,11 +220,11 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
             manos de quienes conocen el mercado inmobiliario regional.
           </p>
 
-          <div ref={buttonsRef} className="flex gap-2.5" style={{ opacity: 0 }}>
+          <div ref={buttonsRef} className="flex flex-col sm:flex-row gap-2.5" style={{ opacity: 0 }}>
             <button
               onClick={() => onNavigate('consignacion')}
               className="flex-1 transition-colors duration-200"
-              style={{ background: RED, color: '#fff', padding: '13px 16px', fontSize: 'clamp(13px, 0.9vw, 14px)', fontWeight: 500, border: 'none', borderRadius: '2px', cursor: 'pointer', fontFamily: FONT_BODY }}
+              style={{ background: RED, color: '#fff', padding: '13px 16px', fontSize: 'clamp(13px, 0.9vw, 14px)', fontWeight: 500, border: 'none', outline: 'none', borderRadius: 0, cursor: 'pointer', fontFamily: FONT_BODY }}
               onMouseEnter={(e) => (e.currentTarget.style.background = '#aa182c')}
               onMouseLeave={(e) => (e.currentTarget.style.background = RED)}
             >
@@ -222,7 +233,7 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
             <button
               onClick={() => window.open(WHATSAPP_URL, '_blank')}
               className="flex-1 transition-colors duration-200"
-              style={{ background: RED, color: '#fff', padding: '13px 16px', fontSize: 'clamp(13px, 0.9vw, 14px)', fontWeight: 500, border: 'none', borderRadius: '2px', cursor: 'pointer', fontFamily: FONT_BODY }}
+              style={{ background: RED, color: '#fff', padding: '13px 16px', fontSize: 'clamp(13px, 0.9vw, 14px)', fontWeight: 500, border: 'none', outline: 'none', borderRadius: 0, cursor: 'pointer', fontFamily: FONT_BODY }}
               onMouseEnter={(e) => (e.currentTarget.style.background = '#aa182c')}
               onMouseLeave={(e) => (e.currentTarget.style.background = RED)}
             >
@@ -239,9 +250,9 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
           </p>
         </div>
 
-        {/* ── GRID DERECHO — 3 pares ────────────────────────────── */}
+        {/* ── GRID DERECHO — solo en lg+ ───────────────────────── */}
         <div
-          className="flex-1 grid grid-cols-3 grid-rows-2 h-[200px] sm:h-[260px] lg:h-full"
+          className="hidden lg:grid flex-1 grid-cols-3 grid-rows-2 lg:h-full"
           style={{ gap: '3px' }}
         >
 

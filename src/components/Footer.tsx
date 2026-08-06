@@ -25,7 +25,7 @@ export default function Footer({ onNavigate }: FooterProps = {}) {
           {/* Marca */}
           <div className="space-y-4">
             <img
-              src="/logo.svg"
+              src="/icons/Logotipo_Logoblanco.svg"
               alt="Arrendamientos Santa Fe"
               className="h-10 w-auto object-contain"
             />
@@ -69,25 +69,22 @@ export default function Footer({ onNavigate }: FooterProps = {}) {
               Nuestras sedes
             </h4>
             <ul className="space-y-3 text-sm text-white/60">
-              <li className="flex items-start gap-2">
-                <img src="/icons/icon-location-red.svg" className="h-4 w-4 mt-0.5 shrink-0" alt="" aria-hidden="true" />
-                <a href={MAPS_MEDELLIN} target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
-                  <strong className="text-white/80 block">Medellín</strong>
-                  Calle 44 San Juan #71-34
+              <li className="flex items-center gap-2">
+                <img src="/icons/icon-location-red.svg" className="h-4 w-4 shrink-0" alt="" aria-hidden="true" />
+                <a href={MAPS_MEDELLIN} target="_blank" rel="noopener noreferrer" className="text-white/80 hover:text-white transition-colors font-semibold">
+                  Medellín
                 </a>
               </li>
-              <li className="flex items-start gap-2">
-                <img src="/icons/icon-location-red.svg" className="h-4 w-4 mt-0.5 shrink-0" alt="" aria-hidden="true" />
-                <a href={MAPS_ENVIGADO} target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
-                  <strong className="text-white/80 block">Envigado</strong>
-                  Centro Comercial Metrosur
+              <li className="flex items-center gap-2">
+                <img src="/icons/icon-location-red.svg" className="h-4 w-4 shrink-0" alt="" aria-hidden="true" />
+                <a href={MAPS_ENVIGADO} target="_blank" rel="noopener noreferrer" className="text-white/80 hover:text-white transition-colors font-semibold">
+                  Envigado
                 </a>
               </li>
-              <li className="flex items-start gap-2">
-                <img src="/icons/icon-location-red.svg" className="h-4 w-4 mt-0.5 shrink-0" alt="" aria-hidden="true" />
-                <a href={MAPS_RIONEGRO} target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
-                  <strong className="text-white/80 block">Rionegro</strong>
-                  Parque Comercial Río del Este
+              <li className="flex items-center gap-2">
+                <img src="/icons/icon-location-red.svg" className="h-4 w-4 shrink-0" alt="" aria-hidden="true" />
+                <a href={MAPS_RIONEGRO} target="_blank" rel="noopener noreferrer" className="text-white/80 hover:text-white transition-colors font-semibold">
+                  Rionegro
                 </a>
               </li>
             </ul>

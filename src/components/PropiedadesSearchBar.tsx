@@ -663,6 +663,27 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', initialTex
   };
 
   const [hoveredTab, setHoveredTab] = useState<string | null>(null);
+  const [showFiltersSheet, setShowFiltersSheet] = useState(false);
+  const [sheetOpen, setSheetOpen] = useState(false);
+  const [sheetMounted, setSheetMounted] = useState(false);
+
+  useEffect(() => { setSheetMounted(true); }, []);
+
+  const openSheet = () => {
+    setShowFiltersSheet(true);
+    requestAnimationFrame(() => requestAnimationFrame(() => setSheetOpen(true)));
+  };
+
+  const closeSheet = () => {
+    setSheetOpen(false);
+    setTimeout(() => setShowFiltersSheet(false), 350);
+  };
+
+  const activeFilterCount = (
+    (codigo ? 1 : 0) + (sector ? 1 : 0) + (tipoPropiedad ? 1 : 0) +
+    (habitaciones !== null ? 1 : 0) + (banos !== null ? 1 : 0) +
+    (parqueadero !== null ? 1 : 0) + estrato.length + comodidades.length
+  );
 
   const toggleEstrato   = (e: string) => setEstrato(prev => prev.includes(e) ? prev.filter(x => x !== e) : [...prev, e]);
   const toggleComodidad = (c: string) => setComodidades(prev => prev.includes(c) ? prev.filter(x => x !== c) : [...prev, c]);
