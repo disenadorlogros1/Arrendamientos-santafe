@@ -179,7 +179,6 @@ function DetailRow({ icon, label, value, isRight, spanFull }: { icon: string; la
         display: 'flex', alignItems: 'baseline', gap: 8,
         padding: '10px 0',
         gridColumn: spanFull ? 'span 2' : undefined,
-        paddingRight: (!isRight && !spanFull) ? 24 : 0,
       }}
     >
       <img
@@ -463,7 +462,7 @@ export default function PropertyDetailPage() {
                     <ScrollReveal y={10}>
                       <h2 style={{ fontFamily: FONT, fontSize: 16, fontWeight: 700, color: '#1a1a1a', marginBottom: 16 }}>Detalles del inmueble</h2>
                     </ScrollReveal>
-                    <div ref={detailsRef} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', columnGap: 24, rowGap: 0 }}>
+                    <div ref={detailsRef} className="grid grid-cols-1 sm:grid-cols-2" style={{ columnGap: 24, rowGap: 0 }}>
                       {[
                         { icon: '/icons/icon-home-red.svg',      label: 'Tipo de inmueble',  value: property.type,                     show: true },
                         { icon: '/icons/icon-area-gray.svg',     label: 'Área construida',   value: property.size,                     show: true },
