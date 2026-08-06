@@ -57,6 +57,7 @@ export default function FeaturedSection({ onNavigate }: FeaturedSectionProps) {
             Propiedades <span style={{ fontWeight: 700 }}>destacadas</span>
           </h2>
 
+          {/* Botón — solo visible en sm+ (desktop) */}
           <button
             type="button"
             onClick={() => {
@@ -65,7 +66,7 @@ export default function FeaturedSection({ onNavigate }: FeaturedSectionProps) {
             }}
             onMouseEnter={applyInkFill}
             onMouseLeave={applyInkFill}
-            className="btn-red-outline inline-flex items-center justify-center h-[42px] px-4 shrink-0"
+            className="btn-red-outline hidden sm:inline-flex items-center justify-center h-[42px] px-4 shrink-0"
             style={{
               fontSize: 'clamp(14px, 1vw, 16px)',
               width: cardWidth > 0 ? `${cardWidth}px` : '200px',
@@ -78,6 +79,23 @@ export default function FeaturedSection({ onNavigate }: FeaturedSectionProps) {
         {/* Carrusel */}
         <div style={{ paddingTop: '1.5%', paddingBottom: '1.5%' }}>
           <InfiniteCarousel properties={featured} onCardWidthChange={setCardWidth} />
+        </div>
+
+        {/* Botón — solo visible en mobile, debajo del carrusel */}
+        <div className="flex sm:hidden" style={{ paddingLeft: H_PAD, paddingRight: H_PAD, paddingBottom: '16px' }}>
+          <button
+            type="button"
+            onClick={() => {
+              onNavigate('propiedades');
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
+            onMouseEnter={applyInkFill}
+            onMouseLeave={applyInkFill}
+            className="btn-red-outline inline-flex items-center justify-center h-[42px] px-4 w-full"
+            style={{ fontSize: '14px' }}
+          >
+            <span>Ver más</span>
+          </button>
         </div>
 
       </div>
