@@ -49,10 +49,11 @@ export default function InfiniteCarousel({ properties, onCardWidthChange, maxVis
   const [containerWidth, setContainerWidth] = useState(0);
   const [isMounted, setIsMounted] = useState(false);
 
-  const containerRef = useRef<HTMLDivElement>(null);
-  const trackRef     = useRef<HTMLDivElement>(null);
-  const isAnimating  = useRef(false);
-  const isPaused     = useRef(false);
+  const containerRef  = useRef<HTMLDivElement>(null);
+  const trackRef      = useRef<HTMLDivElement>(null);
+  const isAnimating   = useRef(false);
+  const isPaused      = useRef(false);
+  const touchStartX   = useRef(0);
 
   useEffect(() => {
     setIsMounted(true);
@@ -150,6 +151,12 @@ export default function InfiniteCarousel({ properties, onCardWidthChange, maxVis
       style={{ position: 'relative', width: '100%' }}
       onMouseEnter={() => { isPaused.current = true; }}
       onMouseLeave={() => { isPaused.current = false; }}
+      onTouchStart={(e) => { touchStartX.current = e.touches[0].clientX; isPaused.current = true; }}
+      onTouchEnd={(e) => {
+        const delta = e.changedTouches[0].clientX - touchStartX.current;
+        if (Math.abs(delta) > 50) navigate(delta < 0);
+        isPaused.current = false;
+      }}
     >
       {/* Track con clip — padding extra para que las sombras no se corten */}
       <div ref={containerRef} style={{ overflow: 'hidden', width: '100%', paddingTop: 'clamp(12px,3vw,32px)', marginTop: 'clamp(-32px,-3vw,-12px)', paddingBottom: 'clamp(12px,3vw,32px)', marginBottom: 'clamp(-32px,-3vw,-12px)', paddingLeft: `${H_PAD}px`, paddingRight: `${H_PAD}px` }}>

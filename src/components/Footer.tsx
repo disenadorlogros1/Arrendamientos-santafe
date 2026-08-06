@@ -21,7 +21,7 @@ export default function Footer({ onNavigate }: FooterProps = {}) {
   return (
     <footer className="relative bg-brand-dark text-white" style={{ zIndex: 5 }}>
       <div className="mx-auto max-w-[88rem] px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
           {/* Marca */}
           <div className="space-y-4">
             <img
@@ -178,7 +178,7 @@ export default function Footer({ onNavigate }: FooterProps = {}) {
                   className="flex items-start gap-2 text-sm text-white/60 hover:text-white transition-colors"
                 >
                   <img src="/icons/icon-mail-red.svg" className="h-4 w-4 shrink-0 mt-[2px]" alt="" aria-hidden="true" />
-                  <span style={{ whiteSpace: 'nowrap' }}>santafe@arrendamientossantafe.com</span>
+                  <span style={{ wordBreak: 'break-all' }}>santafe@arrendamientossantafe.com</span>
                 </a>
               </li>
             </ul>

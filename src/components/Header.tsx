@@ -243,7 +243,7 @@ export default function Header({ currentPage, onNavigate, isHeroPage = true, dar
 
       {/* ── Mobile: logo absoluto + iconos derecha ────────── */}
       <button onClick={() => handleNav('home')} className="lg:hidden absolute top-1/2 -translate-y-1/2 left-4 sm:left-6">
-        <img src={isDark ? "/icons/icon-santa-fe-logo.png" : "/icons/icon-santa-fe-logo-red.png"} alt="Arrendamientos Santa Fe" className="h-10 w-auto object-contain" />
+        <img src="/icons/Logotipo_Logoblanco.svg" alt="Arrendamientos Santa Fe" className="h-9 w-auto object-contain" />
       </button>
 
       <div className="flex lg:hidden items-center h-full px-4 sm:px-6">
@@ -261,7 +261,7 @@ export default function Header({ currentPage, onNavigate, isHeroPage = true, dar
               <SheetTitle className="sr-only">Menú de navegación</SheetTitle>
               <div className="flex flex-col h-full">
                 <div className="flex items-center justify-between p-4 border-b border-white/10">
-                  <img src="/icons/icon-santa-fe-logo.png" alt="Arrendamientos Santa Fe" className="h-8 w-auto object-contain" />
+                  <img src="/icons/Logotipo_Logoblanco.svg" alt="Arrendamientos Santa Fe" className="h-8 w-auto object-contain" />
                   <button onClick={() => setMobileOpen(false)} className="text-white/60 hover:text-white" aria-label="Cerrar menú">
                     <img src="/icons/icon-close-white.svg" alt="Cerrar" className="h-5 w-5" />
                   </button>
@@ -284,7 +284,7 @@ export default function Header({ currentPage, onNavigate, isHeroPage = true, dar
                                 href={sub.href}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="block w-full text-left px-4 py-1.5 rounded-lg text-sm text-white/50 hover:text-white hover:bg-white/5 transition-all duration-200"
+                                className="block w-full text-left px-4 py-3 rounded-lg text-sm text-white/50 hover:text-white hover:bg-white/5 transition-all duration-200"
                                 style={{ fontFamily: "'Avenir LT Std', 'Outfit', system-ui, sans-serif", fontWeight: 300 }}
                               >
                                 {sub.label}

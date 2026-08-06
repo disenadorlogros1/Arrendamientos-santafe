@@ -73,6 +73,7 @@ const servicios = [
 
 export default function ServiciosBlock({ onNavigate: _onNavigate }: ServiciosBlockProps) {
   const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
+  const [touchIdx, setTouchIdx]     = useState<number | null>(null);
   const [redIdx] = useState(() => Math.floor(Math.random() * servicios.length));
 
   return (
@@ -105,9 +106,11 @@ export default function ServiciosBlock({ onNavigate: _onNavigate }: ServiciosBlo
         >
           {servicios.map((s, idx) => {
             const url    = `https://wa.me/${PHONE}?text=${encodeURIComponent(s.waMsg)}`;
-            const isRed  = idx === redIdx;
-            const isHov  = idx === hoveredIdx;
-            const isAdj  = hoveredIdx !== null && Math.abs(idx - hoveredIdx) === 1;
+            const isRed    = idx === redIdx;
+            const isHov    = idx === hoveredIdx;
+            const isTouch  = idx === touchIdx;
+            const isActive = isHov || isTouch;
+            const isAdj    = hoveredIdx !== null && Math.abs(idx - hoveredIdx) === 1;
 
             return (
               <div
@@ -119,14 +122,17 @@ export default function ServiciosBlock({ onNavigate: _onNavigate }: ServiciosBlo
                   borderRadius: 0,
                   background: isRed ? RED : '#fff',
                   cursor: 'default',
-                  transform: isHov ? 'scale(1.08)' : isAdj ? 'scale(0.96)' : 'scale(1)',
-                  zIndex: isHov ? 10 : 1,
+                  transform: isActive ? 'scale(1.06)' : isAdj ? 'scale(0.96)' : 'scale(1)',
+                  zIndex: isActive ? 10 : 1,
                   position: 'relative',
                   transition: 'transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.3s ease',
-                  boxShadow: isHov ? '0 8px 32px rgba(0,0,0,0.18)' : 'none',
+                  boxShadow: isActive ? '0 8px 32px rgba(0,0,0,0.18)' : 'none',
                 }}
                 onMouseEnter={() => setHoveredIdx(idx)}
                 onMouseLeave={() => setHoveredIdx(null)}
+                onTouchStart={() => setTouchIdx(idx)}
+                onTouchEnd={() => setTouchIdx(null)}
+                onTouchCancel={() => setTouchIdx(null)}
               >
                 {/* Ícono */}
                 <img

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import type { PageType } from '@/components/Header';
@@ -53,10 +53,21 @@ export default function Historia60Page({ onNavigate }: Props) {
   const dotRefs          = useRef<(HTMLDivElement | null)[]>(Array(N).fill(null));
   const yearRefs         = useRef<(HTMLSpanElement | null)[]>(Array(N).fill(null));
 
-  const imgRefs    = useRef<(HTMLImageElement | null)[][]>(EVENTS.map(e => Array(e.layers.length).fill(null)));
-  const proxyRefs  = useRef<{ x: number }[][]>(EVENTS.map(e => e.layers.map(() => ({ x: 0 }))));
-  const pxSets     = useRef<((v: number) => void)[][]>(EVENTS.map(() => []));
-  const activeRef  = useRef(0);
+  const imgRefs       = useRef<(HTMLImageElement | null)[][]>(EVENTS.map(e => Array(e.layers.length).fill(null)));
+  const proxyRefs     = useRef<{ x: number }[][]>(EVENTS.map(e => e.layers.map(() => ({ x: 0 }))));
+  const pxSets        = useRef<((v: number) => void)[][]>(EVENTS.map(() => []));
+  const activeRef     = useRef(0);
+  const mobileScrollRef = useRef<HTMLDivElement>(null);
+
+  const [isMobile, setIsMobile] = useState(false);
+  const [mobileIdx, setMobileIdx] = useState(0);
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
+  }, []);
 
   // ── Parallax via objectPosition (no overflow issues) ─────────
   useEffect(() => {
@@ -112,7 +123,7 @@ export default function Historia60Page({ onNavigate }: Props) {
       // Initial text / dot / year
       textRefs.current.forEach((el, i) => { if (el) gsap.set(el, { opacity: i === 0 ? 1 : 0, y: i === 0 ? 0 : 12 }); });
       dotRefs.current.forEach((d, i)   => { if (d)  gsap.set(d,  { scale: i === 0 ? 1.8 : 1 }); });
-      yearRefs.current.forEach((s, i)  => { if (s)  gsap.set(s,  { color: i === 0 ? RED : FOG, fontSize: i === 0 ? 13 : 10, fontWeight: i === 0 ? 700 : 300 }); });
+      yearRefs.current.forEach((s, i)  => { if (s)  gsap.set(s,  { color: i === 0 ? RED : FOG, fontSize: i === 0 ? 14 : 11, fontWeight: i === 0 ? 700 : 300 }); });
 
       if (reduced) return;
 
@@ -130,10 +141,10 @@ export default function Historia60Page({ onNavigate }: Props) {
         const EW_next = CW_total - (ic + 1) * CW;
 
         const activateYear = (idx: number) => {
-          gsap.to(yearRefs.current[idx], { color: RED, fontSize: 13, fontWeight: 700, duration: 0.25, ease: 'power2.out' });
+          gsap.to(yearRefs.current[idx], { color: RED, fontSize: 14, fontWeight: 700, duration: 0.25, ease: 'power2.out' });
         };
         const deactivateYear = (idx: number) => {
-          gsap.to(yearRefs.current[idx], { color: FOG, fontSize: 10, fontWeight: 300, duration: 0.25, ease: 'power2.out' });
+          gsap.to(yearRefs.current[idx], { color: FOG, fontSize: 11, fontWeight: 300, duration: 0.25, ease: 'power2.out' });
         };
 
         const tl = gsap.timeline({
@@ -203,11 +214,134 @@ export default function Historia60Page({ onNavigate }: Props) {
         </div>
       </div>
 
-      {/* ── Horizontal scroll experience ──────────────────────── */}
-      <div ref={wrapperRef} style={{ height: `${N * 100}vh`, background: '#fff' }}>
+      {/* ── Mobile carousel ─────────────────────────────────────── */}
+      {isMobile && (
+        <div style={{ background: '#fff', paddingBottom: 24 }}>
+          <div
+            ref={mobileScrollRef}
+            onScroll={(e) => {
+              const idx = Math.round(e.currentTarget.scrollLeft / e.currentTarget.offsetWidth);
+              setMobileIdx(idx);
+            }}
+            style={{
+              display: 'flex',
+              overflowX: 'auto',
+              scrollSnapType: 'x mandatory',
+            } as React.CSSProperties}
+          >
+            {EVENTS.map((evt, pi) => (
+              <div
+                key={evt.year}
+                style={{
+                  minWidth: '100vw',
+                  scrollSnapAlign: 'start',
+                  position: 'relative',
+                  height: 'clamp(340px, 65dvh, 560px)',
+                  flexShrink: 0,
+                  overflow: 'hidden',
+                }}
+              >
+                {evt.layers.map((layer, li) => (
+                  <img
+                    key={li}
+                    src={layer.src}
+                    alt=""
+                    aria-hidden="true"
+                    style={{
+                      position: 'absolute', top: 0, left: 0,
+                      width: '100%', height: '100%',
+                      objectFit: 'cover', objectPosition: '50% 50%',
+                      display: 'block',
+                      zIndex: layer.z, pointerEvents: 'none',
+                    }}
+                  />
+                ))}
+                <div style={{
+                  position: 'absolute',
+                  bottom: 'clamp(16px,3vh,32px)',
+                  left: 'clamp(16px,5vw,28px)',
+                  zIndex: 20,
+                  maxWidth: 'clamp(220px,80%,320px)',
+                  pointerEvents: 'none',
+                }}>
+                  <h3 style={{
+                    fontFamily: FONT, fontWeight: 700,
+                    fontSize: 'clamp(16px,4.5vw,26px)',
+                    color: '#fff', lineHeight: 1.2, margin: '0 0 8px',
+                  }}>
+                    {evt.title}
+                  </h3>
+                  <p style={{
+                    fontFamily: FONT, fontWeight: 300,
+                    fontSize: 'clamp(12px,3vw,14px)',
+                    color: 'rgba(255,255,255,0.75)',
+                    lineHeight: 1.7, margin: 0,
+                  }}>
+                    {evt.body}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Timeline dots */}
+          <div style={{
+            display: 'flex', alignItems: 'center',
+            paddingTop: 20, paddingLeft: 16, paddingRight: 16,
+            position: 'relative', height: 52,
+          }}>
+            <div style={{
+              position: 'absolute', top: '50%',
+              left: `calc(100% / ${N * 2})`,
+              right: `calc(100% / ${N * 2})`,
+              height: 1, background: FOG,
+              transform: 'translateY(-50%)', zIndex: 1,
+            }} />
+            {EVENTS.map((evt, pi) => {
+              const active = pi === mobileIdx;
+              return (
+                <button
+                  key={evt.year}
+                  onClick={() => {
+                    mobileScrollRef.current?.scrollTo({
+                      left: pi * (mobileScrollRef.current?.offsetWidth ?? window.innerWidth),
+                      behavior: 'smooth',
+                    });
+                  }}
+                  style={{
+                    flex: 1, display: 'flex', flexDirection: 'column',
+                    alignItems: 'center', gap: 6,
+                    background: 'none', border: 'none', cursor: 'pointer',
+                    padding: '0 0 4px', position: 'relative', zIndex: 2,
+                  }}
+                >
+                  <span style={{
+                    fontFamily: FONT,
+                    fontSize: active ? 11 : 10, fontWeight: active ? 700 : 300,
+                    color: active ? RED : FOG,
+                    whiteSpace: 'nowrap', letterSpacing: '0.1em',
+                    transition: 'all 0.2s',
+                  }}>
+                    {evt.year}
+                  </span>
+                  <div style={{
+                    width: 8, height: 8, borderRadius: '50%', background: RED,
+                    transform: active ? 'scale(1.8)' : 'scale(1)',
+                    transition: 'transform 0.2s',
+                  }} />
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* ── Desktop: Horizontal scroll experience ─────────────────── */}
+      {!isMobile && (
+      <div ref={wrapperRef} style={{ height: `${N * 100}dvh`, background: '#fff' }}>
         <div
           style={{
-            position: 'sticky', top: 86, width: '100%', height: 'calc(100vh - 86px)',
+            position: 'sticky', top: 86, width: '100%', height: 'calc(100dvh - 86px)',
             background: '#fff',
             display: 'flex', flexDirection: 'column',
             alignItems: 'center', justifyContent: 'center',
@@ -222,7 +356,7 @@ export default function Historia60Page({ onNavigate }: Props) {
             ref={panelContainerRef}
             style={{
               width: '100%',
-              height: `min(${PANEL_H}px, calc(100vh - 170px))`,
+              height: `min(${PANEL_H}px, calc(100dvh - 170px))`,
               overflow: 'hidden',
               display: 'flex',
               position: 'relative',
@@ -242,7 +376,7 @@ export default function Historia60Page({ onNavigate }: Props) {
                   width: pi === 0 ? '100%' : 0,
                 }}
               >
-                {/* Parallax image layers — contain: show full 1920×1080 canvas */}
+                {/* Parallax image layers */}
                 {evt.layers.map((layer, li) => (
                   <img
                     key={li}
@@ -267,9 +401,9 @@ export default function Historia60Page({ onNavigate }: Props) {
                   style={{
                     position: 'absolute',
                     bottom: 'clamp(16px,3vh,32px)',
-                    left: 28,
+                    left: 'clamp(16px,5vw,28px)',
                     zIndex: 20,
-                    maxWidth: 340,
+                    maxWidth: 'clamp(220px,28vw,340px)',
                     pointerEvents: 'none',
                   }}
                 >
@@ -317,7 +451,6 @@ export default function Historia60Page({ onNavigate }: Props) {
                 key={evt.year}
                 style={{ flex: 1, height: '100%', position: 'relative', zIndex: 2 }}
               >
-                {/* Year label — above the line */}
                 <span
                   ref={el => { yearRefs.current[pi] = el; }}
                   style={{
@@ -332,7 +465,6 @@ export default function Historia60Page({ onNavigate }: Props) {
                 >
                   {evt.year}
                 </span>
-                {/* Dot — sitting on the line */}
                 <div
                   ref={el => { dotRefs.current[pi] = el; }}
                   style={{
@@ -350,6 +482,7 @@ export default function Historia60Page({ onNavigate }: Props) {
 
         </div>
       </div>
+      )}
 
     </div>
   );

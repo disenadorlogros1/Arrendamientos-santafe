@@ -524,7 +524,11 @@ export default function SearchForm({ onNavigate }: SearchFormProps) {
             <img src="/icons/icon-location-red.svg" alt="" width={20} height={20} style={{ flexShrink: 0 }} />
             <div style={{ flex: 1, minWidth: 0 }}>
               <p style={labelStyle}>Ubicación</p>
-              <CustomSelect label="Ubicación" value={sector} onChange={setSector} options={SECTORES} placeholder="Seleccionar" />
+              <select value={sector} onChange={e => setSector(e.target.value)}
+                style={{ fontFamily: FONT, fontSize: '14px', fontWeight: 400, color: sector ? COLOR_VALUE : '#aaa', background: 'transparent', border: 'none', outline: 'none', width: '100%', lineHeight: '1', appearance: 'none', WebkitAppearance: 'none', padding: 0 }}>
+                <option value="" disabled>Seleccionar</option>
+                {SECTORES.map(s => <option key={s} value={s}>{s}</option>)}
+              </select>
             </div>
           </div>
           {/* Tipo */}
@@ -532,7 +536,11 @@ export default function SearchForm({ onNavigate }: SearchFormProps) {
             <img src="/icons/icon-home-red.svg" alt="" width={20} height={20} style={{ flexShrink: 0 }} />
             <div style={{ flex: 1, minWidth: 0 }}>
               <p style={labelStyle}>Tipo de propiedad</p>
-              <CustomSelect label="Tipo" value={tipo} onChange={setTipo} options={TIPOS_INMUEBLE} placeholder="Seleccionar" />
+              <select value={tipo} onChange={e => setTipo(e.target.value)}
+                style={{ fontFamily: FONT, fontSize: '14px', fontWeight: 400, color: tipo ? COLOR_VALUE : '#aaa', background: 'transparent', border: 'none', outline: 'none', width: '100%', lineHeight: '1', appearance: 'none', WebkitAppearance: 'none', padding: 0 }}>
+                <option value="" disabled>Seleccionar</option>
+                {TIPOS_INMUEBLE.map(t => <option key={t} value={t}>{t}</option>)}
+              </select>
             </div>
           </div>
           {/* Precio */}
