@@ -346,6 +346,7 @@ export default function PropiedadesPage({ initialFilter = 'Todos', initialQueStr
   const [mapExpanded, setMapExpanded] = useState(false);
   const [visibleInMap, setVisibleInMap] = useState<import('@/data/properties').Property[]>([]);
   const [hoveredMapProperty, setHoveredMapProperty] = useState<import('@/data/properties').Property | null>(null);
+  const [selectedPinProperty, setSelectedPinProperty] = useState<import('@/data/properties').Property | null>(null);
 
   // Animación de entrada por slot — alterna qué card se reemplaza
   const [replacedSlot, setReplacedSlot] = useState<0 | 1>(1);
@@ -764,7 +765,7 @@ export default function PropiedadesPage({ initialFilter = 'Todos', initialQueStr
         )}
 
         {/* Cross-linking CTAs — ocultos en desktop cuando el mapa está abierto (aparecen arriba) */}
-        <div className={`mt-6 grid gap-6 ${showMap ? 'lg:hidden' : ''} ${appliedFilters.tipo === 'Todos' ? 'md:grid-cols-2' : 'md:grid-cols-1'}`}>
+        <div className={`mt-6 grid gap-4 ${showMap ? 'lg:hidden' : ''} ${appliedFilters.tipo === 'Todos' ? 'grid-cols-2' : 'grid-cols-1'}`}>
           {(appliedFilters.tipo === 'Todos' || appliedFilters.tipo === 'Arrendar') && (
             <ScrollReveal y={20}>
               <div style={{ background: '#1a1a1a', borderRadius: 0, padding: '24px 28px' }}>
