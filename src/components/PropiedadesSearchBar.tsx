@@ -1265,7 +1265,7 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', initialTex
               {/* Baños */}
               <div style={{ padding: '14px 20px', borderBottom: DIVIDER }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 10 }}>
-                  <img src="/icons/icon-bathroom-red.svg" width={20} height={20} alt="" aria-hidden style={{ flexShrink: 0 }} />
+                  <img src={fi('icon-bathroom', false, banos !== null)} width={20} height={20} alt="" aria-hidden style={{ flexShrink: 0 }} />
                   <p style={labelStyle}>Baños</p>
                 </div>
                 <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
@@ -1276,7 +1276,7 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', initialTex
               {/* Parqueadero */}
               <div style={{ padding: '14px 20px', borderBottom: DIVIDER }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 10 }}>
-                  <img src="/icons/icon-parking-red.svg" width={20} height={20} alt="" aria-hidden style={{ flexShrink: 0 }} />
+                  <img src={fi('icon-parking', false, parqueadero !== null)} width={20} height={20} alt="" aria-hidden style={{ flexShrink: 0 }} />
                   <p style={labelStyle}>Parqueadero</p>
                 </div>
                 <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
