@@ -716,7 +716,7 @@ export default function PropiedadesPage({ initialFilter = 'Todos', initialQueStr
                         onClick={() => { window.location.href = `/propiedad/${selectedPinProperty.property.id}`; }}
                       >
                         {/* Thumbnail */}
-                        <img src={selectedPinProperty.property.image} alt="" style={{ width: 84, height: 84, objectFit: 'cover', flexShrink: 0 }} />
+                        <img src={selectedPinProperty.property.image} alt="" style={{ width: 110, height: '100%', objectFit: 'cover', flexShrink: 0 }} />
                         {/* Info */}
                         <div style={{ flex: 1, minWidth: 0, padding: '10px 10px', display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 4 }}>
                           <span style={{ fontFamily: FONT_BODY, fontSize: 14, fontWeight: 900, color: '#1a1a1a', lineHeight: 1 }}>

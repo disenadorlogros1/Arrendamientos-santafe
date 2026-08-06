@@ -208,7 +208,7 @@ export default function InversionistasPage() {
             </span>
             <span style={{ display: 'inline-block', fontWeight: 900, color: '#fff', marginTop: '0px', position: 'relative', overflow: 'hidden' }}>
               <span style={{ position: 'relative', zIndex: 2 }}>
-                de 60 años en el mercado inmobiliario
+                de 60 años en el<br className="lg:hidden" />mercado inmobiliario
               </span>
               <span
                 aria-hidden="true"
@@ -234,7 +234,7 @@ export default function InversionistasPage() {
             className="mt-5 text-base sm:text-lg text-white/80 max-w-2xl mx-auto text-center"
             style={{ fontFamily: FONT, fontWeight: 300, lineHeight: '1.5', opacity: 0 }}
           >
-            Identifica las zonas del Valle de Aburrá y municipios aledaños con<br />
+            Identifica las zonas del Valle de Aburrá y municipios aledaños con{' '}
             <span style={{ color: 'rgba(255,255,255,0.95)', fontWeight: 400 }}>mayor potencial de valorización</span>
           </p>
 
@@ -273,48 +273,59 @@ export default function InversionistasPage() {
 
           {/* Grid 2×2 de sectores */}
           <div style={{ padding: '14px 12px 0' }}>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '7px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
               {SECTORS.map(sector => {
                 const isActive = activeSector === sector;
                 const sectorZones = getZonesBySector(sector);
+                const slug = sectorZones[0]?.slug || sector.toLowerCase();
                 return (
                   <button
                     key={sector}
                     onClick={() => setActiveSector(isActive ? null : sector)}
                     style={{
-                      background: isActive ? '#fff' : '#ebebeb',
-                      borderRadius: '12px',
-                      padding: '11px 12px',
+                      background: isActive ? '#fff' : '#f0f0f0',
+                      borderRadius: '14px',
+                      padding: '12px 12px 13px',
                       border: 'none',
                       textAlign: 'left',
                       cursor: 'pointer',
-                      boxShadow: isActive ? '0 2px 12px rgba(0,0,0,0.08)' : 'none',
+                      boxShadow: isActive ? '0 3px 16px rgba(0,0,0,0.10)' : 'none',
                       transition: 'background 0.18s, box-shadow 0.18s',
                       position: 'relative',
                     }}
                   >
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                      <span style={{ fontFamily: FONT, fontSize: '13px', fontWeight: 700, color: '#1a1a1a' }}>
-                        {sector}
-                      </span>
-                      {isActive && (
-                        <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#f32735', display: 'block', marginTop: 3, flexShrink: 0 }} />
-                      )}
+                    {/* Nombre + subtítulo + botón */}
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '11px' }}>
+                      <div>
+                        <div style={{ fontFamily: FONT, fontSize: '13px', fontWeight: 700, color: '#1a1a1a', lineHeight: 1 }}>{sector}</div>
+                        <div style={{ fontFamily: FONT, fontSize: '9.5px', color: '#999', marginTop: 3 }}>{SECTOR_SUBTITLES[sector]}</div>
+                      </div>
+                      <Link
+                        href={`/inversionistas/${slug}`}
+                        onClick={e => e.stopPropagation()}
+                        style={{
+                          width: 28, height: 28, borderRadius: '50%', flexShrink: 0,
+                          background: RED, display: 'flex', alignItems: 'center', justifyContent: 'center',
+                          boxShadow: '0 2px 8px rgba(243,39,53,0.30)', textDecoration: 'none',
+                        }}
+                      >
+                        <svg width="11" height="11" viewBox="0 0 14 14" fill="none">
+                          <path d="M2.5 11.5L11.5 2.5M11.5 2.5H5M11.5 2.5V9" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+                        </svg>
+                      </Link>
                     </div>
-                    <span style={{ fontFamily: FONT, fontSize: '10px', color: '#999', display: 'block', marginTop: 2 }}>
-                      {SECTOR_SUBTITLES[sector]}
-                    </span>
-                    {/* Datos de rentabilidad y estratos */}
+
+                    {/* Rentabilidad + Estratos — protagonismo máximo */}
                     {sectorZones[0] && (
-                      <div style={{ display: 'flex', gap: '10px', marginTop: '8px' }}>
+                      <div style={{ display: 'flex', gap: '10px', alignItems: 'flex-end' }}>
                         <div>
-                          <div style={{ fontFamily: FONT, fontSize: '13px', fontWeight: 800, color: '#f32735', lineHeight: 1 }}>{sectorZones[0].rentability}</div>
-                          <div style={{ fontFamily: FONT, fontSize: '9px', color: '#999', marginTop: 1 }}>Rentabilidad</div>
+                          <div style={{ fontFamily: FONT, fontSize: '22px', fontWeight: 900, color: RED, lineHeight: 1 }}>{sectorZones[0].rentability}</div>
+                          <div style={{ fontFamily: FONT, fontSize: '8.5px', fontWeight: 600, color: '#aaa', marginTop: 3, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Rentabilidad</div>
                         </div>
-                        <div style={{ width: 1, background: '#ddd', flexShrink: 0 }} />
+                        <div style={{ width: 1, background: '#ddd', height: 28, flexShrink: 0, marginBottom: 14 }} />
                         <div>
-                          <div style={{ fontFamily: FONT, fontSize: '13px', fontWeight: 800, color: '#1a1a1a', lineHeight: 1 }}>{sectorZones[0].strata}</div>
-                          <div style={{ fontFamily: FONT, fontSize: '9px', color: '#999', marginTop: 1 }}>Estratos</div>
+                          <div style={{ fontFamily: FONT, fontSize: '22px', fontWeight: 900, color: '#1a1a1a', lineHeight: 1 }}>{sectorZones[0].strata}</div>
+                          <div style={{ fontFamily: FONT, fontSize: '8.5px', fontWeight: 600, color: '#aaa', marginTop: 3, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Estratos</div>
                         </div>
                       </div>
                     )}
@@ -542,8 +553,8 @@ export default function InversionistasPage() {
 
       {/* Benefits Section */}
       <section style={{ background: '#fff' }} className="w-full">
-        <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '28px clamp(20px, 4vw, 52px)', textAlign: 'center' }}>
-          <h2 style={{ fontFamily: FONT, fontWeight: 300, fontSize: 'clamp(26px, 2.6vw, 46px)', color: '#555', lineHeight: 1.1, margin: 0 }}>
+        <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '20px clamp(20px, 4vw, 52px) 16px', textAlign: 'center' }}>
+          <h2 style={{ fontFamily: FONT, fontWeight: 300, fontSize: 'clamp(26px, 2.6vw, 46px)', color: '#555', lineHeight: 0.95, margin: 0 }}>
             ¿Por qué <span style={{ fontWeight: 700 }}>invertir</span>
             <br />
             <span style={{ fontWeight: 700 }}>con nosotros?</span>
@@ -562,29 +573,32 @@ export default function InversionistasPage() {
           }
         `}</style>
 
-        <div className="lg:hidden" style={{ paddingBottom: '24px' }}>
+        <div className="lg:hidden" style={{ paddingBottom: '24px', position: 'relative' }}>
+          {/* Flecha izquierda — fuera del overflow-hidden */}
+          <button
+            onClick={() => benScrollBy('prev')}
+            aria-label="Anterior"
+            style={{
+              position: 'absolute', left: 10, top: '50%', transform: 'translateY(-50%)', zIndex: 20,
+              width: 36, height: 36, borderRadius: '50%',
+              background: RED, border: 'none', cursor: 'pointer',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              boxShadow: '0 2px 12px rgba(243,39,53,0.35)',
+              transition: 'background 0.18s ease',
+            }}
+            onMouseEnter={e => (e.currentTarget.style.background = '#aa182c')}
+            onMouseLeave={e => (e.currentTarget.style.background = RED)}
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <polyline points="15 18 9 12 15 6" />
+            </svg>
+          </button>
+
           <div
             className="relative overflow-hidden"
             onPointerEnter={(e) => { if (e.pointerType === 'mouse') benPausedRef.current = true; }}
             onPointerLeave={(e) => { if (e.pointerType === 'mouse') benPausedRef.current = false; }}
           >
-            {/* Flecha izquierda */}
-            <button
-              onClick={() => benScrollBy('prev')}
-              aria-label="Anterior"
-              style={{
-                position: 'absolute', left: 0, top: 0, bottom: 0, zIndex: 10,
-                width: 44,
-                background: 'linear-gradient(to right, rgba(255,255,255,1) 45%, transparent)',
-                border: 'none', cursor: 'pointer',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-              }}
-            >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <polyline points="15 18 9 12 15 6" />
-              </svg>
-            </button>
-
             {/* Track */}
             <div ref={benTrackRef} className="flex" style={{ width: 'max-content' }}>
               {[...beneficios, ...beneficios].map((b, idx) => (
@@ -622,24 +636,27 @@ export default function InversionistasPage() {
                 </a>
               ))}
             </div>
-
-            {/* Flecha derecha */}
-            <button
-              onClick={() => benScrollBy('next')}
-              aria-label="Siguiente"
-              style={{
-                position: 'absolute', right: 0, top: 0, bottom: 0, zIndex: 10,
-                width: 44,
-                background: 'linear-gradient(to left, rgba(255,255,255,1) 45%, transparent)',
-                border: 'none', cursor: 'pointer',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-              }}
-            >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <polyline points="9 18 15 12 9 6" />
-              </svg>
-            </button>
           </div>
+
+          {/* Flecha derecha — fuera del overflow-hidden */}
+          <button
+            onClick={() => benScrollBy('next')}
+            aria-label="Siguiente"
+            style={{
+              position: 'absolute', right: 10, top: '50%', transform: 'translateY(-50%)', zIndex: 20,
+              width: 36, height: 36, borderRadius: '50%',
+              background: RED, border: 'none', cursor: 'pointer',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              boxShadow: '0 2px 12px rgba(243,39,53,0.35)',
+              transition: 'background 0.18s ease',
+            }}
+            onMouseEnter={e => (e.currentTarget.style.background = '#aa182c')}
+            onMouseLeave={e => (e.currentTarget.style.background = RED)}
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <polyline points="9 18 15 12 9 6" />
+            </svg>
+          </button>
         </div>
 
         {/* ── DESKTOP (lg+): grid ── */}

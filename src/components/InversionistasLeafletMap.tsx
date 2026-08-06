@@ -2556,23 +2556,41 @@ export default function InversionistasLeafletMap({ activeSector, hoveredSector, 
       // Marcadores de estadísticas por sector
       const makeSectorIcon = (sector: Sector, isActive: boolean) => {
         const stats = SECTOR_STATS[sector];
+        const F = "'Avenir LT Std','Outfit',sans-serif";
         if (isActive) {
+          // Estado activo: grande, texto blanco sobre el mapa
           return L.divIcon({
             className: '',
             html: `<div style="transform:translate(-50%,-50%);text-align:center;pointer-events:none;white-space:nowrap;line-height:1">
-              <div style="font-family:'Avenir LT Std','Outfit',sans-serif;font-size:40px;font-weight:900;color:#fff;line-height:0.9;text-shadow:0 2px 10px rgba(0,0,0,0.4);white-space:nowrap">${stats.barrios} Barrios</div>
-              <div style="font-family:'Avenir LT Std','Outfit',sans-serif;font-size:22px;font-weight:700;color:#fff;line-height:0.9;text-shadow:0 2px 8px rgba(0,0,0,0.4);margin-top:0;white-space:nowrap">${stats.municipios} Municipios</div>
-              <div style="font-family:'Avenir LT Std','Outfit',sans-serif;font-size:11px;font-weight:700;color:#fff;background:${RED};padding:3px 10px;margin-top:1px;white-space:nowrap;display:inline-block">${stats.propiedades} propiedades</div>
+              <div style="font-family:${F};font-size:42px;font-weight:900;color:#fff;line-height:0.9;text-shadow:0 2px 14px rgba(0,0,0,0.5);white-space:nowrap">${stats.barrios} Barrios</div>
+              <div style="font-family:${F};font-size:22px;font-weight:700;color:#fff;line-height:0.9;text-shadow:0 2px 10px rgba(0,0,0,0.45);margin-top:2px;white-space:nowrap">${stats.municipios} Municipios</div>
+              <div style="font-family:${F};font-size:11px;font-weight:700;color:#fff;background:${RED};padding:3px 11px;margin-top:4px;white-space:nowrap;display:inline-block;border-radius:2px">${stats.propiedades} propiedades</div>
             </div>`,
             iconSize:   [0, 0],
             iconAnchor: [0, 0],
           });
         }
-        // Estado por defecto — compacto, siempre visible
+        // Estado por defecto — tarjeta con todos los datos, siempre visible
         return L.divIcon({
           className: '',
-          html: `<div style="transform:translate(-50%,-50%);text-align:center;pointer-events:none;white-space:nowrap;line-height:1">
-            <div style="font-family:'Avenir LT Std','Outfit',sans-serif;font-size:13px;font-weight:800;color:#1a1a1a;background:rgba(255,255,255,0.88);padding:4px 9px 3px;border-radius:99px;white-space:nowrap;box-shadow:0 1px 6px rgba(0,0,0,0.14)">${sector}&nbsp;<span style="color:${RED}">${stats.barrios}B</span></div>
+          html: `<div style="transform:translate(-50%,-50%);background:rgba(255,255,255,0.94);border-radius:8px;padding:8px 11px 7px;box-shadow:0 2px 14px rgba(0,0,0,0.16);text-align:center;pointer-events:none;min-width:110px;line-height:1">
+            <div style="font-family:${F};font-size:12px;font-weight:800;color:#1a1a1a;margin-bottom:6px;letter-spacing:0.02em">${sector}</div>
+            <div style="display:flex;justify-content:center;gap:8px;align-items:flex-start">
+              <div>
+                <div style="font-family:${F};font-size:20px;font-weight:900;color:${RED};line-height:1">${stats.barrios}</div>
+                <div style="font-family:${F};font-size:8px;font-weight:600;color:#999;margin-top:2px;text-transform:uppercase;letter-spacing:0.05em">barrios</div>
+              </div>
+              <div style="width:1px;background:#e5e5e5;height:28px;flex-shrink:0;margin-top:2px"></div>
+              <div>
+                <div style="font-family:${F};font-size:20px;font-weight:900;color:#1a1a1a;line-height:1">${stats.municipios}</div>
+                <div style="font-family:${F};font-size:8px;font-weight:600;color:#999;margin-top:2px;text-transform:uppercase;letter-spacing:0.05em">municipios</div>
+              </div>
+              <div style="width:1px;background:#e5e5e5;height:28px;flex-shrink:0;margin-top:2px"></div>
+              <div>
+                <div style="font-family:${F};font-size:20px;font-weight:900;color:#1a1a1a;line-height:1">${stats.propiedades}</div>
+                <div style="font-family:${F};font-size:8px;font-weight:600;color:#999;margin-top:2px;text-transform:uppercase;letter-spacing:0.05em">prop.</div>
+              </div>
+            </div>
           </div>`,
           iconSize:   [0, 0],
           iconAnchor: [0, 0],
