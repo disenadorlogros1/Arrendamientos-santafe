@@ -179,6 +179,7 @@ function DetailRow({ icon, label, value, isRight, spanFull }: { icon: string; la
         display: 'flex', alignItems: 'baseline', gap: 8,
         padding: '10px 0',
         gridColumn: spanFull ? 'span 2' : undefined,
+        minWidth: 0, overflow: 'hidden',
       }}
     >
       <img
@@ -226,8 +227,8 @@ function ZoneSection({ zone, zoneLabel }: { zone: NonNullable<ReturnType<typeof 
         justifyContent: 'center', alignItems: 'center',
         textAlign: 'center', gap: 18,
       }}>
-        <h3 style={{ fontFamily: FONT, fontSize: 'clamp(24px, 3vw, 32px)', fontWeight: 700, color: '#555', margin: 0, lineHeight: 1.2 }}>
-          {zoneLabel}
+        <h3 style={{ fontFamily: FONT, fontSize: 'clamp(22px, 2.8vw, 30px)', fontWeight: 900, color: '#555', margin: 0, lineHeight: 1.2 }}>
+          ¿Por qué invertir<br />en esta zona?
         </h3>
         <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 4, alignItems: 'center' }}>
@@ -249,7 +250,7 @@ function ZoneSection({ zone, zoneLabel }: { zone: NonNullable<ReturnType<typeof 
           flexShrink: 0,
           width: isMobile ? '100%' : 'clamp(160px, 32%, 240px)',
           background: hovCta ? '#aa182c' : '#f32735',
-          display: 'flex', flexDirection: 'row',
+          display: 'flex', flexDirection: 'column',
           alignItems: 'center', justifyContent: 'center',
           gap: 8, padding: isMobile ? '18px 24px' : '28px 20px',
           textDecoration: 'none',
@@ -264,9 +265,6 @@ function ZoneSection({ zone, zoneLabel }: { zone: NonNullable<ReturnType<typeof 
         }}>
           Ver zona
         </span>
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M5 12h14M12 5l7 7-7 7" />
-        </svg>
       </Link>
     </div>
   );
