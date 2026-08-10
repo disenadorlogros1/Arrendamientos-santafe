@@ -2470,11 +2470,12 @@ function computeSectorCentroids(): Record<Sector, [number, number]> {
     Object.entries(acc).map(([s, { lat, lng, n }]) => [s, [lat / n, lng / n]])
   ) as Record<Sector, [number, number]>;
 }
+// Posiciones manuales repartidas en los 4 cuadrantes del mapa para evitar solapamiento
 const SECTOR_CENTROID: Record<Sector, [number, number]> = {
-  ...computeSectorCentroids(),
-  // Occidente: centrado visualmente entre el cluster noroeste (Santa Fe / Sopetrán / San Jerónimo)
-  // y los barrios urbanos (Laureles / Belén / Robledo)
-  Occidente: [6.38, -75.67],
+  Norte:     [6.44, -75.51],
+  Sur:       [5.99, -75.61],
+  Oriente:   [6.11, -75.40],
+  Occidente: [6.41, -75.83],
 };
 
 export default function InversionistasLeafletMap({ activeSector, hoveredSector, onSectorHover, onSectorClick, onZoneNavigate }: Props) {
@@ -2564,7 +2565,7 @@ export default function InversionistasLeafletMap({ activeSector, hoveredSector, 
             html: `<div style="transform:translate(-50%,-50%);text-align:center;pointer-events:none;white-space:nowrap;line-height:1">
               <div style="font-family:${F};font-size:42px;font-weight:900;color:#fff;line-height:0.9;text-shadow:0 2px 14px rgba(0,0,0,0.5);white-space:nowrap">${stats.barrios} Barrios</div>
               <div style="font-family:${F};font-size:22px;font-weight:700;color:#fff;line-height:0.9;text-shadow:0 2px 10px rgba(0,0,0,0.45);margin-top:2px;white-space:nowrap">${stats.municipios} Municipios</div>
-              <div style="font-family:${F};font-size:11px;font-weight:700;color:#fff;background:${RED};padding:3px 11px;margin-top:4px;white-space:nowrap;display:inline-block;border-radius:2px">${stats.propiedades} propiedades</div>
+              <div style="font-family:${F};font-size:11px;font-weight:700;color:#fff;background:${RED};padding:3px 11px;margin-top:4px;white-space:nowrap;display:inline-block;border-radius:0">${stats.propiedades} propiedades</div>
             </div>`,
             iconSize:   [0, 0],
             iconAnchor: [0, 0],
@@ -2573,22 +2574,22 @@ export default function InversionistasLeafletMap({ activeSector, hoveredSector, 
         // Estado por defecto — tarjeta con todos los datos, siempre visible
         return L.divIcon({
           className: '',
-          html: `<div style="transform:translate(-50%,-50%);background:rgba(255,255,255,0.94);border-radius:8px;padding:8px 11px 7px;box-shadow:0 2px 14px rgba(0,0,0,0.16);text-align:center;pointer-events:none;min-width:110px;line-height:1">
-            <div style="font-family:${F};font-size:12px;font-weight:800;color:#1a1a1a;margin-bottom:6px;letter-spacing:0.02em">${sector}</div>
-            <div style="display:flex;justify-content:center;gap:8px;align-items:flex-start">
+          html: `<div style="transform:translate(-50%,-50%);background:rgba(255,255,255,0.30);backdrop-filter:blur(4px);border:1px solid rgba(255,255,255,0.65);border-radius:0;padding:6px 9px 5px;text-align:center;pointer-events:none;min-width:92px;line-height:1">
+            <div style="font-family:${F};font-size:10px;font-weight:800;color:#1a1a1a;margin-bottom:5px;letter-spacing:0.06em;text-transform:uppercase">${sector}</div>
+            <div style="display:flex;justify-content:center;gap:6px;align-items:flex-start">
               <div>
-                <div style="font-family:${F};font-size:20px;font-weight:900;color:${RED};line-height:1">${stats.barrios}</div>
-                <div style="font-family:${F};font-size:8px;font-weight:600;color:#999;margin-top:2px;text-transform:uppercase;letter-spacing:0.05em">barrios</div>
+                <div style="font-family:${F};font-size:17px;font-weight:900;color:${RED};line-height:1">${stats.barrios}</div>
+                <div style="font-family:${F};font-size:7px;font-weight:600;color:#444;margin-top:2px;text-transform:uppercase;letter-spacing:0.05em">barrios</div>
               </div>
-              <div style="width:1px;background:#e5e5e5;height:28px;flex-shrink:0;margin-top:2px"></div>
+              <div style="width:1px;background:rgba(0,0,0,0.18);height:24px;flex-shrink:0;margin-top:2px"></div>
               <div>
-                <div style="font-family:${F};font-size:20px;font-weight:900;color:#1a1a1a;line-height:1">${stats.municipios}</div>
-                <div style="font-family:${F};font-size:8px;font-weight:600;color:#999;margin-top:2px;text-transform:uppercase;letter-spacing:0.05em">municipios</div>
+                <div style="font-family:${F};font-size:17px;font-weight:900;color:#1a1a1a;line-height:1">${stats.municipios}</div>
+                <div style="font-family:${F};font-size:7px;font-weight:600;color:#444;margin-top:2px;text-transform:uppercase;letter-spacing:0.05em">munic.</div>
               </div>
-              <div style="width:1px;background:#e5e5e5;height:28px;flex-shrink:0;margin-top:2px"></div>
+              <div style="width:1px;background:rgba(0,0,0,0.18);height:24px;flex-shrink:0;margin-top:2px"></div>
               <div>
-                <div style="font-family:${F};font-size:20px;font-weight:900;color:#1a1a1a;line-height:1">${stats.propiedades}</div>
-                <div style="font-family:${F};font-size:8px;font-weight:600;color:#999;margin-top:2px;text-transform:uppercase;letter-spacing:0.05em">prop.</div>
+                <div style="font-family:${F};font-size:17px;font-weight:900;color:#1a1a1a;line-height:1">${stats.propiedades}</div>
+                <div style="font-family:${F};font-size:7px;font-weight:600;color:#444;margin-top:2px;text-transform:uppercase;letter-spacing:0.05em">prop.</div>
               </div>
             </div>
           </div>`,

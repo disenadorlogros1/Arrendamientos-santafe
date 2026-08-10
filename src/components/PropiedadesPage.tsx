@@ -692,8 +692,8 @@ export default function PropiedadesPage({ initialFilter = 'Todos', initialQueStr
                 />
                 {/* Chip flotante junto al pin seleccionado */}
                 {selectedPinProperty && (() => {
-                  const CARD_W = 260;
-                  const CARD_H = 130;
+                  const CARD_W = 200;
+                  const CARD_H = 220; // foto 140 + info ~80
                   const PAD = 10;
                   const mapW = mobileMapRef.current?.offsetWidth ?? 375;
                   const mapH = mobileMapRef.current?.offsetHeight ?? 400;
@@ -704,47 +704,59 @@ export default function PropiedadesPage({ initialFilter = 'Todos', initialQueStr
                   if (left + CARD_W > mapW - PAD) left = pinX - CARD_W - 22;
                   left = Math.max(PAD, Math.min(left, mapW - CARD_W - PAD));
 
-                  // Vertical: arriba del pin (sobre el icono de 50px); si no cabe, debajo
+                  // Vertical: arriba del pin; si no cabe, debajo
                   let top = pinY - 50 - CARD_H - 8;
                   if (top < PAD) top = pinY + 8;
                   top = Math.min(top, mapH - CARD_H - PAD);
 
+                  const prop = selectedPinProperty.property;
                   return (
-                    <div style={{ position: 'absolute', left, top, width: CARD_W, zIndex: 1000 }}>
-                      <div
-                        style={{ display: 'flex', height: CARD_H, background: '#fff', borderTop: '3px solid #f32735', boxShadow: '0 4px 20px rgba(0,0,0,0.22)', cursor: 'pointer', overflow: 'hidden', position: 'relative' }}
-                        onClick={() => { window.location.href = `/propiedad/${selectedPinProperty.property.id}`; }}
-                      >
-                        {/* Thumbnail */}
-                        <img src={selectedPinProperty.property.image} alt="" style={{ width: 130, height: 130, objectFit: 'cover', flexShrink: 0, display: 'block' }} />
-                        {/* Info */}
-                        <div style={{ flex: 1, minWidth: 0, padding: '10px 10px', display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 4 }}>
-                          <span style={{ fontFamily: FONT_BODY, fontSize: 14, fontWeight: 900, color: '#1a1a1a', lineHeight: 1 }}>
-                            {selectedPinProperty.property.price}
-                          </span>
-                          <span style={{ fontFamily: FONT_BODY, fontSize: 11, color: '#888', lineHeight: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                            {selectedPinProperty.property.location.split(',')[0]} · {selectedPinProperty.property.type}
-                          </span>
-                          <span style={{ fontFamily: FONT_BODY, fontSize: 10, color: '#bbb', lineHeight: 1 }}>
-                            {selectedPinProperty.property.reference.replace('Ref. ', '')}
-                          </span>
-                        </div>
-                        {/* Flecha */}
-                        <div style={{ flexShrink: 0, display: 'flex', alignItems: 'center', paddingRight: 10 }}>
-                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f32735" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                            <path d="M5 12h14M12 5l7 7-7 7" />
+                    <div
+                      style={{ position: 'absolute', left, top, width: CARD_W, zIndex: 1000, borderRadius: 8, overflow: 'hidden', boxShadow: '0 4px 24px rgba(0,0,0,0.28)', cursor: 'pointer', background: '#fff' }}
+                      onClick={() => { window.location.href = `/propiedad/${prop.id}`; }}
+                    >
+                      {/* Foto */}
+                      <div style={{ position: 'relative', height: 140, overflow: 'hidden' }}>
+                        <img src={prop.image} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 70%', display: 'block' }} />
+                        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, transparent 55%, rgba(0,0,0,0.22) 100%)', pointerEvents: 'none' }} />
+                        {/* Botón rojo — igual al de PropertyCard */}
+                        <button
+                          type="button"
+                          onClick={e => { e.stopPropagation(); window.location.href = `/propiedad/${prop.id}`; }}
+                          style={{ position: 'absolute', top: 8, right: 8, width: 32, height: 32, borderRadius: '50%', background: '#f32735', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 8px rgba(0,0,0,0.25)' }}
+                        >
+                          <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
+                            <path d="M2.5 11.5L11.5 2.5M11.5 2.5H5M11.5 2.5V9" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
                           </svg>
-                        </div>
+                        </button>
                         {/* × cerrar */}
                         <button
                           type="button"
                           onClick={e => { e.stopPropagation(); setSelectedPinProperty(null); }}
-                          style={{ position: 'absolute', top: 5, right: 5, background: 'rgba(0,0,0,0.4)', border: 'none', borderRadius: '50%', width: 20, height: 20, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 2 }}
+                          style={{ position: 'absolute', top: 8, left: 8, width: 24, height: 24, borderRadius: '50%', background: 'rgba(0,0,0,0.45)', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                         >
                           <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round">
                             <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
                           </svg>
                         </button>
+                      </div>
+                      {/* Info — idéntico a PropertyCard */}
+                      <div style={{ padding: '10px 12px 12px', background: '#fff' }}>
+                        <p style={{ fontFamily: FONT_BODY, fontWeight: 900, fontSize: 15, color: '#1a1a1a', margin: '0 0 4px', lineHeight: 1.15, letterSpacing: '-0.3px' }}>
+                          {prop.price}
+                        </p>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 6 }}>
+                          <span style={{ fontFamily: FONT_BODY, fontSize: 11, color: '#888', fontWeight: 500 }}>
+                            {prop.location.split(',')[0]}
+                          </span>
+                          <span style={{ fontFamily: FONT_BODY, fontSize: 11, color: '#888', fontWeight: 500, flexShrink: 0 }}>
+                            {prop.type}
+                          </span>
+                        </div>
+                        <div style={{ height: 2, background: '#f32735', margin: '4px 0' }} />
+                        <p style={{ fontFamily: FONT_BODY, fontSize: 11, color: '#888', margin: 0 }}>
+                          Código inmueble {prop.reference.replace('Ref. ', '')}
+                        </p>
                       </div>
                     </div>
                   );
