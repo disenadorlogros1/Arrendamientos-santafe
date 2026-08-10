@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Iconos" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: none;
+        stroke: #aa182c;
+        stroke-miterlimit: 10;
+        stroke-width: 80px;
+      }
+    </style>
+  </defs>
+  <circle class="cls-1" cx="324.79" cy="530.51" r="183.56"/>
+  <polyline class="cls-1" points="527.34 543.16 938.77 543.16 938.77 733.05"/>
+  <line class="cls-1" x1="774.2" y1="542.43" x2="774.2" y2="716.5"/>
+</svg>

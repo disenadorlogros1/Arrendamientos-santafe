@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Iconos" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: none;
+        stroke: #aa182c;
+        stroke-miterlimit: 10;
+        stroke-width: 80px;
+      }
+    </style>
+  </defs>
+  <rect class="cls-1" x="131.4" y="160.95" width="807.03" height="747.69"/>
+  <line class="cls-1" x1="534.91" y1="154.29" x2="534.91" y2="925.71"/>
+  <line class="cls-1" x1="151.06" y1="534.8" x2="948.6" y2="534.8"/>
+  <g>
+    <line class="cls-1" x1="250.76" y1="357.96" x2="437.09" y2="357.96"/>
+    <line class="cls-1" x1="343.92" y1="264.8" x2="343.92" y2="451.13"/>
+  </g>
+  <line class="cls-1" x1="642.4" y1="357.96" x2="828.73" y2="357.96"/>
+  <g>
+    <line class="cls-1" x1="278.04" y1="670.68" x2="409.8" y2="802.43"/>
+    <line class="cls-1" x1="409.8" y1="670.68" x2="278.04" y2="802.43"/>
+  </g>
+  <g>
+    <line class="cls-1" x1="642.4" y1="677.21" x2="828.73" y2="677.21"/>
+    <line class="cls-1" x1="642.4" y1="788.77" x2="828.73" y2="788.77"/>
+  </g>
+</svg>

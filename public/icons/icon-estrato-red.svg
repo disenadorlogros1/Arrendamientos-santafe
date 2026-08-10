@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Iconos" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #f32735;
+        font-family: AvenirLTPro-Black, 'Avenir LT Pro';
+        font-size: 278.19px;
+        font-weight: 800;
+      }
+
+      .cls-2 {
+        fill: none;
+        stroke: #f32735;
+        stroke-miterlimit: 10;
+        stroke-width: 80px;
+      }
+    </style>
+  </defs>
+  <g>
+    <rect class="cls-2" x="252.73" y="656.68" width="193.39" height="348.37"/>
+    <rect class="cls-2" x="463.71" y="508.21" width="193.39" height="496.83"/>
+    <rect class="cls-2" x="659.05" y="362.35" width="193.39" height="642.69"/>
+  </g>
+  <text class="cls-1" transform="translate(227.55 547.89)"><tspan x="0" y="0">1</tspan></text>
+  <text class="cls-1" transform="translate(431.53 399.42)"><tspan x="0" y="0">2</tspan></text>
+  <text class="cls-1" transform="translate(676.27 252.53)"><tspan x="0" y="0">3</tspan></text>
+</svg>

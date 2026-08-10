@@ -2523,8 +2523,8 @@ export default function InversionistasLeafletMap({ activeSector, hoveredSector, 
         maxZoom: 19,
       }).addTo(mapRef.current);
 
-      // Cuando el usuario hace zoom o pan manual, notificar al padre para detener auto-rotación
-      mapRef.current.on('dragstart zoomstart', () => {
+      // Solo dragstart (no zoomstart) — flyTo dispara zoomstart internamente y mataría el timer
+      mapRef.current.on('dragstart', () => {
         onInteractionRef.current?.();
       });
 

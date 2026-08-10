@@ -190,7 +190,7 @@ export default function InversionistasPage() {
       autoTimerRef.current = window.setInterval(() => {
         autoIdxRef.current = (autoIdxRef.current + 1) % SECTORS.length;
         setActiveSector(SECTORS[autoIdxRef.current]);
-      }, 15000) as unknown as ReturnType<typeof setInterval>;
+      }, 10000) as unknown as ReturnType<typeof setInterval>;
     }, 800);
     return () => {
       window.clearTimeout(firstTimer);
