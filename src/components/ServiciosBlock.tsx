@@ -167,29 +167,32 @@ export default function ServiciosBlock({ onNavigate: _onNavigate }: ServiciosBlo
         }
       `}</style>
 
-      <div className="lg:hidden" style={{ paddingBottom: '24px' }}>
+      <div className="lg:hidden" style={{ paddingBottom: '24px', position: 'relative' }}>
+        {/* Flecha izquierda — fuera del overflow-hidden */}
+        <button
+          onClick={() => scrollBy('prev')}
+          aria-label="Anterior"
+          style={{
+            position: 'absolute', left: 10, top: '50%', transform: 'translateY(-50%)', zIndex: 20,
+            width: 36, height: 36, borderRadius: '50%',
+            background: RED, border: 'none', cursor: 'pointer',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            boxShadow: '0 2px 12px rgba(243,39,53,0.35)',
+            transition: 'background 0.18s ease',
+          }}
+          onMouseEnter={e => (e.currentTarget.style.background = '#aa182c')}
+          onMouseLeave={e => (e.currentTarget.style.background = RED)}
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <polyline points="15 18 9 12 15 6" />
+          </svg>
+        </button>
+
         <div
           className="relative overflow-hidden"
           onPointerEnter={(e) => { if (e.pointerType === 'mouse') pausedRef.current = true; }}
           onPointerLeave={(e) => { if (e.pointerType === 'mouse') pausedRef.current = false; }}
         >
-          {/* Flecha izquierda */}
-          <button
-            onClick={() => scrollBy('prev')}
-            aria-label="Anterior"
-            style={{
-              position: 'absolute', left: 0, top: 0, bottom: 0, zIndex: 10,
-              width: 44,
-              background: 'linear-gradient(to right, rgba(255,255,255,1) 45%, transparent)',
-              border: 'none', cursor: 'pointer',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-            }}
-          >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <polyline points="15 18 9 12 15 6" />
-            </svg>
-          </button>
-
           {/* Track */}
           <div ref={trackRef} className="flex" style={{ width: 'max-content' }}>
             {[...servicios, ...servicios].map((s, idx) => {
@@ -227,24 +230,27 @@ export default function ServiciosBlock({ onNavigate: _onNavigate }: ServiciosBlo
               );
             })}
           </div>
-
-          {/* Flecha derecha */}
-          <button
-            onClick={() => scrollBy('next')}
-            aria-label="Siguiente"
-            style={{
-              position: 'absolute', right: 0, top: 0, bottom: 0, zIndex: 10,
-              width: 44,
-              background: 'linear-gradient(to left, rgba(255,255,255,1) 45%, transparent)',
-              border: 'none', cursor: 'pointer',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-            }}
-          >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <polyline points="9 18 15 12 9 6" />
-            </svg>
-          </button>
         </div>
+
+        {/* Flecha derecha — fuera del overflow-hidden */}
+        <button
+          onClick={() => scrollBy('next')}
+          aria-label="Siguiente"
+          style={{
+            position: 'absolute', right: 10, top: '50%', transform: 'translateY(-50%)', zIndex: 20,
+            width: 36, height: 36, borderRadius: '50%',
+            background: RED, border: 'none', cursor: 'pointer',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            boxShadow: '0 2px 12px rgba(243,39,53,0.35)',
+            transition: 'background 0.18s ease',
+          }}
+          onMouseEnter={e => (e.currentTarget.style.background = '#aa182c')}
+          onMouseLeave={e => (e.currentTarget.style.background = RED)}
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <polyline points="9 18 15 12 9 6" />
+          </svg>
+        </button>
       </div>
 
       {/* ── DESKTOP (lg+): grid con descripción ── */}

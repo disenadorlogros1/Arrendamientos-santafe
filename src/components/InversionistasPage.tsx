@@ -98,6 +98,13 @@ export default function InversionistasPage() {
   const autoIdxRef     = useRef(0);
   const autoTimerRef   = useRef<ReturnType<typeof setInterval> | null>(null);
 
+  const handleMapInteraction = () => {
+    if (autoTimerRef.current) {
+      clearInterval(autoTimerRef.current);
+      autoTimerRef.current = null;
+    }
+  };
+
   useEffect(() => {
     const track = benTrackRef.current;
     if (!track) return;
@@ -288,6 +295,7 @@ export default function InversionistasPage() {
               onSectorHover={handleMapHover}
               onSectorClick={setActiveSector}
               onZoneNavigate={handleZoneNavigate}
+              onUserInteraction={handleMapInteraction}
             />
           </div>
 
@@ -299,13 +307,15 @@ export default function InversionistasPage() {
                 const sectorZones = getZonesBySector(sector);
                 const slug = sectorZones[0]?.slug || sector.toLowerCase();
                 return (
-                  <div
+                  <Link
                     key={sector}
+                    href={`/inversionistas/${slug}`}
                     onClick={() => {
                       if (autoTimerRef.current) { clearInterval(autoTimerRef.current); autoTimerRef.current = null; }
-                      setActiveSector(isActive ? null : sector);
                     }}
+                    onMouseEnter={() => setActiveSector(sector)}
                     style={{
+                      display: 'block',
                       background: isActive ? '#fff' : '#f0f0f0',
                       borderRadius: '0',
                       padding: '12px 12px 13px',
@@ -314,6 +324,7 @@ export default function InversionistasPage() {
                       boxShadow: isActive ? '0 3px 16px rgba(0,0,0,0.10)' : 'none',
                       transition: 'background 0.18s, box-shadow 0.18s',
                       position: 'relative',
+                      textDecoration: 'none',
                     }}
                   >
                     {/* Nombre + subtítulo + botón */}
@@ -322,19 +333,17 @@ export default function InversionistasPage() {
                         <div style={{ fontFamily: FONT, fontSize: '13px', fontWeight: 700, color: '#1a1a1a', lineHeight: 1 }}>{sector}</div>
                         <div style={{ fontFamily: FONT, fontSize: '9.5px', color: '#999', marginTop: 3 }}>{SECTOR_SUBTITLES[sector]}</div>
                       </div>
-                      <Link
-                        href={`/inversionistas/${slug}`}
-                        onClick={e => e.stopPropagation()}
+                      <div
                         style={{
                           width: 28, height: 28, borderRadius: '50%', flexShrink: 0,
                           background: RED, display: 'flex', alignItems: 'center', justifyContent: 'center',
-                          boxShadow: '0 2px 8px rgba(243,39,53,0.30)', textDecoration: 'none',
+                          boxShadow: '0 2px 8px rgba(243,39,53,0.30)',
                         }}
                       >
                         <svg width="11" height="11" viewBox="0 0 14 14" fill="none">
                           <path d="M2.5 11.5L11.5 2.5M11.5 2.5H5M11.5 2.5V9" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
                         </svg>
-                      </Link>
+                      </div>
                     </div>
 
                     {/* Rentabilidad + Estratos — protagonismo máximo */}
@@ -351,66 +360,12 @@ export default function InversionistasPage() {
                         </div>
                       </div>
                     )}
-                  </div>
+                  </Link>
                 );
               })}
             </div>
           </div>
 
-          {/* Panel de detalle — solo cuando hay sector activo */}
-          {activeSector && (() => {
-            const sectorZones = getZonesBySector(activeSector);
-            const firstZone   = sectorZones[0];
-            if (!firstZone) return null;
-            const allSubzones = sectorZones.flatMap(z => z.subzones).slice(0, 6);
-            return (
-              <div style={{ margin: '10px 12px 16px', background: '#ebebeb', borderRadius: '0', padding: '14px' }}>
-                <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '12px' }}>
-                  <div>
-                    <div style={{ fontFamily: FONT, fontSize: '15px', fontWeight: 700, color: '#1a1a1a' }}>Zona {activeSector}</div>
-                    <div style={{ fontFamily: FONT, fontSize: '11px', color: '#999', marginTop: 2 }}>{SECTOR_SUBTITLES[activeSector]}</div>
-                  </div>
-                  <span style={{ background: '#f32735', color: '#fff', fontSize: '10px', fontWeight: 700, padding: '3px 8px', borderRadius: '0', flexShrink: 0, marginLeft: 8, marginTop: 2 }}>
-                    {sectorZones.length} zona{sectorZones.length !== 1 ? 's' : ''}
-                  </span>
-                </div>
-
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '7px', marginBottom: '12px' }}>
-                  <div style={{ background: '#fff', borderRadius: '0', padding: '10px 12px' }}>
-                    <div style={{ fontFamily: FONT, fontSize: '22px', fontWeight: 800, color: '#f32735', lineHeight: 1 }}>{firstZone.rentability}</div>
-                    <div style={{ fontFamily: FONT, fontSize: '9px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', color: '#999', marginTop: 4 }}>Rentabilidad</div>
-                  </div>
-                  <div style={{ background: '#fff', borderRadius: '0', padding: '10px 12px' }}>
-                    <div style={{ fontFamily: FONT, fontSize: '22px', fontWeight: 800, color: '#f32735', lineHeight: 1 }}>{firstZone.strata}</div>
-                    <div style={{ fontFamily: FONT, fontSize: '9px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', color: '#999', marginTop: 4 }}>Estratos</div>
-                  </div>
-                </div>
-
-                <div style={{ marginBottom: '12px' }}>
-                  <div style={{ fontFamily: FONT, fontSize: '9px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', color: '#999', marginBottom: 6 }}>Barrios y sectores</div>
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '5px' }}>
-                    {allSubzones.map(b => (
-                      <span key={b} style={{ background: '#fff', borderRadius: '0', padding: '3px 9px', fontSize: '11px', fontWeight: 500, color: '#1a1a1a' }}>{b}</span>
-                    ))}
-                  </div>
-                </div>
-
-                <Link
-                  href={`/inversionistas/${firstZone.slug}`}
-                  style={{
-                    display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
-                    width: '100%', background: '#f32735', color: '#fff',
-                    borderRadius: '0', padding: '12px',
-                    fontFamily: FONT, fontSize: '13px', fontWeight: 700,
-                    textDecoration: 'none',
-                  }}
-                >
-                  Ver propiedades
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-                </Link>
-              </div>
-            );
-          })()}
         </div>
 
         {/* 2-col block */}
@@ -476,6 +431,7 @@ export default function InversionistasPage() {
                 onSectorHover={handleMapHover}
                 onSectorClick={setActiveSector}
                 onZoneNavigate={handleZoneNavigate}
+                onUserInteraction={handleMapInteraction}
               />
             </div>
 

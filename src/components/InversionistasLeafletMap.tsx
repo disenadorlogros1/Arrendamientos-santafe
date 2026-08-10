@@ -2674,8 +2674,7 @@ export default function InversionistasLeafletMap({ activeSector, hoveredSector, 
       const targetSector = hoveredSector ?? activeSector;
       if (targetSector !== prevSectorRef.current) {
         prevSectorRef.current = targetSector;
-        // Solo fly automático si el usuario no ha hecho zoom/pan manual
-        if (targetSector && !userInteractedRef.current) {
+        if (targetSector) {
           try {
             const v = SECTOR_VIEW[targetSector];
             map.flyTo(v.center, v.zoom, { duration: 0.7, easeLinearity: 0.5 });
