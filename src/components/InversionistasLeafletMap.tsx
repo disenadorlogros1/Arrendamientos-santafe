@@ -2509,13 +2509,14 @@ export default function InversionistasLeafletMap({ activeSector, hoveredSector, 
       if (containerRef.current.offsetWidth === 0 && containerRef.current.offsetHeight === 0) return;
       const L = (window as any).L;
 
+      const isMobile = window.innerWidth < 1024;
       mapRef.current = L.map(containerRef.current, {
         zoomControl:        true,
         scrollWheelZoom:    false,
         attributionControl: false,
-        dragging:           true,
-        doubleClickZoom:    true,
-        touchZoom:          true,
+        dragging:           !isMobile,
+        doubleClickZoom:    !isMobile,
+        touchZoom:          false,
       }).setView([6.25, -75.58], 9);
 
       L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
