@@ -185,7 +185,7 @@ export default function InversionZonePage() {
 
         {/* ── Stats ─────────────────────────────────────────── */}
         <section style={{ background: '#1a1a1a', padding: '0', borderBottom: '1px solid #1e1e1e' }}>
-          <div style={{ maxWidth: 1120, margin: '0 auto', padding: '0 24px' }}>
+          <div className="px-0 lg:px-6" style={{ maxWidth: 1120, margin: '0 auto' }}>
             <div className="grid grid-cols-2 lg:grid-cols-[1fr_2fr_1fr]" style={{ gap: 2 }}>
               {/* Rentabilidad — col 1 en ambos */}
               <div className="text-center lg:text-left" style={{ background: '#161616', padding: '28px 20px 24px', boxSizing: 'border-box' as const }}>
@@ -194,7 +194,7 @@ export default function InversionZonePage() {
                 </div>
                 <AnimatedStatValue
                   value={zone.rentability}
-                  style={{ fontSize: 'clamp(20px, 2.2vw, 28px)', fontWeight: 900, color: '#fff', lineHeight: 1.1, letterSpacing: '-0.02em' }}
+                  style={{ fontSize: 'clamp(30px, 2.2vw, 36px)', fontWeight: 900, color: '#fff', lineHeight: 1.0, letterSpacing: '-0.02em' }}
                 />
               </div>
               {/* Estratos — col 2 mobile / col 3 desktop */}
@@ -204,7 +204,7 @@ export default function InversionZonePage() {
                 </div>
                 <AnimatedStatValue
                   value={zone.strata}
-                  style={{ fontSize: 'clamp(20px, 2.2vw, 28px)', fontWeight: 900, color: '#fff', lineHeight: 1.1, letterSpacing: '-0.02em' }}
+                  style={{ fontSize: 'clamp(30px, 2.2vw, 36px)', fontWeight: 900, color: '#fff', lineHeight: 1.0, letterSpacing: '-0.02em' }}
                 />
               </div>
               {/* Precio m² — ancho completo mobile / col 2 desktop */}
@@ -214,7 +214,7 @@ export default function InversionZonePage() {
                 </div>
                 <AnimatedStatValue
                   value={zone.pricePerM2}
-                  style={{ fontSize: 'clamp(16px, 2.2vw, 26px)', fontWeight: 900, color: '#fff', lineHeight: 1.1, letterSpacing: '-0.02em' }}
+                  style={{ fontSize: 'clamp(20px, 2.2vw, 26px)', fontWeight: 900, color: '#fff', lineHeight: 1.0, letterSpacing: '-0.02em' }}
                 />
               </div>
             </div>
