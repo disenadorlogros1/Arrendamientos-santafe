@@ -300,6 +300,7 @@ export default function InversionistasPage() {
               onSectorClick={setActiveSector}
               onZoneNavigate={handleZoneNavigate}
               onUserInteraction={handleMapInteraction}
+              showStats={true}
             />
           </div>
 

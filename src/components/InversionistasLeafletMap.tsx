@@ -18,6 +18,7 @@ interface Props {
   onSectorClick?: (sector: Sector) => void;
   onZoneNavigate?: (sector: Sector) => void;
   onUserInteraction?: () => void;
+  showStats?: boolean;
 }
 
 const RED = '#f32735';
@@ -2479,7 +2480,7 @@ const SECTOR_CENTROID: Record<Sector, [number, number]> = {
   Occidente: [6.41, -75.83],
 };
 
-export default function InversionistasLeafletMap({ activeSector, hoveredSector, onSectorHover, onSectorClick, onZoneNavigate, onUserInteraction }: Props) {
+export default function InversionistasLeafletMap({ activeSector, hoveredSector, onSectorHover, onSectorClick, onZoneNavigate, onUserInteraction, showStats = false }: Props) {
   const containerRef       = useRef<HTMLDivElement>(null);
   const mapRef             = useRef<any>(null);
   const polygonsRef        = useRef<Record<string, { polygon: any }>>({});
@@ -2489,11 +2490,13 @@ export default function InversionistasLeafletMap({ activeSector, hoveredSector, 
   const onClickRef         = useRef(onSectorClick);
   const onNavigateRef      = useRef(onZoneNavigate);
   const onInteractionRef   = useRef(onUserInteraction);
+  const showStatsRef       = useRef(showStats);
   const hoverTimerRef      = useRef<any>(null);
   useEffect(() => { onHoverRef.current = onSectorHover; }, [onSectorHover]);
   useEffect(() => { onClickRef.current = onSectorClick; }, [onSectorClick]);
   useEffect(() => { onNavigateRef.current = onZoneNavigate; }, [onZoneNavigate]);
   useEffect(() => { onInteractionRef.current = onUserInteraction; }, [onUserInteraction]);
+  useEffect(() => { showStatsRef.current = showStats; }, [showStats]);
 
   useEffect(() => {
     if (!document.querySelector('link[href*="leaflet"]')) {
@@ -2559,12 +2562,25 @@ export default function InversionistasLeafletMap({ activeSector, hoveredSector, 
         entry.polygon.setStyle({ color: 'transparent', weight: 0, fillColor: RED, fillOpacity: 0.10, opacity: 0 });
       }
 
-      // Marcadores de estadísticas por sector
+      // Marcadores por sector — con o sin estadísticas según showStatsRef
       const makeSectorIcon = (sector: Sector, isActive: boolean) => {
-        const stats = SECTOR_STATS[sector];
         const F = "'Avenir LT Std','Outfit',sans-serif";
+
+        // Desktop: solo nombre del sector, limpio
+        if (!showStatsRef.current) {
+          return L.divIcon({
+            className: '',
+            html: `<div style="transform:translate(-50%,-50%);pointer-events:none;text-align:center">
+              <div style="font-family:${F};font-size:${isActive ? 14 : 11}px;font-weight:800;color:#fff;letter-spacing:0.09em;text-transform:uppercase;text-shadow:0 1px 6px rgba(0,0,0,0.6),0 0 14px rgba(0,0,0,0.35);transition:font-size 0.2s">${sector}</div>
+            </div>`,
+            iconSize:   [0, 0],
+            iconAnchor: [0, 0],
+          });
+        }
+
+        const stats = SECTOR_STATS[sector];
         if (isActive) {
-          // Estado activo: grande, texto blanco sobre el mapa
+          // Mobile activo: grande, texto blanco sobre el mapa
           return L.divIcon({
             className: '',
             html: `<div style="transform:translate(-50%,-50%);text-align:center;pointer-events:none;white-space:nowrap;line-height:1">
@@ -2576,7 +2592,7 @@ export default function InversionistasLeafletMap({ activeSector, hoveredSector, 
             iconAnchor: [0, 0],
           });
         }
-        // Estado por defecto — tarjeta con todos los datos, siempre visible
+        // Mobile por defecto — tarjeta con todos los datos
         return L.divIcon({
           className: '',
           html: `<div style="transform:translate(-50%,-50%);background:rgba(255,255,255,0.30);backdrop-filter:blur(4px);border:1px solid rgba(255,255,255,0.65);border-radius:0;padding:6px 9px 5px;text-align:center;pointer-events:none;min-width:92px;line-height:1">
