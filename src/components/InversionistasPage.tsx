@@ -340,23 +340,23 @@ export default function InversionistasPage() {
             const firstZone   = sectorZones[0];
             const allSubzones = sectorZones.flatMap(z => z.subzones).slice(0, 6);
             return (
-              <div style={{ margin: '10px 12px 16px', background: '#ebebeb', borderRadius: '14px', padding: '14px' }}>
+              <div style={{ margin: '10px 12px 16px', background: '#ebebeb', borderRadius: '0', padding: '14px' }}>
                 <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '12px' }}>
                   <div>
                     <div style={{ fontFamily: FONT, fontSize: '15px', fontWeight: 700, color: '#1a1a1a' }}>Zona {activeSector}</div>
                     <div style={{ fontFamily: FONT, fontSize: '11px', color: '#999', marginTop: 2 }}>{SECTOR_SUBTITLES[activeSector]}</div>
                   </div>
-                  <span style={{ background: '#f32735', color: '#fff', fontSize: '10px', fontWeight: 700, padding: '3px 8px', borderRadius: '99px', flexShrink: 0, marginLeft: 8, marginTop: 2 }}>
+                  <span style={{ background: '#f32735', color: '#fff', fontSize: '10px', fontWeight: 700, padding: '3px 8px', borderRadius: '0', flexShrink: 0, marginLeft: 8, marginTop: 2 }}>
                     {sectorZones.length} zona{sectorZones.length !== 1 ? 's' : ''}
                   </span>
                 </div>
 
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '7px', marginBottom: '12px' }}>
-                  <div style={{ background: '#fff', borderRadius: '10px', padding: '10px 12px' }}>
+                  <div style={{ background: '#fff', borderRadius: '0', padding: '10px 12px' }}>
                     <div style={{ fontFamily: FONT, fontSize: '22px', fontWeight: 800, color: '#f32735', lineHeight: 1 }}>{firstZone.rentability}</div>
                     <div style={{ fontFamily: FONT, fontSize: '9px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', color: '#999', marginTop: 4 }}>Rentabilidad</div>
                   </div>
-                  <div style={{ background: '#fff', borderRadius: '10px', padding: '10px 12px' }}>
+                  <div style={{ background: '#fff', borderRadius: '0', padding: '10px 12px' }}>
                     <div style={{ fontFamily: FONT, fontSize: '22px', fontWeight: 800, color: '#f32735', lineHeight: 1 }}>{firstZone.strata}</div>
                     <div style={{ fontFamily: FONT, fontSize: '9px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', color: '#999', marginTop: 4 }}>Estratos</div>
                   </div>
@@ -366,7 +366,7 @@ export default function InversionistasPage() {
                   <div style={{ fontFamily: FONT, fontSize: '9px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', color: '#999', marginBottom: 6 }}>Barrios y sectores</div>
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '5px' }}>
                     {allSubzones.map(b => (
-                      <span key={b} style={{ background: '#fff', borderRadius: '99px', padding: '3px 9px', fontSize: '11px', fontWeight: 500, color: '#1a1a1a' }}>{b}</span>
+                      <span key={b} style={{ background: '#fff', borderRadius: '0', padding: '3px 9px', fontSize: '11px', fontWeight: 500, color: '#1a1a1a' }}>{b}</span>
                     ))}
                   </div>
                 </div>
@@ -376,7 +376,7 @@ export default function InversionistasPage() {
                   style={{
                     display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
                     width: '100%', background: '#f32735', color: '#fff',
-                    borderRadius: '10px', padding: '12px',
+                    borderRadius: '0', padding: '12px',
                     fontFamily: FONT, fontSize: '13px', fontWeight: 700,
                     textDecoration: 'none',
                   }}
