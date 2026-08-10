@@ -664,7 +664,7 @@ export default function PropiedadesPage({ initialFilter = 'Todos', initialQueStr
 
         {/* Toolbar — oculto en desktop cuando el mapa está abierto */}
         {!showMap && (
-          <div className="flex items-center" style={{ paddingBottom: '20px' }}>
+          <div className="flex items-center justify-center lg:justify-start" style={{ padding: '20px 0' }}>
             <p style={{ fontFamily: FONT_BODY, fontSize: '13px', color: '#999', margin: 0 }}>
               {filtered.length} {filtered.length === 1 ? 'propiedad encontrada' : 'propiedades encontradas'}
             </p>
