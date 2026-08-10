@@ -52,8 +52,8 @@ const servicios = [
     waMsg: 'Hola, quiero comprar un inmueble',
   },
   {
-    iconRed:   '/icons/icon-consult-red.svg',
-    iconWhite: '/icons/icon-consult-white.svg',
+    iconRed:   '/icons/icon-consignación-red.svg',
+    iconWhite: '/icons/icon-consignación-white.svg',
     title: 'Consignación',
     description:
       'Tu propiedad merece estar en buenas manos. Nos encargamos de encontrar el cliente adecuado con la seriedad y el respaldo de 60 años en el mercado inmobiliario antioqueño.',
