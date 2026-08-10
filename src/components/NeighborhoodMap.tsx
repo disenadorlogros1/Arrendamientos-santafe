@@ -198,13 +198,16 @@ export default function NeighborhoodMap({ zone }: Props) {
 
   return (
     <>
-      {/* Título + subtítulo — solo mobile */}
-      <div className="lg:hidden" style={{ background: '#1a1a1a', padding: '14px 16px 12px' }}>
-        <div style={{ fontFamily: FONT, fontSize: 15, fontWeight: 700, color: '#fff', lineHeight: 1.2 }}>
+      {/* Título + subtítulo — mobile y desktop */}
+      <div style={{ background: '#fff', padding: '14px 16px 12px', borderBottom: '1px solid #f0f0f0' }}>
+        <div style={{ fontFamily: FONT, fontSize: 15, fontWeight: 700, color: '#1a1a1a', lineHeight: 1.2 }}>
           Barrios en zona {zone.sector}
         </div>
-        <div style={{ fontFamily: FONT, fontSize: 11, color: 'rgba(255,255,255,0.5)', marginTop: 3 }}>
+        <div className="lg:hidden" style={{ fontFamily: FONT, fontSize: 11, color: '#999', marginTop: 3 }}>
           Da clic sobre el barrio que quieras más información
+        </div>
+        <div className="hidden lg:block" style={{ fontFamily: FONT, fontSize: 11, color: '#999', marginTop: 3 }}>
+          Pasa el cursor sobre un pin para ver la información del barrio
         </div>
       </div>
 
@@ -295,7 +298,24 @@ export default function NeighborhoodMap({ zone }: Props) {
                       <div style={{ fontSize: 13, fontWeight: 700, color: '#fff', lineHeight: 1.3 }}>{active.avgPrice}</div>
                     </div>
                   </div>
-                  <p style={{ fontSize: 10, color: 'rgba(255,255,255,0.55)', lineHeight: 1.5, margin: 0 }}>{active.rentBlurb}</p>
+                  <p style={{ fontSize: 10, color: 'rgba(255,255,255,0.55)', lineHeight: 1.5, margin: '0 0 8px' }}>{active.rentBlurb}</p>
+                  <div style={{ fontSize: 9, fontWeight: 700, textTransform: 'uppercase' as const, letterSpacing: '0.06em', color: 'rgba(255,255,255,0.4)', marginBottom: 6 }}>
+                    Ver propiedades en este barrio
+                  </div>
+                  <div style={{ display: 'flex', gap: 6 }}>
+                    <a
+                      href={`/propiedades?q=${encodeURIComponent(active.name)}#comprar`}
+                      style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '7px 4px', background: RED, color: '#fff', fontFamily: FONT, fontSize: 11, fontWeight: 700, textDecoration: 'none', textAlign: 'center' as const }}
+                    >
+                      En venta
+                    </a>
+                    <a
+                      href={`/propiedades?q=${encodeURIComponent(active.name)}#arrendar`}
+                      style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '7px 4px', background: 'rgba(255,255,255,0.12)', color: '#fff', fontFamily: FONT, fontSize: 11, fontWeight: 600, textDecoration: 'none', textAlign: 'center' as const, border: '1px solid rgba(255,255,255,0.2)' }}
+                    >
+                      En arriendo
+                    </a>
+                  </div>
                 </div>
               </div>
             ) : (
@@ -335,6 +355,25 @@ export default function NeighborhoodMap({ zone }: Props) {
                     <div>
                       <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: '0.09em', color: '#1a1a1a', marginBottom: 4 }}>Comprar</div>
                       <p style={{ fontSize: 11, color: '#888', lineHeight: 1.6, margin: 0 }}>{active.buyBlurb}</p>
+                    </div>
+                  </div>
+                  <div>
+                    <div style={{ fontSize: 9, fontWeight: 700, textTransform: 'uppercase' as const, letterSpacing: '0.08em', color: '#bbb', marginBottom: 8 }}>
+                      Ver propiedades en este barrio
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                      <a
+                        href={`/propiedades?q=${encodeURIComponent(active.name)}#comprar`}
+                        style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '9px 12px', background: RED, color: '#fff', fontFamily: FONT, fontSize: 12, fontWeight: 700, textDecoration: 'none' }}
+                      >
+                        En venta
+                      </a>
+                      <a
+                        href={`/propiedades?q=${encodeURIComponent(active.name)}#arrendar`}
+                        style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '9px 12px', background: '#fff', color: RED, border: `1.5px solid ${RED}`, fontFamily: FONT, fontSize: 12, fontWeight: 600, textDecoration: 'none' }}
+                      >
+                        En arriendo
+                      </a>
                     </div>
                   </div>
                 </div>

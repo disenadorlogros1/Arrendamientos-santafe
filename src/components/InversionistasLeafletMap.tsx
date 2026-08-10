@@ -17,15 +17,16 @@ interface Props {
   onSectorHover?: (sector: Sector | null) => void;
   onSectorClick?: (sector: Sector) => void;
   onZoneNavigate?: (sector: Sector) => void;
+  onUserInteraction?: () => void;
 }
 
 const RED = '#f32735';
 
 const SECTOR_VIEW: Record<Sector, { center: [number, number]; zoom: number }> = {
-  Norte:     { center: [6.36,  -75.57], zoom: 10 },
-  Sur:       { center: [6.08,  -75.57], zoom: 10 },
-  Oriente:   { center: [6.16,  -75.49], zoom: 10 },
-  Occidente: { center: [6.29,  -75.63], zoom: 10 },
+  Norte:     { center: [6.42, -75.53], zoom: 10 },
+  Sur:       { center: [6.03, -75.63], zoom: 10 },
+  Oriente:   { center: [6.11, -75.43], zoom: 9  },
+  Occidente: { center: [6.40, -75.79], zoom: 9  },
 };
 
 // Sector de cada barrio/municipio
@@ -2478,20 +2479,21 @@ const SECTOR_CENTROID: Record<Sector, [number, number]> = {
   Occidente: [6.41, -75.83],
 };
 
-export default function InversionistasLeafletMap({ activeSector, hoveredSector, onSectorHover, onSectorClick, onZoneNavigate }: Props) {
-  const containerRef     = useRef<HTMLDivElement>(null);
-  const mapRef           = useRef<any>(null);
-  const polygonsRef      = useRef<Record<string, { polygon: any }>>({});
-  const sectorMarkersRef = useRef<Record<string, any>>({});
+export default function InversionistasLeafletMap({ activeSector, hoveredSector, onSectorHover, onSectorClick, onZoneNavigate, onUserInteraction }: Props) {
+  const containerRef       = useRef<HTMLDivElement>(null);
+  const mapRef             = useRef<any>(null);
+  const polygonsRef        = useRef<Record<string, { polygon: any }>>({});
+  const sectorMarkersRef   = useRef<Record<string, any>>({});
   const prevSectorRef      = useRef<Sector | null>(null);
   const onHoverRef         = useRef(onSectorHover);
   const onClickRef         = useRef(onSectorClick);
   const onNavigateRef      = useRef(onZoneNavigate);
+  const onInteractionRef   = useRef(onUserInteraction);
   const hoverTimerRef      = useRef<any>(null);
-  const userInteractedRef  = useRef(false);
   useEffect(() => { onHoverRef.current = onSectorHover; }, [onSectorHover]);
   useEffect(() => { onClickRef.current = onSectorClick; }, [onSectorClick]);
   useEffect(() => { onNavigateRef.current = onZoneNavigate; }, [onZoneNavigate]);
+  useEffect(() => { onInteractionRef.current = onUserInteraction; }, [onUserInteraction]);
 
   useEffect(() => {
     if (!document.querySelector('link[href*="leaflet"]')) {
@@ -2520,9 +2522,9 @@ export default function InversionistasLeafletMap({ activeSector, hoveredSector, 
         maxZoom: 19,
       }).addTo(mapRef.current);
 
-      // Cuando el usuario hace zoom o pan manual, desactivar auto-fly
+      // Cuando el usuario hace zoom o pan manual, notificar al padre para detener auto-rotación
       mapRef.current.on('dragstart zoomstart', () => {
-        userInteractedRef.current = true;
+        onInteractionRef.current?.();
       });
 
       for (const [id, coords] of Object.entries(ZONE_POLYGONS)) {
