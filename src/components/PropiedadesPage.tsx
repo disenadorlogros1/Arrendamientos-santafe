@@ -692,8 +692,8 @@ export default function PropiedadesPage({ initialFilter = 'Todos', initialQueStr
                 />
                 {/* Chip flotante junto al pin seleccionado */}
                 {selectedPinProperty && (() => {
-                  const CARD_W = 250;
-                  const CARD_H = 110;
+                  const CARD_W = 260;
+                  const CARD_H = 130;
                   const PAD = 10;
                   const mapW = mobileMapRef.current?.offsetWidth ?? 375;
                   const mapH = mobileMapRef.current?.offsetHeight ?? 400;
@@ -712,11 +712,11 @@ export default function PropiedadesPage({ initialFilter = 'Todos', initialQueStr
                   return (
                     <div style={{ position: 'absolute', left, top, width: CARD_W, zIndex: 1000 }}>
                       <div
-                        style={{ display: 'flex', height: CARD_H, background: '#fff', borderTop: '3px solid #f32735', boxShadow: '0 4px 20px rgba(0,0,0,0.22)', cursor: 'pointer', overflow: 'hidden', position: 'relative', alignItems: 'stretch' }}
+                        style={{ display: 'flex', height: CARD_H, background: '#fff', borderTop: '3px solid #f32735', boxShadow: '0 4px 20px rgba(0,0,0,0.22)', cursor: 'pointer', overflow: 'hidden', position: 'relative' }}
                         onClick={() => { window.location.href = `/propiedad/${selectedPinProperty.property.id}`; }}
                       >
                         {/* Thumbnail */}
-                        <img src={selectedPinProperty.property.image} alt="" style={{ width: 110, height: '100%', objectFit: 'cover', flexShrink: 0 }} />
+                        <img src={selectedPinProperty.property.image} alt="" style={{ width: 130, height: 130, objectFit: 'cover', flexShrink: 0, display: 'block' }} />
                         {/* Info */}
                         <div style={{ flex: 1, minWidth: 0, padding: '10px 10px', display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 4 }}>
                           <span style={{ fontFamily: FONT_BODY, fontSize: 14, fontWeight: 900, color: '#1a1a1a', lineHeight: 1 }}>

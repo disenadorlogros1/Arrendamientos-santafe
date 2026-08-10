@@ -279,14 +279,13 @@ export default function InversionistasPage() {
                 const sectorZones = getZonesBySector(sector);
                 const slug = sectorZones[0]?.slug || sector.toLowerCase();
                 return (
-                  <button
+                  <div
                     key={sector}
                     onClick={() => setActiveSector(isActive ? null : sector)}
                     style={{
                       background: isActive ? '#fff' : '#f0f0f0',
                       borderRadius: '14px',
                       padding: '12px 12px 13px',
-                      border: 'none',
                       textAlign: 'left',
                       cursor: 'pointer',
                       boxShadow: isActive ? '0 3px 16px rgba(0,0,0,0.10)' : 'none',
@@ -329,7 +328,7 @@ export default function InversionistasPage() {
                         </div>
                       </div>
                     )}
-                  </button>
+                  </div>
                 );
               })}
             </div>
