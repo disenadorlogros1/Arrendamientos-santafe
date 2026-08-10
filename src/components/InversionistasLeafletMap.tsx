@@ -2628,12 +2628,16 @@ export default function InversionistasLeafletMap({ activeSector, hoveredSector, 
     const effectiveSector = hoveredSector ?? activeSector;
 
     for (const [id, refs] of Object.entries(polygonsRef.current)) {
-      const sector   = BARRIO_SECTOR[id];
-      const inActive = !effectiveSector || sector === effectiveSector;
-      const isHov    = hoveredSector !== null && sector === hoveredSector;
+      const sector        = BARRIO_SECTOR[id];
+      const inActive      = !effectiveSector || sector === effectiveSector;
+      const isHov         = hoveredSector !== null && sector === hoveredSector;
+      // Relleno fuerte cuando un sector está activo sin hover (auto-rotación o clic en mobile)
+      const isAutoActive  = activeSector !== null && hoveredSector === null && sector === activeSector;
 
       if (isHov) {
-        refs.polygon.setStyle({ color: 'transparent', weight: 0, fillColor: RED, fillOpacity: 0.20, opacity: 0 });
+        refs.polygon.setStyle({ color: 'transparent', weight: 0, fillColor: RED, fillOpacity: 0.22, opacity: 0 });
+      } else if (isAutoActive) {
+        refs.polygon.setStyle({ color: 'transparent', weight: 0, fillColor: RED, fillOpacity: 0.38, opacity: 0 });
       } else if (inActive) {
         refs.polygon.setStyle({ color: 'transparent', weight: 0, fillColor: RED, fillOpacity: 0.12, opacity: 0 });
       } else {
@@ -2641,10 +2645,14 @@ export default function InversionistasLeafletMap({ activeSector, hoveredSector, 
       }
     }
 
-    // Actualizar marcadores de sector — siempre visibles, destacados cuando activo
+    // Cuando hay sector activo/hover, mostrar solo ese marcador — elimina solapamiento
     for (const [s, ref] of Object.entries(sectorMarkersRef.current)) {
       const isActive = effectiveSector !== null && s === effectiveSector;
-      ref.marker.setOpacity(1);
+      if (effectiveSector !== null) {
+        ref.marker.setOpacity(isActive ? 1 : 0);
+      } else {
+        ref.marker.setOpacity(1);
+      }
       ref.marker.setIcon(ref.makeSectorIcon(s as Sector, isActive));
     }
 

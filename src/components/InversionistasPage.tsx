@@ -95,6 +95,8 @@ export default function InversionistasPage() {
   const benPausedRef     = useRef(false);
   const benAnimatingRef  = useRef(false);
   const benDirectionRef  = useRef<1 | -1>(-1); // -1 = forward (left), 1 = backward (right)
+  const autoIdxRef     = useRef(0);
+  const autoTimerRef   = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
     const track = benTrackRef.current;
@@ -167,6 +169,18 @@ export default function InversionistasPage() {
     router.push('/inversionistas/' + sector.toLowerCase());
   };
 
+  // Auto-rotación de sectores — solo en mobile, cicla cada 15s
+  useEffect(() => {
+    if (typeof window === 'undefined' || window.innerWidth >= 1024) return;
+    setActiveSector(SECTORS[0]);
+    autoIdxRef.current = 0;
+    autoTimerRef.current = setInterval(() => {
+      autoIdxRef.current = (autoIdxRef.current + 1) % SECTORS.length;
+      setActiveSector(SECTORS[autoIdxRef.current]);
+    }, 15000);
+    return () => { if (autoTimerRef.current) clearInterval(autoTimerRef.current); };
+  }, []);
+
   useEffect(() => {
     if (!titleAnimating) return;
     if (subtitleRef.current) {
@@ -208,7 +222,7 @@ export default function InversionistasPage() {
             </span>
             <span style={{ display: 'inline-block', fontWeight: 900, color: '#fff', marginTop: '0px', position: 'relative', overflow: 'hidden' }}>
               <span style={{ position: 'relative', zIndex: 2 }}>
-                de 60 años en el<br className="lg:hidden" />mercado inmobiliario
+                de 60 años en el mercado inmobiliario
               </span>
               <span
                 aria-hidden="true"
@@ -281,7 +295,10 @@ export default function InversionistasPage() {
                 return (
                   <div
                     key={sector}
-                    onClick={() => setActiveSector(isActive ? null : sector)}
+                    onClick={() => {
+                      if (autoTimerRef.current) { clearInterval(autoTimerRef.current); autoTimerRef.current = null; }
+                      setActiveSector(isActive ? null : sector);
+                    }}
                     style={{
                       background: isActive ? '#fff' : '#f0f0f0',
                       borderRadius: '0',
