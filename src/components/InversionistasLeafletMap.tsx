@@ -2647,13 +2647,18 @@ export default function InversionistasLeafletMap({ activeSector, hoveredSector, 
 
     // Cuando hay sector activo/hover, mostrar solo ese marcador — elimina solapamiento
     for (const [s, ref] of Object.entries(sectorMarkersRef.current)) {
+      if (!ref || !ref.marker || typeof ref.marker.setOpacity !== 'function') continue;
       const isActive = effectiveSector !== null && s === effectiveSector;
-      if (effectiveSector !== null) {
-        ref.marker.setOpacity(isActive ? 1 : 0);
-      } else {
-        ref.marker.setOpacity(1);
-      }
-      ref.marker.setIcon(ref.makeSectorIcon(s as Sector, isActive));
+      try {
+        if (effectiveSector !== null) {
+          ref.marker.setOpacity(isActive ? 1 : 0);
+        } else {
+          ref.marker.setOpacity(1);
+        }
+        if (typeof ref.makeSectorIcon === 'function') {
+          ref.marker.setIcon(ref.makeSectorIcon(s as Sector, isActive));
+        }
+      } catch (_) { /* marker puede estar en estado parcial durante inicialización */ }
     }
 
     const targetSector = hoveredSector ?? activeSector;
