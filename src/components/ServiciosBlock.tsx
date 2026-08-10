@@ -140,12 +140,17 @@ export default function ServiciosBlock({ onNavigate: _onNavigate }: ServiciosBlo
     }
   }, [SERV_SLOT]);
 
-  useEffect(() => {
-    const id = setInterval(() => {
+  const startAutoRotate = useCallback(() => {
+    if (servIntervalRef.current) clearInterval(servIntervalRef.current);
+    servIntervalRef.current = setInterval(() => {
       if (!servIsAnimating.current) servNavigate(true);
     }, 4000);
-    return () => clearInterval(id);
   }, [servNavigate]);
+
+  useEffect(() => {
+    startAutoRotate();
+    return () => { if (servIntervalRef.current) clearInterval(servIntervalRef.current); };
+  }, [startAutoRotate]);
 
   return (
     <section style={{ background: '#fff' }} className="w-full">
@@ -173,7 +178,7 @@ export default function ServiciosBlock({ onNavigate: _onNavigate }: ServiciosBlo
       <div className="lg:hidden" style={{ paddingBottom: '24px', position: 'relative' }}>
         {/* Flecha izquierda — fuera del overflow-hidden */}
         <button
-          onClick={() => servNavigate(false)}
+          onClick={() => { servNavigate(false); startAutoRotate(); }}
           aria-label="Anterior"
           style={{
             position: 'absolute', left: 10, top: '50%', transform: 'translateY(-50%)', zIndex: 20,
@@ -220,7 +225,7 @@ export default function ServiciosBlock({ onNavigate: _onNavigate }: ServiciosBlo
                       gap: '10px', padding: '20px 12px 16px', textDecoration: 'none',
                     }}
                   >
-                    <img src={s.iconRed} alt="" width={36} height={36} />
+                    <img src={s.iconRed} alt="" width={52} height={52} />
                     <span style={{ fontFamily: FONT_HEADING, fontWeight: 700, fontSize: '14px', color: '#1a1a1a', lineHeight: 1.2 }}>
                       {s.title}
                     </span>
@@ -240,7 +245,7 @@ export default function ServiciosBlock({ onNavigate: _onNavigate }: ServiciosBlo
 
         {/* Flecha derecha — fuera del overflow-hidden */}
         <button
-          onClick={() => servNavigate(true)}
+          onClick={() => { servNavigate(true); startAutoRotate(); }}
           aria-label="Siguiente"
           style={{
             position: 'absolute', right: 10, top: '50%', transform: 'translateY(-50%)', zIndex: 20,
