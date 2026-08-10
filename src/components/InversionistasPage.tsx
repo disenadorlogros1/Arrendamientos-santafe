@@ -172,13 +172,19 @@ export default function InversionistasPage() {
   // Auto-rotación de sectores — solo en mobile, cicla cada 15s
   useEffect(() => {
     if (typeof window === 'undefined' || window.innerWidth >= 1024) return;
-    setActiveSector(SECTORS[0]);
     autoIdxRef.current = 0;
-    autoTimerRef.current = setInterval(() => {
-      autoIdxRef.current = (autoIdxRef.current + 1) % SECTORS.length;
-      setActiveSector(SECTORS[autoIdxRef.current]);
-    }, 15000);
-    return () => { if (autoTimerRef.current) clearInterval(autoTimerRef.current); };
+    // Pequeño delay para que Leaflet termine de inicializarse antes del primer setActiveSector
+    const firstTimer = window.setTimeout(() => {
+      setActiveSector(SECTORS[0]);
+      autoTimerRef.current = window.setInterval(() => {
+        autoIdxRef.current = (autoIdxRef.current + 1) % SECTORS.length;
+        setActiveSector(SECTORS[autoIdxRef.current]);
+      }, 15000) as unknown as ReturnType<typeof setInterval>;
+    }, 800);
+    return () => {
+      window.clearTimeout(firstTimer);
+      if (autoTimerRef.current) clearInterval(autoTimerRef.current);
+    };
   }, []);
 
   useEffect(() => {
@@ -355,6 +361,7 @@ export default function InversionistasPage() {
           {activeSector && (() => {
             const sectorZones = getZonesBySector(activeSector);
             const firstZone   = sectorZones[0];
+            if (!firstZone) return null;
             const allSubzones = sectorZones.flatMap(z => z.subzones).slice(0, 6);
             return (
               <div style={{ margin: '10px 12px 16px', background: '#ebebeb', borderRadius: '0', padding: '14px' }}>
