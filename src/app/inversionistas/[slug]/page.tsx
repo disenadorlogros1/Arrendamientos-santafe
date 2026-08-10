@@ -189,7 +189,7 @@ export default function InversionZonePage() {
             <div className="grid grid-cols-2 lg:grid-cols-[1fr_2fr_1fr]" style={{ gap: 2 }}>
               {/* Rentabilidad — col 1 en ambos */}
               <div className="text-center lg:text-left" style={{ background: '#161616', padding: '28px 20px 24px', boxSizing: 'border-box' as const }}>
-                <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase' as const, color: RED, marginBottom: 10 }}>
+                <div style={{ fontSize: 9, fontWeight: 300, letterSpacing: '0.08em', textTransform: 'uppercase' as const, color: RED, marginBottom: 10 }}>
                   Rentabilidad anual
                 </div>
                 <AnimatedStatValue
@@ -200,7 +200,7 @@ export default function InversionZonePage() {
               </div>
               {/* Estratos — col 2 mobile / col 3 desktop */}
               <div className="order-2 lg:order-3 text-center lg:text-left" style={{ background: '#161616', padding: '28px 20px 24px', boxSizing: 'border-box' as const }}>
-                <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase' as const, color: RED, marginBottom: 10 }}>
+                <div style={{ fontSize: 9, fontWeight: 300, letterSpacing: '0.08em', textTransform: 'uppercase' as const, color: RED, marginBottom: 10 }}>
                   Estratos
                 </div>
                 <AnimatedStatValue
@@ -211,12 +211,13 @@ export default function InversionZonePage() {
               </div>
               {/* Precio m² — ancho completo mobile / col 2 desktop */}
               <div className="col-span-2 order-3 lg:col-span-1 lg:order-2 text-center lg:text-left" style={{ background: '#161616', padding: '28px 20px 24px', boxSizing: 'border-box' as const }}>
-                <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase' as const, color: RED, marginBottom: 10 }}>
+                <div style={{ fontSize: 9, fontWeight: 300, letterSpacing: '0.08em', textTransform: 'uppercase' as const, color: RED, marginBottom: 10 }}>
                   Precio por m²
                 </div>
                 <AnimatedStatValue
                   value={zone.pricePerM2}
-                  style={{ fontSize: 'clamp(20px, 2.2vw, 26px)', fontWeight: 900, color: '#fff', lineHeight: 1.0, letterSpacing: '-0.02em' }}
+                  className="text-[30px] lg:text-[26px]"
+                  style={{ fontWeight: 900, color: '#fff', lineHeight: 1.0, letterSpacing: '-0.02em' }}
                 />
               </div>
             </div>

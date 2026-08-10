@@ -188,7 +188,7 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
             width: '100%',
             height: '220px',
             objectFit: 'cover',
-            objectPosition: 'right 25%',
+            objectPosition: 'left 25%',
             backgroundColor: '#000',
           }}
         />
