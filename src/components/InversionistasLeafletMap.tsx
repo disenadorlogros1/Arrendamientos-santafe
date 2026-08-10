@@ -2503,6 +2503,8 @@ export default function InversionistasLeafletMap({ activeSector, hoveredSector, 
 
     const init = () => {
       if (!containerRef.current || mapRef.current) return;
+      // No inicializar en contenedor oculto (display:none) — previene crash en Leaflet
+      if (containerRef.current.offsetWidth === 0 && containerRef.current.offsetHeight === 0) return;
       const L = (window as any).L;
 
       mapRef.current = L.map(containerRef.current, {
