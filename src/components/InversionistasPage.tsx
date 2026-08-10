@@ -1,6 +1,7 @@
 ﻿'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
+import { flushSync } from 'react-dom';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import gsap from 'gsap';
@@ -90,11 +91,12 @@ export default function InversionistasPage() {
   const subtitleRef      = useRef<HTMLParagraphElement>(null);
   const ctaBtnRef        = useRef<HTMLDivElement>(null);
   const benTrackRef      = useRef<HTMLDivElement>(null);
-  const benPosRef        = useRef(0);
-  const benRafRef        = useRef<number>(0);
-  const benPausedRef     = useRef(false);
-  const benAnimatingRef  = useRef(false);
-  const benDirectionRef  = useRef<1 | -1>(-1); // -1 = forward (left), 1 = backward (right)
+  const benContainerRef  = useRef<HTMLDivElement>(null);
+  const benIsAnimating   = useRef(false);
+  const [benStartIdx, setBenStartIdx] = useState(0);
+  const [benCardW, setBenCardW]       = useState(0);
+  const BEN_GAP  = 10;
+  const BEN_SLOT = benCardW + BEN_GAP;
   const autoIdxRef     = useRef(0);
   const autoTimerRef   = useRef<ReturnType<typeof setInterval> | null>(null);
 
@@ -106,56 +108,58 @@ export default function InversionistasPage() {
   };
 
   useEffect(() => {
-    const track = benTrackRef.current;
-    if (!track) return;
-    const SPEED = 0.15;
-    const step = () => {
-      if (!benPausedRef.current && !benAnimatingRef.current) {
-        benPosRef.current += SPEED * benDirectionRef.current;
-        const card = track.firstElementChild as HTMLElement;
-        const pitch = card ? card.offsetWidth + 10 : 1;
-        const halfWidth = pitch * beneficios.length;
-        if (benPosRef.current <= -halfWidth) benPosRef.current += halfWidth;
-        if (benPosRef.current > 0)           benPosRef.current -= halfWidth;
-        track.style.transform = `translateX(${benPosRef.current}px)`;
-      }
-      benRafRef.current = requestAnimationFrame(step);
+    const el = benContainerRef.current;
+    if (!el) return;
+    const measure = () => {
+      const w = el.getBoundingClientRect().width;
+      if (w > 0) setBenCardW(Math.floor((w - BEN_GAP) / 2));
     };
-    benRafRef.current = requestAnimationFrame(step);
-    return () => cancelAnimationFrame(benRafRef.current);
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    return () => ro.disconnect();
   }, []);
 
-  const benScrollBy = (dir: 'prev' | 'next') => {
-    const track = benTrackRef.current;
-    if (!track || benAnimatingRef.current) return;
-    // Cambiar dirección del auto-scroll y avanzar una card
-    benDirectionRef.current = dir === 'prev' ? 1 : -1;
-    const card = track.firstElementChild as HTMLElement;
-    const pitch = card ? card.offsetWidth + 10 : window.innerWidth / 2;
-    const halfWidth = pitch * beneficios.length;
-    if (dir === 'prev') {
-      if (benPosRef.current > -(pitch + 1)) {
-        benPosRef.current -= halfWidth;
-        track.style.transition = 'none';
-        track.style.transform = `translateX(${benPosRef.current}px)`;
-        track.getBoundingClientRect();
-      }
-      benPosRef.current += pitch;
+  const benNavigate = useCallback((forward: boolean) => {
+    if (benIsAnimating.current || !benTrackRef.current || !benContainerRef.current || BEN_SLOT === 0) return;
+    benIsAnimating.current = true;
+    if (forward) {
+      const slots   = benContainerRef.current.querySelectorAll<HTMLElement>('[data-ben]');
+      const exiting  = slots[0];
+      const entering = slots[slots.length - 1];
+      gsap.set(entering, { scale: 0.75, opacity: 0 });
+      gsap.timeline({
+        onComplete: () => {
+          flushSync(() => setBenStartIdx(p => (p + 1) % beneficios.length));
+          gsap.set(benTrackRef.current, { x: 0 });
+          benIsAnimating.current = false;
+        },
+      })
+        .to(benTrackRef.current, { x: -BEN_SLOT, duration: 0.9,  ease: 'power4.out'  }, 0)
+        .to(exiting,             { scale: 0.75, opacity: 0, duration: 0.42, ease: 'power2.in'  }, 0)
+        .to(entering,            { scale: 1,    opacity: 1, duration: 0.66, ease: 'power3.out' }, 0.2);
     } else {
-      benPosRef.current -= pitch;
+      flushSync(() => setBenStartIdx(p => (p - 1 + beneficios.length) % beneficios.length));
+      const slots   = benContainerRef.current.querySelectorAll<HTMLElement>('[data-ben]');
+      const entering = slots[0];
+      const exiting  = slots[slots.length - 1];
+      gsap.set(benTrackRef.current, { x: -BEN_SLOT });
+      gsap.set(entering,            { scale: 0.75, opacity: 0 });
+      gsap.timeline({
+        onComplete: () => { benIsAnimating.current = false; },
+      })
+        .to(benTrackRef.current, { x: 0,    duration: 0.9,  ease: 'power4.out'  }, 0)
+        .to(exiting,             { scale: 0.75, opacity: 0, duration: 0.42, ease: 'power2.in'  }, 0)
+        .to(entering,            { scale: 1,    opacity: 1, duration: 0.66, ease: 'power3.out' }, 0.2);
     }
-    benAnimatingRef.current = true;
-    track.style.transition = 'transform 0.35s cubic-bezier(0.25,0.46,0.45,0.94)';
-    track.style.transform = `translateX(${benPosRef.current}px)`;
-    setTimeout(() => {
-      if (track) {
-        track.style.transition = '';
-        if (benPosRef.current <= -halfWidth) benPosRef.current += halfWidth;
-        if (benPosRef.current > 0)           benPosRef.current -= halfWidth;
-      }
-      benAnimatingRef.current = false;
-    }, 360);
-  };
+  }, [BEN_SLOT]);
+
+  useEffect(() => {
+    const id = setInterval(() => {
+      if (!benIsAnimating.current) benNavigate(true);
+    }, 15000);
+    return () => clearInterval(id);
+  }, [benNavigate]);
 
   const visibleZones = activeSector ? getZonesBySector(activeSector) : investmentZones;
 
@@ -541,21 +545,10 @@ export default function InversionistasPage() {
         </div>
 
         {/* ── CARRUSEL mobile/tablet ── */}
-        <style>{`
-          .beneficio-card {
-            width: calc(50vw - 10px);
-            flex-shrink: 0;
-            margin-right: 10px;
-          }
-          @media (min-width: 640px) {
-            .beneficio-card { width: calc(33.333vw - 10px); }
-          }
-        `}</style>
-
         <div className="lg:hidden" style={{ paddingBottom: '24px', position: 'relative' }}>
-          {/* Flecha izquierda — fuera del overflow-hidden */}
+          {/* Flecha izquierda */}
           <button
-            onClick={() => benScrollBy('prev')}
+            onClick={() => benNavigate(false)}
             aria-label="Anterior"
             style={{
               position: 'absolute', left: 10, top: '50%', transform: 'translateY(-50%)', zIndex: 20,
@@ -573,53 +566,50 @@ export default function InversionistasPage() {
             </svg>
           </button>
 
-          <div
-            className="relative overflow-hidden"
-            onPointerEnter={(e) => { if (e.pointerType === 'mouse') benPausedRef.current = true; }}
-            onPointerLeave={(e) => { if (e.pointerType === 'mouse') benPausedRef.current = false; }}
-          >
-            {/* Track */}
-            <div ref={benTrackRef} className="flex" style={{ width: 'max-content' }}>
-              {[...beneficios, ...beneficios].map((b, idx) => (
-                <a
-                  key={idx}
-                  href={WHATSAPP_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="beneficio-card"
-                  style={{
-                    background: '#f5f5f5',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    textAlign: 'center',
-                    gap: '10px',
-                    padding: '20px 12px 16px',
-                    textDecoration: 'none',
-                  }}
-                >
-                  <img src={b.icon} alt="" width={36} height={36} />
-                  <span style={{ fontFamily: FONT, fontWeight: 700, fontSize: '14px', color: '#1a1a1a', lineHeight: 1.2 }}>
-                    {b.title}
-                  </span>
-                  <span style={{ fontFamily: FONT, fontWeight: 300, fontSize: '11px', color: 'rgba(0,0,0,0.55)', lineHeight: 1.45, flexGrow: 1 }}>
-                    {b.description}
-                  </span>
-                  <span style={{
-                    fontFamily: FONT, fontWeight: 500, fontSize: '12px',
-                    color: '#fff', background: '#1a1a1a', borderRadius: '99px',
-                    padding: '6px 10px', lineHeight: 1.3,
-                  }}>
-                    Hablar con un asesor
-                  </span>
-                </a>
-              ))}
-            </div>
+          <div ref={benContainerRef} className="relative overflow-hidden">
+            {benCardW > 0 && (
+              <div
+                ref={benTrackRef}
+                className="flex"
+                style={{ gap: `${BEN_GAP}px`, width: `${3 * benCardW + 2 * BEN_GAP}px`, willChange: 'transform' }}
+              >
+                {[0, 1, 2].map(i => {
+                  const b = beneficios[(benStartIdx + i) % beneficios.length];
+                  return (
+                    <a
+                      key={b.title}
+                      data-ben={i}
+                      href={WHATSAPP_URL}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{
+                        width: `${benCardW}px`, minWidth: `${benCardW}px`, flexShrink: 0,
+                        willChange: 'transform, opacity',
+                        background: '#f5f5f5',
+                        display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center',
+                        gap: '10px', padding: '20px 12px 16px', textDecoration: 'none',
+                      }}
+                    >
+                      <img src={b.icon} alt="" width={36} height={36} />
+                      <span style={{ fontFamily: FONT, fontWeight: 700, fontSize: '14px', color: '#1a1a1a', lineHeight: 1.2 }}>
+                        {b.title}
+                      </span>
+                      <span style={{ fontFamily: FONT, fontWeight: 300, fontSize: '11px', color: 'rgba(0,0,0,0.55)', lineHeight: 1.45, flexGrow: 1 }}>
+                        {b.description}
+                      </span>
+                      <span style={{ fontFamily: FONT, fontWeight: 500, fontSize: '12px', color: '#fff', background: '#1a1a1a', borderRadius: '99px', padding: '6px 10px', lineHeight: 1.3 }}>
+                        Hablar con un asesor
+                      </span>
+                    </a>
+                  );
+                })}
+              </div>
+            )}
           </div>
 
-          {/* Flecha derecha — fuera del overflow-hidden */}
+          {/* Flecha derecha */}
           <button
-            onClick={() => benScrollBy('next')}
+            onClick={() => benNavigate(true)}
             aria-label="Siguiente"
             style={{
               position: 'absolute', right: 10, top: '50%', transform: 'translateY(-50%)', zIndex: 20,
