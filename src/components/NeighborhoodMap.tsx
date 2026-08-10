@@ -49,23 +49,42 @@ export default function NeighborhoodMap({ zone }: Props) {
   const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const activePinRef  = useRef<SVGPathElement | null>(null);
   const [active, setActive] = useState<ActiveNeighborhood | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
+  const isMobileRef = useRef(false);
+
+  useEffect(() => {
+    const check = () => {
+      const m = window.innerWidth < 1024;
+      setIsMobile(m);
+      isMobileRef.current = m;
+    };
+    check();
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
+  }, []);
 
   const cancelClose = () => {
     if (closeTimerRef.current) { clearTimeout(closeTimerRef.current); closeTimerRef.current = null; }
   };
 
+  const hidePanel = () => {
+    if (!panelRef.current) return;
+    panelRef.current.style.transform = isMobileRef.current ? 'translateY(-110%)' : 'translateX(100%)';
+  };
+
+  const showPanel = () => {
+    if (panelRef.current) panelRef.current.style.transform = 'translate(0, 0)';
+  };
+
   const scheduleClose = () => {
+    if (isMobileRef.current) return;
     cancelClose();
     closeTimerRef.current = setTimeout(() => {
       closeTimerRef.current = null;
       if (activePinRef.current) { activePinRef.current.setAttribute('fill', '#222'); activePinRef.current = null; }
-      if (panelRef.current) panelRef.current.style.transform = 'translateX(100%)';
+      hidePanel();
       setActive(null);
     }, 250);
-  };
-
-  const openPanel = () => {
-    if (panelRef.current) panelRef.current.style.transform = 'translateX(0)';
   };
 
   useEffect(() => {
@@ -113,24 +132,39 @@ export default function NeighborhoodMap({ zone }: Props) {
         if (el) {
           el.style.cursor = 'pointer';
           el.style.pointerEvents = 'auto';
-          el.addEventListener('mouseenter', () => {
-            // Reset pin anterior
+
+          const activateNeighborhood = () => {
             if (activePinRef.current) activePinRef.current.setAttribute('fill', '#222');
-            // Activar pin actual
             const path = el.querySelector('path') as SVGPathElement | null;
             if (path) { path.setAttribute('fill', RED); activePinRef.current = path; }
-            cancelClose();
-            openPanel();
-            setActive({
-              name:        data.name,
-              rentBlurb:   data.rentBlurb,
-              buyBlurb:    data.buyBlurb,
-              rentability: data.rentability,
-              avgPrice:    data.avgPrice,
-              imageIdx:    data.imageIdx,
-            });
+            showPanel();
+            setActive({ name: data.name, rentBlurb: data.rentBlurb, buyBlurb: data.buyBlurb, rentability: data.rentability, avgPrice: data.avgPrice, imageIdx: data.imageIdx });
+          };
+
+          // Mobile: click para abrir, segundo click para cerrar
+          el.addEventListener('click', () => {
+            if (!isMobileRef.current) return;
+            const path = el.querySelector('path') as SVGPathElement | null;
+            if (path && activePinRef.current === path) {
+              hidePanel();
+              path.setAttribute('fill', '#222');
+              activePinRef.current = null;
+              setActive(null);
+              return;
+            }
+            activateNeighborhood();
           });
-          el.addEventListener('mouseleave', scheduleClose);
+
+          // Desktop: hover
+          el.addEventListener('mouseenter', () => {
+            if (isMobileRef.current) return;
+            cancelClose();
+            activateNeighborhood();
+          });
+          el.addEventListener('mouseleave', () => {
+            if (isMobileRef.current) return;
+            scheduleClose();
+          });
         }
       }
     };
@@ -163,95 +197,152 @@ export default function NeighborhoodMap({ zone }: Props) {
     : null;
 
   return (
-    <div style={{ position: 'relative', width: '100%', height: 480, overflow: 'hidden', isolation: 'isolate' as any }}>
-      <div ref={containerRef} style={{ width: '100%', height: '100%', background: '#f5f5f5', position: 'relative', zIndex: 0 }} />
-
-      {/* Badge */}
-      <div style={{
-        position: 'absolute', top: 16, right: 16, zIndex: 10,
-        padding: '6px 14px',
-        background: 'rgba(255,255,255,0.92)', backdropFilter: 'blur(8px)',
-        border: '1px solid rgba(0,0,0,0.1)',
-        fontFamily: FONT, fontSize: 10, fontWeight: 600,
-        letterSpacing: '0.08em', color: '#888',
-        opacity: active ? 0 : 1,
-        transition: 'opacity 0.2s ease',
-        pointerEvents: 'none',
-      }}>
-        {zone.subzones.length} sectores · Pasa el cursor sobre un pin
+    <>
+      {/* Título + subtítulo — solo mobile */}
+      <div className="lg:hidden" style={{ background: '#1a1a1a', padding: '14px 16px 12px' }}>
+        <div style={{ fontFamily: FONT, fontSize: 15, fontWeight: 700, color: '#fff', lineHeight: 1.2 }}>
+          Barrios en zona {zone.sector}
+        </div>
+        <div style={{ fontFamily: FONT, fontSize: 11, color: 'rgba(255,255,255,0.5)', marginTop: 3 }}>
+          Da clic sobre el barrio que quieras más información
+        </div>
       </div>
 
-      {/* Panel lateral */}
-      <div
-        ref={panelRef}
-        onMouseEnter={cancelClose}
-        onMouseLeave={scheduleClose}
-        style={{
-          position: 'absolute', top: 0, right: 0, bottom: 0,
-          width: '40%', zIndex: 1000,
-          background: '#f7f6f4',
-          borderLeft: '1px solid #ebebeb',
-          display: 'flex', flexDirection: 'column',
-          fontFamily: FONT, overflow: 'hidden',
-          transform: 'translateX(100%)',
-          transition: 'transform 0.28s cubic-bezier(0.4,0,0.2,1)',
-        }}
-      >
-        <button
-          onClick={() => { cancelClose(); if (activePinRef.current) { activePinRef.current.setAttribute('fill', '#222'); activePinRef.current = null; } if (panelRef.current) panelRef.current.style.transform = 'translateX(100%)'; setActive(null); }}
-          style={{
-            position: 'absolute', top: 12, right: 12, zIndex: 2,
-            width: 28, height: 28,
-            background: 'rgba(255,255,255,0.9)', border: '1px solid rgba(0,0,0,0.1)',
-            borderRadius: '50%', cursor: 'pointer',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontFamily: FONT, fontSize: 14, color: '#888', lineHeight: 1, padding: 0,
+      <div style={{ position: 'relative', width: '100%', height: 480, overflow: 'hidden', isolation: 'isolate' as any }}>
+        <div ref={containerRef} style={{ width: '100%', height: '100%', background: '#f5f5f5', position: 'relative', zIndex: 0 }} />
+
+        {/* Badge — solo desktop */}
+        <div className="hidden lg:block" style={{
+          position: 'absolute', top: 16, right: 16, zIndex: 10,
+          padding: '6px 14px',
+          background: 'rgba(255,255,255,0.92)', backdropFilter: 'blur(8px)',
+          border: '1px solid rgba(0,0,0,0.1)',
+          fontFamily: FONT, fontSize: 10, fontWeight: 600,
+          letterSpacing: '0.08em', color: '#888',
+          opacity: active ? 0 : 1,
+          transition: 'opacity 0.2s ease',
+          pointerEvents: 'none',
+        }}>
+          {zone.subzones.length} sectores · Pasa el cursor sobre un pin
+        </div>
+
+        {/* Panel — desktop: derecha | mobile: arriba */}
+        <div
+          ref={panelRef}
+          onMouseEnter={isMobile ? undefined : cancelClose}
+          onMouseLeave={isMobile ? undefined : scheduleClose}
+          style={isMobile ? {
+            position: 'absolute', top: 0, left: 0, right: 0, bottom: 'auto',
+            zIndex: 1000, width: '100%',
+            background: '#1a1a1a',
+            display: 'flex', flexDirection: 'column',
+            fontFamily: FONT, overflow: 'hidden',
+            transform: 'translateY(-110%)',
+            transition: 'transform 0.3s cubic-bezier(0.4,0,0.2,1)',
+            maxHeight: '52%',
+          } : {
+            position: 'absolute', top: 0, right: 0, bottom: 0, left: 'auto',
+            width: '40%', zIndex: 1000,
+            background: '#f7f6f4',
+            borderLeft: '1px solid #ebebeb',
+            display: 'flex', flexDirection: 'column',
+            fontFamily: FONT, overflow: 'hidden',
+            transform: 'translateX(100%)',
+            transition: 'transform 0.28s cubic-bezier(0.4,0,0.2,1)',
           }}
-          aria-label="Cerrar"
-        >×</button>
+        >
+          <button
+            onClick={() => { cancelClose(); if (activePinRef.current) { activePinRef.current.setAttribute('fill', '#222'); activePinRef.current = null; } hidePanel(); setActive(null); }}
+            style={{
+              position: 'absolute', top: 10, right: 10, zIndex: 2,
+              width: 26, height: 26,
+              background: isMobile ? 'rgba(255,255,255,0.15)' : 'rgba(255,255,255,0.9)',
+              border: isMobile ? 'none' : '1px solid rgba(0,0,0,0.1)',
+              borderRadius: '50%', cursor: 'pointer',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              fontFamily: FONT, fontSize: 14, color: isMobile ? '#fff' : '#888', lineHeight: 1, padding: 0,
+            }}
+            aria-label="Cerrar"
+          >×</button>
 
-        {active && (
-          <>
-            <div style={{ height: 180, overflow: 'hidden', flexShrink: 0 }}>
-              {imgSrc && (
-                <img src={imgSrc} alt={active.name}
-                  style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center', display: 'block' }} />
-              )}
-            </div>
-            <div style={{ flex: 1, padding: '20px 20px 16px', display: 'flex', flexDirection: 'column', gap: 14, overflow: 'auto' }}>
-              <div>
-                <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase' as const, color: RED, marginBottom: 5 }}>
-                  {zone.name}
-                </div>
-                <div style={{ fontSize: 20, fontWeight: 900, color: '#1a1a1a', lineHeight: 1.1, letterSpacing: '-0.01em' }}>
-                  {active.name}
-                </div>
-              </div>
-              <div style={{ display: 'flex', gap: 14, alignItems: 'flex-start' }}>
-                <div>
-                  <div style={{ fontSize: 9, fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase' as const, color: '#ccc', marginBottom: 3 }}>Rentabilidad</div>
-                  <div style={{ fontSize: 22, fontWeight: 900, color: RED }}>{active.rentability}</div>
-                </div>
-                <div style={{ width: 1, background: '#e8e8e8', alignSelf: 'stretch' }} />
-                <div>
-                  <div style={{ fontSize: 9, fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase' as const, color: '#ccc', marginBottom: 3 }}>Precio m²</div>
-                  <div style={{ fontSize: 18, fontWeight: 800, color: '#1a1a1a', lineHeight: 1.3 }}>{active.avgPrice}</div>
-                </div>
-              </div>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-                <div>
-                  <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: '0.09em', color: '#1a1a1a', marginBottom: 4 }}>Arrendar</div>
-                  <p style={{ fontSize: 11, color: '#555', lineHeight: 1.6, margin: 0 }}>{active.rentBlurb}</p>
-                </div>
-                <div>
-                  <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: '0.09em', color: '#1a1a1a', marginBottom: 4 }}>Comprar</div>
-                  <p style={{ fontSize: 11, color: '#888', lineHeight: 1.6, margin: 0 }}>{active.buyBlurb}</p>
+          {active && (
+            isMobile ? (
+              /* Mobile: layout horizontal compacto */
+              <div style={{ display: 'flex', height: '100%', overflow: 'hidden' }}>
+                {imgSrc && (
+                  <div style={{ width: 110, flexShrink: 0, overflow: 'hidden' }}>
+                    <img src={imgSrc} alt={active.name}
+                      style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center', display: 'block' }} />
+                  </div>
+                )}
+                <div style={{ flex: 1, padding: '14px 14px 14px', overflow: 'auto', display: 'flex', flexDirection: 'column', gap: 8 }}>
+                  <div>
+                    <div style={{ fontSize: 8, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase' as const, color: RED, marginBottom: 2 }}>
+                      {zone.name}
+                    </div>
+                    <div style={{ fontSize: 17, fontWeight: 900, color: '#fff', lineHeight: 1.1 }}>
+                      {active.name}
+                    </div>
+                  </div>
+                  <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
+                    <div>
+                      <div style={{ fontSize: 8, fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase' as const, color: 'rgba(255,255,255,0.4)', marginBottom: 2 }}>Rentabilidad</div>
+                      <div style={{ fontSize: 18, fontWeight: 900, color: RED }}>{active.rentability}</div>
+                    </div>
+                    <div style={{ width: 1, background: 'rgba(255,255,255,0.15)', alignSelf: 'stretch' }} />
+                    <div>
+                      <div style={{ fontSize: 8, fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase' as const, color: 'rgba(255,255,255,0.4)', marginBottom: 2 }}>Precio m²</div>
+                      <div style={{ fontSize: 13, fontWeight: 700, color: '#fff', lineHeight: 1.3 }}>{active.avgPrice}</div>
+                    </div>
+                  </div>
+                  <p style={{ fontSize: 10, color: 'rgba(255,255,255,0.55)', lineHeight: 1.5, margin: 0 }}>{active.rentBlurb}</p>
                 </div>
               </div>
-            </div>
-          </>
-        )}
+            ) : (
+              /* Desktop: layout vertical original */
+              <>
+                <div style={{ height: 180, overflow: 'hidden', flexShrink: 0 }}>
+                  {imgSrc && (
+                    <img src={imgSrc} alt={active.name}
+                      style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center', display: 'block' }} />
+                  )}
+                </div>
+                <div style={{ flex: 1, padding: '20px 20px 16px', display: 'flex', flexDirection: 'column', gap: 14, overflow: 'auto' }}>
+                  <div>
+                    <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase' as const, color: RED, marginBottom: 5 }}>
+                      {zone.name}
+                    </div>
+                    <div style={{ fontSize: 20, fontWeight: 900, color: '#1a1a1a', lineHeight: 1.1, letterSpacing: '-0.01em' }}>
+                      {active.name}
+                    </div>
+                  </div>
+                  <div style={{ display: 'flex', gap: 14, alignItems: 'flex-start' }}>
+                    <div>
+                      <div style={{ fontSize: 9, fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase' as const, color: '#ccc', marginBottom: 3 }}>Rentabilidad</div>
+                      <div style={{ fontSize: 22, fontWeight: 900, color: RED }}>{active.rentability}</div>
+                    </div>
+                    <div style={{ width: 1, background: '#e8e8e8', alignSelf: 'stretch' }} />
+                    <div>
+                      <div style={{ fontSize: 9, fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase' as const, color: '#ccc', marginBottom: 3 }}>Precio m²</div>
+                      <div style={{ fontSize: 18, fontWeight: 800, color: '#1a1a1a', lineHeight: 1.3 }}>{active.avgPrice}</div>
+                    </div>
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                    <div>
+                      <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: '0.09em', color: '#1a1a1a', marginBottom: 4 }}>Arrendar</div>
+                      <p style={{ fontSize: 11, color: '#555', lineHeight: 1.6, margin: 0 }}>{active.rentBlurb}</p>
+                    </div>
+                    <div>
+                      <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: '0.09em', color: '#1a1a1a', marginBottom: 4 }}>Comprar</div>
+                      <p style={{ fontSize: 11, color: '#888', lineHeight: 1.6, margin: 0 }}>{active.buyBlurb}</p>
+                    </div>
+                  </div>
+                </div>
+              </>
+            )
+          )}
+        </div>
       </div>
-    </div>
+    </>
   );
 }

@@ -2622,55 +2622,63 @@ export default function InversionistasLeafletMap({ activeSector, hoveredSector, 
   }, []);
 
   useEffect(() => {
-    const map = mapRef.current;
-    if (!map) return;
+    try {
+      const map = mapRef.current;
+      if (!map) return;
+      // No operar si el contenedor no tiene dimensiones (mapa oculto por CSS en este viewport)
+      if (containerRef.current &&
+          containerRef.current.offsetWidth === 0 &&
+          containerRef.current.offsetHeight === 0) return;
 
-    const effectiveSector = hoveredSector ?? activeSector;
+      const effectiveSector = hoveredSector ?? activeSector;
 
-    for (const [id, refs] of Object.entries(polygonsRef.current)) {
-      const sector        = BARRIO_SECTOR[id];
-      const inActive      = !effectiveSector || sector === effectiveSector;
-      const isHov         = hoveredSector !== null && sector === hoveredSector;
-      // Relleno fuerte cuando un sector está activo sin hover (auto-rotación o clic en mobile)
-      const isAutoActive  = activeSector !== null && hoveredSector === null && sector === activeSector;
+      for (const [id, refs] of Object.entries(polygonsRef.current)) {
+        try {
+          const sector       = BARRIO_SECTOR[id];
+          const inActive     = !effectiveSector || sector === effectiveSector;
+          const isHov        = hoveredSector !== null && sector === hoveredSector;
+          const isAutoActive = activeSector !== null && hoveredSector === null && sector === activeSector;
 
-      if (isHov) {
-        refs.polygon.setStyle({ color: 'transparent', weight: 0, fillColor: RED, fillOpacity: 0.22, opacity: 0 });
-      } else if (isAutoActive) {
-        refs.polygon.setStyle({ color: 'transparent', weight: 0, fillColor: RED, fillOpacity: 0.38, opacity: 0 });
-      } else if (inActive) {
-        refs.polygon.setStyle({ color: 'transparent', weight: 0, fillColor: RED, fillOpacity: 0.12, opacity: 0 });
-      } else {
-        refs.polygon.setStyle({ color: '#bbb', weight: 0.5, fillColor: '#bbb', fillOpacity: 0.12, opacity: 0.5 });
+          if (isHov) {
+            refs.polygon.setStyle({ color: 'transparent', weight: 0, fillColor: RED, fillOpacity: 0.22, opacity: 0 });
+          } else if (isAutoActive) {
+            refs.polygon.setStyle({ color: 'transparent', weight: 0, fillColor: RED, fillOpacity: 0.38, opacity: 0 });
+          } else if (inActive) {
+            refs.polygon.setStyle({ color: 'transparent', weight: 0, fillColor: RED, fillOpacity: 0.12, opacity: 0 });
+          } else {
+            refs.polygon.setStyle({ color: '#bbb', weight: 0.5, fillColor: '#bbb', fillOpacity: 0.12, opacity: 0.5 });
+          }
+        } catch (_) {}
       }
-    }
 
-    // Cuando hay sector activo/hover, mostrar solo ese marcador — elimina solapamiento
-    for (const [s, ref] of Object.entries(sectorMarkersRef.current)) {
-      if (!ref || !ref.marker || typeof ref.marker.setOpacity !== 'function') continue;
-      const isActive = effectiveSector !== null && s === effectiveSector;
-      try {
-        if (effectiveSector !== null) {
-          ref.marker.setOpacity(isActive ? 1 : 0);
-        } else {
-          ref.marker.setOpacity(1);
-        }
-        if (typeof ref.makeSectorIcon === 'function') {
-          ref.marker.setIcon(ref.makeSectorIcon(s as Sector, isActive));
-        }
-      } catch (_) { /* marker puede estar en estado parcial durante inicialización */ }
-    }
-
-    const targetSector = hoveredSector ?? activeSector;
-    if (targetSector !== prevSectorRef.current) {
-      prevSectorRef.current = targetSector;
-      // Solo fly automático si el usuario no ha hecho zoom/pan manual
-      // Nunca volver al overview automáticamente (quita el snap-back)
-      if (targetSector && !userInteractedRef.current) {
-        const v = SECTOR_VIEW[targetSector];
-        map.flyTo(v.center, v.zoom, { duration: 0.7, easeLinearity: 0.5 });
+      // Cuando hay sector activo/hover, mostrar solo ese marcador — elimina solapamiento
+      for (const [s, ref] of Object.entries(sectorMarkersRef.current)) {
+        try {
+          if (!ref || !ref.marker) continue;
+          const isActive = effectiveSector !== null && s === effectiveSector;
+          if (effectiveSector !== null) {
+            ref.marker.setOpacity(isActive ? 1 : 0);
+          } else {
+            ref.marker.setOpacity(1);
+          }
+          if (typeof ref.makeSectorIcon === 'function') {
+            ref.marker.setIcon(ref.makeSectorIcon(s as Sector, isActive));
+          }
+        } catch (_) {}
       }
-    }
+
+      const targetSector = hoveredSector ?? activeSector;
+      if (targetSector !== prevSectorRef.current) {
+        prevSectorRef.current = targetSector;
+        // Solo fly automático si el usuario no ha hecho zoom/pan manual
+        if (targetSector && !userInteractedRef.current) {
+          try {
+            const v = SECTOR_VIEW[targetSector];
+            map.flyTo(v.center, v.zoom, { duration: 0.7, easeLinearity: 0.5 });
+          } catch (_) {}
+        }
+      }
+    } catch (_) {}
   }, [activeSector, hoveredSector]);
 
   return <div ref={containerRef} style={{ width: '100%', height: '100%' }} />;
