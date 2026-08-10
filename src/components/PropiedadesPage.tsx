@@ -626,7 +626,7 @@ export default function PropiedadesPage({ initialFilter = 'Todos', initialQueStr
           {(appliedFilters.tipo === 'Todos' || appliedFilters.tipo === 'Arrendar') && (
             <div style={{ background: '#1a1a1a', padding: '24px 28px' }}>
               <h3 style={{ fontFamily: FONT_HEADING, fontWeight: 700, fontSize: '20px', color: '#fff', marginBottom: '6px', lineHeight: 1.2 }}>
-                ¿Quieres consignar tu inmueble?
+                ¿Tienes un inmueble para arrendar o vender?
               </h3>
               <p style={{ fontFamily: FONT_BODY, fontSize: '14px', color: 'rgba(255,255,255,0.55)', marginBottom: '16px', lineHeight: 1.4 }}>
                 Consigna tu propiedad con nosotros y accede a nuestra red de clientes.
@@ -827,7 +827,8 @@ export default function PropiedadesPage({ initialFilter = 'Todos', initialQueStr
             <ScrollReveal y={20}>
               <div style={{ background: '#1a1a1a', borderRadius: 0, padding: '24px 28px', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', gap: 16 }}>
                 <h3 style={{ fontFamily: FONT_HEADING, fontWeight: 700, fontSize: '20px', color: '#fff', margin: 0, lineHeight: 1.2 }}>
-                  ¿Quieres consignar tu inmueble?
+                  <span className="lg:hidden">¿Quieres consignar tu inmueble?</span>
+                  <span className="hidden lg:inline">¿Tienes un inmueble para arrendar o vender?</span>
                 </h3>
                 <p className="hidden lg:block" style={{ fontFamily: FONT_BODY, fontSize: '14px', color: 'rgba(255,255,255,0.55)', margin: 0, lineHeight: 1.4 }}>
                   Consigna tu propiedad con nosotros y accede a nuestra red de clientes.
