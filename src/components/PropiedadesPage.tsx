@@ -825,11 +825,11 @@ export default function PropiedadesPage({ initialFilter = 'Todos', initialQueStr
         <div className={`mt-6 grid gap-4 ${showMap ? 'lg:hidden' : ''} ${appliedFilters.tipo === 'Todos' ? 'grid-cols-2' : 'grid-cols-1'}`}>
           {(appliedFilters.tipo === 'Todos' || appliedFilters.tipo === 'Arrendar') && (
             <ScrollReveal y={20}>
-              <div style={{ background: '#1a1a1a', borderRadius: 0, padding: '24px 28px' }}>
-                <h3 style={{ fontFamily: FONT_HEADING, fontWeight: 700, fontSize: '20px', color: '#fff', marginBottom: '6px', lineHeight: 1.2 }}>
+              <div style={{ background: '#1a1a1a', borderRadius: 0, padding: '24px 28px', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', gap: 16 }}>
+                <h3 style={{ fontFamily: FONT_HEADING, fontWeight: 700, fontSize: '20px', color: '#fff', margin: 0, lineHeight: 1.2 }}>
                   ¿Tienes un inmueble para arrendar o vender?
                 </h3>
-                <p style={{ fontFamily: FONT_BODY, fontSize: '14px', color: 'rgba(255,255,255,0.55)', marginBottom: '16px', lineHeight: 1.4 }}>
+                <p className="hidden lg:block" style={{ fontFamily: FONT_BODY, fontSize: '14px', color: 'rgba(255,255,255,0.55)', margin: 0, lineHeight: 1.4 }}>
                   Consigna tu propiedad con nosotros y accede a nuestra red de clientes.
                 </p>
                 <button
@@ -838,13 +838,14 @@ export default function PropiedadesPage({ initialFilter = 'Todos', initialQueStr
                   style={{
                     fontFamily: FONT_BODY, fontSize: '13px', fontWeight: 600,
                     color: '#fff', background: RED, border: 'none',
-                    cursor: 'pointer', padding: '11px 28px', borderRadius: 0,
-                    transition: 'background 0.2s ease',
+                    cursor: 'pointer', padding: '11px 16px', borderRadius: 0,
+                    transition: 'background 0.2s ease', whiteSpace: 'nowrap',
                   }}
                   onMouseEnter={e => (e.currentTarget.style.background = '#aa182c')}
                   onMouseLeave={e => (e.currentTarget.style.background = RED)}
                 >
-                  Consigna tu propiedad
+                  <span className="hidden lg:inline">Consigna tu propiedad</span>
+                  <span className="lg:hidden">Consignar</span>
                 </button>
               </div>
             </ScrollReveal>
@@ -852,11 +853,11 @@ export default function PropiedadesPage({ initialFilter = 'Todos', initialQueStr
 
           {(appliedFilters.tipo === 'Todos' || appliedFilters.tipo === 'Comprar') && (
             <ScrollReveal y={20} delay={appliedFilters.tipo === 'Todos' ? 0.1 : 0}>
-              <div style={{ background: '#1a1a1a', borderRadius: 0, padding: '24px 28px' }}>
-                <h3 style={{ fontFamily: FONT_HEADING, fontWeight: 700, fontSize: '20px', color: '#fff', marginBottom: '6px', lineHeight: 1.2 }}>
+              <div style={{ background: '#1a1a1a', borderRadius: 0, padding: '24px 28px', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', gap: 16 }}>
+                <h3 style={{ fontFamily: FONT_HEADING, fontWeight: 700, fontSize: '20px', color: '#fff', margin: 0, lineHeight: 1.2 }}>
                   ¿Buscas oportunidades de inversión?
                 </h3>
-                <p style={{ fontFamily: FONT_BODY, fontSize: '14px', color: 'rgba(255,255,255,0.55)', marginBottom: '16px', lineHeight: 1.4 }}>
+                <p className="hidden lg:block" style={{ fontFamily: FONT_BODY, fontSize: '14px', color: 'rgba(255,255,255,0.55)', margin: 0, lineHeight: 1.4 }}>
                   Descubre nuestras propiedades con mayor potencial de retorno en Antioquia.
                 </p>
                 <button
@@ -865,13 +866,14 @@ export default function PropiedadesPage({ initialFilter = 'Todos', initialQueStr
                   style={{
                     fontFamily: FONT_BODY, fontSize: '13px', fontWeight: 600,
                     color: '#fff', background: RED, border: 'none',
-                    cursor: 'pointer', padding: '11px 28px', borderRadius: 0,
-                    transition: 'background 0.2s ease',
+                    cursor: 'pointer', padding: '11px 16px', borderRadius: 0,
+                    transition: 'background 0.2s ease', whiteSpace: 'nowrap',
                   }}
                   onMouseEnter={e => (e.currentTarget.style.background = '#aa182c')}
                   onMouseLeave={e => (e.currentTarget.style.background = RED)}
                 >
-                  Ver oportunidades de inversión
+                  <span className="hidden lg:inline">Ver oportunidades de inversión</span>
+                  <span className="lg:hidden">Ver inversión</span>
                 </button>
               </div>
             </ScrollReveal>
