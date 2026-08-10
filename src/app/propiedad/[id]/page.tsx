@@ -516,7 +516,7 @@ export default function PropertyDetailPage() {
                         { icon: '/icons/icon-area-gray.svg',     label: 'Área construida',   value: property.size,                     show: !!property.size },
                         { icon: '/icons/icon-bed-gray.svg',      label: 'Habitaciones',      value: String(property.bedrooms),         show: property.bedrooms > 0 },
                         { icon: '/icons/icon-bathroom-gray.svg', label: 'Baños',             value: String(property.bathrooms),        show: property.bathrooms > 0 },
-                        { icon: '/icons/icon-location-gray.svg', label: 'Estrato',           value: `Estrato ${property.stratum}`,     show: !!property.stratum },
+                        { icon: '/icons/icon-estrato-gray.svg', label: 'Estrato',           value: `Estrato ${property.stratum}`,     show: !!property.stratum },
                         { icon: '/icons/icon-parking-red.svg',   label: 'Parqueaderos',      value: String(property.parking ?? property.garage), show: (property.parking ?? 0) > 0 || (property.garage ?? 0) > 0 },
                         { icon: '/icons/icon-home-red.svg',      label: 'Estado',            value: property.estado ?? '',             show: !!property.estado },
                         { icon: '/icons/icon-schedule-red.svg',  label: 'Antigüedad',        value: property.antiguedad ?? '',         show: !!property.antiguedad },

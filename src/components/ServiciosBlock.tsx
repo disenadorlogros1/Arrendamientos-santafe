@@ -1,6 +1,8 @@
-﻿'use client';
+'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
+import { flushSync } from 'react-dom';
+import gsap from 'gsap';
 import type { PageType } from '@/components/Header';
 
 interface ServiciosBlockProps {
@@ -12,6 +14,7 @@ const FONT_HEADING = "'Avenir LT Std', 'Outfit', system-ui, sans-serif";
 const RED          = '#f32735';
 const PHONE_ARRIENDO  = '573006557529';
 const PHONE_ASESOR    = '573044403848';
+const SERV_GAP = 10;
 
 function applyInkFill(e: React.MouseEvent<HTMLElement>) {
   const el = e.currentTarget;
@@ -31,7 +34,8 @@ function applyInkFill(e: React.MouseEvent<HTMLElement>) {
 
 const servicios = [
   {
-    icon: '/icons/icon-home-red.svg',
+    iconRed:   '/icons/icon-arrendamientos-red.svg',
+    iconWhite: '/icons/icon-arrendamientos-white.svg',
     title: 'Arrendamientos',
     description:
       'Sabemos que encontrar el inmueble indicado no es solo buscar, es encontrar el lugar donde vas a vivir o trabajar. Estamos aquí para que ese proceso sea fácil, seguro y a tu medida.',
@@ -39,7 +43,8 @@ const servicios = [
     waMsg: 'Hola, quiero arrendar un inmueble',
   },
   {
-    icon: '/icons/icon-credit-card-red.svg',
+    iconRed:   '/icons/icon-ventas-red.svg',
+    iconWhite: '/icons/icon-ventas-white.svg',
     title: 'Ventas',
     description:
       'Comprar un inmueble es una de las decisiones más importantes de tu vida. Te acompañamos con el conocimiento del mercado y la experiencia para que elijas con seguridad.',
@@ -47,7 +52,8 @@ const servicios = [
     waMsg: 'Hola, quiero comprar un inmueble',
   },
   {
-    icon: '/icons/icon-consult-red.svg',
+    iconRed:   '/icons/icon-consult-red.svg',
+    iconWhite: '/icons/icon-consult-white.svg',
     title: 'Consignación',
     description:
       'Tu propiedad merece estar en buenas manos. Nos encargamos de encontrar el cliente adecuado con la seriedad y el respaldo de 60 años en el mercado inmobiliario antioqueño.',
@@ -55,7 +61,8 @@ const servicios = [
     waMsg: 'Hola, vengo de la página web y quiero consignar mi propiedad con ustedes. ¿Me pueden asesorar?',
   },
   {
-    icon: '/icons/icon-area-red.svg',
+    iconRed:   '/icons/icon-avaluos-red.svg',
+    iconWhite: '/icons/icon-avaluos-white.svg',
     title: 'Avalúos',
     description:
       'Conocer el valor real de tu inmueble es el primer paso para tomar buenas decisiones. Te damos una valoración técnica, honesta y ajustada al mercado actual.',
@@ -63,7 +70,8 @@ const servicios = [
     waMsg: 'Hola, vengo de la página web y me interesa un avalúo de mi inmueble. ¿Cómo es el proceso?',
   },
   {
-    icon: '/icons/icon-dollar-red.svg',
+    iconRed:   '/icons/icon-hipotecas-red.svg',
+    iconWhite: '/icons/icon-hipotecas-white.svg',
     title: 'Hipotecas',
     description:
       '¿Necesitas dinero? Préstamos en hipoteca al 1.5% de interés, pagos anticipados sin penalización y abonos a capital desde $1.000.000',
@@ -77,62 +85,66 @@ export default function ServiciosBlock({ onNavigate: _onNavigate }: ServiciosBlo
   const [touchIdx, setTouchIdx]     = useState<number | null>(null);
   const [redIdx] = useState(() => Math.floor(Math.random() * servicios.length));
 
-  const trackRef     = useRef<HTMLDivElement>(null);
-  const posRef       = useRef(0);
-  const rafRef       = useRef<number>(0);
-  const pausedRef    = useRef(false);
-  const animatingRef = useRef(false);
+  const servContainerRef = useRef<HTMLDivElement>(null);
+  const servTrackRef     = useRef<HTMLDivElement>(null);
+  const servIsAnimating  = useRef(false);
+  const [servStartIdx, setServStartIdx] = useState(0);
+  const [servCardW, setServCardW]       = useState(0);
+  const SERV_SLOT = servCardW + SERV_GAP;
 
   useEffect(() => {
-    const track = trackRef.current;
-    if (!track) return;
-    const SPEED = 0.5;
-    const step = () => {
-      if (!pausedRef.current && !animatingRef.current) {
-        posRef.current -= SPEED;
-        const card = track.firstElementChild as HTMLElement;
-        const pitch = card ? card.offsetWidth + 10 : 1;
-        const halfWidth = pitch * servicios.length;
-        if (Math.abs(posRef.current) >= halfWidth) posRef.current += halfWidth;
-        track.style.transform = `translateX(${posRef.current}px)`;
-      }
-      rafRef.current = requestAnimationFrame(step);
+    const el = servContainerRef.current;
+    if (!el) return;
+    const measure = () => {
+      const w = el.getBoundingClientRect().width;
+      if (w > 0) setServCardW(Math.floor((w - SERV_GAP) / 2));
     };
-    rafRef.current = requestAnimationFrame(step);
-    return () => cancelAnimationFrame(rafRef.current);
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    return () => ro.disconnect();
   }, []);
 
-  const scrollBy = (dir: 'prev' | 'next') => {
-    const track = trackRef.current;
-    if (!track || animatingRef.current) return;
-    const card = track.firstElementChild as HTMLElement;
-    const pitch = card ? card.offsetWidth + 10 : window.innerWidth / 2;
-    const halfWidth = pitch * servicios.length;
-
-    if (dir === 'prev') {
-      if (posRef.current > -(pitch + 1)) {
-        posRef.current -= halfWidth;
-        track.style.transition = 'none';
-        track.style.transform = `translateX(${posRef.current}px)`;
-        track.getBoundingClientRect();
-      }
-      posRef.current += pitch;
+  const servNavigate = useCallback((forward: boolean) => {
+    if (servIsAnimating.current || !servTrackRef.current || !servContainerRef.current || SERV_SLOT === 0) return;
+    servIsAnimating.current = true;
+    if (forward) {
+      const slots    = servContainerRef.current.querySelectorAll<HTMLElement>('[data-serv]');
+      const exiting  = slots[0];
+      const entering = slots[slots.length - 1];
+      gsap.set(entering, { scale: 0.75, opacity: 0 });
+      gsap.timeline({
+        onComplete: () => {
+          flushSync(() => setServStartIdx(p => (p + 1) % servicios.length));
+          gsap.set(servTrackRef.current, { x: 0 });
+          servIsAnimating.current = false;
+        },
+      })
+        .to(servTrackRef.current, { x: -SERV_SLOT, duration: 0.9,  ease: 'power4.out'  }, 0)
+        .to(exiting,              { scale: 0.75, opacity: 0, duration: 0.42, ease: 'power2.in'  }, 0)
+        .to(entering,             { scale: 1,    opacity: 1, duration: 0.66, ease: 'power3.out' }, 0.2);
     } else {
-      posRef.current -= pitch;
+      flushSync(() => setServStartIdx(p => (p - 1 + servicios.length) % servicios.length));
+      const slots    = servContainerRef.current.querySelectorAll<HTMLElement>('[data-serv]');
+      const entering = slots[0];
+      const exiting  = slots[slots.length - 1];
+      gsap.set(servTrackRef.current, { x: -SERV_SLOT });
+      gsap.set(entering,             { scale: 0.75, opacity: 0 });
+      gsap.timeline({
+        onComplete: () => { servIsAnimating.current = false; },
+      })
+        .to(servTrackRef.current, { x: 0,    duration: 0.9,  ease: 'power4.out'  }, 0)
+        .to(exiting,              { scale: 0.75, opacity: 0, duration: 0.42, ease: 'power2.in'  }, 0)
+        .to(entering,             { scale: 1,    opacity: 1, duration: 0.66, ease: 'power3.out' }, 0.2);
     }
+  }, [SERV_SLOT]);
 
-    animatingRef.current = true;
-    track.style.transition = 'transform 0.35s cubic-bezier(0.25,0.46,0.45,0.94)';
-    track.style.transform = `translateX(${posRef.current}px)`;
-
-    setTimeout(() => {
-      if (track) {
-        track.style.transition = '';
-        if (posRef.current < -halfWidth) posRef.current += halfWidth;
-      }
-      animatingRef.current = false;
-    }, 360);
-  };
+  useEffect(() => {
+    const id = setInterval(() => {
+      if (!servIsAnimating.current) servNavigate(true);
+    }, 4000);
+    return () => clearInterval(id);
+  }, [servNavigate]);
 
   return (
     <section style={{ background: '#fff' }} className="w-full">
@@ -156,22 +168,11 @@ export default function ServiciosBlock({ onNavigate: _onNavigate }: ServiciosBlo
         </h2>
       </div>
 
-      {/* ── CARRUSEL: mobile (2 tarjetas) y tablet (3 tarjetas) ── */}
-      <style>{`
-        .servicio-card {
-          width: calc(50vw - 10px);
-          flex-shrink: 0;
-          margin-right: 10px;
-        }
-        @media (min-width: 640px) {
-          .servicio-card { width: calc(33.333vw - 10px); }
-        }
-      `}</style>
-
+      {/* ── CARRUSEL: mobile/tablet ── */}
       <div className="lg:hidden" style={{ paddingBottom: '24px', position: 'relative' }}>
         {/* Flecha izquierda — fuera del overflow-hidden */}
         <button
-          onClick={() => scrollBy('prev')}
+          onClick={() => servNavigate(false)}
           aria-label="Anterior"
           style={{
             position: 'absolute', left: 10, top: '50%', transform: 'translateY(-50%)', zIndex: 20,
@@ -190,52 +191,55 @@ export default function ServiciosBlock({ onNavigate: _onNavigate }: ServiciosBlo
         </button>
 
         <div
+          ref={servContainerRef}
           className="relative overflow-hidden"
-          onPointerEnter={(e) => { if (e.pointerType === 'mouse') pausedRef.current = true; }}
-          onPointerLeave={(e) => { if (e.pointerType === 'mouse') pausedRef.current = false; }}
+          style={{ marginLeft: '46px', marginRight: '46px' }}
         >
-          {/* Track */}
-          <div ref={trackRef} className="flex" style={{ width: 'max-content' }}>
-            {[...servicios, ...servicios].map((s, idx) => {
-              const url = `https://wa.me/${s.phone}?text=${encodeURIComponent(s.waMsg)}`;
-              return (
-                <a
-                  key={idx}
-                  href={url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="servicio-card"
-                  style={{
-                    background: '#f5f5f5',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    textAlign: 'center',
-                    gap: '10px',
-                    padding: '20px 12px 16px',
-                    textDecoration: 'none',
-                  }}
-                >
-                  <img src={s.icon} alt="" width={36} height={36} />
-                  <span style={{ fontFamily: FONT_HEADING, fontWeight: 700, fontSize: '14px', color: '#1a1a1a', lineHeight: 1.2 }}>
-                    {s.title}
-                  </span>
-                  <span style={{
-                    fontFamily: FONT_BODY, fontWeight: 500, fontSize: '12px',
-                    color: '#fff', background: '#1a1a1a', borderRadius: '99px',
-                    padding: '6px 10px', lineHeight: 1.3, marginTop: 'auto',
-                  }}>
-                    Hablar con un asesor
-                  </span>
-                </a>
-              );
-            })}
-          </div>
+          {servCardW > 0 && (
+            <div
+              ref={servTrackRef}
+              className="flex"
+              style={{ gap: `${SERV_GAP}px`, width: `${3 * servCardW + 2 * SERV_GAP}px`, willChange: 'transform' }}
+            >
+              {[0, 1, 2].map(i => {
+                const s   = servicios[(servStartIdx + i) % servicios.length];
+                const url = `https://wa.me/${s.phone}?text=${encodeURIComponent(s.waMsg)}`;
+                return (
+                  <a
+                    key={s.title}
+                    data-serv={i}
+                    href={url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{
+                      width: `${servCardW}px`, minWidth: `${servCardW}px`, flexShrink: 0,
+                      willChange: 'transform, opacity',
+                      background: '#f5f5f5',
+                      display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center',
+                      gap: '10px', padding: '20px 12px 16px', textDecoration: 'none',
+                    }}
+                  >
+                    <img src={s.iconRed} alt="" width={36} height={36} />
+                    <span style={{ fontFamily: FONT_HEADING, fontWeight: 700, fontSize: '14px', color: '#1a1a1a', lineHeight: 1.2 }}>
+                      {s.title}
+                    </span>
+                    <span style={{
+                      fontFamily: FONT_BODY, fontWeight: 500, fontSize: '12px',
+                      color: '#fff', background: '#1a1a1a', borderRadius: '99px',
+                      padding: '6px 10px', lineHeight: 1.3, marginTop: 'auto',
+                    }}>
+                      Hablar con un asesor
+                    </span>
+                  </a>
+                );
+              })}
+            </div>
+          )}
         </div>
 
         {/* Flecha derecha — fuera del overflow-hidden */}
         <button
-          onClick={() => scrollBy('next')}
+          onClick={() => servNavigate(true)}
           aria-label="Siguiente"
           style={{
             position: 'absolute', right: 10, top: '50%', transform: 'translateY(-50%)', zIndex: 20,
@@ -261,7 +265,7 @@ export default function ServiciosBlock({ onNavigate: _onNavigate }: ServiciosBlo
           style={{ gap: '0', background: 'transparent', overflow: 'visible' }}
         >
           {servicios.map((s, idx) => {
-            const url    = `https://wa.me/${PHONE}?text=${encodeURIComponent(s.waMsg)}`;
+            const url      = `https://wa.me/${s.phone}?text=${encodeURIComponent(s.waMsg)}`;
             const isRed    = idx === redIdx;
             const isHov    = idx === hoveredIdx;
             const isTouch  = idx === touchIdx;
@@ -291,11 +295,11 @@ export default function ServiciosBlock({ onNavigate: _onNavigate }: ServiciosBlo
                 onTouchCancel={() => setTouchIdx(null)}
               >
                 <img
-                  src={s.icon}
+                  src={isRed ? s.iconWhite : s.iconRed}
                   alt=""
                   width={40}
                   height={40}
-                  style={{ flexShrink: 0, filter: isRed ? 'brightness(0) invert(1)' : 'none' }}
+                  style={{ flexShrink: 0 }}
                 />
 
                 <h3

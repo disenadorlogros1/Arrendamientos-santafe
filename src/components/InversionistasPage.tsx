@@ -567,7 +567,7 @@ export default function InversionistasPage() {
             </svg>
           </button>
 
-          <div ref={benContainerRef} className="relative overflow-hidden">
+          <div ref={benContainerRef} className="relative overflow-hidden" style={{ marginLeft: '46px', marginRight: '46px' }}>
             {benCardW > 0 && (
               <div
                 ref={benTrackRef}

@@ -137,10 +137,8 @@ export default function InstitucionalPage({ onNavigate }: InstitucionalPageProps
 
           {/* Grid cifras 3×1 */}
           <div
+            className="grid grid-cols-1 md:grid-cols-3"
             style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(3, 1fr)',
-              gridAutoRows: '1fr',
               marginTop: 52,
               gap: 'clamp(10px, 1.2vw, 16px)',
             }}
@@ -226,10 +224,8 @@ export default function InstitucionalPage({ onNavigate }: InstitucionalPageProps
 
           {/* Grid razones 3×1 */}
           <div
+            className="grid grid-cols-1 md:grid-cols-3"
             style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(3, 1fr)',
-              gridAutoRows: '1fr',
               marginTop: 40,
               gap: 'clamp(10px, 1.2vw, 16px)',
             }}
