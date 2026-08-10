@@ -284,7 +284,7 @@ export default function InversionistasPage() {
                     onClick={() => setActiveSector(isActive ? null : sector)}
                     style={{
                       background: isActive ? '#fff' : '#f0f0f0',
-                      borderRadius: '14px',
+                      borderRadius: '0',
                       padding: '12px 12px 13px',
                       textAlign: 'left',
                       cursor: 'pointer',
