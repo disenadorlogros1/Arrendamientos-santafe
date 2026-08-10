@@ -226,7 +226,7 @@ export default function InversionZonePage() {
           <div style={{ maxWidth: 1120, margin: '0 auto', padding: '0 24px' }}>
             <ScrollReveal y={16}>
               <div style={{ marginBottom: 24 }}>
-                <h2 style={{ fontSize: 'clamp(26px, 3.5vw, 40px)', fontWeight: 900, color: '#1a1a1a', margin: 0, letterSpacing: '-0.01em' }}>
+                <h2 style={{ fontSize: 'clamp(26px, 3.5vw, 40px)', fontWeight: 900, color: '#1a1a1a', margin: 0, letterSpacing: '-0.01em', lineHeight: 1.0 }}>
                   <span style={{ fontWeight: 300, color: '#888' }}>Ventajas del </span><span style={{ color: '#888' }}>{zone.name}</span>
                 </h2>
               </div>
