@@ -88,6 +88,7 @@ export default function ServiciosBlock({ onNavigate: _onNavigate }: ServiciosBlo
   const servContainerRef = useRef<HTMLDivElement>(null);
   const servTrackRef     = useRef<HTMLDivElement>(null);
   const servIsAnimating  = useRef(false);
+  const servIntervalRef  = useRef<ReturnType<typeof setInterval> | null>(null);
   const [servStartIdx, setServStartIdx] = useState(0);
   const [servCardW, setServCardW]       = useState(0);
   const SERV_SLOT = servCardW + SERV_GAP;
