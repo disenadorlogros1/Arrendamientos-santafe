@@ -183,9 +183,8 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
           src="/images/banner_propietarios_2.png"
           alt=""
           aria-hidden
-          className="lg:hidden w-full"
+          className="block lg:hidden w-full"
           style={{
-            display: 'block',
             width: '100%',
             height: '220px',
             objectFit: 'cover',
