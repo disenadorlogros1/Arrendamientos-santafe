@@ -36,7 +36,7 @@ function MobileWhatsAppButton() {
     return () => clearInterval(i);
   }, []);
   return (
-    <a href="https://wa.me/573006557529?text=Hola%2C%20quisiera%20hablar%20con%20un%20asesor%20de%20Arrendamientos%20Santa%20Fe." target="_blank" rel="noopener noreferrer"
+    <a href="https://wa.me/573006557529?text=Hola%20%F0%9F%91%8B" target="_blank" rel="noopener noreferrer"
       className={`flex items-center justify-center w-[42px] h-[42px] rounded-full transition-all duration-500 ${
         isRed ? 'bg-brand-red shadow-[0_0_20px_rgba(243,39,53,0.6)]' : 'bg-white shadow-[0_0_12px_rgba(255,255,255,0.3)]'
       }`}
@@ -88,7 +88,7 @@ function WhatsAppButton() {
     return () => clearInterval(i);
   }, []);
   return (
-    <a href="https://wa.me/573006557529?text=Hola%2C%20quisiera%20hablar%20con%20un%20asesor%20de%20Arrendamientos%20Santa%20Fe." target="_blank" rel="noopener noreferrer"
+    <a href="https://wa.me/573006557529?text=Hola%20%F0%9F%91%8B" target="_blank" rel="noopener noreferrer"
       className={`flex items-center gap-2 h-[42px] px-5 rounded-full text-sm font-semibold whitespace-nowrap transition-all duration-500 ${
         isRed ? 'bg-brand-red shadow-[0_0_20px_rgba(243,39,53,0.6)]' : 'bg-white shadow-[0_0_12px_rgba(255,255,255,0.3)]'
       }`}

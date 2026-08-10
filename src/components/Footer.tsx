@@ -12,7 +12,7 @@ const MAPS_RIONEGRO  = 'https://www.google.com/maps/place/Arrendamientos+Santa+F
 const PSE_URL = 'https://www.psepagos.co/PSEHostingUI/ShowTicketOffice.aspx?ID=9011';
 const SOLICITUD_ARRENDAMIENTO_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSfAg9SMibueBBUy-Pe1rQuO1Rz7U4z7z9uq91pv-gp-0-dCgQ/viewform';
 const REPARACIONES_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSdwCAaLU5ApyfAvf-yEEgj-fMQmnBRIh4614LhDIWtKhBDzyQ/viewform';
-const WHATSAPP_URL = 'https://wa.me/573006557529?text=Hola%2C%20quisiera%20hablar%20con%20un%20asesor%20de%20Arrendamientos%20Santa%20Fe.';
+const WHATSAPP_URL = 'https://wa.me/573044403848?text=Hola%2C%20vengo%20de%20la%20p%C3%A1gina%20web%20de%20Arrendamientos%20Santa%20Fe%20y%20me%20gustar%C3%ADa%20hablar%20con%20un%20asesor.';
 const FACEBOOK_URL = 'https://www.facebook.com/arrendamientossantafe';
 const INSTAGRAM_URL = 'https://www.instagram.com/arrendamientossantafe';
 const TIKTOK_URL = 'https://www.tiktok.com/@arrendamientossantafe';
@@ -21,15 +21,15 @@ export default function Footer({ onNavigate }: FooterProps = {}) {
   return (
     <footer className="relative bg-brand-dark text-white" style={{ zIndex: 5 }}>
       <div className="mx-auto max-w-[88rem] px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
           {/* Marca — mobile: order-5 (último), solo redes; desktop: order-1 con logo+desc */}
-          <div className="space-y-4 order-5 sm:order-1">
+          <div className="space-y-4 order-5 lg:order-1">
             <img
               src="/icons/Logotipo_Logoblanco.svg"
               alt="Arrendamientos Santa Fe"
-              className="hidden sm:block h-10 w-auto object-contain"
+              className="hidden lg:block h-10 w-auto object-contain"
             />
-            <p className="hidden sm:block text-white/60 text-sm leading-relaxed">
+            <p className="hidden lg:block text-white/60 text-sm leading-relaxed">
               Una empresa antioqueña con historia. Para quienes buscan, para quienes confían.
             </p>
             <div className="flex gap-3">
@@ -64,7 +64,7 @@ export default function Footer({ onNavigate }: FooterProps = {}) {
           </div>
 
           {/* Sedes — mobile: order-4 */}
-          <div className="order-4 sm:order-2">
+          <div className="order-4 lg:order-2">
             <h4 className="font-semibold text-sm uppercase tracking-wider mb-4 text-white/80">
               Nuestras sedes
             </h4>
@@ -91,7 +91,7 @@ export default function Footer({ onNavigate }: FooterProps = {}) {
           </div>
 
           {/* Accesos rápidos — mobile: order-1 */}
-          <div className="order-1 sm:order-3">
+          <div className="order-1 lg:order-3">
             <h4 className="font-semibold text-sm uppercase tracking-wider mb-4 text-white/80">
               Accesos rápidos
             </h4>
@@ -144,7 +144,7 @@ export default function Footer({ onNavigate }: FooterProps = {}) {
           </div>
 
           {/* Contacto — mobile: order-2 */}
-          <div className="order-2 sm:order-4">
+          <div className="order-2 lg:order-4">
             <h4 className="font-semibold text-sm uppercase tracking-wider mb-4 text-white/80">
               Contacto
             </h4>
@@ -166,7 +166,7 @@ export default function Footer({ onNavigate }: FooterProps = {}) {
                   className="flex items-center gap-2 text-sm text-white/60 hover:text-white transition-colors"
                 >
                   <img src="/icons/icon-whatsapp-red.svg" className="h-4 w-4 shrink-0" alt="" aria-hidden="true" />
-                  (+57) 300 655 7529
+                  (+57) 304 440 3848
                 </a>
               </li>
               <li>
@@ -182,7 +182,7 @@ export default function Footer({ onNavigate }: FooterProps = {}) {
           </div>
 
           {/* Horarios — mobile: order-3 */}
-          <div className="order-3 sm:order-5">
+          <div className="order-3 lg:order-5">
             <h4 className="font-semibold text-sm uppercase tracking-wider mb-4 text-white/80">
               Horarios
             </h4>
@@ -200,8 +200,8 @@ export default function Footer({ onNavigate }: FooterProps = {}) {
         </div>
 
         {/* Copyright + legales */}
-        <div className="mt-10 pt-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <p className="text-white/40 text-xs text-center sm:text-left">
+        <div className="mt-10 pt-6 border-t border-white/10 flex flex-col lg:flex-row items-center justify-between gap-3">
+          <p className="text-white/40 text-xs text-center lg:text-left">
             © {new Date().getFullYear()} Arrendamientos Santa Fe. Todos los derechos reservados.
             <br className="sm:hidden" />
             <span className="hidden sm:inline"> · </span>

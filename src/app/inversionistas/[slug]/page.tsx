@@ -51,7 +51,7 @@ const ZONE_INK_CSS = `
 `;
 
 /* ── Animated stat value — cuenta desde 0 al entrar en viewport ── */
-function AnimatedStatValue({ value, style }: { value: string; style?: React.CSSProperties }) {
+function AnimatedStatValue({ value, style, className }: { value: string; style?: React.CSSProperties; className?: string }) {
   const ref = useRef<HTMLDivElement>(null);
   const [display, setDisplay] = useState(value);
   const startedRef = useRef(false);
@@ -88,7 +88,7 @@ function AnimatedStatValue({ value, style }: { value: string; style?: React.CSSP
     return () => obs.disconnect();
   }, [animate]);
 
-  return <div ref={ref} style={style}>{display}</div>;
+  return <div ref={ref} style={style} className={className}>{display}</div>;
 }
 
 const STATS_META = [
@@ -194,7 +194,8 @@ export default function InversionZonePage() {
                 </div>
                 <AnimatedStatValue
                   value={zone.rentability}
-                  style={{ fontSize: 'clamp(30px, 2.2vw, 36px)', fontWeight: 900, color: '#fff', lineHeight: 1.0, letterSpacing: '-0.02em' }}
+                  className="text-[30px] lg:text-[26px]"
+                  style={{ fontWeight: 900, color: '#fff', lineHeight: 1.0, letterSpacing: '-0.02em' }}
                 />
               </div>
               {/* Estratos — col 2 mobile / col 3 desktop */}
@@ -204,7 +205,8 @@ export default function InversionZonePage() {
                 </div>
                 <AnimatedStatValue
                   value={zone.strata}
-                  style={{ fontSize: 'clamp(30px, 2.2vw, 36px)', fontWeight: 900, color: '#fff', lineHeight: 1.0, letterSpacing: '-0.02em' }}
+                  className="text-[30px] lg:text-[26px]"
+                  style={{ fontWeight: 900, color: '#fff', lineHeight: 1.0, letterSpacing: '-0.02em' }}
                 />
               </div>
               {/* Precio m² — ancho completo mobile / col 2 desktop */}
@@ -386,21 +388,48 @@ function OtherZoneCard({ zone }: { zone: typeof investmentZones[0] }) {
         <div style={{ fontSize: 'clamp(10px, 0.8vw, 12px)', fontWeight: 500, color: '#aaa', textTransform: 'uppercase' as const, letterSpacing: '0.06em' }}>
           rentabilidad
         </div>
+        {/* Precio m² — solo desktop */}
+        <div className="hidden lg:block" style={{ marginTop: 6, borderTop: '1px solid #f0f0f0', paddingTop: 8, width: '100%' }}>
+          <div style={{ fontSize: 'clamp(12px, 1vw, 15px)', fontWeight: 700, color: '#333', lineHeight: 1.2 }}>
+            {zone.pricePerM2}
+          </div>
+          <div style={{ fontSize: 10, fontWeight: 500, color: '#bbb', textTransform: 'uppercase' as const, letterSpacing: '0.06em', marginTop: 2 }}>
+            precio m²
+          </div>
+        </div>
       </div>
+      {/* Botón mobile: rojo sólido */}
       <Link
         href={`/inversionistas/${zone.slug}`}
+        className="lg:hidden"
         style={{
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           padding: '11px 16px',
-          background: RED,
-          color: '#fff',
+          background: RED, color: '#fff',
           fontFamily: FONT, fontSize: 13, fontWeight: 600,
           textDecoration: 'none', flexShrink: 0,
-          transition: 'background 0.22s ease',
-          border: 'none',
+          transition: 'background 0.22s ease', border: 'none',
         }}
         onMouseEnter={e => (e.currentTarget.style.background = '#aa182c')}
         onMouseLeave={e => (e.currentTarget.style.background = RED)}
+      >
+        Ver análisis
+      </Link>
+      {/* Botón desktop: outlined */}
+      <Link
+        href={`/inversionistas/${zone.slug}`}
+        className="hidden lg:flex"
+        style={{
+          alignItems: 'center', justifyContent: 'center',
+          padding: '11px 16px',
+          background: '#fff', color: '#1a1a1a',
+          border: '1.5px solid #1a1a1a',
+          fontFamily: FONT, fontSize: 13, fontWeight: 600,
+          textDecoration: 'none', flexShrink: 0,
+          transition: 'background 0.22s ease, color 0.22s ease',
+        }}
+        onMouseEnter={e => { e.currentTarget.style.background = '#1a1a1a'; e.currentTarget.style.color = '#fff'; }}
+        onMouseLeave={e => { e.currentTarget.style.background = '#fff'; e.currentTarget.style.color = '#1a1a1a'; }}
       >
         Ver análisis
       </Link>

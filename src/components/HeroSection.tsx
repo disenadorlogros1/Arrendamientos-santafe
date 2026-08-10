@@ -26,7 +26,7 @@ function applyInkFill(e: React.MouseEvent<HTMLElement>) {
 }
 
 const WHATSAPP_URL =
-  'https://wa.me/573006557529?text=Hola%2C%20quisiera%20hablar%20con%20un%20asesor%20de%20Arrendamientos%20Santa%20Fe.';
+  'https://wa.me/573044403848?text=Hola%2C%20vengo%20de%20la%20p%C3%A1gina%20web%20y%20quiero%20hablar%20con%20un%20asesor%20%F0%9F%98%8A';
 
 const FONT_BODY    = "'Avenir LT Std', 'Outfit', system-ui, sans-serif";
 const FONT_HEADING = "'Avenir LT Std', 'Outfit', system-ui, sans-serif";

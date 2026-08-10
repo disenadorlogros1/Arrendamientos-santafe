@@ -9,7 +9,7 @@ import type { PageType } from '@/components/Header';
 const FONT = "'Avenir LT Std', 'Outfit', system-ui, sans-serif";
 const RED  = '#f32735';
 
-const WHATSAPP_URL = 'https://wa.me/573006557529?text=Hola%2C%20quisiera%20consignar%20una%20propiedad%20con%20Arrendamientos%20Santa%20Fe.';
+const WHATSAPP_URL = 'https://wa.me/573044403848?text=%C2%A1Hola!%20Quiero%20consignar%20mi%20inmueble%20con%20Arrendamientos%20Santa%20Fe';
 
 function applyInkFill(e: React.MouseEvent<HTMLElement>) {
   const el = e.currentTarget;

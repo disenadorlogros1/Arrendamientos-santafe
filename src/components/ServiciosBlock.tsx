@@ -10,7 +10,8 @@ interface ServiciosBlockProps {
 const FONT_BODY    = "'Avenir LT Std', 'Outfit', system-ui, sans-serif";
 const FONT_HEADING = "'Avenir LT Std', 'Outfit', system-ui, sans-serif";
 const RED          = '#f32735';
-const PHONE        = '573006557529';
+const PHONE_ARRIENDO  = '573006557529';
+const PHONE_ASESOR    = '573044403848';
 
 function applyInkFill(e: React.MouseEvent<HTMLElement>) {
   const el = e.currentTarget;
@@ -34,40 +35,40 @@ const servicios = [
     title: 'Arrendamientos',
     description:
       'Sabemos que encontrar el inmueble indicado no es solo buscar, es encontrar el lugar donde vas a vivir o trabajar. Estamos aquí para que ese proceso sea fácil, seguro y a tu medida.',
-    waMsg:
-      'Hola, estoy buscando un inmueble para arrendar y me gustaría recibir asesoría. ¿Me pueden ayudar?',
+    phone: PHONE_ARRIENDO,
+    waMsg: 'Hola, quiero arrendar un inmueble',
   },
   {
     icon: '/icons/icon-credit-card-red.svg',
     title: 'Ventas',
     description:
       'Comprar un inmueble es una de las decisiones más importantes de tu vida. Te acompañamos con el conocimiento del mercado y la experiencia para que elijas con seguridad.',
-    waMsg:
-      'Hola, estoy interesado/a en comprar un inmueble y quisiera recibir orientación. ¿Me pueden ayudar?',
+    phone: PHONE_ARRIENDO,
+    waMsg: 'Hola, quiero comprar un inmueble',
   },
   {
     icon: '/icons/icon-consult-red.svg',
     title: 'Consignación',
     description:
       'Tu propiedad merece estar en buenas manos. Nos encargamos de encontrar el cliente adecuado con la seriedad y el respaldo de 60 años en el mercado inmobiliario antioqueño.',
-    waMsg:
-      'Hola, tengo un inmueble disponible y me interesa consignarlo con Arrendamientos Santa Fe. ¿Me pueden dar más información sobre el proceso?',
+    phone: PHONE_ASESOR,
+    waMsg: 'Hola, vengo de la página web y quiero consignar mi propiedad con ustedes. ¿Me pueden asesorar?',
   },
   {
     icon: '/icons/icon-area-red.svg',
     title: 'Avalúos',
     description:
       'Conocer el valor real de tu inmueble es el primer paso para tomar buenas decisiones. Te damos una valoración técnica, honesta y ajustada al mercado actual.',
-    waMsg:
-      'Hola, quisiera solicitar un avalúo comercial para mi inmueble. ¿Me pueden indicar cómo funciona el proceso?',
+    phone: PHONE_ASESOR,
+    waMsg: 'Hola, vengo de la página web y me interesa un avalúo de mi inmueble. ¿Cómo es el proceso?',
   },
   {
     icon: '/icons/icon-dollar-red.svg',
     title: 'Hipotecas',
     description:
       '¿Necesitas dinero? Préstamos en hipoteca al 1.5% de interés, pagos anticipados sin penalización y abonos a capital desde $1.000.000',
-    waMsg:
-      'Hola, tengo un inmueble y estoy explorando la posibilidad de obtener un préstamo hipotecario. Me gustaría saber cómo funciona el proceso con Arrendamientos Santa Fe.',
+    phone: PHONE_ASESOR,
+    waMsg: 'Hola, vengo de la página web y quiero información sobre los préstamos de dinero en hipoteca. ¿Me pueden asesorar?',
   },
 ];
 
@@ -196,7 +197,7 @@ export default function ServiciosBlock({ onNavigate: _onNavigate }: ServiciosBlo
           {/* Track */}
           <div ref={trackRef} className="flex" style={{ width: 'max-content' }}>
             {[...servicios, ...servicios].map((s, idx) => {
-              const url = `https://wa.me/${PHONE}?text=${encodeURIComponent(s.waMsg)}`;
+              const url = `https://wa.me/${s.phone}?text=${encodeURIComponent(s.waMsg)}`;
               return (
                 <a
                   key={idx}
