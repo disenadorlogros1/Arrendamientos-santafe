@@ -186,18 +186,37 @@ export default function InversionZonePage() {
         {/* ── Stats ─────────────────────────────────────────── */}
         <section style={{ background: '#1a1a1a', padding: '0', borderBottom: '1px solid #1e1e1e' }}>
           <div style={{ maxWidth: 1120, margin: '0 auto', padding: '0 24px' }}>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr 1fr', gap: 2 }}>
-              {STATS_META.map((meta) => (
-                <div key={meta.key} style={{ background: '#161616', padding: '32px 28px 28px', boxSizing: 'border-box' as const }}>
-                  <div style={{ fontSize: 10, fontWeight: 400, letterSpacing: '0.04em', color: RED, marginBottom: 10 }}>
-                    {meta.label}
-                  </div>
-                  <AnimatedStatValue
-                    value={zone[meta.key]}
-                    style={{ fontSize: 'clamp(16px, 2.2vw, 26px)', fontWeight: 900, color: '#fff', lineHeight: 1.1, letterSpacing: '-0.02em' }}
-                  />
+            <div className="grid grid-cols-2 lg:grid-cols-[1fr_2fr_1fr]" style={{ gap: 2 }}>
+              {/* Rentabilidad — col 1 en ambos */}
+              <div className="text-center lg:text-left" style={{ background: '#161616', padding: '28px 20px 24px', boxSizing: 'border-box' as const }}>
+                <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase' as const, color: RED, marginBottom: 10 }}>
+                  Rentabilidad anual
                 </div>
-              ))}
+                <AnimatedStatValue
+                  value={zone.rentability}
+                  style={{ fontSize: 'clamp(20px, 2.2vw, 28px)', fontWeight: 900, color: '#fff', lineHeight: 1.1, letterSpacing: '-0.02em' }}
+                />
+              </div>
+              {/* Estratos — col 2 mobile / col 3 desktop */}
+              <div className="order-2 lg:order-3 text-center lg:text-left" style={{ background: '#161616', padding: '28px 20px 24px', boxSizing: 'border-box' as const }}>
+                <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase' as const, color: RED, marginBottom: 10 }}>
+                  Estratos
+                </div>
+                <AnimatedStatValue
+                  value={zone.strata}
+                  style={{ fontSize: 'clamp(20px, 2.2vw, 28px)', fontWeight: 900, color: '#fff', lineHeight: 1.1, letterSpacing: '-0.02em' }}
+                />
+              </div>
+              {/* Precio m² — ancho completo mobile / col 2 desktop */}
+              <div className="col-span-2 order-3 lg:col-span-1 lg:order-2 text-center lg:text-left" style={{ background: '#161616', padding: '28px 20px 24px', boxSizing: 'border-box' as const }}>
+                <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase' as const, color: RED, marginBottom: 10 }}>
+                  Precio por m²
+                </div>
+                <AnimatedStatValue
+                  value={zone.pricePerM2}
+                  style={{ fontSize: 'clamp(16px, 2.2vw, 26px)', fontWeight: 900, color: '#fff', lineHeight: 1.1, letterSpacing: '-0.02em' }}
+                />
+              </div>
             </div>
           </div>
         </section>
