@@ -317,10 +317,14 @@ export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) 
     <section ref={sectionRef} className="w-full overflow-hidden" style={{ background: '#0c0c0c' }}>
 
       {/* ════ MOBILE: texto encima del banner ════════════════ */}
+      {/*
+        minHeight reserva espacio para el título+cuerpo más largo (2 líneas de h2
+        + 3 líneas de body) → impide que el banner salte al cambiar de slide.
+      */}
       <div
         ref={mobileTextRef}
         className="lg:hidden"
-        style={{ padding: '22px 20px 14px' }}
+        style={{ padding: '22px 20px 14px', minHeight: '145px', boxSizing: 'border-box' }}
       >
         {heading}
         {bodyText}

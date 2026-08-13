@@ -152,7 +152,7 @@ export default function NosotrosBanner({ active, onSlideChange }: Props) {
           <h2 style={{
             fontFamily: FONT, fontWeight: 300,
             fontSize: 'clamp(20px, 3.4vw, 52px)',
-            color: '#fff', lineHeight: 0.85,
+            color: '#fff', lineHeight: 0.3,
             margin: '0 0 20px',
             display: 'flex',
             flexDirection: 'column',

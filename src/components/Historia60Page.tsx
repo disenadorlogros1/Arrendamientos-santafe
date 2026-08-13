@@ -218,8 +218,10 @@ export default function Historia60Page({ onNavigate }: Props) {
       {isMobile && (
         <div style={{ background: DARK, paddingBottom: 24 }}>
 
-          {/* Texto encima del banner — reactivo a mobileIdx */}
-          <div style={{ padding: '20px 20px 14px' }}>
+          {/* Texto encima del banner — reactivo a mobileIdx.
+              minHeight reserva espacio para el cuerpo más largo (evento 2026,
+              ~4 líneas a 390px) → el banner no salta al cambiar de slide. */}
+          <div style={{ padding: '20px 20px 14px', minHeight: '180px', boxSizing: 'border-box' }}>
             <h3 style={{
               fontFamily: FONT, fontWeight: 800, fontSize: 20,
               color: '#fff', lineHeight: 1.1, margin: '0 0 8px',
