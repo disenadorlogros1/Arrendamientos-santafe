@@ -280,6 +280,19 @@ export default function Historia60Page({ onNavigate }: Props) {
                     {evt.body}
                   </p>
                 </div>
+                {pi === 0 && (
+                  <img
+                    src="/images/60%20a%C3%B1os%20Arrendamientos%20Santa%20Fe.svg"
+                    alt=""
+                    aria-hidden
+                    style={{
+                      position: 'absolute',
+                      top: 10, right: 12, width: 52,
+                      zIndex: 25, pointerEvents: 'none',
+                      filter: 'drop-shadow(0 3px 10px rgba(0,0,0,0.4))',
+                    }}
+                  />
+                )}
               </div>
             ))}
           </div>
@@ -425,6 +438,22 @@ export default function Historia60Page({ onNavigate }: Props) {
                 </div>
               </div>
             ))}
+
+            {/* Badge 60 años — decorativo, esquina superior derecha */}
+            <img
+              src="/images/60%20a%C3%B1os%20Arrendamientos%20Santa%20Fe.svg"
+              alt=""
+              aria-hidden
+              style={{
+                position: 'absolute',
+                top: 'clamp(12px, 2vw, 24px)',
+                right: 'clamp(14px, 2.5vw, 36px)',
+                width: 'clamp(80px, 9vw, 130px)',
+                zIndex: 25,
+                pointerEvents: 'none',
+                filter: 'drop-shadow(0 4px 14px rgba(0,0,0,0.45))',
+              }}
+            />
           </div>
 
           {/* ── Timeline bar ─────────────────────────────────────── */}
