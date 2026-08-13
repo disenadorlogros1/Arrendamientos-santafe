@@ -79,6 +79,7 @@ export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) 
   const l74ImgRefs      = useRef<(HTMLImageElement | null)[]>([]);
   const textRef         = useRef<HTMLDivElement>(null);
   const tlRef           = useRef<HTMLDivElement>(null);
+  const badgeRef        = useRef<HTMLImageElement>(null);
   const autoTimerRef    = useRef<ReturnType<typeof setInterval> | null>(null);
   const pauseTimerRef   = useRef<ReturnType<typeof setTimeout> | null>(null);
   const entranceDoneRef = useRef(false);
@@ -134,6 +135,15 @@ export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) 
         gsap.to(textRef.current, { opacity: 1, duration: 0.35, ease: 'power2.out' });
       },
     });
+
+    // Micro-pulse del badge al cambiar de año
+    if (badgeRef.current && entranceDoneRef.current) {
+      gsap.killTweensOf(badgeRef.current, 'scale');
+      gsap.to(badgeRef.current, {
+        keyframes: [{ scale: 1.07, duration: 0.18 }, { scale: 1, duration: 0.25 }],
+        ease: 'power1.inOut',
+      });
+    }
   }, [activeIdx]);
 
   /* ── GSAP: entrada + parallax ────────────────────────────── */
@@ -147,21 +157,34 @@ export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) 
         return;
       }
 
-      /* Estado inicial: banner invisible */
+      /* Estado inicial: banner invisible + badge oculto */
       gsap.set(bannerWrapRef.current, { autoAlpha: 0 });
       gsap.set([textRef.current, tlRef.current], { autoAlpha: 0 });
+      gsap.set(badgeRef.current, { autoAlpha: 0, scale: 0.82, rotation: -4, transformOrigin: '70% 20%' });
 
       /* Entrada al viewport */
       gsap.timeline({
         scrollTrigger: { trigger: sectionRef.current, start: 'top 82%', once: true },
-        onComplete: () => { entranceDoneRef.current = true; },
+        onComplete: () => {
+          entranceDoneRef.current = true;
+          /* Float ambiente: arrancar tras la entrada */
+          gsap.to(badgeRef.current, {
+            y: -8, duration: 3.5, ease: 'sine.inOut',
+            yoyo: true, repeat: -1,
+          });
+        },
       })
         .to(bannerWrapRef.current,
           { autoAlpha: 1, duration: 1.1, ease: 'power2.out' })
         .fromTo([textRef.current, tlRef.current],
           { autoAlpha: 0, y: 14 },
           { autoAlpha: 1, y: 0, duration: 0.5, stagger: 0.1, ease: 'power2.out' },
-          '-=0.5');
+          '-=0.5')
+        /* Badge entra como si cayera en posición */
+        .fromTo(badgeRef.current,
+          { autoAlpha: 0, scale: 0.82, rotation: -4 },
+          { autoAlpha: 1, scale: 1, rotation: 0, duration: 0.7, ease: 'back.out(1.4)' },
+          '-=0.6');
 
       /* Parallax por slot de capa — aplicado a los dos grupos */
       [...l66ImgRefs.current, ...l74ImgRefs.current].forEach((img, absIdx) => {
@@ -239,6 +262,23 @@ export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) 
           position: 'absolute', inset: 0, zIndex: 15, pointerEvents: 'none',
           background: 'linear-gradient(to top, rgba(0,0,0,0.82) 0%, rgba(0,0,0,0.1) 50%, transparent 100%)',
         }} />
+
+        {/* ── Badge 60 años — fijo, superior derecha ───────────── */}
+        <img
+          ref={badgeRef}
+          src="/images/60%20a%C3%B1os%20Arrendamientos%20Santa%20Fe.svg"
+          alt="60 años Arrendamientos Santa Fe"
+          style={{
+            position: 'absolute',
+            top:   'clamp(12px, 2.5vw, 28px)',
+            right: 'clamp(14px, 3vw, 36px)',
+            width: 'clamp(72px, 9vw, 130px)',
+            zIndex: 25,
+            pointerEvents: 'none',
+            display: 'block',
+            filter: 'drop-shadow(0 4px 14px rgba(0,0,0,0.45))',
+          }}
+        />
 
         {/* ── Texto + botón ────────────────────────────────────── */}
         <div ref={textRef} style={{
