@@ -87,6 +87,14 @@ export default function InstitucionalPage({ onNavigate }: InstitucionalPageProps
     <div className="min-h-screen" style={{ background: '#fff' }}>
 
       <style>{`
+        /* Swap subtítulos hero: desktop muestra corto, mobile muestra largo */
+        .inst-hero-sub-d { display: block; }
+        .inst-hero-sub-m { display: none; }
+        @media (max-width: 768px) {
+          .inst-hero-sub-d { display: none; }
+          .inst-hero-sub-m { display: block; }
+        }
+
         /* Desktop: grid con overlap 50% sobre el banner, ocultar cuadro mobile */
         @media (min-width: 769px) {
           .inst-cifras-grid {
@@ -122,7 +130,9 @@ export default function InstitucionalPage({ onNavigate }: InstitucionalPageProps
           >
             Sobre <span style={{ fontWeight: 700 }}>nosotros</span>
           </h1>
+          {/* Desktop: subtítulo corto */}
           <p
+            className="inst-hero-sub-d"
             style={{
               fontFamily: FONT, fontWeight: 300,
               fontSize: 'clamp(13px, 1.1vw, 16px)',
@@ -131,6 +141,19 @@ export default function InstitucionalPage({ onNavigate }: InstitucionalPageProps
             }}
           >
             Inmobiliaria antioqueña con más de 60 años de trayectoria.
+          </p>
+          {/* Mobile: subtítulo largo (swapped desde el banner) */}
+          <p
+            className="inst-hero-sub-m"
+            style={{
+              fontFamily: FONT, fontWeight: 300,
+              fontSize: 'clamp(13px, 1.1vw, 16px)',
+              color: '#fff',
+              margin: 0, maxWidth: '560px', lineHeight: 1.55,
+            }}
+          >
+            Desde 1966 acompañamos a personas, familias, propietarios, empresas e inversionistas
+            en decisiones de arrendamiento, venta, compra, administración y consignación de inmuebles.
           </p>
         </div>
       </section>
