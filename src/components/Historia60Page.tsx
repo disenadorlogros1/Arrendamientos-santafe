@@ -216,7 +216,24 @@ export default function Historia60Page({ onNavigate }: Props) {
 
       {/* ── Mobile carousel ─────────────────────────────────────── */}
       {isMobile && (
-        <div style={{ background: '#fff', paddingBottom: 24 }}>
+        <div style={{ background: DARK, paddingBottom: 24 }}>
+
+          {/* Texto encima del banner — reactivo a mobileIdx */}
+          <div style={{ padding: '20px 20px 14px' }}>
+            <h3 style={{
+              fontFamily: FONT, fontWeight: 800, fontSize: 20,
+              color: '#fff', lineHeight: 1.1, margin: '0 0 8px',
+            }}>
+              {EVENTS[mobileIdx].title}
+            </h3>
+            <p style={{
+              fontFamily: FONT, fontWeight: 400, fontSize: 13,
+              color: 'rgba(255,255,255,0.75)', lineHeight: 1.3, margin: 0,
+            }}>
+              {EVENTS[mobileIdx].body}
+            </p>
+          </div>
+
           <div
             ref={mobileScrollRef}
             onScroll={(e) => {
@@ -236,7 +253,8 @@ export default function Historia60Page({ onNavigate }: Props) {
                   minWidth: '100vw',
                   scrollSnapAlign: 'start',
                   position: 'relative',
-                  height: 'clamp(340px, 65dvh, 560px)',
+                  /* aspect-ratio exacto de las imágenes → sin recorte */
+                  aspectRatio: '1920/619',
                   flexShrink: 0,
                   overflow: 'hidden',
                 }}
@@ -256,30 +274,6 @@ export default function Historia60Page({ onNavigate }: Props) {
                     }}
                   />
                 ))}
-                <div style={{
-                  position: 'absolute',
-                  bottom: 'clamp(16px,3vh,32px)',
-                  left: 'clamp(16px,5vw,28px)',
-                  zIndex: 20,
-                  maxWidth: 'clamp(220px,80%,320px)',
-                  pointerEvents: 'none',
-                }}>
-                  <h3 style={{
-                    fontFamily: FONT, fontWeight: 700,
-                    fontSize: 'clamp(16px,4.5vw,26px)',
-                    color: '#fff', lineHeight: 1.2, margin: '0 0 8px',
-                  }}>
-                    {evt.title}
-                  </h3>
-                  <p style={{
-                    fontFamily: FONT, fontWeight: 300,
-                    fontSize: 'clamp(12px,3vw,14px)',
-                    color: 'rgba(255,255,255,0.75)',
-                    lineHeight: 1.7, margin: 0,
-                  }}>
-                    {evt.body}
-                  </p>
-                </div>
                 {pi === 0 && (
                   <img
                     src="/images/60%20a%C3%B1os%20Arrendamientos%20Santa%20Fe.svg"
@@ -300,8 +294,9 @@ export default function Historia60Page({ onNavigate }: Props) {
           {/* Timeline dots */}
           <div style={{
             display: 'flex', alignItems: 'center',
-            paddingTop: 20, paddingLeft: 16, paddingRight: 16,
+            paddingTop: 16, paddingLeft: 16, paddingRight: 16,
             position: 'relative', height: 52,
+            background: DARK,
           }}>
             <div style={{
               position: 'absolute', top: '50%',

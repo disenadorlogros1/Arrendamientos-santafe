@@ -93,6 +93,7 @@ export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) 
   const desktopTextRef  = useRef<HTMLDivElement>(null);
   const mobileTextRef   = useRef<HTMLDivElement>(null);
   const tlRef           = useRef<HTMLDivElement>(null);
+  const tlMobileRef     = useRef<HTMLDivElement>(null);
   const badgeRef        = useRef<HTMLDivElement>(null);
   const autoTimerRef    = useRef<ReturnType<typeof setInterval> | null>(null);
   const pauseTimerRef   = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -171,7 +172,7 @@ export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) 
       }
 
       gsap.set(bannerWrapRef.current, { autoAlpha: 0 });
-      gsap.set([desktopTextRef.current, mobileTextRef.current, tlRef.current], { autoAlpha: 0 });
+      gsap.set([desktopTextRef.current, mobileTextRef.current, tlRef.current, tlMobileRef.current], { autoAlpha: 0 });
       gsap.set(badgeRef.current, { autoAlpha: 0, scale: 0.82, rotation: -4, transformOrigin: '70% 20%' });
 
       gsap.timeline({
@@ -186,7 +187,7 @@ export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) 
       })
         .to(bannerWrapRef.current, { autoAlpha: 1, duration: 1.1, ease: 'power2.out' })
         .fromTo(
-          [desktopTextRef.current, mobileTextRef.current, tlRef.current],
+          [desktopTextRef.current, mobileTextRef.current, tlRef.current, tlMobileRef.current],
           { autoAlpha: 0, y: 14 },
           { autoAlpha: 1, y: 0, duration: 0.5, stagger: 0.07, ease: 'power2.out' },
           '-=0.5',
@@ -448,11 +449,11 @@ export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) 
           </div>
         </div>
 
-        {/* ── Timeline interactivo ───────────────────────── */}
-        <div ref={tlRef} style={{
+        {/* ── Timeline interactivo (solo desktop, dentro del banner) */}
+        <div ref={tlRef} className="hidden lg:block" style={{
           position: 'absolute', bottom: 0, left: 0, right: 0, zIndex: 20,
-          padding: isMobile ? '0 52px' : '0 clamp(24px,5vw,80px)',
-          height: isMobile ? '38px' : 'clamp(36px, 4vw, 52px)',
+          padding: '0 clamp(24px,5vw,80px)',
+          height: 'clamp(36px, 4vw, 52px)',
           display: 'flex', alignItems: 'center',
         }}>
           <div style={{ position: 'relative', flex: 1, height: '100%', display: 'flex', alignItems: 'center' }}>
@@ -487,9 +488,9 @@ export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) 
                   }} />
                   <span style={{
                     fontFamily: FONT,
-                    fontSize:   isMobile ? '11px' : 'clamp(9px, 0.75vw, 12px)',
+                    fontSize: 'clamp(9px, 0.75vw, 12px)',
                     fontWeight: isActive ? 700 : 400,
-                    color:      isActive ? RED : 'rgba(255,255,255,0.4)',
+                    color: isActive ? RED : 'rgba(255,255,255,0.4)',
                     lineHeight: 1, whiteSpace: 'nowrap',
                     transition: 'color 0.3s ease',
                   }}>
@@ -504,7 +505,63 @@ export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) 
       </div>
       {/* ════ FIN BANNER ══════════════════════════════════════ */}
 
-      {/* ════ MOBILE: CTA debajo del banner ══════════════════ */}
+      {/* ════ MOBILE: timeline bajo el banner ════════════════ */}
+      <div
+        ref={tlMobileRef}
+        className="lg:hidden"
+        style={{
+          padding: '0 52px',
+          height: '44px',
+          display: 'flex', alignItems: 'center',
+          background: '#0c0c0c',
+          position: 'relative',
+        }}
+      >
+        <div style={{ position: 'relative', flex: 1, height: '100%', display: 'flex', alignItems: 'center' }}>
+          <div style={{
+            position: 'absolute', top: '50%', left: 0, right: 0,
+            height: 1, background: 'rgba(255,255,255,0.22)', transform: 'translateY(-50%)',
+          }} />
+          {HITOS.map((hito, i) => {
+            const isActive = i === activeIdx;
+            return (
+              <div
+                key={hito.year}
+                role="button" tabIndex={0}
+                aria-label={`${hito.year}: ${hito.title}`}
+                aria-pressed={isActive}
+                onClick={() => handleClick(i)}
+                onKeyDown={e => e.key === 'Enter' && handleClick(i)}
+                style={{
+                  position: 'absolute',
+                  left: `${(i / (HITOS.length - 1)) * 100}%`,
+                  top: '50%', transform: 'translate(-50%, -50%)',
+                  display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 5,
+                  cursor: 'pointer', padding: '10px 8px',
+                }}
+              >
+                <div style={{
+                  width: isActive ? 10 : 7, height: isActive ? 10 : 7,
+                  borderRadius: '50%',
+                  background: isActive ? RED : 'rgba(255,255,255,0.35)',
+                  flexShrink: 0, transition: 'all 0.3s ease',
+                }} />
+                <span style={{
+                  fontFamily: FONT, fontSize: '11px',
+                  fontWeight: isActive ? 700 : 400,
+                  color: isActive ? RED : 'rgba(255,255,255,0.4)',
+                  lineHeight: 1, whiteSpace: 'nowrap',
+                  transition: 'color 0.3s ease',
+                }}>
+                  {hito.year}
+                </span>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* ════ MOBILE: CTA debajo del timeline ════════════════ */}
       <div className="lg:hidden">
         {ctaButton}
       </div>

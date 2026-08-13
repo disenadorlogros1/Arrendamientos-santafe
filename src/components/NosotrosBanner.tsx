@@ -163,7 +163,7 @@ export default function NosotrosBanner({ active, onSlideChange }: Props) {
                 Desktop → "Somos una inmobiliaria antioqueña con"
                 Mobile  → "Somos una inmobiliaria antioqueña"      */}
             <span>
-              Somos una inmobiliaria antioqueña
+              Una inmobiliaria antioqueña
               <span className="nb-con-out"> con</span>
             </span>
 
