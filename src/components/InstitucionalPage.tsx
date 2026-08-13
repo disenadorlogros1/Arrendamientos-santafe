@@ -3,6 +3,7 @@
 import { useRef, useEffect, useState } from 'react';
 import ScrollReveal from '@/components/ScrollReveal';
 import TrayectoriaBlock from '@/components/TrayectoriaBlock';
+import NosotrosBanner from '@/components/NosotrosBanner';
 import type { PageType } from '@/components/Header';
 
 const FONT = "'Avenir LT Std', 'Outfit', system-ui, sans-serif";
@@ -105,6 +106,9 @@ export default function InstitucionalPage({ onNavigate }: InstitucionalPageProps
           </p>
         </div>
       </section>
+
+      {/* ── Banner interactivo trayectoria ── */}
+      <NosotrosBanner />
 
       {/* ── Quiénes somos ── */}
       <section style={{ background: '#fff' }}>
