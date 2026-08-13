@@ -174,6 +174,7 @@ export default function NosotrosBanner({ active, onSlideChange }: Props) {
               fontWeight: 700,
               position: 'relative',
               overflow: 'hidden',
+              marginTop: '-0.28em',
             }}>
               <span style={{ position: 'relative', zIndex: 2 }}>
                 <span className="nb-con-in">con </span>

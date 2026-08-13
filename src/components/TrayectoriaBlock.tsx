@@ -197,21 +197,37 @@ export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) 
           { autoAlpha: 1, scale: 1, rotation: 0, duration: 0.7, ease: 'back.out(1.4)' },
           '-=0.6');
 
-      /* Parallax solo en desktop (no altera el aspect-ratio en mobile) */
       const isDesktop = window.innerWidth >= 1024;
-      if (!isDesktop) return;
 
-      [...l66ImgRefs.current, ...l74ImgRefs.current].forEach((img, absIdx) => {
-        if (!img) return;
-        gsap.to(img, {
-          y: PARALLAX_Y_DESKTOP[absIdx % 5],
-          ease: 'none',
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: 'top bottom', end: 'bottom top', scrub: 1.4,
-          },
+      if (isDesktop) {
+        /* Parallax desktop */
+        [...l66ImgRefs.current, ...l74ImgRefs.current].forEach((img, absIdx) => {
+          if (!img) return;
+          gsap.to(img, {
+            y: PARALLAX_Y_DESKTOP[absIdx % 5],
+            ease: 'none',
+            scrollTrigger: {
+              trigger: sectionRef.current,
+              start: 'top bottom', end: 'bottom top', scrub: 1.4,
+            },
+          });
         });
-      });
+      } else {
+        /* Float ambiente mobile — cada capa se mueve a su propio ritmo */
+        const FLOAT_Y   = [5, -8, 10, -6, 7];
+        const FLOAT_DUR = [9, 7,  8,  11, 6];
+        [...l66ImgRefs.current, ...l74ImgRefs.current].forEach((img, absIdx) => {
+          if (!img) return;
+          const li = absIdx % 5;
+          gsap.to(img, {
+            y: FLOAT_Y[li],
+            duration: FLOAT_DUR[li],
+            ease: 'sine.inOut',
+            yoyo: true,
+            repeat: -1,
+          });
+        });
+      }
     }, sectionRef);
 
     return () => ctx.revert();
@@ -315,6 +331,15 @@ export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) 
   /* ── Render ──────────────────────────────────────────────── */
   return (
     <section ref={sectionRef} className="w-full overflow-hidden" style={{ background: '#0c0c0c' }}>
+
+      <style>{`
+        .tray-tl-d { display: none; }
+        .tray-tl-m { display: flex; }
+        @media (min-width: 1024px) {
+          .tray-tl-d { display: flex; }
+          .tray-tl-m { display: none; }
+        }
+      `}</style>
 
       {/* ════ MOBILE: texto encima del banner ════════════════ */}
       {/*
@@ -454,7 +479,7 @@ export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) 
         </div>
 
         {/* ── Timeline interactivo (solo desktop, dentro del banner) */}
-        <div ref={tlRef} className="hidden lg:block" style={{
+        <div ref={tlRef} className="tray-tl-d" style={{
           position: 'absolute', bottom: 0, left: 0, right: 0, zIndex: 20,
           padding: '0 clamp(24px,5vw,80px)',
           height: 'clamp(36px, 4vw, 52px)',
@@ -512,7 +537,7 @@ export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) 
       {/* ════ MOBILE: timeline bajo el banner ════════════════ */}
       <div
         ref={tlMobileRef}
-        className="lg:hidden"
+        className="tray-tl-m"
         style={{
           padding: '0 52px',
           height: '44px',
