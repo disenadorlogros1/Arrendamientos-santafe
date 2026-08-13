@@ -341,11 +341,11 @@ export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) 
     <section ref={sectionRef} className="w-full overflow-hidden" style={{ background: '#0c0c0c' }}>
 
       <style>{`
-        .tray-tl-d { display: none; }
-        .tray-tl-m { display: flex; }
+        .tray-tl-d { display: none !important; align-items: center; }
+        .tray-tl-m { display: flex !important; align-items: center; }
         @media (min-width: 1024px) {
-          .tray-tl-d { display: flex; }
-          .tray-tl-m { display: none; }
+          .tray-tl-d { display: flex !important; }
+          .tray-tl-m { display: none !important; }
         }
       `}</style>
 
