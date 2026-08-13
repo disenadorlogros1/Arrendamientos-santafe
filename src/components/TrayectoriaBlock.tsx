@@ -7,20 +7,6 @@ import type { PageType } from '@/components/Header';
 
 gsap.registerPlugin(ScrollTrigger);
 
-function applyInkFill(e: React.MouseEvent<HTMLElement>) {
-  const el = e.currentTarget;
-  const rect = el.getBoundingClientRect();
-  const x = e.clientX - rect.left;
-  const y = e.clientY - rect.top;
-  const size = Math.max(
-    Math.hypot(x, y), Math.hypot(rect.width - x, y),
-    Math.hypot(x, rect.height - y), Math.hypot(rect.width - x, rect.height - y),
-  ) * 2;
-  el.style.setProperty('--x', `${x}px`);
-  el.style.setProperty('--y', `${y}px`);
-  el.style.setProperty('--size', `${size}px`);
-}
-
 interface TrayectoriaBlockProps {
   onNavigate: (page: PageType) => void;
 }
@@ -28,7 +14,6 @@ interface TrayectoriaBlockProps {
 const FONT = "'Avenir LT Std', 'Outfit', system-ui, sans-serif";
 const RED  = '#f32735';
 
-/* ── Layer sources — mismos que Historia60Page ─────────────────── */
 const L66 = [
   '/images/Linea%20de%20tiempo/1966-Fondo.webp',
   '/images/Linea%20de%20tiempo/1966-fecha-1.webp',
@@ -60,33 +45,83 @@ const HITOS = [
     body: 'Santa Fe celebra seis décadas de historia con la apertura de su sede en Rionegro.' },
 ] as const;
 
-/*
-  Parallax y-travel por slot de capa (0 = fondo … 4 = frente).
-  Fase 1 usa autoAlpha/scale → no toca y.
-  Fase 2 usa y              → no toca autoAlpha ni scale.
-  GSAP los compone en el mismo transform sin conflicto.
-*/
+/* Parallax y-travel por slot. Imágenes con top:-120px y height:calc(100%+240px)
+   dan ≥120px de margen para que ninguna capa se vea cortada. */
 const PARALLAX_Y = [40, -45, -70, -95, -120];
+
+/* ── Estilos del botón flecha ──────────────────────────────────── */
+const ARROW_BASE: React.CSSProperties = {
+  position: 'absolute',
+  top: '50%',
+  transform: 'translateY(-50%)',
+  zIndex: 30,
+  width: 40,
+  height: 40,
+  borderRadius: '50%',
+  background: 'rgba(255,255,255,0.14)',
+  backdropFilter: 'blur(8px)',
+  WebkitBackdropFilter: 'blur(8px)',
+  border: '1px solid rgba(255,255,255,0.28)',
+  color: '#fff',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  cursor: 'pointer',
+  padding: 0,
+};
+
+/* ── Estilos del botón CTA glass ──────────────────────────────── */
+const GLASS_BTN: React.CSSProperties = {
+  fontFamily: FONT,
+  fontWeight: 600,
+  color: '#fff',
+  background: 'rgba(255,255,255,0.28)',
+  backdropFilter: 'blur(10px)',
+  WebkitBackdropFilter: 'blur(10px)',
+  border: '1.5px solid rgba(255,255,255,0.5)',
+  borderRadius: 4,
+  cursor: 'pointer',
+  letterSpacing: '0.02em',
+  whiteSpace: 'nowrap' as const,
+};
+
+function ChevronLeft() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+      <polyline points="15 18 9 12 15 6" />
+    </svg>
+  );
+}
+function ChevronRight() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+      <polyline points="9 18 15 12 9 6" />
+    </svg>
+  );
+}
 
 export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) {
   const [activeIdx,  setActiveIdx]  = useState(0);
-  const [displayIdx, setDisplayIdx] = useState(0); // idx del texto visible (rezagado al crossfade)
+  const [displayIdx, setDisplayIdx] = useState(0);
   const [isMobile,   setIsMobile]   = useState(false);
 
-  const sectionRef      = useRef<HTMLElement>(null);
-  const bannerWrapRef   = useRef<HTMLDivElement>(null);
-  const l66ImgRefs      = useRef<(HTMLImageElement | null)[]>([]);
-  const l74ImgRefs      = useRef<(HTMLImageElement | null)[]>([]);
-  const textRef         = useRef<HTMLDivElement>(null);
-  const tlRef           = useRef<HTMLDivElement>(null);
-  const badgeRef        = useRef<HTMLImageElement>(null);
-  const autoTimerRef    = useRef<ReturnType<typeof setInterval> | null>(null);
-  const pauseTimerRef   = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const entranceDoneRef = useRef(false);
+  const sectionRef        = useRef<HTMLElement>(null);
+  const bannerWrapRef     = useRef<HTMLDivElement>(null);
+  const l66ImgRefs        = useRef<(HTMLImageElement | null)[]>([]);
+  const l74ImgRefs        = useRef<(HTMLImageElement | null)[]>([]);
+  const desktopTextRef    = useRef<HTMLDivElement>(null);  // texto dentro del banner (desktop)
+  const mobileTextRef     = useRef<HTMLDivElement>(null);  // texto encima del banner (mobile)
+  const tlRef             = useRef<HTMLDivElement>(null);
+  const badgeRef          = useRef<HTMLImageElement>(null);
+  const autoTimerRef      = useRef<ReturnType<typeof setInterval> | null>(null);
+  const pauseTimerRef     = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const entranceDoneRef   = useRef(false);
 
   const activeSet = HITOS[activeIdx].set;
 
-  /* ── Detectar mobile ──────────────────────────────────────── */
+  /* ── Mobile detection ─────────────────────────────────────── */
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 1024);
     check();
@@ -94,7 +129,7 @@ export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) 
     return () => window.removeEventListener('resize', check);
   }, []);
 
-  /* ── Auto-rotación (solo mobile) ─────────────────────────── */
+  /* ── Auto-rotate (mobile only) ────────────────────────────── */
   const startAutoRotate = useCallback(() => {
     if (autoTimerRef.current) clearInterval(autoTimerRef.current);
     autoTimerRef.current = setInterval(() => {
@@ -117,27 +152,26 @@ export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) 
     };
   }, [isMobile, startAutoRotate]);
 
-  /* ── Crossfade del texto al cambiar año ──────────────────── */
+  /* ── Crossfade de texto al cambiar año ───────────────────── */
   useEffect(() => {
-    if (!textRef.current) return;
+    const targets = [desktopTextRef.current, mobileTextRef.current].filter(Boolean);
 
-    // Antes de la entrada: sincronizar sin animación
     if (!entranceDoneRef.current) {
       setDisplayIdx(activeIdx);
       return;
     }
 
-    gsap.killTweensOf(textRef.current);
-    gsap.to(textRef.current, {
+    gsap.killTweensOf(targets);
+    gsap.to(targets, {
       opacity: 0, duration: 0.18, ease: 'power1.in',
       onComplete: () => {
         setDisplayIdx(activeIdx);
-        gsap.to(textRef.current, { opacity: 1, duration: 0.35, ease: 'power2.out' });
+        gsap.to(targets, { opacity: 1, duration: 0.35, ease: 'power2.out' });
       },
     });
 
-    // Micro-pulse del badge al cambiar de año
-    if (badgeRef.current && entranceDoneRef.current) {
+    // Badge pulse
+    if (badgeRef.current) {
       gsap.killTweensOf(badgeRef.current, 'scale');
       gsap.to(badgeRef.current, {
         keyframes: [{ scale: 1.07, duration: 0.18 }, { scale: 1, duration: 0.25 }],
@@ -152,41 +186,37 @@ export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) 
 
     const ctx = gsap.context(() => {
       if (reduced) {
-        gsap.set(bannerWrapRef.current, { autoAlpha: 1 });
+        gsap.set([bannerWrapRef.current, desktopTextRef.current, mobileTextRef.current], { autoAlpha: 1 });
         entranceDoneRef.current = true;
         return;
       }
 
-      /* Estado inicial: banner invisible + badge oculto */
       gsap.set(bannerWrapRef.current, { autoAlpha: 0 });
-      gsap.set([textRef.current, tlRef.current], { autoAlpha: 0 });
+      gsap.set([desktopTextRef.current, mobileTextRef.current, tlRef.current], { autoAlpha: 0 });
       gsap.set(badgeRef.current, { autoAlpha: 0, scale: 0.82, rotation: -4, transformOrigin: '70% 20%' });
 
-      /* Entrada al viewport */
       gsap.timeline({
         scrollTrigger: { trigger: sectionRef.current, start: 'top 82%', once: true },
         onComplete: () => {
           entranceDoneRef.current = true;
-          /* Float ambiente: arrancar tras la entrada */
           gsap.to(badgeRef.current, {
-            y: -8, duration: 3.5, ease: 'sine.inOut',
-            yoyo: true, repeat: -1,
+            y: -8, duration: 3.5, ease: 'sine.inOut', yoyo: true, repeat: -1,
           });
         },
       })
-        .to(bannerWrapRef.current,
-          { autoAlpha: 1, duration: 1.1, ease: 'power2.out' })
-        .fromTo([textRef.current, tlRef.current],
+        .to(bannerWrapRef.current, { autoAlpha: 1, duration: 1.1, ease: 'power2.out' })
+        .fromTo(
+          [desktopTextRef.current, mobileTextRef.current, tlRef.current],
           { autoAlpha: 0, y: 14 },
-          { autoAlpha: 1, y: 0, duration: 0.5, stagger: 0.1, ease: 'power2.out' },
-          '-=0.5')
-        /* Badge entra como si cayera en posición */
+          { autoAlpha: 1, y: 0, duration: 0.5, stagger: 0.07, ease: 'power2.out' },
+          '-=0.5',
+        )
         .fromTo(badgeRef.current,
           { autoAlpha: 0, scale: 0.82, rotation: -4 },
           { autoAlpha: 1, scale: 1, rotation: 0, duration: 0.7, ease: 'back.out(1.4)' },
           '-=0.6');
 
-      /* Parallax por slot de capa — aplicado a los dos grupos */
+      /* Parallax — imágenes tienen 120px extra arriba y abajo */
       [...l66ImgRefs.current, ...l74ImgRefs.current].forEach((img, absIdx) => {
         if (!img) return;
         gsap.to(img, {
@@ -205,7 +235,13 @@ export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) 
     return () => ctx.revert();
   }, []);
 
-  /* ── Handlers de interacción ─────────────────────────────── */
+  /* ── Navegación ──────────────────────────────────────────── */
+  const goTo = (idx: number) => {
+    const next = ((idx % HITOS.length) + HITOS.length) % HITOS.length;
+    setActiveIdx(next);
+    if (isMobile) pauseAutoRotate();
+  };
+
   const handleHover = (idx: number) => {
     if (isMobile || idx === activeIdx) return;
     setActiveIdx(idx);
@@ -216,14 +252,80 @@ export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) 
     if (isMobile) pauseAutoRotate();
   };
 
+  /* ── Contenido de texto compartido ──────────────────────── */
+  const yearLabel = (
+    <p style={{
+      fontFamily: FONT, fontWeight: 700,
+      fontSize: '11px', letterSpacing: '0.1em',
+      color: RED, margin: '0 0 8px', textTransform: 'uppercase',
+    }}>
+      {HITOS[displayIdx].year}
+    </p>
+  );
+
+  const heading = (
+    <h2 style={{
+      fontFamily: FONT, fontWeight: 800,
+      fontSize: isMobile ? '20px' : 'clamp(22px, 2.5vw, 36px)',
+      color: '#fff', lineHeight: 1.15, margin: '0 0 10px',
+    }}>
+      {HITOS[displayIdx].title}
+    </h2>
+  );
+
+  const body = (
+    <p style={{
+      fontFamily: FONT, fontWeight: 400,
+      fontSize: isMobile ? '13px' : 'clamp(14px, 1.15vw, 18px)',
+      color: 'rgba(255,255,255,0.75)',
+      lineHeight: 1.6, margin: 0,
+    }}>
+      {HITOS[displayIdx].body}
+    </p>
+  );
+
+  const ctaButton = (
+    <button
+      type="button"
+      onClick={() => { onNavigate('historia-60'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+      style={{
+        ...GLASS_BTN,
+        fontSize: isMobile ? '13px' : 'clamp(12px, 0.9vw, 14px)',
+        height: isMobile ? 46 : 42,
+        padding: '0 22px',
+      }}
+    >
+      Conocer nuestra historia
+    </button>
+  );
+
+  /* ── Render ──────────────────────────────────────────────── */
   return (
     <section ref={sectionRef} className="w-full overflow-hidden" style={{ background: '#0c0c0c' }}>
+
+      {/* ════ MOBILE: texto encima del banner ════════════════ */}
+      <div
+        ref={mobileTextRef}
+        className="lg:hidden"
+        style={{ padding: '22px 20px 14px' }}
+      >
+        {yearLabel}
+        {heading}
+        {body}
+      </div>
+
+      {/* ════ BANNER ══════════════════════════════════════════ */}
       <div
         ref={bannerWrapRef}
-        style={{ position: 'relative', width: '100%', height: 'clamp(260px, 40vw, 600px)', overflow: 'hidden' }}
+        style={{
+          position: 'relative',
+          width: '100%',
+          height: isMobile ? '280px' : 'clamp(360px, 42vw, 620px)',
+          overflow: 'hidden',
+        }}
       >
 
-        {/* ── Grupo L66 (1966 / 2006 / 2018) ─────────────────── */}
+        {/* ── Grupo L66 ─────────────────────────────────── */}
         <div style={{
           position: 'absolute', inset: 0,
           opacity: activeSet === 'L66' ? 1 : 0,
@@ -233,14 +335,19 @@ export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) 
           {L66.map((src, i) => (
             <img key={i} ref={el => { l66ImgRefs.current[i] = el; }}
               src={src} alt="" aria-hidden
-              style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
+              style={{
+                position: 'absolute',
+                top: '-120px', left: 0,
+                width: '100%',
+                height: 'calc(100% + 240px)',
                 objectFit: 'cover', objectPosition: '50% 50%',
-                zIndex: Z[i], pointerEvents: 'none', display: 'block' }}
+                zIndex: Z[i], pointerEvents: 'none', display: 'block',
+              }}
             />
           ))}
         </div>
 
-        {/* ── Grupo L74 (1974 / 2017 / 2026) ─────────────────── */}
+        {/* ── Grupo L74 ─────────────────────────────────── */}
         <div style={{
           position: 'absolute', inset: 0,
           opacity: activeSet === 'L74' ? 1 : 0,
@@ -250,29 +357,46 @@ export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) 
           {L74.map((src, i) => (
             <img key={i} ref={el => { l74ImgRefs.current[i] = el; }}
               src={src} alt="" aria-hidden
-              style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
+              style={{
+                position: 'absolute',
+                top: '-120px', left: 0,
+                width: '100%',
+                height: 'calc(100% + 240px)',
                 objectFit: 'cover', objectPosition: '50% 50%',
-                zIndex: Z[i], pointerEvents: 'none', display: 'block' }}
+                zIndex: Z[i], pointerEvents: 'none', display: 'block',
+              }}
             />
           ))}
         </div>
 
-        {/* ── Gradiente inferior ───────────────────────────────── */}
-        <div style={{
-          position: 'absolute', inset: 0, zIndex: 15, pointerEvents: 'none',
-          background: 'linear-gradient(to top, rgba(0,0,0,0.82) 0%, rgba(0,0,0,0.1) 50%, transparent 100%)',
-        }} />
+        {/* ── Gradiente inferior (desktop: legibilidad del texto) */}
+        <div
+          className="hidden lg:block"
+          style={{
+            position: 'absolute', inset: 0, zIndex: 15, pointerEvents: 'none',
+            background: 'linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.12) 52%, transparent 100%)',
+          }}
+        />
 
-        {/* ── Badge 60 años — fijo, superior derecha ───────────── */}
+        {/* ── Gradiente sutil mobile (oscurece bordes) ─────── */}
+        <div
+          className="lg:hidden"
+          style={{
+            position: 'absolute', inset: 0, zIndex: 15, pointerEvents: 'none',
+            background: 'linear-gradient(to bottom, rgba(0,0,0,0.35) 0%, transparent 40%, transparent 60%, rgba(0,0,0,0.5) 100%)',
+          }}
+        />
+
+        {/* ── Badge 60 años ──────────────────────────────── */}
         <img
           ref={badgeRef}
           src="/images/60%20a%C3%B1os%20Arrendamientos%20Santa%20Fe.svg"
           alt="60 años Arrendamientos Santa Fe"
           style={{
             position: 'absolute',
-            top:   'clamp(12px, 2.5vw, 28px)',
-            right: 'clamp(14px, 3vw, 36px)',
-            width: 'clamp(72px, 9vw, 130px)',
+            top:   isMobile ? '10px' : 'clamp(12px, 2.5vw, 28px)',
+            right: isMobile ? '56px' : 'clamp(60px, 6vw, 80px)',
+            width: isMobile ? '64px' : 'clamp(80px, 9vw, 130px)',
             zIndex: 25,
             pointerEvents: 'none',
             display: 'block',
@@ -280,48 +404,55 @@ export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) 
           }}
         />
 
-        {/* ── Texto + botón ────────────────────────────────────── */}
-        <div ref={textRef} style={{
-          position: 'absolute',
-          bottom: 'clamp(52px, 8vw, 88px)',
-          left:   'clamp(20px, 5vw, 72px)',
-          zIndex: 20, maxWidth: 'clamp(220px, 36vw, 460px)',
-        }}>
-          <h2 style={{
-            fontFamily: FONT, fontWeight: 700,
-            fontSize: 'clamp(15px, 1.8vw, 26px)',
-            color: '#fff', lineHeight: 1.2, margin: '0 0 8px',
-          }}>
-            {HITOS[displayIdx].title}
-          </h2>
-          <p style={{
-            fontFamily: FONT, fontWeight: 300,
-            fontSize: 'clamp(11px, 0.9vw, 14px)',
-            color: 'rgba(255,255,255,0.65)',
-            lineHeight: 1.65, margin: '0 0 16px',
-          }}>
-            {HITOS[displayIdx].body}
-          </p>
-          <button
-            type="button"
-            onClick={() => { onNavigate('historia-60'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-            onMouseEnter={applyInkFill}
-            onMouseLeave={applyInkFill}
-            className="btn-red-outline"
-            style={{ fontSize: 'clamp(11px, 0.85vw, 13px)', height: 38, padding: '0 18px' }}
-          >
-            <span>Conocer nuestra historia</span>
-          </button>
+        {/* ── Flecha izquierda ───────────────────────────── */}
+        <button
+          type="button"
+          aria-label="Año anterior"
+          onClick={() => goTo(activeIdx - 1)}
+          style={{ ...ARROW_BASE, left: isMobile ? 8 : 16 }}
+        >
+          <ChevronLeft />
+        </button>
+
+        {/* ── Flecha derecha ─────────────────────────────── */}
+        <button
+          type="button"
+          aria-label="Año siguiente"
+          onClick={() => goTo(activeIdx + 1)}
+          style={{ ...ARROW_BASE, right: isMobile ? 8 : 16 }}
+        >
+          <ChevronRight />
+        </button>
+
+        {/* ── DESKTOP: texto sobreimpreso en el banner ───── */}
+        <div
+          ref={desktopTextRef}
+          className="hidden lg:block"
+          style={{
+            position: 'absolute',
+            bottom: 'clamp(56px, 8vw, 100px)',
+            left:   'clamp(24px, 5vw, 80px)',
+            zIndex: 20,
+            maxWidth: 'clamp(280px, 38vw, 520px)',
+          }}
+        >
+          {yearLabel}
+          {heading}
+          {body}
+          <div style={{ marginTop: 22 }}>
+            {ctaButton}
+          </div>
         </div>
 
-        {/* ── Timeline interactivo ─────────────────────────────── */}
+        {/* ── Timeline interactivo ───────────────────────── */}
         <div ref={tlRef} style={{
           position: 'absolute', bottom: 0, left: 0, right: 0, zIndex: 20,
-          padding: '0 clamp(20px,5vw,72px)',
-          height: 'clamp(36px, 4vw, 52px)',
+          padding: isMobile ? '0 52px' : '0 clamp(24px,5vw,80px)',
+          height: isMobile ? '42px' : 'clamp(36px, 4vw, 52px)',
           display: 'flex', alignItems: 'center',
         }}>
           <div style={{ position: 'relative', flex: 1, height: '100%', display: 'flex', alignItems: 'center' }}>
+
             {/* Línea base */}
             <div style={{
               position: 'absolute', top: '50%', left: 0, right: 0,
@@ -349,7 +480,7 @@ export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) 
                     transform: 'translate(-50%, -50%)',
                     display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 5,
                     cursor: 'pointer',
-                    padding: '10px 8px', /* área táctil generosa */
+                    padding: '10px 8px',
                   }}
                 >
                   <div style={{
@@ -362,7 +493,7 @@ export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) 
                   }} />
                   <span style={{
                     fontFamily: FONT,
-                    fontSize:   'clamp(8px, 0.7vw, 11px)',
+                    fontSize:   isMobile ? '9px' : 'clamp(8px, 0.7vw, 11px)',
                     fontWeight: isActive ? 700 : 400,
                     color:      isActive ? RED : 'rgba(255,255,255,0.4)',
                     lineHeight: 1, whiteSpace: 'nowrap',
@@ -377,6 +508,16 @@ export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) 
         </div>
 
       </div>
+      {/* ════ FIN BANNER ══════════════════════════════════════ */}
+
+      {/* ════ MOBILE: CTA debajo del banner ══════════════════ */}
+      <div
+        className="lg:hidden"
+        style={{ padding: '14px 20px 26px', background: '#0c0c0c' }}
+      >
+        {ctaButton}
+      </div>
+
     </section>
   );
 }
