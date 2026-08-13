@@ -1,6 +1,11 @@
 'use client';
 
+import { useRef, useEffect } from 'react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import type { PageType } from '@/components/Header';
+
+gsap.registerPlugin(ScrollTrigger);
 
 function applyInkFill(e: React.MouseEvent<HTMLElement>) {
   const el = e.currentTarget;
@@ -25,7 +30,6 @@ const RED  = '#f32735';
 
 const YEARS = ['1966', '1974', '2006', '2017', '2018', '2026'];
 
-/* Las mismas capas que Historia60Page usa para el panel 1966 */
 const LAYERS = [
   { src: '/images/Linea%20de%20tiempo/1966-Fondo.webp',            z: 2 },
   { src: '/images/Linea%20de%20tiempo/1966-fecha-1.webp',          z: 4 },
@@ -34,17 +38,111 @@ const LAYERS = [
   { src: '/images/Linea%20de%20tiempo/1966-superior.webp',         z: 10 },
 ];
 
-export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) {
-  return (
-    <section className="w-full overflow-hidden" style={{ background: '#0c0c0c' }}>
+/*
+  Parallax rates (y travel in px across the full scroll range of the section).
+  Positive = layer moves DOWN as user scrolls (appears farther away).
+  Negative = layer moves UP faster than container (appears closer).
 
-      {/* ── Banner panorámico ── */}
+  Fase 1 usa autoAlpha + scale  → no usa la propiedad y
+  Fase 2 usa y                  → no usa autoAlpha ni scale
+  → cero conflicto entre fases; GSAP compone ambas en el mismo transform.
+*/
+const PARALLAX = [
+   40,   // Fondo: lento, parece lejano
+  -45,   // fecha-1: sube moderado
+  -70,   // fecha-2: sube más
+  -95,   // recorte-superior: sube bastante
+ -120,   // superior: sube más — se percibe al frente
+];
+
+export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) {
+  const sectionRef  = useRef<HTMLElement>(null);
+  const imgRefs     = useRef<(HTMLImageElement | null)[]>([]);
+  const textRef     = useRef<HTMLDivElement>(null);
+  const tlRef       = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    const ctx = gsap.context(() => {
+      const imgs = imgRefs.current.filter(Boolean) as HTMLImageElement[];
+
+      /* ── Estado inicial: invisible ── */
+      gsap.set([...imgs, textRef.current, tlRef.current], { autoAlpha: 0 });
+
+      /* ══ FASE 1 — Entrada escalonada al viewport ══════════════
+         Usa solo autoAlpha (opacity+visibility) y scale.
+         NO toca la propiedad y → sin conflicto con Fase 2.        */
+      const entrance = gsap.timeline({
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: 'top 82%',
+          once: true,
+        },
+      });
+
+      /* Fondo: fade in + ligero zoom-out */
+      entrance.fromTo(imgs[0],
+        { autoAlpha: 0, scale: 1.07 },
+        { autoAlpha: 1, scale: 1, duration: 1.25, ease: 'power2.out' }
+      );
+
+      /* Capas del año (fecha-1, fecha-2): se revelan con stagger */
+      if (imgs[1] && imgs[2]) {
+        entrance.fromTo([imgs[1], imgs[2]],
+          { autoAlpha: 0 },
+          { autoAlpha: 1, duration: 0.70, stagger: 0.20, ease: 'power2.out' },
+          '-=0.85'
+        );
+      }
+
+      /* Recortes fotográficos */
+      if (imgs[3] && imgs[4]) {
+        entrance.fromTo([imgs[3], imgs[4]],
+          { autoAlpha: 0 },
+          { autoAlpha: 1, duration: 0.65, stagger: 0.14, ease: 'power2.out' },
+          '-=0.50'
+        );
+      }
+
+      /* Texto y timeline */
+      entrance.fromTo([textRef.current, tlRef.current],
+        { autoAlpha: 0, y: 14 },
+        { autoAlpha: 1, y: 0, duration: 0.50, stagger: 0.10, ease: 'power2.out' },
+        '-=0.35'
+      );
+
+      /* ══ FASE 2 — Parallax continuo mientras se hace scroll ══
+         Usa solo y (translateY).
+         NO toca autoAlpha ni scale → sin conflicto con Fase 1.    */
+      imgs.forEach((img, i) => {
+        if (!img) return;
+        gsap.to(img, {
+          y: PARALLAX[i],
+          ease: 'none',
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: 'top bottom',
+            end:   'bottom top',
+            scrub: 1.4,
+          },
+        });
+      });
+
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
+
+  return (
+    <section ref={sectionRef} className="w-full overflow-hidden" style={{ background: '#0c0c0c' }}>
+
       <div style={{ position: 'relative', width: '100%', height: 'clamp(260px, 40vw, 600px)', overflow: 'hidden' }}>
 
-        {/* Capas de imagen (idénticas a Historia60Page panel 1) */}
         {LAYERS.map((layer, i) => (
           <img
             key={i}
+            ref={el => { imgRefs.current[i] = el; }}
             src={layer.src}
             alt=""
             aria-hidden
@@ -57,21 +155,24 @@ export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) 
           />
         ))}
 
-        {/* Degradado inferior para texto legible */}
+        {/* Degradado inferior */}
         <div style={{
           position: 'absolute', inset: 0, zIndex: 15,
           background: 'linear-gradient(to top, rgba(0,0,0,0.82) 0%, rgba(0,0,0,0.1) 50%, transparent 100%)',
           pointerEvents: 'none',
         }} />
 
-        {/* Texto + botón — abajo izquierda */}
-        <div style={{
-          position: 'absolute',
-          bottom: 'clamp(52px, 8vw, 88px)',
-          left: 'clamp(20px, 5vw, 72px)',
-          zIndex: 20,
-          maxWidth: 'clamp(220px, 36vw, 460px)',
-        }}>
+        {/* Texto + botón */}
+        <div
+          ref={textRef}
+          style={{
+            position: 'absolute',
+            bottom: 'clamp(52px, 8vw, 88px)',
+            left: 'clamp(20px, 5vw, 72px)',
+            zIndex: 20,
+            maxWidth: 'clamp(220px, 36vw, 460px)',
+          }}
+        >
           <h2 style={{
             fontFamily: FONT, fontWeight: 700,
             fontSize: 'clamp(15px, 1.8vw, 26px)',
@@ -100,28 +201,23 @@ export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) 
           </button>
         </div>
 
-        {/* Timeline — borde inferior del banner */}
-        <div style={{
-          position: 'absolute', bottom: 0, left: 0, right: 0,
-          zIndex: 20,
-          padding: '0 clamp(20px,5vw,72px)',
-          height: 'clamp(36px, 4vw, 52px)',
-          display: 'flex', alignItems: 'center',
-        }}>
+        {/* Timeline */}
+        <div
+          ref={tlRef}
+          style={{
+            position: 'absolute', bottom: 0, left: 0, right: 0,
+            zIndex: 20,
+            padding: '0 clamp(20px,5vw,72px)',
+            height: 'clamp(36px, 4vw, 52px)',
+            display: 'flex', alignItems: 'center',
+          }}
+        >
           <div style={{ position: 'relative', flex: 1, height: '100%', display: 'flex', alignItems: 'center' }}>
-            {/* Línea base */}
             <div style={{
               position: 'absolute', top: '50%', left: 0, right: 0,
               height: 1, background: 'rgba(255,255,255,0.22)',
               transform: 'translateY(-50%)',
             }} />
-            {/* Segmento rojo — solo hasta el primer punto (1966, index 0, left=0%) */}
-            <div style={{
-              position: 'absolute', top: '50%', left: 0, width: 0,
-              height: 1, background: RED,
-              transform: 'translateY(-50%)',
-            }} />
-            {/* Puntos y años */}
             {YEARS.map((year, i) => (
               <div key={year} style={{
                 position: 'absolute',
