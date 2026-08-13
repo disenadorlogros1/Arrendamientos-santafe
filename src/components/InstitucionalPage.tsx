@@ -87,19 +87,19 @@ export default function InstitucionalPage({ onNavigate }: InstitucionalPageProps
     <div className="min-h-screen" style={{ background: '#fff' }}>
 
       <style>{`
-        /* Desktop: grid con overlap 50% sobre el banner */
+        /* Desktop: grid con overlap 50% sobre el banner, ocultar cuadro mobile */
         @media (min-width: 769px) {
           .inst-cifras-grid {
             margin-top: -80px;
             position: relative;
             z-index: 10;
           }
-          .inst-mobile-cifra { display: none !important; }
+          .inst-mobile-cifra  { display: none !important; }
         }
-        /* Mobile: cuadro único + ocultar grid desktop */
+        /* Mobile: ocultar sección desktop entera (evita espaciado fantasma), mostrar cuadro único */
         @media (max-width: 768px) {
-          .inst-cifras-grid { display: none !important; }
-          .inst-mobile-cifra { display: block; }
+          .inst-cifras-section { display: none !important; }
+          .inst-mobile-cifra  { display: block; }
         }
       `}</style>
 
@@ -138,20 +138,33 @@ export default function InstitucionalPage({ onNavigate }: InstitucionalPageProps
       {/* ── Banner interactivo ── */}
       <NosotrosBanner active={activeSlide} onSlideChange={setActiveSlide} />
 
-      {/* ── Cuadro único mobile (rota con el banner) ── */}
-      <div className="inst-mobile-cifra" style={{ background: '#fff', padding: '0 clamp(16px, 4vw, 24px)' }}>
+      {/* ── Cuadro único mobile: 50% sobre el banner, 50% en la parte blanca ── */}
+      <div
+        className="inst-mobile-cifra"
+        style={{
+          position: 'relative',
+          zIndex: 10,
+          marginTop: '-60px',
+          padding: '0 16px',
+          paddingBottom: 24,
+        }}
+      >
         <div
           style={{
-            padding: 'clamp(24px, 5vw, 36px) clamp(16px, 4vw, 24px)',
+            height: 120,
+            boxSizing: 'border-box',
+            overflow: 'hidden',
+            padding: '20px 20px',
             background: '#f5f5f5',
-            borderTop: `3px solid ${RED}`,
-            display: 'flex', gap: 20, alignItems: 'center',
-            transition: 'opacity 0.3s ease',
+            display: 'flex',
+            gap: 20,
+            alignItems: 'center',
+            boxShadow: '0 -6px 20px rgba(0,0,0,0.18), 0 4px 12px rgba(0,0,0,0.06)',
           }}
         >
           <span style={{
             fontFamily: FONT, fontWeight: 900,
-            fontSize: 'clamp(36px, 8vw, 52px)',
+            fontSize: 'clamp(32px, 7vw, 46px)',
             color: RED, lineHeight: 1, flexShrink: 0,
           }}>
             0{activeSlide + 1}
@@ -159,8 +172,8 @@ export default function InstitucionalPage({ onNavigate }: InstitucionalPageProps
           {currentCifra.type === 'count' ? (
             <p style={{
               fontFamily: FONT, fontWeight: 300,
-              fontSize: 'clamp(13px, 3.5vw, 16px)',
-              color: '#555', lineHeight: 1.55, margin: 0,
+              fontSize: 'clamp(12px, 3.2vw, 15px)',
+              color: '#555', lineHeight: 1.5, margin: 0,
             }}>
               <span style={{ fontWeight: 700 }}>
                 <CountUp to={currentCifra.num} prefix={currentCifra.prefix} />
@@ -170,8 +183,8 @@ export default function InstitucionalPage({ onNavigate }: InstitucionalPageProps
           ) : (
             <p style={{
               fontFamily: FONT, fontWeight: 300,
-              fontSize: 'clamp(13px, 3.5vw, 16px)',
-              color: '#555', lineHeight: 1.55, margin: 0,
+              fontSize: 'clamp(12px, 3.2vw, 15px)',
+              color: '#555', lineHeight: 1.5, margin: 0,
             }}>
               {currentCifra.text}
             </p>
@@ -179,10 +192,9 @@ export default function InstitucionalPage({ onNavigate }: InstitucionalPageProps
         </div>
       </div>
 
-      {/* ── Cifras desktop (overlap 50% sobre banner) ── */}
-      <section style={{ background: '#fff' }}>
+      {/* ── Cifras desktop (oculta en mobile, overlap sobre el banner) ── */}
+      <section className="inst-cifras-section" style={{ background: '#fff' }}>
         <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '0 clamp(20px, 4vw, 52px) 56px' }}>
-
           <div
             className="grid grid-cols-1 md:grid-cols-3 inst-cifras-grid"
             style={{ gap: 'clamp(10px, 1.2vw, 16px)' }}
@@ -202,14 +214,12 @@ export default function InstitucionalPage({ onNavigate }: InstitucionalPageProps
                     boxSizing: 'border-box',
                     boxShadow: '0 -6px 28px rgba(0,0,0,0.10), 0 4px 16px rgba(0,0,0,0.06)',
                     transform: hoveredCifra === i ? 'scale(1.04)' : 'scale(1)',
-                    transition: 'transform 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94), border-top-color 0.2s',
-                    borderTop: `3px solid ${i === activeSlide ? RED : 'transparent'}`,
+                    transition: 'transform 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
                     cursor: 'pointer',
                     zIndex: hoveredCifra === i ? 1 : 0,
                     position: 'relative',
                   }}
                 >
-                  {/* Número de serie */}
                   <span
                     style={{
                       fontFamily: FONT, fontWeight: 900,
@@ -219,27 +229,21 @@ export default function InstitucionalPage({ onNavigate }: InstitucionalPageProps
                   >
                     0{i + 1}
                   </span>
-
-                  {/* Contenido */}
                   {cifra.type === 'count' ? (
-                    <p
-                      style={{
-                        fontFamily: FONT, fontWeight: 300,
-                        fontSize: 'clamp(13px, 1vw, 16px)',
-                        color: '#555', lineHeight: 1.55, margin: 0,
-                      }}
-                    >
+                    <p style={{
+                      fontFamily: FONT, fontWeight: 300,
+                      fontSize: 'clamp(13px, 1vw, 16px)',
+                      color: '#555', lineHeight: 1.55, margin: 0,
+                    }}>
                       <span style={{ fontWeight: 700 }}><CountUp to={cifra.num} prefix={cifra.prefix} /></span>
                       {' '}{cifra.label}
                     </p>
                   ) : (
-                    <p
-                      style={{
-                        fontFamily: FONT, fontWeight: 300,
-                        fontSize: 'clamp(13px, 1vw, 16px)',
-                        color: '#555', lineHeight: 1.55, margin: 0,
-                      }}
-                    >
+                    <p style={{
+                      fontFamily: FONT, fontWeight: 300,
+                      fontSize: 'clamp(13px, 1vw, 16px)',
+                      color: '#555', lineHeight: 1.55, margin: 0,
+                    }}>
                       {cifra.text}
                     </p>
                   )}
@@ -247,13 +251,12 @@ export default function InstitucionalPage({ onNavigate }: InstitucionalPageProps
               </ScrollReveal>
             ))}
           </div>
-
         </div>
       </section>
 
       {/* ── Por qué confiar ── */}
       <section style={{ background: '#fff' }}>
-        <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '32px clamp(20px, 4vw, 52px) 56px' }}>
+        <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '56px clamp(20px, 4vw, 52px) 56px' }}>
 
           <ScrollReveal y={20}>
             <h2
@@ -269,13 +272,9 @@ export default function InstitucionalPage({ onNavigate }: InstitucionalPageProps
             </h2>
           </ScrollReveal>
 
-          {/* Grid razones 3×1 */}
           <div
             className="grid grid-cols-1 md:grid-cols-3"
-            style={{
-              marginTop: 40,
-              gap: 'clamp(10px, 1.2vw, 16px)',
-            }}
+            style={{ marginTop: 40, gap: 'clamp(10px, 1.2vw, 16px)' }}
           >
             {razones.map((razon, i) => (
               <ScrollReveal key={i} y={12} delay={i * 0.09} style={{ height: '100%' }}>

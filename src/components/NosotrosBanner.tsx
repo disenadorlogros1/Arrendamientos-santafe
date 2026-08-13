@@ -24,7 +24,7 @@ export default function NosotrosBanner({ active, onSlideChange }: Props) {
   const prevActive   = useRef(0);
   const imgRefs      = useRef<(HTMLDivElement | null)[]>([]);
   const sectionRef   = useRef<HTMLElement>(null);
-  const underlineRef = useRef<HTMLDivElement>(null);
+  const underlineRef = useRef<HTMLSpanElement>(null);
 
   /* Crossfade cuando cambia active */
   useEffect(() => {
@@ -36,7 +36,7 @@ export default function NosotrosBanner({ active, onSlideChange }: Props) {
     prevActive.current = active;
   }, [active]);
 
-  /* Entrada viewport + animación subrayado */
+  /* Entrada viewport + animación subrayado sobre el texto */
   useEffect(() => {
     const section   = sectionRef.current;
     const underline = underlineRef.current;
@@ -47,21 +47,23 @@ export default function NosotrosBanner({ active, onSlideChange }: Props) {
       scrollTrigger: { trigger: section, start: 'top 88%', once: true },
     });
 
-    let ulSt: gsap.core.Tween | undefined;
     if (underline) {
-      ulSt = gsap.fromTo(
-        underline,
-        { scaleX: 0 },
-        {
-          scaleX: 1, duration: 0.9, ease: 'power2.out',
-          scrollTrigger: { trigger: section, start: 'top 75%', once: true },
-        }
-      );
+      const isMobile = window.innerWidth <= 768;
+      if (isMobile) {
+        gsap.set(underline, { scaleX: 1 });
+      } else {
+        gsap.fromTo(underline,
+          { scaleX: 0 },
+          {
+            scaleX: 1, duration: 0.9, ease: 'power2.out',
+            scrollTrigger: { trigger: section, start: 'top 75%', once: true },
+          }
+        );
+      }
     }
 
     return () => {
       st.scrollTrigger?.kill(); st.kill();
-      ulSt?.scrollTrigger?.kill(); ulSt?.kill();
     };
   }, []);
 
@@ -71,14 +73,13 @@ export default function NosotrosBanner({ active, onSlideChange }: Props) {
   return (
     <>
       <style>{`
-        /* --- Desktop defaults --- */
-        .nb-arrow    { display: none !important; }
-        .nb-dots     { display: none !important; }
-        .nb-underline { display: block; }
-        .nb-subtitle  { line-height: 1.65; }
-        .nb-br        { display: inline; }
+        /* Desktop defaults */
+        .nb-arrow { display: none !important; }
+        .nb-dots  { display: none !important; }
+        .nb-br    { display: inline; }
+        .nb-subtitle { line-height: 1.65; }
 
-        /* --- Mobile overrides --- */
+        /* Mobile overrides */
         @media (max-width: 768px) {
           .nb-arrow {
             display: flex !important;
@@ -87,26 +88,21 @@ export default function NosotrosBanner({ active, onSlideChange }: Props) {
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
-            width: 40px;
-            height: 40px;
-            background: rgba(0, 0, 0, 0.45);
+            width: 44px;
+            height: 44px;
+            background: rgba(0, 0, 0, 0.38);
             border: none;
             border-radius: 50%;
             cursor: pointer;
             z-index: 20;
-            color: #fff;
             -webkit-tap-highlight-color: transparent;
+            padding: 10px;
           }
-          .nb-arrow-prev { left: 14px; }
-          .nb-arrow-next { right: 14px; }
-
+          .nb-arrow-prev { left: 12px; }
+          .nb-arrow-next { right: 12px; }
           .nb-dots { display: flex !important; }
-
-          .nb-underline { display: none; }
-
+          .nb-br   { display: none; }
           .nb-subtitle { line-height: 1.2 !important; }
-
-          .nb-br { display: none; }
         }
       `}</style>
 
@@ -150,25 +146,33 @@ export default function NosotrosBanner({ active, onSlideChange }: Props) {
           <h2 style={{
             fontFamily: FONT, fontWeight: 300,
             fontSize: 'clamp(20px, 3.4vw, 52px)',
-            color: '#fff', lineHeight: 1.1,
-            margin: '0 0 14px',
+            color: '#fff', lineHeight: 1.0,
+            margin: '0 0 20px',
           }}>
             Somos una inmobiliaria antioqueña
             <span className="nb-br" aria-hidden="true"><br /></span>{' '}
-            con <span style={{ fontWeight: 700 }}>60 años de trayectoria.</span>
+            con{' '}
+            {/* Bold span con subrayado animado igual que el hero del home */}
+            <span style={{ fontWeight: 700, position: 'relative', overflow: 'hidden', display: 'inline-block' }}>
+              <span style={{ position: 'relative', zIndex: 2 }}>60 años de trayectoria.</span>
+              <span
+                ref={underlineRef}
+                aria-hidden="true"
+                style={{
+                  position: 'absolute',
+                  top: '62%',
+                  left: 0,
+                  width: '100%',
+                  height: '12%',
+                  backgroundColor: RED,
+                  transformOrigin: 'left center',
+                  transform: 'translateY(-50%) scaleX(0)',
+                  zIndex: 1,
+                  pointerEvents: 'none',
+                }}
+              />
+            </span>
           </h2>
-
-          {/* Línea animada — solo desktop */}
-          <div
-            className="nb-underline"
-            ref={underlineRef}
-            style={{
-              width: 'clamp(60px, 7vw, 100px)', height: 3,
-              background: RED, borderRadius: 2,
-              transformOrigin: 'left center',
-              marginBottom: 18,
-            }}
-          />
 
           <p
             className="nb-subtitle"
@@ -184,18 +188,22 @@ export default function NosotrosBanner({ active, onSlideChange }: Props) {
           </p>
         </div>
 
-        {/* Flechas — solo mobile */}
+        {/* Flechas con SVGs del proyecto — solo mobile */}
         <button className="nb-arrow nb-arrow-prev" onClick={prev} aria-label="Slide anterior">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-            <polyline points="15 18 9 12 15 6" />
-          </svg>
+          <img
+            src="/icons/icon-arrow-right-white.svg"
+            alt=""
+            aria-hidden="true"
+            style={{ width: '100%', height: '100%', transform: 'scaleX(-1)' }}
+          />
         </button>
         <button className="nb-arrow nb-arrow-next" onClick={next} aria-label="Slide siguiente">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-            <polyline points="9 18 15 12 9 6" />
-          </svg>
+          <img
+            src="/icons/icon-arrow-right-white.svg"
+            alt=""
+            aria-hidden="true"
+            style={{ width: '100%', height: '100%' }}
+          />
         </button>
 
         {/* Dots — solo mobile */}
