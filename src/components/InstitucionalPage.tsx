@@ -73,8 +73,35 @@ export default function InstitucionalPage({ onNavigate }: InstitucionalPageProps
   const [hoveredRazon,  setHoveredRazon]  = useState<number | null>(null);
   const [activeSlide,   setActiveSlide]   = useState(0);
 
+  /* Auto-avance cada 10 s */
+  useEffect(() => {
+    const id = setInterval(() => {
+      setActiveSlide(prev => (prev + 1) % cifras.length);
+    }, 10000);
+    return () => clearInterval(id);
+  }, []);
+
+  const currentCifra = cifras[activeSlide];
+
   return (
     <div className="min-h-screen" style={{ background: '#fff' }}>
+
+      <style>{`
+        /* Desktop: grid con overlap 50% sobre el banner */
+        @media (min-width: 769px) {
+          .inst-cifras-grid {
+            margin-top: -80px;
+            position: relative;
+            z-index: 10;
+          }
+          .inst-mobile-cifra { display: none !important; }
+        }
+        /* Mobile: cuadro único + ocultar grid desktop */
+        @media (max-width: 768px) {
+          .inst-cifras-grid { display: none !important; }
+          .inst-mobile-cifra { display: block; }
+        }
+      `}</style>
 
       {/* ── Hero ── */}
       <section
@@ -108,16 +135,56 @@ export default function InstitucionalPage({ onNavigate }: InstitucionalPageProps
         </div>
       </section>
 
-      {/* ── Banner interactivo trayectoria ── */}
-      <NosotrosBanner active={activeSlide} />
+      {/* ── Banner interactivo ── */}
+      <NosotrosBanner active={activeSlide} onSlideChange={setActiveSlide} />
 
-      {/* ── Cifras ── */}
+      {/* ── Cuadro único mobile (rota con el banner) ── */}
+      <div className="inst-mobile-cifra" style={{ background: '#fff', padding: '0 clamp(16px, 4vw, 24px)' }}>
+        <div
+          style={{
+            padding: 'clamp(24px, 5vw, 36px) clamp(16px, 4vw, 24px)',
+            background: '#f5f5f5',
+            borderTop: `3px solid ${RED}`,
+            display: 'flex', gap: 20, alignItems: 'center',
+            transition: 'opacity 0.3s ease',
+          }}
+        >
+          <span style={{
+            fontFamily: FONT, fontWeight: 900,
+            fontSize: 'clamp(36px, 8vw, 52px)',
+            color: RED, lineHeight: 1, flexShrink: 0,
+          }}>
+            0{activeSlide + 1}
+          </span>
+          {currentCifra.type === 'count' ? (
+            <p style={{
+              fontFamily: FONT, fontWeight: 300,
+              fontSize: 'clamp(13px, 3.5vw, 16px)',
+              color: '#555', lineHeight: 1.55, margin: 0,
+            }}>
+              <span style={{ fontWeight: 700 }}>
+                <CountUp to={currentCifra.num} prefix={currentCifra.prefix} />
+              </span>
+              {' '}{currentCifra.label}
+            </p>
+          ) : (
+            <p style={{
+              fontFamily: FONT, fontWeight: 300,
+              fontSize: 'clamp(13px, 3.5vw, 16px)',
+              color: '#555', lineHeight: 1.55, margin: 0,
+            }}>
+              {currentCifra.text}
+            </p>
+          )}
+        </div>
+      </div>
+
+      {/* ── Cifras desktop (overlap 50% sobre banner) ── */}
       <section style={{ background: '#fff' }}>
-        <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '32px clamp(20px, 4vw, 52px) 56px' }}>
+        <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '0 clamp(20px, 4vw, 52px) 56px' }}>
 
-          {/* Grid cifras 3×1 */}
           <div
-            className="grid grid-cols-1 md:grid-cols-3"
+            className="grid grid-cols-1 md:grid-cols-3 inst-cifras-grid"
             style={{ gap: 'clamp(10px, 1.2vw, 16px)' }}
           >
             {cifras.map((cifra, i) => (
@@ -133,6 +200,7 @@ export default function InstitucionalPage({ onNavigate }: InstitucionalPageProps
                     alignItems: 'center',
                     height: '100%',
                     boxSizing: 'border-box',
+                    boxShadow: '0 -6px 28px rgba(0,0,0,0.10), 0 4px 16px rgba(0,0,0,0.06)',
                     transform: hoveredCifra === i ? 'scale(1.04)' : 'scale(1)',
                     transition: 'transform 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94), border-top-color 0.2s',
                     borderTop: `3px solid ${i === activeSlide ? RED : 'transparent'}`,
@@ -179,6 +247,7 @@ export default function InstitucionalPage({ onNavigate }: InstitucionalPageProps
               </ScrollReveal>
             ))}
           </div>
+
         </div>
       </section>
 
