@@ -167,12 +167,14 @@ export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) 
     const ctx = gsap.context(() => {
       if (reduced) {
         gsap.set([bannerWrapRef.current, desktopTextRef.current, mobileTextRef.current], { autoAlpha: 1 });
+        gsap.set([tlRef.current, tlMobileRef.current], { opacity: 1 });
         entranceDoneRef.current = true;
         return;
       }
 
       gsap.set(bannerWrapRef.current, { autoAlpha: 0 });
-      gsap.set([desktopTextRef.current, mobileTextRef.current, tlRef.current, tlMobileRef.current], { autoAlpha: 0 });
+      gsap.set([desktopTextRef.current, mobileTextRef.current], { autoAlpha: 0 });
+      gsap.set([tlRef.current, tlMobileRef.current], { opacity: 0 });
       gsap.set(badgeRef.current, { autoAlpha: 0, scale: 0.82, rotation: -4, transformOrigin: '70% 20%' });
 
       gsap.timeline({
@@ -187,10 +189,16 @@ export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) 
       })
         .to(bannerWrapRef.current, { autoAlpha: 1, duration: 1.1, ease: 'power2.out' })
         .fromTo(
-          [desktopTextRef.current, mobileTextRef.current, tlRef.current, tlMobileRef.current],
+          [desktopTextRef.current, mobileTextRef.current],
           { autoAlpha: 0, y: 14 },
           { autoAlpha: 1, y: 0, duration: 0.5, stagger: 0.07, ease: 'power2.out' },
           '-=0.5',
+        )
+        .fromTo(
+          [tlRef.current, tlMobileRef.current],
+          { opacity: 0, y: 14 },
+          { opacity: 1, y: 0, duration: 0.5, stagger: 0.07, ease: 'power2.out' },
+          '-=0.35',
         )
         .fromTo(badgeRef.current,
           { autoAlpha: 0, scale: 0.82, rotation: -4 },
