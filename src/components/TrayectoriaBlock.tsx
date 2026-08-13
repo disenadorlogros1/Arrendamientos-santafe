@@ -1,8 +1,5 @@
-﻿'use client';
+'use client';
 
-import { useRef, useEffect } from 'react';
-import gsap from 'gsap';
-import { useSplitTextAnimation } from '@/hooks/useSplitTextAnimation';
 import type { PageType } from '@/components/Header';
 
 function applyInkFill(e: React.MouseEvent<HTMLElement>) {
@@ -23,129 +20,137 @@ interface TrayectoriaBlockProps {
   onNavigate: (page: PageType) => void;
 }
 
-const FONT_BODY    = "'Avenir LT Std', 'Outfit', system-ui, sans-serif";
-const FONT_HEADING = "'Avenir LT Std', 'Outfit', system-ui, sans-serif";
-const RED          = '#f32735';
+const FONT = "'Avenir LT Std', 'Outfit', system-ui, sans-serif";
+const RED  = '#f32735';
 
-const HITOS = [
-  { year: '1966', label: 'Nacemos en Medellín con una promesa: acompañar cada decisión con confianza y cercanía.', img: '/images/1966_Donde_todo_comenz%C3%B3.jpeg', objectPos: '60% 20%' },
-  { year: '1974', label: 'Consolidamos nuestra operación y ganamos la confianza de propietarios y clientes en Antioquia.', img: '/images/1974_primeros_cimientos.jpeg', objectPos: '85% 20%' },
-  { year: '2006', label: 'Cuatro décadas de trayectoria avalan nuestro respaldo y seriedad en el sector inmobiliario.', img: '/images/2006_Reconocimiento_consolidaci%C3%B3n.png', objectPos: '55% 20%' },
-  { year: '2017', label: 'Abrimos sede en Envigado y ampliamos nuestra presencia en el sur del Valle de Aburrá.', img: '/images/2017_M%C3%A1s_cerca_de_nuestros%20clientes.png', objectPos: '70% 20%' },
-  { year: '2018', label: 'Renovamos nuestra imagen para proyectar lo que siempre hemos sido: cercanos, serios y vigentes.', img: '/images/2018_Evoluci%C3%B3n_de_marca.png', objectPos: '40% 20%' },
-  { year: '2026', label: '60 años creciendo con Antioquia. Celebramos con la apertura de nuestra sede en Rionegro.', img: '/images/2026_60_a%C3%B1os.png', objectPos: '15% 20%' },
+const YEARS = ['1966', '1974', '2006', '2017', '2018', '2026'];
+
+/* Las mismas capas que Historia60Page usa para el panel 1966 */
+const LAYERS = [
+  { src: '/images/Linea%20de%20tiempo/1966-Fondo.webp',            z: 2 },
+  { src: '/images/Linea%20de%20tiempo/1966-fecha-1.webp',          z: 4 },
+  { src: '/images/Linea%20de%20tiempo/1966-fecha-2.webp',          z: 6 },
+  { src: '/images/Linea%20de%20tiempo/1966-recorte-superior.webp', z: 8 },
+  { src: '/images/Linea%20de%20tiempo/1966-superior.webp',         z: 10 },
 ];
 
 export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) {
-  const { ref: titleRef, titleAnimating } = useSplitTextAnimation('.trayectoria-title-split', 0, true);
-  const subtitleRef = useRef<HTMLParagraphElement>(null);
-
-  useEffect(() => {
-    if (!titleAnimating || !subtitleRef.current) return;
-    gsap.fromTo(subtitleRef.current,
-      { opacity: 0, y: 20 },
-      { opacity: 1, y: 0, duration: 0.4, ease: 'power2.out' }
-    );
-  }, [titleAnimating]);
-
   return (
-    <section style={{ background: '#fff' }} className="w-full overflow-hidden">
-      <div className="px-6 sm:px-10 lg:px-14">
-      <div className="flex flex-col lg:flex-row lg:h-[460px]">
+    <section className="w-full overflow-hidden" style={{ background: '#0c0c0c' }}>
 
-        {/* Columna texto */}
-        <div
-          className="flex flex-col justify-center gap-5 px-0 py-10 sm:py-12 lg:py-0 lg:pl-6 lg:pr-10 lg:flex-shrink-0 lg:flex-grow-0"
-          style={{ flexBasis: '672px' }}
-        >
-          <h2
-            ref={titleRef}
-            className="trayectoria-title-split"
+      {/* ── Banner panorámico ── */}
+      <div style={{ position: 'relative', width: '100%', height: 'clamp(260px, 40vw, 600px)', overflow: 'hidden' }}>
+
+        {/* Capas de imagen (idénticas a Historia60Page panel 1) */}
+        {LAYERS.map((layer, i) => (
+          <img
+            key={i}
+            src={layer.src}
+            alt=""
+            aria-hidden
             style={{
-              fontFamily: FONT_HEADING,
-              fontWeight: 300,
-              fontSize: 'clamp(24px, 2.4vw, 42px)',
-              color: '#555',
-              lineHeight: 1.2,
-              margin: 0,
+              position: 'absolute', top: 0, left: 0,
+              width: '100%', height: '100%',
+              objectFit: 'cover', objectPosition: '50% 50%',
+              zIndex: layer.z, pointerEvents: 'none', display: 'block',
             }}
-          >
-            Inmobiliaria con{' '}
-            <span style={{ display: 'block', fontWeight: 700 }}>
-              60 años de experiencia
-            </span>
-            en Antioquia
+          />
+        ))}
+
+        {/* Degradado inferior para texto legible */}
+        <div style={{
+          position: 'absolute', inset: 0, zIndex: 15,
+          background: 'linear-gradient(to top, rgba(0,0,0,0.82) 0%, rgba(0,0,0,0.1) 50%, transparent 100%)',
+          pointerEvents: 'none',
+        }} />
+
+        {/* Texto + botón — abajo izquierda */}
+        <div style={{
+          position: 'absolute',
+          bottom: 'clamp(52px, 8vw, 88px)',
+          left: 'clamp(20px, 5vw, 72px)',
+          zIndex: 20,
+          maxWidth: 'clamp(220px, 36vw, 460px)',
+        }}>
+          <h2 style={{
+            fontFamily: FONT, fontWeight: 700,
+            fontSize: 'clamp(15px, 1.8vw, 26px)',
+            color: '#fff', lineHeight: 1.2, margin: '0 0 8px',
+          }}>
+            Donde todo comenzó
           </h2>
-
-          <p
-            ref={subtitleRef}
-            style={{
-              fontFamily: FONT_BODY,
-              fontWeight: 400,
-              fontSize: 'clamp(13px, 1vw, 15px)',
-              color: '#555',
-              lineHeight: 1.55,
-              margin: 0,
-              opacity: 0,
-            }}
-          >
-            Desde 1966 acompañamos a personas, familias y propietarios en
-            decisiones de arrendamiento, venta, administración e inversión
-            inmobiliaria.
+          <p style={{
+            fontFamily: FONT, fontWeight: 300,
+            fontSize: 'clamp(11px, 0.9vw, 14px)',
+            color: 'rgba(255,255,255,0.65)',
+            lineHeight: 1.65, margin: '0 0 16px',
+          }}>
+            Arrendamientos Santa Fe nace en Medellín con una visión de servicio,
+            confianza y acompañamiento inmobiliario.
           </p>
-
           <button
             type="button"
-            onClick={() => {
-              onNavigate('historia-60');
-              window.scrollTo({ top: 0, behavior: 'smooth' });
-            }}
+            onClick={() => { onNavigate('historia-60'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
             onMouseEnter={applyInkFill}
             onMouseLeave={applyInkFill}
-            className="btn-red-outline inline-flex items-center justify-center w-full h-[46px]"
-            style={{ fontSize: 'clamp(13px, 0.9vw, 14px)' }}
+            className="btn-red-outline"
+            style={{ fontSize: 'clamp(11px, 0.85vw, 13px)', height: 38, padding: '0 18px' }}
           >
             <span>Conocer nuestra historia</span>
           </button>
         </div>
 
-        {/* Grid 6 columnas × 1 fila */}
-        <div
-          className="flex-1 grid h-[240px] sm:h-[320px] lg:h-full"
-          style={{ gridTemplateColumns: 'repeat(6, 1fr)', gap: '3px' }}
-        >
-          {HITOS.map((hito) => (
-            <div
-              key={hito.year}
-              className="group relative overflow-hidden"
-            >
-              <img
-                src={hito.img}
-                alt={hito.year}
-                className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
-                style={{ objectPosition: hito.objectPos }}
-              />
-              <div style={{
-                position: 'absolute', bottom: 0, left: 0, right: 0,
-                background: 'linear-gradient(to top, rgba(0,0,0,0.72) 0%, transparent 100%)',
-                padding: '24px 0 8px',
-                textAlign: 'center',
+        {/* Timeline — borde inferior del banner */}
+        <div style={{
+          position: 'absolute', bottom: 0, left: 0, right: 0,
+          zIndex: 20,
+          padding: '0 clamp(20px,5vw,72px)',
+          height: 'clamp(36px, 4vw, 52px)',
+          display: 'flex', alignItems: 'center',
+        }}>
+          <div style={{ position: 'relative', flex: 1, height: '100%', display: 'flex', alignItems: 'center' }}>
+            {/* Línea base */}
+            <div style={{
+              position: 'absolute', top: '50%', left: 0, right: 0,
+              height: 1, background: 'rgba(255,255,255,0.22)',
+              transform: 'translateY(-50%)',
+            }} />
+            {/* Segmento rojo — solo hasta el primer punto (1966, index 0, left=0%) */}
+            <div style={{
+              position: 'absolute', top: '50%', left: 0, width: 0,
+              height: 1, background: RED,
+              transform: 'translateY(-50%)',
+            }} />
+            {/* Puntos y años */}
+            {YEARS.map((year, i) => (
+              <div key={year} style={{
+                position: 'absolute',
+                left: `${(i / (YEARS.length - 1)) * 100}%`,
+                top: '50%',
+                transform: 'translate(-50%, -50%)',
+                display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 5,
               }}>
+                <div style={{
+                  width:  i === 0 ? 10 : 7,
+                  height: i === 0 ? 10 : 7,
+                  borderRadius: '50%',
+                  background: i === 0 ? RED : 'rgba(255,255,255,0.35)',
+                  flexShrink: 0,
+                }} />
                 <span style={{
-                  fontFamily: "'Avenir LT Std', system-ui, sans-serif",
-                  fontSize: 'clamp(13px, 1.1vw, 17px)',
-                  fontWeight: 900,
-                  color: '#fff',
-                  lineHeight: 1,
+                  fontFamily: FONT,
+                  fontSize: 'clamp(8px, 0.7vw, 11px)',
+                  fontWeight: i === 0 ? 700 : 400,
+                  color: i === 0 ? RED : 'rgba(255,255,255,0.4)',
+                  lineHeight: 1, whiteSpace: 'nowrap',
                 }}>
-                  {hito.year}
+                  {year}
                 </span>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
 
-      </div>
       </div>
     </section>
   );

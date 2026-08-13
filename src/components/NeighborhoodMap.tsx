@@ -42,15 +42,27 @@ const ZONE_CENTER: Record<string, { lat: number; lng: number; zoom: number }> = 
   occidente: { lat: 6.245, lng: -75.595, zoom: 13 },
 };
 
+const BTN_CTRL: React.CSSProperties = {
+  width: 38, height: 38, borderRadius: '50%',
+  background: 'rgba(255,255,255,0.97)',
+  border: '1px solid rgba(0,0,0,0.13)',
+  boxShadow: '0 2px 10px rgba(0,0,0,0.18)',
+  cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
+  color: '#1a1a1a', fontFamily: 'system-ui', padding: 0,
+};
+
 export default function NeighborhoodMap({ zone }: Props) {
   const containerRef  = useRef<HTMLDivElement>(null);
   const panelRef      = useRef<HTMLDivElement>(null);
   const mapRef        = useRef<any>(null);
   const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const activePinRef  = useRef<SVGPathElement | null>(null);
-  const [active, setActive] = useState<ActiveNeighborhood | null>(null);
+  const [active, setActive]     = useState<ActiveNeighborhood | null>(null);
   const [isMobile, setIsMobile] = useState(false);
+  const [mapActive, setMapActive] = useState(false);
   const isMobileRef = useRef(false);
+
+  const viewConf = ZONE_CENTER[zone.slug] ?? { lat: 6.25, lng: -75.58, zoom: 12 };
 
   useEffect(() => {
     const check = () => {
@@ -87,10 +99,20 @@ export default function NeighborhoodMap({ zone }: Props) {
     }, 250);
   };
 
+  /* ── Habilitar/deshabilitar interacción según mapActive ── */
+  useEffect(() => {
+    if (!mapRef.current || !isMobile) return;
+    if (mapActive) {
+      mapRef.current.dragging.enable();
+      mapRef.current.touchZoom.enable();
+    } else {
+      mapRef.current.dragging.disable();
+      mapRef.current.touchZoom.disable();
+    }
+  }, [mapActive, isMobile]);
+
   useEffect(() => {
     const subzones = zone.subzones;
-    const viewConf = ZONE_CENTER[zone.slug] ?? { lat: 6.25, lng: -75.58, zoom: 12 };
-
     const PIN_W = 22, PIN_H = 30;
 
     const pinHtml = () =>
@@ -108,9 +130,10 @@ export default function NeighborhoodMap({ zone }: Props) {
       if (!containerRef.current || mapRef.current) return;
       const L = (window as any).L;
 
+      const mobile = isMobileRef.current;
       mapRef.current = L.map(containerRef.current, {
         zoomControl: true, scrollWheelZoom: false, attributionControl: false,
-        dragging: true, doubleClickZoom: false, touchZoom: true,
+        dragging: !mobile, doubleClickZoom: false, touchZoom: !mobile,
       }).setView([viewConf.lat, viewConf.lng], viewConf.zoom);
 
       L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
@@ -213,6 +236,61 @@ export default function NeighborhoodMap({ zone }: Props) {
 
       <div style={{ position: 'relative', width: '100%', height: 480, overflow: 'hidden', isolation: 'isolate' as any }}>
         <div ref={containerRef} style={{ width: '100%', height: '100%', background: '#f5f5f5', position: 'relative', zIndex: 0 }} />
+
+        {/* ── Overlay mobile: bloquea scroll accidental ── */}
+        {isMobile && !mapActive && (
+          <div
+            onClick={() => setMapActive(true)}
+            style={{
+              position: 'absolute', inset: 0, zIndex: 800,
+              background: 'rgba(0,0,0,0.14)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              cursor: 'pointer', userSelect: 'none',
+            }}
+          >
+            <div style={{
+              background: 'rgba(255,255,255,0.97)', borderRadius: 99,
+              padding: '10px 20px', fontFamily: FONT,
+              fontSize: 13, fontWeight: 600, color: '#1a1a1a',
+              display: 'flex', alignItems: 'center', gap: 8,
+              boxShadow: '0 2px 16px rgba(0,0,0,0.14)',
+            }}>
+              <svg width="15" height="18" viewBox="0 0 15 18" fill="none">
+                <path d="M7 0C6.17 0 5.5 0.67 5.5 1.5V8.26C5.04 7.96 4.52 7.75 4 7.75C2.62 7.75 1.5 8.87 1.5 10.25C1.5 11.28 1.82 12.01 2.24 12.7L4.5 16.5C5.12 17.43 6.19 18 7.33 18H10C12.21 18 14 16.21 14 14V7.5C14 6.67 13.33 6 12.5 6C12.16 6 11.86 6.12 11.62 6.31C11.38 5.55 10.67 5 9.83 5C9.43 5 9.06 5.14 8.76 5.38C8.48 4.57 7.79 4 7 4V1.5C7 0.67 6.33 0 5.5 0" fill="#1a1a1a" fillOpacity="0.75"/>
+              </svg>
+              Toca para explorar el mapa
+            </div>
+          </div>
+        )}
+
+        {/* ── Controles zoom + centrar — solo mobile ── */}
+        {isMobile && (
+          <div style={{
+            position: 'absolute', right: 10, bottom: 24, zIndex: 810,
+            display: 'flex', flexDirection: 'column', gap: 6,
+          }}>
+            <button style={BTN_CTRL} onClick={() => { mapRef.current?.zoomIn(); setMapActive(true); }} title="Acercar" aria-label="Acercar">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+                <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+              </svg>
+            </button>
+            <button style={BTN_CTRL} onClick={() => { mapRef.current?.zoomOut(); setMapActive(true); }} title="Alejar" aria-label="Alejar">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+                <line x1="5" y1="12" x2="19" y2="12"/>
+              </svg>
+            </button>
+            <button
+              style={{ ...BTN_CTRL, background: RED, border: 'none', color: '#fff' }}
+              onClick={() => { mapRef.current?.setView([viewConf.lat, viewConf.lng], viewConf.zoom); setMapActive(false); }}
+              title="Centrar mapa" aria-label="Centrar mapa"
+            >
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="3"/>
+                <path d="M12 2v3M12 19v3M2 12h3M19 12h3"/>
+              </svg>
+            </button>
+          </div>
+        )}
 
         {/* Badge — solo desktop */}
         <div className="hidden lg:block" style={{
