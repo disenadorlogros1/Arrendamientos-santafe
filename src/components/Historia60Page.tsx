@@ -295,8 +295,7 @@ export default function Historia60Page({ onNavigate }: Props) {
 
           {/* Timeline dots */}
           <div style={{
-            display: 'flex', alignItems: 'center',
-            paddingTop: 16, paddingLeft: 16, paddingRight: 16,
+            display: 'flex',
             position: 'relative', height: 52,
             background: DARK,
           }}>
@@ -319,14 +318,18 @@ export default function Historia60Page({ onNavigate }: Props) {
                     });
                   }}
                   style={{
-                    flex: 1, display: 'flex', flexDirection: 'column',
-                    alignItems: 'center', gap: 6,
+                    flex: 1, height: '100%', position: 'relative',
                     background: 'none', border: 'none', cursor: 'pointer',
-                    padding: '0 0 4px', position: 'relative', zIndex: 2,
+                    padding: 0, zIndex: 2,
                   }}
                 >
+                  {/* Año ENCIMA de la línea */}
                   <span style={{
-                    fontFamily: FONT,
+                    position: 'absolute',
+                    bottom: '50%', left: '50%',
+                    transform: 'translateX(-50%)',
+                    marginBottom: 5,
+                    fontFamily: FONT, lineHeight: 1,
                     fontSize: active ? 11 : 10, fontWeight: active ? 700 : 300,
                     color: active ? RED : FOG,
                     whiteSpace: 'nowrap', letterSpacing: '0.1em',
@@ -334,9 +337,12 @@ export default function Historia60Page({ onNavigate }: Props) {
                   }}>
                     {evt.year}
                   </span>
+                  {/* Punto SOBRE la línea */}
                   <div style={{
+                    position: 'absolute',
+                    top: '50%', left: '50%',
+                    transform: `translate(-50%, -50%) scale(${active ? 1.8 : 1})`,
                     width: 8, height: 8, borderRadius: '50%', background: RED,
-                    transform: active ? 'scale(1.8)' : 'scale(1)',
                     transition: 'transform 0.2s',
                   }} />
                 </button>
