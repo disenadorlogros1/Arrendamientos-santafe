@@ -491,7 +491,7 @@ export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) 
           position: 'absolute', bottom: 0, left: 0, right: 0, zIndex: 20,
           padding: '0 clamp(24px,5vw,80px)',
           height: 'clamp(36px, 4vw, 52px)',
-          display: 'flex', alignItems: 'center',
+          alignItems: 'center',
         }}>
           <div style={{ position: 'relative', flex: 1, height: '100%', display: 'flex', alignItems: 'center' }}>
             <div style={{
@@ -549,7 +549,7 @@ export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) 
         style={{
           padding: '0 52px',
           height: '44px',
-          display: 'flex', alignItems: 'center',
+          alignItems: 'center',
           background: '#0c0c0c',
           position: 'relative',
         }}
@@ -572,18 +572,19 @@ export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) 
                 style={{
                   position: 'absolute',
                   left: `${(i / (HITOS.length - 1)) * 100}%`,
-                  top: '50%', transform: 'translate(-50%, -50%)',
-                  display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 5,
-                  cursor: 'pointer', padding: '10px 8px',
+                  top: 0, bottom: 0,
+                  transform: 'translateX(-50%)',
+                  width: 40,
+                  cursor: 'pointer',
                 }}
               >
-                <div style={{
-                  width: isActive ? 10 : 7, height: isActive ? 10 : 7,
-                  borderRadius: '50%',
-                  background: isActive ? RED : 'rgba(255,255,255,0.35)',
-                  flexShrink: 0, transition: 'all 0.3s ease',
-                }} />
+                {/* Año ENCIMA de la línea */}
                 <span style={{
+                  position: 'absolute',
+                  bottom: '50%',
+                  left: '50%',
+                  transform: 'translateX(-50%)',
+                  marginBottom: 6,
                   fontFamily: FONT, fontSize: '11px',
                   fontWeight: isActive ? 700 : 400,
                   color: isActive ? RED : 'rgba(255,255,255,0.4)',
@@ -592,6 +593,16 @@ export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) 
                 }}>
                   {hito.year}
                 </span>
+                {/* Punto SOBRE la línea */}
+                <div style={{
+                  position: 'absolute',
+                  top: '50%', left: '50%',
+                  transform: 'translate(-50%, -50%)',
+                  width: isActive ? 10 : 7, height: isActive ? 10 : 7,
+                  borderRadius: '50%',
+                  background: isActive ? RED : 'rgba(255,255,255,0.35)',
+                  transition: 'all 0.3s ease',
+                }} />
               </div>
             );
           })}

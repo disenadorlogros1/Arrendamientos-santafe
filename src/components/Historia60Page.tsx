@@ -180,7 +180,7 @@ export default function Historia60Page({ onNavigate }: Props) {
         marginTop: '-86px', paddingTop: 120, paddingBottom: 32,
         paddingLeft: 'clamp(24px,6vw,96px)', paddingRight: 'clamp(24px,6vw,96px)',
       }}>
-        <span aria-hidden="true" style={{
+        <span aria-hidden="true" className="hidden lg:block" style={{
           position: 'absolute', right: '-2%', top: '-10%',
           fontFamily: FONT, fontWeight: 900,
           fontSize: 'clamp(200px,28vw,380px)',
