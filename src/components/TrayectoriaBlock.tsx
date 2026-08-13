@@ -547,8 +547,8 @@ export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) 
         ref={tlMobileRef}
         className="tray-tl-m"
         style={{
-          padding: '0 52px',
-          height: '44px',
+          padding: '12px 52px 0',
+          height: '32px',
           alignItems: 'center',
           background: '#0c0c0c',
           position: 'relative',

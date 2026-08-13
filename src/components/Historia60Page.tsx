@@ -296,7 +296,7 @@ export default function Historia60Page({ onNavigate }: Props) {
           {/* Timeline dots */}
           <div style={{
             display: 'flex',
-            position: 'relative', height: 52,
+            position: 'relative', height: 40, paddingTop: 12,
             background: DARK,
           }}>
             <div style={{
@@ -411,6 +411,12 @@ export default function Historia60Page({ onNavigate }: Props) {
                   />
                 ))}
 
+                {/* Gradient overlay — desktop only */}
+                <div aria-hidden="true" style={{
+                  position: 'absolute', inset: 0, zIndex: 12, pointerEvents: 'none',
+                  background: 'linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.35) 35%, transparent 65%)',
+                }} />
+
                 {/* Text overlay */}
                 <div
                   ref={el => { textRefs.current[pi] = el; }}
@@ -419,21 +425,21 @@ export default function Historia60Page({ onNavigate }: Props) {
                     bottom: 'clamp(16px,3vh,32px)',
                     left: 'clamp(16px,5vw,28px)',
                     zIndex: 20,
-                    maxWidth: 'clamp(220px,28vw,340px)',
+                    maxWidth: 'clamp(260px,35vw,440px)',
                     pointerEvents: 'none',
                   }}
                 >
                   <h3 style={{
                     fontFamily: FONT, fontWeight: 700,
-                    fontSize: 'clamp(16px,1.8vw,26px)',
+                    fontSize: 'clamp(22px,2.4vw,34px)',
                     color: '#fff', lineHeight: 1.2, margin: '0 0 8px',
                   }}>
                     {evt.title}
                   </h3>
                   <p style={{
                     fontFamily: FONT, fontWeight: 300,
-                    fontSize: 'clamp(11px,0.8vw,13px)',
-                    color: 'rgba(255,255,255,0.75)',
+                    fontSize: 'clamp(14px,1.1vw,18px)',
+                    color: 'rgba(255,255,255,0.9)',
                     lineHeight: 1.7, margin: 0,
                   }}>
                     {evt.body}
