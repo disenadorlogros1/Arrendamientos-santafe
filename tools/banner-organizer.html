@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Banner Organizer — Línea de Tiempo</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:       #0a0a0a;
+    --surf:     #141414;
+    --card:     #1c1c1c;
+    --border:   #272727;
+    --border2:  #333;
+    --red:      #f32735;
+    --red-dim:  rgba(243,39,53,0.12);
+    --text:     #efefef;
+    --text2:    #888;
+    --text3:    #555;
+    --green:    #22c55e;
+    --yellow:   #f59e0b;
+    --code-bg:  #0f0f0f;
+    --radius:   8px;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+    font-size: 13px;
+    line-height: 1.5;
+    min-height: 100vh;
+  }
+
+  /* ── Header ───────────────────────────────── */
+  .header {
+    background: var(--surf);
+    border-bottom: 1px solid var(--border);
+    padding: 18px 28px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .header-logo {
+    width: 8px; height: 32px;
+    background: var(--red);
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+  .header h1 {
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: var(--text);
+  }
+  .header p {
+    font-size: 11px;
+    color: var(--text2);
+    margin-top: 1px;
+  }
+  .header-spacer { flex: 1; }
+  .header-tag {
+    font-size: 10px;
+    background: var(--red-dim);
+    color: var(--red);
+    border: 1px solid rgba(243,39,53,0.25);
+    border-radius: 4px;
+    padding: 3px 8px;
+    letter-spacing: 0.04em;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+
+  /* ── Layout ───────────────────────────────── */
+  .layout {
+    display: grid;
+    grid-template-columns: 1fr 420px;
+    gap: 0;
+    min-height: calc(100vh - 69px);
+  }
+  .left  { padding: 24px 28px; border-right: 1px solid var(--border); overflow-y: auto; }
+  .right { padding: 24px 24px; position: sticky; top: 69px; height: calc(100vh - 69px); overflow-y: auto; }
+
+  @media (max-width: 900px) {
+    .layout { grid-template-columns: 1fr; }
+    .right  { position: static; height: auto; border-top: 1px solid var(--border); }
+  }
+
+  /* ── Section ──────────────────────────────── */
+  .section { margin-bottom: 32px; }
+  .section-title {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text3);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* ── Hito cards ───────────────────────────── */
+  .hito-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+  @media (max-width: 700px) { .hito-grid { grid-template-columns: repeat(2, 1fr); } }
+
+  .hito-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 12px;
+    cursor: default;
+    transition: border-color 0.15s;
+  }
+  .hito-card.active-assign {
+    border-color: var(--red);
+    background: var(--red-dim);
+  }
+  .hito-year {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: -0.02em;
+    line-height: 1;
+  }
+  .hito-title {
+    font-size: 11px;
+    color: var(--text2);
+    margin-top: 4px;
+    line-height: 1.3;
+  }
+  .hito-set-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    margin-top: 8px;
+    padding: 3px 7px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 700;
+    font-family: 'Consolas', monospace;
+    background: var(--surf);
+    color: var(--text2);
+    border: 1px solid var(--border2);
+  }
+  .hito-set-pill.shared { color: var(--yellow); border-color: rgba(245,158,11,0.3); }
+  .hito-set-pill.own    { color: var(--green);  border-color: rgba(34,197,94,0.3); }
+  .hito-set-pill.new    { color: var(--red);    border-color: rgba(243,39,53,0.3); }
+
+  /* ── Form ─────────────────────────────────── */
+  label {
+    display: block;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text2);
+    margin-bottom: 5px;
+    letter-spacing: 0.02em;
+  }
+  input[type="text"] {
+    width: 100%;
+    background: var(--card);
+    border: 1px solid var(--border2);
+    border-radius: 6px;
+    color: var(--text);
+    font-size: 13px;
+    padding: 8px 10px;
+    outline: none;
+    font-family: inherit;
+    transition: border-color 0.15s;
+  }
+  input[type="text"]:focus { border-color: var(--red); }
+  input[type="text"]::placeholder { color: var(--text3); }
+
+  .form-row { margin-bottom: 14px; }
+  .form-hint {
+    font-size: 11px;
+    color: var(--text3);
+    margin-top: 4px;
+    font-family: 'Consolas', monospace;
+  }
+
+  /* ── Layers table ─────────────────────────── */
+  .layers-table { width: 100%; border-collapse: collapse; }
+  .layers-table thead th {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text3);
+    text-align: left;
+    padding: 0 8px 8px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .layers-table tbody tr { border-bottom: 1px solid var(--border); }
+  .layers-table tbody td { padding: 8px 8px 8px 0; vertical-align: middle; }
+  .layer-num {
+    font-size: 10px;
+    color: var(--text3);
+    font-family: 'Consolas', monospace;
+    white-space: nowrap;
+  }
+  .layer-label {
+    font-size: 11px;
+    color: var(--text2);
+    white-space: nowrap;
+    padding-right: 12px;
+  }
+  .layer-z {
+    font-size: 10px;
+    font-family: 'Consolas', monospace;
+    color: var(--text3);
+    white-space: nowrap;
+  }
+  .layer-preview {
+    width: 56px; height: 36px;
+    object-fit: cover;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    background: var(--surf);
+    display: block;
+    flex-shrink: 0;
+  }
+  .preview-placeholder {
+    width: 56px; height: 36px;
+    border-radius: 4px;
+    border: 1px dashed var(--border2);
+    background: var(--surf);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .preview-placeholder svg { opacity: 0.3; }
+
+  /* ── Set name row ─────────────────────────── */
+  .set-row {
+    display: grid;
+    grid-template-columns: 140px 1fr;
+    gap: 12px;
+    margin-bottom: 16px;
+    align-items: end;
+  }
+
+  /* ── Assign section ───────────────────────── */
+  .assign-label {
+    font-size: 11px;
+    color: var(--text2);
+    font-weight: 600;
+    margin-bottom: 8px;
+    letter-spacing: 0.02em;
+  }
+  .assign-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .assign-btn {
+    background: var(--card);
+    border: 1px solid var(--border2);
+    border-radius: 6px;
+    color: var(--text2);
+    font-size: 12px;
+    font-weight: 600;
+    padding: 6px 12px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.15s;
+    letter-spacing: -0.01em;
+  }
+  .assign-btn:hover { border-color: var(--red); color: var(--red); }
+  .assign-btn.selected {
+    background: var(--red-dim);
+    border-color: var(--red);
+    color: var(--red);
+  }
+
+  /* ── Primary button ───────────────────────── */
+  .btn-primary {
+    background: var(--red);
+    border: none;
+    border-radius: 6px;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-family: inherit;
+    letter-spacing: -0.01em;
+    transition: opacity 0.15s;
+    width: 100%;
+    margin-top: 16px;
+  }
+  .btn-primary:hover { opacity: 0.88; }
+  .btn-primary:disabled { opacity: 0.35; cursor: not-allowed; }
+
+  /* ── Code output ──────────────────────────── */
+  .code-tabs {
+    display: flex;
+    gap: 2px;
+    background: var(--surf);
+    border: 1px solid var(--border);
+    border-radius: 8px 8px 0 0;
+    padding: 4px;
+  }
+  .tab-btn {
+    flex: 1;
+    background: transparent;
+    border: none;
+    border-radius: 5px;
+    color: var(--text2);
+    font-size: 11px;
+    font-weight: 600;
+    padding: 6px 10px;
+    cursor: pointer;
+    font-family: 'Consolas', monospace;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .tab-btn.active {
+    background: var(--card);
+    color: var(--text);
+  }
+
+  .code-block {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-top: none;
+    border-radius: 0 0 8px 8px;
+    overflow: hidden;
+  }
+  .code-actions {
+    display: flex;
+    justify-content: flex-end;
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--border);
+    gap: 8px;
+  }
+  .btn-copy {
+    background: var(--card);
+    border: 1px solid var(--border2);
+    border-radius: 5px;
+    color: var(--text2);
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 10px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.15s;
+  }
+  .btn-copy:hover { color: var(--text); border-color: var(--text2); }
+  .btn-copy.copied { color: var(--green); border-color: var(--green); }
+
+  pre {
+    padding: 16px;
+    overflow-x: auto;
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 11.5px;
+    line-height: 1.7;
+    color: #cdd6f4;
+    white-space: pre;
+  }
+
+  /* syntax colors */
+  .kw  { color: #cba6f7; }
+  .str { color: #a6e3a1; }
+  .num { color: #fab387; }
+  .cmt { color: #585b70; font-style: italic; }
+  .prop{ color: #89dceb; }
+  .punc{ color: #bac2de; }
+
+  .code-placeholder {
+    padding: 40px 20px;
+    text-align: center;
+    color: var(--text3);
+    font-size: 12px;
+  }
+  .code-placeholder svg { display: block; margin: 0 auto 10px; opacity: 0.2; }
+
+  /* ── Instruction card ─────────────────────── */
+  .instruction {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 12px 14px;
+    margin-bottom: 12px;
+  }
+  .instruction-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px; height: 18px;
+    background: var(--red);
+    border-radius: 50%;
+    font-size: 10px;
+    font-weight: 700;
+    color: #fff;
+    flex-shrink: 0;
+    margin-right: 6px;
+  }
+  .instruction-text {
+    font-size: 12px;
+    color: var(--text2);
+    line-height: 1.5;
+  }
+  .instruction-code {
+    font-family: 'Consolas', monospace;
+    font-size: 11px;
+    background: var(--surf);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 2px 6px;
+    color: var(--text);
+    white-space: nowrap;
+  }
+
+  /* ── Divider ──────────────────────────────── */
+  .divider {
+    height: 1px;
+    background: var(--border);
+    margin: 24px 0;
+  }
+
+  /* ── Filename helper ──────────────────────── */
+  .filename-chip {
+    display: inline-block;
+    font-family: 'Consolas', monospace;
+    font-size: 10px;
+    background: var(--surf);
+    border: 1px solid var(--border2);
+    border-radius: 3px;
+    padding: 2px 6px;
+    color: var(--text2);
+    margin-top: 4px;
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-logo"></div>
+  <div>
+    <h1>Banner Organizer</h1>
+    <p>Línea de Tiempo — Arrendamientos Santa Fe</p>
+  </div>
+  <div class="header-spacer"></div>
+  <span class="header-tag">Herramienta interna</span>
+</div>
+
+<div class="layout">
+
+  <!-- ═══ LEFT PANEL ═══════════════════════════════════════════ -->
+  <div class="left">
+
+    <!-- Estado actual -->
+    <div class="section">
+      <div class="section-title">Estado actual de banners</div>
+      <div class="hito-grid" id="hitoGrid"></div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Constructor de nuevo set -->
+    <div class="section">
+      <div class="section-title">Crear nuevo conjunto de capas</div>
+
+      <div class="set-row">
+        <div class="form-row" style="margin-bottom:0">
+          <label>Nombre del set</label>
+          <input type="text" id="setName" placeholder="ej: L2006" maxlength="12"
+            oninput="onSetNameChange()">
+        </div>
+        <div class="form-row" style="margin-bottom:0">
+          <label>Prefijo de archivos <span style="color:var(--text3);font-weight:400">(para la carpeta)</span></label>
+          <input type="text" id="filePrefix" placeholder="ej: 2006"
+            oninput="updateFilenames()">
+        </div>
+      </div>
+
+      <!-- Layers table -->
+      <table class="layers-table">
+        <thead>
+          <tr>
+            <th style="width:28px">#</th>
+            <th>Capa</th>
+            <th>URL de la imagen</th>
+            <th style="width:64px">Vista</th>
+            <th style="width:30px">z</th>
+          </tr>
+        </thead>
+        <tbody id="layersBody"></tbody>
+      </table>
+
+      <!-- Instrucción de carpeta -->
+      <div style="margin-top:12px; padding:10px 12px; background:var(--surf); border:1px solid var(--border); border-radius:6px;">
+        <div style="font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--text3); margin-bottom:6px;">Dónde guardar los archivos</div>
+        <code style="font-size:11px; color:var(--text2); font-family:'Consolas',monospace;">public/images/Linea de tiempo/</code>
+        <div id="filenameList" style="margin-top:8px; display:flex; flex-wrap:wrap; gap:4px;"></div>
+      </div>
+
+      <div class="divider" style="margin:18px 0"></div>
+
+      <!-- Asignar a hito -->
+      <div>
+        <div class="assign-label">Asignar este set a los hitos</div>
+        <div class="assign-grid" id="assignGrid"></div>
+      </div>
+
+      <button class="btn-primary" onclick="generateCode()">Generar código →</button>
+    </div>
+
+  </div>
+
+  <!-- ═══ RIGHT PANEL ══════════════════════════════════════════ -->
+  <div class="right">
+
+    <!-- Instrucciones -->
+    <div class="section">
+      <div class="section-title">Dónde pegar el código</div>
+
+      <div class="instruction">
+        <span class="instruction-num">1</span>
+        <span class="instruction-text">
+          Abre <span class="instruction-code">src/components/TrayectoriaBlock.tsx</span>
+          y pega el bloque <b>después de L74</b> (línea ~30).
+          Luego actualiza el campo <span class="instruction-code">set:</span> en el array HITOS.
+        </span>
+      </div>
+
+      <div class="instruction">
+        <span class="instruction-num">2</span>
+        <span class="instruction-text">
+          Abre <span class="instruction-code">src/components/Historia60Page.tsx</span>
+          y pega el bloque <b>después de L74</b> (línea ~36).
+          Luego actualiza el campo <span class="instruction-code">layers:</span> en el array EVENTS.
+        </span>
+      </div>
+
+      <div class="instruction">
+        <span class="instruction-num">3</span>
+        <span class="instruction-text">
+          Copia las imágenes a <span class="instruction-code">public/images/Linea de tiempo/</span>
+          con los nombres exactos indicados.
+        </span>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Tabs de código -->
+    <div class="section">
+      <div class="section-title">Código generado</div>
+
+      <div class="code-tabs">
+        <button class="tab-btn active" id="tab-tray" onclick="switchTab('tray')">TrayectoriaBlock</button>
+        <button class="tab-btn"        id="tab-hist" onclick="switchTab('hist')">Historia60Page</button>
+      </div>
+      <div class="code-block">
+        <div class="code-actions">
+          <button class="btn-copy" id="copyBtn" onclick="copyCode()">Copiar</button>
+        </div>
+        <div id="codeOutput">
+          <div class="code-placeholder">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
+            </svg>
+            Completa el formulario y haz clic en<br>«Generar código»
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// ─── Datos base ──────────────────────────────────────────────────────
+const HITOS = [
+  { year: '1966', title: 'Donde todo comenzó',                    set: 'L66', idx: 0 },
+  { year: '1974', title: 'Primeros cimientos',                    set: 'L74', idx: 1 },
+  { year: '2006', title: 'Reconocimiento y consolidación',        set: 'L66', idx: 2 },
+  { year: '2017', title: 'Más cerca de nuestros clientes',        set: 'L74', idx: 3 },
+  { year: '2018', title: 'Evolución de marca',                    set: 'L66', idx: 4 },
+  { year: '2026', title: '60 años acompañando nuevas decisiones', set: 'L74', idx: 5 },
+];
+
+const LAYER_PARAMS = [
+  { label: 'Fondo',            suffix: 'Fondo',            z: 2,  px: 5,  py: 0, dur: 0.85 },
+  { label: 'Fecha 1',          suffix: 'fecha-1',          z: 4,  px: 12, py: 0, dur: 0.70 },
+  { label: 'Fecha 2',          suffix: 'fecha-2',          z: 6,  px: 19, py: 0, dur: 0.55 },
+  { label: 'Recorte superior', suffix: 'recorte-superior', z: 8,  px: 26, py: 0, dur: 0.40 },
+  { label: 'Superior',         suffix: 'superior',         z: 10, px: 34, py: 0, dur: 0.26 },
+];
+
+// Estado mutable
+let assignedHitos = new Set();
+let activeTab = 'tray';
+let generatedCode = { tray: '', hist: '' };
+
+// ─── Render: hito cards ──────────────────────────────────────────────
+function renderHitoGrid() {
+  const grid = document.getElementById('hitoGrid');
+  grid.innerHTML = HITOS.map((h, i) => {
+    const setName = h.set;
+    const isShared = setName === 'L66' || setName === 'L74';
+    const pillClass = isShared ? 'shared' : 'own';
+    const pillTitle = isShared ? 'Usa imágenes de otro hito' : 'Tiene imágenes propias';
+    return `
+      <div class="hito-card" id="card-${i}" title="${pillTitle}">
+        <div class="hito-year">${h.year}</div>
+        <div class="hito-title">${h.title}</div>
+        <span class="hito-set-pill ${pillClass}">${setName}</span>
+      </div>`;
+  }).join('');
+}
+
+// ─── Render: layers table ────────────────────────────────────────────
+function renderLayersTable() {
+  const tbody = document.getElementById('layersBody');
+  tbody.innerHTML = LAYER_PARAMS.map((p, i) => `
+    <tr>
+      <td class="layer-num">${i + 1}</td>
+      <td class="layer-label">${p.label}</td>
+      <td>
+        <input type="text" id="url-${i}" placeholder="URL o ruta de imagen…"
+          oninput="onUrlChange(${i})" style="font-family:'Consolas',monospace; font-size:11px;">
+        <div id="fname-${i}" class="filename-chip" style="display:none"></div>
+      </td>
+      <td>
+        <div id="prev-${i}" class="preview-placeholder">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5">
+            <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/>
+            <polyline points="21 15 16 10 5 21"/>
+          </svg>
+        </div>
+      </td>
+      <td class="layer-z">z:${p.z}</td>
+    </tr>
+  `).join('');
+}
+
+// ─── Render: assign buttons ──────────────────────────────────────────
+function renderAssignGrid() {
+  const grid = document.getElementById('assignGrid');
+  grid.innerHTML = HITOS.map((h, i) => `
+    <button class="assign-btn" id="assign-${i}" onclick="toggleAssign(${i})">
+      ${h.year}
+    </button>
+  `).join('');
+}
+
+// ─── Events ──────────────────────────────────────────────────────────
+function toggleAssign(idx) {
+  if (assignedHitos.has(idx)) assignedHitos.delete(idx);
+  else assignedHitos.add(idx);
+  document.querySelectorAll('.assign-btn').forEach((btn, i) => {
+    btn.classList.toggle('selected', assignedHitos.has(i));
+  });
+  updateCardHighlights();
+}
+
+function updateCardHighlights() {
+  document.querySelectorAll('.hito-card').forEach((card, i) => {
+    card.classList.toggle('active-assign', assignedHitos.has(i));
+  });
+}
+
+function onSetNameChange() {
+  const name = document.getElementById('setName').value.trim();
+  // auto-fill prefix from name if it starts with L + digits
+  const match = name.match(/^L?(\d+)/i);
+  if (match && !document.getElementById('filePrefix').value) {
+    document.getElementById('filePrefix').value = match[1];
+    updateFilenames();
+  }
+  updateFilenames();
+}
+
+function updateFilenames() {
+  const prefix = document.getElementById('filePrefix').value.trim();
+  const list = document.getElementById('filenameList');
+  if (!prefix) { list.innerHTML = ''; return; }
+  list.innerHTML = LAYER_PARAMS.map(p =>
+    `<span class="filename-chip">${prefix}-${p.suffix}.webp</span>`
+  ).join('');
+
+  // Update placeholder filenames in table
+  LAYER_PARAMS.forEach((p, i) => {
+    const el = document.getElementById(`fname-${i}`);
+    if (el) {
+      el.textContent = `${prefix}-${p.suffix}.webp`;
+      el.style.display = 'inline-block';
+    }
+  });
+}
+
+function onUrlChange(idx) {
+  const url = document.getElementById(`url-${idx}`).value.trim();
+  const prev = document.getElementById(`prev-${idx}`);
+  if (url) {
+    prev.outerHTML = `<img id="prev-${idx}" class="layer-preview" src="${url}"
+      onerror="this.style.display='none'" alt="">`;
+  } else {
+    const img = document.getElementById(`prev-${idx}`);
+    if (img && img.tagName === 'IMG') {
+      img.outerHTML = `<div id="prev-${idx}" class="preview-placeholder">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5">
+          <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/>
+          <polyline points="21 15 16 10 5 21"/>
+        </svg></div>`;
+    }
+  }
+}
+
+// ─── Code generation ─────────────────────────────────────────────────
+function generateCode() {
+  const setName = document.getElementById('setName').value.trim();
+  const prefix  = document.getElementById('filePrefix').value.trim();
+  if (!setName) { alert('Escribe el nombre del set (ej: L2006)'); return; }
+
+  const urls = LAYER_PARAMS.map((p, i) => {
+    const val = document.getElementById(`url-${i}`).value.trim();
+    return val || `/images/Linea%20de%20tiempo/${prefix || '????'}-${p.suffix}.webp`;
+  });
+
+  const assignedList = [...assignedHitos];
+  const hitoComments = assignedList.length
+    ? assignedList.map(i => `${HITOS[i].year}`).join(', ')
+    : '(sin asignar)';
+
+  // ── TrayectoriaBlock ──────────────────────────────────────
+  const trayLines = [
+    `// Asignado a: ${hitoComments}`,
+    `const ${setName} = [`,
+    ...urls.map((u, i) => `  '${u}',${i < urls.length - 1 ? '' : ''}`),
+    `];`,
+    ``,
+  ];
+
+  if (assignedList.length) {
+    trayLines.push(`// En HITOS, cambia el campo set: para los años correspondientes:`);
+    assignedList.forEach(i => {
+      trayLines.push(`// { year: '${HITOS[i].year}', set: '${setName}', title: '${HITOS[i].title}', body: '...' }`);
+    });
+  }
+  generatedCode.tray = trayLines.join('\n');
+
+  // ── Historia60Page ────────────────────────────────────────
+  const pad = (s, n) => s.padEnd(n);
+  const histLines = [
+    `// Asignado a: ${hitoComments}`,
+    `const ${setName}: LayerCfg[] = [`,
+    ...LAYER_PARAMS.map((p, i) => {
+      const src = urls[i];
+      const srcStr = `'${src}'`;
+      return `  { src: ${pad(srcStr + ',', 60)} z: ${String(p.z).padEnd(3)} px: ${String(p.px).padEnd(4)} py: 0, dur: ${p.dur} },`;
+    }),
+    `];`,
+    ``,
+  ];
+
+  if (assignedList.length) {
+    histLines.push(`// En EVENTS, cambia el campo layers: para los años correspondientes:`);
+    assignedList.forEach(i => {
+      histLines.push(`// { year: '${HITOS[i].year}', title: '${HITOS[i].title}', body: '...', layers: ${setName} }`);
+    });
+  }
+  generatedCode.hist = histLines.join('\n');
+
+  renderCode();
+
+  // Highlight assigned cards
+  if (assignedList.length) {
+    assignedList.forEach(i => {
+      const pill = document.querySelector(`#card-${i} .hito-set-pill`);
+      if (pill) {
+        pill.textContent = setName;
+        pill.className = 'hito-set-pill new';
+      }
+    });
+  }
+}
+
+function renderCode() {
+  const code = activeTab === 'tray' ? generatedCode.tray : generatedCode.hist;
+  if (!code) return;
+  const html = highlightCode(code);
+  document.getElementById('codeOutput').innerHTML = `<pre>${html}</pre>`;
+}
+
+function highlightCode(code) {
+  return code
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/(\/\/.*)/g, '<span class="cmt">$1</span>')
+    .replace(/\b(const|let|var|type)\b/g, '<span class="kw">$1</span>')
+    .replace(/'([^']*)'/g, '<span class="str">\'$1\'</span>')
+    .replace(/\b(\d+\.?\d*)\b/g, '<span class="num">$1</span>')
+    .replace(/\b(src|z|px|py|dur|set|year|title|body|layers)\b(?=:)/g, '<span class="prop">$1</span>');
+}
+
+function switchTab(tab) {
+  activeTab = tab;
+  document.getElementById('tab-tray').classList.toggle('active', tab === 'tray');
+  document.getElementById('tab-hist').classList.toggle('active', tab === 'hist');
+  if (generatedCode.tray || generatedCode.hist) renderCode();
+}
+
+function copyCode() {
+  const code = activeTab === 'tray' ? generatedCode.tray : generatedCode.hist;
+  if (!code) return;
+  navigator.clipboard.writeText(code).then(() => {
+    const btn = document.getElementById('copyBtn');
+    btn.textContent = '✓ Copiado';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Copiar'; btn.classList.remove('copied'); }, 2000);
+  });
+}
+
+// ─── Init ─────────────────────────────────────────────────────────────
+renderHitoGrid();
+renderLayersTable();
+renderAssignGrid();
+</script>
+</body>
+</html>

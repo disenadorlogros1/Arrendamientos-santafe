@@ -28,6 +28,13 @@ const L74 = [
   '/images/Linea%20de%20tiempo/1974-recorte-superior.webp',
   '/images/Linea%20de%20tiempo/1974-superior.webp',
 ];
+const L2006 = [
+  '/images/Linea%20de%20tiempo/2006-Fondo.webp',
+  '/images/Linea%20de%20tiempo/2006-fecha-1.webp',
+  '/images/Linea%20de%20tiempo/2006-fecha-2.webp',
+  '/images/Linea%20de%20tiempo/2006-recorte-superior.webp',
+  '/images/Linea%20de%20tiempo/2006-superior.webp',
+];
 const Z = [2, 4, 6, 8, 10];
 
 const HITOS = [
@@ -35,7 +42,7 @@ const HITOS = [
     body: 'Arrendamientos Santa Fe nace en Medellín con una visión de servicio, confianza y acompañamiento inmobiliario.' },
   { year: '1974', set: 'L74', title: 'Primeros cimientos',
     body: 'La empresa fortalece su presencia y consolida una operación más cercana para propietarios y clientes.' },
-  { year: '2006', set: 'L66', title: 'Reconocimiento y consolidación',
+  { year: '2006', set: 'L2006', title: 'Reconocimiento y consolidación',
     body: 'Cuatro décadas de trabajo reflejan una trayectoria construida con compromiso, seriedad y respaldo.' },
   { year: '2017', set: 'L74', title: 'Más cerca de nuestros clientes',
     body: 'Con la apertura de la sede en Envigado, Santa Fe amplía su presencia en el Valle de Aburrá.' },
