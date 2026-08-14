@@ -97,6 +97,7 @@ export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) 
   const bannerWrapRef   = useRef<HTMLDivElement>(null);
   const l66ImgRefs      = useRef<(HTMLImageElement | null)[]>([]);
   const l74ImgRefs      = useRef<(HTMLImageElement | null)[]>([]);
+  const l2006ImgRefs    = useRef<(HTMLImageElement | null)[]>([]);
   const desktopTextRef  = useRef<HTMLDivElement>(null);
   const mobileTextRef   = useRef<HTMLDivElement>(null);
   const tlRef           = useRef<HTMLDivElement>(null);
@@ -216,7 +217,7 @@ export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) 
 
       if (isDesktop) {
         /* Parallax desktop */
-        [...l66ImgRefs.current, ...l74ImgRefs.current].forEach((img, absIdx) => {
+        [...l66ImgRefs.current, ...l74ImgRefs.current, ...l2006ImgRefs.current].forEach((img, absIdx) => {
           if (!img) return;
           gsap.to(img, {
             y: PARALLAX_Y_DESKTOP[absIdx % 5],
@@ -231,7 +232,7 @@ export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) 
         /* Float ambiente mobile — cada capa se mueve a su propio ritmo */
         const FLOAT_Y   = [5, -8, 10, -6, 7];
         const FLOAT_DUR = [9, 7,  8,  11, 6];
-        [...l66ImgRefs.current, ...l74ImgRefs.current].forEach((img, absIdx) => {
+        [...l66ImgRefs.current, ...l74ImgRefs.current, ...l2006ImgRefs.current].forEach((img, absIdx) => {
           if (!img) return;
           const li = absIdx % 5;
           gsap.to(img, {
@@ -407,6 +408,19 @@ export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) 
         }}>
           {L74.map((src, i) => (
             <img key={i} ref={el => { l74ImgRefs.current[i] = el; }}
+              src={src} alt="" aria-hidden style={imgStyle(i)} />
+          ))}
+        </div>
+
+        {/* ── Grupo L2006 ────────────────────────────────── */}
+        <div style={{
+          position: 'absolute', inset: 0,
+          opacity: activeSet === 'L2006' ? 1 : 0,
+          transition: 'opacity 0.45s ease',
+          zIndex: activeSet === 'L2006' ? 2 : 1,
+        }}>
+          {L2006.map((src, i) => (
+            <img key={i} ref={el => { l2006ImgRefs.current[i] = el; }}
               src={src} alt="" aria-hidden style={imgStyle(i)} />
           ))}
         </div>
