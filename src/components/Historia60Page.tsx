@@ -96,7 +96,7 @@ export default function Historia60Page({ onNavigate }: Props) {
     return () => window.removeEventListener('resize', check);
   }, []);
 
-  // ── Parallax via objectPosition (ambient drift + mouse) ───────
+  // ── Mouse quickTo — el scroll-driven ambient se configura en el ScrollTrigger useEffect
   useEffect(() => {
     EVENTS.forEach((evt, pi) => {
       evt.layers.forEach((layer, li) => {
@@ -105,33 +105,13 @@ export default function Historia60Page({ onNavigate }: Props) {
         const ambientProxy = ambientProxies.current[pi]?.[li];
         if (!img || !mouseProxy || !ambientProxy) return;
 
-        const applyPos = () => {
-          img.style.objectPosition = `calc(50% + ${ambientProxy.x + mouseProxy.x}px) 50%`;
-        };
-
-        // Mouse quickTo — se suma al ambient
         pxSets.current[pi][li] = gsap.quickTo(mouseProxy, 'x', {
           duration: layer.dur * 0.6,
           ease: 'power3.out',
-          onUpdate: applyPos,
-        });
-
-        // Ambient drift — vaivén suave continuo por capa
-        const maxDrift = layer.px * 0.4;
-        const dur      = 5 + li * 2 + pi * 0.3;
-        const phase    = (pi * 0.5 + li * 1.3) % dur;
-        gsap.fromTo(ambientProxy,
-          { x: -maxDrift },
-          {
-            x: maxDrift,
-            duration: dur,
-            ease: 'sine.inOut',
-            yoyo: true,
-            repeat: -1,
-            delay: phase,
-            onUpdate: applyPos,
+          onUpdate: () => {
+            img.style.objectPosition = `calc(50% + ${ambientProxy.x + mouseProxy.x}px) 50%`;
           },
-        );
+        });
       });
     });
   }, []);
@@ -214,6 +194,38 @@ export default function Historia60Page({ onNavigate }: Props) {
           .fromTo(dotRefs.current[ic],       { scale: 1.8 }, { scale: 1,   ease: 'none' }, 0)
           .fromTo(dotRefs.current[ic + 1],   { scale: 1   }, { scale: 1.8, ease: 'none' }, 0);
       }
+
+      // Scroll-driven X drift durante el período de reposo de cada panel
+      EVENTS.forEach((_evt, pi) => {
+        const holdStartPx = pi * 3 * window.innerHeight;
+        const holdEndPx   = (pi * 3 + 2) * window.innerHeight;
+
+        EVENTS[pi].layers.forEach((layer, li) => {
+          const ambientProxy = ambientProxies.current[pi]?.[li];
+          const mouseProxy   = proxyRefs.current[pi]?.[li];
+          const img          = imgRefs.current[pi]?.[li];
+          if (!ambientProxy || !mouseProxy || !img) return;
+
+          const maxDrift = layer.px * 0.6;
+
+          gsap.fromTo(ambientProxy,
+            { x: -maxDrift },
+            {
+              x: maxDrift,
+              ease: 'none',
+              scrollTrigger: {
+                trigger: wrapperRef.current,
+                start: `top+=${holdStartPx} top+=${startOffset}`,
+                end:   `top+=${holdEndPx}   top+=${startOffset}`,
+                scrub: 2,
+                onUpdate: () => {
+                  img.style.objectPosition = `calc(50% + ${ambientProxy.x + mouseProxy.x}px) 50%`;
+                },
+              },
+            },
+          );
+        });
+      });
     }, wrapperRef);
 
     return () => ctx.revert();

@@ -169,7 +169,7 @@ export default function Header({ currentPage, onNavigate, isHeroPage = true, dar
         </button>
 
         {/* Nav — flex-1 en lg (sin solapamiento); absoluta centrada en xl+ */}
-        <div className="flex-1 min-w-0 flex items-center justify-center xl:flex-none xl:absolute xl:inset-0 xl:px-8 xl:pointer-events-none">
+        <div className="flex-1 min-w-0 flex items-center justify-center xl:flex-none xl:absolute xl:inset-y-0 xl:left-[155px] xl:right-[320px] xl:pointer-events-none">
           <nav className="flex items-center justify-between gap-1 rounded-full p-[3px] h-[42px] border shadow-lg w-full xl:pointer-events-auto"
             style={{
               maxWidth: '64rem',
