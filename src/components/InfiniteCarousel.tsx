@@ -175,7 +175,7 @@ export default function InfiniteCarousel({ properties, onCardWidthChange, maxVis
                   willChange: 'transform, opacity',
                 }}
               >
-                <PropertyCard property={property} />
+                <PropertyCard property={property} hideCarousel />
               </div>
             ))}
           </div>

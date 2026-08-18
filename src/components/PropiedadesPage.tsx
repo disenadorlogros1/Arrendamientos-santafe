@@ -801,7 +801,7 @@ export default function PropiedadesPage({ initialFilter = 'Todos', initialQueStr
                       display: 'flex', alignItems: 'center', gap: '8px',
                     }}
                   >
-                    Cargar más
+                    Ver más
                     <span style={{ fontSize: '12px', opacity: 0.75 }}>
                       ({mobileVisible} de {filtered.length})
                     </span>

@@ -6,12 +6,13 @@ import type { Property } from '@/data/properties';
 
 interface PropertyCardProps {
   property: Property;
+  hideCarousel?: boolean;
 }
 
 const FONT = "'Avenir LT Std', 'Outfit', system-ui, sans-serif";
 const RED  = '#f32735';
 
-export default function PropertyCard({ property }: PropertyCardProps) {
+export default function PropertyCard({ property, hideCarousel = false }: PropertyCardProps) {
   const router = useRouter();
   const [isHovered, setIsHovered]   = useState(false);
   const [imgIndex,  setImgIndex]    = useState(0);
@@ -60,7 +61,7 @@ export default function PropertyCard({ property }: PropertyCardProps) {
     >
       {/* Zona de imagen */}
       <div
-        className="relative flex-1 overflow-hidden cursor-pointer"
+        className="relative h-56 lg:h-auto lg:flex-1 overflow-hidden cursor-pointer"
         onClick={handleViewMore}
         onTouchStart={onTouchStart}
         onTouchEnd={onTouchEnd}
@@ -110,8 +111,8 @@ export default function PropertyCard({ property }: PropertyCardProps) {
           </svg>
         </button>
 
-        {/* Flechas prev/next — solo mobile, solo si hay más de 1 foto */}
-        {total > 1 && (
+        {/* Flechas prev/next — solo mobile, solo si hay más de 1 foto y no está desactivado */}
+        {total > 1 && !hideCarousel && (
           <>
             <button
               type="button"
