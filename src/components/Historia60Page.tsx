@@ -199,6 +199,16 @@ export default function Historia60Page({ onNavigate }: Props) {
   // ── JSX ───────────────────────────────────────────────────────
   return (
     <div style={{ background: '#fff' }}>
+      <style>{`
+        @keyframes badge-enter {
+          from { opacity: 0; transform: scale(0.6) rotate(-12deg); }
+          to   { opacity: 1; transform: scale(1) rotate(0deg); }
+        }
+        @keyframes badge-float {
+          0%, 100% { transform: translateY(0px) rotate(0deg); }
+          50%       { transform: translateY(-6px) rotate(2deg); }
+        }
+      `}</style>
 
       {/* ── Article hero ──────────────────────────────────────── */}
       <div style={{
@@ -213,6 +223,41 @@ export default function Historia60Page({ onNavigate }: Props) {
           color: 'rgba(255,255,255,0.04)', lineHeight: 1,
           userSelect: 'none', pointerEvents: 'none',
         }}>60</span>
+
+        {/* Badge 60 años — desktop */}
+        <img
+          src="/icons/60%20a%C3%B1os-destok.svg"
+          alt="60 años"
+          aria-hidden="true"
+          className="hidden lg:block"
+          style={{
+            position: 'absolute',
+            top: 'calc(86px + 20px)',
+            right: 'clamp(24px,6vw,96px)',
+            width: 'clamp(96px,9vw,136px)',
+            zIndex: 2,
+            pointerEvents: 'none',
+            animation: 'badge-enter 0.7s cubic-bezier(0.34,1.56,0.64,1) 0.4s both, badge-float 5s ease-in-out 1.1s infinite',
+          }}
+        />
+
+        {/* Badge 60 años — mobile */}
+        <img
+          src="/icons/60%20a%C3%B1os-mobile.svg"
+          alt="60 años"
+          aria-hidden="true"
+          className="lg:hidden"
+          style={{
+            position: 'absolute',
+            top: 'calc(86px + 16px)',
+            right: 20,
+            width: 76,
+            zIndex: 2,
+            pointerEvents: 'none',
+            animation: 'badge-enter 0.7s cubic-bezier(0.34,1.56,0.64,1) 0.4s both, badge-float 5s ease-in-out 1.1s infinite',
+          }}
+        />
+
         <div style={{ maxWidth: 680, position: 'relative', zIndex: 1 }}>
           <button
             onClick={() => onNavigate('blog')}

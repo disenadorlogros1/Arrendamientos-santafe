@@ -1,14 +1,3 @@
 BANNERS PENDIENTES — Arrendamientos Santa Fe
 ============================================
-Guardar en esta misma carpeta con el nombre exacto que aparece abajo.
-
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-BLOG — Imágenes editoriales (tarjeta Historia 60 años)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Aparecen como franjas verticales en la tarjeta del artículo "60 años".
-Tamaño:   600 × 800 px cada una
-
-Nombre:   2006_Reconocimiento_consolidación.png   → franja año 2006
-Nombre:   2018_Evolución_de_marca.png             → franja año 2018
-Nombre:   2026_60_años.png                        → franja año 2026
+Todos los banners están completos. No hay pendientes.
