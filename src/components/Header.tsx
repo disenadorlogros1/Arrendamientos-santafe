@@ -254,7 +254,7 @@ export default function Header({ currentPage, onNavigate, isHeroPage = true, dar
           <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
             <SheetTrigger asChild>
               <button className="p-1.5 hover:bg-white/10 rounded-full transition-colors" style={{ color: headerTextColor }} aria-label="Abrir menú">
-                <img src={isDark ? "/icons/icon-menu-white.svg" : "/icons/icon-menu-black.svg"} alt="Menú" className="h-5 w-5" />
+                <img src={isDark ? "/icons/icon-menu-white.svg" : "/icons/icon-menu-red-dark.svg"} alt="Menú" className="h-5 w-5" />
               </button>
             </SheetTrigger>
             <SheetContent side="right" className="w-[min(90vw,320px)] bg-brand-dark border-brand-dark-secondary p-0">
