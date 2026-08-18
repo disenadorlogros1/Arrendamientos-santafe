@@ -176,8 +176,8 @@ export default function Historia60Page({ onNavigate }: Props) {
         const tl = gsap.timeline({
           scrollTrigger: {
             trigger: wrapperRef.current,
-            start: `top+=${(ic * 2 + 1) * window.innerHeight} top+=${startOffset}`,
-            end:   `top+=${(ic * 2 + 2) * window.innerHeight} top+=${startOffset}`,
+            start: `top+=${(ic * 4 + 3) * window.innerHeight} top+=${startOffset}`,
+            end:   `top+=${(ic * 4 + 4) * window.innerHeight} top+=${startOffset}`,
             scrub: 1.2,
             onEnter:     () => { activeRef.current = ic + 1; resetParallax(ic);     deactivateYear(ic);     activateYear(ic + 1); },
             onLeaveBack: () => { activeRef.current = ic;     resetParallax(ic + 1); deactivateYear(ic + 1); activateYear(ic);     },
@@ -478,7 +478,7 @@ export default function Historia60Page({ onNavigate }: Props) {
 
       {/* ── Desktop: Horizontal scroll experience ─────────────────── */}
       {!isMobile && (
-      <div ref={wrapperRef} style={{ height: `${N * 200}dvh`, background: '#fff' }}>
+      <div ref={wrapperRef} style={{ height: `${N * 400}dvh`, background: '#fff' }}>
         <div
           style={{
             position: 'sticky', top: 86, width: '100%', height: 'calc(100dvh - 86px)',
