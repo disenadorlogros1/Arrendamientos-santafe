@@ -224,40 +224,6 @@ export default function Historia60Page({ onNavigate }: Props) {
           userSelect: 'none', pointerEvents: 'none',
         }}>60</span>
 
-        {/* Badge 60 años — desktop */}
-        <img
-          src="/icons/60%20a%C3%B1os-destok.svg"
-          alt="60 años"
-          aria-hidden="true"
-          className="hidden lg:block"
-          style={{
-            position: 'absolute',
-            top: 'calc(86px + 20px)',
-            right: 'clamp(24px,6vw,96px)',
-            width: 'clamp(96px,9vw,136px)',
-            zIndex: 2,
-            pointerEvents: 'none',
-            animation: 'badge-enter 0.7s cubic-bezier(0.34,1.56,0.64,1) 0.4s both, badge-float 5s ease-in-out 1.1s infinite',
-          }}
-        />
-
-        {/* Badge 60 años — mobile */}
-        <img
-          src="/icons/60%20a%C3%B1os-mobile.svg"
-          alt="60 años"
-          aria-hidden="true"
-          className="lg:hidden"
-          style={{
-            position: 'absolute',
-            top: 'calc(86px + 16px)',
-            right: 20,
-            width: 76,
-            zIndex: 2,
-            pointerEvents: 'none',
-            animation: 'badge-enter 0.7s cubic-bezier(0.34,1.56,0.64,1) 0.4s both, badge-float 5s ease-in-out 1.1s infinite',
-          }}
-        />
-
         <div style={{ maxWidth: 680, position: 'relative', zIndex: 1 }}>
           <button
             onClick={() => onNavigate('blog')}
@@ -349,14 +315,15 @@ export default function Historia60Page({ onNavigate }: Props) {
                 ))}
                 {pi === 0 && (
                   <img
-                    src="/images/60%20a%C3%B1os%20Arrendamientos%20Santa%20Fe.svg"
+                    src="/icons/60%20a%C3%B1os-mobile.svg"
                     alt=""
                     aria-hidden
                     style={{
                       position: 'absolute',
-                      top: 10, right: 12, width: 52,
+                      top: 10, right: 12, width: 68,
                       zIndex: 25, pointerEvents: 'none',
                       filter: 'drop-shadow(0 3px 10px rgba(0,0,0,0.4))',
+                      animation: 'badge-enter 0.7s cubic-bezier(0.34,1.56,0.64,1) 0.4s both, badge-float 5s ease-in-out 1.1s infinite',
                     }}
                   />
                 )}
@@ -521,17 +488,18 @@ export default function Historia60Page({ onNavigate }: Props) {
 
             {/* Badge 60 años — decorativo, esquina superior derecha */}
             <img
-              src="/images/60%20a%C3%B1os%20Arrendamientos%20Santa%20Fe.svg"
+              src="/icons/60%20a%C3%B1os-destok.svg"
               alt=""
               aria-hidden
               style={{
                 position: 'absolute',
                 top: 'clamp(12px, 2vw, 24px)',
                 right: 'clamp(14px, 2.5vw, 36px)',
-                width: 'clamp(80px, 9vw, 130px)',
+                width: 'clamp(90px, 9vw, 140px)',
                 zIndex: 25,
                 pointerEvents: 'none',
                 filter: 'drop-shadow(0 4px 14px rgba(0,0,0,0.45))',
+                animation: 'badge-enter 0.7s cubic-bezier(0.34,1.56,0.64,1) 0.4s both, badge-float 5s ease-in-out 1.1s infinite',
               }}
             />
           </div>
