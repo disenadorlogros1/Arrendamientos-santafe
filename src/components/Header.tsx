@@ -161,16 +161,16 @@ export default function Header({ currentPage, onNavigate, isHeroPage = true, dar
         height: '86px',
       }}>
 
-      {/* ── Desktop lg: flex-1 nav | Desktop xl+: nav absoluta centrada como buscador ── */}
-      <div className="hidden lg:flex items-center h-full px-4 lg:px-8 gap-4 xl:gap-0 xl:relative">
-        {/* Logo — flujo normal izquierda; z-10 solo en xl donde la nav es absoluta */}
-        <button onClick={() => handleNav('home')} className="shrink-0 xl:relative xl:z-10">
+      {/* ── Desktop: grid [logo | nav | botones] sin solapamientos ── */}
+      <div className="hidden lg:grid lg:grid-cols-[auto_1fr_auto] items-center h-full px-4 lg:px-8 gap-4 lg:gap-6">
+        {/* Logo */}
+        <button onClick={() => handleNav('home')} className="shrink-0">
           <img src="/icons/Logotipo_Logoblanco.svg" alt="Arrendamientos Santa Fe" className="h-10 md:h-11 w-auto object-contain" />
         </button>
 
-        {/* Nav — flex-1 en lg (sin solapamiento); absoluta centrada en xl+ */}
-        <div className="flex-1 min-w-0 flex items-center justify-center xl:flex-none xl:absolute xl:inset-y-0 xl:left-[155px] xl:right-[320px] xl:pointer-events-none">
-          <nav className="flex items-center justify-between gap-1 rounded-full p-[3px] h-[42px] border shadow-lg w-full xl:pointer-events-auto"
+        {/* Nav — columna central, se expande entre logo y botones */}
+        <div className="flex items-center justify-center min-w-0">
+          <nav className="flex items-center justify-between gap-1 rounded-full p-[3px] h-[42px] border shadow-lg w-full"
             style={{
               maxWidth: '64rem',
               overflow: 'visible',
@@ -234,8 +234,8 @@ export default function Header({ currentPage, onNavigate, isHeroPage = true, dar
           </nav>
         </div>
 
-        {/* Botones — flujo normal en lg; ml-auto + z-10 en xl donde la nav es absoluta */}
-        <div className="flex items-center gap-2 shrink-0 xl:ml-auto xl:relative xl:z-10">
+        {/* Botones */}
+        <div className="flex items-center gap-2 shrink-0">
           <WhatsAppButton />
           <PSEButton />
         </div>
