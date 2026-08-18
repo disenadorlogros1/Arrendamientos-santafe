@@ -156,7 +156,7 @@ export default function Home() {
         </div>
       </main>
 
-      <div style={{ marginTop: currentPage === 'home' ? '35px' : 0 }}>
+      <div className={currentPage === 'home' ? 'lg:mt-[35px]' : ''}>
         <Footer onNavigate={handleNavigate} />
       </div>
     </div>

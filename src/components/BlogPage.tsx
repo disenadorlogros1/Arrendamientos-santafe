@@ -3,7 +3,6 @@
 import { useRef, useEffect } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { ArrowRight } from 'lucide-react';
 import type { PageType } from '@/components/Header';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -151,7 +150,7 @@ export default function BlogPage({
               <img
                 src="/images/Banners/blog_articulo_60_anios.webp"
                 alt=""
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                className="w-full h-full object-cover object-left lg:object-center group-hover:scale-105 transition-transform duration-300"
               />
               <div className="absolute inset-0 bg-black/10" />
               <div className="absolute top-3 right-3">
