@@ -98,6 +98,9 @@ export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) 
   const l66ImgRefs      = useRef<(HTMLImageElement | null)[]>([]);
   const l74ImgRefs      = useRef<(HTMLImageElement | null)[]>([]);
   const l2006ImgRefs    = useRef<(HTMLImageElement | null)[]>([]);
+  const l66GroupRef     = useRef<HTMLDivElement>(null);
+  const l74GroupRef     = useRef<HTMLDivElement>(null);
+  const l2006GroupRef   = useRef<HTMLDivElement>(null);
   const desktopTextRef  = useRef<HTMLDivElement>(null);
   const mobileTextRef   = useRef<HTMLDivElement>(null);
   const tlRef           = useRef<HTMLDivElement>(null);
@@ -168,6 +171,22 @@ export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) 
     }
   }, [activeIdx]);
 
+  /* ── Animación de entrada en mobile al cambiar slide ─────── */
+  useEffect(() => {
+    if (window.innerWidth >= 1024) return;
+    const groupMap: Record<string, HTMLDivElement | null> = {
+      L66:   l66GroupRef.current,
+      L74:   l74GroupRef.current,
+      L2006: l2006GroupRef.current,
+    };
+    const group = groupMap[HITOS[activeIdx].set];
+    if (!group) return;
+    gsap.fromTo(group,
+      { scale: 1.06 },
+      { scale: 1, duration: 0.7, ease: 'power2.out' }
+    );
+  }, [activeIdx]);
+
   /* ── GSAP: entrada + parallax (solo desktop) ─────────────── */
   useEffect(() => {
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -229,19 +248,25 @@ export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) 
           });
         });
       } else {
-        /* Ken Burns mobile — cada capa escala a distinto ritmo creando profundidad */
-        const SCALE_TO  = [1.07, 1.05, 1.06, 1.04, 1.05];
-        const FLOAT_DUR = [9,    7,    8,    11,   6   ];
+        /* Ken Burns mobile — zoom + pan lateral, claramente visible */
+        const KB = [
+          { scale: 1.14, x:  18, dur: 9,  origin: '30% 60%' },
+          { scale: 1.10, x: -14, dur: 7,  origin: '70% 40%' },
+          { scale: 1.12, x:  10, dur: 8,  origin: '50% 50%' },
+          { scale: 1.08, x: -12, dur: 11, origin: '40% 55%' },
+          { scale: 1.11, x:  16, dur: 6,  origin: '60% 45%' },
+        ];
         [...l66ImgRefs.current, ...l74ImgRefs.current, ...l2006ImgRefs.current].forEach((img, absIdx) => {
           if (!img) return;
           const li = absIdx % 5;
+          const k  = KB[li];
           gsap.to(img, {
-            scale: SCALE_TO[li],
-            duration: FLOAT_DUR[li],
+            scale: k.scale, x: k.x,
+            duration: k.dur,
             ease: 'sine.inOut',
             yoyo: true,
             repeat: -1,
-            transformOrigin: 'center center',
+            transformOrigin: k.origin,
           });
         });
       }
@@ -388,7 +413,7 @@ export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) 
       >
 
         {/* ── Grupo L66 ─────────────────────────────────── */}
-        <div style={{
+        <div ref={l66GroupRef} style={{
           position: 'absolute', inset: 0,
           opacity: activeSet === 'L66' ? 1 : 0,
           transition: 'opacity 0.45s ease',
@@ -401,7 +426,7 @@ export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) 
         </div>
 
         {/* ── Grupo L74 ─────────────────────────────────── */}
-        <div style={{
+        <div ref={l74GroupRef} style={{
           position: 'absolute', inset: 0,
           opacity: activeSet === 'L74' ? 1 : 0,
           transition: 'opacity 0.45s ease',
@@ -414,7 +439,7 @@ export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) 
         </div>
 
         {/* ── Grupo L2006 ────────────────────────────────── */}
-        <div style={{
+        <div ref={l2006GroupRef} style={{
           position: 'absolute', inset: 0,
           opacity: activeSet === 'L2006' ? 1 : 0,
           transition: 'opacity 0.45s ease',
