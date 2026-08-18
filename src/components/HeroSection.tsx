@@ -9,54 +9,14 @@ interface HeroSectionProps {
   searchFormSlot?: React.ReactNode;
 }
 
-/* ── YouTube background sin controles (IFrame Player API) ── */
-function YTBackground({ videoId }: { videoId: string }) {
+/* ── Streamable background sin controles ── */
+function StreamableBackground({ videoId }: { videoId: string }) {
   const coverRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const playerId = 'yt-hero-bg';
-
-    const initPlayer = () => {
-      new (window as any).YT.Player(playerId, {
-        videoId,
-        playerVars: {
-          autoplay: 1, mute: 1, loop: 1,
-          playlist: videoId,
-          controls: 0, disablekb: 1,
-          rel: 0, showinfo: 0,
-          modestbranding: 1, playsinline: 1,
-          iv_load_policy: 3, fs: 0,
-        },
-        events: {
-          onReady: (e: any) => e.target.playVideo(),
-          onStateChange: (e: any) => {
-            /* YT.PlayerState.PLAYING = 1 → desvanece la capa que cubre el UI de YouTube */
-            if (e.data === 1 && coverRef.current) {
-              coverRef.current.style.transition = 'opacity 0.8s ease';
-              coverRef.current.style.opacity = '0';
-            }
-          },
-        },
-      });
-    };
-
-    if ((window as any).YT?.Player) {
-      initPlayer();
-    } else {
-      if (!document.getElementById('yt-api-script')) {
-        const tag = document.createElement('script');
-        tag.id = 'yt-api-script';
-        tag.src = 'https://www.youtube.com/iframe_api';
-        document.head.appendChild(tag);
-      }
-      (window as any).onYouTubeIframeAPIReady = initPlayer;
-    }
-  }, [videoId]);
 
   return (
     <>
       <style>{`
-        #yt-hero-bg {
+        .streamable-bg-iframe {
           position: absolute !important;
           top: 50% !important;
           left: 50% !important;
@@ -69,18 +29,23 @@ function YTBackground({ videoId }: { videoId: string }) {
           border: none !important;
         }
       `}</style>
-      {/*
-        zIndex:0 en el wrapper crea un stacking context local →
-        la capa cover (z-index:10) solo domina dentro de este wrapper,
-        el overlay y el contenido del hero siguen pintando encima.
-      */}
       <div
         className="absolute inset-0 overflow-hidden"
         style={{ zIndex: 0 }}
         aria-hidden="true"
       >
-        <div id="yt-hero-bg" />
-        {/* Cubre el botón de play de YouTube hasta que el video arranca */}
+        <iframe
+          className="streamable-bg-iframe"
+          src={`https://streamable.com/e/${videoId}?autoplay=1&muted=1&loop=1&nocontrols=1`}
+          allow="autoplay; fullscreen"
+          allowFullScreen
+          onLoad={() => {
+            if (coverRef.current) {
+              coverRef.current.style.transition = 'opacity 1.2s ease';
+              coverRef.current.style.opacity = '0';
+            }
+          }}
+        />
         <div
           ref={coverRef}
           style={{
@@ -152,8 +117,8 @@ export default function HeroSection({ onNavigate, searchFormSlot }: HeroSectionP
           style={{ minHeight: 'clamp(500px, 88vh, 950px)' }}
           ref={titleRef}
         >
-          {/* Video de fondo — YouTube IFrame API (sin controles) */}
-          <YTBackground videoId="WJhuP6tOk74" />
+          {/* Video de fondo — Streamable (sin controles) */}
+          <StreamableBackground videoId="j404zu" />
 
           {/* Overlay oscuro */}
           <div className="absolute inset-0 hero-video-overlay" />

@@ -271,9 +271,18 @@ export default function Header({ currentPage, onNavigate, isHeroPage = true, dar
                     <div key={item.label}>
                       <button
                         onClick={() => { if (item.children) setExpandedMobile(expandedMobile === item.label ? null : item.label); else if (item.page) handleNav(item.page); }}
-                        className={`w-full text-left px-4 py-3 text-sm font-medium transition-all duration-200 ${currentPage === item.page ? 'bg-[#f5f5f5] text-[#1a1a1a]' : 'text-white/70 hover:bg-white/10 hover:text-white'}`}
+                        className={`w-full text-left px-4 py-3 text-sm font-medium transition-all duration-200 flex items-center justify-between ${currentPage === item.page ? 'bg-[#f5f5f5] text-[#1a1a1a]' : 'text-white/70 hover:bg-white/10 hover:text-white'}`}
                         style={{ fontFamily: "'Avenir LT Std', 'Outfit', system-ui, sans-serif", fontWeight: currentPage === item.page ? 700 : 300 }}>
-                        {item.label}
+                        <span>{item.label}</span>
+                        {item.children && (
+                          <img
+                            src={currentPage === item.page ? '/icons/icon-chevron-right-dark.svg' : '/icons/icon-chevron-right-white.svg'}
+                            alt=""
+                            aria-hidden="true"
+                            className="w-4 h-4 flex-shrink-0 transition-transform duration-200"
+                            style={{ transform: expandedMobile === item.label ? 'rotate(-90deg)' : 'rotate(90deg)', opacity: 0.55 }}
+                          />
+                        )}
                       </button>
                       {item.children && expandedMobile === item.label && (
                         <div className="pl-6 pb-1 space-y-0">
