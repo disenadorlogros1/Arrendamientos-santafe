@@ -196,6 +196,34 @@ export default function Historia60Page({ onNavigate }: Props) {
     return () => ctx.revert();
   }, []);
 
+  // ── Ken Burns mobile ──────────────────────────────────────────
+  useEffect(() => {
+    if (!isMobile) return;
+    const KB = [
+      { scale: 1.07, x:  9, dur: 9,  origin: '30% 60%' },
+      { scale: 1.05, x: -7, dur: 7,  origin: '70% 40%' },
+      { scale: 1.06, x:  5, dur: 8,  origin: '50% 50%' },
+      { scale: 1.04, x: -6, dur: 11, origin: '40% 55%' },
+      { scale: 1.055,x:  8, dur: 6,  origin: '60% 45%' },
+      { scale: 1.06, x: -5, dur: 10, origin: '55% 50%' },
+    ];
+    const timer = setTimeout(() => {
+      EVENTS.forEach((_evt, pi) => {
+        const img = imgRefs.current[pi]?.[0];
+        if (!img) return;
+        const k = KB[pi % KB.length];
+        gsap.to(img, {
+          scale: k.scale, x: k.x,
+          duration: k.dur,
+          ease: 'sine.inOut',
+          yoyo: true, repeat: -1,
+          transformOrigin: k.origin,
+        });
+      });
+    }, 80);
+    return () => clearTimeout(timer);
+  }, [isMobile]);
+
   // ── JSX ───────────────────────────────────────────────────────
   return (
     <div style={{ background: '#fff' }}>
@@ -216,13 +244,6 @@ export default function Historia60Page({ onNavigate }: Props) {
         marginTop: '-86px', paddingTop: 120, paddingBottom: 32,
         paddingLeft: 'clamp(24px,6vw,96px)', paddingRight: 'clamp(24px,6vw,96px)',
       }}>
-        <span aria-hidden="true" className="hidden lg:block" style={{
-          position: 'absolute', right: '-2%', top: '-10%',
-          fontFamily: FONT, fontWeight: 900,
-          fontSize: 'clamp(200px,28vw,380px)',
-          color: 'rgba(255,255,255,0.04)', lineHeight: 1,
-          userSelect: 'none', pointerEvents: 'none',
-        }}>60</span>
 
         <div style={{ maxWidth: 680, position: 'relative', zIndex: 1 }}>
           <button
@@ -255,13 +276,16 @@ export default function Historia60Page({ onNavigate }: Props) {
       {isMobile && (
         <div style={{ background: DARK, paddingBottom: 24 }}>
 
-          {/* Texto encima del banner — reactivo a mobileIdx.
-              minHeight reserva espacio para el cuerpo más largo (evento 2026,
-              ~4 líneas a 390px) → el banner no salta al cambiar de slide. */}
-          <div style={{ padding: '20px 20px 14px', minHeight: '180px', boxSizing: 'border-box' }}>
+          {/* Texto centrado encima del banner */}
+          <div style={{
+            padding: '20px 20px 14px', minHeight: '180px',
+            boxSizing: 'border-box', textAlign: 'center',
+            display: 'flex', flexDirection: 'column',
+            alignItems: 'center', justifyContent: 'center', gap: 8,
+          }}>
             <h3 style={{
               fontFamily: FONT, fontWeight: 800, fontSize: 20,
-              color: '#fff', lineHeight: 1.1, margin: '0 0 8px',
+              color: '#fff', lineHeight: 1.1, margin: 0,
             }}>
               {EVENTS[mobileIdx].title}
             </h3>
@@ -273,76 +297,139 @@ export default function Historia60Page({ onNavigate }: Props) {
             </p>
           </div>
 
-          <div
-            ref={mobileScrollRef}
-            onScroll={(e) => {
-              const idx = Math.round(e.currentTarget.scrollLeft / e.currentTarget.offsetWidth);
-              setMobileIdx(idx);
-            }}
-            style={{
-              display: 'flex',
-              overflowX: 'auto',
-              scrollSnapType: 'x mandatory',
-            } as React.CSSProperties}
-          >
-            {EVENTS.map((evt, pi) => (
-              <div
-                key={evt.year}
-                style={{
-                  minWidth: '100vw',
-                  scrollSnapAlign: 'start',
-                  position: 'relative',
-                  /* aspect-ratio exacto de las imágenes → sin recorte */
-                  aspectRatio: '1920/619',
-                  flexShrink: 0,
-                  overflow: 'hidden',
-                }}
-              >
-                {evt.layers.map((layer, li) => (
-                  <img
-                    key={li}
-                    src={layer.src}
-                    alt=""
-                    aria-hidden="true"
-                    style={{
-                      position: 'absolute', top: 0, left: 0,
-                      width: '100%', height: '100%',
-                      objectFit: 'cover', objectPosition: '50% 50%',
-                      display: 'block',
-                      zIndex: layer.z, pointerEvents: 'none',
-                    }}
-                  />
-                ))}
-                {pi === 0 && (
-                  <img
-                    src="/icons/60%20a%C3%B1os-mobile.svg"
-                    alt=""
-                    aria-hidden
-                    style={{
-                      position: 'absolute',
-                      top: 10, right: 12, width: 68,
-                      zIndex: 25, pointerEvents: 'none',
-                      filter: 'drop-shadow(0 3px 10px rgba(0,0,0,0.4))',
-                      animation: 'badge-enter 0.7s cubic-bezier(0.34,1.56,0.64,1) 0.4s both, badge-float 5s ease-in-out 1.1s infinite',
-                    }}
-                  />
-                )}
-              </div>
-            ))}
+          {/* Banner con flechas */}
+          <div style={{ position: 'relative' }}>
+            {/* Flecha izquierda */}
+            <button
+              type="button"
+              aria-label="Año anterior"
+              onClick={() => {
+                const prev = Math.max(0, mobileIdx - 1);
+                mobileScrollRef.current?.scrollTo({
+                  left: prev * (mobileScrollRef.current?.offsetWidth ?? window.innerWidth),
+                  behavior: 'smooth',
+                });
+              }}
+              style={{
+                position: 'absolute', left: 8, top: '50%',
+                transform: 'translateY(-50%)', zIndex: 30,
+                width: 36, height: 36, borderRadius: '50%',
+                background: 'rgba(255,255,255,0.14)',
+                backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)',
+                border: '1px solid rgba(255,255,255,0.28)',
+                color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                cursor: 'pointer', padding: 0,
+              }}
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="15 18 9 12 15 6" />
+              </svg>
+            </button>
+
+            {/* Scroll container — scrollbar oculto */}
+            <style>{`.mob-scroll::-webkit-scrollbar { display: none; }`}</style>
+            <div
+              ref={mobileScrollRef}
+              className="mob-scroll"
+              onScroll={(e) => {
+                const idx = Math.round(e.currentTarget.scrollLeft / e.currentTarget.offsetWidth);
+                setMobileIdx(idx);
+              }}
+              style={{
+                display: 'flex',
+                overflowX: 'auto',
+                scrollSnapType: 'x mandatory',
+                scrollbarWidth: 'none',
+              } as React.CSSProperties}
+            >
+              {EVENTS.map((evt, pi) => (
+                <div
+                  key={evt.year}
+                  style={{
+                    minWidth: '100vw',
+                    scrollSnapAlign: 'start',
+                    position: 'relative',
+                    aspectRatio: '1920/619',
+                    flexShrink: 0,
+                    overflow: 'hidden',
+                  }}
+                >
+                  {evt.layers.map((layer, li) => (
+                    <img
+                      key={li}
+                      ref={el => { imgRefs.current[pi][li] = el; }}
+                      src={layer.src}
+                      alt=""
+                      aria-hidden="true"
+                      style={{
+                        position: 'absolute', top: 0, left: 0,
+                        width: '100%', height: '100%',
+                        objectFit: 'cover', objectPosition: '50% 50%',
+                        display: 'block',
+                        zIndex: layer.z, pointerEvents: 'none',
+                      }}
+                    />
+                  ))}
+                  {pi === 0 && (
+                    <img
+                      src="/icons/60%20a%C3%B1os-mobile.svg"
+                      alt=""
+                      aria-hidden
+                      style={{
+                        position: 'absolute',
+                        top: 10, right: 12, width: 54,
+                        zIndex: 25, pointerEvents: 'none',
+                        filter: 'drop-shadow(0 3px 10px rgba(0,0,0,0.4))',
+                        animation: 'badge-enter 0.7s cubic-bezier(0.34,1.56,0.64,1) 0.4s both, badge-float 5s ease-in-out 1.1s infinite',
+                      }}
+                    />
+                  )}
+                </div>
+              ))}
+            </div>
+
+            {/* Flecha derecha */}
+            <button
+              type="button"
+              aria-label="Año siguiente"
+              onClick={() => {
+                const next = Math.min(N - 1, mobileIdx + 1);
+                mobileScrollRef.current?.scrollTo({
+                  left: next * (mobileScrollRef.current?.offsetWidth ?? window.innerWidth),
+                  behavior: 'smooth',
+                });
+              }}
+              style={{
+                position: 'absolute', right: 8, top: '50%',
+                transform: 'translateY(-50%)', zIndex: 30,
+                width: 36, height: 36, borderRadius: '50%',
+                background: 'rgba(255,255,255,0.14)',
+                backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)',
+                border: '1px solid rgba(255,255,255,0.28)',
+                color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                cursor: 'pointer', padding: 0,
+              }}
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="9 18 15 12 9 6" />
+              </svg>
+            </button>
           </div>
 
-          {/* Timeline dots */}
+          {/* Timeline dots — años arriba, círculos en medio, línea abajo */}
           <div style={{
             display: 'flex',
-            position: 'relative', height: 40, paddingTop: 12,
+            position: 'relative', height: 56,
             background: DARK,
           }}>
+            {/* Línea horizontal — debajo de los círculos */}
             <div style={{
-              position: 'absolute', top: '50%',
+              position: 'absolute',
+              bottom: 10,
               left: `calc(100% / ${N * 2})`,
               right: `calc(100% / ${N * 2})`,
               height: 1, background: FOG,
-              transform: 'translateY(-50%)', zIndex: 1,
+              zIndex: 1,
             }} />
             {EVENTS.map((evt, pi) => {
               const active = pi === mobileIdx;
@@ -361,12 +448,11 @@ export default function Historia60Page({ onNavigate }: Props) {
                     padding: 0, zIndex: 2,
                   }}
                 >
-                  {/* Año ENCIMA de la línea */}
+                  {/* Año — arriba */}
                   <span style={{
                     position: 'absolute',
-                    bottom: '50%', left: '50%',
+                    top: 6, left: '50%',
                     transform: 'translateX(-50%)',
-                    marginBottom: 5,
                     fontFamily: FONT, lineHeight: 1,
                     fontSize: active ? 11 : 10, fontWeight: active ? 700 : 300,
                     color: active ? RED : FOG,
@@ -375,11 +461,11 @@ export default function Historia60Page({ onNavigate }: Props) {
                   }}>
                     {evt.year}
                   </span>
-                  {/* Punto SOBRE la línea */}
+                  {/* Círculo — en medio */}
                   <div style={{
                     position: 'absolute',
-                    top: '50%', left: '50%',
-                    transform: `translate(-50%, -50%) scale(${active ? 1.8 : 1})`,
+                    top: 28, left: '50%',
+                    transform: `translateX(-50%) scale(${active ? 1.8 : 1})`,
                     width: 8, height: 8, borderRadius: '50%', background: RED,
                     transition: 'transform 0.2s',
                   }} />

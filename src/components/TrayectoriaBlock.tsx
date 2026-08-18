@@ -77,7 +77,8 @@ const HITOS = [
     Con extra=60px, objectFit:cover escala muy poco → mínimo recorte lateral.
   Mobile: imágenes a height:100% → cero recorte, parallax desactivado.
 */
-const PARALLAX_Y_DESKTOP = [12, -15, -24, -32, -40]; // reducidos vs versión anterior
+const PARALLAX_Y_DESKTOP = [28, -38, -62, -88, -115];
+const MOUSE_PX_DESKTOP   = [6, 18, 32, 48, 66]; // desplazamiento X máximo por capa al mover mouse
 
 /* ── Estilos estáticos ───────────────────────────────────────── */
 const ARROW_BASE: React.CSSProperties = {
@@ -134,6 +135,7 @@ export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) 
   const autoTimerRef    = useRef<ReturnType<typeof setInterval> | null>(null);
   const pauseTimerRef   = useRef<ReturnType<typeof setTimeout> | null>(null);
   const entranceDoneRef = useRef(false);
+  const mouseSettersRef = useRef<Map<HTMLImageElement, (dx: number) => void>>(new Map());
 
   const activeSet = HITOS[activeIdx].set;
 
@@ -263,17 +265,29 @@ export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) 
       const isDesktop = window.innerWidth >= 1024;
 
       if (isDesktop) {
-        /* Parallax desktop */
-        [...l66ImgRefs.current, ...l74ImgRefs.current, ...l2006ImgRefs.current, ...l2017ImgRefs.current, ...l2018ImgRefs.current, ...l2026ImgRefs.current].forEach((img, absIdx) => {
+        /* Parallax Y desktop (scroll) + mouse X por capa */
+        const allImgs = [...l66ImgRefs.current, ...l74ImgRefs.current, ...l2006ImgRefs.current,
+                         ...l2017ImgRefs.current, ...l2018ImgRefs.current, ...l2026ImgRefs.current];
+        allImgs.forEach((img, absIdx) => {
           if (!img) return;
+          const li = absIdx % 5;
+
           gsap.to(img, {
-            y: PARALLAX_Y_DESKTOP[absIdx % 5],
+            y: PARALLAX_Y_DESKTOP[li],
             ease: 'none',
             scrollTrigger: {
               trigger: sectionRef.current,
               start: 'top bottom', end: 'bottom top', scrub: 1.4,
             },
           });
+
+          const proxy  = { x: 0 };
+          const px     = MOUSE_PX_DESKTOP[li];
+          const setter = gsap.quickTo(proxy, 'x', {
+            duration: 0.65, ease: 'power3.out',
+            onUpdate: () => { img.style.objectPosition = `calc(50% + ${proxy.x}px) 50%`; },
+          });
+          mouseSettersRef.current.set(img, (dx: number) => setter(dx * px));
         });
       } else {
         /* Ken Burns mobile — intensidad 50% vs desktop */
@@ -448,6 +462,16 @@ export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) 
           aspectRatio: '1920/619',
           overflow: 'hidden',
         }}
+        onMouseMove={(e) => {
+          if (isMobile || !entranceDoneRef.current) return;
+          const rect = bannerWrapRef.current?.getBoundingClientRect();
+          if (!rect) return;
+          const dx = (e.clientX - rect.left) / rect.width - 0.5;
+          mouseSettersRef.current.forEach((setter) => setter(dx));
+        }}
+        onMouseLeave={() => {
+          mouseSettersRef.current.forEach((setter) => setter(0));
+        }}
       >
 
         {/* ── Grupo L66 ─────────────────────────────────── */}
@@ -575,14 +599,14 @@ export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) 
             position: 'absolute',
             top:   isMobile ? '8px'  : 'clamp(12px, 2.5vw, 28px)',
             right: isMobile ? '52px' : 'clamp(60px, 6vw, 80px)',
-            width: isMobile ? '48px' : 'clamp(80px, 8.5vw, 120px)',
+            width: isMobile ? '38px' : 'clamp(80px, 8.5vw, 120px)',
             zIndex: 25,
             cursor: 'pointer',
             filter: 'drop-shadow(0 4px 14px rgba(0,0,0,0.45))',
           }}
         >
           <img
-            src="/images/60%20a%C3%B1os%20Arrendamientos%20Santa%20Fe.svg"
+            src={isMobile ? '/icons/60%20a%C3%B1os-mobile.svg' : '/icons/60%20a%C3%B1os-destok.svg'}
             alt=""
             style={{ width: '100%', display: 'block', pointerEvents: 'none' }}
           />
