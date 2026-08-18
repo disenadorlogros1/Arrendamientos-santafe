@@ -135,7 +135,7 @@ export default function ServiciosPage() {
                 <div
                   className="aspect-[4/3] rounded-2xl bg-cover bg-center"
                   style={{
-                    backgroundImage: 'url(https://picsum.photos/seed/office-med/800/600)',
+                    backgroundImage: 'url(/images/Banners/banner_servicios.webp)',
                   }}
                 />
                 <div className="absolute inset-0 rounded-2xl bg-gradient-to-t from-black/30 to-transparent" />

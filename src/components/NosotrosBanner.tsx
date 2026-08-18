@@ -10,9 +10,9 @@ const FONT = "'Avenir LT Std', 'Outfit', system-ui, sans-serif";
 const RED  = '#f32735';
 
 const IMAGES = [
-  'https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=1600&q=80',
-  'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=1600&q=80',
-  'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1600&q=80',
+  '/images/Banners/banner_nosotros_1.webp',
+  '/images/Banners/banner_nosotros_2.webp',
+  '/images/Banners/banner_nosotros_3.webp',
 ];
 
 interface Props {

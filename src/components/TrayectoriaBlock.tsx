@@ -15,44 +15,44 @@ const FONT = "'Avenir LT Std', 'Outfit', system-ui, sans-serif";
 const RED  = '#f32735';
 
 const L66 = [
-  '/images/Linea%20de%20tiempo/1966-Fondo.webp',
-  '/images/Linea%20de%20tiempo/1966-fecha-1.webp',
-  '/images/Linea%20de%20tiempo/1966-fecha-2.webp',
-  '/images/Linea%20de%20tiempo/1966-recorte-superior.webp',
-  '/images/Linea%20de%20tiempo/1966-superior.webp',
+  '/images/Banners/Linea%20de%20tiempo/1966-Fondo.webp',
+  '/images/Banners/Linea%20de%20tiempo/1966-fecha-1.webp',
+  '/images/Banners/Linea%20de%20tiempo/1966-fecha-2.webp',
+  '/images/Banners/Linea%20de%20tiempo/1966-recorte-superior.webp',
+  '/images/Banners/Linea%20de%20tiempo/1966-superior.webp',
 ];
 const L74 = [
-  '/images/Linea%20de%20tiempo/1974-Fondo.webp',
-  '/images/Linea%20de%20tiempo/1974-fecha-1.webp',
-  '/images/Linea%20de%20tiempo/1974-fecha-2.webp',
-  '/images/Linea%20de%20tiempo/1974-recorte-superior.webp',
-  '/images/Linea%20de%20tiempo/1974-superior.webp',
+  '/images/Banners/Linea%20de%20tiempo/1974-Fondo.webp',
+  '/images/Banners/Linea%20de%20tiempo/1974-fecha-1.webp',
+  '/images/Banners/Linea%20de%20tiempo/1974-fecha-2.webp',
+  '/images/Banners/Linea%20de%20tiempo/1974-recorte-superior.webp',
+  '/images/Banners/Linea%20de%20tiempo/1974-superior.webp',
 ];
 const L2006 = [
-  '/images/Linea%20de%20tiempo/2006-Fondo.webp',
-  '/images/Linea%20de%20tiempo/2006-fecha-1.webp',
-  '/images/Linea%20de%20tiempo/2006-fecha-2.webp',
-  '/images/Linea%20de%20tiempo/2006-recorte-superior.webp',
-  '/images/Linea%20de%20tiempo/2006-superior.webp',
+  '/images/Banners/Linea%20de%20tiempo/2006-Fondo.webp',
+  '/images/Banners/Linea%20de%20tiempo/2006-fecha-1.webp',
+  '/images/Banners/Linea%20de%20tiempo/2006-fecha-2.webp',
+  '/images/Banners/Linea%20de%20tiempo/2006-recorte-superior.webp',
+  '/images/Banners/Linea%20de%20tiempo/2006-superior.webp',
 ];
 const L2017 = [
-  '/images/Linea%20de%20tiempo/2017-Fondo.webp',
-  '/images/Linea%20de%20tiempo/2017-fecha-1.webp',
-  '/images/Linea%20de%20tiempo/2017-fecha-2.webp',
-  '/images/Linea%20de%20tiempo/2017-recorte-superior.webp',
-  '/images/Linea%20de%20tiempo/2017-superior.webp',
+  '/images/Banners/Linea%20de%20tiempo/2017-Fondo.webp',
+  '/images/Banners/Linea%20de%20tiempo/2017-fecha-1.webp',
+  '/images/Banners/Linea%20de%20tiempo/2017-fecha-2.webp',
+  '/images/Banners/Linea%20de%20tiempo/2017-recorte-superior.webp',
+  '/images/Banners/Linea%20de%20tiempo/2017-superior.webp',
 ];
 const L2018 = [
-  '/images/Linea%20de%20tiempo/2018-Fondo.webp',
-  '/images/Linea%20de%20tiempo/2018-fecha-1.webp',
-  '/images/Linea%20de%20tiempo/2018-fecha-2.webp',
-  '/images/Linea%20de%20tiempo/2018-superior.webp',
+  '/images/Banners/Linea%20de%20tiempo/2018-Fondo.webp',
+  '/images/Banners/Linea%20de%20tiempo/2018-fecha-1.webp',
+  '/images/Banners/Linea%20de%20tiempo/2018-fecha-2.webp',
+  '/images/Banners/Linea%20de%20tiempo/2018-superior.webp',
 ];
 const L2026 = [
-  '/images/Linea%20de%20tiempo/2026-fondo.webp',
-  '/images/Linea%20de%20tiempo/2026-fecha-1.webp',
-  '/images/Linea%20de%20tiempo/2026-fecha-2.webp',
-  '/images/Linea%20de%20tiempo/2026-superior.webp',
+  '/images/Banners/Linea%20de%20tiempo/2026-fondo.webp',
+  '/images/Banners/Linea%20de%20tiempo/2026-fecha-1.webp',
+  '/images/Banners/Linea%20de%20tiempo/2026-fecha-2.webp',
+  '/images/Banners/Linea%20de%20tiempo/2026-superior.webp',
 ];
 const Z = [2, 4, 6, 8, 10];
 

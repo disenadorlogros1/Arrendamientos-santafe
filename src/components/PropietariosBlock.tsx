@@ -180,7 +180,7 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
 
         {/* ── BANNER MOBILE — solo visible en < lg ─────────────── */}
         <img
-          src="/images/banner_propietarios_2.png"
+          src="/images/Banners/banner_propietarios_2.png"
           alt=""
           aria-hidden
           className="block lg:hidden w-full"
@@ -268,7 +268,7 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
             <div ref={clipARef} style={{ position: 'absolute', inset: 0, zIndex: 0, overflow: 'hidden' }}>
               <div
                 className="absolute inset-0 transition-transform duration-[650ms] ease-out group-hover:scale-[1.06]"
-                style={{ backgroundImage: 'url(/images/banner_propietarios_1.png)', backgroundSize: 'cover', backgroundPosition: 'center top' }}
+                style={{ backgroundImage: 'url(/images/Banners/banner_propietarios_1.png)', backgroundSize: 'cover', backgroundPosition: 'center top' }}
               />
             </div>
             <div ref={gradARef} style={{
@@ -288,7 +288,7 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
             <div ref={clipBRef} style={{ position: 'absolute', inset: 0, zIndex: 0, overflow: 'hidden' }}>
               <div
                 className="absolute inset-0 transition-transform duration-[650ms] ease-out group-hover:scale-[1.06]"
-                style={{ backgroundImage: 'url(/images/banner_propietarios_3.png)', backgroundSize: 'cover', backgroundPosition: 'center top' }}
+                style={{ backgroundImage: 'url(/images/Banners/banner_propietarios_3.png)', backgroundSize: 'cover', backgroundPosition: 'center top' }}
               />
             </div>
             <div ref={gradBRef} style={{
@@ -308,7 +308,7 @@ export default function PropietariosBlock({ onNavigate }: PropietariosBlockProps
             <div ref={clipCRef} style={{ position: 'absolute', inset: 0, zIndex: 0, overflow: 'hidden' }}>
               <div
                 className="absolute inset-0 transition-transform duration-[650ms] ease-out group-hover:scale-[1.06]"
-                style={{ backgroundImage: 'url(/images/banner_propietarios_2.png)', backgroundSize: 'cover', backgroundPosition: 'center' }}
+                style={{ backgroundImage: 'url(/images/Banners/banner_propietarios_2.png)', backgroundSize: 'cover', backgroundPosition: 'center' }}
               />
             </div>
             <div ref={gradCRef} style={{

@@ -25,7 +25,7 @@ export const allArticles: BlogArticle[] = [
     excerpt: 'Aprende cómo proteger tu inversión inmobiliaria con mantenimiento preventivo y cuidados esenciales que evitarán costosas reparaciones futuras.',
     date: 'Mayo 18, 2026',
     category: 'Arrendamiento',
-    image: 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=1200&q=80',
+    image: '/images/Banners/blog_articulo_1.webp',
     readTime: '5 min',
     intro: 'La diferencia entre una propiedad que mantiene su valor y una que lo pierde está, en buena parte, en el mantenimiento preventivo. Si tienes un inmueble en arriendo, estos cinco hábitos te evitarán conflictos, gastos inesperados y pérdida de valor a largo plazo.',
     blocks: [
@@ -51,7 +51,7 @@ export const allArticles: BlogArticle[] = [
     excerpt: 'Descubre por qué El Poblado es el barrio preferido de inversionistas y expatriados. Analiza rentabilidades, precios y oportunidades actuales.',
     date: 'Mayo 12, 2026',
     category: 'Mercado',
-    image: 'https://images.unsplash.com/photo-1552664730-d307ca884978?w=1200&q=80',
+    image: '/images/Banners/blog_articulo_2.webp',
     readTime: '7 min',
     intro: 'El Poblado concentra la mayor demanda de arrendamiento residencial premium en Medellín. Pero no todos sus sectores son iguales: entender sus diferencias es clave para tomar decisiones de inversión inteligentes.',
     blocks: [
@@ -83,7 +83,7 @@ export const allArticles: BlogArticle[] = [
     excerpt: 'Detrás de un buen porcentaje hay cálculos precisos. Te enseñamos a evaluar correctamente si tu propiedad genera los retornos esperados.',
     date: 'Mayo 8, 2026',
     category: 'Inversión',
-    image: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=1200&q=80',
+    image: '/images/Banners/blog_articulo_3.webp',
     readTime: '6 min',
     intro: 'El precio de compra de una propiedad no dice nada por sí solo sobre su rentabilidad como inversión. Detrás de un porcentaje atractivo puede haber costos ocultos que cambian completamente el panorama. Aquí te enseñamos a calcular correctamente.',
     blocks: [
@@ -114,7 +114,7 @@ export const allArticles: BlogArticle[] = [
     excerpt: 'Conoce los requisitos legales, contratos y documentos indispensables para proteger tu propiedad y asegurar un arrendamiento seguro.',
     date: 'Abril 30, 2026',
     category: 'Arrendamiento',
-    image: 'https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=1200&q=80',
+    image: '/images/Banners/blog_articulo_4.webp',
     readTime: '4 min',
     intro: 'Un contrato de arrendamiento bien soportado documentalmente protege a ambas partes y reduce drásticamente los conflictos. Antes de entregar las llaves, asegúrate de tener todo en orden.',
     blocks: [
@@ -148,7 +148,7 @@ export const allArticles: BlogArticle[] = [
     excerpt: 'Explora los proyectos inmobiliarios más promisores del momento y descubre dónde colocar tu capital para máxima rentabilidad.',
     date: 'Abril 22, 2026',
     category: 'Inversión',
-    image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1200&q=80',
+    image: '/images/Banners/blog_articulo_5.webp',
     readTime: '8 min',
     intro: 'Durante años, la inversión inmobiliaria en Antioquia estuvo concentrada en el Valle de Aburrá. Hoy, el mapa se ha expandido, y algunas de las oportunidades más interesantes están fuera de Medellín.',
     blocks: [
@@ -180,7 +180,7 @@ export const allArticles: BlogArticle[] = [
     excerpt: 'Descubre cómo muchos propietarios en Medellín están multiplicando sus ingresos con arrendamiento turístico de corta duración.',
     date: 'Abril 15, 2026',
     category: 'Arrendamiento',
-    image: 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=1200&q=80',
+    image: '/images/Banners/blog_articulo_6.webp',
     readTime: '6 min',
     intro: 'Medellín se ha convertido en uno de los destinos más visitados de Latinoamérica. Ese flujo de turistas ha creado una demanda creciente por alojamiento de corta duración que algunos propietarios ya están aprovechando con muy buenos resultados.',
     blocks: [

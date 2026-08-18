@@ -9,6 +9,65 @@ interface HeroSectionProps {
   searchFormSlot?: React.ReactNode;
 }
 
+/* ── YouTube background sin controles (IFrame Player API) ── */
+function YTBackground({ videoId }: { videoId: string }) {
+  useEffect(() => {
+    const playerId = 'yt-hero-bg';
+
+    const initPlayer = () => {
+      new (window as any).YT.Player(playerId, {
+        videoId,
+        playerVars: {
+          autoplay: 1, mute: 1, loop: 1,
+          playlist: videoId,
+          controls: 0, disablekb: 1,
+          rel: 0, showinfo: 0,
+          modestbranding: 1, playsinline: 1,
+          iv_load_policy: 3, fs: 0,
+        },
+        events: {
+          onReady: (e: any) => e.target.playVideo(),
+        },
+      });
+    };
+
+    if ((window as any).YT?.Player) {
+      initPlayer();
+    } else {
+      if (!document.getElementById('yt-api-script')) {
+        const tag = document.createElement('script');
+        tag.id = 'yt-api-script';
+        tag.src = 'https://www.youtube.com/iframe_api';
+        document.head.appendChild(tag);
+      }
+      (window as any).onYouTubeIframeAPIReady = initPlayer;
+    }
+  }, [videoId]);
+
+  return (
+    <>
+      {/* El id se transfiere del div al iframe que crea la API → el CSS aplica a ambos */}
+      <style>{`
+        #yt-hero-bg {
+          position: absolute !important;
+          top: 50% !important;
+          left: 50% !important;
+          width: calc(177.78vh + 200px) !important;
+          min-width: calc(100% + 200px) !important;
+          height: calc(56.25vw + 200px) !important;
+          min-height: calc(100% + 200px) !important;
+          transform: translate(-50%, -50%) !important;
+          pointer-events: none !important;
+          border: none !important;
+        }
+      `}</style>
+      <div className="absolute inset-0 overflow-hidden" aria-hidden="true">
+        <div id="yt-hero-bg" />
+      </div>
+    </>
+  );
+}
+
 function applyInkFill(e: React.MouseEvent<HTMLElement>) {
   const el = e.currentTarget;
   const rect = el.getBoundingClientRect();
@@ -66,23 +125,8 @@ export default function HeroSection({ onNavigate, searchFormSlot }: HeroSectionP
           style={{ minHeight: 'clamp(500px, 88vh, 950px)' }}
           ref={titleRef}
         >
-          {/* Video de fondo — YouTube embed */}
-          <div className="absolute inset-0 overflow-hidden" aria-hidden="true">
-            <iframe
-              src="https://www.youtube.com/embed/WJhuP6tOk74?autoplay=1&mute=1&loop=1&playlist=WJhuP6tOk74&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1&disablekb=1&iv_load_policy=3"
-              allow="autoplay; encrypted-media"
-              allowFullScreen={false}
-              style={{
-                position: 'absolute',
-                top: '50%', left: '50%',
-                width: 'calc(100% + 400px)',
-                height: 'calc(100% + 400px)',
-                transform: 'translate(-50%, -50%)',
-                pointerEvents: 'none',
-                border: 'none',
-              }}
-            />
-          </div>
+          {/* Video de fondo — YouTube IFrame API (sin controles) */}
+          <YTBackground videoId="WJhuP6tOk74" />
 
           {/* Overlay oscuro */}
           <div className="absolute inset-0 hero-video-overlay" />

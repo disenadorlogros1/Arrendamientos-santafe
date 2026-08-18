@@ -20,45 +20,45 @@ const PANEL_H = 619; // panel height in px (matches previous 1100×16/9 ratio)
 type LayerCfg = { src: string; z: number; px: number; py: number; dur: number };
 
 const L66: LayerCfg[] = [
-  { src: '/images/Linea%20de%20tiempo/1966-Fondo.webp',            z: 2,  px: 5,  py: 0, dur: 0.85 },
-  { src: '/images/Linea%20de%20tiempo/1966-fecha-1.webp',          z: 4,  px: 12, py: 0, dur: 0.70 },
-  { src: '/images/Linea%20de%20tiempo/1966-fecha-2.webp',          z: 6,  px: 19, py: 0, dur: 0.55 },
-  { src: '/images/Linea%20de%20tiempo/1966-recorte-superior.webp', z: 8,  px: 26, py: 0, dur: 0.40 },
-  { src: '/images/Linea%20de%20tiempo/1966-superior.webp',         z: 10, px: 34, py: 0, dur: 0.26 },
+  { src: '/images/Banners/Linea%20de%20tiempo/1966-Fondo.webp',            z: 2,  px: 5,  py: 0, dur: 0.85 },
+  { src: '/images/Banners/Linea%20de%20tiempo/1966-fecha-1.webp',          z: 4,  px: 12, py: 0, dur: 0.70 },
+  { src: '/images/Banners/Linea%20de%20tiempo/1966-fecha-2.webp',          z: 6,  px: 19, py: 0, dur: 0.55 },
+  { src: '/images/Banners/Linea%20de%20tiempo/1966-recorte-superior.webp', z: 8,  px: 26, py: 0, dur: 0.40 },
+  { src: '/images/Banners/Linea%20de%20tiempo/1966-superior.webp',         z: 10, px: 34, py: 0, dur: 0.26 },
 ];
 
 const L74: LayerCfg[] = [
-  { src: '/images/Linea%20de%20tiempo/1974-Fondo.webp',            z: 2,  px: 5,  py: 0, dur: 0.85 },
-  { src: '/images/Linea%20de%20tiempo/1974-fecha-1.webp',          z: 4,  px: 12, py: 0, dur: 0.70 },
-  { src: '/images/Linea%20de%20tiempo/1974-fecha-2.webp',          z: 6,  px: 19, py: 0, dur: 0.55 },
-  { src: '/images/Linea%20de%20tiempo/1974-recorte-superior.webp', z: 8,  px: 26, py: 0, dur: 0.40 },
-  { src: '/images/Linea%20de%20tiempo/1974-superior.webp',         z: 10, px: 34, py: 0, dur: 0.26 },
+  { src: '/images/Banners/Linea%20de%20tiempo/1974-Fondo.webp',            z: 2,  px: 5,  py: 0, dur: 0.85 },
+  { src: '/images/Banners/Linea%20de%20tiempo/1974-fecha-1.webp',          z: 4,  px: 12, py: 0, dur: 0.70 },
+  { src: '/images/Banners/Linea%20de%20tiempo/1974-fecha-2.webp',          z: 6,  px: 19, py: 0, dur: 0.55 },
+  { src: '/images/Banners/Linea%20de%20tiempo/1974-recorte-superior.webp', z: 8,  px: 26, py: 0, dur: 0.40 },
+  { src: '/images/Banners/Linea%20de%20tiempo/1974-superior.webp',         z: 10, px: 34, py: 0, dur: 0.26 },
 ];
 const L2006: LayerCfg[] = [
-  { src: '/images/Linea%20de%20tiempo/2006-Fondo.webp',            z: 2,  px: 5,  py: 0, dur: 0.85 },
-  { src: '/images/Linea%20de%20tiempo/2006-fecha-1.webp',          z: 4,  px: 12, py: 0, dur: 0.70 },
-  { src: '/images/Linea%20de%20tiempo/2006-fecha-2.webp',          z: 6,  px: 19, py: 0, dur: 0.55 },
-  { src: '/images/Linea%20de%20tiempo/2006-recorte-superior.webp', z: 8,  px: 26, py: 0, dur: 0.40 },
-  { src: '/images/Linea%20de%20tiempo/2006-superior.webp',         z: 10, px: 34, py: 0, dur: 0.26 },
+  { src: '/images/Banners/Linea%20de%20tiempo/2006-Fondo.webp',            z: 2,  px: 5,  py: 0, dur: 0.85 },
+  { src: '/images/Banners/Linea%20de%20tiempo/2006-fecha-1.webp',          z: 4,  px: 12, py: 0, dur: 0.70 },
+  { src: '/images/Banners/Linea%20de%20tiempo/2006-fecha-2.webp',          z: 6,  px: 19, py: 0, dur: 0.55 },
+  { src: '/images/Banners/Linea%20de%20tiempo/2006-recorte-superior.webp', z: 8,  px: 26, py: 0, dur: 0.40 },
+  { src: '/images/Banners/Linea%20de%20tiempo/2006-superior.webp',         z: 10, px: 34, py: 0, dur: 0.26 },
 ];
 const L2017: LayerCfg[] = [
-  { src: '/images/Linea%20de%20tiempo/2017-Fondo.webp',            z: 2,  px: 5,  py: 0, dur: 0.85 },
-  { src: '/images/Linea%20de%20tiempo/2017-fecha-1.webp',          z: 4,  px: 12, py: 0, dur: 0.70 },
-  { src: '/images/Linea%20de%20tiempo/2017-fecha-2.webp',          z: 6,  px: 19, py: 0, dur: 0.55 },
-  { src: '/images/Linea%20de%20tiempo/2017-recorte-superior.webp', z: 8,  px: 26, py: 0, dur: 0.40 },
-  { src: '/images/Linea%20de%20tiempo/2017-superior.webp',         z: 10, px: 34, py: 0, dur: 0.26 },
+  { src: '/images/Banners/Linea%20de%20tiempo/2017-Fondo.webp',            z: 2,  px: 5,  py: 0, dur: 0.85 },
+  { src: '/images/Banners/Linea%20de%20tiempo/2017-fecha-1.webp',          z: 4,  px: 12, py: 0, dur: 0.70 },
+  { src: '/images/Banners/Linea%20de%20tiempo/2017-fecha-2.webp',          z: 6,  px: 19, py: 0, dur: 0.55 },
+  { src: '/images/Banners/Linea%20de%20tiempo/2017-recorte-superior.webp', z: 8,  px: 26, py: 0, dur: 0.40 },
+  { src: '/images/Banners/Linea%20de%20tiempo/2017-superior.webp',         z: 10, px: 34, py: 0, dur: 0.26 },
 ];
 const L2018: LayerCfg[] = [
-  { src: '/images/Linea%20de%20tiempo/2018-Fondo.webp',    z: 2,  px: 5,  py: 0, dur: 0.85 },
-  { src: '/images/Linea%20de%20tiempo/2018-fecha-1.webp',  z: 4,  px: 12, py: 0, dur: 0.70 },
-  { src: '/images/Linea%20de%20tiempo/2018-fecha-2.webp',  z: 6,  px: 19, py: 0, dur: 0.55 },
-  { src: '/images/Linea%20de%20tiempo/2018-superior.webp', z: 10, px: 34, py: 0, dur: 0.26 },
+  { src: '/images/Banners/Linea%20de%20tiempo/2018-Fondo.webp',    z: 2,  px: 5,  py: 0, dur: 0.85 },
+  { src: '/images/Banners/Linea%20de%20tiempo/2018-fecha-1.webp',  z: 4,  px: 12, py: 0, dur: 0.70 },
+  { src: '/images/Banners/Linea%20de%20tiempo/2018-fecha-2.webp',  z: 6,  px: 19, py: 0, dur: 0.55 },
+  { src: '/images/Banners/Linea%20de%20tiempo/2018-superior.webp', z: 10, px: 34, py: 0, dur: 0.26 },
 ];
 const L2026: LayerCfg[] = [
-  { src: '/images/Linea%20de%20tiempo/2026-fondo.webp',    z: 2,  px: 5,  py: 0, dur: 0.85 },
-  { src: '/images/Linea%20de%20tiempo/2026-fecha-1.webp',  z: 4,  px: 12, py: 0, dur: 0.70 },
-  { src: '/images/Linea%20de%20tiempo/2026-fecha-2.webp',  z: 6,  px: 19, py: 0, dur: 0.55 },
-  { src: '/images/Linea%20de%20tiempo/2026-superior.webp', z: 10, px: 34, py: 0, dur: 0.26 },
+  { src: '/images/Banners/Linea%20de%20tiempo/2026-fondo.webp',    z: 2,  px: 5,  py: 0, dur: 0.85 },
+  { src: '/images/Banners/Linea%20de%20tiempo/2026-fecha-1.webp',  z: 4,  px: 12, py: 0, dur: 0.70 },
+  { src: '/images/Banners/Linea%20de%20tiempo/2026-fecha-2.webp',  z: 6,  px: 19, py: 0, dur: 0.55 },
+  { src: '/images/Banners/Linea%20de%20tiempo/2026-superior.webp', z: 10, px: 34, py: 0, dur: 0.26 },
 ];
 
 const EVENTS = [
