@@ -35,6 +35,25 @@ const L2006 = [
   '/images/Linea%20de%20tiempo/2006-recorte-superior.webp',
   '/images/Linea%20de%20tiempo/2006-superior.webp',
 ];
+const L2017 = [
+  '/images/Linea%20de%20tiempo/2017-Fondo.webp',
+  '/images/Linea%20de%20tiempo/2017-fecha-1.webp',
+  '/images/Linea%20de%20tiempo/2017-fecha-2.webp',
+  '/images/Linea%20de%20tiempo/2017-recorte-superior.webp',
+  '/images/Linea%20de%20tiempo/2017-superior.webp',
+];
+const L2018 = [
+  '/images/Linea%20de%20tiempo/2018-Fondo.webp',
+  '/images/Linea%20de%20tiempo/2018-fecha-1.webp',
+  '/images/Linea%20de%20tiempo/2018-fecha-2.webp',
+  '/images/Linea%20de%20tiempo/2018-superior.webp',
+];
+const L2026 = [
+  '/images/Linea%20de%20tiempo/2026-fondo.webp',
+  '/images/Linea%20de%20tiempo/2026-fecha-1.webp',
+  '/images/Linea%20de%20tiempo/2026-fecha-2.webp',
+  '/images/Linea%20de%20tiempo/2026-superior.webp',
+];
 const Z = [2, 4, 6, 8, 10];
 
 const HITOS = [
@@ -44,11 +63,11 @@ const HITOS = [
     body: 'La empresa fortalece su presencia y consolida una operación más cercana para propietarios y clientes.' },
   { year: '2006', set: 'L2006', title: 'Reconocimiento y consolidación',
     body: 'Cuatro décadas de trabajo reflejan una trayectoria construida con compromiso, seriedad y respaldo.' },
-  { year: '2017', set: 'L74', title: 'Más cerca de nuestros clientes',
+  { year: '2017', set: 'L2017', title: 'Más cerca de nuestros clientes',
     body: 'Con la apertura de la sede en Envigado, Santa Fe amplía su presencia en el Valle de Aburrá.' },
-  { year: '2018', set: 'L66', title: 'Evolución de marca',
+  { year: '2018', set: 'L2018', title: 'Evolución de marca',
     body: 'Arrendamientos Santa Fe renueva su imagen para proyectar una empresa más actual, cercana y coherente.' },
-  { year: '2026', set: 'L74', title: '60 años acompañando nuevas decisiones',
+  { year: '2026', set: 'L2026', title: '60 años acompañando nuevas decisiones',
     body: 'Santa Fe celebra seis décadas de historia con la apertura de su sede en Rionegro.' },
 ] as const;
 
@@ -98,9 +117,15 @@ export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) 
   const l66ImgRefs      = useRef<(HTMLImageElement | null)[]>([]);
   const l74ImgRefs      = useRef<(HTMLImageElement | null)[]>([]);
   const l2006ImgRefs    = useRef<(HTMLImageElement | null)[]>([]);
+  const l2017ImgRefs    = useRef<(HTMLImageElement | null)[]>([]);
+  const l2018ImgRefs    = useRef<(HTMLImageElement | null)[]>([]);
+  const l2026ImgRefs    = useRef<(HTMLImageElement | null)[]>([]);
   const l66GroupRef     = useRef<HTMLDivElement>(null);
   const l74GroupRef     = useRef<HTMLDivElement>(null);
   const l2006GroupRef   = useRef<HTMLDivElement>(null);
+  const l2017GroupRef   = useRef<HTMLDivElement>(null);
+  const l2018GroupRef   = useRef<HTMLDivElement>(null);
+  const l2026GroupRef   = useRef<HTMLDivElement>(null);
   const desktopTextRef  = useRef<HTMLDivElement>(null);
   const mobileTextRef   = useRef<HTMLDivElement>(null);
   const tlRef           = useRef<HTMLDivElement>(null);
@@ -178,6 +203,9 @@ export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) 
       L66:   l66GroupRef.current,
       L74:   l74GroupRef.current,
       L2006: l2006GroupRef.current,
+      L2017: l2017GroupRef.current,
+      L2018: l2018GroupRef.current,
+      L2026: l2026GroupRef.current,
     };
     const group = groupMap[HITOS[activeIdx].set];
     if (!group) return;
@@ -236,7 +264,7 @@ export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) 
 
       if (isDesktop) {
         /* Parallax desktop */
-        [...l66ImgRefs.current, ...l74ImgRefs.current, ...l2006ImgRefs.current].forEach((img, absIdx) => {
+        [...l66ImgRefs.current, ...l74ImgRefs.current, ...l2006ImgRefs.current, ...l2017ImgRefs.current, ...l2018ImgRefs.current, ...l2026ImgRefs.current].forEach((img, absIdx) => {
           if (!img) return;
           gsap.to(img, {
             y: PARALLAX_Y_DESKTOP[absIdx % 5],
@@ -256,7 +284,7 @@ export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) 
           { scale: 1.08, x: -12, dur: 11, origin: '40% 55%' },
           { scale: 1.11, x:  16, dur: 6,  origin: '60% 45%' },
         ];
-        [...l66ImgRefs.current, ...l74ImgRefs.current, ...l2006ImgRefs.current].forEach((img, absIdx) => {
+        [...l66ImgRefs.current, ...l74ImgRefs.current, ...l2006ImgRefs.current, ...l2017ImgRefs.current, ...l2018ImgRefs.current, ...l2026ImgRefs.current].forEach((img, absIdx) => {
           if (!img) return;
           const li = absIdx % 5;
           const k  = KB[li];
@@ -451,6 +479,57 @@ export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) 
               style={{
                 ...imgStyle(i),
                 /* Capas de texto/composición: contain para ver la imagen completa sin recorte */
+                ...(i > 0 ? { objectFit: 'contain', objectPosition: '50% 50%' } : {}),
+              }} />
+          ))}
+        </div>
+
+        {/* ── Grupo L2017 ────────────────────────────────── */}
+        <div ref={l2017GroupRef} style={{
+          position: 'absolute', inset: 0,
+          opacity: activeSet === 'L2017' ? 1 : 0,
+          transition: 'opacity 0.45s ease',
+          zIndex: activeSet === 'L2017' ? 2 : 1,
+        }}>
+          {L2017.map((src, i) => (
+            <img key={i} ref={el => { l2017ImgRefs.current[i] = el; }}
+              src={src} alt="" aria-hidden
+              style={{
+                ...imgStyle(i),
+                ...(i > 0 ? { objectFit: 'contain', objectPosition: '50% 50%' } : {}),
+              }} />
+          ))}
+        </div>
+
+        {/* ── Grupo L2018 ────────────────────────────────── */}
+        <div ref={l2018GroupRef} style={{
+          position: 'absolute', inset: 0,
+          opacity: activeSet === 'L2018' ? 1 : 0,
+          transition: 'opacity 0.45s ease',
+          zIndex: activeSet === 'L2018' ? 2 : 1,
+        }}>
+          {L2018.map((src, i) => (
+            <img key={i} ref={el => { l2018ImgRefs.current[i] = el; }}
+              src={src} alt="" aria-hidden
+              style={{
+                ...imgStyle(i),
+                ...(i > 0 ? { objectFit: 'contain', objectPosition: '50% 50%' } : {}),
+              }} />
+          ))}
+        </div>
+
+        {/* ── Grupo L2026 ────────────────────────────────── */}
+        <div ref={l2026GroupRef} style={{
+          position: 'absolute', inset: 0,
+          opacity: activeSet === 'L2026' ? 1 : 0,
+          transition: 'opacity 0.45s ease',
+          zIndex: activeSet === 'L2026' ? 2 : 1,
+        }}>
+          {L2026.map((src, i) => (
+            <img key={i} ref={el => { l2026ImgRefs.current[i] = el; }}
+              src={src} alt="" aria-hidden
+              style={{
+                ...imgStyle(i),
                 ...(i > 0 ? { objectFit: 'contain', objectPosition: '50% 50%' } : {}),
               }} />
           ))}

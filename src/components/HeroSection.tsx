@@ -66,17 +66,23 @@ export default function HeroSection({ onNavigate, searchFormSlot }: HeroSectionP
           style={{ minHeight: 'clamp(500px, 88vh, 950px)' }}
           ref={titleRef}
         >
-          {/* Video de fondo */}
-          <video
-            autoPlay
-            muted
-            loop
-            playsInline
-            className="absolute inset-0 w-full h-full object-cover"
-            poster="https://images.unsplash.com/photo-1588392382834-a891154bca4d?w=1920&q=80"
-          >
-            <source src="/hero-video.mp4" type="video/mp4" />
-          </video>
+          {/* Video de fondo — YouTube embed */}
+          <div className="absolute inset-0 overflow-hidden" aria-hidden="true">
+            <iframe
+              src="https://www.youtube.com/embed/WJhuP6tOk74?autoplay=1&mute=1&loop=1&playlist=WJhuP6tOk74&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1&disablekb=1&iv_load_policy=3"
+              allow="autoplay; encrypted-media"
+              allowFullScreen={false}
+              style={{
+                position: 'absolute',
+                top: '50%', left: '50%',
+                width: 'calc(100% + 400px)',
+                height: 'calc(100% + 400px)',
+                transform: 'translate(-50%, -50%)',
+                pointerEvents: 'none',
+                border: 'none',
+              }}
+            />
+          </div>
 
           {/* Overlay oscuro */}
           <div className="absolute inset-0 hero-video-overlay" />

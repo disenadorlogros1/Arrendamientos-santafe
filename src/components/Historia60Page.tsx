@@ -41,14 +41,33 @@ const L2006: LayerCfg[] = [
   { src: '/images/Linea%20de%20tiempo/2006-recorte-superior.webp', z: 8,  px: 26, py: 0, dur: 0.40 },
   { src: '/images/Linea%20de%20tiempo/2006-superior.webp',         z: 10, px: 34, py: 0, dur: 0.26 },
 ];
+const L2017: LayerCfg[] = [
+  { src: '/images/Linea%20de%20tiempo/2017-Fondo.webp',            z: 2,  px: 5,  py: 0, dur: 0.85 },
+  { src: '/images/Linea%20de%20tiempo/2017-fecha-1.webp',          z: 4,  px: 12, py: 0, dur: 0.70 },
+  { src: '/images/Linea%20de%20tiempo/2017-fecha-2.webp',          z: 6,  px: 19, py: 0, dur: 0.55 },
+  { src: '/images/Linea%20de%20tiempo/2017-recorte-superior.webp', z: 8,  px: 26, py: 0, dur: 0.40 },
+  { src: '/images/Linea%20de%20tiempo/2017-superior.webp',         z: 10, px: 34, py: 0, dur: 0.26 },
+];
+const L2018: LayerCfg[] = [
+  { src: '/images/Linea%20de%20tiempo/2018-Fondo.webp',    z: 2,  px: 5,  py: 0, dur: 0.85 },
+  { src: '/images/Linea%20de%20tiempo/2018-fecha-1.webp',  z: 4,  px: 12, py: 0, dur: 0.70 },
+  { src: '/images/Linea%20de%20tiempo/2018-fecha-2.webp',  z: 6,  px: 19, py: 0, dur: 0.55 },
+  { src: '/images/Linea%20de%20tiempo/2018-superior.webp', z: 10, px: 34, py: 0, dur: 0.26 },
+];
+const L2026: LayerCfg[] = [
+  { src: '/images/Linea%20de%20tiempo/2026-fondo.webp',    z: 2,  px: 5,  py: 0, dur: 0.85 },
+  { src: '/images/Linea%20de%20tiempo/2026-fecha-1.webp',  z: 4,  px: 12, py: 0, dur: 0.70 },
+  { src: '/images/Linea%20de%20tiempo/2026-fecha-2.webp',  z: 6,  px: 19, py: 0, dur: 0.55 },
+  { src: '/images/Linea%20de%20tiempo/2026-superior.webp', z: 10, px: 34, py: 0, dur: 0.26 },
+];
 
 const EVENTS = [
   { year: '1966', title: 'Donde todo comenzó',                    body: 'Arrendamientos Santa Fe nace en Medellín con una visión de servicio, confianza y acompañamiento inmobiliario.',                                                                             layers: L66 },
   { year: '1974', title: 'Primeros cimientos',                    body: 'La empresa fortalece su presencia y consolida una operación más cercana para propietarios y clientes.',                                                                                      layers: L74 },
   { year: '2006', title: 'Reconocimiento y consolidación',        body: 'Cuatro décadas de trabajo reflejan una trayectoria construida con compromiso, seriedad y respaldo.',                                                                                        layers: L2006 },
-  { year: '2017', title: 'Más cerca de nuestros clientes',        body: 'Con la apertura de la sede en Envigado, Santa Fe amplía su presencia y fortalece su cercanía con nuevas zonas del Valle de Aburrá.',                                                        layers: L74 },
-  { year: '2018', title: 'Evolución de marca',                    body: 'Arrendamientos Santa Fe renueva su imagen para proyectar una empresa más actual, cercana y coherente con su evolución.',                                                                     layers: L66 },
-  { year: '2026', title: '60 años acompañando nuevas decisiones', body: 'Santa Fe celebra seis décadas de historia con una nueva etapa: la apertura de su sede en Rionegro, reafirmando su compromiso de estar más cerca de quienes toman decisiones inmobiliarias.', layers: L74 },
+  { year: '2017', title: 'Más cerca de nuestros clientes',        body: 'Con la apertura de la sede en Envigado, Santa Fe amplía su presencia y fortalece su cercanía con nuevas zonas del Valle de Aburrá.',                                                        layers: L2017 },
+  { year: '2018', title: 'Evolución de marca',                    body: 'Arrendamientos Santa Fe renueva su imagen para proyectar una empresa más actual, cercana y coherente con su evolución.',                                                                     layers: L2018 },
+  { year: '2026', title: '60 años acompañando nuevas decisiones', body: 'Santa Fe celebra seis décadas de historia con una nueva etapa: la apertura de su sede en Rionegro, reafirmando su compromiso de estar más cerca de quienes toman decisiones inmobiliarias.', layers: L2026 },
 ];
 
 export default function Historia60Page({ onNavigate }: Props) {
