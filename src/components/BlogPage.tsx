@@ -150,12 +150,12 @@ export default function BlogPage({
             <div className="relative h-48 overflow-hidden bg-gray-900">
               <div className="absolute inset-0 flex gap-[2px]">
                 {[
-                  { src: '/images/1966_Donde_todo_comenz%C3%B3.jpeg', pos: '60% 20%' },
-                  { src: '/images/1974_primeros_cimientos.jpeg', pos: '85% 20%' },
-                  { src: '/images/Banners/2006_Reconocimiento_consolidaci%C3%B3n.png', pos: '55% 20%' },
-                  { src: '/images/2017_M%C3%A1s_cerca_de_nuestros%20clientes.png', pos: '70% 20%' },
-                  { src: '/images/Banners/2018_Evoluci%C3%B3n_de_marca.png', pos: '40% 20%' },
-                  { src: '/images/Banners/2026_60_a%C3%B1os.png', pos: '15% 20%' },
+                  { src: '/images/Banners/Linea%20de%20tiempo/1966-superior.webp', pos: '60% 20%' },
+                  { src: '/images/Banners/Linea%20de%20tiempo/1974-superior.webp', pos: '50% 20%' },
+                  { src: '/images/Banners/Linea%20de%20tiempo/2006-superior.webp', pos: '50% 20%' },
+                  { src: '/images/Banners/Linea%20de%20tiempo/2017-superior.webp', pos: '50% 20%' },
+                  { src: '/images/Banners/Linea%20de%20tiempo/2018-superior.webp', pos: '50% 20%' },
+                  { src: '/images/Banners/Linea%20de%20tiempo/2026-superior.webp', pos: '50% 20%' },
                 ].map((item, j) => (
                   <div key={j} className="flex-1 overflow-hidden">
                     <img

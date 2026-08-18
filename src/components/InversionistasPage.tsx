@@ -221,7 +221,7 @@ export default function InversionistasPage() {
         <div
           className="absolute inset-0"
           style={{
-            backgroundImage: 'url(/images/Banners/banner_inversionistas.png)',
+            backgroundImage: 'url(/images/Banners/banner_inversionistas.webp)',
             backgroundSize: 'cover',
             backgroundPosition: 'center',
           }}

@@ -160,7 +160,7 @@ export default function InversionZonePage() {
           {/* Imagen de fondo con opacidad baja */}
           <div style={{
             position: 'absolute', inset: 0,
-            backgroundImage: 'url(/images/Banners/banner_inversionistas.png)',
+            backgroundImage: 'url(/images/Banners/banner_inversionistas.webp)',
             backgroundSize: 'cover', backgroundPosition: 'center',
             opacity: 0.18,
             pointerEvents: 'none',

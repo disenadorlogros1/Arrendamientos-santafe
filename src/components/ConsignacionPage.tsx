@@ -98,7 +98,7 @@ export default function ConsignacionPage({ onNavigate }: ConsignacionPageProps =
         <div
           className="absolute inset-0"
           style={{
-            backgroundImage: 'url(/images/Banners/Banner_consigna_propiedad.png)',
+            backgroundImage: 'url(/images/Banners/Banner_consigna_propiedad.webp)',
             backgroundSize: 'cover',
             backgroundPosition: 'center',
           }}
