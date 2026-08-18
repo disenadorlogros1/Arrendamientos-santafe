@@ -173,9 +173,8 @@ export default function BlogPage({
                 </div>
                 <span>5 min de lectura</span>
               </div>
-              <button className="mt-4 inline-flex items-center gap-2 text-brand-red font-semibold text-sm group/btn">
+              <button className="mt-4 text-brand-red font-semibold text-sm">
                 Leer más
-                <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
               </button>
             </div>
           </article>
@@ -215,9 +214,8 @@ export default function BlogPage({
                   <span>{post.readTime} de lectura</span>
                 </div>
 
-                <button className="mt-4 inline-flex items-center gap-2 text-brand-red font-semibold text-sm group/btn">
+                <button className="mt-4 text-brand-red font-semibold text-sm">
                   Leer más
-                  <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
                 </button>
               </div>
             </article>
