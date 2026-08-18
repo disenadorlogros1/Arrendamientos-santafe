@@ -153,7 +153,7 @@ function MapCarousel({
                     borderRadius: '8px', overflow: 'hidden', cursor: 'pointer',
                   }}
                 >
-                  <PropertyCard property={property} />
+                  <PropertyCard property={property} hideCarousel portraitMobile />
                 </div>
               );
             })}
@@ -546,7 +546,7 @@ export default function PropiedadesPage({ initialFilter = 'Todos', initialQueStr
                             borderRadius: '8px',
                           }}
                         >
-                          <PropertyCard property={property} />
+                          <PropertyCard property={property} hideCarousel portraitMobile />
                         </div>
                       );
                     })}
@@ -785,7 +785,7 @@ export default function PropiedadesPage({ initialFilter = 'Todos', initialQueStr
               <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                 {mobilePaged.map((property) => (
                   <div key={property.id} className="propiedades-card-item">
-                    <PropertyCard property={property} />
+                    <PropertyCard property={property} hideCarousel portraitMobile />
                   </div>
                 ))}
               </div>
@@ -802,9 +802,6 @@ export default function PropiedadesPage({ initialFilter = 'Todos', initialQueStr
                     }}
                   >
                     Ver más
-                    <span style={{ fontSize: '12px', opacity: 0.75 }}>
-                      ({mobileVisible} de {filtered.length})
-                    </span>
                   </button>
                 </div>
               )}
@@ -826,7 +823,7 @@ export default function PropiedadesPage({ initialFilter = 'Todos', initialQueStr
             <div ref={cardsGridRef} className="grid grid-cols-3 xl:grid-cols-4 gap-5">
               {desktopPaged.map((property) => (
                 <div key={property.id} className="propiedades-card-item">
-                  <PropertyCard property={property} />
+                  <PropertyCard property={property} hideCarousel portraitMobile />
                 </div>
               ))}
             </div>

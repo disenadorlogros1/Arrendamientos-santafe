@@ -7,12 +7,13 @@ import type { Property } from '@/data/properties';
 interface PropertyCardProps {
   property: Property;
   hideCarousel?: boolean;
+  portraitMobile?: boolean;
 }
 
 const FONT = "'Avenir LT Std', 'Outfit', system-ui, sans-serif";
 const RED  = '#f32735';
 
-export default function PropertyCard({ property, hideCarousel = false }: PropertyCardProps) {
+export default function PropertyCard({ property, hideCarousel = false, portraitMobile = false }: PropertyCardProps) {
   const router = useRouter();
   const [isHovered, setIsHovered]   = useState(false);
   const [imgIndex,  setImgIndex]    = useState(0);
@@ -61,7 +62,11 @@ export default function PropertyCard({ property, hideCarousel = false }: Propert
     >
       {/* Zona de imagen */}
       <div
-        className={`relative overflow-hidden cursor-pointer ${hideCarousel ? 'flex-1' : 'h-56 lg:h-auto lg:flex-1'}`}
+        className={`relative overflow-hidden cursor-pointer ${
+          portraitMobile ? 'aspect-[4/5] lg:aspect-auto lg:flex-1' :
+          hideCarousel   ? 'flex-1' :
+          'h-56 lg:h-auto lg:flex-1'
+        }`}
         onClick={handleViewMore}
         onTouchStart={onTouchStart}
         onTouchEnd={onTouchEnd}
