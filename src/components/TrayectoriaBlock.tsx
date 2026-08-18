@@ -276,13 +276,13 @@ export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) 
           });
         });
       } else {
-        /* Ken Burns mobile — zoom + pan lateral, claramente visible */
+        /* Ken Burns mobile — intensidad 50% vs desktop */
         const KB = [
-          { scale: 1.14, x:  18, dur: 9,  origin: '30% 60%' },
-          { scale: 1.10, x: -14, dur: 7,  origin: '70% 40%' },
-          { scale: 1.12, x:  10, dur: 8,  origin: '50% 50%' },
-          { scale: 1.08, x: -12, dur: 11, origin: '40% 55%' },
-          { scale: 1.11, x:  16, dur: 6,  origin: '60% 45%' },
+          { scale: 1.07, x:   9, dur: 9,  origin: '30% 60%' },
+          { scale: 1.05, x:  -7, dur: 7,  origin: '70% 40%' },
+          { scale: 1.06, x:   5, dur: 8,  origin: '50% 50%' },
+          { scale: 1.04, x:  -6, dur: 11, origin: '40% 55%' },
+          { scale: 1.055,x:   8, dur: 6,  origin: '60% 45%' },
         ];
         [...l66ImgRefs.current, ...l74ImgRefs.current, ...l2006ImgRefs.current, ...l2017ImgRefs.current, ...l2018ImgRefs.current, ...l2026ImgRefs.current].forEach((img, absIdx) => {
           if (!img) return;

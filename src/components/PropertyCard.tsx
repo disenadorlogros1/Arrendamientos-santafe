@@ -61,7 +61,7 @@ export default function PropertyCard({ property, hideCarousel = false }: Propert
     >
       {/* Zona de imagen */}
       <div
-        className="relative h-56 lg:h-auto lg:flex-1 overflow-hidden cursor-pointer"
+        className={`relative overflow-hidden cursor-pointer ${hideCarousel ? 'flex-1' : 'h-56 lg:h-auto lg:flex-1'}`}
         onClick={handleViewMore}
         onTouchStart={onTouchStart}
         onTouchEnd={onTouchEnd}
