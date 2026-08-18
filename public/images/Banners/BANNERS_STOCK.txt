@@ -12,16 +12,3 @@ Tamaño:   600 × 800 px cada una
 Nombre:   2006_Reconocimiento_consolidación.png   → franja año 2006
 Nombre:   2018_Evolución_de_marca.png             → franja año 2018
 Nombre:   2026_60_años.png                        → franja año 2026
-
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-BLOG — Portadas de los 6 artículos
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Tamaño:   1200 × 630 px  (ratio 16:9)
-
-Nombre:   blog_articulo_1.webp  → "5 consejos para mantener tu propiedad"
-Nombre:   blog_articulo_2.webp  → "El Poblado: Guía completa para invertir"
-Nombre:   blog_articulo_3.webp  → "Cómo calcular la rentabilidad real"
-Nombre:   blog_articulo_4.webp  → "Documentos y trámites para arrendar"
-Nombre:   blog_articulo_5.webp  → "Nuevas oportunidades: Proyectos en Antioquia"
-Nombre:   blog_articulo_6.webp  → "Tendencias en arrendamiento turístico"

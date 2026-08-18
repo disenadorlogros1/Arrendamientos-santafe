@@ -25,7 +25,7 @@ const blogPosts: BlogPost[] = [
     excerpt: 'Aprende cómo proteger tu inversión inmobiliaria con mantenimiento preventivo y cuidados esenciales que evitarán costosas reparaciones futuras.',
     date: 'Mayo 18, 2026',
     category: 'Arrendamiento',
-    image: 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800&q=80',
+    image: '/images/Banners/blog_articulo_1.webp',
     readTime: '5 min',
   },
   {
@@ -34,7 +34,7 @@ const blogPosts: BlogPost[] = [
     excerpt: 'Descubre por qué El Poblado es el barrio preferido de inversionistas y expatriados. Analiza rentabilidades, precios y oportunidades actuales.',
     date: 'Mayo 12, 2026',
     category: 'Mercado',
-    image: 'https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&q=80',
+    image: '/images/Banners/blog_articulo_2.webp',
     readTime: '7 min',
   },
   {
@@ -43,7 +43,7 @@ const blogPosts: BlogPost[] = [
     excerpt: 'Detrás de un buen porcentaje hay cálculos precisos. Te enseñamos a evaluar correctamente si tu propiedad genera los retornos esperados.',
     date: 'Mayo 8, 2026',
     category: 'Inversión',
-    image: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=800&q=80',
+    image: '/images/Banners/blog_articulo_3.webp',
     readTime: '6 min',
   },
   {
@@ -52,7 +52,7 @@ const blogPosts: BlogPost[] = [
     excerpt: 'Conoce los requisitos legales, contratos y documentos indispensables para proteger tu propiedad y asegurar un arrendamiento seguro.',
     date: 'Abril 30, 2026',
     category: 'Arrendamiento',
-    image: 'https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=800&q=80',
+    image: '/images/Banners/blog_articulo_4.webp',
     readTime: '4 min',
   },
   {
@@ -61,7 +61,7 @@ const blogPosts: BlogPost[] = [
     excerpt: 'Explora los proyectos inmobiliarios más promisores del momento y descubre dónde colocar tu capital para máxima rentabilidad.',
     date: 'Abril 22, 2026',
     category: 'Inversión',
-    image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&q=80',
+    image: '/images/Banners/blog_articulo_5.webp',
     readTime: '8 min',
   },
   {
@@ -70,7 +70,7 @@ const blogPosts: BlogPost[] = [
     excerpt: 'Descubre cómo muchos propietarios en Medellín están multiplicando sus ingresos con arrendamiento turístico de corta duración.',
     date: 'Abril 15, 2026',
     category: 'Arrendamiento',
-    image: 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800&q=80',
+    image: '/images/Banners/blog_articulo_6.webp',
     readTime: '6 min',
   },
 ];
