@@ -229,18 +229,19 @@ export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) 
           });
         });
       } else {
-        /* Float ambiente mobile — cada capa se mueve a su propio ritmo */
-        const FLOAT_Y   = [5, -8, 10, -6, 7];
-        const FLOAT_DUR = [9, 7,  8,  11, 6];
+        /* Ken Burns mobile — cada capa escala a distinto ritmo creando profundidad */
+        const SCALE_TO  = [1.07, 1.05, 1.06, 1.04, 1.05];
+        const FLOAT_DUR = [9,    7,    8,    11,   6   ];
         [...l66ImgRefs.current, ...l74ImgRefs.current, ...l2006ImgRefs.current].forEach((img, absIdx) => {
           if (!img) return;
           const li = absIdx % 5;
           gsap.to(img, {
-            y: FLOAT_Y[li],
+            scale: SCALE_TO[li],
             duration: FLOAT_DUR[li],
             ease: 'sine.inOut',
             yoyo: true,
             repeat: -1,
+            transformOrigin: 'center center',
           });
         });
       }
@@ -421,7 +422,12 @@ export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) 
         }}>
           {L2006.map((src, i) => (
             <img key={i} ref={el => { l2006ImgRefs.current[i] = el; }}
-              src={src} alt="" aria-hidden style={imgStyle(i)} />
+              src={src} alt="" aria-hidden
+              style={{
+                ...imgStyle(i),
+                /* Capas de texto/composición: contain para ver la imagen completa sin recorte */
+                ...(i > 0 ? { objectFit: 'contain', objectPosition: '50% 50%' } : {}),
+              }} />
           ))}
         </div>
 

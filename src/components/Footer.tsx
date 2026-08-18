@@ -69,23 +69,32 @@ export default function Footer({ onNavigate }: FooterProps = {}) {
               Nuestras sedes
             </h4>
             <ul className="space-y-3 text-sm text-white/60">
-              <li className="flex items-center gap-2">
-                <img src="/icons/icon-location-red.svg" className="h-4 w-4 shrink-0" alt="" aria-hidden="true" />
-                <a href={MAPS_MEDELLIN} target="_blank" rel="noopener noreferrer" className="text-white/80 hover:text-white transition-colors font-semibold">
-                  Medellín
-                </a>
+              <li className="flex items-start gap-2">
+                <img src="/icons/icon-location-red.svg" className="h-4 w-4 shrink-0 mt-0.5" alt="" aria-hidden="true" />
+                <div>
+                  <a href={MAPS_MEDELLIN} target="_blank" rel="noopener noreferrer" className="text-white/80 hover:text-white transition-colors font-semibold block">
+                    Medellín
+                  </a>
+                  <span className="hidden lg:block text-white/40 text-xs leading-tight mt-0.5">Cl. 44 San Juan #71-34</span>
+                </div>
               </li>
-              <li className="flex items-center gap-2">
-                <img src="/icons/icon-location-red.svg" className="h-4 w-4 shrink-0" alt="" aria-hidden="true" />
-                <a href={MAPS_ENVIGADO} target="_blank" rel="noopener noreferrer" className="text-white/80 hover:text-white transition-colors font-semibold">
-                  Envigado
-                </a>
+              <li className="flex items-start gap-2">
+                <img src="/icons/icon-location-red.svg" className="h-4 w-4 shrink-0 mt-0.5" alt="" aria-hidden="true" />
+                <div>
+                  <a href={MAPS_ENVIGADO} target="_blank" rel="noopener noreferrer" className="text-white/80 hover:text-white transition-colors font-semibold block">
+                    Envigado
+                  </a>
+                  <span className="hidden lg:block text-white/40 text-xs leading-tight mt-0.5">C.C. Metrosur, local 121</span>
+                </div>
               </li>
-              <li className="flex items-center gap-2">
-                <img src="/icons/icon-location-red.svg" className="h-4 w-4 shrink-0" alt="" aria-hidden="true" />
-                <a href={MAPS_RIONEGRO} target="_blank" rel="noopener noreferrer" className="text-white/80 hover:text-white transition-colors font-semibold">
-                  Rionegro
-                </a>
+              <li className="flex items-start gap-2">
+                <img src="/icons/icon-location-red.svg" className="h-4 w-4 shrink-0 mt-0.5" alt="" aria-hidden="true" />
+                <div>
+                  <a href={MAPS_RIONEGRO} target="_blank" rel="noopener noreferrer" className="text-white/80 hover:text-white transition-colors font-semibold block">
+                    Rionegro
+                  </a>
+                  <span className="hidden lg:block text-white/40 text-xs leading-tight mt-0.5">Sede Oriente</span>
+                </div>
               </li>
             </ul>
           </div>
@@ -174,8 +183,8 @@ export default function Footer({ onNavigate }: FooterProps = {}) {
                   href="mailto:santafe@arrendamientossantafe.com"
                   className="flex items-start gap-2 text-sm text-white/60 hover:text-white transition-colors"
                 >
-                  <img src="/icons/icon-mail-red.svg" className="h-4 w-4 shrink-0 mt-[2px]" alt="" aria-hidden="true" />
-                  <span style={{ wordBreak: 'break-all' }}>santafe@arrendamientossantafe.com</span>
+                  <img src="/icons/icon-mail-red.svg" className="h-4 w-4 shrink-0" alt="" aria-hidden="true" />
+                  <span className="whitespace-nowrap">santafe@arrendamientossantafe.com</span>
                 </a>
               </li>
             </ul>
