@@ -161,7 +161,7 @@ export default function PropertyCard({ property, hideCarousel = false, portraitM
               </svg>
             </button>
 
-            {/* Dots — solo mobile */}
+            {/* Dots — solo mobile, máx 5 centrados en el activo */}
             <div
               className="lg:hidden"
               style={{
@@ -170,19 +170,31 @@ export default function PropertyCard({ property, hideCarousel = false, portraitM
                 pointerEvents: 'none',
               }}
             >
-              {images.map((_, i) => (
-                <span
-                  key={i}
-                  style={{
-                    width: i === imgIndex ? '16px' : '6px',
-                    height: '6px',
-                    borderRadius: '3px',
-                    background: i === imgIndex ? '#fff' : 'rgba(255,255,255,0.5)',
-                    transition: 'width 0.2s ease, background 0.2s ease',
-                    display: 'inline-block',
-                  }}
-                />
-              ))}
+              {(() => {
+                const MAX = 5;
+                const half = Math.floor(MAX / 2);
+                let start = Math.max(0, imgIndex - half);
+                const end = Math.min(total, start + MAX);
+                start = Math.max(0, end - MAX);
+                return Array.from({ length: end - start }, (_, k) => {
+                  const i = start + k;
+                  const isActive = i === imgIndex;
+                  const isEdge = (i === start && start > 0) || (i === end - 1 && end < total);
+                  return (
+                    <span
+                      key={i}
+                      style={{
+                        width: isActive ? '16px' : '6px',
+                        height: '6px',
+                        borderRadius: '3px',
+                        background: isActive ? '#fff' : isEdge ? 'rgba(255,255,255,0.25)' : 'rgba(255,255,255,0.5)',
+                        transition: 'width 0.2s ease, background 0.2s ease',
+                        display: 'inline-block',
+                      }}
+                    />
+                  );
+                });
+              })()}
             </div>
           </>
         )}
