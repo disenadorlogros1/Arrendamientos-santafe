@@ -1,3 +1,7 @@
+BANNERS PENDIENTES — Arrendamientos Santa Fe
+============================================
+Guardar en esta misma carpeta con el nombre exacto que aparece abajo.
+
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 BLOG — Imágenes editoriales (tarjeta Historia 60 años)
@@ -21,15 +25,3 @@ Nombre:   blog_articulo_3.webp  → "Cómo calcular la rentabilidad real"
 Nombre:   blog_articulo_4.webp  → "Documentos y trámites para arrendar"
 Nombre:   blog_articulo_5.webp  → "Nuevas oportunidades: Proyectos en Antioquia"
 Nombre:   blog_articulo_6.webp  → "Tendencias en arrendamiento turístico"
-
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-YA OK (no tocar)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Banner_consigna_propiedad.png    → Consignación
-banner_inversionistas.png        → Inversionistas
-banner_propietarios_1.png        → Propietarios bloque 1
-banner_propietarios_2.png        → Propietarios bloque 2
-banner_propietarios_3.png        → Propietarios bloque 3
-banner_servicios.webp            → ServiciosPage (página inhabilitada, no visible al usuario)
-Linea de tiempo/ (carpeta)       → 33 archivos webp para los 6 hitos: 1966, 1974, 2006, 2017, 2018, 2026
