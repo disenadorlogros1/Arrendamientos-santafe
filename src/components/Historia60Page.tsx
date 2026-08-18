@@ -79,9 +79,10 @@ export default function Historia60Page({ onNavigate }: Props) {
   const dotRefs          = useRef<(HTMLDivElement | null)[]>(Array(N).fill(null));
   const yearRefs         = useRef<(HTMLSpanElement | null)[]>(Array(N).fill(null));
 
-  const imgRefs       = useRef<(HTMLImageElement | null)[][]>(EVENTS.map(e => Array(e.layers.length).fill(null)));
-  const proxyRefs     = useRef<{ x: number }[][]>(EVENTS.map(e => e.layers.map(() => ({ x: 0 }))));
-  const pxSets        = useRef<((v: number) => void)[][]>(EVENTS.map(() => []));
+  const imgRefs          = useRef<(HTMLImageElement | null)[][]>(EVENTS.map(e => Array(e.layers.length).fill(null)));
+  const proxyRefs        = useRef<{ x: number }[][]>(EVENTS.map(e => e.layers.map(() => ({ x: 0 }))));
+  const ambientProxies   = useRef<{ x: number }[][]>(EVENTS.map(e => e.layers.map(() => ({ x: 0 }))));
+  const pxSets           = useRef<((v: number) => void)[][]>(EVENTS.map(() => []));
   const activeRef     = useRef(0);
   const mobileScrollRef = useRef<HTMLDivElement>(null);
 
@@ -95,20 +96,42 @@ export default function Historia60Page({ onNavigate }: Props) {
     return () => window.removeEventListener('resize', check);
   }, []);
 
-  // ── Parallax via objectPosition (no overflow issues) ─────────
+  // ── Parallax via objectPosition (ambient drift + mouse) ───────
   useEffect(() => {
     EVENTS.forEach((evt, pi) => {
       evt.layers.forEach((layer, li) => {
-        const img   = imgRefs.current[pi]?.[li];
-        const proxy = proxyRefs.current[pi]?.[li];
-        if (!img || !proxy) return;
-        pxSets.current[pi][li] = gsap.quickTo(proxy, 'x', {
+        const img          = imgRefs.current[pi]?.[li];
+        const mouseProxy   = proxyRefs.current[pi]?.[li];
+        const ambientProxy = ambientProxies.current[pi]?.[li];
+        if (!img || !mouseProxy || !ambientProxy) return;
+
+        const applyPos = () => {
+          img.style.objectPosition = `calc(50% + ${ambientProxy.x + mouseProxy.x}px) 50%`;
+        };
+
+        // Mouse quickTo — se suma al ambient
+        pxSets.current[pi][li] = gsap.quickTo(mouseProxy, 'x', {
           duration: layer.dur * 0.6,
           ease: 'power3.out',
-          onUpdate: () => {
-            img.style.objectPosition = `calc(50% + ${proxy.x}px) 50%`;
-          },
+          onUpdate: applyPos,
         });
+
+        // Ambient drift — vaivén suave continuo por capa
+        const maxDrift = layer.px * 0.4;
+        const dur      = 5 + li * 2 + pi * 0.3;
+        const phase    = (pi * 0.5 + li * 1.3) % dur;
+        gsap.fromTo(ambientProxy,
+          { x: -maxDrift },
+          {
+            x: maxDrift,
+            duration: dur,
+            ease: 'sine.inOut',
+            yoyo: true,
+            repeat: -1,
+            delay: phase,
+            onUpdate: applyPos,
+          },
+        );
       });
     });
   }, []);
