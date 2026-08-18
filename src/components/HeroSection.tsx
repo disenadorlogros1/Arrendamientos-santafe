@@ -11,6 +11,8 @@ interface HeroSectionProps {
 
 /* ── YouTube background sin controles (IFrame Player API) ── */
 function YTBackground({ videoId }: { videoId: string }) {
+  const coverRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     const playerId = 'yt-hero-bg';
 
@@ -27,6 +29,13 @@ function YTBackground({ videoId }: { videoId: string }) {
         },
         events: {
           onReady: (e: any) => e.target.playVideo(),
+          onStateChange: (e: any) => {
+            /* YT.PlayerState.PLAYING = 1 → desvanece la capa que cubre el UI de YouTube */
+            if (e.data === 1 && coverRef.current) {
+              coverRef.current.style.transition = 'opacity 0.8s ease';
+              coverRef.current.style.opacity = '0';
+            }
+          },
         },
       });
     };
@@ -46,7 +55,6 @@ function YTBackground({ videoId }: { videoId: string }) {
 
   return (
     <>
-      {/* El id se transfiere del div al iframe que crea la API → el CSS aplica a ambos */}
       <style>{`
         #yt-hero-bg {
           position: absolute !important;
@@ -61,8 +69,27 @@ function YTBackground({ videoId }: { videoId: string }) {
           border: none !important;
         }
       `}</style>
-      <div className="absolute inset-0 overflow-hidden" aria-hidden="true">
+      {/*
+        zIndex:0 en el wrapper crea un stacking context local →
+        la capa cover (z-index:10) solo domina dentro de este wrapper,
+        el overlay y el contenido del hero siguen pintando encima.
+      */}
+      <div
+        className="absolute inset-0 overflow-hidden"
+        style={{ zIndex: 0 }}
+        aria-hidden="true"
+      >
         <div id="yt-hero-bg" />
+        {/* Cubre el botón de play de YouTube hasta que el video arranca */}
+        <div
+          ref={coverRef}
+          style={{
+            position: 'absolute', inset: 0,
+            background: '#0d0d0d',
+            zIndex: 10,
+            pointerEvents: 'none',
+          }}
+        />
       </div>
     </>
   );

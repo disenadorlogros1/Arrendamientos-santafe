@@ -1,0 +1,85 @@
+BANNERS PENDIENTES DE DISEÑO — Arrendamientos Santa Fe
+=======================================================
+Guardar en esta misma carpeta con el nombre exacto que aparece abajo.
+Formato recomendado: .webp (mejor peso) o .png si tiene transparencia.
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+A REDISEÑAR (existen pero con mala calidad)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Nombre:   Banner_consigna_propiedad.png
+Tamaño actual:  5616 × 3024 px  ← demasiado pesada, sin optimizar
+Tamaño ideal:   1920 × 800 px
+Uso:      Banner hero de la página Consignación. backgroundSize: cover.
+
+Nombre:   banner_inversionistas.png
+Tamaño actual:  1920 × 1080 px  ← baja calidad visual
+Tamaño ideal:   1920 × 800 px
+Uso:      Banner hero de la página Inversionistas. backgroundSize: cover.
+
+Nombre:   banner_propietarios_1.png
+Tamaño actual:  830 × 228 px  ← muy pequeña, se ve pixelada
+Tamaño ideal:   1920 × 619 px  (mismo ratio que los banners de línea de tiempo)
+Uso:      Imagen de fondo en la sección Propietarios (bloque 1).
+
+Nombre:   banner_propietarios_2.png
+Tamaño actual:  830 × 228 px  ← muy pequeña
+Tamaño ideal:   1200 × 630 px
+Uso:      Imagen del bloque central de Propietarios (pareja / asesor).
+
+Nombre:   banner_propietarios_3.png
+Tamaño actual:  416 × 460 px  ← demasiado pequeña y ratio incorrecto
+Tamaño ideal:   1920 × 619 px
+Uso:      Imagen de fondo en la sección Propietarios (bloque 3).
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SECCIÓN NOSOTROS (banner con 3 slides — InstitucionalPage)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Nombre:   banner_nosotros_1.webp
+Nombre:   banner_nosotros_2.webp
+Nombre:   banner_nosotros_3.webp
+Tamaño:   1920 × 800 px  (mínimo 1920 × 600 px)
+Uso:      Banner de pantalla completa, sección "Quiénes somos".
+          Los 3 slides hacen crossfade entre sí. Deben tener coherencia visual.
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SECCIÓN SERVICIOS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Nombre:   banner_servicios.webp
+Tamaño:   1200 × 900 px  (ratio 4:3)
+Uso:      Imagen decorativa al lado del texto de servicios.
+          Formato redondeado, backgroundSize: cover.
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+BLOG — Imágenes editoriales (tarjeta Historia 60 años)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Aparecen como franjas verticales en la tarjeta del artículo "60 años".
+Tamaño:   600 × 800 px cada una
+
+Nombre:   2006_Reconocimiento_consolidación.png   → franja año 2006
+Nombre:   2018_Evolución_de_marca.png             → franja año 2018
+Nombre:   2026_60_años.png                        → franja año 2026
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+BLOG — Portadas de los 6 artículos
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Tamaño:   1200 × 630 px  (ratio 16:9)
+
+Nombre:   blog_articulo_1.webp  → "5 consejos para mantener tu propiedad"
+Nombre:   blog_articulo_2.webp  → "El Poblado: Guía completa para invertir"
+Nombre:   blog_articulo_3.webp  → "Cómo calcular la rentabilidad real"
+Nombre:   blog_articulo_4.webp  → "Documentos y trámites para arrendar"
+Nombre:   blog_articulo_5.webp  → "Nuevas oportunidades: Proyectos en Antioquia"
+Nombre:   blog_articulo_6.webp  → "Tendencias en arrendamiento turístico"
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+YA OK (no tocar)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Linea de tiempo/ (carpeta)  → 33 archivos webp para los 6 hitos de la línea
+                               de tiempo: 1966, 1974, 2006, 2017, 2018, 2026
