@@ -4,7 +4,6 @@ import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { flushSync } from 'react-dom';
 import gsap from 'gsap';
 import PropertyCard from './PropertyCard';
-import InfiniteCarousel from './InfiniteCarousel';
 import { properties } from '@/data/properties';
 import { useSplitTextAnimation } from '@/hooks/useSplitTextAnimation';
 import PropiedadesSearchBar, { type PropSearchFilters } from './PropiedadesSearchBar';
@@ -14,6 +13,9 @@ import PropiedadesLeafletMap from './PropiedadesLeafletMap';
 const FONT_HEADING = "'Avenir LT Std', 'Outfit', system-ui, sans-serif";
 const FONT_BODY    = "'Avenir LT Std', 'Outfit', system-ui, sans-serif";
 const RED          = '#f32735';
+
+const DESKTOP_PAGE_SIZE = 12;
+const MOBILE_LOAD_SIZE  = 6;
 
 
 
@@ -391,6 +393,21 @@ export default function PropiedadesPage({ initialFilter = 'Todos', initialQueStr
 
   const filtered = useMemo(() => applyFilters(appliedFilters), [appliedFilters]);
 
+  const [desktopPage,    setDesktopPage]    = useState(1);
+  const [mobileVisible,  setMobileVisible]  = useState(MOBILE_LOAD_SIZE);
+
+  useEffect(() => {
+    setDesktopPage(1);
+    setMobileVisible(MOBILE_LOAD_SIZE);
+  }, [appliedFilters]);
+
+  const totalDesktopPages = Math.ceil(filtered.length / DESKTOP_PAGE_SIZE);
+  const desktopPaged = useMemo(
+    () => filtered.slice((desktopPage - 1) * DESKTOP_PAGE_SIZE, desktopPage * DESKTOP_PAGE_SIZE),
+    [filtered, desktopPage],
+  );
+  const mobilePaged = filtered.slice(0, mobileVisible);
+
   // Efecto 1: detecta nueva propiedad hovereada → decide qué slot reemplazar (alterna)
   useEffect(() => {
     if (!hoveredMapProperty) { prevHovId.current = null; return; }
@@ -765,7 +782,40 @@ export default function PropiedadesPage({ initialFilter = 'Todos', initialQueStr
             </>
           ) : (
             <div style={{ padding: '0 clamp(16px, 3vw, 48px)' }}>
-              <InfiniteCarousel properties={filtered} />
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                {mobilePaged.map((property) => (
+                  <div key={property.id} className="propiedades-card-item">
+                    <PropertyCard property={property} />
+                  </div>
+                ))}
+              </div>
+              {mobileVisible < filtered.length && (
+                <div style={{ display: 'flex', justifyContent: 'center', marginTop: '24px' }}>
+                  <button
+                    type="button"
+                    onClick={() => setMobileVisible(v => v + MOBILE_LOAD_SIZE)}
+                    style={{
+                      fontFamily: FONT_BODY, fontSize: '14px', fontWeight: 600,
+                      color: '#fff', background: RED, border: 'none',
+                      cursor: 'pointer', padding: '12px 32px',
+                      display: 'flex', alignItems: 'center', gap: '8px',
+                    }}
+                  >
+                    Cargar más
+                    <span style={{ fontSize: '12px', opacity: 0.75 }}>
+                      ({mobileVisible} de {filtered.length})
+                    </span>
+                  </button>
+                </div>
+              )}
+              {filtered.length > 0 && mobileVisible >= filtered.length && (
+                <p style={{
+                  textAlign: 'center', fontFamily: FONT_BODY,
+                  fontSize: '13px', color: '#999', marginTop: '20px',
+                }}>
+                  Has visto todas las propiedades disponibles
+                </p>
+              )}
             </div>
           )}
         </div>
