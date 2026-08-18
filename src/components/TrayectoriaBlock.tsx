@@ -427,6 +427,7 @@ export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) 
           boxSizing: 'border-box',
           display: 'flex',
           flexDirection: 'column',
+          justifyContent: 'center',
           gap: '18px',
         }}
       >

@@ -824,12 +824,57 @@ export default function PropiedadesPage({ initialFilter = 'Todos', initialQueStr
         {!showMap && (
           <div className="hidden lg:flex flex-col">
             <div ref={cardsGridRef} className="grid grid-cols-3 xl:grid-cols-4 gap-5">
-              {filtered.map((property) => (
+              {desktopPaged.map((property) => (
                 <div key={property.id} className="propiedades-card-item">
                   <PropertyCard property={property} />
                 </div>
               ))}
             </div>
+
+            {/* Paginación desktop */}
+            {totalDesktopPages > 1 && (
+              <div style={{
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                gap: '8px', marginTop: '40px',
+              }}>
+                <button
+                  type="button"
+                  disabled={desktopPage === 1}
+                  onClick={() => { setDesktopPage(p => p - 1); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                  style={{
+                    fontFamily: FONT_BODY, fontSize: '13px', fontWeight: 600,
+                    color: desktopPage === 1 ? '#ccc' : '#fff',
+                    background: desktopPage === 1 ? '#f0f0f0' : RED,
+                    border: 'none', cursor: desktopPage === 1 ? 'default' : 'pointer',
+                    padding: '9px 20px', transition: 'all 0.15s',
+                  }}
+                >
+                  ← Anterior
+                </button>
+
+                <span style={{
+                  fontFamily: FONT_BODY, fontSize: '13px', color: '#555',
+                  padding: '0 12px',
+                }}>
+                  Página {desktopPage} de {totalDesktopPages}
+                </span>
+
+                <button
+                  type="button"
+                  disabled={desktopPage === totalDesktopPages}
+                  onClick={() => { setDesktopPage(p => p + 1); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                  style={{
+                    fontFamily: FONT_BODY, fontSize: '13px', fontWeight: 600,
+                    color: desktopPage === totalDesktopPages ? '#ccc' : '#fff',
+                    background: desktopPage === totalDesktopPages ? '#f0f0f0' : RED,
+                    border: 'none', cursor: desktopPage === totalDesktopPages ? 'default' : 'pointer',
+                    padding: '9px 20px', transition: 'all 0.15s',
+                  }}
+                >
+                  Siguiente →
+                </button>
+              </div>
+            )}
           </div>
         )}
 

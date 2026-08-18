@@ -216,7 +216,7 @@ export default function NeighborhoodMap({ zone }: Props) {
   }, [zone.slug]);
 
   const imgSrc = active
-    ? `/images/barrios/${NAME_TO_SLUG[active.name] ?? 'el-poblado'}.jpg`
+    ? `/images/barrios/${NAME_TO_SLUG[active.name] ?? 'el-poblado'}.webp`
     : null;
 
   return (
