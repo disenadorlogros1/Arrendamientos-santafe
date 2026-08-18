@@ -340,7 +340,8 @@ export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) 
     <h2 style={{
       fontFamily: FONT, fontWeight: 800,
       fontSize: isMobile ? '20px' : 'clamp(22px, 2.5vw, 36px)',
-      color: '#fff', lineHeight: 1.1, margin: '0 0 8px',
+      color: '#fff', lineHeight: 1.1, margin: 0,
+      textAlign: isMobile ? 'center' : 'left',
     }}>
       {HITOS[displayIdx].title}
     </h2>
@@ -352,6 +353,7 @@ export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) 
       fontSize: isMobile ? '13px' : 'clamp(14px, 1.15vw, 18px)',
       color: 'rgba(255,255,255,0.78)',
       lineHeight: 1.25, margin: 0,
+      textAlign: isMobile ? 'center' : 'left',
     }}>
       {HITOS[displayIdx].body}
     </p>
@@ -419,7 +421,14 @@ export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) 
       <div
         ref={mobileTextRef}
         className="lg:hidden"
-        style={{ padding: '22px 20px 14px', minHeight: '145px', boxSizing: 'border-box' }}
+        style={{
+          padding: '18px 24px',
+          minHeight: '145px',
+          boxSizing: 'border-box',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '18px',
+        }}
       >
         {heading}
         {bodyText}
