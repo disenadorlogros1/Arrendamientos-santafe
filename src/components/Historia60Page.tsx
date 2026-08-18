@@ -103,7 +103,7 @@ export default function Historia60Page({ onNavigate }: Props) {
         const proxy = proxyRefs.current[pi]?.[li];
         if (!img || !proxy) return;
         pxSets.current[pi][li] = gsap.quickTo(proxy, 'x', {
-          duration: layer.dur,
+          duration: layer.dur * 0.6,
           ease: 'power3.out',
           onUpdate: () => {
             img.style.objectPosition = `calc(50% + ${proxy.x}px) 50%`;
@@ -126,7 +126,7 @@ export default function Historia60Page({ onNavigate }: Props) {
     const rect = panel.getBoundingClientRect();
     const dx = (e.clientX - rect.left) / rect.width - 0.5;
     EVENTS[pi].layers.forEach((l, li) => {
-      pxSets.current[pi][li]?.(dx * l.px * 2);
+      pxSets.current[pi][li]?.(dx * l.px * 4);
     });
   };
 
@@ -200,12 +200,12 @@ export default function Historia60Page({ onNavigate }: Props) {
   useEffect(() => {
     if (!isMobile) return;
     const KB = [
-      { scale: 1.07, x:  9, dur: 9,  origin: '30% 60%' },
-      { scale: 1.05, x: -7, dur: 7,  origin: '70% 40%' },
-      { scale: 1.06, x:  5, dur: 8,  origin: '50% 50%' },
-      { scale: 1.04, x: -6, dur: 11, origin: '40% 55%' },
-      { scale: 1.055,x:  8, dur: 6,  origin: '60% 45%' },
-      { scale: 1.06, x: -5, dur: 10, origin: '55% 50%' },
+      { scale: 1.14, x:  18, dur: 8,  origin: '30% 60%' },
+      { scale: 1.12, x: -15, dur: 7,  origin: '70% 40%' },
+      { scale: 1.13, x:  14, dur: 9,  origin: '50% 50%' },
+      { scale: 1.11, x: -16, dur: 10, origin: '40% 55%' },
+      { scale: 1.14, x:  17, dur: 7,  origin: '60% 45%' },
+      { scale: 1.12, x: -13, dur: 9,  origin: '55% 50%' },
     ];
     const timer = setTimeout(() => {
       EVENTS.forEach((_evt, pi) => {
@@ -422,10 +422,10 @@ export default function Historia60Page({ onNavigate }: Props) {
             position: 'relative', height: 56,
             background: DARK,
           }}>
-            {/* Línea horizontal — debajo de los círculos */}
+            {/* Línea horizontal — al mismo nivel que los círculos */}
             <div style={{
               position: 'absolute',
-              bottom: 10,
+              top: 32,
               left: `calc(100% / ${N * 2})`,
               right: `calc(100% / ${N * 2})`,
               height: 1, background: FOG,
@@ -461,11 +461,11 @@ export default function Historia60Page({ onNavigate }: Props) {
                   }}>
                     {evt.year}
                   </span>
-                  {/* Círculo — en medio */}
+                  {/* Círculo — sobre la línea */}
                   <div style={{
                     position: 'absolute',
-                    top: 28, left: '50%',
-                    transform: `translateX(-50%) scale(${active ? 1.8 : 1})`,
+                    top: 32, left: '50%',
+                    transform: `translate(-50%, -50%) scale(${active ? 1.8 : 1})`,
                     width: 8, height: 8, borderRadius: '50%', background: RED,
                     transition: 'transform 0.2s',
                   }} />
