@@ -58,7 +58,7 @@ const beneficios = [
   { icon: '/icons/icon-home-red.svg',        title: 'Trayectoria comprobada',    description: 'Desde 1966, con más de 2.000 inmuebles en gestión activa entre arrendamiento y venta en Antioquia.' },
   { icon: '/icons/icon-area-red.svg',         title: 'Análisis de mercado',       description: 'Acceso a estudios y reportes detallados del mercado inmobiliario por zona, estrato y tipo de inmueble.' },
   { icon: '/icons/icon-credit-card-red.svg',  title: 'Servicios integrales',      description: 'Arrendamiento, venta, avalúos e hipotecas, todo en un solo lugar con un equipo dedicado.' },
-  { icon: '/icons/icon-location-red.svg',     title: 'Ubicaciones estratégicas',  description: 'Propiedades en las mejores zonas del Valle de Aburrá y municipios aledaños con alto potencial.' },
+  { icon: '/icons/icon-location-red.svg',     title: 'Ubicaciones estratégicas',  description: 'Propiedades en las mejores zonas del Valle de Medellín y municipios aledaños con alto potencial.' },
 ];
 
 const SECTOR_COLORS: Record<Sector, { bg: string; border: string; text: string }> = {
@@ -69,10 +69,10 @@ const SECTOR_COLORS: Record<Sector, { bg: string; border: string; text: string }
 };
 
 const SECTOR_SUBTITLES: Record<Sector, string> = {
-  Norte:     'Norte del Valle de Aburrá',
-  Sur:       'Sur del Valle de Aburrá',
-  Oriente:   'Oriente del Valle de Aburrá',
-  Occidente: 'Occidente del Valle de Aburrá',
+  Norte:     'Norte del Valle de Medellín',
+  Sur:       'Sur del Valle de Medellín',
+  Oriente:   'Oriente del Valle de Medellín',
+  Occidente: 'Occidente del Valle de Medellín',
 };
 
 
@@ -265,7 +265,7 @@ export default function InversionistasPage() {
             className="mt-5 text-base sm:text-lg text-white/80 max-w-2xl mx-auto text-center"
             style={{ fontFamily: FONT, fontWeight: 300, lineHeight: '1.5', opacity: 0 }}
           >
-            Identifica las zonas del Valle de Aburrá y municipios aledaños con{' '}
+            Identifica las zonas del Valle de Medellín y municipios aledaños con{' '}
             <span style={{ color: 'rgba(255,255,255,0.95)', fontWeight: 400 }}>mayor potencial de valorización</span>
           </p>
 

@@ -224,22 +224,6 @@ export default function HeroSection({ onNavigate, searchFormSlot }: HeroSectionP
             </div>
           )}
 
-          {/* Ubicación — siempre debajo del buscador, sobre el video */}
-          <div
-            className="relative w-full flex items-center justify-center gap-2 pb-5 pt-3"
-            style={{ zIndex: 10 }}
-          >
-            <img src="/icons/icon-location-white.svg" alt="" width={14} height={14} style={{ opacity: 0.75 }} />
-            <span style={{
-              fontFamily: FONT_BODY,
-              fontSize: '13px',
-              fontWeight: 300,
-              color: 'rgba(255,255,255,0.7)',
-              letterSpacing: '0.01em',
-            }}>
-              Propiedades en Medellín
-            </span>
-          </div>
         </div>
 
       </div>

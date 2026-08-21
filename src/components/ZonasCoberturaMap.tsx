@@ -3,7 +3,7 @@
 import { MapPin, Building2 } from 'lucide-react';
 
 const ZONAS = {
-  'Valle de Aburrá': [
+  'Valle de Medellín': [
     'Medellín', 'Envigado', 'Itagüí', 'Sabaneta', 'Bello',
     'Copacabana', 'La Estrella', 'Caldas', 'Girardota', 'Barbosa',
   ],
@@ -57,7 +57,7 @@ export default function ZonasCoberturaMap() {
               fontWeight: 300,
             }}
           >
-            Operamos en el Valle de Aburrá, el Oriente Antioqueño y municipios
+            Operamos en el Valle de Medellín, el Oriente Antioqueño y municipios
             aledaños del departamento de Antioquia.
           </p>
         </div>

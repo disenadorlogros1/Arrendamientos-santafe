@@ -23,7 +23,7 @@ export const investmentZones: InvestmentZone[] = [
   {
     id: 'norte',
     slug: 'norte',
-    name: 'Norte del Valle de Aburrá',
+    name: 'Norte del Valle de Medellín',
     sector: 'Norte',
     rentability: '5-8%',
     pricePerM2: '$2,500,000 - $6,500,000',
@@ -61,7 +61,7 @@ export const investmentZones: InvestmentZone[] = [
   {
     id: 'sur',
     slug: 'sur',
-    name: 'Sur del Valle de Aburrá',
+    name: 'Sur del Valle de Medellín',
     sector: 'Sur',
     rentability: '4-7%',
     pricePerM2: '$4,500,000 - $14,000,000',
@@ -98,7 +98,7 @@ export const investmentZones: InvestmentZone[] = [
   {
     id: 'oriente',
     slug: 'oriente',
-    name: 'Oriente del Valle de Aburrá',
+    name: 'Oriente del Valle de Medellín',
     sector: 'Oriente',
     rentability: '4-6%',
     pricePerM2: '$8,000,000 - $30,000,000',
@@ -136,7 +136,7 @@ export const investmentZones: InvestmentZone[] = [
   {
     id: 'occidente',
     slug: 'occidente',
-    name: 'Occidente del Valle de Aburrá',
+    name: 'Occidente del Valle de Medellín',
     sector: 'Occidente',
     rentability: '5-7%',
     pricePerM2: '$6,500,000 - $18,000,000',

@@ -77,7 +77,7 @@ const realEstateAgentJsonLd = {
   email: "santafe@arrendamientossantafe.com",
   foundingDate: "1966",
   areaServed: [
-    { "@type": "AdministrativeArea", name: "Valle de Aburrá" },
+    { "@type": "AdministrativeArea", name: "Valle de Medellín" },
     { "@type": "AdministrativeArea", name: "Oriente Antioqueño" },
     { "@type": "AdministrativeArea", name: "Antioquia, Colombia" },
   ],

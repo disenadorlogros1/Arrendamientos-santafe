@@ -64,7 +64,7 @@ const HITOS = [
   { year: '2006', set: 'L2006', title: 'Reconocimiento y consolidación',
     body: 'Cuatro décadas de trabajo reflejan una trayectoria construida con compromiso, seriedad y respaldo.' },
   { year: '2017', set: 'L2017', title: 'Más cerca de nuestros clientes',
-    body: 'Con la apertura de la sede en Envigado, Santa Fe amplía su presencia en el Valle de Aburrá.' },
+    body: 'Con la apertura de la sede en Envigado, Santa Fe amplía su presencia en el Valle de Medellín.' },
   { year: '2018', set: 'L2018', title: 'Evolución de marca',
     body: 'Arrendamientos Santa Fe renueva su imagen para proyectar una empresa más actual, cercana y coherente.' },
   { year: '2026', set: 'L2026', title: '60 años acompañando nuevas decisiones',

@@ -150,7 +150,7 @@ export const allArticles: BlogArticle[] = [
     category: 'Inversión',
     image: '/images/Banners/blog_articulo_5.webp',
     readTime: '8 min',
-    intro: 'Durante años, la inversión inmobiliaria en Antioquia estuvo concentrada en el Valle de Aburrá. Hoy, el mapa se ha expandido, y algunas de las oportunidades más interesantes están fuera de Medellín.',
+    intro: 'Durante años, la inversión inmobiliaria en Antioquia estuvo concentrada en el Valle de Medellín. Hoy, el mapa se ha expandido, y algunas de las oportunidades más interesantes están fuera de Medellín.',
     blocks: [
       { type: 'heading', text: 'El Oriente Antioqueño: el nuevo polo' },
       { type: 'paragraph', text: 'Rionegro, El Retiro, La Ceja y Marinilla han consolidado un corredor de inversión sólido impulsado por la expansión del Aeropuerto José María Córdova, la instalación de empresas de logística y manufactura, y el crecimiento de una clase media que prefiere vivir en zonas de menor densidad urbana.' },
@@ -166,7 +166,7 @@ export const allArticles: BlogArticle[] = [
       { type: 'heading', text: 'Cómo evaluar una oportunidad antes de invertir' },
       { type: 'list', items: [
         'Investiga los proyectos de infraestructura planificados en la zona (vías, equipamientos, zonas francas).',
-        'Compara el precio por metro cuadrado con el Valle de Aburrá: si la diferencia supera el 40%, el potencial de convergencia puede ser alto.',
+        'Compara el precio por metro cuadrado con el Valle de Medellín: si la diferencia supera el 40%, el potencial de convergencia puede ser alto.',
         'Consulta la dinámica de arrendamiento local: ¿cuánto tiempo tarda en arrendarse un inmueble similar?',
         'Evalúa la accesibilidad vial y la oferta de servicios: colegios, salud y comercio definen la demanda residencial.',
       ]},
