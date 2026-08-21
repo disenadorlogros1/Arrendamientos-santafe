@@ -107,7 +107,7 @@ export default function ConsignacionPage({ onNavigate }: ConsignacionPageProps =
         <div className="relative z-10 text-center px-4 sm:px-6 lg:px-8 max-w-4xl" ref={titleRef}>
           <h1
             className="consignacion-title-split leading-tight text-white text-center"
-            style={{ fontFamily: FONT, fontWeight: 300, lineHeight: '1.2', fontSize: 'clamp(28px, 4vw, 52px)' }}
+            style={{ fontFamily: FONT, fontWeight: 300, lineHeight: '1.2', fontSize: 'clamp(26px, 3.2vw, 46px)' }}
             onMouseEnter={() => setTitleHovered(true)}
             onMouseLeave={() => setTitleHovered(false)}
           >
