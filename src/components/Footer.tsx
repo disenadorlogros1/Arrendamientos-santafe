@@ -93,7 +93,7 @@ export default function Footer({ onNavigate }: FooterProps = {}) {
                   <a href={MAPS_RIONEGRO} target="_blank" rel="noopener noreferrer" className="text-white/80 hover:text-white transition-colors font-semibold block">
                     Rionegro
                   </a>
-                  <span className="hidden lg:block text-white/40 text-xs leading-tight mt-0.5">Sede Oriente</span>
+                  <span className="hidden lg:block text-white/40 text-xs leading-tight mt-0.5">Parque Comercial Río del Este</span>
                 </div>
               </li>
             </ul>

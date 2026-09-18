@@ -103,6 +103,8 @@ export default function ConsignacionPage({ onNavigate }: ConsignacionPageProps =
             backgroundPosition: 'center',
           }}
         />
+        {/* Overlay gris para mejorar la lectura del texto */}
+        <div className="absolute inset-0" style={{ background: 'rgba(35,34,34,0.5)' }} />
 
         <div className="relative z-10 text-center px-4 sm:px-6 lg:px-8 max-w-4xl" ref={titleRef}>
           <h1
@@ -112,16 +114,16 @@ export default function ConsignacionPage({ onNavigate }: ConsignacionPageProps =
             onMouseLeave={() => setTitleHovered(false)}
           >
             <span style={{ display: 'block', fontWeight: 300 }}>Ten la tranquilidad de dejar tu</span>
-            <span style={{ display: 'inline-block', fontWeight: 700, position: 'relative', overflow: 'hidden' }}>
+            <span style={{ display: 'inline-block', fontWeight: 900, position: 'relative', overflow: 'hidden', paddingBottom: '0.14em' }}>
               <span style={{ position: 'relative', zIndex: 2 }}>inmueble en buenas manos</span>
               <span
                 aria-hidden="true"
                 style={{
                   position: 'absolute',
-                  top: '62%',
+                  top: '80%',
                   left: 0,
                   width: '100%',
-                  height: '10%',
+                  height: '9%',
                   backgroundColor: RED,
                   transform: `translateY(-50%) scaleX(${titleHovered ? 1 : 0})`,
                   transformOrigin: 'left center',
@@ -151,11 +153,11 @@ export default function ConsignacionPage({ onNavigate }: ConsignacionPageProps =
               rel="noopener noreferrer"
               onMouseEnter={applyInkFill}
               onMouseLeave={applyInkFill}
-              className="hero-btn-fill inline-flex items-center gap-2 justify-center h-12 px-8 rounded-full"
-              style={{ fontFamily: FONT, fontWeight: 600, fontSize: 14, textDecoration: 'none', cursor: 'pointer' }}
+              className="hero-btn-fill inline-flex items-center gap-3 justify-center h-14 px-10 rounded-full"
+              style={{ fontFamily: FONT, fontWeight: 600, fontSize: 16, textDecoration: 'none', cursor: 'pointer' }}
             >
               <span>Empecemos ahora mismo</span>
-              <img src="/icons/icon-whatsapp-white.svg" alt="WhatsApp" width={20} height={20} style={{ position: 'relative', zIndex: 1 }} />
+              <img src="/icons/icon-whatsapp-white.svg" alt="WhatsApp" width={24} height={24} style={{ position: 'relative', zIndex: 1 }} />
             </a>
           </div>
         </div>

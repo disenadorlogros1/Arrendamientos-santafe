@@ -11,7 +11,7 @@ interface FeaturedSectionProps {
 }
 
 const FONT_HEADING = "'Avenir LT Std', 'Outfit', system-ui, sans-serif";
-const H_PAD = 32; // debe coincidir con H_PAD en InfiniteCarousel
+const H_PAD = 'var(--carousel-pad)'; // debe coincidir con H_PAD_* en InfiniteCarousel
 
 function applyInkFill(e: React.MouseEvent<HTMLElement>) {
   const el = e.currentTarget;
@@ -47,14 +47,26 @@ export default function FeaturedSection({ onNavigate }: FeaturedSectionProps) {
             className="featured-title-split"
             style={{
               fontFamily: FONT_HEADING,
-              fontWeight: 300,
+              fontWeight: 900,
               fontSize: 'clamp(26px, 2.6vw, 46px)',
-              color: '#555',
+              color: '#1a1a1a',
               lineHeight: 1.2,
               margin: 0,
             }}
           >
-            Propiedades <span style={{ fontWeight: 700 }}>destacadas</span>
+            Propiedades{' '}
+            <span
+              style={{
+                fontWeight: 900,
+                color: '#fff',
+                background: '#f32735',
+                padding: '0 0.28em 0.04em',
+                display: 'inline-block',
+                lineHeight: 1.1,
+              }}
+            >
+              destacadas
+            </span>
           </h2>
 
           {/* Botón — solo visible en sm+ (desktop) */}

@@ -120,6 +120,7 @@ html.lenis, html.lenis body { height: auto; }
 }
 
 :root {
+  --carousel-pad: 32px;
   --radius: 0.625rem;
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
@@ -152,6 +153,10 @@ html.lenis, html.lenis body { height: auto; }
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+}
+
+@media (min-width: 640px) {
+  :root { --carousel-pad: 56px; }
 }
 
 .dark {
@@ -191,6 +196,12 @@ html.lenis, html.lenis body { height: auto; }
 @layer base {
   * {
     @apply border-border outline-ring/50;
+  }
+  /* Tailwind v4 deja los botones con cursor:default — restaurar puntero de enlace */
+  button:not(:disabled),
+  [role="button"]:not([aria-disabled="true"]),
+  summary {
+    cursor: pointer;
   }
   body {
     @apply bg-background text-foreground;
@@ -863,6 +874,12 @@ input[type="range"]::-moz-range-track {
 
 .hero-title-split span {
   line-height: inherit !important;
+}
+
+/* Título de Propietarios: más aire entre "¿Tienes un inmueble para" y "arrendar o vender?" */
+.propietarios-title-split .split-line {
+  margin-bottom: 0.14em;
+  line-height: 1.22;
 }
 
 @media (min-width: 640px) {

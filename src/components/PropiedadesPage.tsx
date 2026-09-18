@@ -244,7 +244,7 @@ function hasSecondaryFilters(filters: PropSearchFilters): boolean {
   return (
     !!filters.textoBusqueda ||
     !!filters.codigo ||
-    !!filters.sector ||
+    filters.sector.length > 0 ||
     !!filters.tipoPropiedad ||
     filters.habitaciones !== null ||
     filters.banos !== null ||
@@ -255,6 +255,8 @@ function hasSecondaryFilters(filters: PropSearchFilters): boolean {
     filters.comodidades.length > 0
   );
 }
+
+const LAST_SEARCH_KEY = 'asf-ultima-busqueda';
 
 function parsePrice(s: string): number {
   return parseInt(s.replace(/[^0-9]/g, '')) || 0;
@@ -285,7 +287,7 @@ function applyFilters(filters: PropSearchFilters) {
     }
 
     if (filters.tipoPropiedad && p.type.toLowerCase() !== filters.tipoPropiedad.toLowerCase()) return false;
-    if (filters.sector && p.location.toLowerCase() !== filters.sector.toLowerCase()) return false;
+    if (filters.sector.length > 0 && !filters.sector.some(sec => sec.toLowerCase() === p.location.toLowerCase())) return false;
 
     const price = parsePrice(p.price);
     if (price > 0 && (price < filters.precioMin || price > filters.precioMax)) return false;
@@ -360,13 +362,13 @@ export default function PropiedadesPage({ initialFilter = 'Todos', initialQueStr
   const cardSlotRefs  = [useRef<HTMLDivElement>(null), useRef<HTMLDivElement>(null)];
 
   const getDefaultPrecioMax = (tipo: string) =>
-    tipo === 'Comprar' ? 500_000_000 : tipo === 'Arrendar' ? 15_000_000 : 500_000_000;
+    tipo === 'Comprar' ? 2_000_000_000 : tipo === 'Arrendar' ? 15_000_000 : 2_000_000_000;
 
   const [appliedFilters, setAppliedFilters] = useState<PropSearchFilters>({
     tipo: initialFilter || 'Todos',
     textoBusqueda: initialQueString,
     codigo: '',
-    sector: '',
+    sector: [],
     tipoPropiedad: '',
     precioMin: 0,
     precioMax: getDefaultPrecioMax(initialFilter || 'Todos'),
@@ -382,6 +384,27 @@ export default function PropiedadesPage({ initialFilter = 'Todos', initialQueStr
   useEffect(() => {
     setAppliedFilters(prev => ({ ...prev, tipo: initialFilter || 'Todos' }));
   }, [initialFilter]);
+
+  // El ?q= llega después del primer render (lo lee el Shell en un effect):
+  // sincronizarlo con el filtro aplicado y recordar la última búsqueda de la sesión.
+  const [restoredQuery, setRestoredQuery] = useState('');
+  useEffect(() => {
+    if (initialQueString) {
+      setAppliedFilters(prev => ({ ...prev, textoBusqueda: initialQueString }));
+      return;
+    }
+    try {
+      const saved = sessionStorage.getItem(LAST_SEARCH_KEY);
+      if (saved) {
+        setRestoredQuery(saved);
+        setAppliedFilters(prev => (prev.textoBusqueda ? prev : { ...prev, textoBusqueda: saved }));
+      }
+    } catch { /* sessionStorage no disponible */ }
+  }, [initialQueString]);
+
+  useEffect(() => {
+    try { sessionStorage.setItem(LAST_SEARCH_KEY, appliedFilters.textoBusqueda); } catch { /* noop */ }
+  }, [appliedFilters.textoBusqueda]);
 
   useEffect(() => {
     if (!titleAnimating || !subtitleRef.current) return;
@@ -490,7 +513,7 @@ export default function PropiedadesPage({ initialFilter = 'Todos', initialQueStr
       <div style={{ backgroundColor: '#f7f6f4' }}>
         <PropiedadesSearchBar
           initialTipo={initialFilter || 'Todos'}
-          initialTextoBusqueda={initialQueString}
+          initialTextoBusqueda={initialQueString || restoredQuery}
           onApply={setAppliedFilters}
           onShowMap={() => {
             if (typeof window !== 'undefined' && window.innerWidth < 1024) {
@@ -888,7 +911,7 @@ export default function PropiedadesPage({ initialFilter = 'Todos', initialQueStr
                 onClick={() => setAppliedFilters(prev => ({
                   tipo: prev.tipo,
                   textoBusqueda: '',
-                  sector: '',
+                  sector: [],
                   precioMin: 0,
                   precioMax: getDefaultPrecioMax(prev.tipo),
                   habitaciones: null,

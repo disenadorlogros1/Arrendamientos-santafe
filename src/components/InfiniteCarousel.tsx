@@ -39,8 +39,9 @@ function applyInkFill(e: React.MouseEvent<HTMLElement>) {
 const GAP_RATIO = 0.15;
 const NAV_W     = 40;  // px ancho botón flecha
 const NAV_OFF_BASE = 16; // px desde el borde de la card hasta la flecha
-const INFO_H    = 90;  // px altura aprox. del panel de info inferior
-const H_PAD     = 32;  // px padding horizontal para que la sombra no se corte
+const INFO_H    = 94;  // px altura aprox. del panel de info inferior
+const H_PAD_MOBILE  = 32; // px padding horizontal para que la sombra no se corte
+const H_PAD_DESKTOP = 56; // ≥640px: deja espacio para las flechas por fuera de las cards
 
 export default function InfiniteCarousel({ properties, onCardWidthChange, maxVisible }: InfiniteCarouselProps) {
   const [cards] = useState(() => buildCards(properties));
@@ -67,7 +68,8 @@ export default function InfiniteCarousel({ properties, onCardWidthChange, maxVis
     const el = containerRef.current;
     if (!el) return;
     const measure = () => {
-      const w = el.getBoundingClientRect().width - H_PAD * 2;
+      const pad = window.innerWidth >= 640 ? H_PAD_DESKTOP : H_PAD_MOBILE;
+      const w = el.getBoundingClientRect().width - pad * 2;
       if (w > 0) setContainerWidth(w);
     };
     measure();
@@ -75,6 +77,9 @@ export default function InfiniteCarousel({ properties, onCardWidthChange, maxVis
     ro.observe(el);
     return () => ro.disconnect();
   }, [isMounted]);
+
+  const outsideArrows = windowWidth >= 640;
+  const H_PAD = outsideArrows ? H_PAD_DESKTOP : H_PAD_MOBILE;
 
   const VISIBLE_RAW = windowWidth < 640 ? 1 : windowWidth < 1024 ? 2 : windowWidth < 1280 ? 3 : windowWidth < 1536 ? 4 : 5;
   const VISIBLE = maxVisible ? Math.min(VISIBLE_RAW, maxVisible) : VISIBLE_RAW;
@@ -93,7 +98,9 @@ export default function InfiniteCarousel({ properties, onCardWidthChange, maxVis
 
   // Flecha: centrada verticalmente en la zona de imagen (descontando INFO_H)
   const arrowTopPx = CARD_H > 0 ? Math.round((CARD_H - INFO_H) / 2) : 0;
-  const NAV_OFF = Math.max(8, Math.round(containerWidth * 0.02)) || NAV_OFF_BASE;
+  const NAV_OFF = outsideArrows
+    ? Math.round((H_PAD_DESKTOP - NAV_W) / 2)
+    : Math.max(8, Math.round(containerWidth * 0.02)) || NAV_OFF_BASE;
 
   const visibleCards = Array.from({ length: VISIBLE + 1 }, (_, i) => {
     const idx = (startIndex + i) % cards.length;
@@ -159,7 +166,7 @@ export default function InfiniteCarousel({ properties, onCardWidthChange, maxVis
       }}
     >
       {/* Track con clip — padding extra para que las sombras no se corten */}
-      <div ref={containerRef} style={{ overflow: 'hidden', width: '100%', paddingTop: 'clamp(12px,3vw,32px)', marginTop: 'clamp(-32px,-3vw,-12px)', paddingBottom: 'clamp(12px,3vw,32px)', marginBottom: 'clamp(-32px,-3vw,-12px)', paddingLeft: `${H_PAD}px`, paddingRight: `${H_PAD}px` }}>
+      <div ref={containerRef} style={{ overflow: 'hidden', width: '100%', paddingTop: 'clamp(12px,3vw,32px)', marginTop: 'clamp(-32px,-3vw,-12px)', paddingBottom: 'clamp(12px,3vw,32px)', marginBottom: 'clamp(-32px,-3vw,-12px)', paddingLeft: `${H_PAD}px`, paddingRight: `${H_PAD}px`, clipPath: outsideArrows ? `inset(-60px ${H_PAD}px -60px ${H_PAD - 20}px)` : undefined }}>
         {CARD_W > 0 && (
           <div
             ref={trackRef}
@@ -182,7 +189,7 @@ export default function InfiniteCarousel({ properties, onCardWidthChange, maxVis
         )}
       </div>
 
-      {/* Flechas superpuestas sobre card 1 y última */}
+      {/* Flechas: por fuera de las cards en ≥640px, superpuestas en mobile */}
       {arrowTopPx > 0 && (
         <>
           <button

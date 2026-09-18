@@ -356,6 +356,7 @@ export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) 
       fontSize: isMobile ? '20px' : 'clamp(22px, 2.5vw, 36px)',
       color: '#fff', lineHeight: 1.1, margin: 0,
       textAlign: isMobile ? 'center' : 'left',
+      textShadow: isMobile ? 'none' : '0 2px 14px rgba(0,0,0,0.75)',
     }}>
       {HITOS[displayIdx].title}
     </h2>
@@ -365,9 +366,10 @@ export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) 
     <p style={{
       fontFamily: FONT, fontWeight: 400,
       fontSize: isMobile ? '13px' : 'clamp(14px, 1.15vw, 18px)',
-      color: 'rgba(255,255,255,0.78)',
+      color: isMobile ? 'rgba(255,255,255,0.78)' : 'rgba(255,255,255,0.92)',
       lineHeight: 1.25, margin: 0,
       textAlign: isMobile ? 'center' : 'left',
+      textShadow: isMobile ? 'none' : '0 1px 10px rgba(0,0,0,0.8)',
     }}>
       {HITOS[displayIdx].body}
     </p>
@@ -574,7 +576,9 @@ export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) 
           className="hidden lg:block"
           style={{
             position: 'absolute', inset: 0, zIndex: 15, pointerEvents: 'none',
-            background: 'linear-gradient(to top, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.1) 50%, transparent 100%)',
+            background:
+              'linear-gradient(to right, rgba(0,0,0,0.78) 0%, rgba(0,0,0,0.5) 32%, transparent 60%), ' +
+              'linear-gradient(to top, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.1) 50%, transparent 100%)',
           }}
         />
 

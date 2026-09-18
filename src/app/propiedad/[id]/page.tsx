@@ -26,41 +26,32 @@ const FONT = "'Avenir LT Std', 'Outfit', system-ui, sans-serif";
 type SimilarFilter = 'precio' | 'ubicacion' | 'metros';
 
 function getSimilar(current: import('@/data/properties').Property, filter: SimilarFilter) {
-  const all = properties.filter(p => p.id !== current.id && p.businessType === current.businessType);
-  const priceNum = parseInt(current.price.replace(/[^0-9]/g, '')) || 0;
+  // Solo inmuebles del mismo tipo (apartamento con apartamento, local con local…) y mismo negocio
+  const all = properties.filter(p =>
+    p.id !== current.id &&
+    p.businessType === current.businessType &&
+    p.type === current.type
+  );
+  const priceOf  = (p: import('@/data/properties').Property) => parseInt(p.price.replace(/[^0-9]/g, '')) || 0;
+  const priceNum = priceOf(current);
   const areaNum  = parseInt(current.size) || 0;
   const zone     = current.location.split(',')[0].trim();
 
-  const byPrice = all.filter(p => {
-    const n = parseInt(p.price.replace(/[^0-9]/g, '')) || 0;
-    return priceNum > 0 && n > priceNum * 0.6 && n < priceNum * 1.4;
-  });
-  const byArea = all.filter(p => {
-    const n = parseInt(p.size) || 0;
-    return areaNum > 0 && n > areaNum * 0.6 && n < areaNum * 1.4;
-  });
-  const byZone  = all.filter(p => p.location.includes(zone));
-  const byType  = all.filter(p => p.type === current.type);
-  const byBeds  = all.filter(p => p.bedrooms === current.bedrooms && current.bedrooms > 0);
+  const priceGap = (p: import('@/data/properties').Property) => Math.abs(priceOf(p) - priceNum);
+  const areaGap  = (p: import('@/data/properties').Property) => Math.abs((parseInt(p.size) || 0) - areaNum);
 
   if (filter === 'precio') {
-    const base = [...byPrice];
-    if (base.length < 4) { byType.forEach(p => !base.some(b => b.id === p.id) && base.push(p)); }
-    if (base.length < 4) { byBeds.forEach(p => !base.some(b => b.id === p.id) && base.push(p)); }
-    if (base.length < 4) { all.forEach(p => !base.some(b => b.id === p.id) && base.push(p)); }
-    return base.slice(0, 12);
+    // Más cercanos en precio primero
+    return [...all].sort((a, b) => priceGap(a) - priceGap(b)).slice(0, 12);
   }
   if (filter === 'ubicacion') {
-    const base = [...byZone];
-    if (base.length < 4) { byPrice.forEach(p => !base.some(b => b.id === p.id) && base.push(p)); }
-    if (base.length < 4) { all.forEach(p => !base.some(b => b.id === p.id) && base.push(p)); }
-    return base.slice(0, 12);
+    // Misma zona → misma zona de inversión → resto; dentro de cada grupo, el más cercano en precio
+    const rank = (p: import('@/data/properties').Property) =>
+      p.location.includes(zone) ? 0 : (current.investmentZone && p.investmentZone === current.investmentZone ? 1 : 2);
+    return [...all].sort((a, b) => rank(a) - rank(b) || priceGap(a) - priceGap(b)).slice(0, 12);
   }
   // metros
-  const base = [...byArea];
-  if (base.length < 4) { byType.forEach(p => !base.some(b => b.id === p.id) && base.push(p)); }
-  if (base.length < 4) { all.forEach(p => !base.some(b => b.id === p.id) && base.push(p)); }
-  return base.slice(0, 12);
+  return [...all].sort((a, b) => areaGap(a) - areaGap(b)).slice(0, 12);
 }
 
 const DIR_TRANSFORMS: Record<string, string> = {
@@ -171,7 +162,7 @@ function SimilarSection({ current }: { current: import('@/data/properties').Prop
         </div>
         {/* Espacio + carrusel horizontal */}
         <div style={{ marginTop: 16 }}>
-          <InfiniteCarousel properties={similar} maxVisible={3} />
+          <InfiniteCarousel key={filter} properties={similar} maxVisible={3} />
         </div>
       </div>
     );
@@ -202,7 +193,7 @@ function SimilarSection({ current }: { current: import('@/data/properties').Prop
       </div>
       {/* Carrusel */}
       <div style={{ flex: 1, minWidth: 0 }}>
-        <InfiniteCarousel properties={similar} maxVisible={3} />
+        <InfiniteCarousel key={filter} properties={similar} maxVisible={3} />
       </div>
     </div>
   );

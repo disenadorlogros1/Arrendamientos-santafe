@@ -26,7 +26,7 @@ const SECTORES = [
 ];
 
 const TIPOS_INMUEBLE = [
-  'Apartamento', 'Apartaestudio', 'Casa', 'Oficina',
+  'Apartamento', 'Apartaestudio', 'Casa', 'Casa-Local', 'Oficina',
   'Local comercial', 'Bodega', 'Lote', 'Finca',
 ];
 
@@ -34,6 +34,7 @@ function fmtCOP(n: number): string {
   if (n === 0) return '$ 0';
   if (n >= 1_000_000) {
     const m = n / 1_000_000;
+    if (m >= 1000) return `$ ${m.toLocaleString('es-CO')}M`;
     return `$ ${Number.isInteger(m) ? m : m.toFixed(1)}M`;
   }
   return `$ ${Math.round(n / 1_000)}K`;
@@ -130,7 +131,7 @@ function PriceSelect({
 
   const isArrendar = searchType !== 'comprar';
   const min  = isArrendar ? 0          : 30_000_000;
-  const max  = isArrendar ? 15_000_000 : 500_000_000;
+  const max  = isArrendar ? 15_000_000 : 2_000_000_000;
   const step = isArrendar ? 250_000    : 5_000_000;
 
   useEffect(() => { setMounted(true); }, []);
@@ -467,7 +468,7 @@ export default function SearchForm({ onNavigate }: SearchFormProps) {
           const active = searchType === t;
           return (
             <button key={t} type="button"
-              onClick={() => { setSearchType(t); setPrecioRange(t === 'comprar' ? [30_000_000, 500_000_000] : [0, 15_000_000]); }}
+              onClick={() => { setSearchType(t); setPrecioRange(t === 'comprar' ? [30_000_000, 2_000_000_000] : [0, 15_000_000]); }}
               style={{
                 flex: 1, height: '100%',
                 background: active ? RED : 'rgba(255,255,255,0.4)',
@@ -551,7 +552,7 @@ export default function SearchForm({ onNavigate }: SearchFormProps) {
             </div>
             <PriceRangeSlider
               min={searchType === 'comprar' ? 30_000_000 : 0}
-              max={searchType === 'comprar' ? 500_000_000 : 15_000_000}
+              max={searchType === 'comprar' ? 2_000_000_000 : 15_000_000}
               step={searchType === 'comprar' ? 5_000_000 : 250_000}
               value={precioRange} onChange={setPrecioRange}
             />

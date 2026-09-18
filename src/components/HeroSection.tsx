@@ -147,8 +147,8 @@ export default function HeroSection({ onNavigate, searchFormSlot }: HeroSectionP
                 onMouseEnter={() => setTitleHovered(true)}
                 onMouseLeave={() => setTitleHovered(false)}
               >
-                <span style={{ fontWeight: 200 }}>60 años</span>
-                <span style={{ fontWeight: 300, position: 'relative', overflow: 'hidden' }}>
+                <span style={{ fontWeight: 900 }}>60 años</span>
+                <span style={{ fontWeight: 300, position: 'relative', overflow: 'hidden', paddingBottom: '0.14em' }}>
                   <span style={{ position: 'relative', zIndex: 2 }}>
                     conectando personas
                   </span>
@@ -157,10 +157,10 @@ export default function HeroSection({ onNavigate, searchFormSlot }: HeroSectionP
                     aria-hidden="true"
                     style={{
                       position: 'absolute',
-                      top: '62%',
+                      top: '78%',
                       left: 0,
                       width: '100%',
-                      height: '13%',
+                      height: '11%',
                       backgroundColor: RED,
                       transform: `translateY(-50%) scaleX(${(isMobile || titleHovered) ? 1 : 0})`,
                       transformOrigin: 'left center',
@@ -177,9 +177,9 @@ export default function HeroSection({ onNavigate, searchFormSlot }: HeroSectionP
                 style={{
                   fontFamily: FONT_BODY,
                   fontWeight: 300,
-                  fontSize: 'clamp(15px, 1.1vw, 17px)',
+                  fontSize: 'clamp(16px, 1.25vw, 20px)',
                   color: 'rgba(255,255,255,0.85)',
-                  marginTop: '20px',
+                  marginTop: '32px',
                   lineHeight: 1.45,
                   textAlign: 'center',
                   opacity: 0,

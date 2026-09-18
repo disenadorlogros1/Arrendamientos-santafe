@@ -24,7 +24,7 @@ const SECTORES = [
 ];
 
 const TIPOS_INMUEBLE = [
-  'Apartamento', 'Apartaestudio', 'Casa', 'Oficina',
+  'Apartamento', 'Apartaestudio', 'Casa', 'Casa-Local', 'Oficina',
   'Local', 'Bodega', 'Lote', 'Finca',
 ];
 
@@ -47,7 +47,7 @@ export interface PropSearchFilters {
   tipo: 'Todos' | 'Arrendar' | 'Comprar';
   textoBusqueda: string;
   codigo: string;
-  sector: string;
+  sector: string[];
   tipoPropiedad: string;
   precioMin: number;
   precioMax: number;
@@ -64,7 +64,7 @@ export const DEFAULT_FILTERS: PropSearchFilters = {
   tipo: 'Todos',
   textoBusqueda: '',
   codigo: '',
-  sector: '',
+  sector: [],
   tipoPropiedad: '',
   precioMin: 0,
   precioMax: 15_000_000,
@@ -83,6 +83,7 @@ function fmtCOP(n: number): string {
   if (n === 0) return '$ 0';
   if (n >= 1_000_000) {
     const m = n / 1_000_000;
+    if (m >= 1000) return `$ ${m.toLocaleString('es-CO')}M`;
     return `$ ${Number.isInteger(m) ? m : m.toFixed(1)}M`;
   }
   return `$ ${Math.round(n / 1_000)}K`;
@@ -178,7 +179,7 @@ function PriceSelect({
   const isComprar = searchType === 'comprar';
   const isArrendar = searchType === 'arrendar';
   const min  = isComprar ? 30_000_000  : 0;
-  const max  = isArrendar ? 15_000_000 : 500_000_000;
+  const max  = isArrendar ? 15_000_000 : 2_000_000_000;
   const step = isArrendar ? 250_000    : 5_000_000;
 
   useEffect(() => { setMounted(true); }, []);
@@ -238,8 +239,8 @@ function PriceSelect({
 /* ── CustomSelect — dropdown buscable portal ─────────────────────────── */
 
 function CustomSelect({
-  value, onChange, options, placeholder, searchable = false, footer,
-}: { value: string; onChange: (v: string) => void; options: string[]; placeholder?: string; searchable?: boolean; footer?: React.ReactNode }) {
+  value, onChange, options, placeholder, searchable = false, footer, multi = false, selected = [],
+}: { value: string; onChange: (v: string) => void; options: string[]; placeholder?: string; searchable?: boolean; footer?: React.ReactNode; multi?: boolean; selected?: string[] }) {
   const [open, setOpen]       = useState(false);
   const [mounted, setMounted] = useState(false);
   const [query, setQuery]     = useState('');
@@ -282,7 +283,11 @@ function CustomSelect({
     ? options.filter(o => o.toLowerCase().includes(query.toLowerCase()))
     : options;
 
-  const selectOption = (opt: string) => { onChange(opt); setOpen(false); setQuery(''); };
+  const selectOption = (opt: string) => {
+    onChange(opt);
+    // Multi-selección: el dropdown queda abierto para poder sumar más opciones
+    if (!multi) { setOpen(false); setQuery(''); }
+  };
 
   const dropdown = mounted && open ? (
     <div ref={dropdownRef} data-search-portal style={{ position: 'fixed', top: pos.top, left: pos.left, width: pos.width, zIndex: 9999 }}>
@@ -295,7 +300,7 @@ function CustomSelect({
               <button key={opt} type="button"
                 onMouseDown={e => e.preventDefault()}
                 onClick={() => selectOption(opt)}
-                className={`block w-full text-left px-4 py-2.5 transition-colors duration-100 ${value === opt ? 'bg-brand-red text-white' : 'text-gray-700 hover:bg-brand-red hover:text-white'}`}
+                className={`block w-full text-left px-4 py-2.5 transition-colors duration-100 ${(multi ? selected.includes(opt) : value === opt) ? 'bg-brand-red text-white' : 'text-gray-700 hover:bg-brand-red hover:text-white'}`}
                 style={{ fontFamily: FONT, fontSize: '13px' }}>
                 {opt}
               </button>
@@ -589,7 +594,7 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', initialTex
   const [busquedaActive, setBusquedaActive] = useState(false);
   const [codigo,         setCodigo]        = useState('');
   const [codigoActive,   setCodigoActive]  = useState(false);
-  const [sector,        setSector]        = useState('');
+  const [sector,        setSector]        = useState<string[]>([]);
   const [tipoPropiedad, setTipoPropiedad] = useState('');
 
   const [showAdvanced, setShowAdvanced] = useState(false);
@@ -616,7 +621,7 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', initialTex
   const col2Collapsed   = busquedaActive || (busquedaCollapsed && !codigoCollapsed);
   const col345Collapsed = busquedaCollapsed || codigoCollapsed;
   const defaultPrecioRange = (t: string): [number, number] =>
-    t === 'Comprar' ? [30_000_000, 500_000_000] : t === 'Arrendar' ? [0, 15_000_000] : [0, 500_000_000];
+    t === 'Comprar' ? [30_000_000, 2_000_000_000] : t === 'Arrendar' ? [0, 15_000_000] : [0, 2_000_000_000];
 
   const [precioRange, setPrecioRange] = useState<[number, number]>(defaultPrecioRange(initialTipo));
 
@@ -632,6 +637,11 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', initialTex
     setTipo(initialTipo);
     setPrecioRange(defaultPrecioRange(initialTipo));
   }, [initialTipo]);
+
+  // initialTextoBusqueda puede llegar después del primer render (ej. ?q= desde el home)
+  useEffect(() => {
+    if (initialTextoBusqueda) setTextoBusqueda(initialTextoBusqueda);
+  }, [initialTextoBusqueda]);
 
   // Cierra búsqueda avanzada al hacer clic fuera del componente (excepto portals de filtros)
   useEffect(() => {
@@ -660,7 +670,7 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', initialTex
 
   const handleClear = () => {
     const defaultRange = defaultPrecioRange(tipo);
-    setTextoBusqueda(''); setCodigo(''); setSector(''); setTipoPropiedad('');
+    setTextoBusqueda(''); setCodigo(''); setSector([]); setTipoPropiedad('');
     setPrecioRange(defaultRange);
     setHabitaciones(null); setBanos(null); setParqueadero(null);
     setAreaMin(''); setAreaMax(''); setEstrato([]); setComodidades([]);
@@ -689,11 +699,12 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', initialTex
   };
 
   const activeFilterCount = (
-    (codigo ? 1 : 0) + (sector ? 1 : 0) + (tipoPropiedad ? 1 : 0) +
+    (codigo ? 1 : 0) + sector.length + (tipoPropiedad ? 1 : 0) +
     (habitaciones !== null ? 1 : 0) + (banos !== null ? 1 : 0) +
     (parqueadero !== null ? 1 : 0) + estrato.length + comodidades.length
   );
 
+  const toggleSector    = (v: string) => setSector(prev => prev.includes(v) ? prev.filter(x => x !== v) : [...prev, v]);
   const toggleEstrato   = (e: string) => setEstrato(prev => prev.includes(e) ? prev.filter(x => x !== e) : [...prev, e]);
   const toggleComodidad = (c: string) => setComodidades(prev => prev.includes(c) ? prev.filter(x => x !== c) : [...prev, c]);
 
@@ -932,8 +943,10 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', initialTex
               <div style={{ minWidth: 0, flex: 1 }}>
                 <p style={labelStyle}>Ubicación / Mapa</p>
                 <CustomSelect
-                  value={sector}
-                  onChange={setSector}
+                  value={sector.join(', ')}
+                  onChange={toggleSector}
+                  multi
+                  selected={sector}
                   options={SECTORES}
                   placeholder="Seleccionar"
                   searchable
@@ -1204,25 +1217,44 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', initialTex
               {/* Ubicación — fila styled + native select invisible encima */}
               <div style={{ position: 'relative', borderBottom: DIVIDER }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '14px 20px' }}>
-                  <img src={fi('icon-location', sectorFocused, !!sector)} width={20} height={20} alt="" aria-hidden style={{ flexShrink: 0 }} />
+                  <img src={fi('icon-location', sectorFocused, sector.length > 0)} width={20} height={20} alt="" aria-hidden style={{ flexShrink: 0 }} />
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <p style={labelStyle}>Ubicación</p>
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                      <span style={{ fontFamily: FONT, fontSize: '14px', color: sector ? COLOR_VALUE : '#aaa' }}>{sector || 'Seleccionar'}</span>
+                      <span style={{ fontFamily: FONT, fontSize: '14px', color: sector.length ? COLOR_VALUE : '#aaa' }}>{sector.length === 0 ? 'Seleccionar' : sector.length === 1 ? sector[0] : `${sector[0]} +${sector.length - 1}`}</span>
                       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#aaa" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
                     </div>
                   </div>
                 </div>
-                <select value={sector} onChange={e => {
-                    const v = e.target.value; setSector(v);
-                    onApply({ tipo, textoBusqueda, codigo, sector: v, tipoPropiedad, precioMin: precioRange[0], precioMax: precioRange[1], habitaciones, banos, parqueadero, areaMin, areaMax, estrato, comodidades });
+                <select value="" onChange={e => {
+                    const v = e.target.value;
+                    if (!v) return;
+                    const next = sector.includes(v) ? sector.filter(x => x !== v) : [...sector, v];
+                    setSector(next);
+                    onApply({ tipo, textoBusqueda, codigo, sector: next, tipoPropiedad, precioMin: precioRange[0], precioMax: precioRange[1], habitaciones, banos, parqueadero, areaMin, areaMax, estrato, comodidades });
                   }}
                   onFocus={() => setSectorFocused(true)}
                   onBlur={() => setSectorFocused(false)}
                   style={{ position: 'absolute', inset: 0, opacity: 0, width: '100%', height: '100%', cursor: 'pointer' }}>
-                  <option value="">Seleccionar</option>
-                  {SECTORES.map(s => <option key={s} value={s}>{s}</option>)}
+                  <option value="">Seleccionar (puedes elegir varios)</option>
+                  {SECTORES.map(s => <option key={s} value={s}>{sector.includes(s) ? '✓ ' : ''}{s}</option>)}
                 </select>
+                {sector.length > 0 && (
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, padding: '0 20px 12px 54px', position: 'relative', zIndex: 1 }}>
+                    {sector.map(sec => (
+                      <button key={sec} type="button"
+                        onClick={() => {
+                          const next = sector.filter(x => x !== sec);
+                          setSector(next);
+                          onApply({ tipo, textoBusqueda, codigo, sector: next, tipoPropiedad, precioMin: precioRange[0], precioMax: precioRange[1], habitaciones, banos, parqueadero, areaMin, areaMax, estrato, comodidades });
+                        }}
+                        aria-label={`Quitar ${sec}`}
+                        style={{ fontFamily: FONT, fontSize: 12, color: '#fff', background: RED, border: 'none', borderRadius: 99, padding: '4px 10px', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+                        {sec}<span aria-hidden="true">×</span>
+                      </button>
+                    ))}
+                  </div>
+                )}
               </div>
 
               {/* Tipo de propiedad — mismo patrón */}
@@ -1252,12 +1284,12 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', initialTex
               {/* Precio */}
               <div style={{ padding: '14px 20px', borderBottom: DIVIDER }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 10 }}>
-                  <img src={fi('icon-dollar', false, precioRange[0] > 0 || precioRange[1] < (tipo === 'Comprar' ? 500_000_000 : 15_000_000))} width={20} height={20} alt="" aria-hidden style={{ flexShrink: 0 }} />
+                  <img src={fi('icon-dollar', false, precioRange[0] > 0 || precioRange[1] < (tipo === 'Comprar' ? 2_000_000_000 : 15_000_000))} width={20} height={20} alt="" aria-hidden style={{ flexShrink: 0 }} />
                   <p style={labelStyle}>Precio</p>
                 </div>
                 <PriceRangeSlider
                   min={tipo === 'Comprar' ? 30_000_000 : 0}
-                  max={tipo === 'Comprar' ? 500_000_000 : 15_000_000}
+                  max={tipo === 'Comprar' ? 2_000_000_000 : 15_000_000}
                   step={tipo === 'Comprar' ? 5_000_000 : 250_000}
                   value={precioRange}
                   onChange={setPrecioRange}

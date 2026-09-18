@@ -215,17 +215,17 @@ export default function PropertyCard({ property, hideCarousel = false, portraitM
         </p>
 
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: '6px' }}>
-          <span style={{ fontFamily: FONT, fontSize: '12px', color: '#888', fontWeight: 500, lineHeight: 1.3 }}>
+          <span style={{ fontFamily: FONT, fontSize: '14px', color: '#666', fontWeight: 500, lineHeight: 1.3 }}>
             {property.location}
           </span>
-          <span style={{ fontFamily: FONT, fontSize: '12px', color: '#888', fontWeight: 500, lineHeight: 1.3, flexShrink: 0 }}>
+          <span style={{ fontFamily: FONT, fontSize: '14px', color: '#666', fontWeight: 500, lineHeight: 1.3, flexShrink: 0 }}>
             {property.type}
           </span>
         </div>
 
         <div style={{ height: '2px', background: RED, margin: '3px 0 3px' }} />
 
-        <p style={{ fontFamily: FONT, fontSize: '12px', color: '#888', fontWeight: 400, margin: 0 }}>
+        <p style={{ fontFamily: FONT, fontSize: '13px', color: '#1a1a1a', fontWeight: 900, margin: 0 }}>
           Código inmueble {property.reference.replace('Ref. ', '')}
         </p>
       </div>

@@ -83,7 +83,6 @@ const servicios = [
 export default function ServiciosBlock({ onNavigate: _onNavigate }: ServiciosBlockProps) {
   const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
   const [touchIdx, setTouchIdx]     = useState<number | null>(null);
-  const [redIdx] = useState(() => Math.floor(Math.random() * servicios.length));
 
   const servContainerRef = useRef<HTMLDivElement>(null);
   const servTrackRef     = useRef<HTMLDivElement>(null);
@@ -277,10 +276,10 @@ export default function ServiciosBlock({ onNavigate: _onNavigate }: ServiciosBlo
         >
           {servicios.map((s, idx) => {
             const url      = `https://wa.me/${s.phone}?text=${encodeURIComponent(s.waMsg)}`;
-            const isRed    = idx === redIdx;
             const isHov    = idx === hoveredIdx;
             const isTouch  = idx === touchIdx;
             const isActive = isHov || isTouch;
+            const isRed    = isActive; // caja roja solo en el servicio bajo el puntero
             const isAdj    = hoveredIdx !== null && Math.abs(idx - hoveredIdx) === 1;
 
             return (
@@ -329,9 +328,9 @@ export default function ServiciosBlock({ onNavigate: _onNavigate }: ServiciosBlo
                 <p
                   style={{
                     fontFamily: FONT_BODY,
-                    fontWeight: 300,
+                    fontWeight: 400,
                     fontSize: 'clamp(12.5px, 0.9vw, 14px)',
-                    color: isRed ? 'rgba(255,255,255,0.75)' : 'rgba(0,0,0,0.55)',
+                    color: isRed ? 'rgba(255,255,255,0.9)' : 'rgba(0,0,0,0.72)',
                     margin: 0,
                     lineHeight: 1.15,
                     flexGrow: 1,
