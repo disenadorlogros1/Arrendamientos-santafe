@@ -191,7 +191,7 @@ export default function HeroSection({ onNavigate, searchFormSlot }: HeroSectionP
                   fontWeight: 300,
                   fontSize: 'clamp(16px, 1.25vw, 20px)',
                   color: 'rgba(255,255,255,0.85)',
-                  marginTop: '32px',
+                  marginTop: isMobile ? '10px' : '32px',
                   lineHeight: 1.45,
                   textAlign: 'center',
                   opacity: 0,

@@ -920,6 +920,8 @@ input[type="range"]::-moz-range-track {
     font-size: clamp(24px, 7vw, 30px) !important;
     line-height: 1.22 !important;
   }
+  /* La regla global "span { line-height: 1.45 }" abría el interlineado: aquí los spans heredan el del título */
+  .mob-hero-title span { line-height: inherit !important; }
   .mob-hero-title .tu-lead { display: inline !important; }
   .mob-hero-title .tu-lead::after { content: ' '; }
 
