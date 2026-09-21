@@ -112,7 +112,7 @@ export default function Footer({ onNavigate }: FooterProps = {}) {
                   rel="noopener noreferrer"
                   className="flex items-center gap-2 text-sm text-white/60 hover:text-white transition-colors"
                 >
-                  <img src="/icons/icon-credit-card-red.svg" className="h-4 w-4 shrink-0" alt="" aria-hidden="true" />
+                  <img src="/icons/New_icon-credit-card-red.svg" className="h-4 w-4 shrink-0" alt="" aria-hidden="true" />
                   Pagar en línea (PSE)
                 </a>
               </li>

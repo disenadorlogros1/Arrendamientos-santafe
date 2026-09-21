@@ -12,8 +12,8 @@ const SearchGif = (_: any) => (
 );
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const CreditCardGif = (_: any) => (
-  <><img src="/icons/icon-credit-card-red.svg"  className="w-5 h-5 block group-hover:hidden" alt="" aria-hidden />
-    <img src="/icons/icon-credit-card-white.svg" className="w-5 h-5 hidden group-hover:block" alt="" aria-hidden /></>
+  <><img src="/icons/New_icon-credit-card-red.svg"  className="w-5 h-5 block group-hover:hidden" alt="" aria-hidden />
+    <img src="/icons/New_icon-credit-card-white.svg" className="w-5 h-5 hidden group-hover:block" alt="" aria-hidden /></>
 );
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const WhatsAppGif = (_: any) => (
