@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { useFavorites, refCode } from '@/lib/favorites';
 import { properties, type Property } from '@/data/properties';
 import PropertyCard from '@/components/PropertyCard';
@@ -9,6 +9,55 @@ const FONT = "'Avenir LT Std', 'Outfit', system-ui, sans-serif";
 const RED = '#f32735';
 const MIN_COMPARE = 2;
 const MAX_COMPARE = 4;
+
+/** Grilla de cards. En celular (< 768px) se comporta como carrusel y muestra puntos de posición debajo. */
+function FavCarousel({ count, children }: { count: number; children: React.ReactNode }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [active, setActive] = useState(0);
+
+  const updateActive = () => {
+    const el = ref.current;
+    if (!el) return;
+    const base = el.getBoundingClientRect().left + 16; // padding-left del carrusel en celular
+    let best = 0;
+    let bestDist = Infinity;
+    Array.from(el.children).forEach((child, i) => {
+      const d = Math.abs(child.getBoundingClientRect().left - base);
+      if (d < bestDist) { bestDist = d; best = i; }
+    });
+    setActive(best);
+  };
+
+  const goTo = (i: number) => {
+    const el = ref.current;
+    const child = el?.children[i] as HTMLElement | undefined;
+    if (!el || !child) return;
+    el.scrollTo({ left: child.offsetLeft - el.offsetLeft - 16, behavior: 'smooth' });
+  };
+
+  return (
+    <>
+      <div ref={ref} onScroll={updateActive} className="fav-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+        {children}
+      </div>
+      {count > 1 && (
+        <div className="fav-dots" role="tablist" aria-label="Posición en el carrusel">
+          {Array.from({ length: count }, (_, i) => (
+            <button
+              key={i}
+              type="button"
+              role="tab"
+              aria-selected={i === active}
+              aria-label={`Ir a la propiedad ${i + 1} de ${count}`}
+              onClick={() => goTo(i)}
+              className={i === active ? 'fav-dot fav-dot-active' : 'fav-dot'}
+            />
+          ))}
+        </div>
+      )}
+    </>
+  );
+}
 
 export default function FavoritosPage() {
   const { ids } = useFavorites();
@@ -41,6 +90,7 @@ export default function FavoritosPage() {
     <div style={{ background: '#fff', minHeight: '60vh' }}>
       <style>{`
         .fav-mobile-cta { display: none; }
+        .fav-dots { display: none; }
         @media (max-width: 767px) {
           .fav-head-btn { display: none !important; }
           .fav-mobile-cta { display: block; }
@@ -57,7 +107,14 @@ export default function FavoritosPage() {
             scrollbar-width: none;
           }
           .fav-grid::-webkit-scrollbar { display: none; }
-          .fav-grid > * { flex: 0 0 82%; max-width: 330px; scroll-snap-align: start; }
+          .fav-grid > * { flex: 0 0 76%; max-width: 330px; scroll-snap-align: start; }
+          /* Puntos de posición */
+          .fav-dots { display: flex; justify-content: center; align-items: center; gap: 6px; margin-top: 12px; }
+          .fav-dot {
+            width: 7px; height: 7px; padding: 0; border: none; border-radius: 4px;
+            background: #d5d5d5; transition: width 0.2s ease, background 0.2s ease;
+          }
+          .fav-dot-active { width: 20px; background: #f32735; }
         }
       `}</style>
       <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '40px clamp(16px, 3vw, 52px) 56px' }}>
@@ -109,7 +166,7 @@ export default function FavoritosPage() {
                   </div>
 
                   {/* Mismas cards verticales que Propiedades y Propiedades destacadas */}
-                  <div className="fav-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+                  <FavCarousel count={list.length}>
                     {list.map((p) => {
                       const isSel = chosen.includes(p.id);
                       const blocked = !isSel && chosen.length >= MAX_COMPARE;
@@ -147,7 +204,7 @@ export default function FavoritosPage() {
                         </div>
                       );
                     })}
-                  </div>
+                  </FavCarousel>
 
                   {/* Solo celular: botón Comparar debajo del carrusel */}
                   <div className="fav-mobile-cta" style={{ marginTop: 14 }}>
