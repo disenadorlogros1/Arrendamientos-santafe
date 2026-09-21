@@ -131,10 +131,20 @@ function CompareTable({ list }: { list: Property[] }) {
   const rows = buildRows(list);
   return (
     <>
+      <style>{`
+        .cmp-mobile { display: none; }
+        @media (max-width: 767px) {
+          .cmp-desktop { display: none; }
+          .cmp-mobile { display: block; }
+        }
+      `}</style>
       <p style={{ fontFamily: FONT, fontSize: 13, color: '#888', margin: '0 0 20px' }}>
         El mejor valor de cada fila aparece resaltado en rojo.
       </p>
-      <div style={{ overflowX: 'auto' }}>
+      <div className="cmp-mobile">
+        <CompareMobile list={list} rows={rows} />
+      </div>
+      <div className="cmp-desktop" style={{ overflowX: 'auto' }}>
         <div style={{ display: 'grid', gridTemplateColumns: `repeat(${list.length}, minmax(260px, 1fr))`, gap: 0, minWidth: list.length * 260 }}>
           {list.map((p, col) => (
             <div key={p.id} style={{ padding: '0 24px', borderLeft: col > 0 ? '1px solid rgba(0,0,0,0.1)' : 'none', minWidth: 0 }}>
@@ -171,5 +181,85 @@ function CompareTable({ list }: { list: Property[] }) {
         </div>
       </div>
     </>
+  );
+}
+
+/* ── Vista compacta para celular: etiquetas fijas a la izquierda + una columna por propiedad ── */
+function bestIndexes(row: Row): Set<number> {
+  const out = new Set<number>();
+  const same = row.values.every((v) => v === row.values[0]);
+  if (same || !row.nums || !row.best) return out;
+  const valid = row.nums.filter((n): n is number => n !== null);
+  if (!valid.length) return out;
+  const target = row.best === 'min' ? Math.min(...valid) : Math.max(...valid);
+  row.nums.forEach((n, i) => { if (n === target) out.add(i); });
+  return out;
+}
+
+function CompareMobile({ list, rows }: { list: Property[]; rows: Row[] }) {
+  const LABEL_W = 112;
+  const cols = `${LABEL_W}px repeat(${list.length}, minmax(116px, 1fr))`;
+  const stickyLeft: React.CSSProperties = { position: 'sticky', left: 0, background: '#fff', zIndex: 2 };
+  return (
+    <div style={{ maxHeight: 'calc(100vh - 140px)', overflow: 'auto', border: '1px solid rgba(0,0,0,0.08)', borderRadius: 8, background: '#fff' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: cols, minWidth: LABEL_W + list.length * 116 }}>
+        {/* Encabezado fijo arriba */}
+        <div style={{ ...stickyLeft, top: 0, zIndex: 4, borderBottom: '1px solid rgba(0,0,0,0.1)', position: 'sticky', display: 'flex', alignItems: 'flex-end', padding: '10px' }}>
+          <span style={{ fontFamily: FONT, fontSize: 13, fontWeight: 700, color: '#1a1a1a', lineHeight: 1.2 }}>Detalles del inmueble</span>
+        </div>
+        {list.map((p) => (
+          <div
+            key={p.id}
+            style={{ position: 'sticky', top: 0, zIndex: 3, background: '#fff', padding: '10px 8px', borderBottom: '1px solid rgba(0,0,0,0.1)', borderLeft: '1px solid rgba(0,0,0,0.06)', minWidth: 0 }}
+          >
+            <img src={p.image} alt={p.title} style={{ width: '100%', height: 76, objectFit: 'cover', borderRadius: 6, display: 'block', marginBottom: 8 }} />
+            <p style={{ fontFamily: FONT, fontWeight: 900, fontSize: 13, color: '#1a1a1a', margin: 0, lineHeight: 1.2 }}>{p.location}</p>
+            <p style={{ fontFamily: FONT, fontWeight: 700, fontSize: 11, color: '#888', margin: '2px 0 8px' }}>Cód. {refCode(p)}</p>
+            <a
+              href={`/propiedad/${p.id}`}
+              style={{
+                display: 'flex', alignItems: 'center', justifyContent: 'center', height: 30, borderRadius: 999,
+                background: RED, color: '#fff', fontFamily: FONT, fontWeight: 700, fontSize: 12, textDecoration: 'none', whiteSpace: 'nowrap',
+              }}
+            >
+              Ver propiedad
+            </a>
+          </div>
+        ))}
+
+        {rows.map((row) => {
+          const best = bestIndexes(row);
+          return (
+            <div key={row.label} style={{ display: 'contents' }}>
+              <div
+                style={{
+                  ...stickyLeft, display: 'flex', alignItems: 'center', gap: 6, padding: '11px 8px 11px 10px',
+                  borderTop: '1px solid rgba(0,0,0,0.07)',
+                }}
+              >
+                <img src={row.icon} width="14" height="14" alt="" style={{ flexShrink: 0, filter: 'grayscale(1) opacity(0.4)' }} />
+                <span style={{ fontFamily: FONT, fontSize: 12, fontWeight: 700, color: '#333', lineHeight: 1.15 }}>{row.label}</span>
+              </div>
+              {row.values.map((v, j) => {
+                const isBest = best.has(j);
+                return (
+                  <div
+                    key={j}
+                    style={{
+                      display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '11px 6px', textAlign: 'center',
+                      borderTop: '1px solid rgba(0,0,0,0.07)', borderLeft: '1px solid rgba(0,0,0,0.06)',
+                      fontFamily: FONT, fontSize: 13, fontWeight: isBest ? 700 : 400, color: isBest ? '#aa182c' : '#555',
+                      background: isBest ? 'rgba(243,39,53,0.08)' : undefined, minWidth: 0, wordBreak: 'break-word',
+                    }}
+                  >
+                    {v}
+                  </div>
+                );
+              })}
+            </div>
+          );
+        })}
+      </div>
+    </div>
   );
 }
