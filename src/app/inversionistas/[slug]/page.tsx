@@ -402,9 +402,9 @@ function OtherZoneCard({ zone }: { zone: typeof investmentZones[0] }) {
       {/* Botón mobile: rojo sólido */}
       <Link
         href={`/inversionistas/${zone.slug}`}
-        className="lg:hidden"
+        className="flex lg:hidden"
         style={{
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          alignItems: 'center', justifyContent: 'center',
           padding: '11px 16px',
           background: RED, color: '#fff',
           fontFamily: FONT, fontSize: 13, fontWeight: 600,
