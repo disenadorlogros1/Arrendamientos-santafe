@@ -139,10 +139,22 @@ function CompareTable({ list }: { list: Property[] }) {
           {list.map((p, col) => (
             <div key={p.id} style={{ padding: '0 24px', borderLeft: col > 0 ? '1px solid rgba(0,0,0,0.1)' : 'none', minWidth: 0 }}>
               <img src={p.image} alt={p.title} style={{ width: '100%', height: 150, objectFit: 'cover', borderRadius: 6, display: 'block', marginBottom: 12 }} />
-              <p style={{ fontFamily: FONT, fontWeight: 900, fontSize: 16, color: '#1a1a1a', margin: '0 0 2px' }}>{p.location}</p>
-              <a href={`/propiedad/${p.id}`} style={{ fontFamily: FONT, fontSize: 12, fontWeight: 700, color: RED, textDecoration: 'none' }}>
-                Cód. {refCode(p)} · Ver ficha
-              </a>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
+                <div style={{ minWidth: 0 }}>
+                  <p style={{ fontFamily: FONT, fontWeight: 900, fontSize: 16, color: '#1a1a1a', margin: '0 0 2px' }}>{p.location}</p>
+                  <p style={{ fontFamily: FONT, fontSize: 12, fontWeight: 700, color: '#888', margin: 0 }}>Cód. {refCode(p)}</p>
+                </div>
+                <a
+                  href={`/propiedad/${p.id}`}
+                  style={{
+                    flexShrink: 0, display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+                    height: 34, padding: '0 16px', borderRadius: 999, background: RED, color: '#fff',
+                    fontFamily: FONT, fontWeight: 700, fontSize: 13, textDecoration: 'none', whiteSpace: 'nowrap',
+                  }}
+                >
+                  Ver propiedad
+                </a>
+              </div>
               <h2 style={{ fontFamily: FONT, fontSize: 16, fontWeight: 700, color: '#1a1a1a', margin: '22px 0 8px' }}>Detalles del inmueble</h2>
               {rows.map((row) => {
                 const same = row.values.every((v) => v === row.values[0]);

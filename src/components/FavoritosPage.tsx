@@ -96,7 +96,7 @@ export default function FavoritosPage() {
                           key={p.id}
                           style={{
                             position: 'relative', borderRadius: 8,
-                            boxShadow: isSel ? `0 0 0 3px ${RED}` : 'none',
+                            boxShadow: isSel ? `0 0 0 1.5px ${RED}` : 'none',
                             transition: 'box-shadow 0.2s ease',
                           }}
                         >
