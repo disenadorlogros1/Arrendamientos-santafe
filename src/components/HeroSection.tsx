@@ -13,7 +13,7 @@ interface HeroSectionProps {
 /* ── Streamable background sin controles ──
    Dos videos: horizontal (16:9) para pantallas anchas y vertical (9:16) para celulares/portrait.
    El iframe se dimensiona como "cover" usando container query units del contenedor. */
-const VIDEO_HORIZONTAL = 'mjqjyr';
+const VIDEO_HORIZONTAL = 'ahrs1d';
 const VIDEO_VERTICAL   = 'bi3mk3';
 
 function StreamableBackground({ videoId, vertical }: { videoId: string; vertical: boolean }) {
