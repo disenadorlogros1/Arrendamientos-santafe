@@ -157,7 +157,7 @@ export default function HeroSection({ onNavigate, searchFormSlot }: HeroSectionP
           >
             <div style={{ maxWidth: '700px', width: '100%', textAlign: 'center' }}>
               <h1
-                className="hero-title-split text-[36px] sm:text-[clamp(32px,5vw,52px)]"
+                className="hero-title-split text-[clamp(26px,8.4vw,36px)] sm:text-[clamp(32px,5vw,52px)]"
                 style={{
                   fontFamily: FONT_HEADING,
                   fontWeight: 700,
@@ -178,7 +178,7 @@ export default function HeroSection({ onNavigate, searchFormSlot }: HeroSectionP
                 <TitleUnderline
                   active={isMobile || titleHovered}
                   transition={isMobile ? 'none' : 'transform 0.234s ease'}
-                  style={{ fontWeight: 300 }}
+                  style={{ fontWeight: 300, whiteSpace: isMobile ? 'nowrap' : undefined }}
                 >
                   conectando personas
                 </TitleUnderline>

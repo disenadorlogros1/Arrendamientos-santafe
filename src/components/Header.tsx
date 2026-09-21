@@ -47,6 +47,35 @@ function MobileWhatsAppButton() {
   );
 }
 
+function MobileFavoritesButton() {
+  const { count } = useFavorites();
+  const [isRed, setIsRed] = useState(false);
+  useEffect(() => {
+    const i = setInterval(() => setIsRed(p => !p), 5000);
+    return () => clearInterval(i);
+  }, []);
+  return (
+    <a href="/favoritos" aria-label={count > 0 ? `Favoritos (${count})` : 'Favoritos'}
+      className={`relative flex items-center justify-center w-[42px] h-[42px] rounded-full transition-all duration-500 ${
+        isRed ? 'bg-brand-red shadow-[0_0_20px_rgba(243,39,53,0.6)]' : 'bg-white shadow-[0_0_12px_rgba(255,255,255,0.3)]'
+      }`}>
+      <img src={isRed ? '/icons/icon-heart-white.svg' : '/icons/icon-heart-dark.svg'} alt="" aria-hidden="true" className="w-5 h-5" />
+      {count > 0 && (
+        <span
+          style={{
+            position: 'absolute', top: -4, right: -4, minWidth: 18, height: 18, borderRadius: 9, padding: '0 4px',
+            background: isRed ? '#fff' : '#f32735', color: isRed ? '#f32735' : '#fff',
+            fontSize: 11, fontWeight: 700, lineHeight: '18px', textAlign: 'center',
+            boxShadow: '0 1px 4px rgba(0,0,0,0.3)', transition: 'background 0.5s ease, color 0.5s ease',
+          }}
+        >
+          {count}
+        </span>
+      )}
+    </a>
+  );
+}
+
 function MobilePSEButton() {
   const [isRed, setIsRed] = useState(false);
   useEffect(() => {
@@ -291,6 +320,7 @@ export default function Header({ currentPage, onNavigate, isHeroPage = true, dar
       <div className="flex lg:hidden items-center h-full px-4 sm:px-6">
         <div className="flex-1" />
         <div className="flex items-center gap-2">
+          <MobileFavoritesButton />
           <MobileWhatsAppButton />
           <MobilePSEButton />
           <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>

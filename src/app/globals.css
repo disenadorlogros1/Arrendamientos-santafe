@@ -900,3 +900,12 @@ input[type="range"]::-moz-range-track {
     transform: none;
   }
 }
+
+/* Propiedades destacadas: en celular/tablet las líneas del título no se sobreponen
+   (la regla global .split-line usa margen negativo para el título del hero) */
+@media (max-width: 1023px) {
+  .featured-title-split .split-line {
+    margin-bottom: 0.2em;
+    line-height: 1.15;
+  }
+}
