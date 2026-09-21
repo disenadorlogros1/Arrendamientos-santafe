@@ -5,6 +5,7 @@ import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 import SmoothScrollProvider from "@/components/SmoothScrollProvider";
 import ScrollTracker from "@/components/ScrollTracker";
+import FloatingFavorites from "@/components/FloatingFavorites";
 
 const outfit = Outfit({
   variable: "--font-outfit",
@@ -164,6 +165,7 @@ export default function RootLayout({
           {children}
         </SmoothScrollProvider>
         <Toaster />
+        <FloatingFavorites />
       </body>
     </html>
   );

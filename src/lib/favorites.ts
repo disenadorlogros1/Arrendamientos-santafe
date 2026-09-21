@@ -1,9 +1,13 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
+import type { Property } from '@/data/properties';
 
 const KEY = 'asf-favoritos';
 const EVENT = 'asf-favoritos-change';
+
+/** Código público del inmueble (ej. "A12439"), el mismo que se muestra en tarjetas y en /comparar?codigos= */
+export const refCode = (p: Pick<Property, 'reference'>) => p.reference.replace('Ref. ', '');
 
 function read(): number[] {
   try {
@@ -12,6 +16,11 @@ function read(): number[] {
   } catch {
     return [];
   }
+}
+
+function write(next: number[]) {
+  try { localStorage.setItem(KEY, JSON.stringify(next)); } catch { /* storage no disponible */ }
+  window.dispatchEvent(new Event(EVENT));
 }
 
 /** Favoritos guardados en el navegador (sin cuenta), sincronizados entre componentes y pestañas. */
@@ -31,10 +40,12 @@ export function useFavorites() {
 
   const toggle = useCallback((id: number) => {
     const current = read();
-    const next = current.includes(id) ? current.filter((x) => x !== id) : [...current, id];
-    try { localStorage.setItem(KEY, JSON.stringify(next)); } catch { /* storage no disponible */ }
-    window.dispatchEvent(new Event(EVENT));
+    write(current.includes(id) ? current.filter((x) => x !== id) : [...current, id]);
   }, []);
 
-  return { ids, count: ids.length, isFavorite: (id: number) => ids.includes(id), toggle };
+  const remove = useCallback((id: number) => {
+    write(read().filter((x) => x !== id));
+  }, []);
+
+  return { ids, count: ids.length, isFavorite: (id: number) => ids.includes(id), toggle, remove };
 }
