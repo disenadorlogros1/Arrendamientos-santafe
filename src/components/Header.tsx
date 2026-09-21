@@ -100,21 +100,38 @@ function WhatsAppButton() {
   );
 }
 
-function FavoritesLink({ onClick, active }: { onClick: () => void; active: boolean }) {
+function FavoritesLink({ onClick }: { onClick: () => void }) {
   const { count } = useFavorites();
+  // Mismo ciclo de color que WhatsApp y Pagar en línea (blanco ↔ rojo cada 6 s)
+  const [isRed, setIsRed] = useState(false);
+  useEffect(() => {
+    const i = setInterval(() => setIsRed(p => !p), 6000);
+    return () => clearInterval(i);
+  }, []);
   return (
     <button
       type="button"
       onClick={onClick}
       aria-label={count > 0 ? `Favoritos (${count})` : 'Favoritos'}
       title="Favoritos"
-      className="relative flex items-center justify-center w-[42px] h-[42px] rounded-full transition-colors duration-300"
-      style={{ background: active ? '#f32735' : 'rgba(255,255,255,0.25)', border: '1px solid rgba(255,255,255,0.35)', color: '#fff', backdropFilter: 'blur(10px)' }}
+      className={`relative flex items-center justify-center w-[42px] h-[42px] rounded-full transition-all duration-500 ${
+        isRed ? 'bg-brand-red shadow-[0_0_20px_rgba(243,39,53,0.6)]' : 'bg-white shadow-[0_0_12px_rgba(255,255,255,0.3)]'
+      }`}
     >
-      <img src="/icons/icon-heart-white.svg" alt="" aria-hidden="true" className="w-5 h-5" />
+      <img
+        src={isRed ? '/icons/icon-heart-white.svg' : '/icons/icon-heart-dark.svg'}
+        alt=""
+        aria-hidden="true"
+        className="w-5 h-5"
+      />
       {count > 0 && (
         <span
-          style={{ position: 'absolute', top: -4, right: -4, minWidth: 18, height: 18, borderRadius: 9, padding: '0 4px', background: '#f32735', color: '#fff', fontSize: 11, fontWeight: 700, lineHeight: '18px', textAlign: 'center' }}
+          style={{
+            position: 'absolute', top: -4, right: -4, minWidth: 18, height: 18, borderRadius: 9, padding: '0 4px',
+            background: isRed ? '#fff' : '#f32735', color: isRed ? '#f32735' : '#fff',
+            fontSize: 11, fontWeight: 700, lineHeight: '18px', textAlign: 'center',
+            boxShadow: '0 1px 4px rgba(0,0,0,0.3)', transition: 'background 0.5s ease, color 0.5s ease',
+          }}
         >
           {count}
         </span>
@@ -260,7 +277,7 @@ export default function Header({ currentPage, onNavigate, isHeroPage = true, dar
 
         {/* Botones */}
         <div className="flex items-center gap-2 shrink-0">
-          <FavoritesLink onClick={() => { window.location.href = '/favoritos'; }} active={currentPage === 'favoritos'} />
+          <FavoritesLink onClick={() => { window.location.href = '/favoritos'; }} />
           <WhatsAppButton />
           <PSEButton />
         </div>
