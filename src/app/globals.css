@@ -877,9 +877,12 @@ input[type="range"]::-moz-range-track {
 }
 
 /* Título de Propietarios: más aire entre "¿Tienes un inmueble para" y "arrendar o vender?" */
+.propietarios-title-split .split-line,
+.propietarios-title-split .split-line span {
+  line-height: 1.15;
+}
 .propietarios-title-split .split-line {
-  margin-bottom: 0.14em;
-  line-height: 1.22;
+  margin-bottom: 0.1em;
 }
 
 @media (min-width: 640px) {
