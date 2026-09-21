@@ -10,9 +10,15 @@ interface HeroSectionProps {
   searchFormSlot?: React.ReactNode;
 }
 
-/* ── Streamable background sin controles ── */
-function StreamableBackground({ videoId }: { videoId: string }) {
+/* ── Streamable background sin controles ──
+   Dos videos: horizontal (16:9) para pantallas anchas y vertical (9:16) para celulares/portrait.
+   El iframe se dimensiona como "cover" usando container query units del contenedor. */
+const VIDEO_HORIZONTAL = 'mjqjyr';
+const VIDEO_VERTICAL   = 'bi3mk3';
+
+function StreamableBackground({ videoId, vertical }: { videoId: string; vertical: boolean }) {
   const coverRef = useRef<HTMLDivElement>(null);
+  const cls = vertical ? 'streamable-bg-iframe streamable-bg-vertical' : 'streamable-bg-iframe streamable-bg-horizontal';
 
   return (
     <>
@@ -21,22 +27,31 @@ function StreamableBackground({ videoId }: { videoId: string }) {
           position: absolute !important;
           top: 50% !important;
           left: 50% !important;
-          width: calc(177.78vh + 200px) !important;
-          min-width: calc(100% + 200px) !important;
-          height: calc(56.25vw + 200px) !important;
-          min-height: calc(100% + 200px) !important;
           transform: translate(-50%, -50%) !important;
           pointer-events: none !important;
           border: none !important;
         }
+        /* 16:9 — cubre el contenedor con 100px extra para recortar bordes del player */
+        .streamable-bg-horizontal {
+          width: max(calc(100cqw + 100px), calc(177.78cqh + 100px)) !important;
+          aspect-ratio: 16 / 9 !important;
+          height: auto !important;
+        }
+        /* 9:16 — mismo criterio con la proporción vertical */
+        .streamable-bg-vertical {
+          width: max(calc(100cqw + 60px), calc(56.25cqh + 60px)) !important;
+          aspect-ratio: 9 / 16 !important;
+          height: auto !important;
+        }
       `}</style>
       <div
         className="absolute inset-0 overflow-hidden"
-        style={{ zIndex: 0 }}
+        style={{ zIndex: 0, containerType: 'size' }}
         aria-hidden="true"
       >
         <iframe
-          className="streamable-bg-iframe"
+          key={videoId}
+          className={cls}
           src={`https://streamable.com/e/${videoId}?autoplay=1&muted=1&loop=1&nocontrols=1`}
           allow="autoplay; fullscreen"
           allowFullScreen
@@ -89,9 +104,14 @@ export default function HeroSection({ onNavigate, searchFormSlot }: HeroSectionP
   const subtitleRef = useRef<HTMLParagraphElement>(null);
   const [titleHovered, setTitleHovered] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  // null hasta conocer la orientación: evita cargar primero el video equivocado
+  const [isPortrait, setIsPortrait] = useState<boolean | null>(null);
 
   useEffect(() => {
-    const check = () => setIsMobile(window.innerWidth < 640);
+    const check = () => {
+      setIsMobile(window.innerWidth < 640);
+      setIsPortrait(window.innerHeight > window.innerWidth);
+    };
     check();
     window.addEventListener('resize', check);
     return () => window.removeEventListener('resize', check);
@@ -119,7 +139,13 @@ export default function HeroSection({ onNavigate, searchFormSlot }: HeroSectionP
           ref={titleRef}
         >
           {/* Video de fondo — Streamable (sin controles) */}
-          <StreamableBackground videoId="j404zu" />
+          {isPortrait !== null && (
+            <StreamableBackground
+              key={isPortrait ? 'v' : 'h'}
+              videoId={isPortrait ? VIDEO_VERTICAL : VIDEO_HORIZONTAL}
+              vertical={isPortrait}
+            />
+          )}
 
           {/* Overlay oscuro */}
           <div className="absolute inset-0 hero-video-overlay" />
