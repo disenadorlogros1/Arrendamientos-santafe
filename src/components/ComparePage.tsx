@@ -10,6 +10,7 @@ const MAX_COMPARE = 4;
 
 interface Row {
   label: string;
+  icon: string;
   values: string[];
   /** valores numéricos para resaltar el mejor */
   nums?: (number | null)[];
@@ -36,30 +37,32 @@ function buildRows(list: Property[]): Row[] {
   return [
     {
       label: 'Precio',
+      icon: '/icons/icon-dollar-red.svg',
       values: list.map((p) => p.price),
       nums: list.map((p) => num(p.price)),
       // Solo se resalta el más económico si todas son del mismo negocio (arriendo con arriendo, venta con venta)
       best: list.every((p) => p.businessType === list[0].businessType) ? 'min' : undefined,
     },
-    { label: 'Oferta', values: list.map((p) => (p.businessType === 'Comprar' ? 'Venta' : 'Arriendo')) },
-    { label: 'Sector', values: list.map((p) => p.location) },
-    { label: 'Zona', values: list.map(zone) },
-    { label: 'Área (m²)', values: list.map((p) => String(num(p.size) || '—')), nums: list.map((p) => num(p.size) || null), best: 'max' },
-    { label: 'Habitaciones', values: list.map((p) => String(p.bedrooms)), nums: list.map((p) => p.bedrooms), best: 'max' },
-    { label: 'Baños', values: list.map((p) => String(p.bathrooms)), nums: list.map((p) => p.bathrooms), best: 'max' },
+    { label: 'Oferta', icon: '/icons/icon-key-red.svg', values: list.map((p) => (p.businessType === 'Comprar' ? 'Venta' : 'Arriendo')) },
+    { label: 'Sector', icon: '/icons/icon-location-red.svg', values: list.map((p) => p.location) },
+    { label: 'Zona', icon: '/icons/icon-home-red.svg', values: list.map(zone) },
+    { label: 'Área (m²)', icon: '/icons/icon-area-red.svg', values: list.map((p) => String(num(p.size) || '—')), nums: list.map((p) => num(p.size) || null), best: 'max' },
+    { label: 'Habitaciones', icon: '/icons/icon-bed-red.svg', values: list.map((p) => String(p.bedrooms)), nums: list.map((p) => p.bedrooms), best: 'max' },
+    { label: 'Baños', icon: '/icons/icon-bathroom-red.svg', values: list.map((p) => String(p.bathrooms)), nums: list.map((p) => p.bathrooms), best: 'max' },
     {
       label: 'Parqueaderos',
+      icon: '/icons/icon-parking-red.svg',
       values: list.map((p) => String(p.parking ?? p.garage ?? 0)),
       nums: list.map((p) => p.parking ?? p.garage ?? 0),
       best: 'max',
     },
-    { label: 'Estrato', values: list.map((p) => (p.stratum ? String(p.stratum) : '—')) },
-    { label: 'Amoblado', values: list.map((p) => yesNo(!!p.furnished)) },
-    { label: 'Ascensor', values: list.map((p) => yesNo(has(p, 'ascensor'))) },
-    { label: 'Unidad cerrada', values: list.map((p) => yesNo(has(p, 'unidad cerrada'))) },
-    { label: 'Zona de ropas', values: list.map((p) => yesNo(has(p, 'lavander', 'ropas', 'servicios'))) },
-    { label: 'Red de gas', values: list.map((p) => yesNo(has(p, 'gas'))) },
-    { label: 'Cocina', values: list.map(kitchen) },
+    { label: 'Estrato', icon: '/icons/icon-estrato-red.svg', values: list.map((p) => (p.stratum ? String(p.stratum) : '—')) },
+    { label: 'Amoblado', icon: '/icons/icon-sofa-red.svg', values: list.map((p) => yesNo(!!p.furnished)) },
+    { label: 'Ascensor', icon: '/icons/icon-check-red.svg', values: list.map((p) => yesNo(has(p, 'ascensor'))) },
+    { label: 'Unidad cerrada', icon: '/icons/icon-shield-red.svg', values: list.map((p) => yesNo(has(p, 'unidad cerrada'))) },
+    { label: 'Zona de ropas', icon: '/icons/icon-water-red.svg', values: list.map((p) => yesNo(has(p, 'lavander', 'ropas', 'servicios'))) },
+    { label: 'Red de gas', icon: '/icons/icon-flame-red.svg', values: list.map((p) => yesNo(has(p, 'gas'))) },
+    { label: 'Cocina', icon: '/icons/icon-kitchen-red.svg', values: list.map(kitchen) },
   ];
 }
 
@@ -77,7 +80,7 @@ export default function ComparePage() {
 
   return (
     <div style={{ background: '#fff', minHeight: '60vh' }}>
-      <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '32px clamp(16px, 3vw, 52px) 56px' }}>
+      <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '32px clamp(16px, 3vw, 52px) 56px' }}>
         <a href="/favoritos" style={{ fontFamily: FONT, fontWeight: 700, fontSize: 14, color: RED, textDecoration: 'none' }}>
           ← Volver a Mis Favoritos
         </a>
@@ -99,62 +102,61 @@ export default function ComparePage() {
   );
 }
 
+function CompareRow({ icon, label, value, best }: { icon: string; label: string; value: string; best: boolean }) {
+  const [hov, setHov] = useState(false);
+  return (
+    <div
+      onMouseEnter={() => setHov(true)}
+      onMouseLeave={() => setHov(false)}
+      style={{ display: 'flex', alignItems: 'baseline', gap: 8, padding: '10px 0', minWidth: 0, overflow: 'hidden' }}
+    >
+      <img
+        src={icon} width="15" height="15" alt=""
+        style={{
+          flexShrink: 0, alignSelf: 'center',
+          filter: hov || best
+            ? 'invert(16%) sepia(100%) saturate(6000%) hue-rotate(340deg) brightness(85%)'
+            : 'grayscale(1) opacity(0.35)',
+          transition: 'filter 0.18s',
+        }}
+      />
+      <span style={{ fontFamily: FONT, fontSize: 13, fontWeight: 700, color: '#333', whiteSpace: 'nowrap' }}>{label}</span>
+      <span style={{ flex: 1, height: 0, minWidth: 12, borderBottom: `1px solid ${hov || best ? RED : '#1a1a1a'}`, marginBottom: 3, transition: 'border-color 0.18s' }} />
+      <span style={{ fontFamily: FONT, fontSize: 13, fontWeight: best ? 700 : 400, color: best ? '#aa182c' : '#555', whiteSpace: 'nowrap' }}>{value}</span>
+    </div>
+  );
+}
+
 function CompareTable({ list }: { list: Property[] }) {
   const rows = buildRows(list);
   return (
     <>
       <p style={{ fontFamily: FONT, fontSize: 13, color: '#888', margin: '0 0 20px' }}>
-        El mejor valor de cada fila aparece resaltado. Las filas marcadas con “·” son iguales en todas las propiedades.
+        El mejor valor de cada fila aparece resaltado en rojo.
       </p>
-      <div style={{ overflowX: 'auto', border: '1px solid rgba(0,0,0,0.08)', borderRadius: 8 }}>
-        <table style={{ borderCollapse: 'collapse', width: '100%', minWidth: 180 + list.length * 210, fontFamily: FONT, fontSize: 14 }}>
-          <thead>
-            <tr>
-              <th style={{ width: 180, background: '#fff' }} />
-              {list.map((p) => (
-                <th key={p.id} style={{ padding: 14, textAlign: 'left', verticalAlign: 'top', background: '#fff', fontWeight: 400 }}>
-                  <img src={p.image} alt={p.title} style={{ width: '100%', height: 130, objectFit: 'cover', borderRadius: 6, display: 'block', marginBottom: 10 }} />
-                  <p style={{ fontWeight: 700, color: '#1a1a1a', margin: '0 0 2px' }}>{p.location}</p>
-                  <a href={`/propiedad/${p.id}`} style={{ fontSize: 12, fontWeight: 700, color: RED, textDecoration: 'none' }}>
-                    Cód. {refCode(p)} · Ver ficha
-                  </a>
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {rows.map((row, i) => {
-              const same = row.values.every((v) => v === row.values[0]);
-              let bestVal: number | null = null;
-              if (!same && row.nums && row.best) {
-                const valid = row.nums.filter((n): n is number => n !== null);
-                if (valid.length) bestVal = row.best === 'min' ? Math.min(...valid) : Math.max(...valid);
-              }
-              return (
-                <tr key={row.label} style={{ background: same ? 'rgba(243,39,53,0.05)' : i % 2 ? '#fff' : '#fafafa' }}>
-                  <th scope="row" style={{ padding: '12px 14px', textAlign: 'left', fontWeight: 700, color: '#1a1a1a', background: '#f5f5f5', borderTop: '1px solid rgba(0,0,0,0.06)' }}>
-                    {row.label}{same ? ' ·' : ''}
-                  </th>
-                  {row.values.map((v, j) => {
-                    const isBest = bestVal !== null && row.nums?.[j] === bestVal;
-                    return (
-                      <td
-                        key={j}
-                        style={{
-                          padding: '12px 14px', borderTop: '1px solid rgba(0,0,0,0.06)',
-                          color: isBest ? '#aa182c' : '#333', fontWeight: isBest ? 700 : 400,
-                          background: isBest ? 'rgba(243,39,53,0.13)' : undefined,
-                        }}
-                      >
-                        {v}
-                      </td>
-                    );
-                  })}
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
+      <div style={{ overflowX: 'auto' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: `repeat(${list.length}, minmax(260px, 1fr))`, gap: 0, minWidth: list.length * 260 }}>
+          {list.map((p, col) => (
+            <div key={p.id} style={{ padding: '0 24px', borderLeft: col > 0 ? '1px solid rgba(0,0,0,0.1)' : 'none', minWidth: 0 }}>
+              <img src={p.image} alt={p.title} style={{ width: '100%', height: 150, objectFit: 'cover', borderRadius: 6, display: 'block', marginBottom: 12 }} />
+              <p style={{ fontFamily: FONT, fontWeight: 900, fontSize: 16, color: '#1a1a1a', margin: '0 0 2px' }}>{p.location}</p>
+              <a href={`/propiedad/${p.id}`} style={{ fontFamily: FONT, fontSize: 12, fontWeight: 700, color: RED, textDecoration: 'none' }}>
+                Cód. {refCode(p)} · Ver ficha
+              </a>
+              <h2 style={{ fontFamily: FONT, fontSize: 16, fontWeight: 700, color: '#1a1a1a', margin: '22px 0 8px' }}>Detalles del inmueble</h2>
+              {rows.map((row) => {
+                const same = row.values.every((v) => v === row.values[0]);
+                let bestVal: number | null = null;
+                if (!same && row.nums && row.best) {
+                  const valid = row.nums.filter((n): n is number => n !== null);
+                  if (valid.length) bestVal = row.best === 'min' ? Math.min(...valid) : Math.max(...valid);
+                }
+                const best = bestVal !== null && row.nums?.[col] === bestVal;
+                return <CompareRow key={row.label} icon={row.icon} label={row.label} value={row.values[col]} best={best} />;
+              })}
+            </div>
+          ))}
+        </div>
       </div>
     </>
   );
