@@ -138,11 +138,11 @@ export default function ConsignacionPage({ onNavigate }: ConsignacionPageProps =
               rel="noopener noreferrer"
               onMouseEnter={applyInkFill}
               onMouseLeave={applyInkFill}
-              className="hero-btn-fill inline-flex items-center gap-3 justify-center h-14 px-10 rounded-full"
-              style={{ fontFamily: FONT, fontWeight: 600, fontSize: 16, textDecoration: 'none', cursor: 'pointer' }}
+              className="hero-btn-fill inline-flex items-center gap-3 justify-center h-16 px-12 rounded-full"
+              style={{ fontFamily: FONT, fontWeight: 600, fontSize: 18, textDecoration: 'none', cursor: 'pointer' }}
             >
               <span>Empecemos ahora mismo</span>
-              <img src="/icons/icon-whatsapp-white.svg" alt="WhatsApp" width={24} height={24} style={{ position: 'relative', zIndex: 1 }} />
+              <img src="/icons/icon-whatsapp-white.svg" alt="WhatsApp" width={28} height={28} style={{ position: 'relative', zIndex: 1 }} />
             </a>
           </div>
         </div>
