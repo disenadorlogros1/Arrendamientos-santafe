@@ -339,7 +339,15 @@ function applyFilters(filters: PropSearchFilters) {
   });
 }
 
-export default function PropiedadesPage({ initialFilter = 'Todos', initialQueString = '' }: { initialFilter?: 'Todos' | 'Arrendar' | 'Comprar'; initialQueString?: string }) {
+export interface InitialSearchParams {
+  codigo?: string;
+  sector?: string[];
+  tipoPropiedad?: string;
+  precioMin?: number;
+  precioMax?: number;
+}
+
+export default function PropiedadesPage({ initialFilter = 'Todos', initialQueString = '', initialParams }: { initialFilter?: 'Todos' | 'Arrendar' | 'Comprar'; initialQueString?: string; initialParams?: InitialSearchParams }) {
   const { ref: titleRef, titleAnimating } = useSplitTextAnimation('.propiedades-title-split', 0, false);
   const subtitleRef = useRef<HTMLParagraphElement>(null);
   const cardsGridRef = useRef<HTMLDivElement>(null);
@@ -384,6 +392,19 @@ export default function PropiedadesPage({ initialFilter = 'Todos', initialQueStr
   useEffect(() => {
     setAppliedFilters(prev => ({ ...prev, tipo: initialFilter || 'Todos' }));
   }, [initialFilter]);
+
+  // Filtros que llegan desde el buscador del home (?codigo, ?sector, ?tipoprop, ?pmin, ?pmax)
+  useEffect(() => {
+    if (!initialParams) return;
+    setAppliedFilters(prev => ({
+      ...prev,
+      ...(initialParams.codigo !== undefined ? { codigo: initialParams.codigo } : {}),
+      ...(initialParams.sector ? { sector: initialParams.sector } : {}),
+      ...(initialParams.tipoPropiedad !== undefined ? { tipoPropiedad: initialParams.tipoPropiedad } : {}),
+      ...(initialParams.precioMin !== undefined ? { precioMin: initialParams.precioMin } : {}),
+      ...(initialParams.precioMax !== undefined ? { precioMax: initialParams.precioMax } : {}),
+    }));
+  }, [initialParams]);
 
   // El ?q= llega después del primer render (lo lee el Shell en un effect):
   // sincronizarlo con el filtro aplicado y recordar la última búsqueda de la sesión.
@@ -514,6 +535,7 @@ export default function PropiedadesPage({ initialFilter = 'Todos', initialQueStr
         <PropiedadesSearchBar
           initialTipo={initialFilter || 'Todos'}
           initialTextoBusqueda={initialQueString || restoredQuery}
+          initialParams={initialParams}
           onApply={setAppliedFilters}
           onShowMap={() => {
             if (typeof window !== 'undefined' && window.innerWidth < 1024) {

@@ -200,10 +200,11 @@ const ICON_ONLY_W = 52;
 /* ── CustomSelect ────────────────────────────────────────────────── */
 
 function CustomSelect({
-  value, onChange, options, placeholder, onOpen, searchable = false,
+  value, onChange, options, placeholder, onOpen, searchable = false, multi = false, selected = [],
 }: {
   label: string; value: string; onChange: (v: string) => void;
   options: string[]; placeholder?: string; onOpen?: () => void; searchable?: boolean;
+  multi?: boolean; selected?: string[];
 }) {
   const [open, setOpen]       = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -260,7 +261,11 @@ function CustomSelect({
     ? options.filter(o => o.toLowerCase().includes(query.toLowerCase()))
     : options;
 
-  const selectOption = (opt: string) => { onChange(opt); setOpen(false); setQuery(''); };
+  const selectOption = (opt: string) => {
+    onChange(opt);
+    // Multi-selección: el dropdown queda abierto para sumar más opciones
+    if (!multi) { setOpen(false); setQuery(''); }
+  };
 
   const dropdown = mounted && open ? (
     <div ref={dropdownRef} style={{ position: 'fixed', top: pos.top, left: pos.left, width: pos.width, zIndex: 9999 }}>
@@ -272,7 +277,7 @@ function CustomSelect({
               onMouseDown={e => e.preventDefault()}
               onClick={() => selectOption(opt)}
               className={`block w-full text-left px-4 py-2.5 transition-colors duration-100 ${
-                value === opt ? 'bg-brand-red text-white' : 'text-gray-700 hover:bg-brand-red hover:text-white'
+                (multi ? selected.includes(opt) : value === opt) ? 'bg-brand-red text-white' : 'text-gray-700 hover:bg-brand-red hover:text-white'
               }`}
               style={{ fontFamily: FONT, fontSize: '13px' }}>
               {opt}
@@ -332,8 +337,9 @@ export default function SearchForm({ onNavigate }: SearchFormProps) {
   const [queActive,   setQueActive]   = useState(false);
   const [codigoActive,setCodigoActive]= useState(false);
   const [codigo,      setCodigo]      = useState('');
-  const [sector,      setSector]      = useState('');
+  const [sector,      setSector]      = useState<string[]>([]);
   const [tipo,        setTipo]        = useState('');
+  const toggleSector = (v: string) => setSector(prev => prev.includes(v) ? prev.filter(x => x !== v) : [...prev, v]);
   const [precioRange, setPrecioRange] = useState<[number, number]>([0, 15_000_000]);
 
   /* ── Refs ── */
@@ -420,12 +426,23 @@ export default function SearchForm({ onNavigate }: SearchFormProps) {
 
   /* ── Buscar ── */
   const handleBuscar = useCallback(() => {
-    if (queString.trim()) {
-      router.push(`/propiedades?q=${encodeURIComponent(queString.trim())}`);
+    const params = new URLSearchParams();
+    if (queString.trim()) params.set('q', queString.trim());
+    if (codigo.trim()) params.set('codigo', codigo.trim());
+    sector.forEach(sec => params.append('sector', sec));
+    if (tipo) params.set('tipoprop', tipo);
+    if (searchType) params.set('negocio', searchType === 'comprar' ? 'Comprar' : 'Arrendar');
+    const defMin = searchType === 'comprar' ? 30_000_000 : 0;
+    const defMax = searchType === 'comprar' ? 2_000_000_000 : 15_000_000;
+    if (precioRange[0] !== defMin) params.set('pmin', String(precioRange[0]));
+    if (precioRange[1] !== defMax) params.set('pmax', String(precioRange[1]));
+    const qs = params.toString();
+    if (qs) {
+      router.push(`/propiedades?${qs}`);
     } else {
       onNavigate?.('propiedades');
     }
-  }, [queString, router, onNavigate]);
+  }, [queString, codigo, sector, tipo, searchType, precioRange, router, onNavigate]);
 
   /* ── Click fuera → deactivate ── */
   useEffect(() => {
@@ -525,11 +542,21 @@ export default function SearchForm({ onNavigate }: SearchFormProps) {
             <img src="/icons/icon-location-red.svg" alt="" width={20} height={20} style={{ flexShrink: 0 }} />
             <div style={{ flex: 1, minWidth: 0 }}>
               <p style={labelStyle}>Ubicación</p>
-              <select value={sector} onChange={e => setSector(e.target.value)}
-                style={{ fontFamily: FONT, fontSize: '14px', fontWeight: 400, color: sector ? COLOR_VALUE : '#aaa', background: 'transparent', border: 'none', outline: 'none', width: '100%', lineHeight: '1', appearance: 'none', WebkitAppearance: 'none', padding: 0 }}>
-                <option value="" disabled>Seleccionar</option>
-                {SECTORES.map(s => <option key={s} value={s}>{s}</option>)}
+              <select value="" onChange={e => { if (e.target.value) toggleSector(e.target.value); }}
+                style={{ fontFamily: FONT, fontSize: '14px', fontWeight: 400, color: sector.length ? COLOR_VALUE : '#aaa', background: 'transparent', border: 'none', outline: 'none', width: '100%', lineHeight: '1', appearance: 'none', WebkitAppearance: 'none', padding: 0 }}>
+                <option value="">{sector.length ? `${sector.length} seleccionado${sector.length > 1 ? 's' : ''} · agregar otro` : 'Seleccionar (puedes elegir varios)'}</option>
+                {SECTORES.map(sec => <option key={sec} value={sec}>{sector.includes(sec) ? '✓ ' : ''}{sec}</option>)}
               </select>
+              {sector.length > 0 && (
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginTop: 8 }}>
+                  {sector.map(sec => (
+                    <button key={sec} type="button" onClick={() => toggleSector(sec)} aria-label={`Quitar ${sec}`}
+                      style={{ fontFamily: FONT, fontSize: 12, color: '#fff', background: RED, border: 'none', borderRadius: 99, padding: '4px 10px', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+                      {sec}<span aria-hidden="true">×</span>
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
           {/* Tipo */}
@@ -659,7 +686,7 @@ export default function SearchForm({ onNavigate }: SearchFormProps) {
                 <img src="/icons/icon-location-red.svg" alt="" width={24} height={24} style={{ flexShrink: 0 }} />
                 <div style={{ minWidth: 0, flex: 1 }}>
                   <p style={labelStyle}>Ubicación</p>
-                  <CustomSelect label="Ubicación" value={sector} onChange={setSector} options={SECTORES} placeholder="Seleccionar" searchable />
+                  <CustomSelect label="Ubicación" value={sector.join(', ')} onChange={toggleSector} multi selected={sector} options={SECTORES} placeholder="Seleccionar" searchable />
                 </div>
               </div>
             </div>

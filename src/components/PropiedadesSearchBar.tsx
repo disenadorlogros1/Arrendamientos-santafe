@@ -578,6 +578,7 @@ const advContentStyle: React.CSSProperties = {
 interface Props {
   initialTipo?: 'Todos' | 'Arrendar' | 'Comprar';
   initialTextoBusqueda?: string;
+  initialParams?: { codigo?: string; sector?: string[]; tipoPropiedad?: string; precioMin?: number; precioMax?: number };
   onApply: (f: PropSearchFilters) => void;
   onShowMap?: () => void;
   onShowList?: () => void;
@@ -588,7 +589,7 @@ interface Props {
 const fi = (base: string, focused: boolean, filled: boolean) =>
   filled ? `/icons/${base}-red.svg` : focused ? `/icons/${base}-red-dark.svg` : `/icons/${base}-gray.svg`;
 
-export default function PropiedadesSearchBar({ initialTipo = 'Todos', initialTextoBusqueda = '', onApply, onShowMap, onShowList, mapActive = false, collapsed = false }: Props) {
+export default function PropiedadesSearchBar({ initialTipo = 'Todos', initialTextoBusqueda = '', initialParams, onApply, onShowMap, onShowList, mapActive = false, collapsed = false }: Props) {
   const [tipo,           setTipo]          = useState<'Todos' | 'Arrendar' | 'Comprar'>(initialTipo);
   const [textoBusqueda,  setTextoBusqueda] = useState(initialTextoBusqueda);
   const [busquedaActive, setBusquedaActive] = useState(false);
@@ -637,6 +638,17 @@ export default function PropiedadesSearchBar({ initialTipo = 'Todos', initialTex
     setTipo(initialTipo);
     setPrecioRange(defaultPrecioRange(initialTipo));
   }, [initialTipo]);
+
+  // Filtros que llegan desde el buscador del home
+  useEffect(() => {
+    if (!initialParams) return;
+    if (initialParams.codigo !== undefined) setCodigo(initialParams.codigo);
+    if (initialParams.sector) setSector(initialParams.sector);
+    if (initialParams.tipoPropiedad !== undefined) setTipoPropiedad(initialParams.tipoPropiedad);
+    if (initialParams.precioMin !== undefined || initialParams.precioMax !== undefined) {
+      setPrecioRange(prev => [initialParams.precioMin ?? prev[0], initialParams.precioMax ?? prev[1]]);
+    }
+  }, [initialParams]);
 
   // initialTextoBusqueda puede llegar después del primer render (ej. ?q= desde el home)
   useEffect(() => {
