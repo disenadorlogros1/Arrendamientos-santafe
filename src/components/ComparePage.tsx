@@ -81,9 +81,34 @@ export default function ComparePage() {
   return (
     <div style={{ background: '#fff', minHeight: '60vh' }}>
       <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '32px clamp(16px, 3vw, 52px) 56px' }}>
-        <a href="/favoritos" style={{ fontFamily: FONT, fontWeight: 700, fontSize: 14, color: RED, textDecoration: 'none' }}>
+        <style>{`
+          .cmp-back-mobile { display: none; }
+          @media (max-width: 1023px) {
+            .cmp-back-desktop { display: none !important; }
+            .cmp-back-mobile {
+              display: flex; align-items: center; justify-content: center;
+              position: sticky; top: 98px; z-index: 30;
+              width: 40px; height: 40px; border-radius: 50%; border: none; padding: 0;
+              background: ${RED}; box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            }
+          }
+        `}</style>
+        <a className="cmp-back-desktop" href="/favoritos" style={{ fontFamily: FONT, fontWeight: 700, fontSize: 14, color: RED, textDecoration: 'none' }}>
           ← Volver a Mis Favoritos
         </a>
+        <button
+          type="button"
+          className="cmp-back-mobile"
+          aria-label="Volver a la página anterior"
+          onClick={() => {
+            if (document.referrer && window.history.length > 1) window.history.back();
+            else window.location.href = '/favoritos';
+          }}
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <polyline points="15 18 9 12 15 6" />
+          </svg>
+        </button>
         <h1 style={{ fontFamily: FONT, fontWeight: 900, fontSize: 'clamp(26px, 2.6vw, 40px)', color: '#1a1a1a', margin: '14px 0 8px' }}>
           Comparar propiedades
         </h1>
@@ -206,9 +231,11 @@ function CompareMobile({ list, rows }: { list: Property[]; rows: Row[] }) {
       <div style={grid}>
         {list.map((p) => (
           <div key={p.id} style={{ minWidth: 0 }}>
-            <img src={p.image} alt={p.title} style={{ width: '100%', height: 96, objectFit: 'cover', borderRadius: 8, display: 'block', marginBottom: 8 }} />
-            <p style={{ fontFamily: FONT, fontWeight: 900, fontSize: 14, color: '#1a1a1a', margin: 0, lineHeight: 1.2 }}>{p.location}</p>
-            <p style={{ fontFamily: FONT, fontWeight: 700, fontSize: 11, color: '#888', margin: '2px 0 8px' }}>Cód. {refCode(p)}</p>
+            <a href={`/propiedad/${p.id}`} style={{ display: 'block', textDecoration: 'none' }}>
+              <img src={p.image} alt={p.title} style={{ width: '100%', height: 96, objectFit: 'cover', borderRadius: 8, display: 'block', marginBottom: 8 }} />
+              <p style={{ fontFamily: FONT, fontWeight: 900, fontSize: 14, color: '#1a1a1a', margin: 0, lineHeight: 1.2 }}>{p.location}</p>
+              <p style={{ fontFamily: FONT, fontWeight: 700, fontSize: 11, color: '#888', margin: '2px 0 8px' }}>Cód. {refCode(p)}</p>
+            </a>
             <a
               href={`/propiedad/${p.id}`}
               style={{
@@ -237,9 +264,12 @@ function CompareMobile({ list, rows }: { list: Property[]; rows: Row[] }) {
               {row.values.map((v, j) => {
                 const isBest = best.has(j);
                 return (
-                  <div
+                  <a
                     key={j}
+                    href={`/propiedad/${list[j].id}`}
+                    aria-label={`${row.label}: ${v}. Ver propiedad ${list[j].location}`}
                     style={{
+                      display: 'block', textDecoration: 'none', cursor: 'pointer',
                       minWidth: 0, textAlign: 'center', padding: '8px 6px', borderRadius: 8,
                       background: isBest ? 'rgba(243,39,53,0.09)' : '#f7f6f4',
                       boxShadow: isBest ? 'inset 0 0 0 1px rgba(243,39,53,0.35)' : 'none',
@@ -247,7 +277,7 @@ function CompareMobile({ list, rows }: { list: Property[]; rows: Row[] }) {
                   >
                     <div style={{ fontFamily: FONT, fontSize: 14, fontWeight: isBest ? 700 : 400, color: isBest ? '#aa182c' : '#444', wordBreak: 'break-word', lineHeight: 1.25 }}>{v}</div>
                     <div style={{ fontFamily: FONT, fontSize: 10.5, color: '#999', marginTop: 2, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{list[j].location}</div>
-                  </div>
+                  </a>
                 );
               })}
             </div>
