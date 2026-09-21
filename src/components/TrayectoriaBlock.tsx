@@ -576,9 +576,19 @@ export default function TrayectoriaBlock({ onNavigate }: TrayectoriaBlockProps) 
           className="hidden lg:block"
           style={{
             position: 'absolute', inset: 0, zIndex: 15, pointerEvents: 'none',
-            background:
-              'linear-gradient(to right, rgba(0,0,0,0.78) 0%, rgba(0,0,0,0.5) 32%, transparent 60%), ' +
-              'linear-gradient(to top, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.1) 50%, transparent 100%)',
+            background: 'linear-gradient(to top, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.1) 50%, transparent 100%)',
+          }}
+        />
+
+        {/* ── Degradado lateral solo en la mitad inferior izquierda (detrás del texto del hito),
+            para no oscurecer los textos que vienen dentro de las imágenes arriba a la izquierda */}
+        <div
+          className="hidden lg:block"
+          style={{
+            position: 'absolute', left: 0, bottom: 0, width: '62%', height: '68%', zIndex: 15, pointerEvents: 'none',
+            background: 'linear-gradient(to right, rgba(0,0,0,0.78) 0%, rgba(0,0,0,0.5) 50%, transparent 100%)',
+            WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, #000 35%)',
+            maskImage: 'linear-gradient(to bottom, transparent 0%, #000 35%)',
           }}
         />
 
