@@ -271,12 +271,11 @@ function CompareMobile({ list, rows }: { list: Property[]; rows: Row[] }) {
                     style={{
                       display: 'block', textDecoration: 'none', cursor: 'pointer',
                       minWidth: 0, textAlign: 'center', padding: '8px 6px', borderRadius: 8,
-                      background: isBest ? 'rgba(243,39,53,0.09)' : '#f7f6f4',
-                      boxShadow: isBest ? 'inset 0 0 0 1px rgba(243,39,53,0.35)' : 'none',
+                      background: isBest ? '#dedbd8' : '#f7f6f4',
                     }}
                   >
-                    <div style={{ fontFamily: FONT, fontSize: 14, fontWeight: isBest ? 700 : 400, color: isBest ? '#aa182c' : '#444', wordBreak: 'break-word', lineHeight: 1.25 }}>{v}</div>
-                    <div style={{ fontFamily: FONT, fontSize: 10.5, color: '#999', marginTop: 2, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{list[j].location}</div>
+                    <div style={{ fontFamily: FONT, fontSize: 14, fontWeight: isBest ? 700 : 400, color: isBest ? '#1a1a1a' : '#444', wordBreak: 'break-word', lineHeight: 1.25 }}>{v}</div>
+                    <div style={{ fontFamily: FONT, fontSize: 10.5, color: isBest ? '#666' : '#999', marginTop: 2, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{list[j].location}</div>
                   </a>
                 );
               })}
