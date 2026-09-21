@@ -9,12 +9,14 @@ interface PropertyCardProps {
   property: Property;
   hideCarousel?: boolean;
   portraitMobile?: boolean;
+  /** Contenido superpuesto en la parte baja de la imagen, justo encima del precio */
+  imageOverlay?: React.ReactNode;
 }
 
 const FONT = "'Avenir LT Std', 'Outfit', system-ui, sans-serif";
 const RED  = '#f32735';
 
-export default function PropertyCard({ property, hideCarousel = false, portraitMobile = false }: PropertyCardProps) {
+export default function PropertyCard({ property, hideCarousel = false, portraitMobile = false, imageOverlay }: PropertyCardProps) {
   const router = useRouter();
   const [isHovered, setIsHovered]   = useState(false);
   const [imgIndex,  setImgIndex]    = useState(0);
@@ -201,6 +203,16 @@ export default function PropertyCard({ property, hideCarousel = false, portraitM
               })()}
             </div>
           </>
+        )}
+        {imageOverlay && (
+          <div
+            style={{ position: 'absolute', left: 10, bottom: 10, zIndex: 3 }}
+            onClick={(e) => e.stopPropagation()}
+            onTouchStart={(e) => e.stopPropagation()}
+            onTouchEnd={(e) => e.stopPropagation()}
+          >
+            {imageOverlay}
+          </div>
         )}
       </div>
 

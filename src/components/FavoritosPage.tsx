@@ -70,7 +70,7 @@ export default function FavoritosPage() {
                 <section key={type} style={{ marginBottom: 36 }}>
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, marginBottom: 14 }}>
                     <h2 style={{ fontFamily: FONT, fontWeight: 900, fontSize: 20, color: '#1a1a1a', margin: 0 }}>
-                      {type} <span style={{ fontWeight: 400, color: '#999' }}>({list.length})</span>
+                      {type}
                     </h2>
                     <button
                       type="button"
@@ -82,7 +82,7 @@ export default function FavoritosPage() {
                         cursor: canCompare ? 'pointer' : 'not-allowed', transition: 'background 0.2s ease',
                       }}
                     >
-                      Comparar{chosen.length > 0 ? ` (${chosen.length})` : ''}
+                      Comparar
                     </button>
                   </div>
 
@@ -100,24 +100,27 @@ export default function FavoritosPage() {
                             transition: 'box-shadow 0.2s ease',
                           }}
                         >
-                          <PropertyCard property={p} portraitMobile />
-                          <label
-                            style={{
-                              position: 'absolute', top: 10, left: 10, zIndex: 3, display: 'inline-flex', alignItems: 'center', gap: 6,
-                              background: '#fff', borderRadius: 4, padding: '5px 9px', fontFamily: FONT, fontWeight: 700, fontSize: 12,
-                              color: '#1a1a1a', cursor: blocked ? 'not-allowed' : 'pointer', opacity: blocked ? 0.55 : 1,
-                              boxShadow: '0 2px 6px rgba(0,0,0,0.2)',
-                            }}
-                          >
-                            <input
-                              type="checkbox"
-                              checked={isSel}
-                              disabled={blocked}
-                              onChange={() => toggleSelect(type, p.id)}
-                              style={{ accentColor: RED, width: 14, height: 14 }}
-                            />
-                            Comparar
-                          </label>
+                          <PropertyCard
+                            property={p}
+                            portraitMobile
+                            imageOverlay={
+                              <button
+                                type="button"
+                                disabled={blocked}
+                                aria-pressed={isSel}
+                                onClick={() => toggleSelect(type, p.id)}
+                                style={{
+                                  fontFamily: FONT, fontWeight: 700, fontSize: 13, height: 34, padding: '0 16px', border: 'none',
+                                  borderRadius: 999,
+                                  background: isSel ? RED : '#fff', color: isSel ? '#fff' : '#1a1a1a',
+                                  cursor: blocked ? 'not-allowed' : 'pointer', opacity: blocked ? 0.55 : 1,
+                                  boxShadow: '0 2px 8px rgba(0,0,0,0.3)', transition: 'background 0.2s ease, color 0.2s ease',
+                                }}
+                              >
+                                Comparar
+                              </button>
+                            }
+                          />
                         </div>
                       );
                     })}
