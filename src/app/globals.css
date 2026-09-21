@@ -872,7 +872,7 @@ input[type="range"]::-moz-range-track {
   opacity: 0;
 }
 
-.hero-title-split span {
+.hero-title-split span:not([data-tu]) {
   line-height: inherit !important;
 }
 

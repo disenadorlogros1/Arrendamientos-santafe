@@ -3,6 +3,7 @@
 import { useRef, useEffect, useState } from 'react';
 import gsap from 'gsap';
 import { useSplitTextAnimation } from '@/hooks/useSplitTextAnimation';
+import TitleUnderline from '@/components/TitleUnderline';
 
 interface HeroSectionProps {
   onNavigate?: (page: 'propiedades' | 'consignacion') => void;
@@ -148,28 +149,13 @@ export default function HeroSection({ onNavigate, searchFormSlot }: HeroSectionP
                 onMouseLeave={() => setTitleHovered(false)}
               >
                 <span style={{ fontWeight: 900 }}>60 años</span>
-                <span style={{ fontWeight: 300, position: 'relative', overflow: 'hidden', paddingBottom: '0.14em' }}>
-                  <span style={{ position: 'relative', zIndex: 2 }}>
-                    conectando personas
-                  </span>
-                  {/* Línea roja — siempre visible en mobile, aparece en hover en desktop */}
-                  <span
-                    aria-hidden="true"
-                    style={{
-                      position: 'absolute',
-                      top: '78%',
-                      left: 0,
-                      width: '100%',
-                      height: '11%',
-                      backgroundColor: RED,
-                      transform: `translateY(-50%) scaleX(${(isMobile || titleHovered) ? 1 : 0})`,
-                      transformOrigin: 'left center',
-                      zIndex: 1,
-                      transition: isMobile ? 'none' : 'transform 0.234s ease',
-                      pointerEvents: 'none',
-                    }}
-                  />
-                </span>
+                <TitleUnderline
+                  active={isMobile || titleHovered}
+                  transition={isMobile ? 'none' : 'transform 0.234s ease'}
+                  style={{ fontWeight: 300 }}
+                >
+                  conectando personas
+                </TitleUnderline>
               </h1>
 
               <p

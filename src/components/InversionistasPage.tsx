@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import gsap from 'gsap';
 import { SECTORS, getZonesBySector, investmentZones, type Sector } from '@/data/investment-zones';
+import TitleUnderline from '@/components/TitleUnderline';
 import { useSplitTextAnimation } from '@/hooks/useSplitTextAnimation';
 import ScrollReveal from '@/components/ScrollReveal';
 
@@ -227,7 +228,7 @@ export default function InversionistasPage() {
           }}
         />
 
-        <div className="relative z-10 text-center px-4 sm:px-6 lg:px-8 max-w-4xl" ref={titleRef}>
+        <div className="relative z-10 text-center px-4 sm:px-6 lg:px-8 max-w-5xl" ref={titleRef}>
           <h1
             className="inversionistas-title-split leading-tight text-white text-center"
             style={{ fontFamily: FONT, fontWeight: 300, lineHeight: '1.05', fontSize: 'clamp(28px, 4vw, 52px)' }}
@@ -235,29 +236,11 @@ export default function InversionistasPage() {
             onMouseLeave={() => setTitleHovered(false)}
           >
             <span style={{ display: 'block', fontWeight: 300 }}>
-              Invierte con la experiencia
+              Invierte con la experiencia de
             </span>
-            <span style={{ display: 'inline-block', fontWeight: 900, color: '#fff', marginTop: '0px', position: 'relative', overflow: 'hidden' }}>
-              <span style={{ position: 'relative', zIndex: 2 }}>
-                de 60 años en el mercado inmobiliario
-              </span>
-              <span
-                aria-hidden="true"
-                style={{
-                  position: 'absolute',
-                  top: '62%',
-                  left: 0,
-                  width: '100%',
-                  height: '13%',
-                  backgroundColor: '#f32735',
-                  transform: `translateY(-50%) scaleX(${titleHovered ? 1 : 0})`,
-                  transformOrigin: 'left center',
-                  zIndex: 1,
-                  transition: 'transform 0.234s ease',
-                  pointerEvents: 'none',
-                }}
-              />
-            </span>
+            <TitleUnderline active={titleHovered} style={{ fontWeight: 900 }}>
+              60 años en el mercado inmobiliario
+            </TitleUnderline>
           </h1>
 
           <p

@@ -2,6 +2,7 @@
 
 import { useRef, useEffect } from 'react';
 import gsap from 'gsap';
+import TitleUnderline from '@/components/TitleUnderline';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -170,32 +171,14 @@ export default function NosotrosBanner({ active, onSlideChange }: Props) {
             {/* Línea 2 con subrayado (igual al hero del home):
                 Desktop → "60 años de trayectoria."
                 Mobile  → "con 60 años de trayectoria."            */}
-            <span style={{
-              fontWeight: 700,
-              position: 'relative',
-              overflow: 'hidden',
-              marginTop: '-0.28em',
-            }}>
-              <span style={{ position: 'relative', zIndex: 2 }}>
-                <span className="nb-con-in">con </span>
-                60 años de trayectoria.
-              </span>
-              <span
-                ref={underlineRef}
-                aria-hidden="true"
-                style={{
-                  position: 'absolute',
-                  top: '62%',
-                  left: 0,
-                  width: '100%',
-                  height: '13%',
-                  backgroundColor: RED,
-                  transformOrigin: 'left center',
-                  zIndex: 1,
-                  pointerEvents: 'none',
-                }}
-              />
-            </span>
+            <TitleUnderline
+              barRef={underlineRef}
+              transition="none"
+              style={{ fontWeight: 700, marginTop: '-0.16em' }}
+            >
+              <span className="nb-con-in">con </span>
+              60 años de trayectoria.
+            </TitleUnderline>
           </h2>
 
           {/* Subtítulo desktop: "Desde 1966..." */}

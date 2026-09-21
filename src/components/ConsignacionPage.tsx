@@ -2,6 +2,7 @@
 
 import { useRef, useEffect, useState } from 'react';
 import gsap from 'gsap';
+import TitleUnderline from '@/components/TitleUnderline';
 import { useSplitTextAnimation } from '@/hooks/useSplitTextAnimation';
 import ScrollReveal from '@/components/ScrollReveal';
 import type { PageType } from '@/components/Header';
@@ -114,25 +115,9 @@ export default function ConsignacionPage({ onNavigate }: ConsignacionPageProps =
             onMouseLeave={() => setTitleHovered(false)}
           >
             <span style={{ display: 'block', fontWeight: 300 }}>Ten la tranquilidad de dejar tu</span>
-            <span style={{ display: 'inline-block', fontWeight: 900, position: 'relative', overflow: 'hidden', paddingBottom: '0.14em' }}>
-              <span style={{ position: 'relative', zIndex: 2 }}>inmueble en buenas manos</span>
-              <span
-                aria-hidden="true"
-                style={{
-                  position: 'absolute',
-                  top: '80%',
-                  left: 0,
-                  width: '100%',
-                  height: '9%',
-                  backgroundColor: RED,
-                  transform: `translateY(-50%) scaleX(${titleHovered ? 1 : 0})`,
-                  transformOrigin: 'left center',
-                  zIndex: 1,
-                  transition: 'transform 0.234s ease',
-                  pointerEvents: 'none',
-                }}
-              />
-            </span>
+            <TitleUnderline active={titleHovered} style={{ fontWeight: 900 }}>
+              inmueble en buenas manos
+            </TitleUnderline>
           </h1>
 
           <p
