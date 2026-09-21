@@ -92,8 +92,8 @@ export default function PropertyCard({ property, hideCarousel = false, portraitM
           }}
         />
 
-        {/* Favoritos — esquina superior izquierda */}
-        <FavoriteButton propertyId={property.id} style={{ position: 'absolute', top: '10px', left: '10px', zIndex: 2 }} />
+        {/* Favoritos — debajo del botón de flecha (esquina superior derecha) */}
+        <FavoriteButton propertyId={property.id} style={{ position: 'absolute', top: '54px', right: '10px', zIndex: 2 }} />
 
         {/* Botón rojo — flecha superior derecha */}
         <button
