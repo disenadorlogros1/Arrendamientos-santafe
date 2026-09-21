@@ -255,7 +255,7 @@ function CompareMobile({ list, rows }: { list: Property[]; rows: Row[] }) {
       {rows.map((row) => {
         const best = bestIndexes(row);
         return (
-          <div key={row.label} style={{ padding: '12px 0', borderBottom: '1px solid rgba(0,0,0,0.08)' }}>
+          <div key={row.label} style={{ padding: '12px 0' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
               <img src={row.icon} width="15" height="15" alt="" style={{ flexShrink: 0, filter: 'grayscale(1) opacity(0.4)' }} />
               <span style={{ fontFamily: FONT, fontSize: 13, fontWeight: 700, color: '#333' }}>{row.label}</span>
