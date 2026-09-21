@@ -10,6 +10,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import MapComponent from '@/components/MapComponent';
 import PropertyGallery from '@/components/PropertyGallery';
+import FavoriteButton from '@/components/FavoriteButton';
 import ScrollReveal from '@/components/ScrollReveal';
 import InfiniteCarousel from '@/components/InfiniteCarousel';
 import { getInvestmentZoneForLocation } from '@/data/properties';
@@ -472,6 +473,7 @@ export default function PropertyDetailPage() {
                   <div style={{ display: 'flex', alignItems: 'baseline', flexWrap: 'wrap', gap: '10px 20px', margin: '0 0 5px 0' }}>
                     <h1 style={{ fontFamily: FONT, fontSize: 'clamp(22px, 3.5vw, 34px)', fontWeight: 900, color: '#1a1a1a', lineHeight: 1.1, letterSpacing: '-0.3px', margin: 0 }}>{property.title}</h1>
                     <p style={{ fontFamily: FONT, fontSize: 'clamp(20px, 3vw, 32px)', fontWeight: 900, color: '#f32735', lineHeight: 1.05, letterSpacing: '-0.5px', margin: 0 }}>{property.price}</p>
+                    <FavoriteButton propertyId={property.id} size={40} style={{ alignSelf: 'center', border: '1px solid rgba(0,0,0,0.12)', boxShadow: 'none' }} />
                   </div>
 
                   <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 16 }}>

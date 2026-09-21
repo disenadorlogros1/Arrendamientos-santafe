@@ -10,6 +10,8 @@ export function navigate(page: PageType, filter?: string) {
     window.location.href = '/blog/historia-60';
   } else if (page === 'inversionistas') {
     window.location.href = '/inversionistas';
+  } else if (page === 'favoritos') {
+    window.location.href = '/favoritos';
   } else if (page === 'consignacion') {
     window.location.href = '/consignacion';
   } else {

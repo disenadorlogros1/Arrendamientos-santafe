@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from '@/components/ui/sheet';
+import { Heart } from 'lucide-react';
+import { useFavorites } from '@/lib/favorites';
 
 function applyInkFill(e: React.MouseEvent<HTMLElement>) {
   const el = e.currentTarget;
@@ -19,7 +21,7 @@ function applyInkFill(e: React.MouseEvent<HTMLElement>) {
   el.style.setProperty('--size', `${size}px`);
 }
 
-export type PageType = 'home' | 'propiedades' | 'consignacion' | 'hipotecas' | 'nosotros' | 'blog' | 'historia-60' | 'blog-article' | 'inversionistas' | 'politicas' | 'terminos';
+export type PageType = 'home' | 'propiedades' | 'consignacion' | 'hipotecas' | 'nosotros' | 'blog' | 'historia-60' | 'blog-article' | 'inversionistas' | 'politicas' | 'terminos' | 'favoritos';
 
 interface HeaderProps { currentPage: PageType; onNavigate: (page: PageType, filter?: string) => void; isHeroPage?: boolean; darkHeader?: boolean; }
 interface SubItem { label: string; page?: PageType; href?: string; filter?: string; }
@@ -96,6 +98,29 @@ function WhatsAppButton() {
       <img src={isRed ? "/icons/icon-whatsapp-white.svg" : "/icons/icon-whatsapp-red-dark.svg"} alt="WhatsApp" className="w-5 h-5" />
       <span>WhatsApp</span>
     </a>
+  );
+}
+
+function FavoritesLink({ onClick, active }: { onClick: () => void; active: boolean }) {
+  const { count } = useFavorites();
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-label={count > 0 ? `Favoritos (${count})` : 'Favoritos'}
+      title="Favoritos"
+      className="relative flex items-center justify-center w-[42px] h-[42px] rounded-full transition-colors duration-300"
+      style={{ background: active ? '#f32735' : 'rgba(255,255,255,0.25)', border: '1px solid rgba(255,255,255,0.35)', color: '#fff', backdropFilter: 'blur(10px)' }}
+    >
+      <Heart size={20} color="#fff" fill={count > 0 ? '#fff' : 'none'} strokeWidth={2} />
+      {count > 0 && (
+        <span
+          style={{ position: 'absolute', top: -4, right: -4, minWidth: 18, height: 18, borderRadius: 9, padding: '0 4px', background: '#f32735', color: '#fff', fontSize: 11, fontWeight: 700, lineHeight: '18px', textAlign: 'center' }}
+        >
+          {count}
+        </span>
+      )}
+    </button>
   );
 }
 
@@ -236,6 +261,7 @@ export default function Header({ currentPage, onNavigate, isHeroPage = true, dar
 
         {/* Botones */}
         <div className="flex items-center gap-2 shrink-0">
+          <FavoritesLink onClick={() => { window.location.href = '/favoritos'; }} active={currentPage === 'favoritos'} />
           <WhatsAppButton />
           <PSEButton />
         </div>
@@ -310,6 +336,13 @@ export default function Header({ currentPage, onNavigate, isHeroPage = true, dar
                       )}
                     </div>
                   ))}
+                  <button
+                    onClick={() => { window.location.href = '/favoritos'; }}
+                    className={`w-full text-left px-4 py-3 text-sm font-medium transition-all duration-200 flex items-center gap-2 ${currentPage === 'favoritos' ? 'bg-[#f5f5f5] text-[#1a1a1a]' : 'text-white/70 hover:bg-white/10 hover:text-white'}`}
+                    style={{ fontFamily: "'Avenir LT Std', 'Outfit', system-ui, sans-serif", fontWeight: currentPage === 'favoritos' ? 700 : 300 }}>
+                    <Heart size={16} strokeWidth={2} />
+                    <span>Favoritos</span>
+                  </button>
                 </nav>
               </div>
             </SheetContent>

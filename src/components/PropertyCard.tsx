@@ -3,6 +3,7 @@
 import { useState, useCallback, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import type { Property } from '@/data/properties';
+import FavoriteButton from '@/components/FavoriteButton';
 
 interface PropertyCardProps {
   property: Property;
@@ -90,6 +91,9 @@ export default function PropertyCard({ property, hideCarousel = false, portraitM
             background: 'linear-gradient(to bottom, transparent 55%, rgba(0,0,0,0.22) 100%)',
           }}
         />
+
+        {/* Favoritos — esquina superior izquierda */}
+        <FavoriteButton propertyId={property.id} style={{ position: 'absolute', top: '10px', left: '10px', zIndex: 2 }} />
 
         {/* Botón rojo — flecha superior derecha */}
         <button
