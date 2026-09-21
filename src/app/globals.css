@@ -909,3 +909,33 @@ input[type="range"]::-moz-range-track {
     line-height: 1.15;
   }
 }
+
+/* ── Mobile (< 640px): títulos de portada que se parten en varias líneas ───────────── */
+@media (max-width: 639px) {
+  /* Reparte las líneas de los títulos sin dejar palabras sueltas ("de", "tu", "pasos") */
+  h1, h2 { text-wrap: balance; }
+
+  /* Portadas de Inversionistas y Consignación: el título fluye como un solo texto */
+  .mob-hero-title {
+    font-size: clamp(24px, 7vw, 30px) !important;
+    line-height: 1.22 !important;
+  }
+  .mob-hero-title .tu-lead { display: inline !important; }
+  .mob-hero-title .tu-lead::after { content: ' '; }
+
+  /* Subrayado rojo bajo cada línea de la parte resaltada (siempre visible en celular) */
+  .tu-wrap {
+    display: inline !important;
+    overflow: visible !important;
+    padding-bottom: 0 !important;
+    line-height: inherit !important;
+    background-image: linear-gradient(#f32735, #f32735);
+    background-repeat: no-repeat;
+    background-size: 100% 0.17em;
+    background-position: 0 88%;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+  }
+  .tu-wrap > [data-tu-bar] { display: none !important; }
+  .tu-wrap > [data-tu] { position: static !important; }
+}

@@ -10,6 +10,8 @@ interface TitleUnderlineProps {
   barRef?: Ref<HTMLSpanElement>;
   style?: CSSProperties;
   transition?: string;
+  /** En celular (< 640px) el título puede partirse en varias líneas: el subrayado se dibuja bajo cada línea y queda siempre visible */
+  wrapOnMobile?: boolean;
 }
 
 const RED = '#f32735';
@@ -31,10 +33,11 @@ export const UNDERLINE_BAR_STYLE: CSSProperties = {
   pointerEvents: 'none',
 };
 
-export default function TitleUnderline({ children, active = false, barRef, style, transition = 'transform 0.234s ease' }: TitleUnderlineProps) {
+export default function TitleUnderline({ children, active = false, barRef, style, transition = 'transform 0.234s ease', wrapOnMobile = false }: TitleUnderlineProps) {
   return (
     <span
       data-tu
+      className={wrapOnMobile ? 'tu-wrap' : undefined}
       style={{
         display: 'inline-block',
         position: 'relative',
@@ -47,6 +50,7 @@ export default function TitleUnderline({ children, active = false, barRef, style
       <span data-tu style={{ position: 'relative', zIndex: 2, lineHeight: 'inherit', fontWeight: 'inherit' }}>{children}</span>
       <span
         data-tu
+        data-tu-bar
         ref={barRef}
         aria-hidden="true"
         style={{ ...UNDERLINE_BAR_STYLE, transform: `scaleX(${active ? 1 : 0})`, transition }}

@@ -384,9 +384,8 @@ export default function Header({ currentPage, onNavigate, isHeroPage = true, dar
                   ))}
                   <button
                     onClick={() => { window.location.href = '/favoritos'; }}
-                    className={`w-full text-left px-4 py-3 text-sm font-medium transition-all duration-200 flex items-center gap-2 ${currentPage === 'favoritos' ? 'bg-[#f5f5f5] text-[#1a1a1a]' : 'text-white/70 hover:bg-white/10 hover:text-white'}`}
+                    className={`w-full text-left px-4 py-3 text-sm font-medium transition-all duration-200 flex items-center justify-between ${currentPage === 'favoritos' ? 'bg-[#f5f5f5] text-[#1a1a1a]' : 'text-white/70 hover:bg-white/10 hover:text-white'}`}
                     style={{ fontFamily: "'Avenir LT Std', 'Outfit', system-ui, sans-serif", fontWeight: currentPage === 'favoritos' ? 700 : 300 }}>
-                    <img src={currentPage === 'favoritos' ? '/icons/icon-heart-dark.svg' : '/icons/icon-heart-white.svg'} alt="" aria-hidden="true" className="w-4 h-4" />
                     <span>Favoritos</span>
                   </button>
                 </nav>

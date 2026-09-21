@@ -81,7 +81,7 @@ const WHATSAPP_URL = 'https://wa.me/573006557529?text=Hola%2C%20quisiera%20consu
 
 export default function InversionistasPage() {
   const router = useRouter();
-  const { ref: titleRef, titleAnimating } = useSplitTextAnimation('.inversionistas-title-split', 0, false);
+  const { ref: titleRef, titleAnimating } = useSplitTextAnimation('.inversionistas-title-split', 0, false, true);
   const [activeSector,  setActiveSector]  = useState<Sector | null>(null);
   const [hoveredSector, setHoveredSector] = useState<Sector | null>(null);
   const [titleHovered,     setTitleHovered]     = useState(false);
@@ -229,15 +229,15 @@ export default function InversionistasPage() {
 
         <div className="relative z-10 text-center px-4 sm:px-6 lg:px-8 max-w-5xl" ref={titleRef}>
           <h1
-            className="inversionistas-title-split leading-tight text-white text-center"
+            className="inversionistas-title-split mob-hero-title leading-tight text-white text-center"
             style={{ fontFamily: FONT, fontWeight: 300, lineHeight: '1.05', fontSize: 'clamp(28px, 4vw, 52px)' }}
             onMouseEnter={() => setTitleHovered(true)}
             onMouseLeave={() => setTitleHovered(false)}
           >
-            <span style={{ display: 'block', fontWeight: 300 }}>
+            <span className="tu-lead" style={{ display: 'block', fontWeight: 300 }}>
               Invierte con la experiencia de
             </span>
-            <TitleUnderline active={titleHovered} style={{ fontWeight: 900 }}>
+            <TitleUnderline wrapOnMobile active={titleHovered} style={{ fontWeight: 900 }}>
               60 años en el mercado inmobiliario
             </TitleUnderline>
           </h1>

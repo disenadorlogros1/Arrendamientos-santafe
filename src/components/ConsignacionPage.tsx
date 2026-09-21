@@ -64,7 +64,7 @@ interface ConsignacionPageProps {
 }
 
 export default function ConsignacionPage({ onNavigate }: ConsignacionPageProps = {}) {
-  const { ref: titleRef, titleAnimating } = useSplitTextAnimation('.consignacion-title-split', 0, false);
+  const { ref: titleRef, titleAnimating } = useSplitTextAnimation('.consignacion-title-split', 0, false, true);
   const subtitleRef    = useRef<HTMLParagraphElement>(null);
   const ctaBtnRef      = useRef<HTMLDivElement>(null);
   const [titleHovered, setTitleHovered] = useState(false);
@@ -109,13 +109,13 @@ export default function ConsignacionPage({ onNavigate }: ConsignacionPageProps =
 
         <div className="relative z-10 text-center px-4 sm:px-6 lg:px-8 max-w-4xl" ref={titleRef}>
           <h1
-            className="consignacion-title-split leading-tight text-white text-center"
+            className="consignacion-title-split mob-hero-title leading-tight text-white text-center"
             style={{ fontFamily: FONT, fontWeight: 300, lineHeight: '1.2', fontSize: 'clamp(26px, 3.2vw, 46px)' }}
             onMouseEnter={() => setTitleHovered(true)}
             onMouseLeave={() => setTitleHovered(false)}
           >
-            <span style={{ display: 'block', fontWeight: 300 }}>Ten la tranquilidad de dejar tu</span>
-            <TitleUnderline active={titleHovered} style={{ fontWeight: 900 }}>
+            <span className="tu-lead" style={{ display: 'block', fontWeight: 300 }}>Ten la tranquilidad de dejar tu</span>
+            <TitleUnderline wrapOnMobile active={titleHovered} style={{ fontWeight: 900 }}>
               inmueble en buenas manos
             </TitleUnderline>
           </h1>
@@ -138,8 +138,8 @@ export default function ConsignacionPage({ onNavigate }: ConsignacionPageProps =
               rel="noopener noreferrer"
               onMouseEnter={applyInkFill}
               onMouseLeave={applyInkFill}
-              className="hero-btn-fill inline-flex items-center gap-3 justify-center h-16 px-12 rounded-full"
-              style={{ fontFamily: FONT, fontWeight: 600, fontSize: 18, textDecoration: 'none', cursor: 'pointer' }}
+              className="hero-btn-fill inline-flex items-center gap-3 justify-center h-14 px-6 sm:h-16 sm:px-12 rounded-full whitespace-nowrap"
+              style={{ fontFamily: FONT, fontWeight: 600, fontSize: 'clamp(15px, 4.2vw, 18px)', textDecoration: 'none', cursor: 'pointer' }}
             >
               <span>Empecemos ahora mismo</span>
               <img src="/icons/icon-whatsapp-white.svg" alt="WhatsApp" width={28} height={28} style={{ position: 'relative', zIndex: 1 }} />
