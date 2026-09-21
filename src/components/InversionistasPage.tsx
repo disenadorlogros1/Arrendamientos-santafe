@@ -86,7 +86,6 @@ export default function InversionistasPage() {
   const [hoveredSector, setHoveredSector] = useState<Sector | null>(null);
   const [titleHovered,     setTitleHovered]     = useState(false);
   const [hoveredBeneficio, setHoveredBeneficio] = useState<number | null>(null);
-  const [redIdx] = useState(() => Math.floor(Math.random() * beneficios.length));
   const [hoveredZoneCard,  setHoveredZoneCard]  = useState<string | null>(null);
   const [ctaHovered,       setCtaHovered]       = useState(false);
   const subtitleRef      = useRef<HTMLParagraphElement>(null);
@@ -616,8 +615,8 @@ export default function InversionistasPage() {
         <div className="hidden lg:block" style={{ maxWidth: '1400px', margin: '0 auto', padding: '0 clamp(20px, 4vw, 52px) 52px' }}>
           <div className="grid lg:grid-cols-4" style={{ gap: '0', overflow: 'visible' }}>
             {beneficios.map((b, idx) => {
-              const isRed = idx === redIdx;
               const isHov = hoveredBeneficio === idx;
+              const isRed = isHov; // caja roja solo en el beneficio bajo el puntero
               const isAdj = hoveredBeneficio !== null && Math.abs(idx - hoveredBeneficio) === 1;
               return (
                 <div
@@ -639,7 +638,7 @@ export default function InversionistasPage() {
                   <h3 style={{ fontFamily: FONT, fontWeight: 700, fontSize: 'clamp(16px, 1.2vw, 20px)', color: isRed ? '#fff' : '#1a1a1a', margin: 0, lineHeight: 1.15 }}>
                     {b.title}
                   </h3>
-                  <p style={{ fontFamily: FONT, fontWeight: 300, fontSize: 'clamp(12.5px, 0.9vw, 14px)', color: isRed ? 'rgba(255,255,255,0.75)' : 'rgba(0,0,0,0.55)', margin: 0, lineHeight: 1.5, flexGrow: 1 }}>
+                  <p style={{ fontFamily: FONT, fontWeight: 400, fontSize: 'clamp(12.5px, 0.9vw, 14px)', color: isRed ? 'rgba(255,255,255,0.9)' : 'rgba(0,0,0,0.72)', margin: 0, lineHeight: 1.5, flexGrow: 1 }}>
                     {b.description}
                   </p>
                   <a
@@ -655,6 +654,7 @@ export default function InversionistasPage() {
                       marginLeft: '-20px', marginRight: '-20px', marginBottom: '-20px',
                       background: isRed ? '#f32735' : '#ffffff',
                       color: isRed ? '#ffffff' : undefined,
+                      borderTop: isRed ? '1px solid rgba(255,255,255,0.35)' : undefined,
                       borderRadius: 0,
                     }}
                   >
