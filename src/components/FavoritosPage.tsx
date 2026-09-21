@@ -39,6 +39,27 @@ export default function FavoritosPage() {
 
   return (
     <div style={{ background: '#fff', minHeight: '60vh' }}>
+      <style>{`
+        .fav-mobile-cta { display: none; }
+        @media (max-width: 767px) {
+          .fav-head-btn { display: none !important; }
+          .fav-mobile-cta { display: block; }
+          /* Carrusel horizontal por tipo de propiedad */
+          .fav-grid {
+            display: flex !important;
+            overflow-x: auto;
+            gap: 12px !important;
+            margin: 0 -16px;
+            padding: 4px 16px 6px;
+            scroll-snap-type: x mandatory;
+            scroll-padding-left: 16px;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+          }
+          .fav-grid::-webkit-scrollbar { display: none; }
+          .fav-grid > * { flex: 0 0 82%; max-width: 330px; scroll-snap-align: start; }
+        }
+      `}</style>
       <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '40px clamp(16px, 3vw, 52px) 56px' }}>
         <h1 style={{ fontFamily: FONT, fontWeight: 900, fontSize: 'clamp(26px, 2.6vw, 40px)', color: '#1a1a1a', margin: '0 0 8px' }}>
           Mis Favoritos
@@ -74,6 +95,7 @@ export default function FavoritosPage() {
                     </h2>
                     <button
                       type="button"
+                      className="fav-head-btn"
                       disabled={!canCompare}
                       onClick={() => compare(type, list)}
                       style={{
@@ -87,7 +109,7 @@ export default function FavoritosPage() {
                   </div>
 
                   {/* Mismas cards verticales que Propiedades y Propiedades destacadas */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+                  <div className="fav-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
                     {list.map((p) => {
                       const isSel = chosen.includes(p.id);
                       const blocked = !isSel && chosen.length >= MAX_COMPARE;
@@ -103,6 +125,7 @@ export default function FavoritosPage() {
                           <PropertyCard
                             property={p}
                             portraitMobile
+                            disableSwipe
                             imageOverlay={
                               <button
                                 type="button"
@@ -124,6 +147,29 @@ export default function FavoritosPage() {
                         </div>
                       );
                     })}
+                  </div>
+
+                  {/* Solo celular: botón Comparar debajo del carrusel */}
+                  <div className="fav-mobile-cta" style={{ marginTop: 14 }}>
+                    <button
+                      type="button"
+                      disabled={!canCompare}
+                      onClick={() => compare(type, list)}
+                      style={{
+                        width: '100%', fontFamily: FONT, fontWeight: 700, fontSize: 15, height: 48, border: 'none', borderRadius: 999,
+                        background: canCompare ? RED : '#eee', color: canCompare ? '#fff' : '#aaa',
+                        cursor: canCompare ? 'pointer' : 'not-allowed', transition: 'background 0.2s ease',
+                      }}
+                    >
+                      Comparar{chosen.length > 0 ? ` ${chosen.length} de ${type.toLowerCase()}` : ''}
+                    </button>
+                    {!canCompare && (
+                      <p style={{ fontFamily: FONT, fontSize: 12, color: '#888', textAlign: 'center', margin: '8px 0 0' }}>
+                        {list.length < MIN_COMPARE
+                          ? `Guarda al menos ${MIN_COMPARE} propiedades de este tipo para compararlas`
+                          : `Marca ${MIN_COMPARE - chosen.length} más para habilitar la comparación`}
+                      </p>
+                    )}
                   </div>
                 </section>
               );

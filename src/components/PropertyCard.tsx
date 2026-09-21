@@ -11,12 +11,14 @@ interface PropertyCardProps {
   portraitMobile?: boolean;
   /** Contenido superpuesto en la parte baja de la imagen, justo encima del precio */
   imageOverlay?: React.ReactNode;
+  /** Desactiva el deslizamiento de fotos con el dedo (cuando la card vive dentro de un carrusel horizontal) */
+  disableSwipe?: boolean;
 }
 
 const FONT = "'Avenir LT Std', 'Outfit', system-ui, sans-serif";
 const RED  = '#f32735';
 
-export default function PropertyCard({ property, hideCarousel = false, portraitMobile = false, imageOverlay }: PropertyCardProps) {
+export default function PropertyCard({ property, hideCarousel = false, portraitMobile = false, imageOverlay, disableSwipe = false }: PropertyCardProps) {
   const router = useRouter();
   const [isHovered, setIsHovered]   = useState(false);
   const [imgIndex,  setImgIndex]    = useState(0);
@@ -71,8 +73,8 @@ export default function PropertyCard({ property, hideCarousel = false, portraitM
           'h-56 lg:h-auto lg:flex-1'
         }`}
         onClick={handleViewMore}
-        onTouchStart={onTouchStart}
-        onTouchEnd={onTouchEnd}
+        onTouchStart={disableSwipe ? undefined : onTouchStart}
+        onTouchEnd={disableSwipe ? undefined : onTouchEnd}
       >
         <img
           src={images[imgIndex]}

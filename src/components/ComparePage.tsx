@@ -133,9 +133,9 @@ function CompareTable({ list }: { list: Property[] }) {
     <>
       <style>{`
         .cmp-mobile { display: none; }
-        @media (max-width: 767px) {
+        @media (max-width: 1023px) {
           .cmp-desktop { display: none; }
-          .cmp-mobile { display: block; }
+          .cmp-mobile { display: block; max-width: 640px; margin: 0 auto; }
         }
       `}</style>
       <p style={{ fontFamily: FONT, fontSize: 13, color: '#888', margin: '0 0 20px' }}>
@@ -184,7 +184,7 @@ function CompareTable({ list }: { list: Property[] }) {
   );
 }
 
-/* ── Vista compacta para celular: etiquetas fijas a la izquierda + una columna por propiedad ── */
+/* ── Vista para celular: una fila por característica, sin cajas con scroll ── */
 function bestIndexes(row: Row): Set<number> {
   const out = new Set<number>();
   const same = row.values.every((v) => v === row.values[0]);
@@ -197,69 +197,63 @@ function bestIndexes(row: Row): Set<number> {
 }
 
 function CompareMobile({ list, rows }: { list: Property[]; rows: Row[] }) {
-  const LABEL_W = 112;
-  const cols = `${LABEL_W}px repeat(${list.length}, minmax(116px, 1fr))`;
-  const stickyLeft: React.CSSProperties = { position: 'sticky', left: 0, background: '#fff', zIndex: 2 };
+  // 2 propiedades → 2 columnas, 3 → 3 columnas, 4 → 2×2. Todo fluye con el scroll de la página, sin cajas con barras.
+  const cols = list.length === 3 ? 3 : 2;
+  const grid: React.CSSProperties = { display: 'grid', gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))`, gap: 8 };
   return (
-    <div style={{ maxHeight: 'calc(100vh - 140px)', overflow: 'auto', border: '1px solid rgba(0,0,0,0.08)', borderRadius: 8, background: '#fff' }}>
-      <div style={{ display: 'grid', gridTemplateColumns: cols, minWidth: LABEL_W + list.length * 116 }}>
-        {/* Encabezado fijo arriba */}
-        <div style={{ ...stickyLeft, top: 0, zIndex: 4, borderBottom: '1px solid rgba(0,0,0,0.1)', position: 'sticky', display: 'flex', alignItems: 'flex-end', padding: '10px' }}>
-          <span style={{ fontFamily: FONT, fontSize: 13, fontWeight: 700, color: '#1a1a1a', lineHeight: 1.2 }}>Detalles del inmueble</span>
-        </div>
+    <div>
+      {/* Propiedades */}
+      <div style={grid}>
         {list.map((p) => (
-          <div
-            key={p.id}
-            style={{ position: 'sticky', top: 0, zIndex: 3, background: '#fff', padding: '10px 8px', borderBottom: '1px solid rgba(0,0,0,0.1)', borderLeft: '1px solid rgba(0,0,0,0.06)', minWidth: 0 }}
-          >
-            <img src={p.image} alt={p.title} style={{ width: '100%', height: 76, objectFit: 'cover', borderRadius: 6, display: 'block', marginBottom: 8 }} />
-            <p style={{ fontFamily: FONT, fontWeight: 900, fontSize: 13, color: '#1a1a1a', margin: 0, lineHeight: 1.2 }}>{p.location}</p>
+          <div key={p.id} style={{ minWidth: 0 }}>
+            <img src={p.image} alt={p.title} style={{ width: '100%', height: 96, objectFit: 'cover', borderRadius: 8, display: 'block', marginBottom: 8 }} />
+            <p style={{ fontFamily: FONT, fontWeight: 900, fontSize: 14, color: '#1a1a1a', margin: 0, lineHeight: 1.2 }}>{p.location}</p>
             <p style={{ fontFamily: FONT, fontWeight: 700, fontSize: 11, color: '#888', margin: '2px 0 8px' }}>Cód. {refCode(p)}</p>
             <a
               href={`/propiedad/${p.id}`}
               style={{
-                display: 'flex', alignItems: 'center', justifyContent: 'center', height: 30, borderRadius: 999,
-                background: RED, color: '#fff', fontFamily: FONT, fontWeight: 700, fontSize: 12, textDecoration: 'none', whiteSpace: 'nowrap',
+                display: 'flex', alignItems: 'center', justifyContent: 'center', height: 34, borderRadius: 999,
+                background: RED, color: '#fff', fontFamily: FONT, fontWeight: 700, fontSize: 12.5, textDecoration: 'none', whiteSpace: 'nowrap',
               }}
             >
               Ver propiedad
             </a>
           </div>
         ))}
+      </div>
 
-        {rows.map((row) => {
-          const best = bestIndexes(row);
-          return (
-            <div key={row.label} style={{ display: 'contents' }}>
-              <div
-                style={{
-                  ...stickyLeft, display: 'flex', alignItems: 'center', gap: 6, padding: '11px 8px 11px 10px',
-                  borderTop: '1px solid rgba(0,0,0,0.07)',
-                }}
-              >
-                <img src={row.icon} width="14" height="14" alt="" style={{ flexShrink: 0, filter: 'grayscale(1) opacity(0.4)' }} />
-                <span style={{ fontFamily: FONT, fontSize: 12, fontWeight: 700, color: '#333', lineHeight: 1.15 }}>{row.label}</span>
-              </div>
+      <h2 style={{ fontFamily: FONT, fontSize: 16, fontWeight: 700, color: '#1a1a1a', margin: '26px 0 4px' }}>Detalles del inmueble</h2>
+
+      {/* Una fila por característica: etiqueta arriba y el valor de cada propiedad debajo */}
+      {rows.map((row) => {
+        const best = bestIndexes(row);
+        return (
+          <div key={row.label} style={{ padding: '12px 0', borderBottom: '1px solid rgba(0,0,0,0.08)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+              <img src={row.icon} width="15" height="15" alt="" style={{ flexShrink: 0, filter: 'grayscale(1) opacity(0.4)' }} />
+              <span style={{ fontFamily: FONT, fontSize: 13, fontWeight: 700, color: '#333' }}>{row.label}</span>
+            </div>
+            <div style={grid}>
               {row.values.map((v, j) => {
                 const isBest = best.has(j);
                 return (
                   <div
                     key={j}
                     style={{
-                      display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '11px 6px', textAlign: 'center',
-                      borderTop: '1px solid rgba(0,0,0,0.07)', borderLeft: '1px solid rgba(0,0,0,0.06)',
-                      fontFamily: FONT, fontSize: 13, fontWeight: isBest ? 700 : 400, color: isBest ? '#aa182c' : '#555',
-                      background: isBest ? 'rgba(243,39,53,0.08)' : undefined, minWidth: 0, wordBreak: 'break-word',
+                      minWidth: 0, textAlign: 'center', padding: '8px 6px', borderRadius: 8,
+                      background: isBest ? 'rgba(243,39,53,0.09)' : '#f7f6f4',
+                      boxShadow: isBest ? 'inset 0 0 0 1px rgba(243,39,53,0.35)' : 'none',
                     }}
                   >
-                    {v}
+                    <div style={{ fontFamily: FONT, fontSize: 14, fontWeight: isBest ? 700 : 400, color: isBest ? '#aa182c' : '#444', wordBreak: 'break-word', lineHeight: 1.25 }}>{v}</div>
+                    <div style={{ fontFamily: FONT, fontSize: 10.5, color: '#999', marginTop: 2, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{list[j].location}</div>
                   </div>
                 );
               })}
             </div>
-          );
-        })}
-      </div>
+          </div>
+        );
+      })}
     </div>
   );
 }
